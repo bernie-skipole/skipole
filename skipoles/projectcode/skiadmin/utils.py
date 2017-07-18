@@ -1,0 +1,608 @@
+####### SKIPOLE WEB FRAMEWORK #######
+#
+# utils.py  - some utility functions used by the skiadmin code
+#
+# This file is part of the Skipole web framework
+#
+# Date : 20130205
+#
+# Author : Bernard Czenkusz
+# Email  : bernie@skipole.co.uk
+#
+#
+#   Copyright 2013 Bernard Czenkusz
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+import collections, json, os
+
+from ...ski import skiboot, widgets, tag
+from ...ski.excepts import FailPage, ServerError
+
+
+def no_ident_data(call_data):
+    "Clears call data apart from set of required values"
+    editedprojname = call_data['editedprojname']
+    editedprojurl = call_data['editedprojurl']
+    editedprojversion = call_data['editedprojversion']
+    editedprojbrief = call_data['editedprojbrief']
+    editedproj = call_data['editedproj']
+    adminproj = call_data['adminproj']
+    extend_nav_buttons = call_data['extend_nav_buttons']
+    caller_ident = call_data['caller_ident']
+    call_data.clear()
+    call_data['editedprojname'] = editedprojname
+    call_data['editedprojurl'] = editedprojurl
+    call_data['editedprojversion'] = editedprojversion
+    call_data['editedprojbrief'] = editedprojbrief
+    call_data['editedproj'] = editedproj
+    call_data['adminproj'] = adminproj
+    call_data['caller_ident'] = caller_ident
+    call_data['extend_nav_buttons'] = extend_nav_buttons
+
+
+def retrieve_edit_page(call_data, page_data):
+    "Common function used by page editors, placed here to be used by multiple pages"
+
+    editedproj = call_data['editedproj']
+    page = call_data['page']
+
+    # fills in header
+    page_data[("adminhead","page_head","large_text")] = page.name
+    page_data[("adminhead","page_head","small_text")] = page.brief
+
+    page_data[('page_edit','p_ident','page_ident')] = page.ident
+
+    if "new_name" in call_data:
+        page_data[('page_edit','p_rename','input_text')] = call_data["new_name"]
+    else:
+        page_data[('page_edit','p_rename','input_text')] = page.name
+
+    if "parent_ident" in call_data:
+        page_data[('page_edit','p_parent','input_text')] = call_data["parent_ident"]
+    else:
+        page_data[('page_edit','p_parent','input_text')] = page.parentfolder_ident.to_comma_str()
+
+    if 'page_brief' in call_data:
+        page_data[('page_edit','p_brief','input_text')] = call_data['page_brief']
+    else:
+        page_data[('page_edit','p_brief','input_text')] = page.brief
+
+
+def save(call_data, folder=None, page=None, section_name=None, section=None, widget_name=''):
+    "Saves given items, widget_name is the widget to display an error"
+    editedproj = call_data['editedproj']
+    try:
+        if folder is not None:
+            # save the altered folder
+            editedproj.save_folder(folder)
+        if page is not None:
+            # save the altered page
+            editedproj.save_page(page)
+        if section is not None:
+            # save the altered section
+           editedproj.add_section(section_name, section)
+    except ServerError as e:
+        if (folder is not None) and ('folder' in call_data):
+            # replace call_data['folder'] with new value
+            call_data['folder'] = skiboot.from_ident(folder.ident)
+        if (page is not None) and ('page' in call_data):
+            # replace call_data['page'] with new value
+            call_data['page'] = skiboot.from_ident(page.ident, import_sections=False)
+        if (section is not None) and ('section_part' in call_data):
+            # replace call_data['section_part'] with new value
+            section = editedproj.section(section_name)
+            call_data['section_part'] = section
+        raise FailPage(message=e.message, widget=widget_name)
+
+
+def _location_from_part_string(part_string, section_name):
+    """part_string is a location string such as head-0-1, this returns a location tuple
+          consisting of the leading string (such as head or section name or widget name)
+                                  container integer, such as 0 for container 0, or None if no container
+                                  and tuple of location integers"""
+    location_list = part_string.split('-')
+    # first item should be a string, rest integers, but section or widget could have a name 'this_name'
+    location_string = location_list[0]
+    if len(location_list) == 1:
+        # no location integers
+        return (location_string, None, ())
+    location_integers = [ int(i) for i in location_list[1:]]
+    if not section_name:
+        # either a location or widget in a page
+        if (location_string =='head') or (location_string =='body') or  (location_string =='svg'):
+            # No widget, no container    
+            return (location_string, None, tuple(location_integers))
+    else:
+        # so must be a section
+        if location_string == section_name:
+            # No widget, no container
+            return (location_string, None, tuple(location_integers))
+    # so location_string must be a widget name, and first integer is a container   
+    if len(location_integers) == 1:
+        # must be a location of a widget container
+        return (location_string, location_integers[0], ())
+    # must be a location within a widget container
+    return (location_string, location_integers[0], tuple(location_integers[1:]))
+
+
+def _part_string_from_location(location):
+    """Inverse of the above"""
+    part_string = location[0]
+    if location[1] is not None:
+        part_string = part_string + '-' + str(location[1])
+    if location[2]:
+        stringlist = [str(i) for i in location[2]]
+        part_string = part_string + '-' + '-'.join(stringlist)
+    return part_string
+
+
+def part_from_location(page=None, section=None, section_name=None, location_string='', container=None, location_integers=()):
+    "Returns the part given the location information, if not found, return None"
+    if (page is None) and (section is None):
+        return
+
+    if page is not None:
+        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
+            return page.get_part(location_string, location_integers)
+        elif location_string in page.widgets:
+            widget = page.widgets[location_string]
+            if widget is not None:
+                # widget is the containing widget 
+                if widget.can_contain() and not (container is None):
+                    return widget.get_from_container(container, location_integers)
+
+    if section is not None:
+        if location_string == section_name:
+            if location_integers:
+                return section.get_location_value(location_integers)
+            else:
+                return section
+        elif location_string in section.widgets:
+            widget = section.widgets[location_string]
+            if widget is not None:
+                # widget is the containing widget 
+                if widget.can_contain() and not (container is None):
+                    return widget.get_from_container(container, location_integers)
+
+
+def set_part(newpart, location, page=None, section=None, section_name='', widget=None, failmessage=''):
+    "Sets a part in a location"
+    part_top, container, location_tuple = location
+    if (page is None) and (section is None):
+        raise FailPage(failmessage)
+    if page is None:
+        # set part in a section
+        if part_top == section_name:
+            # part is not embedded in a widget
+            section.set_location_value(location_tuple, newpart)
+        elif (widget is not None) and part_top == widget.name: 
+            # location is in a widget, within a container
+            widget.set_in_container(container, location_tuple, newpart)
+        else:
+            raise FailPage(failmessage)
+    else:
+        # set part in a page
+        if (part_top == 'head'):
+            page.head.set_location_value(location_tuple, newpart)
+        elif (part_top == 'body'):
+            page.body.set_location_value(location_tuple, newpart)
+        elif (part_top == 'svg'):
+            page.svg.set_location_value(location_tuple, newpart)
+        elif (widget is not None) and part_top == widget.name: 
+            # location is in a container
+            widget.set_in_container(container, location_tuple, newpart)
+        else:
+            raise FailPage(failmessage)
+ 
+
+def get_bits(call_data):
+    """Returns a named tuple of (page, section, section_name, widget, location,
+                                 part, part_top, part_string, field, field_arg, validator)
+       if obtainable from call_data, with None for any bit unable to find"""
+
+    Bits = collections.namedtuple('Bits', ['page',
+                                           'section',
+                                           'section_name',
+                                           'parent_widget',
+                                           'parent_container',  # an integer
+                                           'widget',
+                                           'location',
+                                           'container',     # an integer
+                                           'part',          # submitted part
+                                           'container_part',# submitted container index
+                                           'part_top',      # a string such as 'head' or widgename
+                                           'page_top',      # a string 'head', 'body', 'svg' or None
+                                           'part_string',   # a string such as 'head_0_1'
+                                           'field',
+                                           'field_arg',
+                                           'validator'])
+
+    # note: call_data['part'] is from a form, something like head_0_1, or sessionname_0_1 or widgetname_0_1
+    # if given then this has precedence, and replaces any session 'location' data, if not given, session location is used. 
+
+    # location is a list of leading string 'head', 'body', 'svg' or section name
+    #                                          second string of widget_name
+    #                                          container integer, such as 0 for container 0, or None if no container
+    #                                          and tuple of location integers
+
+    page=None               # The page instance, mutually exclusive with
+    section = None          # The section instance
+    section_name = None     # The section name
+    parent_widget = None    # the parent widget if any
+    parent_container = None # the container integer of the parent widget containing edited widget
+    widget = None           # widget instance retrieved from call_data['widget_name']
+    location = None         # location list, derived from session data 'part' or session data 'location'  
+    container = None        # container integer, retrieved from call_data['container']
+    part = None             # The part instance at location, derived from submitted 'part' or session data location
+    container_part = None   # The integer submitted when a user decides to edit a container
+    part_top = None         # The string such as 'head', 'body', 'svg',  widgetname
+    page_top = None         # derived from part_top and widget ident, None if this is a section
+    part_string = None      # The string such as 'head_0_1' derived from call_data['part'] or from session data location
+    field = None            # field instance, derived from field_arg and widget
+    field_arg = None        # Derived from form call_data['field_arg'], checked exists in widget, if not then None
+    validator = None        # Derived from form call_data['validx'], field and widget, if not then None
+
+    # get page or section - an error if both are present
+    if 'page' in call_data:
+        if 'section_name' in call_data:
+            raise FailPage(message = "Section and page both present in session data")
+        page = call_data['page']
+        if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
+            raise FailPage(message = "Invalid page")
+    elif 'section_name' in call_data:
+        if 'section' not in call_data:
+            raise FailPage(message = "Section part not valid")
+        section_name = call_data['section_name']
+        section = call_data['section']
+    else:
+        return Bits(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+
+    # 'widget' is from session data
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+        if section:
+            widget = section.widgets.get(widget_name)
+        else:
+            widget = page.widgets.get(widget_name)
+        if widget:
+            part_top = widget.name
+
+    # 'container' is from session data, only valid if 'widget' is present
+    if (widget is not None) and ('container' in call_data):
+        container = call_data['container']
+
+    # 'container_part' is from submitted data
+    if 'container_part' in call_data:
+        try:
+            container_part = int(call_data['container_part'])
+        except:
+            container_part = None
+
+    # get location and part_string from 'part' in call data - 'part' provided by responder from submitted data 
+    if 'part' in call_data:
+        # part is a location string such as head-0-1, or sectionname-0-1 or widgetname-0-1
+        # put this into part_string, and into call_data['location']
+        if call_data['part']:
+            part_string = call_data['part']
+            call_data['location'] = _location_from_part_string(part_string, section_name)
+
+    elif ('part_top' in call_data) and ('part_loc' in call_data):
+        # 'part_top' is the string top of a location such as 'head' or 'widgetname'
+        # 'part_loc' is the string location, such as '0-1', could be empty
+        if call_data['part_top'] and call_data['part_loc']:
+            part_string = call_data['part_top'] + '-' + call_data['part_loc']
+        elif call_data['part_top']:
+             # part_loc is empty, only have the name
+            part_string = call_data['part_top']
+        call_data['location'] = _location_from_part_string(part_string, section_name)
+
+    # 'part' may not be given, but 'location' may be given from stored session data
+    # so use this location, derived either from 'part' or from 'location',
+    # to generate part_string, part_top and part
+
+    if 'location' in call_data:
+        location = call_data['location']
+
+        # the part text
+        part_top = location[0]
+        # the part sequence numbers
+        if not part_string:
+            part_string = _part_string_from_location(location)
+        # got location, part_top and part_string
+
+        # get part
+        part_from_loc = part_from_location(page, section, section_name, location_string=location[0], container=location[1], location_integers=location[2])
+        if part_from_loc is not None:
+            part = part_from_loc
+
+        # get page_top
+        if page is not None:
+            if (part_top == 'head') or (part_top == 'body') or (part_top == 'svg'):
+                page_top = part_top
+            elif part_top in page.widgets:
+                widget_top = page.widgets[part_top]
+                if widget_top is not None:
+                    ident_top = widget_top.ident_string.split("-", 1)
+                    # ident_top[0] will be of the form proj_pagenum_head
+                    page_top = ident_top[0].split("_")[2]
+
+
+    # rest is only valid if edited part is a widget given in session data
+    if widget is None:
+        return Bits(page, section, section_name, parent_widget, parent_container,
+                        widget, location, container,
+                        part, container_part, part_top, page_top, part_string, field, field_arg, validator)
+
+    if page is None:
+        parent_widget, parent_container = widget.get_parent_widget(section)
+    else:
+        ident_top = widget.ident_string.split("-", 1)
+        # ident_top[0] will be of the form proj_pagenum_head
+        page_top = ident_top[0].split("_")[2]
+        # so this gives page_top of body, head or svg
+        parent_widget, parent_container = widget.get_parent_widget(page)
+
+    # get field_arg
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+
+    if not field_arg:
+        # Field not identified
+        field_arg = None
+        return Bits(page, section, section_name, parent_widget, parent_container,
+                        widget, location, container,
+                        part, container_part, part_top, page_top, part_string, field, field_arg, validator)
+
+    if field_arg in widget.fields:
+        field = widget.fields[field_arg]
+    else:
+        field_arg = None
+        return Bits(page, section, section_name, parent_widget, parent_container,
+                        widget, location, container,
+                        part, container_part, part_top, page_top, part_string, field, field_arg, validator)
+
+    # get validator
+    if 'validx' in call_data:
+        try:
+            validx = int(call_data['validx'])
+        except:
+            return Bits(page, section, section_name, parent_widget, parent_container,
+                        widget, location, container,
+                        part, container_part, part_top, page_top, part_string, field, field_arg, validator)
+        val_list = field.val_list
+        if val_list:
+            if (validx >= 0) and (validx < len(val_list)):
+                validator = val_list[validx]
+
+    return Bits(page, section, section_name, parent_widget, parent_container,
+                        widget, location, container,
+                        part, container_part, part_top, page_top, part_string, field, field_arg, validator)
+
+
+def nav_boxes(call_data, page, section, pagetop=None, parent=None, widget=None, container=None):
+    """Extends list of navigation boxes in call_data['extend_nav_buttons']"""
+
+    if (page is None) and (section is None):
+        raise FailPage("Page/section not identified")
+
+    boxes = []
+
+    if page is not None:
+        if page.page_type == 'TemplatePage':
+            if pagetop == 'head':
+                boxes.append(['page_head', "Head", True, ''])    # label to 3320
+            elif pagetop == 'body':
+                boxes.append(['page_body', "Body", True, ''])    # label to 3340
+        else:
+            if pagetop == 'svg':
+                boxes.append(['page_svg', "SVG", True, ''])    # label to 3420
+    else:
+        boxes.append(['back_to_section', "Section", True, ''])    # label to 7040
+
+    if parent is not None:
+        boxes.append(['back_to_parent_container', "Parent", True, ''])    # label to 44720
+
+    if widget is not None:
+        boxes.append(['back_to_widget_edit', "Widget", True, ''])    # label to 44002
+
+    if container is not None:
+        boxes.append(["back_to_container", "Container", True, ''])   # label to 44704
+
+    if boxes:
+        if 'extend_nav_buttons' in call_data:
+            call_data['extend_nav_buttons'].extend(boxes)
+        else:
+            call_data['extend_nav_buttons'] = boxes
+
+
+def extendparts(rows, item, part_loc, contents, no_link, empty, indent=1):
+    "Creates the part table"
+
+    #        contents: A list for every element in the table, should be row*col lists
+    #              col 0 - text string (This will be either text to display, button text, or Textblock reference)
+    #               col 1 - True if this is a TextBlock, False if not
+    #               col 2 - A 'style' string set on the td cell, if empty string, no style applied
+    #               col 3 - Link ident, if empty, only text will be shown, not a button
+    #                             if given, a link will be set with button_class applied to it
+    #              col 4 - The get field value of the button link, empty string if no get field, ignored if no link ident given
+
+    if not isinstance(item, tag.Part):
+        raise ServerError("utils.extendtable incorrectly called")
+    indent += 1
+    padding = "padding-left : %sem;" % (indent,)
+    last_index = len(item)-1
+    u_r_flag = False
+
+    last_row_at_this_level = 0
+
+    #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert   #remove
+
+    for index, part in enumerate(item.parts):
+        part_location_string = part_loc + '-' + str(index)
+        rows += 1
+        # the row text
+        if isinstance(part, widgets.Widget) or isinstance(part, widgets.ClosedWidget):
+            edit_page_label = 'edit_widget'
+            part_name = 'Widget ' + part.name
+            if len(part_name)>40:
+                part_name = part_name[:35] + '...'
+            contents.append([part_name, False, padding, '', ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief] + no_link)
+        elif isinstance(part, tag.TextBlock):
+            edit_page_label = 'edit_textblockref'
+            contents.append(['TextBlock', False, padding, '', ''])
+            part_ref = part.textref
+            if len(part_ref)>40:
+                part_ref = part_ref[:35] + '...'
+            if not part_ref:
+                part_ref = '-'
+            contents.append([part_ref] + no_link)
+        elif isinstance(part, tag.SectionPlaceHolder):
+            edit_page_label = 'edit_placeholder'
+            section_name = part.placename
+            if section_name:
+                section_name = "Section " + section_name
+            else:
+                section_name = "Section -None-"
+            if len(section_name)>40:
+                section_name = section_name[:35] + '...'
+            contents.append([section_name, False, padding, '', ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief] + no_link)
+        elif isinstance(part, str):
+            edit_page_label = 'edit_text'
+            contents.append(['Text', False, padding, '', ''])
+            if len(part)<40:
+                part_str = part
+            else:
+                part_str = part[:35] + '...'
+            if not part_str:
+                part_str = '-'
+            contents.append([part_str] + no_link)
+        elif isinstance(part, tag.HTMLSymbol):
+            edit_page_label = 'edit_symbol'
+            contents.append(['Symbol', False, padding, '', ''])
+            if len(part.text)<40:
+                part_str = part.text
+            else:
+                part_str = part.text[:35] + '...'
+            if not part_str:
+                part_str = '-'
+            contents.append([part_str] + no_link)
+        elif isinstance(part, tag.Comment):
+            edit_page_label = 'edit_comment'
+            contents.append(['Comment', False, padding, '', ''])
+            if len(part.text)<33:
+                part_str =  "<!--"+part.text + '-->'
+            else:
+                part_str = "<!--"+part.text[:31] + '...'
+            if not part_str:
+                part_str = '<!---->'
+            contents.append([part_str] + no_link)
+        elif isinstance(part, tag.ClosedPart):
+            edit_page_label = 'get_part_edit'
+            if part.attribs:
+                tag_name = "<%s ... />" % part.tag_name
+            else:
+                tag_name = "<%s />" % part.tag_name
+            contents.append([tag_name, False, padding, '', ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief] + no_link)
+        elif isinstance(part, tag.Part):
+            edit_page_label = 'get_part_edit'
+            if part.attribs:
+                tag_name = "<%s ... >" % part.tag_name
+            else:
+                tag_name = "<%s>" % part.tag_name
+            contents.append([tag_name, False, padding, '', ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief] + no_link)
+        else:
+            edit_page_label = 'admin_home'
+            contents.append(['UNKNOWN', False, padding, '', ''])
+            contents.append(['ERROR'] + no_link)
+
+        # UP ARROW
+        if rows == 2:
+            # second line in table cannot move upwards
+            contents.append(empty)
+        else:
+            contents.append(['&uarr;', False, 'width : 1%;', 'up', part_location_string])
+
+        # UP RIGHT ARROW
+        if u_r_flag:
+            contents.append(['&nearr;', False, 'width : 1%;', 'up_right', part_location_string])
+        else:
+            contents.append(empty)
+
+        # DOWN ARROW
+        if (indent == 1) and (index == last_index):
+            # the last line at this top indent has been added, no down arrow
+            contents.append(empty)
+        else:
+            contents.append(['&darr;', False, 'width : 1%;', 'down', part_location_string])
+
+        # DOWN RIGHT ARROW
+        # set to empty, when next line is created if down-right not applicable
+        contents.append(empty)
+
+        # EDIT
+        contents.append(['Edit', False, 'width : 1%;', edit_page_label, part_location_string])
+
+        # INSERT or APPEND
+        if isinstance(part, tag.Part) and not isinstance(part, widgets.Widget):
+            if part.tag_name == 'script' and part.has_attrib('src'):
+                contents.append(['Append', False, 'width : 1%;text-align: center;', 'new_append', part_location_string])  # append link to 43103
+            else:
+                contents.append(['Insert', False, 'width : 1%;text-align: center;', 'new_insert', part_location_string]) # insert link to 43102
+        else:
+            contents.append(['Append', False, 'width : 1%;text-align: center;', 'new_append', part_location_string])
+
+        # REMOVE
+        contents.append(['Remove', False, 'width : 1%;', 'remove_item', part_location_string]) # remove link 43104
+
+        u_r_flag = False
+        if isinstance(part, tag.Part) and not isinstance(part, widgets.Widget):
+            if last_row_at_this_level and (part.tag_name != 'script') and (part.tag_name != 'pre'):
+                # add down right arrow in previous row at this level, get loc_string from adjacent edit cell
+                editcell = contents[last_row_at_this_level *9-3]
+                loc_string = editcell[4]
+                contents[last_row_at_this_level *9-4] = ['&searr;', False, 'width : 1%;', 'down_right', loc_string]
+            last_row_at_this_level = rows
+            rows = extendparts(rows, part, part_location_string, contents, no_link, empty, indent)
+            # set u_r_flag for next item below this one
+            if  (part.tag_name != 'script') and (part.tag_name != 'pre'):
+                u_r_flag = True
+        else:
+            last_row_at_this_level =rows
+
+    return rows
+

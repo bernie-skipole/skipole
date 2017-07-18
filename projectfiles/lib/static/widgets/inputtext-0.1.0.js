@@ -1,0 +1,427 @@
+/*
+####### SKIPOLE WEB FRAMEWORK #######
+
+ inputtext-0.1.0.js  - javascript widgets
+
+ This file is part of the Skipole web framework
+
+ Date : 20150501
+
+ Author : Bernard Czenkusz
+ Email  : bernie@skipole.co.uk
+
+
+   Copyright 2015 Bernard Czenkusz
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+
+SKIPOLE.inputtext = {};
+
+
+SKIPOLE.inputtext.TextInput1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputtext.TextInput1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.TextInput1.prototype.constructor = SKIPOLE.inputtext.TextInput1;
+SKIPOLE.inputtext.TextInput1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_accepted_errored(this.widg, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        this.widg.val(input_text);
+        }
+    };
+
+
+SKIPOLE.inputtext.Password1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputtext.Password1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.Password1.prototype.constructor = SKIPOLE.inputtext.Password1;
+SKIPOLE.inputtext.Password1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_accepted_errored(this.widg, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        this.widg.val(input_text);
+        }
+    };
+
+
+SKIPOLE.inputtext.TextInput2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputtext.TextInput2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.TextInput2.prototype.constructor = SKIPOLE.inputtext.TextInput2;
+SKIPOLE.inputtext.TextInput2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    this.check_error(fieldlist, result);
+    var text_input = this.widg.find('input[type="text"]');
+    var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
+    this.set_if_disabled(text_input, input_disabled, fieldlist, result);
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        text_input.val(input_text);
+        }
+    };
+
+
+SKIPOLE.inputtext.Password2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputtext.Password2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.Password2.prototype.constructor = SKIPOLE.inputtext.Password2;
+SKIPOLE.inputtext.Password2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    this.check_error(fieldlist, result);
+    var text_input = this.widg.find('input[type="password"]');
+    var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
+    this.set_if_disabled(text_input, input_disabled, fieldlist, result);
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        text_input.val(input_text);
+        }
+    };
+
+
+SKIPOLE.inputtext.TextInput3 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputtext.TextInput3.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.TextInput3.prototype.constructor = SKIPOLE.inputtext.TextInput3;
+SKIPOLE.inputtext.TextInput3.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var text_input = this.widg.find('input[type="text"]');
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        text_input.val(input_text);
+        }
+    };
+
+
+SKIPOLE.inputtext.TextInput4 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputtext.TextInput4.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.TextInput4.prototype.constructor = SKIPOLE.inputtext.TextInput4;
+SKIPOLE.inputtext.TextInput4.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var text_input = this.widg.find('input[type="text"]');
+    var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
+    this.set_if_disabled(text_input, input_disabled, fieldlist, result);
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        text_input.val(input_text);
+        }
+    };
+
+
+SKIPOLE.inputtext.SubmitTextInput1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputtext.SubmitTextInput1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.SubmitTextInput1.prototype.constructor = SKIPOLE.inputtext.SubmitTextInput1;
+SKIPOLE.inputtext.SubmitTextInput1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    this.check_error(fieldlist, result);
+    var text_input = this.widg.find('input[type="text"]');
+    // Check for set_input_accepted or set_input_errored
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        text_input.val(input_text);
+        }
+    // hide
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (this.widg.is(":visible")) {
+                this.widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(this.widg.is(":visible"))) {
+                this.widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput1.prototype.eventfunc = function (e) {
+    if (e.type == 'submit') {
+        // form submitted
+        if (!SKIPOLE.form_validate(this.widg)) {
+            // prevent the submission if validation failure
+            e.preventDefault();
+            }
+        else {
+            // form validated, so if json url set, call a json page
+            var jsonurl = this.fieldvalues["url"];
+            if (jsonurl) {
+                var self = this;
+                var widgform = this.widg.find('form');
+                var senddata = widgform.serializeArray();
+                $.getJSON(jsonurl, senddata).done(function(result){
+                     if (self.get_error(result)) {
+                        // if error, set any results received from the json call
+                        SKIPOLE.setfields(result);
+                        }
+                   else {
+                        // If no error received, clear any previous error
+                        self.clear_error();
+                        SKIPOLE.setfields(result);
+                        // enable input event, which is used to clear set_accepted class on input
+                        self.widg.on('input', function(e) {self.eventfunc(e)});
+                        }
+                    });
+                e.preventDefault();
+                }
+            }
+        }
+    else if (e.type == 'input'){
+        // text changed in input field
+        this.widg.off(e);
+        this.set_accepted($(e.target),false);
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput1.prototype.show_error = function (error_message) {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
+    var input_field = this.widg.find('input[type="text"]');
+    this.set_errored(input_field, true);
+    };
+SKIPOLE.inputtext.SubmitTextInput1.prototype.clear_error = function() {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.clear_error.call(this);
+    var input_field = this.widg.find('input[type="text"]');
+    this.set_errored(input_field, false);
+    };
+
+
+SKIPOLE.inputtext.SubmitTextInput3 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputtext.SubmitTextInput3.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.SubmitTextInput3.prototype.constructor = SKIPOLE.inputtext.SubmitTextInput3;
+SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    this.check_error(fieldlist, result);
+    var text_input = this.widg.find('input[type="text"]');
+    // Check for set_input_accepted or set_input_errored
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text) {
+        text_input.val(input_text);
+        }
+    // hide
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (this.widg.is(":visible")) {
+                this.widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(this.widg.is(":visible"))) {
+                this.widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput3.prototype.eventfunc = function (e) {
+    if (e.type == 'submit') {
+        // form submitted
+        if (!SKIPOLE.form_validate(this.widg)) {
+            // prevent the submission if validation failure
+            e.preventDefault();
+            }
+        else {
+            // form validated, so if json url set, call a json page
+            var jsonurl = this.fieldvalues["url"];
+            if (jsonurl) {
+                var self = this
+                var widgform = this.widg.find('form');
+                var senddata = widgform.serializeArray();
+                $.getJSON(jsonurl, senddata).done(function(result){
+                     if (self.get_error(result)) {
+                        // if error, set any results received from the json call
+                        SKIPOLE.setfields(result);
+                        }
+                   else {
+                        // If no error received, clear any previous error
+                        self.clear_error();
+                        SKIPOLE.setfields(result);
+                        // enable input event, which is used to clear set_accepted class on input
+                        self.widg.on('input', function(e) {self.eventfunc(e)});
+                        }
+                    });
+                e.preventDefault();
+                }
+            }
+        }
+    else if (e.type == 'input'){
+        // text changed in input field
+        this.widg.off(e);
+        this.set_accepted($(e.target),false);
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput3.prototype.show_error = function (error_message) {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
+    var input_field = this.widg.find('input[type="text"]');
+    this.set_errored(input_field, true);
+    };
+SKIPOLE.inputtext.SubmitTextInput3.prototype.clear_error = function() {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.clear_error.call(this);
+    var input_field = this.widg.find('input[type="text"]');
+    this.set_errored(input_field, false);
+    };
+
+
+SKIPOLE.inputtext.TwoInputsSubmit1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputtext.TwoInputsSubmit1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.TwoInputsSubmit1.prototype.constructor = SKIPOLE.inputtext.TwoInputsSubmit1;
+SKIPOLE.inputtext.TwoInputsSubmit1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var two_text_input = this.widg.find('input[type="text"]');
+    var text1 = two_text_input[0];
+    // Check for set_input_accepted1 or set_input_errored1
+    var input_accepted1 = this.fieldarg_in_result('set_input_accepted1', result, fieldlist);
+    this.set_accepted(text1, input_accepted1);
+    var input_errored1 = this.fieldarg_in_result('set_input_errored1', result, fieldlist);
+    this.set_errored(text1, input_errored1);
+    // input_text1
+    var input_text1 = this.fieldarg_in_result('input_text1', result, fieldlist);
+    if (input_text1) {
+        text1.val(input_text1);
+        }
+    var text2 = two_text_input[1];
+    // Check for set_input_accepted2 or set_input_errored2
+    var input_accepted2 = this.fieldarg_in_result('set_input_accepted2', result, fieldlist);
+    this.set_accepted(text2, input_accepted2);
+    var input_errored2 = this.fieldarg_in_result('set_input_errored2', result, fieldlist);
+    this.set_errored(text2, input_errored2);
+    // input_text2
+    var input_text2 = this.fieldarg_in_result('input_text2', result, fieldlist);
+    if (input_text2) {
+        text2.val(input_text2);
+        }
+    };
+SKIPOLE.inputtext.TwoInputsSubmit1.prototype.eventfunc = function (e) {
+    if (e.type == 'submit') {
+        // form submitted
+        if (!SKIPOLE.form_validate(this.widg)) {
+            // prevent the submission if validation failure
+            e.preventDefault();
+            }
+        else {
+            // form validated, so if json url set, call a json page
+            var jsonurl = this.fieldvalues["url"];
+            if (jsonurl) {
+                var self = this
+                var widgform = this.widg.find('form');
+                var senddata = widgform.serializeArray();
+                $.getJSON(jsonurl, senddata).done(function(result){
+                     if (self.get_error(result)) {
+                        // if error, set any results received from the json call
+                        SKIPOLE.setfields(result);
+                        }
+                   else {
+                        // If no error received, clear any previous error
+                        self.clear_error();
+                        SKIPOLE.setfields(result);
+                        // enable input event, which is used to clear set_accepted class on input
+                        self.widg.on('input', function(e) {self.eventfunc(e)});
+                        }
+                    });
+                e.preventDefault();
+                }
+            }
+        }
+    else if (e.type == 'input'){
+        // text changed in input field
+        this.widg.off(e);
+        this.set_accepted($(e.target),false);
+        }
+    };
+SKIPOLE.inputtext.TwoInputsSubmit1.prototype.clear_error = function() {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.clear_error.call(this);
+    var two_text_input = this.widg.find('input[type="text"]');
+    var text1 = two_text_input[0];
+    this.set_errored(text1, false);
+    var text2 = two_text_input[1];
+    this.set_errored(text2, false);
+    };
+
+
+SKIPOLE.inputtext.SubmitDict1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputtext.SubmitDict1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.SubmitDict1.prototype.constructor = SKIPOLE.inputtext.SubmitDict1;
+
+

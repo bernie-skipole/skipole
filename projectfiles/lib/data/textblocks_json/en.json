@@ -1,0 +1,6 @@
+{
+  "authentication_failure": "Login failed: Authentication failure please try again",
+  "hiding_text": "This paragraph is a paras000.TextBlockParaHider widget, it consists of a TextBlock (which you are reading now)\nand which is hideable - click on this text to see it vanish.",
+  "index01": "Well done!\nYou have successfully installed Skipole!",
+  "index_footer_ref": "Skipole: an example page"
+}
