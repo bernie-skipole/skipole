@@ -1,0 +1,10 @@
+{
+"backcol": "#ffffff",
+"css_links": [
+"normalize_css"
+],
+"js_links": [
+"jquery_core",
+"skipole_js"
+]
+}

@@ -1,0 +1,1268 @@
+{
+"url": "/",
+"default_language": "en",
+"brief": "Library project of static files",
+"version": "0.0.1",
+"skipole": "0.0.5",
+"subprojects": {},
+"specialpages": {
+"general_json": 870,
+"jquery_core": 20,
+"no_javascript": 840,
+"redirector": 830,
+"server_error": 820,
+"ski_basic": 101,
+"ski_checkbox": 601,
+"ski_confirm": 603,
+"ski_debug_tools": 614,
+"ski_dropdown": 607,
+"ski_error_messages": 611,
+"ski_footers": 616,
+"ski_headers": 629,
+"ski_info": 618,
+"ski_inputforms": 622,
+"ski_inputtables": 621,
+"ski_inputtext": 613,
+"ski_links": 602,
+"ski_logins": 609,
+"ski_paras": 623,
+"ski_paths": 102,
+"ski_radio": 624,
+"ski_svgarrows": 606,
+"ski_svgbasics": 620,
+"ski_tables": 604,
+"ski_textarea": 605,
+"ski_upload": 608,
+"skipole_js": 10,
+"url_not_found": 880,
+"validate_error": 810
+},
+"sections": {},
+"RootFolder": {
+"brief": "Site root",
+"default_page_name": "index",
+"folders": {
+"css": {
+"ident": 300,
+"brief": "Folder holding css pages",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"simple.css": {
+"ident": 310,
+"brief": "A simple css page",
+"CSS": {
+"enable_cache": false,
+"style": {
+"body": [
+[
+"font-family",
+"Arial, sans-serif"
+],
+[
+"background-color",
+"#FFFFFF"
+]
+],
+"p": [
+[
+"color",
+"#000000"
+],
+[
+"font-size",
+"1.0em"
+],
+[
+"margin",
+"10px"
+]
+],
+".ski_errorcol": [
+[
+"color",
+"#FF0000"
+],
+[
+"padding",
+"3px 6px 3px 30%"
+]
+],
+".ski_left_label": [
+[
+"display",
+"inline-block"
+],
+[
+"padding",
+"3px 6px"
+],
+[
+"text-align",
+"right"
+],
+[
+"vertical-align",
+"top"
+],
+[
+"width",
+"30%"
+]
+],
+".okcol": [
+[
+"color",
+"#00FF00"
+]
+]
+}
+}
+}
+}
+},
+"jq": {
+"ident": 2,
+"brief": "Holds jquery files",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"jquery-2.1.4.min.js": {
+"ident": 20,
+"brief": "Link to static/jq/jquery-2.1.4.min.js",
+"FilePage": {
+"filepath": "lib/static/jq/jquery-2.1.4.min.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+}
+}
+},
+"restricted": {
+"ident": 800,
+"brief": "Folder of system pages",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"general_json": {
+"ident": 870,
+"brief": "General purpose JSON file",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
+},
+"redirector": {
+"ident": 830,
+"brief": "Page used to redirect to an external url.",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Redirector"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_basic",
+"brief": "Link to skipole javascript validators",
+"fields": {
+"script_ident": "ski_basic",
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "info.Redirector",
+"name": "redirect_to",
+"brief": "Redirector",
+"fields": {
+"show": true,
+"text_refnotfound": "",
+"text_replaceblock": "If this page does not redirect automatically, follow this link:",
+"textblock_ref": "",
+"url": "http://www.bbc.co.uk",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+},
+"server_error": {
+"ident": 820,
+"brief": "The skipole admin server error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"message1"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Server Error"
+]
+]
+}
+],
+[
+"ClosedWidget",
+{
+"class": "links.CSSLink",
+"name": "cssl2",
+"brief": "Link to css page newpage_css",
+"fields": {
+"css_ident": "newpage_css",
+"media": "",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "sl1",
+"brief": "Do not remove. Link to jquery library",
+"fields": {
+"script_ident": "jquery_core",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "skiboot_js",
+"brief": "Do not remove. Link to skipole js library",
+"fields": {
+"script_ident": "skipole_js",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_basic",
+"brief": "Link to skipole javascript validators",
+"fields": {
+"script_ident": "ski_basic",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_paras",
+"brief": "Link to ski_paras",
+"fields": {
+"script_ident": "ski_paras",
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"id": "divmessage1"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "message1",
+"brief": "TextBlockPara",
+"fields": {
+"clear_error": false,
+"error_class": "errorcol",
+"linebreaks": true,
+"project_ident": "",
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "",
+"text_replaceblock": "",
+"textblock_ref": "",
+"widget_class": ""
+},
+"set_names": {
+"text_replaceblock": "message_text"
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowEnviron",
+"name": "se1",
+"brief": "ShowEnviron",
+"fields": {
+"clear_error": false,
+"error_class": "ski_errorcol",
+"para_class": "",
+"show": true,
+"show_error": "",
+"toptext": "Environmental variables for this call:",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+},
+"url_not_found": {
+"ident": 880,
+"brief": "The skipole admin url not found error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"url"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"URL not found"
+]
+]
+}
+],
+[
+"ClosedWidget",
+{
+"class": "links.CSSLink",
+"name": "cssl2",
+"brief": "Link to css page newpage_css",
+"fields": {
+"css_ident": "newpage_css",
+"media": "",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "sl1",
+"brief": "Do not remove. Link to jquery library",
+"fields": {
+"script_ident": "jquery_core",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "skiboot_js",
+"brief": "Do not remove. Link to skipole js library",
+"fields": {
+"script_ident": "skipole_js",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_basic",
+"brief": "Link to skipole javascript validators",
+"fields": {
+"script_ident": "ski_basic",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_paras",
+"brief": "Link to ski_paras",
+"fields": {
+"script_ident": "ski_paras",
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The page:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"id": "divmessage1"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "url",
+"brief": "TextBlockPara",
+"fields": {
+"clear_error": false,
+"error_class": "errorcol",
+"linebreaks": true,
+"project_ident": "",
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "",
+"text_replaceblock": "",
+"textblock_ref": "",
+"widget_class": ""
+},
+"set_names": {
+"text_replaceblock": "message_text"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Has not been found at this site"
+]
+]
+}
+]
+]
+}
+]
+},
+"validate_error": {
+"ident": 810,
+"brief": "The skipole admin validation error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"message1"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Validation Error"
+]
+]
+}
+],
+[
+"ClosedWidget",
+{
+"class": "links.CSSLink",
+"name": "cssl2",
+"brief": "Link to css page newpage_css",
+"fields": {
+"css_ident": "newpage_css",
+"media": "",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "sl1",
+"brief": "Do not remove. Link to jquery library",
+"fields": {
+"script_ident": "jquery_core",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "skiboot_js",
+"brief": "Do not remove. Link to skipole js library",
+"fields": {
+"script_ident": "skipole_js",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_basic",
+"brief": "Link to skipole javascript validators",
+"fields": {
+"script_ident": "ski_basic",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_paras",
+"brief": "Link to ski_paras",
+"fields": {
+"script_ident": "ski_paras",
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"id": "divmessage1"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "message1",
+"brief": "TextBlockPara",
+"fields": {
+"clear_error": false,
+"error_class": "errorcol",
+"linebreaks": true,
+"project_ident": "",
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "",
+"text_replaceblock": "",
+"textblock_ref": "",
+"widget_class": ""
+},
+"set_names": {
+"text_replaceblock": "message_text"
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowEnviron",
+"name": "se1",
+"brief": "ShowEnviron",
+"fields": {
+"clear_error": false,
+"error_class": "ski_errorcol",
+"para_class": "",
+"show": true,
+"show_error": "",
+"toptext": "Environmental variables for this call:",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+}
+}
+},
+"validators": {
+"ident": 100,
+"brief": "Holds skipole javascript validators",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"basic.js": {
+"ident": 101,
+"brief": "Link to basic.js",
+"FilePage": {
+"filepath": "lib/static/validators/basic-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"paths.js": {
+"ident": 102,
+"brief": "Link to paths.js",
+"FilePage": {
+"filepath": "lib/static/validators/paths-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+}
+}
+},
+"widgets": {
+"ident": 600,
+"brief": "Javascript widgets",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"checkbox-0.1.0.js": {
+"ident": 601,
+"brief": "Link to lib/static/widgets/checkbox-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/checkbox-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"confirm-0.1.0.js": {
+"ident": 603,
+"brief": "Link to lib/static/widgets/confirm-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/confirm-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"debug_tools-0.1.0.js": {
+"ident": 614,
+"brief": "Link to lib/static/widgets/debug_tools-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/debug_tools-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"dropdown-0.1.0.js": {
+"ident": 607,
+"brief": "Link to lib/static/widgets/dropdown-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/dropdown-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"error_messages-0.1.0.js": {
+"ident": 611,
+"brief": "Link to lib/static/widgets/error_messages-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/error_messages-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"footers-0.1.0.js": {
+"ident": 616,
+"brief": "Link to lib/static/widgets/footers-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/footers-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"headers-0.1.0.js": {
+"ident": 629,
+"brief": "Link to lib/static/widgets/headers-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/headers-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"info-0.1.0.js": {
+"ident": 618,
+"brief": "Link to lib/static/widgets/info-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/info-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"inputforms-0.1.0.js": {
+"ident": 622,
+"brief": "Link to lib/static/widgets/inputforms-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/inputforms-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"inputtables-0.1.0.js": {
+"ident": 621,
+"brief": "Link to lib/static/widgets/inputtables-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/inputtables-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"inputtext-0.1.0.js": {
+"ident": 613,
+"brief": "Link to lib/static/widgets/inputtext-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/inputtext-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"links-0.1.0.js": {
+"ident": 602,
+"brief": "Link to lib/static/widgets/links-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/links-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"logins-0.1.0.js": {
+"ident": 609,
+"brief": "Link to lib/static/widgets/logins-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/logins-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"paras-0.1.0.js": {
+"ident": 623,
+"brief": "Link to lib/static/widgets/paras-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/paras-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"radio-0.1.0.js": {
+"ident": 624,
+"brief": "Link to lib/static/widgets/radio-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/radio-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"svgarrows-0.1.0.js": {
+"ident": 606,
+"brief": "Link to lib/static/widgets/svgarrows-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/svgarrows-0.1.0.js",
+"enable_cache": false,
+"mimetype": "application/javascript"
+}
+},
+"svgbasics-0.1.0.js": {
+"ident": 620,
+"brief": "Link to lib/static/widgets/svgbasics-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/svgbasics-0.1.0.js",
+"enable_cache": false,
+"mimetype": "application/javascript"
+}
+},
+"tables-0.1.0.js": {
+"ident": 604,
+"brief": "Link to lib/static/widgets/tables-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/tables-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"textarea-0.1.0.js": {
+"ident": 605,
+"brief": "Link to lib/static/widgets/textarea-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/textarea-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"upload-0.1.0.js": {
+"ident": 608,
+"brief": "Link to lib/static/widgets/upload-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/upload-0.1.0.js",
+"enable_cache": false,
+"mimetype": "application/javascript"
+}
+}
+}
+}
+},
+"pages": {
+"no_javascript": {
+"ident": 840,
+"brief": "Displayed on javascript failure",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#FFFFFF",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"New page"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "jquery_core",
+"brief": "Link to jquery_core",
+"fields": {
+"script_ident": "jquery_core",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "skipole_js",
+"brief": "Link to skipole_js",
+"fields": {
+"script_ident": "skipole_js",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_info",
+"brief": "Link to ski_info",
+"fields": {
+"script_ident": "ski_info",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_error_messages",
+"brief": "Link to ski_error_messages",
+"fields": {
+"script_ident": "ski_error_messages",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_links",
+"brief": "Link to ski_links",
+"fields": {
+"script_ident": "ski_links",
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "ErrorDiv",
+"fields": {
+"clear_error": false,
+"error_class": "ski_errorcol",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+},
+"skipole-0.1.0.js": {
+"ident": 10,
+"brief": "Link to static/skipole-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/skipole-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+}
+}
+}
+}

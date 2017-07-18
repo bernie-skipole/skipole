@@ -1,0 +1,1159 @@
+{
+"url": "/",
+"default_language": "en",
+"brief": "New Project",
+"version": "0.0.1",
+"skipole": "0.0.23",
+"subprojects": {
+"lib": "/lib/"
+},
+"specialpages": {
+"general_json": 570,
+"home": 1,
+"jquery_core": "lib,jquery_core",
+"no_javascript": 540,
+"normalize_css": 1002,
+"redirector": 530,
+"server_error": 520,
+"ski_basic": "lib,ski_basic",
+"ski_checkbox": "lib,ski_checkbox",
+"ski_confirm": "lib,ski_confirm",
+"ski_debug_tools": "lib,ski_debug_tools",
+"ski_dropdown": "lib,ski_dropdown",
+"ski_error_messages": "lib,ski_error_messages",
+"ski_footers": "lib,ski_footers",
+"ski_headers": "lib,ski_headers",
+"ski_info": "lib,ski_info",
+"ski_inputforms": "lib,ski_inputforms",
+"ski_inputtables": "lib,ski_inputtables",
+"ski_inputtext": "lib,ski_inputtext",
+"ski_links": "lib,ski_links",
+"ski_logins": "lib,ski_logins",
+"ski_paras": "lib,ski_paras",
+"ski_paths": "lib,ski_paths",
+"ski_radio": "lib,ski_radio",
+"ski_svgarrows": "lib,ski_svgarrows",
+"ski_svgbasics": "lib,ski_svgbasics",
+"ski_tables": "lib,ski_tables",
+"ski_textarea": "lib,ski_textarea",
+"ski_upload": "lib,ski_upload",
+"skipole_js": "lib,skipole_js",
+"url_not_found": 500,
+"validate_error": 510
+},
+"sections": {},
+"RootFolder": {
+"brief": "Site root",
+"default_page_name": "index",
+"restricted": false,
+"folders": {
+"css": {
+"ident": 1000,
+"brief": "Holds CSS pages",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"normalize.css": {
+"ident": 1002,
+"brief": "From necolas.github.io/normalize.css/",
+"FilePage": {
+"filepath": "newproj/static/css/normalize.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+}
+}
+},
+"restricted": {
+"ident": 2000,
+"brief": "Holds pages not accessable directly via URL",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"general_json": {
+"ident": 570,
+"brief": "General purpose JSON file",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
+},
+"index_template": {
+"ident": 2001,
+"brief": "The template for the index page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Index"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to normalize_css",
+"show": true,
+"attribs": {
+"href": "{normalize_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Well done!\r\nThis is the home page of your new project."
+]
+]
+}
+]
+},
+"redirector": {
+"ident": 530,
+"brief": "Redirect to an external url.",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Redirector"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to normalize_css",
+"show": true,
+"attribs": {
+"href": "{normalize_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "info.Redirector",
+"name": "redirect_to",
+"brief": "Redirector",
+"fields": {
+"show": true,
+"text_refnotfound": "",
+"text_replaceblock": "If this page does not redirect automatically, follow this link:",
+"textblock_ref": "",
+"url": "http://www.bbc.co.uk",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+},
+"server_error": {
+"ident": 520,
+"brief": "The server error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"diagnostic"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Server Error"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to normalize_css",
+"show": true,
+"attribs": {
+"href": "{normalize_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds diagnostic message heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "diagnostic",
+"brief": "Shows the error message",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "No error message available",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "homelink",
+"brief": "Link to site home",
+"fields": {
+"content": "Return to home page",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowEnviron",
+"name": "se1",
+"brief": "ShowEnviron",
+"fields": {
+"clear_error": false,
+"error_class": "ski_errorcol",
+"para_class": "",
+"show": true,
+"show_error": "",
+"toptext": "Environmental variables for this call:",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+},
+"url_not_found": {
+"ident": 500,
+"brief": "The url not found error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"url"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"URL not found"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to normalize_css",
+"show": true,
+"attribs": {
+"href": "{normalize_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Holds heading text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The page:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Holds called URL",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "url",
+"brief": "TextBlockPara",
+"fields": {
+"clear_error": false,
+"error_class": "errorcol",
+"linebreaks": true,
+"project_ident": "",
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "",
+"text_replaceblock": "",
+"textblock_ref": "",
+"widget_class": "",
+"widget_style": ""
+},
+"set_names": {
+"text_replaceblock": "message_text"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Not found paragraph",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Has not been found at this site"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "homelink",
+"brief": "Link to site home",
+"fields": {
+"content": "Return to home page",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"validate_error": {
+"ident": 510,
+"brief": "The validation error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"diagnostic"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Validation Error"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to normalize_css",
+"show": true,
+"attribs": {
+"href": "{normalize_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds diagnostic message heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "diagnostic",
+"brief": "Shows the error message",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "No error message available",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "homelink",
+"brief": "Link to site home",
+"fields": {
+"content": "Return to home page",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+}
+}
+}
+},
+"pages": {
+"index": {
+"ident": 1,
+"brief": "Responder to fill in index_template fields",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": 2001
+},
+"original_fields": {}
+}
+},
+"no_javascript": {
+"ident": 540,
+"brief": "javascript disabled page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"New page"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "ErrorDiv",
+"fields": {
+"clear_error": false,
+"error_class": "ski_errorcol",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph containing no javascript textblock",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "no_javascript_text",
+"failmessage": "Javascript failure - This page requires javascript to be enabled in your browser.",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "homelink",
+"brief": "Link to site home",
+"fields": {
+"content": "Return to home page",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"show_server_error": {
+"ident": 560,
+"brief": "Displays the server error page",
+"RespondPage": {
+"class": "PageData",
+"original_args": {
+"target_ident": "server_error"
+},
+"original_fields": {
+"show_error": "Example server error message"
+}
+}
+},
+"show_validate_error": {
+"ident": 550,
+"brief": "Displays the validate error page",
+"RespondPage": {
+"class": "PageData",
+"original_args": {
+"target_ident": "validate_error"
+},
+"original_fields": {
+"show_error": "Example validate error message"
+}
+}
+}
+}
+}
+}

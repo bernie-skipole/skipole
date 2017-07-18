@@ -1,0 +1,224 @@
+####### SKIPOLE WEB FRAMEWORK #######
+#
+# debug_tools.py  - classes which may be useful to aid in debugging
+#
+# This file is part of the Skipole web framework
+#
+# Date : 20130205
+#
+# Author : Bernard Czenkusz
+# Email  : bernie@skipole.co.uk
+#
+#
+#   Copyright 2013 Bernard Czenkusz
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+
+
+"""Defines widgets to aid in debugging"""
+
+from string import Template
+import pprint
+
+from .. import skiboot
+from .. import tag
+from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
+
+
+class ShowEnviron(Widget):
+    """This class is a div, followed by a paragraph of toptext, and then
+       a <pre> tag with text content showing the environ dictionary.
+       On error a paragraph above the toptext paragraph appears with error_class
+       If debug mode is False then this widget is not shown
+    """
+
+    error_location = (0,0,0)
+
+    arg_descriptions = {'toptext':FieldArg("text", ''),
+                        'para_class':FieldArg("cssclass",""),
+                        'error_class':FieldArg("cssclass", "")
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """toptext: The text appearing above environ data
+           error_class: If given the class of the error text"""
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
+        self[0][0] = tag.Part(tag_name="p")
+        self[0][0][0] = ''
+        self[1] = tag.Part(tag_name="p", hide_if_empty=True)
+        self[2] = tag.Part(tag_name="pre")
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if not skiboot.get_debug():
+            self.show = False
+            return
+        if self.get_field_value('error_class'):
+            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.error_status:
+            self[0].del_one_attrib("style")
+        if self.get_field_value('para_class'):
+            self[1].update_attribs({"class":self.get_field_value('para_class')})
+        self[1].text = self.get_field_value('toptext')
+        self[2].text = pprint.pformat(environ)
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """<div{str_attribs}> <!-- div with class widget_class -->
+  <div> <!-- normally hidden div, with class error_class -->
+    <p> <!-- Any error text appears here --> </p>
+  </div>
+  <p>  <!-- with class para_class -->
+  <!-- toptext appears in this paragraph, if there is no toptext the paragraph is not shown -->
+  </p>
+  <pre>
+  <!-- environ variables are displayed here -->
+  </pre>
+</div>
+""".format(str_attribs=self.attributes_string)
+
+
+class ShowCallData(Widget):
+    """This class is a div, followed by a paragraph of toptext, and then
+       a <pre> tag with text content showing the call_data dictionary.
+       On error a paragraph above the toptext paragraph appears with error_class
+       If debug mode is False then this widget is not shown
+    """
+
+    error_location = (0,0,0)
+
+    arg_descriptions = {'toptext':FieldArg("text", ''),
+                        'para_class':FieldArg("cssclass",""),
+                        'error_class':FieldArg("cssclass", "")
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """toptext: The text appearing above call_data
+           error_class: If given the class of the error text"""
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
+        self[0][0] = tag.Part(tag_name="p")
+        self[0][0][0] = ''
+        self[1] = tag.Part(tag_name="p", hide_if_empty=True)
+        self[2] = tag.Part(tag_name="pre")
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if not skiboot.get_debug():
+            self.show = False
+            return
+        if self.get_field_value('error_class'):
+            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.error_status:
+            self[0].del_one_attrib("style")
+        if self.get_field_value('para_class'):
+            self[1].update_attribs({"class":self.get_field_value('para_class')})
+        self[1].text = self.get_field_value('toptext')
+        self[2].text = pprint.pformat(call_data)
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """<div{str_attribs}> <!-- div with class widget_class -->
+  <div> <!-- normally hidden div, with class error_class -->
+    <p> <!-- Any error text appears here --> </p>
+  </div>
+  <p>  <!-- with class para_class -->
+  <!-- toptext appears in this paragraph, if there is no toptext the paragraph is not shown -->
+  </p>
+  <pre>
+  <!-- The call_data displayed here -->
+  </pre>
+</div>
+""".format(str_attribs=self.attributes_string)
+
+
+class ShowResponders(Widget):
+    """This class is a div containing a table with columns
+       showing the responders called to access this page
+    """
+
+    error_location = (0,0,0)
+
+    arg_descriptions = {'toptext':FieldArg("text", ''),
+                        'para_class':FieldArg("cssclass",""),
+                        'error_class':FieldArg("cssclass", ""),
+                        'paradiv_class':FieldArg("cssclass",""),
+                        'table_class':FieldArg("cssclass","")
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        "Create the div and table, does not require any arguments"
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
+        self[0][0] = tag.Part(tag_name="p")
+        self[0][0][0] = ''
+        self[1] = tag.Part(tag_name="div")
+        self[1][0] = tag.Part(tag_name="p", hide_if_empty=True)
+        self[2] = tag.Part(tag_name="table")
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Update the table to show responder data"
+        if not skiboot.get_debug():
+            self.show = False
+            return
+        if self.get_field_value('error_class'):
+            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.error_status:
+            self[0].del_one_attrib("style")
+        if self.get_field_value('paradiv_class'):
+            self[1].update_attribs({"class":self.get_field_value('paradiv_class')})
+        if self.get_field_value('para_class'):
+            self[1][0].update_attribs({"class":self.get_field_value('para_class')})
+        self[1][0].text = self.get_field_value('toptext')
+        if self.get_field_value('table_class'):
+            self[2].attribs = {"class":self.get_field_value('table_class')}
+        # The ident_list is the list of responder idents used when calling this page
+        if not ident_list:
+            self[2][0] = tag.Part(tag_name="tr")
+            self[2][0][0] = tag.Part(tag_name="td", text=page.ident.to_comma_str())
+            self[2][0][1] = tag.Part(tag_name="td", text='This page')
+            self[2][0][2] = tag.Part(tag_name="td", text=page.brief)
+            return
+        for index, ident in enumerate(ident_list):
+            item = skiboot.from_ident(ident)
+            self[2][index] = tag.Part(tag_name="tr")
+            self[2][index][0] = tag.Part(tag_name="td", text=ident.to_comma_str())
+            self[2][index][1] = tag.Part(tag_name="td", text=item.responder.__class__.__name__)
+            self[2][index][2] = tag.Part(tag_name="td", text=item.brief)
+        last_line = tag.Part(tag_name="tr")
+        last_line[0] = tag.Part(tag_name="td", text=page.ident.to_comma_str())
+        last_line[1] = tag.Part(tag_name="td", text='This page')
+        last_line[2] = tag.Part(tag_name="td", text=page.brief)
+        self[2].append(last_line)
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """<div{str_attribs}> <!-- div with class widget_class -->
+  <div> <!-- normally hidden div, with class error_class -->
+    <p> <!-- Any error text appears here --> </p>
+  </div>
+  <div>  <!-- with class paradiv_class -->
+    <p>  <!-- with class para_class -->
+    <!-- toptext appears in this paragraph, if there is no toptext the paragraph is not shown -->
+    </p>
+  </div>
+  <table>   <!-- with class table_class -->
+   <!-- a row for every Responder page visited, with columns; page ident, responder class, page brief --> 
+  </table>
+</div>
+""".format(str_attribs=self.attributes_string)
+
+
