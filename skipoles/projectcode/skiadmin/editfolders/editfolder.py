@@ -32,7 +32,7 @@ from .. import utils
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 from .... import skilift
-from ....skilift import editpage, editfolder
+from ....skilift import editpage, editfolder, fromjson
 
 
 def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -300,21 +300,17 @@ def submit_folder_brief(caller_ident, ident_list, submit_list, submit_dict, call
 
 def submit_default_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Set this folder's default page"
-    if 'folder' in call_data:
-        folder = call_data['folder']   # from session data
-    else:
+    if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
-
     if 'selectvalue' not in call_data:
         raise FailPage(message="The page to set as default has not been found", widget="sdd1")
-    # Set the default page name
     if call_data['selectvalue'] == "-None-":
-        folder.default_page_name = ""
-    elif call_data['selectvalue'] not in folder.pages:
-        raise FailPage(message="The page to set as default has not been found in this folder", widget="sdd1")
+        default_page_name = ""
     else:
-        folder.default_page_name = call_data['selectvalue']
-    utils.save(call_data, folder=folder)
+        default_page_name = call_data['selectvalue']
+    error_message = editfolder.set_default_page(call_data['editedprojname'], call_data['folder_number'], default_page_name)
+    if error_message:
+        raise FailPage(message=error_message, widget="sdd1")
     call_data['status'] = 'Default page set'
 
 
@@ -356,12 +352,9 @@ def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call
 
 def downloadfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets folder, and returns a json dictionary, this will be sent as an octet file to be downloaded"
-    if 'folder' in call_data:
-        folder = call_data['folder']   # from session data
-    else:
+    if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
-    project = call_data['editedproj']
-    jsonstring =  skilift.fromjson.folder_to_json(project.proj_ident, folder.ident.num, indent=4)
+    jsonstring =  fromjson.folder_to_json(call_data['editedprojname'], call_data['folder_number'], indent=4)
     line_list = []
     n = 0
     for line in jsonstring.splitlines(True):

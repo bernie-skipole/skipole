@@ -145,3 +145,25 @@ def set_folder_brief(project, foldernumber, newbrief):
         return e.message
 
 
+def set_default_page(project, foldernumber, default_page_name):
+    "set new default page on this folder, return None on success, error message on failure"
+    # get a copy of the folder
+    # which can then be saved to the project
+    folder, error_message = _get_folder(project, foldernumber)
+    if folder is None:
+        return error_message
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        return "Project not loaded"
+    if not default_page_name:
+        default_page_name = ''
+    elif default_page_name not in folder.pages:
+        return "The page to set as default has not been found in this folder"
+    folder.default_page_name = default_page_name
+    # And save this folder copy to the project
+    try:
+        editedproj.save_folder(folder)
+    except ServerError as e:
+        return e.message
+
+
