@@ -31,7 +31,6 @@ from . import foldertree
 from .. import utils
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
-from ....skilift.editfolder import rename_folder
 from .... import skilift
 from ....skilift import editpage, editfolder
 
@@ -280,7 +279,7 @@ def submit_rename_folder(caller_ident, ident_list, submit_list, submit_dict, cal
     if 'name' not in call_data:
         raise FailPage(message="No new folder name has been given", widget="rename_folder")
     # Rename the folder
-    error_message = rename_folder(call_data['editedprojname'], call_data['folder_number'], call_data['name'])
+    error_message = editfolder.rename_folder(call_data['editedprojname'], call_data['folder_number'], call_data['name'])
     if error_message:
         raise FailPage(message=error_message, widget="rename_folder")
     call_data['status'] = 'Folder renamed'
@@ -288,16 +287,15 @@ def submit_rename_folder(caller_ident, ident_list, submit_list, submit_dict, cal
 
 def submit_folder_brief(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "set this folders brief"
-    if 'folder' in call_data:
-        folder = call_data['folder']   # from session data
-    else:
+    if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
-
-    if not 'brief' in call_data:
+    if 'brief' not in call_data:
         raise FailPage(message="No folder description available", widget="st2")
-    folder.brief = call_data['brief']
-    utils.save(call_data, folder=folder)
-    call_data['status'] = 'Folder description set : %s' % (folder.brief,)
+    # set folder brief
+    error_message = editfolder.set_folder_brief(call_data['editedprojname'], call_data['folder_number'], call_data['brief'])
+    if error_message:
+        raise FailPage(message=error_message, widget="st2")
+    call_data['status'] = 'Folder description set : %s' % (call_data['brief'],)
 
 
 def submit_default_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

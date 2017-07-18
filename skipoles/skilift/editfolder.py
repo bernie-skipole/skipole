@@ -124,3 +124,24 @@ def delete_folder(project, foldernumber):
         return e.message
 
 
+def set_folder_brief(project, foldernumber, newbrief):
+    "set new brief on this folder, return None on success, error message on failure"
+    if not newbrief:
+        return "No new folder description given"
+    # get a copy of the folder, which can have a new brief set
+    # and can then be saved to the project
+    folder, error_message = _get_folder(project, foldernumber)
+    if folder is None:
+        return error_message
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        return "Project not loaded"
+    # set new folder brief
+    folder.brief = newbrief
+    # And save this folder copy to the project
+    try:
+        editedproj.save_folder(folder)
+    except ServerError as e:
+        return e.message
+
+
