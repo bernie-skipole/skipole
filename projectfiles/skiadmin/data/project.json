@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
 "version": "0.0.30",
-"skipole": "0.0.30",
+"skipole": "0.0.31",
 "subprojects": {
 "lib": "/skiadmin/lib/"
 },
@@ -353,7 +353,7 @@
 "force_ident": false,
 "get_field1": "",
 "get_field2": "",
-"link_ident": "https://bitbucket.org/skipole/framework/wiki/Home",
+"link_ident": "https://bitbucket.org/skipole/skipole/wiki/Home",
 "new_window": true,
 "show": true,
 "widget_class": "",
