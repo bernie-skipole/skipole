@@ -79,13 +79,10 @@ def retrieve_edit_page(call_data, page_data):
         page_data[('page_edit','p_brief','input_text')] = page.brief
 
 
-def save(call_data, folder=None, page=None, section_name=None, section=None, widget_name=''):
+def save(call_data, page=None, section_name=None, section=None, widget_name=''):
     "Saves given items, widget_name is the widget to display an error"
     editedproj = call_data['editedproj']
     try:
-        if folder is not None:
-            # save the altered folder
-            editedproj.save_folder(folder)
         if page is not None:
             # save the altered page
             editedproj.save_page(page)
@@ -93,9 +90,6 @@ def save(call_data, folder=None, page=None, section_name=None, section=None, wid
             # save the altered section
            editedproj.add_section(section_name, section)
     except ServerError as e:
-        if (folder is not None) and ('folder' in call_data):
-            # replace call_data['folder'] with new value
-            call_data['folder'] = skiboot.from_ident(folder.ident)
         if (page is not None) and ('page' in call_data):
             # replace call_data['page'] with new value
             call_data['page'] = skiboot.from_ident(page.ident, import_sections=False)

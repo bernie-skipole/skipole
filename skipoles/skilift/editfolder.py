@@ -167,3 +167,44 @@ def set_default_page(project, foldernumber, default_page_name):
         return e.message
 
 
+
+def set_restricted_status(project, foldernumber, restricted):
+    """set restricted True, set this folder restricted, or unrestricted if False.
+       return None on success, error message on failure"""
+    # get a copy of the folder
+    # which can then be saved to the project
+    if foldernumber == 0:
+        return "Cannot change the root folder restricted status"
+    folder, error_message = _get_folder(project, foldernumber)
+    if folder is None:
+        return error_message
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        return "Project not loaded"
+    if restricted:
+        # set folder and sub items as retricted
+        restricted_list = folder.set_restricted()
+        if not restricted_list:
+            return "No action taken"
+        # And save this folder copy to the project
+        try:
+            for f in restricted_list:
+                editedproj.save_folder(f)
+        except ServerError as e:
+            return e.message
+        return
+    # unset restricted if parent is not restricted
+    if folder.parentfolder.restricted:
+        return "Parent folder is restricted, cannot set this folder as unrestricted"
+    # un-restrict the folder
+    status = folder.set_unrestricted()
+    if not status:
+        return "Failed to set unrestricted"
+    # And save this folder copy to the project
+    try:
+        editedproj.save_folder(folder)
+    except ServerError as e:
+        return e.message
+
+
+
