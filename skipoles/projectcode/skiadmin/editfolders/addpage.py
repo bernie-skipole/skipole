@@ -179,13 +179,7 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     # add this new page to the parent folder
     page = parent.add_page(newpage, new_ident)
     #  clear and re-populate call_data for edit page
-    if 'folder' in call_data:
-        folder = call_data['folder']
-    else:
-        folder = None
-    utils.no_ident_data(call_data)
-    if folder is not None:
-        call_data['folder'] = folder
+    utils.no_ident_data(call_data, keep=['folder_number'])
     call_data['page'] = page
     call_data['status'] = 'Page %s added' % (new_name,)
 
@@ -210,13 +204,7 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     # add this new svg to the parent folder
     parent.add_page(page, new_ident)
     #  clear and re-populate call_data for edit page
-    if 'folder' in call_data:
-        folder = call_data['folder']
-    else:
-        folder = None
-    utils.no_ident_data(call_data)
-    if folder is not None:
-        call_data['folder'] = folder
+    utils.no_ident_data(call_data, keep=['folder_number'])
     call_data['page'] = page
     call_data['status'] = 'SVG %s added' % (new_name,)
 
@@ -253,6 +241,8 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     page = CSS(name=new_name, brief=new_brief, style={})
     # add this new css to the parent folder
     parent.add_page(page, new_ident)
+    #  clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data, keep=['folder_number'])
     # add new page ident to call_data so the page can be edited
     call_data['page'] = str(page.ident)
     call_data['status'] = 'CSS page %s added' % (new_name,)
@@ -266,6 +256,8 @@ def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page = JSON(name=new_name, brief=new_brief)
     # add this new json page to the parent folder
     parent.add_page(page, new_ident)
+    #  clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data, keep=['folder_number'])
     # Currently, after adding a json page, go back to edit folder
     # however if in future it is required to go to the page edit
     # then session data will need to have the page in it, so the following line
@@ -285,6 +277,8 @@ def submit_new_file(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page = FilePage(name=new_name, brief=new_brief, filepath=filepath)
     # add this filepage to the parent folder
     parent.add_page(page, new_ident)
+    #  clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data, keep=['folder_number'])
     call_data['status'] = 'File link page %s added' % (new_name,)
 
 
@@ -337,6 +331,8 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
     page = RespondPage(name=new_name, brief=new_brief, responder=responder)
     # add this new responder to the parent folder
     parent.add_page(page, new_ident)
+    #  clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data, keep=['folder_number'])
     # add new page ident to call_data so the page can be edited
     call_data['page'] = str(page.ident)
     call_data['status'] = 'Responder %s - type %s added' % (new_name, responder_class)
@@ -402,7 +398,7 @@ def submit_copy_page(caller_ident, ident_list, submit_list, submit_dict, call_da
     edited_folder = call_data['edited_folder']
     utils.no_ident_data(call_data)
     call_data['edited_folder'] = edited_folder
-    call_data['folder'] = parent
+    call_data['folder_number'] = parent.ident.num
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
@@ -465,9 +461,8 @@ def submit_upload_page(caller_ident, ident_list, submit_list, submit_dict, call_
     edited_folder = call_data['edited_folder']
     utils.no_ident_data(call_data)
     call_data['edited_folder'] = edited_folder
-    call_data['folder'] = parent
+    call_data['folder_number'] = parent.ident.num
     call_data['status'] = 'Page %s added' % (new_name,)
-
 
 
 

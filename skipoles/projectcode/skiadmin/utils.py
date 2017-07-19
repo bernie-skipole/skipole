@@ -30,17 +30,18 @@ from ...ski import skiboot, widgets, tag
 from ...ski.excepts import FailPage, ServerError
 
 
-def no_ident_data(call_data):
+def no_ident_data(call_data, keep=None):
     "Clears call data apart from set of required values"
-    required = ('editedprojname',
+    required = ['editedprojname',
                 'editedprojurl',
                 'editedprojversion',
                 'editedprojbrief',
                 'editedproj',
                 'adminproj',
                 'extend_nav_buttons',
-                'caller_ident')
-
+                'caller_ident']
+    if keep:
+        required.extend(keep)
     temp_storage = {key:value for key,value in call_data.items() if key in required}
     call_data.clear()
     for key,value in temp_storage.items():
