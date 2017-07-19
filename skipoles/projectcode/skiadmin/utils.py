@@ -32,23 +32,21 @@ from ...ski.excepts import FailPage, ServerError
 
 def no_ident_data(call_data):
     "Clears call data apart from set of required values"
-    editedprojname = call_data['editedprojname']
-    editedprojurl = call_data['editedprojurl']
-    editedprojversion = call_data['editedprojversion']
-    editedprojbrief = call_data['editedprojbrief']
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-    extend_nav_buttons = call_data['extend_nav_buttons']
-    caller_ident = call_data['caller_ident']
+    required = ('editedprojname',
+                'editedprojurl',
+                'editedprojversion',
+                'editedprojbrief',
+                'editedproj',
+                'adminproj',
+                'extend_nav_buttons',
+                'caller_ident')
+
+    temp_storage = {key:value for key,value in call_data.items() if key in required}
     call_data.clear()
-    call_data['editedprojname'] = editedprojname
-    call_data['editedprojurl'] = editedprojurl
-    call_data['editedprojversion'] = editedprojversion
-    call_data['editedprojbrief'] = editedprojbrief
-    call_data['editedproj'] = editedproj
-    call_data['adminproj'] = adminproj
-    call_data['caller_ident'] = caller_ident
-    call_data['extend_nav_buttons'] = extend_nav_buttons
+    for key,value in temp_storage.items():
+        call_data[key] = value
+
+
 
 
 def retrieve_edit_page(call_data, page_data):

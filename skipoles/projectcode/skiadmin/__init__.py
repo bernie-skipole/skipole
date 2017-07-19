@@ -673,4 +673,3 @@ def set_navigation(identnum, call_data, page_data):
 
 
 
-

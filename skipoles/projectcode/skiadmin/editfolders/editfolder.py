@@ -30,30 +30,15 @@ from collections import OrderedDict
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 from .... import skilift
-from ....skilift import editpage, editfolder, fromjson, pages, folders, folder_info, item_info
+from ....skilift import editpage, editfolder, fromjson
+from .. import utils
 
 
 def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Go to edit root folder, with no other call_data contents other than those set here"
     # called by responder 3, edit_root link from Root Folder nav button
     # this responder then targets responder 22008 to fill in root folder fields
-    editedprojname = call_data['editedprojname']
-    editedprojurl = call_data['editedprojurl']
-    editedprojversion = call_data['editedprojversion']
-    editedprojbrief = call_data['editedprojbrief']
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-    extend_nav_buttons = call_data['extend_nav_buttons']
-    caller_ident = call_data['caller_ident']
-    call_data.clear()
-    call_data['editedprojname'] = editedprojname
-    call_data['editedprojurl'] = editedprojurl
-    call_data['editedprojversion'] = editedprojversion
-    call_data['editedprojbrief'] = editedprojbrief
-    call_data['editedproj'] = editedproj
-    call_data['adminproj'] = adminproj
-    call_data['caller_ident'] = caller_ident
-    call_data['extend_nav_buttons'] = extend_nav_buttons
+    utils.no_ident_data(call_data)
     call_data['folder_number'] = 0
 
 
@@ -71,8 +56,6 @@ def goto_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # also from the cancel button of the confirm page delete
     # uses session data, so does not need anything added here.
-
-
 
 
 def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -103,7 +86,14 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
 
     folder_ident = str(folder.ident)
 
-    contents, rows = _foldertree(editedproj.proj_ident, folder.ident.num)
+    info = skilift.item_info(call_data['editedprojname'], call_data['folder_number'])
+
+    # info is a named tuple with members
+    # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
+
+
+
+    contents, rows = _foldertree(call_data['editedprojname'], call_data['folder_number'])
     page_data['ftree', 'contents'] = contents
     page_data['ftree', 'rows'] = rows
 
@@ -116,24 +106,22 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
                                    ["edit_action", ""],
                                    ["no_javascript", "2004"]  ]
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = folder.brief
+    if 'status' not in call_data:
+        page_data[("adminhead","page_head","small_text")] = info.brief
 
-    if folder.ident.num == 0:
-        page_data[("adminhead","page_head","large_text")] = "Edit Root Folder : %s" % (folder.url,)
+    if call_data['folder_number'] == 0:
+        page_data[("adminhead","page_head","large_text")] = "Edit Root Folder : %s" % (info.path,)
     else:
-        page_data[("adminhead","page_head","large_text")] = "Edit Folder : %s" % (folder.url,)
+        page_data[("adminhead","page_head","large_text")] = "Edit Folder : %s" % (info.path,)
 
     # set edited folder in the required dictionary
-    page_data['ie1:page_ident'] = folder.ident
+    page_data['ie1:page_ident'] = (info.project, info.itemnumber)
     if 'brief' in call_data:
         page_data['st2:folder_brief'] = call_data['brief']
     else:
-        page_data['st2:folder_brief'] = folder.brief
+        page_data['st2:folder_brief'] = info.brief
     # check if this is rootfolder
-    if folder.ident.num == 0:
+    if info.itemnumber == 0:
         # hide certain items if this is the root folder
         page_data['rename_folder','show'] = False
         page_data['sp1:show_parent_restricted'] = False
@@ -144,15 +132,16 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
         if 'name' in call_data:
             page_data['rename_folder','input_text'] = call_data['name']
         else:
-            page_data['rename_folder', 'input_text'] = folder.name
-        if folder.parentfolder.restricted:
+            page_data['rename_folder', 'input_text'] = info.name
+        parent = skilift.item_info(info.project, info.parentfolder_number)
+        if parent.restricted:
             page_data['sp1:show_parent_restricted'] = True
             page_data['sb1:show_set_restricted'] = False
             page_data['sb2:show_set_unrestricted'] = False
         else:
             # parent is not restricted
             page_data['sp1:show_parent_restricted'] = False
-            if folder.restricted:
+            if info.restricted:
                 # folder currently restricted
                 page_data['sb1:show_set_restricted'] = False
                 page_data['sb2:show_set_unrestricted'] = True
@@ -160,17 +149,23 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
                 # folder currently unrestricted
                 page_data['sb1:show_set_restricted'] = True
                 page_data['sb2:show_set_unrestricted'] = False
-    if folder.default_page:
-        page_data['sdd1:selectvalue'] = folder.default_page.name
+    # get default page, and list of page names within the folder
+    default_page_name, page_names = skilift.folder_page_names(info.project, info.itemnumber)
+    if default_page_name:
+        page_data['sdd1:selectvalue'] = default_page_name
     else:
         page_data['sdd1:selectvalue'] = "-None-"
-    page_data['sdd1:option_list'] = [page_name for page_name in folder.pages]
-    page_data['sdd1:option_list'].insert(0,"-None-")
-    if folder.restricted:
-        # do not give a choose default page option if the folder has restricted access
-        page_data['sdd1:show'] = False
+    page_data['sdd1:option_list'] = page_names
+    if page_names:
+        if info.restricted:
+            # do not give a choose default page option if the folder has restricted access
+            page_data['sdd1:show'] = False
+        else:
+            page_data['sdd1:option_list'].insert(0,"-None-")
+            page_data['sdd1:show'] = True
     else:
-        page_data['sdd1:show'] = bool(folder.pages)
+        # Only give a default page option if pages are present
+        page_data['sdd1:show'] = False
 
 
 def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -370,8 +365,8 @@ def _foldertree(projectname, foldernumber):
     """Returns contents list of lists with ftree table fields, with the given foldernumber of the folder at the top of
     the table"""
 
-    finfo = folder_info(projectname, foldernumber)
-    folder_path = item_info(projectname, foldernumber).path
+    finfo = skilift.folder_info(projectname, foldernumber)
+    folder_path = skilift.item_info(projectname, foldernumber).path
     folder_ident = projectname + '_' + str(foldernumber)
 
     #   col 0 - text string, either text to display or button text
@@ -432,7 +427,7 @@ def _show_pages(contents, projectname, foldernumber, rownumber, indent):
     ident = projectname + "_"
     padding = "padding-left : %sem;" % (indent,)
 
-    for pinfo in pages(projectname, foldernumber):
+    for pinfo in skilift.pages(projectname, foldernumber):
         rownumber += 1
         page_ident = ident + str(pinfo.number)
 
@@ -495,7 +490,7 @@ def _show_folders(contents, projectname, foldernumber, rownumber, indent):
     ident = projectname + "_"
     padding = "padding-left : %sem;" % (indent,)
 
-    for finfo in folders(projectname, foldernumber):
+    for finfo in skilift.folders(projectname, foldernumber):
         rownumber += 1
         folder_ident = ident + str(finfo.number)
 
