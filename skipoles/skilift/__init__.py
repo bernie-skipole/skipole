@@ -284,6 +284,26 @@ def folder_info(project, foldernumber):
     return FolderInfo(folder.name, folder.ident.num, folder.restricted, folder.brief, bool(folder.pages), bool(folder.folders))
 
 
+def folder_page_names(project, foldernumber):
+    """Returns tuple of (default_page_name, [page names,....]) where default_page_name is None if no default page has been set
+       and the page names list is empty if no pages are present. The page names list is sorted."""
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    folder_ident = skiboot.Ident(project, foldernumber)
+    folder = proj.get_item(folder_ident)
+    if folder is None:
+        raise ServerError("Folder not recognised")
+    # folder.pages is a dictionary of page.name:page.ident
+    if not folder.pages:
+        return None, []
+    page_names = list(folder.pages.keys())
+    page_names.sort()
+    if folder.default_page_name:
+        return folder.default_page_name, page_names
+    return None, page_names
+
+
 def parent_list(project, itemnumber):
     """Returns list of [(name,number),...] of parents, starting with ('root',0) ending with name and number of item"""
     # raise error if invalid project
