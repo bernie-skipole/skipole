@@ -27,19 +27,33 @@
 
 from collections import OrderedDict
 
-from . import foldertree
-from .. import utils
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 from .... import skilift
-from ....skilift import editpage, editfolder, fromjson
+from ....skilift import editpage, editfolder, fromjson, pages, folders, folder_info, item_info
 
 
 def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Go to edit root folder, with no other call_data contents other than those set here"
     # called by responder 3, edit_root link from Root Folder nav button
     # this responder then targets responder 22008 to fill in root folder fields
-    utils.no_ident_data(call_data)
+    editedprojname = call_data['editedprojname']
+    editedprojurl = call_data['editedprojurl']
+    editedprojversion = call_data['editedprojversion']
+    editedprojbrief = call_data['editedprojbrief']
+    editedproj = call_data['editedproj']
+    adminproj = call_data['adminproj']
+    extend_nav_buttons = call_data['extend_nav_buttons']
+    caller_ident = call_data['caller_ident']
+    call_data.clear()
+    call_data['editedprojname'] = editedprojname
+    call_data['editedprojurl'] = editedprojurl
+    call_data['editedprojversion'] = editedprojversion
+    call_data['editedprojbrief'] = editedprojbrief
+    call_data['editedproj'] = editedproj
+    call_data['adminproj'] = adminproj
+    call_data['caller_ident'] = caller_ident
+    call_data['extend_nav_buttons'] = extend_nav_buttons
     call_data['folder_number'] = 0
 
 
@@ -89,7 +103,7 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
 
     folder_ident = str(folder.ident)
 
-    contents, rows = foldertree.foldertree(editedproj.proj_ident, folder.ident.num)
+    contents, rows = _foldertree(editedproj.proj_ident, folder.ident.num)
     page_data['ftree', 'contents'] = contents
     page_data['ftree', 'rows'] = rows
 
@@ -316,37 +330,23 @@ def submit_default_page(caller_ident, ident_list, submit_list, submit_dict, call
 
 def submit_restricted(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "set this folder as restricted"
-    if 'folder' in call_data:
-        folder = call_data['folder']   # from session data
-    else:
+    if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
-    if folder.ident.num == 0:
-        raise FailPage(message="Cannot set the root folder as restricted")
     # restrict the folder
-    restricted_list = folder.set_restricted()
-    if not restricted_list:
-        raise FailPage(message="No action taken")
-    for f in restricted_list:
-        utils.save(call_data, folder=f)
+    error_message = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], True)
+    if error_message:
+        raise FailPage(message=error_message)
     call_data['status'] = 'Folder set to restricted access'
 
 
 def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "set this folder as unrestricted"
-    if 'folder' in call_data:
-        folder = call_data['folder']   # from session data
-    else:
+    if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
-
-    if folder.ident.num == 0:
-        raise FailPage(message="Cannot change the root folder restricted status")
-    if folder.parentfolder.restricted:
-        raise FailPage(message="Parent folder is restricted, cannot set this folder as unrestricted")
     # un-restrict the folder
-    status = folder.set_unrestricted()
-    if not status:
-        raise FailPage(message="Failed to set unrestricted")
-    utils.save(call_data, folder=folder)
+    error_message = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], False)
+    if error_message:
+        raise FailPage(message=error_message)
     call_data['status'] = 'Folder set to unrestricted access'
 
 
@@ -363,4 +363,183 @@ def downloadfolder(caller_ident, ident_list, submit_list, submit_dict, call_data
         line_list.append(binline)
     page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
     return line_list
+
+
+
+def _foldertree(projectname, foldernumber):
+    """Returns contents list of lists with ftree table fields, with the given foldernumber of the folder at the top of
+    the table"""
+
+    finfo = folder_info(projectname, foldernumber)
+    folder_path = item_info(projectname, foldernumber).path
+    folder_ident = projectname + '_' + str(foldernumber)
+
+    #   col 0 - text string, either text to display or button text
+    #   col 1 - A 'style' string set on the td cell, if empty string, no style applied
+    #   col 2 - Is button? If False only text will be shown, not a button, button class will not be applied
+    #           If True a link to link_ident/json_ident will be set with button_class applied to it
+    #   col 3 - The get field value of the button link, empty string if no get field
+
+    # This creates a contents of cell's, each row of the table has eight columns
+    contents = []
+
+    # first cell is the folder URL, no style, Not a link, no get field
+    contents.append( (folder_path, '', False, '') )
+ 
+    # second cell is the folder ident number
+    contents.append( (str(finfo.number), '', False, '') )
+
+    # third cell is restricted or not
+    if finfo.restricted:
+        contents.append( ('R', 'width : 1%;text-align: center;color: black;background-color: red;', False, '') )
+    else:
+        contents.append( ('', '', False, '') )
+
+    # fourth cell is the folder brief
+    if len(finfo.brief)>40:
+        contents.append( (finfo.brief[:35] + "...", '', False, '') )
+    else:
+        contents.append( (finfo.brief[:35], '', False, '') )
+
+    # fifth cell is an Edit link
+    # top folder does not have an edit link
+    contents.append( ('', '', False, '') )
+
+    # sixth cell is add folder
+    contents.append( ('Add Folder', 'width : 1%;text-align: center;', True, 'add_folder_' + folder_ident)    )
+
+    # seventh cell is add page
+    contents.append( ('Add Page', 'width : 1%;text-align: center;', True, 'add_page_' + folder_ident) )
+
+    # eighth cell is remove line - but no remove link for the top line
+    contents.append( ('', '', False, '') )
+
+    rownumber = 1
+
+    # place all sub pages in rows beneath the folder
+    if finfo.contains_pages:
+        rownumber = _show_pages(contents, projectname, foldernumber, rownumber, 2)
+    if finfo.contains_folders:
+        rownumber = _show_folders(contents, projectname, foldernumber, rownumber, 2)
+    return contents, rownumber
+
+
+def _show_pages(contents, projectname, foldernumber, rownumber, indent):
+    """Used to create pages  beneath the folder"""
+
+    # pinfo attributes are 'name', 'number', 'restricted', 'brief', 'item_type', 'responder'
+
+    ident = projectname + "_"
+    padding = "padding-left : %sem;" % (indent,)
+
+    for pinfo in pages(projectname, foldernumber):
+        rownumber += 1
+        page_ident = ident + str(pinfo.number)
+
+        # first column is the page name, style includes padding, not a link, no get field
+        contents.append( (pinfo.name, padding, False, '') )
+ 
+        # second column is the page ident number, no style, not a link, no get field
+        contents.append( (str(pinfo.number), '', False, '') )
+
+        # third column is restricted or not
+        if pinfo.restricted:
+            contents.append( ('R', 'width : 1%;text-align: center;color: black;background-color: red;', False, '') )
+        else:
+            contents.append( ('', '', False, '') )
+
+        # fourth cell is the page brief
+        if len(pinfo.brief)>40:
+            contents.append( (pinfo.brief[:35] + "...", '', False, '') )
+        else:
+            contents.append( (pinfo.brief[:35], '', False, '') )
+
+        # fifth column is an Edit link
+        contents.append( ('Edit', 'width: 1%;text-align: center;', True, 'edit_page_' + page_ident) )
+
+        # sixth column is page type
+        # seventh either empty or responder type
+
+        if pinfo.item_type == 'TemplatePage':
+            contents.append( ('TemplatePage', 'text-align: center;', False, '') )
+            contents.append( ('', '', False, '') )
+        elif pinfo.item_type == 'RespondPage':
+            contents.append( ('RespondPage', 'text-align: center;', False, '') )
+            contents.append( (pinfo.responder, 'text-align: center;', False, '') )
+        elif pinfo.item_type == 'CSS':
+            contents.append( ('CSS', 'text-align: center;', False, '') )
+            contents.append( ('', '', False, '') )
+        elif pinfo.item_type == 'JSON':
+            contents.append( ('JSON', 'text-align: center;', False, '') )
+            contents.append( ('', '', False, '') )
+        elif pinfo.item_type == 'SVG':
+            contents.append( ('SVG', 'text-align: center;', False, '') )
+            contents.append( ('', '', False, '') )
+        elif pinfo.item_type == 'FilePage':
+            contents.append( ('FilePage', 'text-align: center;', False, '') )
+            contents.append( ('', '', False, '') )
+        else:
+            raise ServerError(message="An unknown page type")
+
+        # eighth column is remove page
+        contents.append( ('Remove', 'width : 1%;text-align: center;', True, page_ident) )
+
+    return rownumber
+
+
+def _show_folders(contents, projectname, foldernumber, rownumber, indent):
+
+
+    # finfo attributes are 'name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders'
+
+    ident = projectname + "_"
+    padding = "padding-left : %sem;" % (indent,)
+
+    for finfo in folders(projectname, foldernumber):
+        rownumber += 1
+        folder_ident = ident + str(finfo.number)
+
+        # first column is the folder path from parent, with padding style, Not a link, no get field
+        contents.append( (finfo.name+"/", padding, False, '') )
+
+        # second column is the folder ident number, no style, not a link, no get field
+        contents.append( (str(finfo.number), '', False, '') )
+
+        # third column is restricted or not
+        if finfo.restricted:
+            contents.append( ('R', 'width : 1%;text-align: center;color: black;background-color: red;', False, '') )
+        else:
+            contents.append( ('', '', False, '') )
+
+        # fourth cell is the folder brief
+        if len(finfo.brief)>40:
+            contents.append( (finfo.brief[:35] + "...", '', False, '') )
+        else:
+            contents.append( (finfo.brief[:35], '', False, '') )
+
+        # fifth column is an Edit link
+        contents.append( ('Edit', 'width: 1%;text-align: center;', True, 'edit_folder_' + folder_ident) )
+
+        # sixth column is add folder
+        contents.append( ('Add Folder', 'width : 1%;text-align: center;', True, 'add_folder_' + folder_ident) )
+
+        # seventh column is add page
+        contents.append( ('Add Page', 'width : 1%;text-align: center;', True, 'add_page_' + folder_ident) )
+
+        # eighth column is remove line - but no remove if folder has contents
+        if finfo.contains_pages or finfo.contains_folders:
+            contents.append( ('', '', False, '') )
+        else:
+            contents.append( ('Remove', 'width : 1%;text-align: center;', True, folder_ident) )
+
+        # place all sub pages in rows beneath the subfolder
+        if finfo.contains_pages:
+            rownumber = _show_pages(contents, projectname, finfo.number, rownumber, indent+1)
+
+        if finfo.contains_folders:
+            rownumber = _show_folders(contents, projectname, finfo.number, rownumber, indent+1)
+
+    return rownumber
+
+
 
