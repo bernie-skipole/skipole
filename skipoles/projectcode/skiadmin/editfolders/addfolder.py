@@ -104,7 +104,9 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
      "restricted":False
     }
 
-    And then calling fromjson.create_folder
+    And then calling editfolder.make_new_folder.
+
+    Also calls _make_static_folder if folderpath is in call data
 
 """
 
@@ -180,10 +182,8 @@ def _make_static_folder(project, folder_dict, fullpath, folderpath):
     ###### note, still uses parent 'Folder' object until FilePage is sorted
     try:
         editedproj = skiboot.getproject(project)
-        folder =  editedproj.get_item(skiboot.Ident(project, folder_dict["ident"]))
-        restricted = folder.restricted
         # loads everything under folderpath as Folders and FilePages
-        # ident_dict maps folderpath to newly created folder numbers
+        # ident_dict maps folderpath to newly created folder ident numbers
         ident_dict = {}
         ident_dict[folderpath] = folder_dict["ident"]
         ident = folder_dict["ident"]
