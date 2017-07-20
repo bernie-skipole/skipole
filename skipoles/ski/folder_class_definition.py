@@ -86,7 +86,7 @@ class Folder(object):
     page_type = "Folder"
 
 
-    def __init__(self, name=None, brief = "New Folder", default_page_name = "index", restricted=False):
+    def __init__(self, name=None, brief = "New Folder", default_page_name = "", restricted=False):
         """Initiates a Folder instance
 
         name: None if root, any url friendly name for any other folder
