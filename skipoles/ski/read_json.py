@@ -197,7 +197,7 @@ def create_folder(proj_ident, parent_ident, addition_number, folder_name, restri
     if 'default_page_name' in folder_dict:
         default_page_name = folder_dict['default_page_name']
     else:
-        default_page_name = 'index'
+        default_page_name = ''
     if not restricted:
         if 'restricted' in folder_dict:
             restricted = folder_dict['restricted']

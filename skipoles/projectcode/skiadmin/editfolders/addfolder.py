@@ -33,6 +33,7 @@ from ....ski.page_class_definition import FilePage
 
 from .. import utils
 
+from .... import skilift
 from ....skilift import fromjson
 
 
@@ -94,20 +95,47 @@ def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call
 
 
 def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """ Creates a folder by making a dictionary similar to:
+
+    {
+     "name":"folder_name",
+     "ident":999,
+     "brief":"brief description of the folder",
+     "restricted":False
+    }
+
+    And then calling fromjson.create_folder
+
+"""
+
+    folder_dict = {}
+    editedprojname = call_data['editedprojname']
+
+    if 'parent' not in call_data:
+        raise FailPage(message = "Parent folder missing")
+
 
     editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
 
-    # parent is the folder a new folder is to be added to
-    # the value in call_data is the string ident submitted by the button
-    if 'parent' in call_data:
-        parent_ident = skiboot.Ident.to_ident(call_data['parent'], editedproj.proj_ident)
-        # parent folder is the folder from memory, not a copy
-        parent =  editedproj.get_item(parent_ident)
-        if parent.page_type != "Folder":
-            raise FailPage(message = "Invalid parent folder")
-    else:
-        raise FailPage(message = "Parent folder missing")
+
+    # the parent value in call_data is the string ident submitted by the button
+    try:
+        project, parent_number = call_data['parent'].split('_')
+        parent_number = int(parent_number)
+    except:
+        raise FailPage(message = "Invalid parent folder")
+    if project != call_data['editedprojname']:
+        raise FailPage(message = "Invalid parent folder")
+
+    parentinfo = skilift.item_info(project, parent_number)
+    if not parentinfo:
+        raise FailPage(message = "Invalid parent folder")
+
+    # parentinfo is a named tuple with members
+    # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
+
+    if parentinfo.item_type != "Folder":
+        raise FailPage(message = "Invalid parent folder")
 
     if ('new_folder' not in call_data) or ('checkbox' not in call_data) or ('folder_brief' not in call_data) or ('folder_ident_number' not in call_data):
         raise FailPage("New folder information missing")
@@ -118,25 +146,23 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
         raise FailPage("The Folder Ident number must be an integer")
     if folder_ident_number<1:
         raise FailPage("The Folder Ident number must be a positive integer greater than zero")
-    new_ident = skiboot.make_ident(folder_ident_number, parent.ident.proj)
-    if call_data['new_folder'] in parent:
-        raise FailPage("Sorry, that name already exists in the parent folder")
-    if parent.restricted:
-        restricted = True
-    else:
-        restricted = call_data['checkbox']
+    folder_dict["ident"] = folder_ident_number
 
-    if 'folderpath' in call_data and call_data['folderpath']:
-        _make_static_folder(parent, call_data['new_folder'], call_data['folder_brief'], restricted, new_ident, call_data['folderpath'], editedproj)
-        call_data['status'] = 'Static folder tree added'
-        return
+    folder_dict["name"] = call_data['new_folder']
+    folder_dict["brief"] = call_data['folder_brief']
+    folder_dict["restricted"] = call_data['checkbox']
+
+    #if 'folderpath' in call_data and call_data['folderpath']:
+    #    _make_static_folder(parent, call_data['new_folder'], call_data['folder_brief'], folder_dict["restricted"], new_ident, call_data['folderpath'], editedproj)
+    #    call_data['status'] = 'Static folder tree added'
+    #    return
+
     try:
-        # create a new folder and add to the given parent folder
-        folder = Folder(name=call_data['new_folder'], brief=call_data['folder_brief'], restricted=restricted)
-        parent.add_folder(folder, new_ident)
-    except ValidateError as e:
-        raise FailPage(e.message)
-    call_data['status'] = 'New folder added'
+        fromjson.create_folder(project, parentinfo.itemnumber, 0, folder_dict["name"], parentinfo.restricted, folder_dict)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    call_data['status'] = 'New folder %s added.' % (parentinfo.path + folder_dict["name"] + '/',)
 
 
 def _make_static_folder(parent, name, brief, restricted, new_ident, folderpath, editedproj):
