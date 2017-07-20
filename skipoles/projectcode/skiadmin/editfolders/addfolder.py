@@ -34,7 +34,7 @@ from ....ski.page_class_definition import FilePage
 from .. import utils
 
 from .... import skilift
-from ....skilift import fromjson
+from ....skilift import editfolder, fromjson
 
 
 
@@ -109,15 +109,9 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
 """
 
     folder_dict = {}
-    editedprojname = call_data['editedprojname']
 
     if 'parent' not in call_data:
         raise FailPage(message = "Parent folder missing")
-
-
-    editedproj = call_data['editedproj']
-
-
     # the parent value in call_data is the string ident submitted by the button
     try:
         project, parent_number = call_data['parent'].split('_')
@@ -130,10 +124,8 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
     parentinfo = skilift.item_info(project, parent_number)
     if not parentinfo:
         raise FailPage(message = "Invalid parent folder")
-
     # parentinfo is a named tuple with members
     # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
-
     if parentinfo.item_type != "Folder":
         raise FailPage(message = "Invalid parent folder")
 
@@ -147,68 +139,81 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
     if folder_ident_number<1:
         raise FailPage("The Folder Ident number must be a positive integer greater than zero")
     folder_dict["ident"] = folder_ident_number
-
     folder_dict["name"] = call_data['new_folder']
     folder_dict["brief"] = call_data['folder_brief']
     folder_dict["restricted"] = call_data['checkbox']
 
-    #if 'folderpath' in call_data and call_data['folderpath']:
-    #    _make_static_folder(parent, call_data['new_folder'], call_data['folder_brief'], folder_dict["restricted"], new_ident, call_data['folderpath'], editedproj)
-    #    call_data['status'] = 'Static folder tree added'
-    #    return
+
+    if 'folderpath' in call_data and call_data['folderpath']:
+        folderpath = call_data['folderpath']
+        folderpath = folderpath.rstrip('/')
+        folderpath = folderpath.rstrip('\\')
+        if not folderpath:
+            raise FailPage("Sorry, the given static folder is invalid.")
+        fullpath = os.path.join(skiboot.projectfiles(), folderpath)
+        if not os.path.isdir(fullpath):
+            raise FailPage("Sorry, the given static folder location cannot be found.")
+        if not call_data['folder_brief']:
+            folder_dict["brief"] = "Link to %s" % folderpath
+    else:
+        folderpath = None
+        fullpath = None
 
     try:
-        fromjson.create_folder(project, parentinfo.itemnumber, 0, folder_dict["name"], parentinfo.restricted, folder_dict)
+        # create the folder
+        editfolder.make_new_folder(project, parent_number, folder_dict)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    if fullpath:
+        # add subfolders and file pages
+        _make_static_folder(project, folder_dict, fullpath, folderpath)
+        call_data['status'] = 'Static folder tree added'
+        return
 
     call_data['status'] = 'New folder %s added.' % (parentinfo.path + folder_dict["name"] + '/',)
 
 
-def _make_static_folder(parent, name, brief, restricted, new_ident, folderpath, editedproj):
-    """Creates a Folder containing sub folders and Filepages pointing to static files within a directory
-       of the server, parent is the folder to which this folder is to be added"""
-    folderpath = folderpath.rstrip('/')
-    folderpath = folderpath.rstrip('\\')
-    if not folderpath:
-        raise FailPage("Sorry, the given static folder is invalid.")
-    if not brief:
-        brief = "Link to %s" % folderpath
+def _make_static_folder(project, folder_dict, fullpath, folderpath):
+    """Creates containing sub folders and Filepages pointing to static files within a directory
+       of the server"""
+    ###### note, still uses parent 'Folder' object until FilePage is sorted
     try:
-        folder = Folder(name=name, brief=brief, restricted=restricted)
-        folder = parent.add_folder(folder, new_ident)
+        editedproj = skiboot.getproject(project)
+        folder =  editedproj.get_item(skiboot.Ident(project, folder_dict["ident"]))
+        restricted = folder.restricted
         # loads everything under folderpath as Folders and FilePages
+        # ident_dict maps folderpath to newly created folder numbers
         ident_dict = {}
-        fullfolder = os.path.join(skiboot.projectfiles(), folderpath)
-        ident_dict[folderpath] = folder
-        ident = new_ident.num
-        for root, dirs, files in os.walk(fullfolder):
+        ident_dict[folderpath] = folder_dict["ident"]
+        ident = folder_dict["ident"]
+        for root, dirs, files in os.walk(fullpath):
             # given root, find the folder, at first pass, equivalent to parent=folder
             fpath = root[len(skiboot.projectfiles())+1:]
-            parent = ident_dict[fpath]
+            parent_ident = ident_dict[fpath]
+            parent = editedproj.get_item(parent_ident)
             if files:
                 # create files
                 for filename in files:
-                    if filename not in parent.pages:
-                        new_file = FilePage(name=filename, filepath=os.path.join(fpath, filename))
-                        if ident:
-                            ident +=1
-                            if ident in editedproj:
-                                ident = None
-                        parent.add_page(new_file, ident=ident)
+                    new_file = FilePage(name=filename, filepath=os.path.join(fpath, filename))
+                    if ident:
+                        ident +=1
+                        if ident in editedproj:
+                            ident = None
+                    parent.add_page(new_file, ident=ident)
             if dirs:
                 # create folders
                 for foldername in dirs:
-                    if foldername not in parent.folders:
-                        new_folderpath=os.path.join(fpath, foldername)
-                        new_brief = "Link to %s" % new_folderpath
-                        new_folder = Folder(name=foldername, brief=new_brief, restricted=restricted)
-                        if ident:
-                            ident +=1
-                            if ident in editedproj:
-                                ident = None
-                        new_folder = parent.add_folder(new_folder, ident=ident)
-                        ident_dict[fpath] = new_folder
+                    new_folderpath=os.path.join(fpath, foldername)
+                    new_folder_dict = {"name":foldername,
+                                       "brief":"Link to %s" % (new_folderpath,),
+                                       "restricted":False
+                                      }
+                    if ident:
+                        ident +=1
+                        if ident not in editedproj:
+                            new_folder_dict["ident"] = ident
+                    ident_dict[new_folderpath] = editfolder.make_new_folder(project, parent_ident, new_folder_dict)
     except ValidateError as e:
         raise FailPage(e.message)
 

@@ -33,6 +33,7 @@ from ..ski import skiboot
 from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info
+from . import fromjson
 
 def _raise_server_error(message=''):
     "Raises a ServerError, and if debug mode on, adds taceback to message"
@@ -205,6 +206,37 @@ def set_restricted_status(project, foldernumber, restricted):
         editedproj.save_folder(folder)
     except ServerError as e:
         return e.message
+
+
+def make_new_folder(project, parent_number, folder_dict):
+    """Creates a new folder, raise ServerError on failure, returns new folder ident number
+    folder_dict is something like:
+
+    {
+     "name":"folder_name",
+     "ident":999,
+     "brief":"brief description of the folder",
+     "restricted":False
+    }
+
+    if ident not given, this function chooses the next free ident number.
+    """
+
+    project_loaded(project)
+
+    parentinfo = item_info(project, parent_number)
+    if not parentinfo:
+        raise FailPage(message = "Invalid parent folder")
+    # parentinfo is a named tuple with members
+    # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
+
+    if 'ident' not in folder_dict:
+        editedproj = skiboot.getproject(project)
+        folder_dict['ident'] = editedproj.next_ident()
+
+    # creates the folder and returns the folder number
+    return fromjson.create_folder(project, parent_number, 0, folder_dict["name"], parentinfo.restricted, folder_dict)
+    
 
 
 

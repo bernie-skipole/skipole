@@ -655,10 +655,12 @@ class Project(object):
 
 
     def get_item(self, ident):
-        """given an ident (Ident object), return a
+        """given an ident (Ident object or integer), return a
            folder or page from the database, if not found, return None.
            Note: the item is returned without copying and without sections imported"""
-        if ident.proj != self._proj_ident:
+        if isinstance(ident, int):
+            ident = skiboot.Ident(self._proj_ident, ident)
+        elif ident.proj != self._proj_ident:
             return None
         if ident.num == 0:
             return self.root

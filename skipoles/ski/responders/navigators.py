@@ -111,7 +111,7 @@ empty, any page can call it - on failure, calls the project validate error page.
         if caller_page is None:
             raise ValidateError()
         self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-        if (self.widgfield not in form_data) or (not form_data[self.widgfield]):
+        if (self.widgfield not in form_data) or (form_data[self.widgfield] == ''):
             return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         return self.get_alternate_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
@@ -143,7 +143,7 @@ to alternate_ident.
         "Matches the field against the data"
 
         for field in self.fields:
-            if (field not in call_data) or (not call_data[field]):
+            if (field not in call_data) or (call_data[field] == ''):
                 return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         return self.get_alternate_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
