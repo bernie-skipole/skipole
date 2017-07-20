@@ -69,8 +69,6 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
         del call_data['edit_folder']
     elif 'folder_number' in call_data:
         folder = skiboot.from_ident((call_data['editedprojname'], call_data['folder_number']))
-    elif 'folder' in call_data:
-        folder = skiboot.from_ident(call_data['folder'])
     else:
         raise FailPage(message = "Folder missing")
 
@@ -80,8 +78,7 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
     if folder.page_type != "Folder":
         raise FailPage(message = "Invalid folder")
 
-    # set folder into call_data
-    call_data['folder'] = folder
+    # set folder_number into call_data
     call_data['folder_number'] = folder.ident.num
 
     folder_ident = str(folder.ident)
@@ -267,15 +264,13 @@ def delete_item(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     if error:
         raise FailPage(message = "Unable to delete the page")
 
-    # as page is deleted, this will affect any folder and page objects
+    # as page is deleted, this will affect any page objects
     # stored in call_data, so clear them
 
     if 'page_number' in call_data:
         del call_data['page_number']
     if 'page' in call_data:
         del call_data['page']
-    if 'folder' in call_data:
-        del call_data['folder']
 
     call_data['status'] = 'Page deleted'
     
