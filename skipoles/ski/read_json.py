@@ -167,7 +167,8 @@ def create_svgpage(proj_ident, parent_ident, page_ident, page_name, brief, json_
 
 
 def create_folder(proj_ident, parent_ident, addition_number, folder_name, restricted, json_data):
-    """Builds the folder and contents from the given json string, or ordered dictionary and adds it to project"""
+    """Builds the folder and contents from the given json string, or ordered dictionary and adds it to project
+       Returns the top folder ident"""
     if isinstance(json_data, str):
         folder_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
     else:
@@ -222,6 +223,7 @@ def create_folder(proj_ident, parent_ident, addition_number, folder_name, restri
     for item in item_list:
         project.identitems[item.ident] = item
     project.clear_cache()
+    return topfolder.ident
 
 
 

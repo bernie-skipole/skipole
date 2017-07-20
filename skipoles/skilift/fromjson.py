@@ -208,7 +208,8 @@ def page_to_json(project, pagenumber, indent=0):
 
 
 def create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data):
-    """Builds a folder and contents from the given json string / ordered dictionary, and adds it to project"""
+    """Builds a folder and contents from the given json string / ordered dictionary, and adds it to project
+       returns top folder_number"""
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(addition_number, int):
@@ -222,9 +223,10 @@ def create_folder(project, parentnumber, addition_number, folder_name, restricte
         raise ServerError(message = "The parent with this ident number is not a folder")
     # create the folder
     try:
-        read_json.create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data)
+        ident = read_json.create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data)
     except ServerError as e:
         _raise_server_error(e.message)
+    return ident.num
 
 
 def folder_to_OD(project, foldernumber):
