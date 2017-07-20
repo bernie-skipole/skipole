@@ -311,15 +311,15 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         # call to go back to edit a folder
         if 'folder' in session_data:
             folder_ident = session_data['folder']
+            # folder_ident is tuple (project, folder_number)
             # check this folder exists
             folder = skiboot.from_ident(folder_ident)
             if (folder is None) or (folder.page_type != 'Folder'):
                 return "admin_home", call_data, page_data, lang
             if not folder in editedproj:
                 return "admin_home", call_data, page_data, lang
-            # add the folder to call_data with the 'folder' key
-            call_data['folder'] = folder
-            call_data['folder_number'] = call_data['folder'].ident.num
+            # add the folder_number to call_data
+            call_data['folder_number'] = folder_ident[1]
             return called_ident, call_data, page_data, lang
         else:
             return "admin_home", call_data, page_data, lang
@@ -405,6 +405,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 
     if 'folder' in session_data:
         folder_ident = session_data['folder']
+        # folder_ident is tuple (project, folder_number)
         # check this folder exists
         folder = skiboot.from_ident(folder_ident)
         if (folder is None) or (folder.page_type != 'Folder'):
@@ -417,8 +418,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         if folder.change != session_data['fchange']:
             call_data['status'] = "Someone else is editing this site, please try again later. folder (%s, %s)" % (folder.change, session_data['fchange'])
             return "admin_home", call_data, page_data, lang
-        call_data['folder'] = folder
-        call_data['folder_number'] = folder.ident.num
+        call_data['folder_number'] = folder_ident[1]
 
     if 'add_to_foldernumber' in session_data:
         call_data['add_to_foldernumber'] = session_data['add_to_foldernumber']
@@ -554,11 +554,6 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
             info = skilift.item_info(call_data['editedprojname'], call_data['folder_number'])
             sent_session_data['folder'] = (info.project, info.itemnumber)
             sent_session_data['fchange'] = info.change
-        elif 'folder' in call_data:
-            folder_ident = skiboot.make_ident(call_data['folder'])
-            sent_session_data['folder'] = folder_ident.to_tuple()
-            info = skilift.item_info(*sent_session_data['folder'])
-            sent_session_data['fchange'] = info.change
 
     if sent_session_data:
         # store in _SESSION_DATA, and send the key as ident_data
@@ -591,9 +586,7 @@ def set_navigation(identnum, call_data, page_data):
         item_number = page_ident.num
     elif 'folder_number' in call_data:
         item_number = call_data['folder_number']
-    elif 'folder' in call_data:
-        folder_ident = skiboot.make_ident(call_data['folder'])
-        item_number = folder_ident.num
+
     if item_number:
         parents = skilift.parent_list(call_data['editedprojname'], item_number)
         for item in parents:
