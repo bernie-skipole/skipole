@@ -29,11 +29,11 @@
 
 import sys, traceback
 
-from ..ski import skiboot
+from ..ski import skiboot, read_json
 from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info
-from . import fromjson
+
 
 def _raise_server_error(message=''):
     "Raises a ServerError, and if debug mode on, adds taceback to message"
@@ -224,18 +224,29 @@ def make_new_folder(project, parent_number, folder_dict):
 
     project_loaded(project)
 
+    if not isinstance(parentnumber, int):
+        raise ServerError(message="parent_number is not an integer")
+
     parentinfo = item_info(project, parent_number)
     if not parentinfo:
-        raise FailPage(message = "Invalid parent folder")
+        raise ServerError(message = "Invalid parent folder")
     # parentinfo is a named tuple with members
     # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
+
+    if parentinfo.item_type != "Folder":
+        raise ServerError(message = "The parent with this ident number is not a folder")
 
     if 'ident' not in folder_dict:
         editedproj = skiboot.getproject(project)
         folder_dict['ident'] = editedproj.next_ident()
 
-    # creates the folder and returns the folder number
-    return fromjson.create_folder(project, parent_number, 0, folder_dict["name"], parentinfo.restricted, folder_dict)
+    # create the folder
+    try:
+        ident = read_json.create_folder(project, parent_number, 0, folder_dict["name"], parentinfo.restricted, folder_dict)
+    except ServerError as e:
+        _raise_server_error(e.message)
+    return ident.num
+
     
 
 
