@@ -197,10 +197,22 @@ def part_info(project, pagenumber, section_name, location):
     return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type)
 
 
-
 def ident_exists(project, itemnumber):
     "Return True if ident exists, False otherwise"
     return skiboot.ident_exists((project, itemnumber))
+
+
+def ident_numbers(project=None):
+    "Returns a list of the project ident numbers"
+    num_list = [0]
+    if project is None:
+        project = skiboot.project_ident()
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return []
+    return proj.ident_numbers
 
 
 def labels(project=None):
