@@ -414,7 +414,18 @@ class Project(object):
     @property
     def idents(self):
         "Returns a set of idents, as strings"
-        return set(str(ident) for ident in self.identitems)
+        ident_set = set(str(ident) for ident in self.identitems)
+        ident_set.add(str(self.root.ident))
+        return ident_set
+
+    @property
+    def ident_numbers(self):
+        "return a list of ident numbers"
+        num_list = [ ident.num for ident in self.identitems ]
+        # insert the root
+        num_list.insert(0,0)
+        num_list.sort()
+        return num_list
 
     def __getitem__(self, ident):
         """given an Ident, or a string version of ident, return page or folder. 
@@ -671,7 +682,8 @@ class Project(object):
 
     def __iter__(self):
         "This iterator does not return the root folder"
-        return self.idents.__iter__()
+        for ident in self.identitems:
+            yield ident
 
     def __contains__(self, item):
         "Checks if this project contains folder, page or ident"

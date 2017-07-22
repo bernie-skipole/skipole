@@ -32,7 +32,7 @@ import sys, traceback
 from ..ski import skiboot, read_json
 from ..ski.excepts import ServerError
 
-from . import project_loaded, item_info
+from . import project_loaded, item_info, ident_exists
 
 
 def _raise_server_error(message=''):
@@ -208,6 +208,22 @@ def set_restricted_status(project, foldernumber, restricted):
         return e.message
 
 
+def _check_parent_number(project, parent_number):
+    "Checks parent_number is a Folder and returns parentinfo"
+    project_loaded(project)
+    if not isinstance(parent_number, int):
+        raise ServerError(message="parent_number is not an integer")
+    parentinfo = item_info(project, parent_number)
+    if not parentinfo:
+        raise ServerError(message = "Invalid parent folder")
+    # parentinfo is a named tuple with members
+    # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
+
+    if parentinfo.item_type != "Folder":
+        raise ServerError(message = "The parent with this ident number is not a folder")
+    return parentinfo
+
+
 def make_new_folder(project, parent_number, folder_dict):
     """Creates a new folder, raise ServerError on failure, returns new folder ident number
     folder_dict is something like:
@@ -221,24 +237,12 @@ def make_new_folder(project, parent_number, folder_dict):
 
     if ident not given, this function chooses the next free ident number.
     """
-
-    project_loaded(project)
-
-    if not isinstance(parentnumber, int):
-        raise ServerError(message="parent_number is not an integer")
-
-    parentinfo = item_info(project, parent_number)
-    if not parentinfo:
-        raise ServerError(message = "Invalid parent folder")
-    # parentinfo is a named tuple with members
-    # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
-
-    if parentinfo.item_type != "Folder":
-        raise ServerError(message = "The parent with this ident number is not a folder")
-
+    parentinfo = _check_parent_number(project, parent_number)
     if 'ident' not in folder_dict:
         editedproj = skiboot.getproject(project)
-        folder_dict['ident'] = editedproj.next_ident()
+        folder_dict['ident'] = editedproj.max_ident_num+1
+    elif ident_exists(project, folder_dict['ident']):
+        raise ServerError(message = "An item with this ident number already exists")
 
     # create the folder
     try:
@@ -247,7 +251,43 @@ def make_new_folder(project, parent_number, folder_dict):
         _raise_server_error(e.message)
     return ident.num
 
-    
 
+def make_new_page(project, parent_number, page_dict):
+    """Creates a new page, raise ServerError on failure, returns new page ident number
+    page_dict is something like:
+
+    {
+    "name":"normalize.css",
+    "ident": 1002,
+    "brief": "From necolas.github.io/normalize.css/",
+    "FilePage": {
+        "filepath": "newproj/static/css/normalize.css",
+        "enable_cache": True,
+        "mimetype": "text/css"
+        }
+    }
+
+    if ident not given, this function chooses the next free ident number.
+    """
+    parentinfo = _check_parent_number(project, parent_number)
+    if 'ident' not in page_dict:
+        editedproj = skiboot.getproject(project)
+        page_dict['ident'] = editedproj.max_ident_num+1
+    elif ident_exists(project, page_dict['ident']):
+        raise ServerError(message = "An item with this ident number already exists")
+    # create the page
+    try:
+        if "SVG" in page_dict:
+            read_json.create_svgpage(project, parent_number, page_dict['ident'], page_dict['name'], page_dict['brief'], page_dict)
+        elif "TemplatePage" in page_dict:
+            read_json.create_templatepage(project, parent_number, page_dict['ident'], page_dict['name'], page_dict['brief'], page_dict)
+        elif "FilePage" in page_dict:
+            read_json.create_filepage(project, parent_number, page_dict['ident'], page_dict['name'], page_dict['brief'], page_dict)
+        else:
+            raise ServerError("page data not recognized")
+    except ServerError as e:
+        _raise_server_error(e.message)
+    return page_dict['ident']
+    
 
 
