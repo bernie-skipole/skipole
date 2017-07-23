@@ -5518,42 +5518,48 @@ false,
 "ident": 2900,
 "brief": "Check set restricted fields",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStore",
 "original_args": {
 "allowed_callers": [
 22009
 ],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22902,
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"editfolders",
+"editfolder",
+"submit_restricted"
+],
+"submit_option": true,
+"target_ident": 22008,
 "validate_fail_ident": null,
 "validate_option": false
 },
-"original_fields": {
-"sb1:button_text": ""
-}
+"original_fields": {}
 }
 },
 "set_unrestricted": {
 "ident": 2950,
 "brief": "Check set unrestricted fields",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStore",
 "original_args": {
 "allowed_callers": [
 22009
 ],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22952,
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"editfolders",
+"editfolder",
+"submit_unrestricted"
+],
+"submit_option": true,
+"target_ident": 22008,
 "validate_fail_ident": null,
 "validate_option": false
 },
-"original_fields": {
-"sb2:button_text": ""
-}
+"original_fields": {}
 }
 }
 }
@@ -24594,30 +24600,6 @@ false
 "original_args": {
 "fail_ident": 22307,
 "target_ident": 23207
-},
-"original_fields": {}
-}
-},
-"submit_restricted": {
-"ident": 22902,
-"brief": "Set folder as restricted",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 22008,
-"target_ident": 22008
-},
-"original_fields": {}
-}
-},
-"submit_unrestricted": {
-"ident": 22952,
-"brief": "Set folder as unrestricted",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 22008,
-"target_ident": 22008
 },
 "original_fields": {}
 }

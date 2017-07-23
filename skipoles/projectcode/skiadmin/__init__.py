@@ -117,8 +117,6 @@ _CALL_SUBMIT_DATA = {
                        22455: addpage.submit_new_file,                  # add a new file page
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
                        22470: addpage.submit_new_json,                  # add a new json page
-                       22902: editfolder.submit_restricted,             # set folder as restricted
-                       22952: editfolder.submit_unrestricted,           # set folder as unrestricted
                        23039: common.submit_new_parent,                 # page given a new parent folder
                        23049: common.submit_page_brief,                 # page given a new brief
                        23229: editpage.submit_last_scroll,              # sets last scroll flag
