@@ -117,7 +117,6 @@ _CALL_SUBMIT_DATA = {
                        22455: addpage.submit_new_file,                  # add a new file page
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
                        22470: addpage.submit_new_json,                  # add a new json page
-                       22703: editfolder.submit_default_page,           # set the default page of the folder
                        22902: editfolder.submit_restricted,             # set folder as restricted
                        22952: editfolder.submit_unrestricted,           # set folder as unrestricted
                        23039: common.submit_new_parent,                 # page given a new parent folder
@@ -307,17 +306,18 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         return called_ident, call_data, page_data, lang
 
     if identnum == 2003:
-        # call to go back to edit a folder
         if 'folder' in session_data:
+            # call to go back to edit a folder, ignore anything else in session data
             folder_ident = session_data['folder']
             # folder_ident is tuple (project, folder_number)
+            if folder_ident[0] != editedprojname:
+                return "admin_home", call_data, page_data, lang
             # check this folder exists
-            folder = skiboot.from_ident(folder_ident)
-            if (folder is None) or (folder.page_type != 'Folder'):
+            folder_info = skilift.item_info(*folder_ident)
+            # folder_info is a named tuple with contents
+            # project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted
+            if (folder_info is None) or (folder_info.item_type != 'Folder'):
                 return "admin_home", call_data, page_data, lang
-            if not folder in editedproj:
-                return "admin_home", call_data, page_data, lang
-            # add the folder_number to call_data
             call_data['folder_number'] = folder_ident[1]
             return called_ident, call_data, page_data, lang
         else:
@@ -405,17 +405,19 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     if 'folder' in session_data:
         folder_ident = session_data['folder']
         # folder_ident is tuple (project, folder_number)
-        # check this folder exists
-        folder = skiboot.from_ident(folder_ident)
-        if (folder is None) or (folder.page_type != 'Folder'):
+        if folder_ident[0] != editedprojname:
             return "admin_home", call_data, page_data, lang
-        if not folder in editedproj:
+        # check this folder exists
+        folder_info = skilift.item_info(*folder_ident)
+        # folder_info is a named tuple with contents
+        # project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted
+        if (folder_info is None) or (folder_info.item_type != 'Folder'):
             return "admin_home", call_data, page_data, lang
         # if folder provided, so must fchange
         if 'fchange' not in session_data:
             return "admin_home", call_data, page_data, lang
-        if folder.change != session_data['fchange']:
-            call_data['status'] = "Someone else is editing this site, please try again later. folder (%s, %s)" % (folder.change, session_data['fchange'])
+        if folder_info.change != session_data['fchange']:
+            call_data['status'] = "Someone else is editing this site, please try again later. folder (%s, %s)" % (folder_info.change, session_data['fchange'])
             return "admin_home", call_data, page_data, lang
         call_data['folder_number'] = folder_ident[1]
 
