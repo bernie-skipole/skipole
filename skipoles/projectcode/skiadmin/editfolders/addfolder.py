@@ -39,7 +39,6 @@ from ....skilift import editfolder, fromjson
 def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
 
     editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
 
     # parent is the folder a new folder is to be added to
     # the value in call_data is the string ident submitted by the ftree add_folder button
@@ -225,7 +224,6 @@ def submit_upload_folder(caller_ident, ident_list, submit_list, submit_dict, cal
     "Copy a folder from uploaded file"
 
     editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
 
     # add_to_foldernumber is the folder a new folder is to be added to
     if 'add_to_foldernumber' in call_data:

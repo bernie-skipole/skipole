@@ -446,7 +446,7 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
         call_data['edit_page'] = item.ident
         raise GoTo(target=23407, clear_submitted=True)
     elif item.page_type == "Folder":
-        call_data['edit_folder'] = item.ident
+        call_data['edit_folder'] = str(item.ident) ####### moving away from ident objects
         raise GoTo(target=22008, clear_submitted=True)
     raise FailPage(message="Item not found")
     

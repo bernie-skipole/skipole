@@ -27,7 +27,6 @@
 
 from collections import OrderedDict
 
-from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 from .... import skilift
 from ....skilift import editpage, editfolder, fromjson
@@ -59,38 +58,37 @@ def goto_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_
 
 
 def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fills in the edit folder page, including the tree of folder contents"
 
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
     # 'edit_folder' is from a form, not from session data
 
     if 'edit_folder' in call_data:
-        folder = skiboot.from_ident(call_data['edit_folder'])
+        try:
+            proj,folder = call_data['edit_folder'].split('_')
+            folder_number = int(folder)
+        except:
+            raise FailPage(message = "Invalid Folder")
+        if proj != editedprojname:
+            raise FailPage(message = "Invalid Folder")
         del call_data['edit_folder']
+        call_data['folder_number'] = folder_number
     elif 'folder_number' in call_data:
-        folder = skiboot.from_ident((call_data['editedprojname'], call_data['folder_number']))
+        folder_number = call_data['folder_number']
     else:
         raise FailPage(message = "Folder missing")
 
-    if (not folder) or (folder not in editedproj):
-        raise FailPage(message = "Invalid folder")
-
-    if folder.page_type != "Folder":
-        raise FailPage(message = "Invalid folder")
-
-    # set folder_number into call_data
-    call_data['folder_number'] = folder.ident.num
-
-    folder_ident = str(folder.ident)
-
-    info = skilift.item_info(call_data['editedprojname'], call_data['folder_number'])
+    info = skilift.item_info(editedprojname, folder_number)
 
     # info is a named tuple with members
     # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
 
+    if (not info) or (info.item_type != "Folder"):
+        raise FailPage(message = "Invalid folder")
 
 
-    contents, rows = _foldertree(call_data['editedprojname'], call_data['folder_number'])
+    contents, rows = _foldertree(editedprojname, folder_number)
     page_data['ftree', 'contents'] = contents
     page_data['ftree', 'rows'] = rows
 

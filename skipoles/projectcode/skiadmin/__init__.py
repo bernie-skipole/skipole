@@ -592,7 +592,8 @@ def set_navigation(identnum, call_data, page_data):
         for item in parents:
             # for each item apart from root
             if item[1]:
-                page_data["adminhead","top_nav","nav_links"].append(['edit_from_top_nav', item[0], False, str(item[1])])
+                edited_folder = call_data['editedprojname'] + '_' + str(item[1])
+                page_data["adminhead","top_nav","nav_links"].append(['edit_from_top_nav', item[0], False, edited_folder])
     # Top navigation lists in reverse order as the float right keeps making the next link the rightmost
     page_data["adminhead","top_nav","nav_links"].reverse()
 
