@@ -53,8 +53,7 @@ def goto_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_
     if ('ftree','edited_item') in widgfields:
         call_data['edit_folder'] = widgfields['ftree','edited_item']
 
-    # also from the cancel button of the confirm page delete
-    # uses session data, so does not need anything added here.
+
 
 
 def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

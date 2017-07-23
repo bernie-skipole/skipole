@@ -117,7 +117,6 @@ _CALL_SUBMIT_DATA = {
                        22455: addpage.submit_new_file,                  # add a new file page
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
                        22470: addpage.submit_new_json,                  # add a new json page
-                       22653: editfolder.submit_folder_brief,           # set the folder brief
                        22703: editfolder.submit_default_page,           # set the default page of the folder
                        22902: editfolder.submit_restricted,             # set folder as restricted
                        22952: editfolder.submit_unrestricted,           # set folder as unrestricted

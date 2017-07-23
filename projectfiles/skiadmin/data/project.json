@@ -5240,21 +5240,25 @@ false,
 "ident": 2650,
 "brief": "Check folder brief fields",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStoreKeyed",
 "original_args": {
 "allowed_callers": [
 22009
 ],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22651,
-"validate_fail_ident": null,
-"validate_option": false
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"editfolders",
+"editfolder",
+"submit_folder_brief"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": 22008,
+"validate_option": true
 },
 "original_fields": {
-"st2:button_text": "",
-"st2:folder_brief": ""
+"st2:folder_brief": "brief"
 }
 }
 },
@@ -24555,18 +24559,6 @@ false
 "original_fields": {}
 }
 },
-"submit_folder_brief": {
-"ident": 22653,
-"brief": "Set the folder brief",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 22008,
-"target_ident": 22008
-},
-"original_fields": {}
-}
-},
 "submit_new_folder": {
 "ident": 22204,
 "brief": "Creates the new folder",
@@ -25260,23 +25252,6 @@ false,
 "setfilepath:pagebrief": "page_brief",
 "setfilepath:pageident": "page_ident_number",
 "setfilepath:pagename": "new_page"
-}
-}
-},
-"validate_folder_brief": {
-"ident": 22651,
-"brief": "Check text of the brief",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22653,
-"validate_fail_ident": 22008,
-"validate_option": true
-},
-"original_fields": {
-"st2:folder_brief": "brief"
 }
 }
 },
