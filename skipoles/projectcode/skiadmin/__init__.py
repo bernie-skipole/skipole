@@ -28,7 +28,7 @@ import pkgutil, re, collections, uuid, os
 
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets
 
-from .editfolders import editsite, editproject, editfolder, addfolder, addpage
+from .editfolders import editsite, editproject, addfolder, addpage
 from .editpages import common, editpage, insert
 from .editresponders import editrespondpage
 from .editfiles import editfile
@@ -104,7 +104,6 @@ _CALL_SUBMIT_DATA = {
                        20121: editproject.retrieve_edit_project,        # gets field data for edit project page
                        20139: editproject.submit_suburl,                # sets the url of a sub project
                        20159: editproject.submit_copy_project,          # copies the project
-                       22107: addfolder.retrieve_add_folder,            # gets field data for add folder
                        22204: addfolder.submit_addfolder,               # add a new folder
                        22307: addpage.retrieve_add_page,                # gets field data for add page
                        22410: addpage.submit_new_template,              # add a new template page
