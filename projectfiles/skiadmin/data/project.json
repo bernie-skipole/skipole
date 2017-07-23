@@ -5164,23 +5164,27 @@ false,
 },
 "default": {
 "ident": 2700,
-"brief": "Check default page fields",
+"brief": "Change default page",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStoreKeyed",
 "original_args": {
 "allowed_callers": [
 22009
 ],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22702,
-"validate_fail_ident": null,
-"validate_option": false
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"editfolders",
+"editfolder",
+"submit_default_page"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": 22008,
+"validate_option": true
 },
 "original_fields": {
-"sdd1:button_text": "",
-"sdd1:selectvalue": ""
+"sdd1:selectvalue": "selectvalue"
 }
 }
 },
@@ -24535,18 +24539,6 @@ false
 }
 }
 },
-"submit_default": {
-"ident": 22703,
-"brief": "Set the default page",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 22008,
-"target_ident": 22008
-},
-"original_fields": {}
-}
-},
 "submit_filepage": {
 "ident": 22455,
 "brief": "Create a new file page",
@@ -25217,23 +25209,6 @@ false,
 ]
 }
 ]
-},
-"validate_default": {
-"ident": 22702,
-"brief": "Check page selected",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22703,
-"validate_fail_ident": 22008,
-"validate_option": true
-},
-"original_fields": {
-"sdd1:selectvalue": "selectvalue"
-}
-}
 },
 "validate_filepage": {
 "ident": 22454,
