@@ -946,7 +946,6 @@ false,
 "aboutcode": {
 "ident": 70000,
 "brief": "Folder of pages about user code",
-"default_page_name": "index",
 "restricted": false,
 "folders": {
 "restricted": {
