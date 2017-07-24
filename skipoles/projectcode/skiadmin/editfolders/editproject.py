@@ -46,7 +46,7 @@ def retrieve_edit_project(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage(message="Project not found", widget = "projmap")
     if (not sub_project) or (not skiboot.is_project(sub_project)):
         raise FailPage(message = 'invalid project', widget = "projmap")
-    url = editedproj.subproject_urls[sub_project]
+    url = editedproj.subproject_paths[sub_project]
     page_data['subprojurl:hidden_field1'] = sub_project
     page_data['subprojurl:bottomtext'] = "Current sub project URL is %s" % (url,)
     page_data['subprojurl:input_text'] = url
@@ -131,7 +131,7 @@ def submit_suburl(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
     if proj_id not in editedproj.subprojects:
         raise FailPage(message = "Invalid project")
-    current_url = editedproj.subproject_urls[proj_id]
+    current_url = editedproj.subproject_paths[proj_id]
     if current_url == call_data["project_url"]:
         return {("adminhead","page_head","small_text"):"No change to the current URL?"}
     try:
