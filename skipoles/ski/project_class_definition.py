@@ -418,13 +418,6 @@ class Project(object):
             del self.sections[name]
 
     @property
-    def idents(self):
-        "Returns a set of idents, as strings"
-        ident_set = set(str(ident) for ident in self.identitems)
-        ident_set.add(str(self.root.ident))
-        return ident_set
-
-    @property
     def ident_numbers(self):
         "return a list of ident numbers"
         num_list = [ ident.num for ident in self.identitems ]

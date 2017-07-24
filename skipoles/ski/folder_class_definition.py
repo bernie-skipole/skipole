@@ -330,6 +330,17 @@ class Folder(object):
         name_list.sort()
         return [self.pages[name] for name in name_list]
 
+    @property
+    def ident_numbers(self):
+        "return a list of ident numbers within this folder, not including folder number itself"
+        num_list = []
+        for ident in self.folders.values():
+            num_list.append(ident.num)
+        for ident in self.pages.values():
+            num_list.append(ident.num)
+        num_list.sort()
+        return num_list
+
     def contains_ident(self, ident):
         "Returns True if the given ident is beneath this Folder"
         ident = skiboot.Ident.to_ident(ident, self.ident.proj)
