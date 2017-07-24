@@ -375,9 +375,7 @@ def ident_exists(ident, proj_ident=None):
     project = getproject(ident.proj)
     if project is None:
         return False
-    if ident.num == 0:
-        return True
-    return str(ident) in project.idents
+    return ident.num in project.ident_numbers
 
 
 def ident_exists_strict(ident):
@@ -387,9 +385,7 @@ def ident_exists_strict(ident):
     project = getproject(ident.proj)
     if project is None:
         return
-    if ident.num == 0:
-        return ident
-    if str(ident) in project.idents:
+    if ident.num in project.ident_numbers:
         return ident
 
 
