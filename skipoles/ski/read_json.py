@@ -180,10 +180,6 @@ def create_filepage(proj_ident, parent_ident, page_ident, page_name, brief, json
     parent.add_page(page, page_ident)
 
 
-
-
-
-
 def create_folder(proj_ident, parent_ident, addition_number, folder_name, restricted, json_data):
     """Builds the folder and contents from the given json string, or ordered dictionary and adds it to project
        Returns the top folder ident"""

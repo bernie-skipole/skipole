@@ -230,7 +230,7 @@ def labels(project=None):
 def projectURLpaths():
     "Returns a dictionary of project name : project path"
     rootproject = skiboot.getproject()
-    paths = {ident:path for ident,path in rootproject.subproject_urls.items()}
+    paths = {ident:path for ident,path in rootproject.subproject_paths.items()}
     paths[rootproject.proj_ident] = rootproject.url
     return paths
 

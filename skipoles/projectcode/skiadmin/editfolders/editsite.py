@@ -68,7 +68,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
         page_data["debugtoggle", "button_text"] = "Set Debug ON"
 
     ctable = []
-    for proj, suburl in editedproj.subproject_urls.items():
+    for proj, suburl in editedproj.subproject_paths.items():
         ctable.append([proj, suburl, skiboot.getproject(proj).brief, proj, '', proj, '', True, True])
     # append the final row showing this edited project
     ctable.append([editedproj.proj_ident, editedproj.url, editedproj.brief, '', '', '', '', False, False])
@@ -81,7 +81,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
         page_data['sdd1:show_add_project'] = False
     else:
         # get loaded projects
-        loaded_projects = editedproj.subproject_urls
+        loaded_projects = editedproj.subproject_paths
         # get projects which have json files
         for directory in dirs:
             if directory == editedproj.proj_ident or (directory in loaded_projects):

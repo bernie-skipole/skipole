@@ -58,8 +58,13 @@ class Project(object):
         self.special_pages = {}
         # dictionary of sections, key = name: value = section
         self.sections = {}
+
         # an ordered dictionary of {proj_ident: url,...}, ordered by length of url
-        self._subproject_urls = collections.OrderedDict()
+        self._subproject_paths = collections.OrderedDict()
+        # A dictionary of subproject dicts {proj_ident: {'path':path,...}}
+        self.subproject_dicts = {}
+        # self.subprojects is a dictionary of sub projects {proj_ident: Project instance,.....}
+        self.subprojects = {}
 
         # dictionary of idents: to folder or page, apart from root
         # note keys are full Ident instances, values are  folder or page instances
@@ -68,9 +73,6 @@ class Project(object):
         # This is set to True if the project is the top root project
         # otherwise it is False - which means this is a subproject
         self.rootproject = False
-
-        # self.subprojects is a dictionary of sub projects {proj_ident: Project instance,.....}
-        self.subprojects = {}
 
         # This parameter is sent to the user start_call function
         self.option = None
@@ -99,16 +101,19 @@ class Project(object):
         self.rootproject = rootproject
         projectdict = read_json.create_project(self._proj_ident)
         self.url = projectdict['url']
-        subprojects = projectdict["subprojects"]
-        if subprojects and rootproject:
-            self._subproject_urls = collections.OrderedDict(sorted(subprojects.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
-            for subproj_ident in self._subproject_urls:
+        self.subproject_dicts = projectdict["subprojects"]
+        if self.subproject_dicts and rootproject:
+            # pull out a dictionary of sub project ident:path
+            sub_paths = {sub_ident:sub_dict['path'] for sub_ident,sub_dict in self.subproject_dicts.items()}
+            # make this an ordered dictionary, ordered by length of path elements
+            self._subproject_paths = collections.OrderedDict(sorted(sub_paths.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
+            for subproj_ident in self._subproject_paths:
                 subproject = Project(subproj_ident)
                 subproject.load_from_json(rootproject = False)
                 # and add it to this site
                 self.subprojects[subproj_ident] = subproject
         else:
-            self._subproject_urls = collections.OrderedDict()
+            self._subproject_paths = collections.OrderedDict()
             self.subprojects = {}
         self.default_language = projectdict['default_language']
         self.brief = projectdict['brief']
@@ -133,7 +138,7 @@ class Project(object):
         self.proj_data = projectcode.start_project(self._proj_ident, self.url, self.option)
        # and call start_project for each subproject
         for subproj_ident, proj in self.subprojects.items():
-            proj.start_project(path=self._subproject_urls[subproj_ident])
+            proj.start_project(path=self._subproject_paths[subproj_ident])
 
 
     @property
@@ -715,8 +720,8 @@ class Project(object):
         rp = skiboot.getproject()
         # may be a subproject instance created before a root project has been defined
         # or not yet added to a root project
-        if (rp is not None) and  (self._proj_ident in rp.subproject_urls):
-            return rp.subproject_urls[self._proj_ident]
+        if (rp is not None) and  (self._proj_ident in rp.subproject_paths):
+            return rp.subproject_paths[self._proj_ident]
         if self._url:
             return self._url
         return "/"
@@ -731,11 +736,12 @@ class Project(object):
         if self.rootproject:
             current_url = self._url
             # set the url of all sub projects
-            subproject_urls = collections.OrderedDict()
-            if self._subproject_urls:
-                for proj_ident, proj_url in self._subproject_urls.items():
-                    subproject_urls[proj_ident] = proj_url.replace(current_url, url, 1)
-                self._subproject_urls = subproject_urls
+            sub_paths = collections.OrderedDict()
+            if self._subproject_paths:
+                for proj_ident, proj_url in self._subproject_paths.items():
+                    sub_paths[proj_ident] = proj_url.replace(current_url, url, 1)
+                    self.subproject_dicts[proj_ident]["path"] = sub_paths[proj_ident]
+                self._subproject_paths = sub_paths
         self._url = url
 
     url = property(get_url, set_url)
@@ -1042,7 +1048,7 @@ class Project(object):
         page_data={}
         call_ident = None
         if self.rootproject:
-            for proj, projurl in self._subproject_urls.items():
+            for proj, projurl in self._subproject_paths.items():
                 if (path.find(projurl) == 0) or (path + "/" == projurl):
                     # this url is within a project
                     subproj = self.subprojects[proj]
@@ -1156,12 +1162,12 @@ class Project(object):
         return self._proj_ident
 
     @property
-    def subproject_urls(self):
-        "property getter to return an ordered dictionary of sub project {ident:url,...}"
+    def subproject_paths(self):
+        "property getter to return an ordered dictionary of sub project {ident:path,...}"
         if not self.rootproject:
             # sub project do not themselves contain further sub projects
             return collections.OrderedDict()
-        return self._subproject_urls.copy()
+        return self._subproject_paths.copy()
 
 
     def set_subproject_option(self, proj, option):
@@ -1170,20 +1176,19 @@ class Project(object):
             proj_id = proj.proj_ident
         else:
             proj_id = proj
-        if proj_id in self.subproject_urls:
+        if proj_id in self.subproject_paths:
             if proj_id in self.subprojects:
                 self.subprojects[proj_id].option = option
 
 
     def list_of_subproject_idents(self):
         "Returns a list of subproject idents"
-        subproject_urls = self.subproject_urls
-        return [i for i in subproject_urls]
+        return [i for i in self.subproject_paths]
 
     def add_project(self, proj, url=None):
         """Add a project to self, returns the url
-           proj can be the sub project itself, rootfolder, or the sub project ident string.
-           This adds a reference to the project to the subproject_urls, returns the sub project url"""
+           proj can be the sub project itself, sub project rootfolder, or the sub project ident string.
+           This adds a reference to the project to the subproject_paths, returns the sub project path"""
         if not self.rootproject:
            raise ValidateError(message="Cannot add to a sub project")
         if hasattr(proj, 'proj_ident'):
@@ -1194,15 +1199,15 @@ class Project(object):
             raise ValidateError(message="Sorry, invalid project id")
         if not proj_id.isalnum():
             raise ValidateError(message="Sorry, invalid project id")
-        # get a copy of the {proj_id:url} subproject_urls dictionary, and this projects url
-        subproject_urls = self.subproject_urls
+        # get a copy of the {proj_id:url} subproject_paths dictionary, and this projects url
+        sub_paths = self._subproject_paths.copy()
         this_url = self.url
-        if proj_id in subproject_urls:
+        if proj_id in sub_paths:
             # sub project already exists, overwrite current one with new one, in case of changes
             if isinstance(proj, Project):
                 proj.rootproject = False
                 self.subprojects[proj_id] = proj
-            return subproject_urls[proj_id]
+            return sub_paths[proj_id]
         if url is None:
             url = this_url + proj_id
         url=url.strip("/")
@@ -1211,10 +1216,10 @@ class Project(object):
         if not url.startswith(this_url):
             url = url.lstrip("/")
             url = this_url + url
-        # add this ident and url to subproject_urls
-        subproject_urls[proj_id] = url
-        # save new subproject_urls dictionary
-        self._subproject_urls = collections.OrderedDict(sorted(subproject_urls.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
+        # add this ident and url to subproject_paths
+        sub_paths[proj_id] = url
+        # save new subproject_paths dictionary
+        self._subproject_paths = collections.OrderedDict(sorted(sub_paths.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
         # add the subproject to this project
         if isinstance(proj, Project):
             proj.rootproject = False
@@ -1223,6 +1228,9 @@ class Project(object):
             subproj = Project(proj_id)
             subproj.load_from_json(rootproject = False)
             self.subprojects[proj_id] = subproj
+        # add the subproject to the self.subproject_dicts
+        self.subproject_dicts[proj_id] = {}
+        self.subproject_dicts[proj_id]["path"] = url
         # call the subproject start_project function
         self.subprojects[proj_id].start_project(url)
         return url
@@ -1251,8 +1259,8 @@ class Project(object):
             # setting the url of this project
             self.url = url
             return url
-        subproject_urls = self.subproject_urls
-        if proj_id not in subproject_urls:
+        sub_paths = self._subproject_paths.copy()
+        if proj_id not in subproject_paths:
             raise ValidateError(message="Sorry, this sub project does not exist")
         if url == "/":
             raise ValidateError(message="Sorry, a sub project cannot have a url of '/'")
@@ -1262,12 +1270,13 @@ class Project(object):
         if not url.startswith(this_url):
             url = url.lstrip("/")
             url = this_url + url
-        if url in subproject_urls.values():
+        if url in sub_paths.values():
             raise ValidateError(message="Sorry, a sub project with this url already exists")
-        # add this ident and url to subproject_urls
-        subproject_urls[proj_id] = url
-        # save new subproject_urls dictionary
-        self._subproject_urls = collections.OrderedDict(sorted(subproject_urls.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
+        # add this ident and url to sub_paths
+        sub_paths[proj_id] = url
+        # save new subproject_paths dictionary
+        self._subproject_paths = collections.OrderedDict(sorted(sub_paths.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
+        self.subproject_dicts[proj_id]["path"] = url
         return url
 
     def remove_project(self, proj):
@@ -1280,12 +1289,15 @@ class Project(object):
             raise ValidateError(message="Sorry, invalid project id")
         if not proj_id.isalnum():
             raise ValidateError(message="Sorry, invalid project id")
-        if proj_id not in self.subproject_urls:
+        if proj_id not in self.subproject_paths:
             return
-        del self._subproject_urls[proj_id]
+        del self._subproject_paths[proj_id]
         # remove from subprojects
         if proj_id in self.subprojects:
             del self.subprojects[proj_id]
+        # remove from subproject_dicts
+        if proj_id in self.subproject_dicts:
+            del self.subproject_dicts[proj_id]
 
     @property
     def root_ident(self):

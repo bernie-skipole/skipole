@@ -125,7 +125,9 @@ def project_to_OD(proj_ident=None):
     # stores the version of this skipole
     project["skipole"] = skiboot.version()
 
-    subprojects = proj.subproject_urls
+    # proj.subproject_dicts is a dictionary of {proj_ident: {'path':path,...}}
+    # currently only path is stored, but other project items could be stored
+    subprojects = proj.subproject_dicts
     if skiboot.admin_project() in subprojects:
         del subprojects[skiboot.admin_project()]
     if subprojects:

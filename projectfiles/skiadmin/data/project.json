@@ -5,7 +5,9 @@
 "version": "0.0.31",
 "skipole": "0.0.31",
 "subprojects": {
-"lib": "/skiadmin/lib/"
+"lib": {
+"path": "/skiadmin/lib/"
+}
 },
 "specialpages": {
 "about_code": 70001,

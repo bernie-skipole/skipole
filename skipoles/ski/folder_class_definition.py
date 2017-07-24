@@ -434,7 +434,7 @@ class RootFolder(Folder):
         topproject = skiboot.getproject()
         if self.ident.proj == topproject.proj_ident:
             return topproject.url
-        return topproject.subproject_urls[self.ident.proj]
+        return topproject.subproject_paths[self.ident.proj]
 
 
     def page_from_pathlist(self, pathlist):
