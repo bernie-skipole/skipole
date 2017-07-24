@@ -62,6 +62,7 @@ class Project(object):
         # an ordered dictionary of {proj_ident: url,...}, ordered by length of url
         self._subproject_paths = collections.OrderedDict()
         # A dictionary of subproject dicts {proj_ident: {'path':path,...}}
+        # this dictionary being loaded from the project.json file
         self.subproject_dicts = {}
         # self.subprojects is a dictionary of sub projects {proj_ident: Project instance,.....}
         self.subprojects = {}
@@ -1260,7 +1261,7 @@ class Project(object):
             self.url = url
             return url
         sub_paths = self._subproject_paths.copy()
-        if proj_id not in subproject_paths:
+        if proj_id not in sub_paths:
             raise ValidateError(message="Sorry, this sub project does not exist")
         if url == "/":
             raise ValidateError(message="Sorry, a sub project cannot have a url of '/'")
