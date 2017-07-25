@@ -68,7 +68,7 @@ def _get_page(project, pagenumber):
 
 
 def pagechange(project, pagenumber):
-    "Returns None if pagenumber is not found (or is a folder), otherwise returns the integer page change number"
+    "Returns None if pagenumber is not found (or is a folder), otherwise returns the page change uuid"
     # raise error if invalid project
     project_loaded(project)
     info = item_info(project, pagenumber)

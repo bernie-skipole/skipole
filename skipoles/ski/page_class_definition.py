@@ -30,7 +30,7 @@ This module defines the page objects
 """
 
 
-import os, mimetypes, copy, collections, json, re
+import os, mimetypes, copy, collections, json, re, uuid
 from string import Template
 
 from . import skiboot
@@ -56,9 +56,8 @@ class ParentPage(object):
         self.status = '200 OK'
         self.headers = [('content-type', 'text/html')]
         self.brief = brief
-        # the change number increments from 0 to 9999 then cycles to 0 again
-        # whenever the page is stored in the database
-        self.change = 0
+        # the change is a uuid which alters whenever the page changes
+        self.change = uuid.uuid4().hex
         self.ident_data = ''
         # Set by end_call
         self.session_cookie = ()
@@ -91,7 +90,7 @@ class ParentPage(object):
         copy_page.ident = None
         copy_page.name = name
         copy_page.brief = brief
-        copy_page.change = 0
+        copy_page.change = uuid.uuid4().hex
         return copy_page
 
     def root(self):

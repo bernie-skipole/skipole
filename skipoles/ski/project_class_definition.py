@@ -30,7 +30,7 @@ This module defines the Project class
 """
 
 
-import copy, os, cgi, collections, html, pprint, json, shutil
+import copy, os, cgi, collections, html, pprint, json, shutil, uuid
 
 from http import cookies
 
@@ -394,10 +394,6 @@ class Project(object):
 
     def add_section(self, name, section):
         "Adds a section to the project"
-        # Does the section already exist? If so copy the change value
-        currentsection = self.section(name, makecopy=False)
-        if currentsection is not None:
-            section.change = currentsection.change
         # and save the section
         section.widgets = {}
         section.section_places = {}  # currently unused
@@ -406,9 +402,7 @@ class Project(object):
         # set validators in section
         section.load_validator_scriptlinks()
         # set the section change number
-        section.change += 1
-        if section.change > 9999:
-            section.change = 0
+        section.change = uuid.uuid4().hex
         self.sections[name] = section
 
 
@@ -507,9 +501,7 @@ class Project(object):
             parent.pages[item.name] = item.ident
 
         # set the parent change value
-        parent.change += 1
-        if parent.change > 9999:
-            parent.change = 0
+        parent.change = uuid.uuid4().hex
         item.parentfolder = parent
 
         # and finally, add the item
@@ -537,9 +529,7 @@ class Project(object):
             del parentfolder.pages[item.name]
         if item.name in parentfolder.folders:
             del parentfolder.folders[item.name]
-        parentfolder.change += 1
-        if parentfolder.change > 9999:
-                parentfolder.change = 0
+        parentfolder.change = uuid.uuid4().hex
         # del the item
         del self.identitems[itemident]
         self.clear_cache()
@@ -569,9 +559,7 @@ class Project(object):
         # now set validator modules in page
         if item.page_type == 'TemplatePage':
             item.load_validator_scriptlinks()
-        item.change += 1
-        if item.change > 9999:
-            item.change = 0
+        item.change = uuid.uuid4().hex
         if (old_name == item.name) and (new_parent_ident is None):
             # no folder change
             self.identitems[item_ident] = item
@@ -586,6 +574,7 @@ class Project(object):
             if old_name in old_parent.pages:
                 del old_parent.pages[old_name]
             old_parent.pages[item.name] = item_ident
+            old_parent.change = uuid.uuid4().hex
             self.identitems[item_ident] = item
             self.clear_cache()
             return
@@ -596,7 +585,9 @@ class Project(object):
             raise ServerError(message="Sorry, a folder with that name already exists")
         if old_name in old_parent.pages:
             del old_parent.pages[old_name]
+            old_parent.change = uuid.uuid4().hex
         new_parent.pages[item.name] = item_ident
+        new_parent.change = uuid.uuid4().hex
         item.parentfolder = new_parent
         self.identitems[item_ident] = item
         self.clear_cache()
@@ -615,9 +606,7 @@ class Project(object):
         if item_ident.num == 0:
             if new_parent_ident:
                 raise ServerError(message="Root folder cannot have new parent")
-            item.change += 1
-            if item.change > 9999:
-                item.change = 0
+            item.change = uuid.uuid4().hex
             self.root = item
             self.clear_cache()
             return
@@ -630,9 +619,7 @@ class Project(object):
             new_parent = self.identitems[new_parent_ident]
             if new_parent == old_parent:
                 new_parent_ident = None
-        item.change += 1
-        if item.change > 9999:
-            item.change = 0
+        item.change = uuid.uuid4().hex
         if (old_name == item.name) and (new_parent_ident is None):
             # no parent folder change
             self.identitems[item_ident] = item
@@ -647,6 +634,7 @@ class Project(object):
             if old_name in old_parent.folders:
                 del old_parent.folders[old_name]
             old_parent.folders[item.name] = item_ident
+            old_parent.change = uuid.uuid4().hex
             self.identitems[item_ident] = item
             self.clear_cache()
             return
@@ -657,7 +645,9 @@ class Project(object):
             raise ServerError(message="Sorry, a folder with that name already exists")
         if old_name in old_parent.folders:
             del old_parent.folders[old_name]
+            old_parent.change = uuid.uuid4().hex
         new_parent.folders[item.name] = item_ident
+        new_parent.change = uuid.uuid4().hex
         item.parentfolder = new_parent
         self.identitems[item_ident] = item
         self.clear_cache()

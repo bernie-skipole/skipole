@@ -39,7 +39,7 @@ or *create_admin_page*
 """
 
 
-import copy, os, cgi, collections, html, pprint, json, shutil
+import copy, os, cgi, collections, html, pprint, json, shutil, uuid
 
 from http import cookies
 
@@ -109,9 +109,8 @@ class Folder(object):
             self.default_page_name = ""
         self._restricted = bool(restricted)
         self.brief = brief
-        # the change number increments from 0 to 9999 then cycles to 0 again
-        # whenever the page is stored in the database
-        self.change = 0
+        # the change is a uuid which alters whenever the page changes
+        self.change = uuid.uuid4().hex
 
     @property
     def proj_ident(self):
