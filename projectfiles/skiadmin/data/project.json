@@ -4834,6 +4834,11 @@ false,
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 70001,
+"submit_list": [
+"editfolders",
+"editsite",
+"reload_project_code"
+],
 "submit_option": true,
 "target_ident": 70001,
 "validate_fail_ident": null,
@@ -24571,6 +24576,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 22107,
+"submit_list": [
+"editfolders",
+"addfolder",
+"submit_addfolder"
+],
 "target_ident": 22006
 },
 "original_fields": {}
@@ -37587,6 +37597,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 20041,
+"submit_list": [
+"editfolders",
+"editsite",
+"json_submit_saveproject"
+],
 "target_ident": 20041
 },
 "original_fields": {}
@@ -37599,6 +37614,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editsite",
+"html_submit_saveproject"
+],
 "target_ident": "admin_home"
 },
 "original_fields": {}
@@ -38612,6 +38632,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editsite",
+"about_export"
+],
 "target_ident": 20500
 },
 "original_fields": {}
@@ -38645,6 +38670,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editsite",
+"retrieve_colour_data"
+],
 "target_ident": 20300
 },
 "original_fields": {}
@@ -38833,6 +38863,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 1,
+"submit_list": [
+"editfolders",
+"editsite",
+"retrieve_download"
+],
 "target_ident": 20090
 },
 "original_fields": {}
@@ -39178,6 +39213,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editsite",
+"submit_rootpath"
+],
 "submit_option": true,
 "target_ident": "admin_home",
 "validate_fail_ident": "admin_home",

@@ -28,7 +28,7 @@ import pkgutil, re, collections, uuid, os
 
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets
 
-from .editfolders import editsite, editproject, addfolder, addpage
+from .editfolders import editproject, addpage
 from .editpages import common, editpage, insert
 from .editresponders import editrespondpage
 from .editfiles import editfile
@@ -64,10 +64,6 @@ _SESSION_DATA = collections.OrderedDict()
 # this method to eventually be replaced by responders with submit lists
 
 _CALL_SUBMIT_DATA = {
-                          50: editsite.submit_rootpath,                 # sets the root path
-                          90: editsite.retrieve_download,               # get export.tar filepath to download
-                         300: editsite.retrieve_colour_data,            # colour data for colours page
-                         500: editsite.about_export,                    # description of the export.tar file
                         2460: addpage.submit_copy_page,                 # copies an existing page to create a new one
                         2470: addpage.submit_upload_page,           # copies an uploaded page definition file to create a new one
                         3230: editpage.set_html_lang,                   # sets page html lang tag
@@ -97,14 +93,11 @@ _CALL_SUBMIT_DATA = {
                         7011: managesections.file_new_section,          # creates a new section from uploaded file
                         7050: managesections.downloadsection,           # downloads section as json file
                         7060: managesections.newsectionpage,            # populates the new section page
-                       20040: editsite.json_submit_saveproject,         # save the project
-                       20045: editsite.html_submit_saveproject,         # save the project
                        20101: editproject.submit_addproject,            # adds a project
                        20111: editproject.submit_removeproject,         # remove the project
                        20121: editproject.retrieve_edit_project,        # gets field data for edit project page
                        20139: editproject.submit_suburl,                # sets the url of a sub project
                        20159: editproject.submit_copy_project,          # copies the project
-                       22204: addfolder.submit_addfolder,               # add a new folder
                        22307: addpage.retrieve_add_page,                # gets field data for add page
                        22410: addpage.submit_new_template,              # add a new template page
                        22420: addpage.retrieve_new_responder,           # gets data for creating a new responder
@@ -202,7 +195,6 @@ _CALL_SUBMIT_DATA = {
                        56317: editvalidator.retrieve_validator_list,    # gets data for listing validators
                        56353: editvalidator.create_validator,           # creates new validator
                        70001: editproject.retrieve_about_code,          # retrieve content for about user code
-                       70002: editsite.reload_project_code,             # reloads user code
                        70005: editproject.retrieve_about_skilift,       # retrieve content for about skilift
                        70010: editproject.retrieve_about_fromjson,      # retrieve content for about fromjson
                        70015: editproject.retrieve_about_editfolder,    # retrieve content for about editfolder
