@@ -69,7 +69,7 @@ def _get_folder(project, foldernumber):
 
 
 def folderchange(project, foldernumber):
-    "Returns None if foldernumber is not found (or is a page), otherwise returns the integer folder change number"
+    "Returns None if foldernumber is not found (or is a page), otherwise returns the folder change uuid"
     # raise error if invalid project
     project_loaded(project)
     info = item_info(project, foldernumber)

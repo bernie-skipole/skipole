@@ -35,7 +35,7 @@ ClosedPart which is also a tag, with name and attributes, but no contents, such 
 Widget which inherits from Part and can be subclassed to create widgets
 """
 
-import html, copy
+import html, copy, uuid
 
 from urllib.parse import quote, quote_plus
 
@@ -731,9 +731,9 @@ class Section(Part):
         self._validator_scriptlinks = []
         # currently unused, though passed to parts in set_idents
         self.section_places = {}
-        # the change number increments from 0 to 9999 then cycles to 0 again
+        # the change uuid is regenerated
         # whenever the item is stored in the database
-        self.change = 0
+        self.change = uuid.uuid4().hex
 
     @property
     def validator_scriptlinks(self):
