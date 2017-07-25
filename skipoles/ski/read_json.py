@@ -25,7 +25,7 @@
 #   limitations under the License.
 
 
-import os, json, importlib, inspect, collections
+import os, json, importlib, inspect, collections, uuid
 
 
 from . import skiboot, excepts, folder_class_definition, page_class_definition, tag
@@ -201,9 +201,7 @@ def create_folder(proj_ident, parent_ident, addition_number, folder_name, restri
         raise excepts.ServerError("This name already exists in the parent folder")
 
     # set the parent change value
-    parent.change += 1
-    if parent.change > 9999:
-        parent.change = 0
+    parent.change = uuid.uuid4().hex
 
     if 'brief' in folder_dict:
         brief = folder_dict['brief']
