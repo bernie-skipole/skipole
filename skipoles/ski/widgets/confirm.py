@@ -49,6 +49,7 @@ class ConfirmBox1(Widget):
                         'button1_class':FieldArg("cssclass", ""),
                         'button1_style':FieldArg("cssstyle", ""),
                         'link_ident1':FieldArg("url", ''),
+                        'json_ident1':FieldArg("url", ''),
                         'get_field1_1':FieldArg("text", "", valdt=True, jsonset=True),
                         'get_field1_2':FieldArg("text","", valdt=True, jsonset=True),
                         'get_field1_3':FieldArg("text","", valdt=True, jsonset=True),
@@ -57,6 +58,7 @@ class ConfirmBox1(Widget):
                         'button2_class':FieldArg("cssclass", ""),
                         'button2_style':FieldArg("cssstyle", ""),
                         'link_ident2':FieldArg("url", ''),
+                        'json_ident2':FieldArg("url", ''),
                         'get_field2_1':FieldArg("text", "", valdt=True, jsonset=True),
                         'get_field2_2':FieldArg("text","", valdt=True, jsonset=True),
                         'get_field2_3':FieldArg("text","", valdt=True, jsonset=True),
@@ -72,6 +74,8 @@ class ConfirmBox1(Widget):
         paradiv_class: The class of the div containing the paragraph
         para_class: The class of the TextBlock paragraph
         buttondiv_class: The class of the div holding the buttons
+        json_ident1: The url, ident or label to link by button1, expecting a json file to be returned
+        json_ident2: The url, ident or label to link by button2, expecting a json file to be returned
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name="div")
@@ -83,6 +87,8 @@ class ConfirmBox1(Widget):
         self[0][1] = tag.Part(tag_name="div")
         self[0][1][0] = tag.Part(tag_name="a", attribs={"role":"button"})
         self[0][1][1] = tag.Part(tag_name="a", attribs={"role":"button"})
+        self._jsonurl1 =''
+        self._jsonurl2 =''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -104,6 +110,8 @@ class ConfirmBox1(Widget):
             self[0][1][0].update_attribs({"class":self.get_field_value('button1_class')})
         if self.get_field_value('button1_style'):
             self[0][1][0].update_attribs({"style":self.get_field_value('button1_style')})
+        if self.get_field_value("json_ident1"):
+            self._jsonurl1 = skiboot.get_url(self.get_field_value("json_ident1"), proj_ident=page.proj_ident)
         if not self.get_field_value("link_ident1"):
             self[0][1][0][0] = "Warning: broken link"
         else:
@@ -126,6 +134,8 @@ class ConfirmBox1(Widget):
             self[0][1][1].update_attribs({"class":self.get_field_value('button2_class')})
         if self.get_field_value('button2_style'):
             self[0][1][1].update_attribs({"style":self.get_field_value('button2_style')})
+        if self.get_field_value("json_ident2"):
+            self._jsonurl2 = skiboot.get_url(self.get_field_value("json_ident2"), proj_ident=page.proj_ident)
         if not self.get_field_value("link_ident2"):
             self[0][1][1][0] = "Warning: broken link"
         else:
@@ -139,10 +149,26 @@ class ConfirmBox1(Widget):
                     self[0][1][1][0] = url
                 # create a url for the href
                 get_fields = {self.get_formname("get_field2_1"):self.get_field_value("get_field2_1"),
-                                            self.get_formname("get_field2_2"):self.get_field_value("get_field2_2"),
-                                            self.get_formname("get_field2_3"):self.get_field_value("get_field2_3")}
+                              self.get_formname("get_field2_2"):self.get_field_value("get_field2_2"),
+                              self.get_formname("get_field2_3"):self.get_field_value("get_field2_3")}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][1][1].update_attribs({"href": url})
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        if not (self._jsonurl1 or self._jsonurl2):
+            return
+        jscript = """  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        if self._jsonurl1 and self._jsonurl2:
+            return jscript + self._make_fieldvalues( url1=self._jsonurl1, url2=self._jsonurl2)
+        elif self._jsonurl1:
+            return jscript + self._make_fieldvalues( url1=self._jsonurl1)
+        else:
+            return jscript + self._make_fieldvalues( url2=self._jsonurl2)
 
 
     def __str__(self):
