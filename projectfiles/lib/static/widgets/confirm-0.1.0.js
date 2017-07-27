@@ -111,7 +111,7 @@ SKIPOLE.confirm.ConfirmBox1.prototype.eventfunc = function (e) {
         }
     var fieldvalues = this.fieldvalues;
     var button = $(e.target);
-    var button_num = button.parent().index();
+    var button_num = button.index();
     var href = button.attr('href');
     if (!href) {
         return;
@@ -138,19 +138,6 @@ SKIPOLE.confirm.ConfirmBox1.prototype.eventfunc = function (e) {
         }
     e.preventDefault();
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 SKIPOLE.confirm.ConfirmBox2 = function (widg_id, error_message, fieldmap) {
