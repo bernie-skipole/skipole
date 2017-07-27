@@ -105,6 +105,52 @@ SKIPOLE.confirm.ConfirmBox1.prototype.setvalues = function (fieldlist, result) {
         a_2.attr('href', url);
         }
     };
+SKIPOLE.confirm.ConfirmBox1.prototype.eventfunc = function (e) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var button = $(e.target);
+    var button_num = button.parent().index();
+    var href = button.attr('href');
+    if (!href) {
+        return;
+        }
+    var senddata = href.substring(href.indexOf('?')+1);
+    if (button_num === 0) {
+        if (!fieldvalues["url1"]) {
+            return;
+            }
+        $.getJSON(fieldvalues["url1"], senddata)
+            .done(function(result){
+                SKIPOLE.setfields(result);
+                });
+        } else if (button_num === 1) {
+            if (!fieldvalues["url2"]) {
+                return;
+                }
+            $.getJSON(fieldvalues["url2"], senddata)
+                .done(function(result){
+                SKIPOLE.setfields(result);
+                });
+        } else {
+            return;
+        }
+    e.preventDefault();
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 SKIPOLE.confirm.ConfirmBox2 = function (widg_id, error_message, fieldmap) {
