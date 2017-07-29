@@ -17,7 +17,8 @@
 "widget_class": "w3-section"
 },
 "ShowPara2": {
-"close_class": "w3-button w3-round w3-theme-l1 w3-right"
+"close_class": "w3-button w3-round w3-theme-l1 w3-right",
+"widget_class": "w3-panel w3-theme-action w3-center"
 },
 "DivPara": {
 "error_class": "w3-red",
@@ -63,8 +64,7 @@
 "button_class": "w3-button w3-theme-d4 w3-margin-left",
 "input_class": "ski_input",
 "inputdiv_class": "w3-section",
-"widget_class": "",
-"widget_style": ""
+"widget_class": "w3-section"
 },
 "TextInput4": {
 "label_class": "ski_left_label",
@@ -293,6 +293,14 @@
 "widget_class": "w3-modal",
 "error_class": "w3-panel",
 "buttondiv_class": "w3-panel"
+},
+"ErrorClear2": {
+"close_class": "w3-button w3-round w3-theme-l1 w3-right",
+"widget_class": "w3-modal",
+"error_class": "w3-panel w3-center w3-red",
+"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"buttondiv_class": "w3-bar",
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d3"
 }
 },
 "logins": {
@@ -310,10 +318,26 @@
 "para_class": "",
 "buttondiv_class": "w3-bar",
 "button1_class": "w3-button w3-round w3-theme-d4",
-"button2_class": "w3-button w3-round w3-theme-d4 w3-right",
+"button2_class": "w3-button w3-round w3-theme-d4",
 "paradiv_class": "w3-panel",
-"button2_style": "margin-right:20%",
-"button1_style": "margin-left:20%"
+"button2_style": "",
+"button1_style": "margin-left:20%;margin-right:10px;"
+},
+"AlertClear1": {
+"widget_class": "w3-modal",
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d4",
+"inner_class": "w3-panel w3-theme-d4",
+"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"buttondiv_class": "w3-bar"
+},
+"ConfirmBox1": {
+"widget_class": "w3-modal",
+"paradiv_class": "w3-panel",
+"button1_class": "w3-button w3-round w3-theme-d4",
+"button1_style": "margin-left:20%;margin-right:10px;",
+"button2_class": "w3-button w3-round w3-theme-d4",
+"button2_style": "",
+"buttondiv_class": "w3-bar"
 }
 }
 },
