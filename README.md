@@ -24,4 +24,6 @@ This serves the application using the python standard library wsgiref.simple_ser
 
 It is intended that in a finished project the application could be served via any wsgi server.
 
-The Downloads section of bitbucket.org/skipole/skipole contains the skipole tar file containing the framework, the latest version should be downloaded, extracted and the skipole.py script will be found within. Further information can be found from the wiki pages of this site, and the admin web interface contains its own documentation.
+The Downloads section of bitbucket.org/skipole/skipole contains the skipole tar file containing the framework, the latest version can be downloaded, extracted and the skipole.py script will be found within, it has no dependencies other than python 3.2 or above. So far it has been developed on Linux only, may work on Windows, not sure!
+
+Further information can be found from the wiki pages of this site, and the admin web interface contains its own documentation.
