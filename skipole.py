@@ -142,6 +142,7 @@ if not (args.SYMLINK or args.admin or args.delete or args.listprojects or args.n
         # Take an existing folder path
         while True:
             path = input('Give the folder path:')
+            path = os.path.expanduser(path)
             if not os.path.isdir(path):
                 print("Folder not found.")
                 continue
@@ -153,6 +154,7 @@ if not (args.SYMLINK or args.admin or args.delete or args.listprojects or args.n
             path = input('Input a new folder path:')
             if not path:
                 continue
+            path = os.path.expanduser(path)
             if os.path.exists(path):
                 print("This folder already exists!")
                 continue
@@ -239,12 +241,14 @@ else:
 
     # symlink an existing project
     if args.symlink and (not args.new) and (not args.source):
-        skipoles.make_symlink_from_project(args.symlink, project)
+        sympath = os.path.expanduser(args.symlink)
+        skipoles.make_symlink_from_project(sympath, project)
         sys.exit(0)
 
     # symlink an external project directory
     if args.SYMLINK:
-        skipoles.make_symlink_to_project(args.SYMLINK, project)
+        sympath = os.path.expanduser(args.SYMLINK)
+        skipoles.make_symlink_to_project(sympath, project)
         sys.exit(0)
 
     # Delete project
@@ -268,7 +272,8 @@ else:
     if args.new:
         if args.symlink:
             # Create a new project in directory and symlink it
-            skipoles.copy_newproj_to_symlink(args.symlink, project)
+            sympath = os.path.expanduser(args.symlink)
+            skipoles.copy_newproj_to_symlink(sympath, project)
         else:
             # Create a new project
             skipoles.copy_newproj_to(project)
@@ -278,7 +283,8 @@ else:
     if args.source:
         if args.symlink:
             # Create a copy project in directory and symlink it
-            skipoles.copy_proj_to_symlink(args.symlink, args.source, project)
+            sympath = os.path.expanduser(args.symlink)
+            skipoles.copy_proj_to_symlink(sympath, args.source, project)
         else:
             # create new project by copying an existing project
             skipoles.copy_proj(args.source, project)
