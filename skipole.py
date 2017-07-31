@@ -55,6 +55,7 @@ adminproj = skipoles.adminproj
 # the directory where projectfiles are held
 projectfiles = skipoles.projectfiles
 
+
 # Set up command line parser
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -64,9 +65,10 @@ Enables a user to create a wsgi application which calls your
 own Python functions to set web page widget parameters.
 
 Typically a new project can be created with the call:
-skipole.py -n myprojectname
+skipole.py
+without any arguments.
 
-And administered with:
+And an existing project can be administered with:
 skipole.py -a myprojectname
 ''')
 
@@ -109,116 +111,191 @@ args = parser.parse_args()
 
 port = args.port
 
-project = args.project
-
-
-if args.listprojects and (project or args.delete or args.new or args.admin or args.tarimport or args.symlink or args.SYMLINK or args.source):
-    parser.error("The -l/--list option cannot be used with any other option.")
-
-if args.symlink and (args.delete or args.admin or args.tarimport or args.SYMLINK):
-    parser.error("The -s/--symlink option can only be used with a directory path and project name, with only -n and -c options allowed.")
-
-if args.SYMLINK and (args.delete or args.new or args.admin or args.tarimport or args.source or args.symlink):
-    parser.error("The -S/--SYMLINK option can only be used with a directory path, and project name, not with any other option.")
-
-if args.source and (args.delete or args.new  or args.admin or args.tarimport):
-    parser.error("The arguments combination is invalid")
-
-if args.tarimport and (project or args.delete or args.new or args.admin):
-    parser.error("The -i/--import option can only be used with a path to a tar file")
-
-
-# List projects
-if args.listprojects:
-    plist = os.listdir(projectfiles)
-    plist.sort()
-    if plist:
-        print("Project List:")
-        print(*plist, sep="\n")
-    else:
-        print("No projects available")
-    parser.exit()
-
-# project tar file to be imported
-if args.tarimport:
-    skipoles.import_project(args.tarimport)
-    sys.exit(0)
-
-if not project:
-    print("Error - a project name is required")
-    sys.exit(4)
-
-# Do checks on given project name
-
-if not (project.isalnum() and project.islower()):
-    print("Error - the project name must be lower case alphanumeric only")
-    sys.exit(3)
-
-if (project == adminproj) or (project == skipoles.newproj) or (project == skipoles.libproj):
-    if args.delete:
-        print("Error - %s should not be deleted." % (project,))
-        sys.exit(4)
-    print("Warning - %s is a system project and should not normally be altered." % (project,))
-    print("Are you sure you wish to continue?")
+if not (args.SYMLINK or args.admin or args.delete or args.listprojects or args.new or args.option or args.project or args.source or args.symlink or args.tarimport):
+    # skipole.py has been called on its own, or just with a port option
+    # create interactive session to build a new project
+    admin_mode = True
+    skipoles.set_debug(True)
+    print("skipole.py without arguments indicates you wish to create a new project, is this correct?")
     responce = input('Type Yes to proceed :')
     if responce != 'Yes':
-        print("Command terminated.")
+        print("Try skipole.py -h to list script options.\nCommand terminated.")
+        sys.exit(0)
+    plist = os.listdir(projectfiles)
+    plist.sort()
+    project = ''
+    while True:
+        project = input('Type a new project name :')
+        if not (project.isalnum() and project.islower()):
+            print("The project name must be lowercase alphanumeric")
+            continue
+        if (project == adminproj) or (project == skipoles.newproj) or (project == skipoles.libproj):
+            print("Invalid project name")
+            continue
+        if project in plist:
+            print("This project already exists")
+            continue
+        break
+    print("A new project requires an empty project folder.")
+    responce = input('Have you already created a folder? (Yes if you have):')
+    if responce == 'Yes':
+        # Take an existing folder path
+        while True:
+            path = input('Give the folder path:')
+            if not os.path.isdir(path):
+                print("Folder not found.")
+                continue
+            break
+    else:
+        # create a new folder path
+        print("A new folder will be created.")
+        while True:
+            path = input('Input a new folder path:')
+            if not path:
+                continue
+            if os.path.exists(path):
+                print("This folder already exists!")
+                continue
+            os.mkdir(path)
+            break
+    projectcopy = ''
+    if plist:
+        responce = input('Do you wish to copy an existing project? (Yes if you do):')
+        if responce == 'Yes':
+            print("Project List:")
+            print(*plist, sep="\n")
+            projectcopy = input('Project name to copy:')
+            if projectcopy not in plist:
+                sys.exit(0)
+    print("Building project %s in folder %s" % (project, path))
+    print("For future use - to run the project use 'skipole.py %s'" %(project,))
+    print("Or to administer the project, use 'skipole.py -a %s'" %(project,))
+    if projectcopy:
+        # copy an existing project in directory and symlink it
+        skipoles.copy_proj_to_symlink(path, projectcopy, project)
+    else:
+        # Create a new project in directory and symlink it
+        skipoles.copy_newproj_to_symlink(path, project)
+
+else:
+    # take options from parser
+    project = args.project
+
+    if args.listprojects and (project or args.delete or args.new or args.admin or args.tarimport or args.symlink or args.SYMLINK or args.source):
+        parser.error("The -l/--list option cannot be used with any other option.")
+
+    if args.symlink and (args.delete or args.admin or args.tarimport or args.SYMLINK):
+        parser.error("The -s/--symlink option can only be used with a directory path and project name, with only -n and -c options allowed.")
+
+    if args.SYMLINK and (args.delete or args.new or args.admin or args.tarimport or args.source or args.symlink):
+        parser.error("The -S/--SYMLINK option can only be used with a directory path, and project name, not with any other option.")
+
+    if args.source and (args.delete or args.new  or args.admin or args.tarimport):
+        parser.error("The arguments combination is invalid")
+
+    if args.tarimport and (project or args.delete or args.new or args.admin):
+        parser.error("The -i/--import option can only be used with a path to a tar file")
+
+
+    # List projects
+    if args.listprojects:
+        plist = os.listdir(projectfiles)
+        plist.sort()
+        if plist:
+            print("Project List:")
+            print(*plist, sep="\n")
+        else:
+            print("No projects available")
+        parser.exit()
+
+    # project tar file to be imported
+    if args.tarimport:
+        skipoles.import_project(args.tarimport)
         sys.exit(0)
 
-# symlink an existing project
-if args.symlink and (not args.new) and (not args.source):
-    skipoles.make_symlink_from_project(args.symlink, project)
-    sys.exit(0)
+    if not project:
+        print("Error - a project name is required")
+        sys.exit(4)
 
-# symlink an external project directory
-if args.SYMLINK:
-    skipoles.make_symlink_to_project(args.SYMLINK, project)
-    sys.exit(0)
+    # Do checks on given project name
 
-# Delete project
-if args.delete:
-    skipoles.delete_project(project)
-    sys.exit(0)
+    if not (project.isalnum() and project.islower()):
+        print("Error - the project name must be lower case alphanumeric only")
+        sys.exit(3)
 
-project_path = os.path.join(projectfiles, project)
+    if (project == adminproj) or (project == skipoles.newproj) or (project == skipoles.libproj):
+        if args.delete:
+            print("Error - %s should not be deleted." % (project,))
+            sys.exit(4)
+        print("Warning - %s is a system project and should not normally be altered." % (project,))
+        print("Are you sure you wish to continue?")
+        responce = input('Type Yes to proceed :')
+        if responce != 'Yes':
+            print("Command terminated.")
+            sys.exit(0)
 
-if args.new or args.source:
-    # new project is to be created
-    if os.path.isdir(project_path):
-        print("Error - This project name - or at least the directory %s already exists." % (project_path,))
-        sys.exit(5)
-else:
-    # an existing project is to be loaded
-    if not os.path.isdir(project_path):
-        print("Error - Project not found. Try with '-n %s' to create a new project." % (project,))
-        sys.exit(6)
+    # symlink an existing project
+    if args.symlink and (not args.new) and (not args.source):
+        skipoles.make_symlink_from_project(args.symlink, project)
+        sys.exit(0)
 
-if args.new:
-    if args.symlink:
-        # Create a new project in directory and symlink it
-        skipoles.copy_newproj_to_symlink(args.symlink, project)
+    # symlink an external project directory
+    if args.SYMLINK:
+        skipoles.make_symlink_to_project(args.SYMLINK, project)
+        sys.exit(0)
+
+    # Delete project
+    if args.delete:
+        skipoles.delete_project(project)
+        sys.exit(0)
+
+    project_path = os.path.join(projectfiles, project)
+
+    if args.new or args.source:
+        # new project is to be created
+        if os.path.isdir(project_path):
+            print("Error - This project name - or at least the directory %s already exists." % (project_path,))
+            sys.exit(5)
     else:
-        # Create a new project
-        skipoles.copy_newproj_to(project)
-    print("Project %s created." % (project,))
-    sys.exit(0)
+        # an existing project is to be loaded
+        if not os.path.isdir(project_path):
+            print("Error - Project not found. Try 'skipole.py -l' option to list projects.")
+            sys.exit(6)
 
-if args.source:
-    if args.symlink:
-        # Create a copy project in directory and symlink it
-        skipoles.copy_proj_to_symlink(args.symlink, args.source, project)
+    if args.new:
+        if args.symlink:
+            # Create a new project in directory and symlink it
+            skipoles.copy_newproj_to_symlink(args.symlink, project)
+        else:
+            # Create a new project
+            skipoles.copy_newproj_to(project)
+        print("Project %s created." % (project,))
+        sys.exit(0)
+
+    if args.source:
+        if args.symlink:
+            # Create a copy project in directory and symlink it
+            skipoles.copy_proj_to_symlink(args.symlink, args.source, project)
+        else:
+            # create new project by copying an existing project
+            skipoles.copy_proj(args.source, project)
+        print("Project %s copied to %s." % (args.source, project))
+        sys.exit(0)
+
+    if args.admin:
+        # set debug mode on
+        admin_mode = True
+        skipoles.set_debug(True)
     else:
-        # create new project by copying an existing project
-        skipoles.copy_proj(args.source, project)
-    print("Project %s copied to %s." % (args.source, project))
-    sys.exit(0)
+        admin_mode = False
 
-if args.admin:
-    # set debug mode on
-    skipoles.set_debug(True)
+
+######################################
+# create the site object
+######################################
 
 # If necessary, load the admin project
-if args.admin and (project != adminproj):
+if admin_mode and (project != adminproj):
     adminprojectinstance = skipoles.load_project(adminproj, options = {}, rootproject = False)
     if adminprojectinstance is None:
         print("Admin project %s not found" % (adminproj,))
@@ -236,7 +313,7 @@ options = {project: args.option}
 # load the project
 site = skipoles.load_project(project, options)
 
-if args.admin and (project != adminproj):
+if admin_mode and (project != adminproj):
     # and add the admin project to the site as a sub-project
     host = "127.0.0.1"
     site.add_project(adminprojectinstance)
@@ -261,13 +338,17 @@ httpd = make_server(host, port, application)
 
 print("Serving project %s on port %s... open a browser and go to\nlocalhost:%s%s" % (project, port, port, site.url))
 
-if args.admin and (project != adminproj) :
+if admin_mode and (project != adminproj) :
     print("or to\nlocalhost:%s%s%s\nto administer the site." % (port, site.url, adminproj))
 
 print("Press ctrl-c to stop.")
 
-if args.admin:
+if admin_mode:
     print("Be sure to commit the project first to save any changes.")
 
 # Serve until process is killed
 httpd.serve_forever()
+
+
+
+

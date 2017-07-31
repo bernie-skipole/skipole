@@ -61,6 +61,16 @@ def admin_project():
     "Returns the ski admin project name"
     return skiboot.admin_project()
 
+
+def get_debug():
+    "Returns the debug mode"
+    return skiboot.get_debug()
+
+def set_debug(mode):
+    "Sets debug mode"
+    skiboot.set_debug(mode)
+
+
 def get_proj_data(project, key):
     "Returns the value from the proj_data dictionary, or None if not found"
     # raise error if invalid project

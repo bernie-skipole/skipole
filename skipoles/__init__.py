@@ -126,7 +126,7 @@ def delete_project(proj_ident):
     project_dir = skiboot.projectpath(proj_ident)
     code_dir = skiboot.projectcode(proj_ident)
 
-    if (not os.path.isdir(project_dir)) and (not os.path.isdir(code_dir)):
+    if not ( os.path.isdir(project_dir) or os.path.islink(project_dir) or os.path.isdir(code_dir) or os.path.islink(code_dir)):
         # project directories not found
         print("This project has not been found")
         return
@@ -144,7 +144,7 @@ def delete_project(proj_ident):
     projectcode_deleted = False
 
     # delete project files directory
-    if os.path.isdir(project_dir):
+    if os.path.isdir(project_dir) or os.path.islink(project_dir):
         try:
             if os.path.islink(project_dir):
                 os.unlink(project_dir)
@@ -159,7 +159,7 @@ def delete_project(proj_ident):
         print("Directory %s not found" % (project_dir,))
 
     # delete project code directory
-    if os.path.isdir(code_dir):
+    if os.path.isdir(code_dir) or os.path.islink(code_dir):
         try:
             if os.path.islink(code_dir):
                 os.unlink(code_dir)
