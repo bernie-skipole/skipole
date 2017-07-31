@@ -10,17 +10,13 @@ Skipole requires python 3.2 or later.
 
 A new project can be created with the command:
 
-skipole.py -n myprojectname
+python3 skipole.py
 
-Or more typically, a pre-existing sample project can be copied, to take advantage of CSS classes applied to widgets. The copy command being:
+This creates and serves a new project using the python standard library wsgiref.simple_server. Connecting to localhost:8000 will allow you to view the web site, and administer it at localhost:8000/skiadmin
 
-skipole.py -c sampleproject myprojectname
+To serve and administer an already existing project, run:
 
-Once created, the project can be administered with:
-
-skipole.py -a myprojectname
-
-This serves the application using the python standard library wsgiref.simple_server. Connecting to localhost:8000 will allow you to view the web site, and administer it at localhost:8000/skiadmin
+python3 skipole.py -a myprojectname
 
 It is intended that in a finished project the application could be served via any wsgi server.
 
