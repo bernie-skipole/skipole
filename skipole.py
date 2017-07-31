@@ -116,10 +116,10 @@ if not (args.SYMLINK or args.admin or args.delete or args.listprojects or args.n
     # create interactive session to build a new project
     admin_mode = True
     skipoles.set_debug(True)
-    print("skipole.py without arguments indicates you wish to create a new project, is this correct?")
+    print("Do you wish to create a new project?")
     responce = input('Type Yes to proceed :')
     if responce != 'Yes':
-        print("Try skipole.py -h to list script options.\nCommand terminated.")
+        print("Try skipole.py -h to list options.\nCommand terminated.")
         sys.exit(0)
     plist = os.listdir(projectfiles)
     plist.sort()
@@ -160,13 +160,16 @@ if not (args.SYMLINK or args.admin or args.delete or args.listprojects or args.n
             break
     projectcopy = ''
     if plist:
-        responce = input('Do you wish to copy an existing project? (Yes if you do):')
-        if responce == 'Yes':
-            print("Project List:")
-            print(*plist, sep="\n")
-            projectcopy = input('Project name to copy:')
-            if projectcopy not in plist:
-                sys.exit(0)
+        while True:
+            responce = input('Do you wish to copy an existing project? (Yes if you do):')
+            if responce == 'Yes':
+                print("Project List:")
+                print(*plist, sep="\n")
+                projectcopy = input('Project name to copy:')
+                if projectcopy not in plist:
+                    print("This project has not been recognized")
+                    continue
+            break
     print("Building project %s in folder %s" % (project, path))
     print("For future use - to run the project use 'skipole.py %s'" %(project,))
     print("Or to administer the project, use 'skipole.py -a %s'" %(project,))
@@ -317,7 +320,7 @@ if admin_mode and (project != adminproj):
     # and add the admin project to the site as a sub-project
     host = "127.0.0.1"
     site.add_project(adminprojectinstance)
-    print("Administration project at %s%s has been included." % (site.url, adminproj))
+    print("Administration at %s%s has been included." % (site.url, adminproj))
 else:
     # remove the admin project
     site.remove_project(adminproj)
