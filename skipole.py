@@ -59,7 +59,7 @@ projectfiles = skipoles.projectfiles
 # Set up command line parser
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
-description='Skipole web framework',
+description='Skipole WSGI application generator',
 epilog='''
 Enables a user to create a wsgi application which calls your
 own Python functions to set web page widget parameters.
@@ -91,7 +91,7 @@ parser.add_argument("-n", "--new", action='store_true', dest="new", default=Fals
                   help="Create a new project with the given project name.")
 
 parser.add_argument("-d", "--delete", action='store_true', dest="delete", default=False,
-                  help="Delete the given project.")
+                  help="Delete the given project (deletes symlinks).")
 
 parser.add_argument("-i", "--import", dest="tarimport",
                   help="Import a project tar.gz file.")
@@ -348,12 +348,9 @@ httpd = make_server(host, port, application)
 print("Serving project %s on port %s... open a browser and go to\nlocalhost:%s%s" % (project, port, port, site.url))
 
 if admin_mode and (project != adminproj) :
-    print("or to\nlocalhost:%s%s%s\nto administer the site." % (port, site.url, adminproj))
+    print("or to administer the site, go to\nlocalhost:%s%s%s" % (port, site.url, adminproj))
 
 print("Press ctrl-c to stop.")
-
-if admin_mode:
-    print("Be sure to commit the project first to save any changes.")
 
 # Serve until process is killed
 httpd.serve_forever()
