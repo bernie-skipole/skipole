@@ -37,21 +37,19 @@ from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, Field
 
 
 class ServerTimeStamp(Widget):
-    """A widget containing the current server time. consists of a span with time stamp, if an error is raised, the span class
-         becomes the error_class and the span text changes to the error message"""
+    """A widget containing the current server time. consists of a span with time stamp"""
 
-    error_location = 0
+    # This class does not display any error messages
+    display_errors = False
 
     arg_descriptions = {
                         'timestamp':FieldArg("text", '', jsonset=True),
-                        'error_class':FieldArg("cssclass", ''),
                         'utc':FieldArg("boolean", True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
         """
         timestamp: normally empty and timestamp will automatically be displayed, or other text can be set here.
-        error_class: The class of the widget set on error - which provides the appearance via CSS
         utc: If True, time is utc, if False it is local time
         """
         Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
@@ -59,29 +57,19 @@ class ServerTimeStamp(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"
-        if self.error_status:
-            self.update_attribs({"class":self.get_field_value('error_class')})
+        # set timer or string
+        if self.get_field_value("timestamp"):
+            self[0] = self.get_field_value("timestamp")
+        elif self.get_field_value("utc"):
+            self[0] = time.strftime("%c", time.gmtime())
         else:
-            # set timer or string
-            if self.get_field_value("timestamp"):
-                self[0] = self.get_field_value("timestamp")
-            elif self.get_field_value("utc"):
-                self[0] = time.strftime("%c", time.gmtime())
-            else:
-                self[0] = time.strftime("%c", time.localtime())
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets error_class into fieldvalues"""
-        if not self.get_field_value('error_class'):
-            return ''
-        return self._make_fieldvalues('error_class')
+            self[0] = time.strftime("%c", time.localtime())
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class, changes to error_class on error -->
-  <!-- Normally timestamp, replaced by error message on error -->
+<span>  <!--  class set to widget_class -->
+  <!-- Normally timestamp -->
 </span>
 """
 
@@ -90,41 +78,119 @@ class PageIdent(Widget):
     """A widget containing the given ident which is set within the text
          If no page ident is given, shows ident of the current page"""
 
-    error_location = 0
+    # This class does not display any error messages
+    display_errors = False
 
     arg_descriptions = {'page_ident':FieldArg("ident", ''),
-                        'error_class':FieldArg("cssclass", '')
+                        'span_text':FieldArg("text", "", jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
         """
         page_ident: The ident of a page or folder, converted to string
-        error_class: The class of the widget set on error - which provides the appearance via CSS
+        span_text: if given, overrides the page_ident value
         """
         Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"
-        if not self[0]:
-            if self.get_field_value("page_ident"):
-                self[0] = self.get_field_value("page_ident").to_comma_str()
-            else:
-                self[0] = page.ident.to_comma_str()
-        if self.error_status:
-            self.update_attribs({"class":self.get_field_value('error_class')})
+        if self.get_field_value("span_text"):
+            self[0] = self.get_field_value("span_text")
+        elif self.get_field_value("page_ident"):
+            self[0] = self.get_field_value("page_ident").to_comma_str()
+        else:
+            self[0] = page.ident.to_comma_str()
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets error_class into fieldvalues"""
-        if not self.get_field_value('error_class'):
-            return ''
-        return self._make_fieldvalues('error_class')
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class, changes to error_class on error -->
-  <!-- string value of the page_ident, replaced by error message on error -->
+<span>  <!--  class set to widget_class -->
+  <!-- string value of the page_ident, or span_text -->
+</span>
+"""
+
+
+class PageName(Widget):
+    """A widget containing the given page name which is set within the text
+         If no page ident is given, shows name of the current page"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'page_ident':FieldArg("ident", ''),
+                        'span_text':FieldArg("text", "", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        page_ident: The ident of a page or folder
+        span_text: if given, overrides the page name value
+        """
+        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        self[0] = ""
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the element"
+        if self.get_field_value("span_text"):
+            self[0] = self.get_field_value("span_text")
+        elif self.get_field_value("page_ident"):
+            requested_page = skiboot.get_item(self.get_field_value("page_ident"))
+            if requested_page is None:
+                self[0] = "Unknown page"
+            else:
+                self[0] = requested_page.name
+        else:
+            self[0] = page.name
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<span>  <!--  class set to widget_class -->
+  <!-- The page name -->
+</span>
+"""
+
+
+class PageDescription(Widget):
+    """A widget containing the page brief of the given ident which is set within the text
+         If no page ident is given, shows brief of the current page"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'page_ident':FieldArg("ident", ''),
+                        'span_text':FieldArg("text", "", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        page_ident: The ident of a page or folder
+        span_text: if given, overrides the page description value
+        """
+        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        self[0] = ""
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the element"
+        if self.get_field_value("span_text"):
+            self[0] = self.get_field_value("span_text")
+        elif self.get_field_value("page_ident"):
+            requested_page = skiboot.get_item(self.get_field_value("page_ident"))
+            if requested_page is None:
+                self[0] = "Unknown page"
+            else:
+                self[0] = requested_page.brief
+        else:
+            self[0] = page.brief
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<span>  <!--  class set to widget_class -->
+  <!-- The page description -->
 </span>
 """
 

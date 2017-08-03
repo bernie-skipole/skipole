@@ -31,37 +31,14 @@ SKIPOLE.info = {};
 
 SKIPOLE.info.ServerTimeStamp = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
     };
 SKIPOLE.info.ServerTimeStamp.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.info.ServerTimeStamp.prototype.constructor = SKIPOLE.info.ServerTimeStamp;
-SKIPOLE.info.ServerTimeStamp.prototype.show_error = function (error_message) {
-    if (!error_message) {
-        error_message = this.error_message;
-        }
-    if (!error_message) {
-        error_message = "Unknown Error";
-        }
-    var the_widg = this.widg;
-    the_widg.attr("data-status", "error");
-    the_widg.text(error_message);
-    if ("error_class" in this.fieldvalues) {
-         the_widg.attr("class", this.fieldvalues["error_class"]);
-        }
-    };
-SKIPOLE.info.ServerTimeStamp.prototype.clear_error = function () {
-    /* prototype clears data-status  */
-    var the_widg = this.widg;
-    if (the_widg.attr("data-status") == "error") {
-        the_widg.removeAttr( "data-status" )
-        }
-    };
 SKIPOLE.info.ServerTimeStamp.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    /* check if an error message or clear_error is given */
-    this.check_error(fieldlist, result);
-    // timestamp
     var timestamp_text = this.fieldarg_in_result('timestamp', result, fieldlist);
     if (timestamp_text) {
         this.widg.text(timestamp_text);
@@ -71,28 +48,54 @@ SKIPOLE.info.ServerTimeStamp.prototype.setvalues = function (fieldlist, result) 
 
 SKIPOLE.info.PageIdent = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
     };
 SKIPOLE.info.PageIdent.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.info.PageIdent.prototype.constructor = SKIPOLE.info.PageIdent;
-SKIPOLE.info.PageIdent.prototype.show_error = function (error_message) {
-    if (!error_message) {
-        error_message = this.error_message;
+SKIPOLE.info.PageIdent.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - span_text */
+   if (!this.widg_id) {
+        return;
         }
-    if (!error_message) {
-        error_message = "Unknown Error";
-        }
-    var the_widg = this.widg;
-    the_widg.attr("data-status", "error");
-    the_widg.text(error_message);
-    if ("error_class" in this.fieldvalues) {
-         the_widg.attr("class", this.fieldvalues["error_class"]);
+    var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
+    if (span_text) {
+        this.widg.text(span_text);
         }
     };
-SKIPOLE.info.PageIdent.prototype.clear_error = function () {
-    /* prototype clears data-status  */
-    var the_widg = this.widg;
-    if (the_widg.attr("data-status") == "error") {
-        the_widg.removeAttr( "data-status" )
+
+
+SKIPOLE.info.PageName = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.info.PageName.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.info.PageName.prototype.constructor = SKIPOLE.info.PageName;
+SKIPOLE.info.PageName.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - span_text */
+   if (!this.widg_id) {
+        return;
+        }
+    var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
+    if (span_text) {
+        this.widg.text(span_text);
+        }
+    };
+
+
+SKIPOLE.info.PageDescription = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.info.PageDescription.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.info.PageDescription.prototype.constructor = SKIPOLE.info.PageDescription;
+SKIPOLE.info.PageDescription.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - span_text */
+   if (!this.widg_id) {
+        return;
+        }
+    var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
+    if (span_text) {
+        this.widg.text(span_text);
         }
     };
 
