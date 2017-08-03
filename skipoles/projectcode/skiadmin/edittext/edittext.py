@@ -50,11 +50,7 @@ def retrieve_edittextpage(caller_ident, ident_list, submit_list, submit_dict, ca
     utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
 
     page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the text string."
+    page_data[("adminhead","page_head","small_text")] = "Edit the text string."
 
     # so header text and navigation done, now continue with the page contents
 
@@ -152,7 +148,6 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
     # goes to edit text, with location set to the new location
     call_data['location'] = new_location
-    call_data['status'] = "New text element created"
 
 
 def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -210,7 +205,6 @@ def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
     # goes to edit symbol, with location set to the new location
     call_data['location'] = new_location
-    call_data['status'] = "New HTML symbol created"
 
 
 def retrieve_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -409,6 +403,5 @@ def create_insert_comment(caller_ident, ident_list, submit_list, submit_dict, ca
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
     # goes to edit comment, with location set to the new location
     call_data['location'] = new_location
-    call_data['status'] = "New comment created"
 
 
