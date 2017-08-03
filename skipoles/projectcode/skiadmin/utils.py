@@ -61,6 +61,8 @@ def retrieve_edit_page(call_data, page_data):
     page_data[("adminhead","page_head","small_text")] = page.brief
 
     page_data[('page_edit','p_ident','page_ident')] = page.ident
+    page_data[('page_edit','p_name','page_ident')] = page.ident
+    page_data[('page_edit','p_description','page_ident')] = page.ident
 
     if "new_name" in call_data:
         page_data[('page_edit','p_rename','input_text')] = call_data["new_name"]

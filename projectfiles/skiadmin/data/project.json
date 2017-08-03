@@ -631,7 +631,13 @@ false,
 "parts": [
 [
 "Text",
-"Page ident: "
+"Page ident:"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
 ],
 [
 "Widget",
@@ -640,11 +646,81 @@ false,
 "name": "p_ident",
 "brief": "PageIdent",
 "fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
 "page_ident": null,
 "show": true,
-"show_error": "",
+"span_text": "",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Holds page name",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Page name:"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Widget",
+{
+"class": "info.PageName",
+"name": "p_name",
+"brief": "Shows page name",
+"fields": {
+"page_ident": null,
+"show": true,
+"span_text": "",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Page description",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Description:"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Widget",
+{
+"class": "info.PageDescription",
+"name": "p_description",
+"brief": "page description",
+"fields": {
+"page_ident": null,
+"show": true,
+"span_text": "",
 "widget_class": "",
 "widget_style": ""
 }
@@ -19968,10 +20044,7 @@ false
 "name": "today",
 "brief": "ServerTimeStamp",
 "fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
 "show": true,
-"show_error": "",
 "timestamp": "",
 "utc": true,
 "widget_class": "",
@@ -20324,11 +20397,9 @@ false
 "name": "p_ident",
 "brief": "PageIdent",
 "fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
 "page_ident": null,
 "show": true,
-"show_error": "",
+"span_text": "",
 "widget_class": "",
 "widget_style": ""
 }
@@ -24880,11 +24951,9 @@ false
 "name": "ie1",
 "brief": "PageIdent",
 "fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
 "page_ident": null,
 "show": true,
-"show_error": "",
+"span_text": "",
 "widget_class": "",
 "widget_style": ""
 }
