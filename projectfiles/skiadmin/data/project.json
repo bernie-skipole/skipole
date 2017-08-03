@@ -2,7 +2,7 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.32",
+"version": "0.0.33",
 "skipole": "0.0.32",
 "subprojects": {
 "lib": {
@@ -336,7 +336,7 @@
 "parts": [
 [
 "Text",
-"Further information can be found at the project wiki:"
+"Further information can be found at:"
 ],
 [
 "HTMLSymbol",
@@ -935,6 +935,35 @@ false,
 "widget_style": "width : 50%; right : 0; top : 80px;height : 70vh;"
 }
 }
+],
+[
+"Widget",
+{
+"class": "confirm.AlertClear1",
+"name": "show_status",
+"brief": "Shows modal error or status messages",
+"fields": {
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d4",
+"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"buttondiv_class": "w3-bar",
+"buttondiv_style": "",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"hide": true,
+"inner_class": "w3-panel w3-theme-d4",
+"inner_style": "",
+"link_ident": "no_javascript",
+"para_text": "",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-modal",
+"widget_style": ""
+}
+}
 ]
 ]
 }
@@ -968,7 +997,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -1720,7 +1749,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -2079,7 +2108,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -2438,7 +2467,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -2688,7 +2717,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -3480,7 +3509,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -3939,7 +3968,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -5622,7 +5651,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -7725,7 +7754,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -8486,7 +8515,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -9071,7 +9100,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -9479,7 +9508,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -10051,7 +10080,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -10594,7 +10623,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -11229,7 +11258,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -11522,7 +11551,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -11825,7 +11854,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -12172,7 +12201,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -12586,7 +12615,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -13301,7 +13330,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -14041,7 +14070,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -14477,7 +14506,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -14854,7 +14883,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -15809,7 +15838,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -16524,7 +16553,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -16818,7 +16847,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -17677,7 +17706,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -20034,7 +20063,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -20446,7 +20475,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -21196,7 +21225,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -21696,7 +21725,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -22444,7 +22473,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -22963,7 +22992,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -23337,7 +23366,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -23682,7 +23711,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -24023,7 +24052,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -24632,7 +24661,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -25438,7 +25467,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -25786,7 +25815,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -26155,7 +26184,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -26926,7 +26955,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -27297,7 +27326,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -27526,7 +27555,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -27755,7 +27784,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -28310,7 +28339,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -29835,7 +29864,7 @@ false,
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -30248,7 +30277,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -30679,7 +30708,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -31901,7 +31930,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -32877,7 +32906,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -33301,7 +33330,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -33839,7 +33868,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -34628,7 +34657,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -34918,7 +34947,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -35559,7 +35588,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -36199,7 +36228,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
@@ -36504,7 +36533,7 @@ false
 "backcol": "#bbbbbb",
 "default_error_widget": [
 "adminhead",
-"page_head"
+"show_status"
 ]
 },
 "head": [
