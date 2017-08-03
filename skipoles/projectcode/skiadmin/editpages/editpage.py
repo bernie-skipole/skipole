@@ -621,7 +621,6 @@ def move_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
     if 'part_loc' in call_data:
         del call_data['part_loc']
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-    call_data['status'] = "Element moved"
     raise GoTo(target = label, clear_submitted=True)
 
 
@@ -709,7 +708,6 @@ def move_up_right(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if 'part_loc' in call_data:
         del call_data['part_loc']
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-    call_data['status'] = "Element moved"
     raise GoTo(target = label, clear_submitted=True)
 
 
@@ -804,7 +802,6 @@ def move_down(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     if 'part_loc' in call_data:
         del call_data['part_loc']
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-    call_data['status'] = "Element moved"
     raise GoTo(target = label, clear_submitted=True)
 
 
@@ -898,7 +895,6 @@ def move_down_right(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if 'part_loc' in call_data:
         del call_data['part_loc']
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-    call_data['status'] = "Element moved"
     raise GoTo(target = label, clear_submitted=True)
 
 

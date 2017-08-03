@@ -589,6 +589,7 @@ class ImageLink1(Widget):
                         'img_ident':FieldArg("url", ''),
                         'width':FieldArg("text","100"),
                         'height':FieldArg("text","100"),
+                        'align':FieldArg("text",""),
                         'get_field1':FieldArg("text","", valdt=True),
                         'get_field2':FieldArg("text","", valdt=True),
                         'get_field3':FieldArg("text","", valdt=True),
@@ -618,6 +619,8 @@ class ImageLink1(Widget):
             self[0].set_attribs({'width':self.get_field_value('width')})
         elif self.get_field_value('height'):
             self[0].set_attribs({'height':self.get_field_value('height')})
+        if self.get_field_value('align'):
+            self[0].update_attribs({'align':self.get_field_value('align')})
         if not self.get_field_value("link_ident"):
             self._error = "Warning: broken link"
             return

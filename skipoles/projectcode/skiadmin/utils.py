@@ -28,6 +28,7 @@ import collections, json, os
 
 from ...ski import skiboot, widgets, tag
 from ...ski.excepts import FailPage, ServerError
+from ... import skilift
 
 
 def no_ident_data(call_data, keep=None):
@@ -53,28 +54,29 @@ def no_ident_data(call_data, keep=None):
 def retrieve_edit_page(call_data, page_data):
     "Common function used by page editors, placed here to be used by multiple pages"
 
-    editedproj = call_data['editedproj']
-    page = call_data['page']
+    page_number = call_data['page_number']
+    editedprojname = call_data['editedprojname']
+    info = skilift.item_info(editedprojname, page_number)
 
     # fills in header
-    page_data[("adminhead","page_head","large_text")] = page.name
-    page_data[("adminhead","page_head","small_text")] = page.brief
+    page_data[("adminhead","page_head","large_text")] = info.name
+    page_data[("adminhead","page_head","small_text")] = info.brief
 
-    page_data[('page_edit','p_ident','page_ident')] = page.ident
-    page_data[('page_edit','p_name','page_ident')] = page.ident
-    page_data[('page_edit','p_description','page_ident')] = page.ident
+    page_data[('page_edit','p_ident','page_ident')] = (editedprojname,page_number)
+    page_data[('page_edit','p_name','page_ident')] = (editedprojname,page_number)
+    page_data[('page_edit','p_description','page_ident')] = (editedprojname,page_number)
 
     if "new_name" in call_data:
         page_data[('page_edit','p_rename','input_text')] = call_data["new_name"]
     else:
-        page_data[('page_edit','p_rename','input_text')] = page.name
+        page_data[('page_edit','p_rename','input_text')] = info.name
 
-    page_data[('page_edit','p_parent','input_text')] = page.parentfolder_ident.to_comma_str()
+    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (editedprojname, info.parentfolder_number)
 
     if 'page_brief' in call_data:
         page_data[('page_edit','p_brief','input_text')] = call_data['page_brief']
     else:
-        page_data[('page_edit','p_brief','input_text')] = page.brief
+        page_data[('page_edit','p_brief','input_text')] = info.brief
 
 
 def save(call_data, page=None, section_name=None, section=None, widget_name=''):
