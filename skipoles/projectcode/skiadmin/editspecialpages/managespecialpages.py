@@ -46,11 +46,7 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
     specials = editedproj.special_pages
 
     page_data[("adminhead","page_head","large_text")] = "Manage page labels"
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Set or edit page labels"
+    page_data[("adminhead","page_head","small_text")] = "Set or edit page labels"
 
     system_list = skiboot.sys_list()
     page_data['system:col_label'] = system_list
@@ -192,26 +188,26 @@ def add_user_page(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
     # check label is valid
     if _AN.search(label):
-        raise FailPage(message = "The label can only contain A-Z, a-z, 0-9 and the underscore character.", widget='addlabel')
+        raise FailPage(message = "The label can only contain A-Z, a-z, 0-9 and the underscore character.")
 
     if '_' in label:
         labelparts = label.split('_')
         for lpart in labelparts:
             if lpart.isdigit():
-                raise FailPage(message = "Invalid label (Danger of confusion with a page ident, please avoid using digits without letters).", widget='addlabel')
+                raise FailPage(message = "Invalid label (Danger of confusion with a page ident, please avoid using digits without letters).")
 
     if label.isdigit():
-        raise FailPage(message = "Invalid label (Danger of confusion with a page ident).", widget='addlabel')
+        raise FailPage(message = "Invalid label (Danger of confusion with a page ident).")
 
     if label in skiboot.lib_list():
-        raise FailPage(message = "Invalid label, reserved for system files.", widget='addlabel')
+        raise FailPage(message = "Invalid label, reserved for system files.")
     if label in skiboot.sys_list():
-        raise FailPage(message = "Invalid label, reserved for system pages.", widget='addlabel')
+        raise FailPage(message = "Invalid label, reserved for system pages.")
 
     try:
         editedproj.set_special_page(label, ident_or_url)
     except (ValidateError, ServerError) as e:
-        raise FailPage(message = e.message, widget='addlabel')
+        raise FailPage(message = e.message)
 
     call_data['status'] = 'Label %s set' % (label,)
 

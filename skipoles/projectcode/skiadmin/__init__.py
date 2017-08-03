@@ -474,10 +474,13 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
         # fill in navigation information
         set_navigation(identnum, call_data, page_data)
 
-    # set status in admin_footer section, which in all pages has alias 'foot'
+    # Show the status message
     if 'status' in call_data:
         page_data[("adminhead","page_head","small_text")] = call_data['status']
         page_data['foot', 'foot_status','footer_text'] = call_data['status']
+        page_data[("adminhead","show_status","para_text")] = call_data['status']
+        page_data[("adminhead","show_status","hide")] = False
+
 
     # do not send any session data for the following pages
  
