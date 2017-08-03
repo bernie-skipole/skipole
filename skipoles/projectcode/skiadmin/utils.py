@@ -67,10 +67,7 @@ def retrieve_edit_page(call_data, page_data):
     else:
         page_data[('page_edit','p_rename','input_text')] = page.name
 
-    if "parent_ident" in call_data:
-        page_data[('page_edit','p_parent','input_text')] = call_data["parent_ident"]
-    else:
-        page_data[('page_edit','p_parent','input_text')] = page.parentfolder_ident.to_comma_str()
+    page_data[('page_edit','p_parent','input_text')] = page.parentfolder_ident.to_comma_str()
 
     if 'page_brief' in call_data:
         page_data[('page_edit','p_brief','input_text')] = call_data['page_brief']

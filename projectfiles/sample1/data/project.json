@@ -3,9 +3,11 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "0.0.23",
+"skipole": "0.0.32",
 "subprojects": {
-"lib": {"path":"/lib/"}
+"lib": {
+"path": "/lib/"
+}
 },
 "specialpages": {
 "general_json": 570,
@@ -38,7 +40,7 @@
 "ski_textarea": "lib,ski_textarea",
 "ski_upload": "lib,ski_upload",
 "skipole_js": "lib,skipole_js",
-"url_not_found": 500,
+"url_not_found": 550,
 "validate_error": 510,
 "w3_css": 1002,
 "w3_theme_ski_css": 1004
@@ -92,14 +94,6 @@
 "restricted": true,
 "folders": {},
 "pages": {
-"general_json": {
-"ident": 570,
-"brief": "General purpose JSON file",
-"JSON": {
-"enable_cache": false,
-"content": {}
-}
-},
 "index_template": {
 "ident": 2001,
 "brief": "The template for the index page",
@@ -380,6 +374,23 @@
 ]
 }
 ]
+}
+}
+},
+"system": {
+"ident": 500,
+"brief": "Folder holding required system pages",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"general_json": {
+"ident": 570,
+"brief": "General purpose JSON file",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
 },
 "redirector": {
 "ident": 530,
@@ -761,7 +772,7 @@
 ]
 },
 "url_not_found": {
-"ident": 500,
+"ident": 550,
 "brief": "The url not found error page",
 "TemplatePage": {
 "show_backcol": false,
@@ -1425,32 +1436,6 @@
 ]
 }
 ]
-},
-"show_server_error": {
-"ident": 560,
-"brief": "Displays the server error page",
-"RespondPage": {
-"class": "PageData",
-"original_args": {
-"target_ident": "server_error"
-},
-"original_fields": {
-"show_error": "Example server error message"
-}
-}
-},
-"show_validate_error": {
-"ident": 550,
-"brief": "Displays the validate error page",
-"RespondPage": {
-"class": "PageData",
-"original_args": {
-"target_ident": "validate_error"
-},
-"original_fields": {
-"show_error": "Example validate error message"
-}
-}
 }
 }
 }
