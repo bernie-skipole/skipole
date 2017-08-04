@@ -181,7 +181,7 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     #  clear and re-populate call_data for edit page
     utils.no_ident_data(call_data, keep=['folder_number'])
     call_data['page'] = page
-    call_data['status'] = 'Page %s added' % (new_name,)
+    page_data["adminhead","page_head","small_text"] = 'Page %s added' % (new_name,)
 
 
 def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -206,7 +206,7 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     #  clear and re-populate call_data for edit page
     utils.no_ident_data(call_data, keep=['folder_number'])
     call_data['page'] = page
-    call_data['status'] = 'SVG %s added' % (new_name,)
+    page_data["adminhead","page_head","small_text"] = 'SVG %s added' % (new_name,)
 
 
 def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -245,7 +245,7 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     utils.no_ident_data(call_data, keep=['folder_number'])
     # add new page ident to call_data so the page can be edited
     call_data['page'] = str(page.ident)
-    call_data['status'] = 'CSS page %s added' % (new_name,)
+    page_data["adminhead","page_head","small_text"] = 'CSS page %s added' % (new_name,)
 
 
 def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -262,7 +262,9 @@ def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_dat
     # however if in future it is required to go to the page edit
     # then session data will need to have the page in it, so the following line
     # will need to be inserted
-    #call_data['page'] = str(page.ident)
+    # call_data['page'] = str(page.ident)
+    # and instead of call_data['status'] it should be
+    # page_data["adminhead","page_head","small_text"] = 'JSON page %s added' % (new_name,)
     call_data['status'] = 'JSON page %s added' % (new_name,)
 
 
@@ -335,7 +337,7 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
     utils.no_ident_data(call_data, keep=['folder_number'])
     # add new page ident to call_data so the page can be edited
     call_data['page'] = str(page.ident)
-    call_data['status'] = 'Responder %s - type %s added' % (new_name, responder_class)
+    page_data["adminhead","page_head","small_text"] = 'Responder %s - type %s added' % (new_name, responder_class)
 
 
 def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

@@ -155,7 +155,7 @@ def submit_new_selector(caller_ident, ident_list, submit_list, submit_dict, call
     page.style = style
     # save the altered page in the database
     utils.save(call_data, page=page, widget_name='add')
-    call_data['status'] = 'Page selector set'
+    page_data["adminhead","page_head","small_text"] = 'Page selector set'
 
 
 def submit_delete_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -179,7 +179,7 @@ def submit_delete_selector(caller_ident, ident_list, submit_list, submit_dict, c
     page.style = style
     # save the altered page in the database
     utils.save(call_data, page=page, widget_name='selectortable')
-    call_data['status'] = 'Selector deleted'
+    page_data["adminhead","page_head","small_text"] = 'Selector deleted'
 
 
 def submit_selector_properties(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -252,7 +252,7 @@ def move_selector_up(caller_ident, ident_list, submit_list, submit_dict, call_da
     page.style = new_style
     # save the altered page in the database
     utils.save(call_data, page=page, widget_name='selectortable')
-    call_data['status'] = 'Selector moved'
+    page_data["adminhead","page_head","small_text"] = 'Selector moved'
 
 
 def move_selector_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -282,7 +282,7 @@ def move_selector_down(caller_ident, ident_list, submit_list, submit_dict, call_
     page.style = new_style
     # save the altered page in the database
     utils.save(call_data, page=page, widget_name='selectortable')
-    call_data['status'] = 'Selector moved'
+    page_data["adminhead","page_head","small_text"] = 'Selector moved'
 
 
 def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
