@@ -129,13 +129,9 @@ def textcolor(r, g, b):
         return '#ffffff'
 
     h,s,l = rgb_hsl(r, g, b)
-    # get a contrasting color for text
-    # get an opposite hue
-    oph = h+0.5
-    if oph > 1:
-        oph = oph - 1
+    # get a contrasting tone for text
     if l>0.8:
-        # for light background, make text dark
+        # for light background, make text dark, but same hue
         opl = 0.2
     elif l>0.5:
         # for lightish background, make text black
@@ -147,7 +143,7 @@ def textcolor(r, g, b):
         # for dark background, have lighter text
         opl = 0.8
     # Choose same saturation
-    new_r, new_g, new_b = hsl_rgb(oph, s, opl)
+    new_r, new_g, new_b = hsl_rgb(h, s, opl)
     return int_hex(new_r, new_g, new_b) 
 
 def light_color(r, g, b):

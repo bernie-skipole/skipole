@@ -60,7 +60,8 @@ def retrieve_edit_page(call_data, page_data):
 
     # fills in header
     page_data[("adminhead","page_head","large_text")] = info.name
-    page_data[("adminhead","page_head","small_text")] = info.brief
+    if ("adminhead","page_head","small_text") not in page_data:
+        page_data[("adminhead","page_head","small_text")] = info.brief
 
     page_data[('page_edit','p_ident','page_ident')] = (editedprojname,page_number)
     page_data[('page_edit','p_name','page_ident')] = (editedprojname,page_number)
