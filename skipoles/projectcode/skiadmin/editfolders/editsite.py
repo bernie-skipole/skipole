@@ -677,7 +677,6 @@ def submit_hex_color(caller_ident, ident_list, submit_list, submit_dict, call_da
     # change name of 220 to avoid css cache
     newname = "w3-theme-ski-" + str(random.randint(10000, 99999)) + ".css"
     editpage.rename_page(adminproj.proj_ident, 220, newname)
-    call_data['status'] = 'Color scheme set'
 
 
 def set_colour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
