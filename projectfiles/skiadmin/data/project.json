@@ -1019,7 +1019,7 @@ false,
 "name": "show_status",
 "brief": "Shows modal error or status messages",
 "fields": {
-"boxdiv_class": "w3-modal-content w3-panel w3-theme-d4",
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d4 w3-border",
 "button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
 "buttondiv_class": "w3-bar",
 "buttondiv_style": "",

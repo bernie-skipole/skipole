@@ -632,5 +632,5 @@ def set_submit_option(caller_ident, ident_list, submit_list, submit_dict, call_d
         page.responder.submit_option = True
         
     utils.save(call_data, page=page, widget_name='alternate')
-    call_data['status'] = 'Validator changed'
+    call_data['status'] = 'Submit option changed'
 
