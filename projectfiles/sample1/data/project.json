@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "New Project",
-"version": "0.0.1",
-"skipole": "0.0.32",
+"version": "0.0.2",
+"skipole": "0.0.33",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -45,7 +45,93 @@
 "w3_css": 1002,
 "w3_theme_ski_css": 1004
 },
-"sections": {},
+"sections": {
+"leftnav": [
+"Section",
+{
+"tag_name": "div",
+"brief": "left sidebar for links",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-sidebar w3-bar-block w3-theme-l1 w3-container",
+"style": "width:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph of sidebar",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This is section leftnav, a good place for navigation."
+]
+]
+}
+]
+]
+}
+],
+"topnav": [
+"Section",
+{
+"tag_name": "div",
+"brief": "container div for header",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container w3-theme-d1"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Header paragraph",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This is section topnav - a good place for header text."
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorClear2",
+"name": "top_error",
+"brief": "Error alert widget",
+"fields": {
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d3",
+"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"buttondiv_class": "w3-bar",
+"buttondiv_style": "",
+"clear_error": false,
+"error_class": "w3-panel w3-center w3-red",
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"hide": true,
+"link_ident": "no_javascript",
+"pre_line": true,
+"show": true,
+"show_error": "An unknown error has occurred",
+"widget_class": "w3-modal",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+},
 "RootFolder": {
 "brief": "Site root",
 "default_page_name": "index",
@@ -233,83 +319,19 @@
 },
 "parts": [
 [
-"Part",
+"SectionPlaceHolder",
 {
-"tag_name": "div",
-"brief": "container div for header",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container w3-theme-d1"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "Header paragraph",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"This is a top div - a good place for header text."
-]
-]
+"brief": "Top header navigation",
+"section_name": "topnav",
+"placename": "topnav"
 }
 ],
 [
-"Widget",
+"SectionPlaceHolder",
 {
-"class": "error_messages.ErrorDiv",
-"name": "top_error",
-"brief": "Error Div providing a widget for the default error field",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hide": true,
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-"Text",
-""
-]
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "left sidebar for links",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-sidebar w3-bar-block w3-theme-l1 w3-container",
-"style": "width:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "Top paragraph of sidebar",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"This is a left div, a good place for navigation."
-]
-]
-}
-]
-]
+"brief": "Left navigation",
+"section_name": "leftnav",
+"placename": "leftnav"
 }
 ],
 [
@@ -327,6 +349,14 @@
 [
 "Part",
 {
+"tag_name": "div",
+"brief": "Div holding sample introductory text and links.",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
 "tag_name": "p",
 "brief": "Top paragraph of main page content",
 "show": true,
@@ -334,7 +364,7 @@
 "parts": [
 [
 "Text",
-"Well done!\r\nThis is the home page of your new project.\r\n\r\nThis project has been created with minimal content and uses the CSS library w3.css, further information about w3.css can be found at:"
+"Well done!\r\nThis is the home page of your new project."
 ]
 ]
 }
@@ -343,7 +373,66 @@
 "Part",
 {
 "tag_name": "p",
-"brief": "Paragraph for link",
+"brief": "Paragraph about the skipole framework",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This is a sample project, intended to be copied, and edited with the skipole framework.\r\n\r\nFurther information about skipole can be found at:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph containing skipole.ski link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to skipole.ski",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "http://skipole.ski"
+},
+"parts": [
+[
+"Text",
+"http://skipole.ski"
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph about w3.css",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This project has been created with minimal content and uses the CSS library w3.css, further information about w3.css can be found at:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph containing w3.css link",
 "show": true,
 "hide_if_empty": false,
 "parts": [
@@ -361,6 +450,24 @@
 [
 "Text",
 "https://www.w3schools.com/w3css/"
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph about w3-theme-ski.css",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"In particular the colour theme is defined by the file w3-theme-ski.css under the projectfiles 'static/css' folder."
 ]
 ]
 }
