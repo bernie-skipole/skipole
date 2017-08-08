@@ -80,7 +80,6 @@ def submit_addproject(caller_ident, ident_list, submit_list, submit_dict, call_d
     except (ValidateError, ServerError) as e:
         raise FailPage(message = e.message,
                     widget = "sdd1")
-    call_data['status'] = 'Project added'
 
 
 def submit_removeproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -115,7 +114,7 @@ def submit_removeproject(caller_ident, ident_list, submit_list, submit_dict, cal
     except (ValidateError, ServerError) as e:
         raise FailPage(message = e.message,
                     widget = "projmap")
-    call_data['status'] = 'Project removed'
+
 
 def submit_suburl(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "sets the url of a sub project"
