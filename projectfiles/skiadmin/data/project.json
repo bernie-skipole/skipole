@@ -377,7 +377,7 @@
 "error_class": "",
 "para_class": "",
 "paradiv_class": "",
-"show": true,
+"show": false,
 "show_error": "",
 "table_class": "w3-table w3-bordered",
 "toptext": "",
@@ -13966,7 +13966,7 @@ false,
 "fail_ident": null,
 "submit_option": false,
 "target_ident": 56033,
-"validate_fail_ident": 56007,
+"validate_fail_ident": null,
 "validate_option": false
 },
 "original_fields": {
