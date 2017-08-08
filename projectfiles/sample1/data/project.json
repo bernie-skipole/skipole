@@ -189,7 +189,7 @@
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
-"",
+"top_nav",
 "top_error"
 ]
 },
@@ -487,6 +487,7 @@
 "system": {
 "ident": 500,
 "brief": "Folder holding required system pages",
+"default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
