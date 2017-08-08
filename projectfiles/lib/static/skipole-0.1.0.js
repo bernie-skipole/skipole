@@ -147,7 +147,6 @@ SKIPOLE.setfields = function(result) {
                widg_fields[widg_id].push(splitwidgfield[1]);
                continue;
                }
-
            // section parameters
            if (SKIPOLE.sections.indexOf(widg_id) > -1) {
                if (splitwidgfield[1] == "section_class") {

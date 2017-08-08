@@ -377,7 +377,7 @@
 "error_class": "",
 "para_class": "",
 "paradiv_class": "",
-"show": false,
+"show": true,
 "show_error": "",
 "table_class": "w3-table w3-bordered",
 "toptext": "",
@@ -13149,7 +13149,7 @@ false,
 "maxlength": "150",
 "new_window": false,
 "pattern": "",
-"required": true,
+"required": false,
 "set_input_accepted": false,
 "set_input_errored": false,
 "show": true,
@@ -13159,14 +13159,6 @@ false,
 "type": "text",
 "widget_class": "w3-section",
 "widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A display widget must be provided"
-}
-]
 }
 }
 ],
@@ -13975,7 +13967,7 @@ false,
 "submit_option": false,
 "target_ident": 56033,
 "validate_fail_ident": 56007,
-"validate_option": true
+"validate_option": false
 },
 "original_fields": {
 "displaywidget:input_text": "displaywidget"
