@@ -189,7 +189,7 @@
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
-"top_nav",
+"topnav",
 "top_error"
 ]
 },
