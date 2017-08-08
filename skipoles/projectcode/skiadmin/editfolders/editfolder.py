@@ -323,7 +323,6 @@ def submit_restricted(caller_ident, ident_list, submit_list, submit_dict, call_d
     error_message = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], True)
     if error_message:
         raise FailPage(message=error_message)
-    call_data['status'] = 'Folder set to restricted access'
 
 
 def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -334,7 +333,6 @@ def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call
     error_message = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], False)
     if error_message:
         raise FailPage(message=error_message)
-    call_data['status'] = 'Folder set to unrestricted access'
 
 
 def downloadfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

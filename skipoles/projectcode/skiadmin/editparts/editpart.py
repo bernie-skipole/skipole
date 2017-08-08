@@ -144,6 +144,7 @@ def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
     section = bits.section
     widget = bits.widget
     part = bits.part
+    message = ''
 
     if (page is None) and (section is None):
         raise FailPage("Page/section not identified")
@@ -163,7 +164,6 @@ def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
         if 'val' not in call_data:
             raise FailPage("The attribute value has not been found")
         part.update_attribs({call_data["attrib"]:call_data["val"]})
-        message = 'New attribute set'
         widget_name='add_attrib_error'
     elif 'hide_if_empty' in call_data:
         if not isinstance(part, tag.Part):
@@ -180,7 +180,8 @@ def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
         raise FailPage("A new Tag value to edit has not been found")
 
     utils.save(call_data, page=page, section_name=bits.section_name, section=section, widget_name=widget_name)
-    call_data['status'] = message
+    if message:
+        call_data['status'] = message
 
 
 def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -207,7 +208,6 @@ def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, cal
     part.del_one_attrib(call_data['attribs_list','contents'])
 
     utils.save(call_data, page=page, section_name=bits.section_name, section=section, widget_name='list_attribs_error')
-    call_data['status'] = "Attribute deleted"
 
 
 def downloadpart(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
