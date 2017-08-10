@@ -114,7 +114,7 @@ Note : NOT the call_data dictionary, with keys of widgfield tuples.
                     try:
                         projectcode.submit_data(caller_page.ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        submit_dict,
                                        call_data,
                                        page_data,
@@ -161,7 +161,7 @@ Note : NOT the call_data dictionary, with keys of widgfield tuples.
             try:
                 projectcode.submit_data(caller_page.ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        submit_dict,
                                        call_data,
                                        page_data,
@@ -225,7 +225,7 @@ class StoreData(Respond):
             try:
                 projectcode.submit_data(caller_ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        {'target_ident':self.ident_for_user(self.target_ident),
                                         'fail_ident':self.ident_for_user(self.fail_ident),
                                         'environ':environ},
@@ -289,7 +289,7 @@ class StoreDataKeyed(Respond):
             try:
                 projectcode.submit_data(caller_page.ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        {'target_ident':self.ident_for_user(self.target_ident),
                                         'fail_ident':self.ident_for_user(self.fail_ident),
                                         'environ':environ},
@@ -363,7 +363,7 @@ with keys equal to the field values set here.
                     try:
                         projectcode.submit_data(caller_page.ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        {'target_ident':self.ident_for_user(self.target_ident),
                                         'fail_ident':self.ident_for_user(self.fail_ident),
                                         'environ':environ},
@@ -403,7 +403,7 @@ with keys equal to the field values set here.
             try:
                 projectcode.submit_data(caller_page.ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        {'target_ident':self.ident_for_user(self.target_ident),
                                         'fail_ident':self.ident_for_user(self.fail_ident),
                                         'environ':environ},
@@ -475,7 +475,7 @@ class AllowStore(Respond):
                     try:
                         projectcode.submit_data(caller_page.ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        {'target_ident':self.ident_for_user(self.target_ident),
                                         'fail_ident':self.ident_for_user(self.fail_ident),
                                         'environ':environ},
@@ -519,7 +519,7 @@ class AllowStore(Respond):
             try:
                 projectcode.submit_data(caller_page.ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        {'target_ident':self.ident_for_user(self.target_ident),
                                         'fail_ident':self.ident_for_user(self.fail_ident),
                                         'environ':environ},
@@ -591,7 +591,7 @@ class PrettyFormData(Respond):
         try:
             projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    submit_dict,
                                    call_data,
                                    page_data,
@@ -651,7 +651,7 @@ class Accept(Respond):
         try:
             projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    submit_dict,
                                    call_data,
                                    page_data,
@@ -726,7 +726,7 @@ class AllowedAccept(Respond):
         try:
             projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    submit_dict,
                                    call_data,
                                    page_data,
