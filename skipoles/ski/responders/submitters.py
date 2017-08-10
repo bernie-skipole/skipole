@@ -76,7 +76,7 @@ If submit_data raises a FailPage then the fail_ident page will be called.
         try:
             projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'target_ident':self.ident_for_user(self.target_ident),
                                     'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
@@ -124,7 +124,7 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
         try:
             colours = projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'target_ident':self.ident_for_user(self.target_ident),
                                     'environ':environ},
                                    call_data,
@@ -170,7 +170,7 @@ Sets a language cookie with a persistance of 30 days
         try:
             language_string = projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'target_ident':self.ident_for_user(self.target_ident),
                                     'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
@@ -226,7 +226,7 @@ Sets cookies, submit_data should return an instance of http.cookies.BaseCookie
         try:
             sendcookies = projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'target_ident':self.ident_for_user(self.target_ident),
                                     'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
@@ -288,7 +288,7 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
             # and send the widgfield to submit_data
             defaultdict = projectcode.submit_data(caller_page.ident,
                                                    ident_list,
-                                                   self.submit_list,
+                                                   self.submit_list.copy(),
                                                    {'target_ident':self.ident_for_user(self.target_ident),
                                                     'fail_ident':self.ident_for_user(self.fail_ident),
                                                     'widgfield':self.widgfield.to_tuple_no_i(),
@@ -369,7 +369,7 @@ class FieldStoreSubmit(Respond):
         try:
             projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    submit_dict,
                                    call_data,
                                    page_data,
@@ -459,7 +459,7 @@ the error message ignored.
         try:
             jsondict = projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
                                    call_data,
@@ -544,7 +544,7 @@ Only page_data['status'] and page_data['headers'] will be used if given
         try:
             text = projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
                                    call_data,
@@ -697,7 +697,7 @@ list of two element lists acting as css declaration blocks.
         try:
             styledict = projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
                                    call_data,
@@ -745,7 +745,7 @@ Given media queries and CSS page targets, wraps the targets with the media queri
             try:
                 mediadict = projectcode.submit_data(caller_ident,
                                        ident_list,
-                                       self.submit_list,
+                                       self.submit_list.copy(),
                                        media_target.copy(),
                                        call_data,
                                        page_data,
@@ -862,7 +862,7 @@ submit_data should return a binary file iterator
         try:
             biniterator = projectcode.submit_data(caller_ident,
                                    ident_list,
-                                   self.submit_list,
+                                   self.submit_list.copy(),
                                    {'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
                                    call_data,
