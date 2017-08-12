@@ -116,8 +116,20 @@ text-align : center;}
 .ski_nowrap {
 white-space: nowrap;}
 
+
+@media (max-width:992px) {
+
+  .ski_left_label {
+    text-align : left;
+    width : 100%;}
+
+}
+
+
 @media (max-width:768px){
- .ski_nowrap {
- white-space: normal;}
+
+  .ski_nowrap {
+    white-space: normal;}
+
 }
 
