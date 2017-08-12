@@ -113,3 +113,11 @@ width : 100%;}
 margin-bottom : 10px;
 text-align : center;}
 
+.ski_nowrap {
+white-space: nowrap;}
+
+@media (max-width:768px){
+ .ski_nowrap {
+ white-space: normal;}
+}
+

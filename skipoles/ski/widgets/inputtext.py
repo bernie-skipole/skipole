@@ -779,6 +779,7 @@ class SubmitTextInput1(Widget):
                         'button_text':FieldArg("text",'Submit'),
                         'button_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
+                        'inputandbutton_class':FieldArg("cssclass", ''),
                         'error_class':FieldArg("cssclass", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'size':FieldArg("text", ''),
@@ -809,6 +810,7 @@ class SubmitTextInput1(Widget):
         button_text: The text on the button
         button_class: The class given to the button tag
         inputdiv_class: the class attribute of the div which contains the label, input text and button
+        inputandbutton_class: the class attribute of the span which contains the input text and button
         error_class: The class applied to the paragraph containing the error message on error.
         input_text: The default text in the text input field, field name used as the name attribute
         size: The number of characters appearing in the text input area
@@ -836,11 +838,13 @@ class SubmitTextInput1(Widget):
         self[1][0] = tag.Part(tag_name='div')
         # the label
         self[1][0][0] = tag.Part(tag_name="label", hide_if_empty=True)
+        # span containing input text and button
+        self[1][0][1] = tag.Part(tag_name='span')
         # the text input field
-        self[1][0][1] = tag.ClosedPart(tag_name="input", attribs ={"type":"text"})
+        self[1][0][1][0] = tag.ClosedPart(tag_name="input", attribs ={"type":"text"})
         # the submit button
-        self[1][0][2] = tag.Part(tag_name="button", attribs ={"type":"submit"})
-        self[1][0][2][0] = "Submit"
+        self[1][0][1][1] = tag.Part(tag_name="button", attribs ={"type":"submit"})
+        self[1][0][1][1][0] = "Submit"
         self._jsonurl = ''
 
 
@@ -866,30 +870,35 @@ class SubmitTextInput1(Widget):
             return
         # update the action of the form
         self[1].update_attribs({"action": actionurl})
-        # the div holding label, text and button
+        # the div holding label, input text and button
         if self.get_field_value('inputdiv_class'):
             self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
-        if self.get_field_value('label'):
-            self[1][0][0][0] = self.get_field_value('label')
+
         if self.get_field_value('label_class'):
             self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label'):
+            self[1][0][0][0] = self.get_field_value('label')
+
+        # the span holding input text and button
+        if self.get_field_value('inputandbutton_class'):
+            self[1][0][1].attribs = {"class": self.get_field_value('inputandbutton_class')}
 
         # set an id in the input field for the 'label for' tag
-        self[1][0][1].insert_id()
+        self[1][0][1][0].insert_id()
 
-        self[1][0][1].update_attribs({"name":self.get_formname('input_text'), "value":self.get_field_value('input_text')})
+        self[1][0][1][0].update_attribs({"name":self.get_formname('input_text'), "value":self.get_field_value('input_text')})
         if self.get_field_value('size'):
-            self[1][0][1].update_attribs({"size":self.get_field_value('size')})
+            self[1][0][1][0].update_attribs({"size":self.get_field_value('size')})
         if self.get_field_value('maxlength'):
-            self[1][0][1].update_attribs({"maxlength":self.get_field_value('maxlength')})
+            self[1][0][1][0].update_attribs({"maxlength":self.get_field_value('maxlength')})
         if self.get_field_value('required'):
-            self[1][0][1].update_attribs({"required":"required"})
+            self[1][0][1][0].update_attribs({"required":"required"})
         if self.get_field_value('type'):
-            self[1][0][1].update_attribs({"type":self.get_field_value('type')})
+            self[1][0][1][0].update_attribs({"type":self.get_field_value('type')})
         if self.get_field_value('pattern'):
-            self[1][0][1].update_attribs({"pattern":self.get_field_value('pattern')})
+            self[1][0][1][0].update_attribs({"pattern":self.get_field_value('pattern')})
         if self.get_field_value('title'):
-            self[1][0][1].update_attribs({"title":self.get_field_value('title')})
+            self[1][0][1][0].update_attribs({"title":self.get_field_value('title')})
         if self.get_field_value('input_class'):
             input_class = self.get_field_value('input_class')
         else:
@@ -912,16 +921,17 @@ class SubmitTextInput1(Widget):
                 input_class = self.get_field_value('input_accepted_class')
 
         if input_class:
-            self[1][0][1].update_attribs({"class":input_class})
+            self[1][0][1][0].update_attribs({"class":input_class})
 
         # set the label 'for' attribute
-        self[1][0][0].update_attribs({'for':self[1][0][1].get_id()})
+        self[1][0][0].update_attribs({'for':self[1][0][1][0].get_id()})
 
         # submit button
-        if self.get_field_value('button_text'):
-            self[1][0][2][0] = self.get_field_value('button_text')
         if self.get_field_value('button_class'):
-            self[1][0][2].update_attribs({"class": self.get_field_value('button_class')})
+            self[1][0][1][1].update_attribs({"class": self.get_field_value('button_class')})
+        if self.get_field_value('button_text'):
+            self[1][0][1][1][0] = self.get_field_value('button_text')
+
 
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
@@ -950,11 +960,13 @@ class SubmitTextInput1(Widget):
     <div> <!-- class attribute set to inputdiv_class -->
       <label> <!-- with class set to label_class and content to label, for set to input text id -->
       </label>
-      <input type="text" />  <!-- class set to input_class -->
-        <!-- input text value set to input_text -->
-      <button type="submit"> <!-- with class set to button_class -->
-        <!-- button_text -->
-      </button>
+      <span>  <!-- class attribute set to inputandbutton_class -->
+          <input type="text" />  <!-- class set to input_class -->
+            <!-- input text value set to input_text -->
+          <button type="submit"> <!-- with class set to button_class -->
+            <!-- button_text -->
+          </button>
+      </span>
     </div>
     <!-- hidden input fields -->                              
   </form>
