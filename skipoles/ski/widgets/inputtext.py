@@ -512,6 +512,7 @@ class TextInput3(Widget):
     js_validators=True
 
     arg_descriptions = {
+                        'input_class':FieldArg("cssclass", ''),
                         'input_accepted_class':FieldArg("cssclass", ''),
                         'input_errored_class':FieldArg("cssclass", ''),
                         'set_input_accepted':FieldArg("boolean", False, jsonset=True),
@@ -531,6 +532,7 @@ class TextInput3(Widget):
                        }
     def __init__(self, name=None, brief='', **field_args):
         """
+        input_class: The css class of the input field
         input_accepted_class: A class which can be set on the input field
         input_errored_class: A class which can be set on the input field
         set_input_accepted: If True, input_accepted_class will be set on the input field
@@ -561,10 +563,25 @@ class TextInput3(Widget):
         if self.get_field_value('left_class'):
             self[0].attribs = {"class": self.get_field_value('left_class')}
         self[1].update_attribs({"name":self.get_formname('input_text'), "value":self.get_field_value('input_text')})
-        if self.get_field_value('set_input_accepted') and self.get_field_value('input_accepted_class'):
-            self[1].update_attribs({"class":self.get_field_value('input_accepted_class')})
+
+        if self.get_field_value('input_class'):
+            input_class = self.get_field_value('input_class')
+        else:
+            input_class = ''
+
         if self.get_field_value('set_input_errored') and self.get_field_value('input_errored_class'):
-            self[1].update_attribs({"class":self.get_field_value('input_errored_class')})
+            if input_class:
+                input_class = input_class + ' ' + self.get_field_value('input_errored_class')
+            else:
+                input_class = self.get_field_value('input_errored_class')
+        elif self.get_field_value('set_input_accepted') and self.get_field_value('input_accepted_class'):
+            if input_class:
+                input_class = input_class + ' ' + self.get_field_value('input_accepted_class')
+            else:
+                input_class = self.get_field_value('input_accepted_class')
+        if input_class:
+            self[1].update_attribs({"class":input_class})
+
         if self.get_field_value('size'):
             self[1].update_attribs({"size":self.get_field_value('size')})
         if self.get_field_value('maxlength'):
