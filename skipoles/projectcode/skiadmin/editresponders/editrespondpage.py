@@ -408,7 +408,6 @@ def add_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, call_
         return {("adminhead","page_head","small_text"):'This allowed caller already exists'}
     responder.allowed_callers.append(a_c)
     utils.save(call_data, page=page, widget_name='allowed_callers_error')
-    call_data['status'] = 'New allowed caller set'
 
 
 def delete_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -433,7 +432,6 @@ def delete_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, ca
         return {("adminhead","page_head","small_text"):'This allowed caller does not exist'}
     del responder.allowed_callers[idx]
     utils.save(call_data, page=page, widget_name='allowed_callers_error')
-    call_data['status'] = 'Allowed caller deleted'
 
 
 def remove_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -461,7 +459,6 @@ def remove_field(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     else:
         raise FailPage(message="Field not found", widget="fields_error")
     utils.save(call_data, page=page, widget_name='fields_error')
-    call_data['status'] = 'Field deleted'
 
 
 def add_field_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -492,7 +489,6 @@ def add_field_value(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage(message="Invalid submission, empty field values are not allowed", widget="fields_error")
     responder.set_field(call_data['field'], call_data['value'])
     utils.save(call_data, page=page, widget_name='fields_error')
-    call_data['status'] = 'New field and value set'
 
 
 def add_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -516,7 +512,6 @@ def add_field(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
         raise FailPage(message="Invalid submission, this responder requires field values", widget="fields_error")
     responder.set_field(call_data['field'], '')
     utils.save(call_data, page=page, widget_name='fields_error')
-    call_data['status'] = 'New field set'
 
 
 
@@ -566,7 +561,6 @@ def delete_submit_list_string(caller_ident, ident_list, submit_list, submit_dict
     except:
         raise FailPage(message="Failed to delete the string", widget="submit_list_error")
     utils.save(call_data, page=page, widget_name='submit_list_error')
-    call_data['status'] = 'Submit List string deleted'
 
 
 def add_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -585,7 +579,6 @@ def add_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, c
         raise FailPage(message="Invalid submission, this responder does not have a submit list")
     responder.submit_list.append(call_data['submit_list_string'])
     utils.save(call_data, page=page, widget_name='submit_list_error')
-    call_data['status'] = 'New submit list string added'
 
 
 def set_validate_option(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
