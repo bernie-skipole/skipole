@@ -20,6 +20,6 @@ python3 skipole.py -a myprojectname
 
 It is intended that in a finished project the application could be served via any wsgi server.
 
-The Downloads section of bitbucket.org/skipole/skipole contains the skipole tar file containing the framework, the latest version can be downloaded, extracted and the skipole.py script will be found within, it has no dependencies other than python 3.2 or above. So far it has been developed on Linux only, may work on Windows, not sure!
+The Downloads section contains the skipole tar file containing the framework, the latest version can be downloaded, extracted and the skipole.py script will be found within, it has no dependencies other than python 3.2 or above. So far it has been developed on Linux only, may work on Windows, not sure!
 
 Further information can be found from the wiki pages of this site, and the admin web interface contains its own documentation.
