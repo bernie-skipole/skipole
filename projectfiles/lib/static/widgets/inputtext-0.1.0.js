@@ -261,10 +261,15 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
     this.set_accepted_errored(text_input, fieldlist, result);
     // div2 is the second div of the widget holding the paragraphs
     var div2 = this.widg.find("div:eq(1)");
+    var para1 = div2.find(':first');
+    // para_text
+    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    if (para_text) {
+        para1.text(para_text);
+        }
     // show_para1
     var show_para1 = this.fieldarg_in_result('show_para1', result, fieldlist);
     if (show_para1 != undefined) {
-        var para1 = div2.find(':first');
         if (show_para1) {
             if (!(para1.is(":visible"))) {
                 para1.fadeIn('slow');
@@ -291,10 +296,6 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
                 }
             }
         }
-
-
-
-
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text) {
