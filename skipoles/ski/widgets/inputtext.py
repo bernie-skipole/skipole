@@ -1001,7 +1001,7 @@ class SubmitTextInput3(Widget):
 
     arg_descriptions = {
                         'show_para1':FieldArg("boolean", True, jsonset=True),
-                        'para_text':FieldArg("text", default="", valdt=False),
+                        'para_text':FieldArg("text", '', jsonset=True),
                         'show_para2':FieldArg("boolean", True, jsonset=True),
                         'textblock_ref':FieldArg("textblock_ref", ""),
                         'label':FieldArg("text", ''),
