@@ -1000,9 +1000,9 @@ class SubmitTextInput3(Widget):
     error_location = (0,0,0)
 
     arg_descriptions = {
-                        'show_para1':FieldArg("boolean", default=True, valdt=False),
+                        'show_para1':FieldArg("boolean", True, jsonset=True),
                         'para_text':FieldArg("text", default="", valdt=False),
-                        'show_para2':FieldArg("boolean", default=True, valdt=False),
+                        'show_para2':FieldArg("boolean", True, jsonset=True),
                         'textblock_ref':FieldArg("textblock_ref", ""),
                         'label':FieldArg("text", ''),
                         'label_class':FieldArg("cssclass", ''),
