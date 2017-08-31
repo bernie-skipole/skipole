@@ -259,6 +259,42 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
     var text_input = this.widg.find('input[type="text"]');
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
+    // div2 is the second div of the widget holding the paragraphs
+    var div2 = this.widg.find("div:eq(1)");
+    // show_para1
+    var show_para1 = this.fieldarg_in_result('show_para1', result, fieldlist);
+    if (show_para1 != undefined) {
+        var para1 = div2.find(':first');
+        if (show_para1) {
+            if (!(para1.is(":visible"))) {
+                para1.fadeIn('slow');
+                 }
+             }
+        else {
+             if (para1.is(":visible")) {
+                para1.fadeOut('slow');
+                }
+            }
+        }
+    // show_para2
+    var show_para2 = this.fieldarg_in_result('show_para2', result, fieldlist);
+    if (show_para2 != undefined) {
+        var para2 = div2.find(':eq(1)');
+        if (show_para2) {
+            if (!(para2.is(":visible"))) {
+                para2.fadeIn('slow');
+                 }
+             }
+        else {
+             if (para2.is(":visible")) {
+                para2.fadeOut('slow');
+                }
+            }
+        }
+
+
+
+
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text) {
