@@ -1613,10 +1613,10 @@ class SubmitDict1(Widget):
                                                     "type":"text"})
             linumber += 1
             if li_class:
-                self[0][0][rownumber] = tag.Part(tag_name="li", attribs ={"class":li_class})
+                self[0][0][linumber] = tag.Part(tag_name="li", attribs ={"class":li_class})
             else:
-                self[0][0][rownumber] = tag.Part(tag_name="li")
-            self[0][0][rownumber][0] = li_input
+                self[0][0][linumber] = tag.Part(tag_name="li")
+            self[0][0][linumber][0] = li_input
 
         # list done, now for submit button
         if self.get_field_value('button_class'):
