@@ -683,6 +683,7 @@
   "widgets.inputtext.TextInput4.size.full": "The number of characters appearing in the text input field.",
   "widgets.inputtext.TextInput4.title": "Shown if the pattern fails.",
   "widgets.inputtext.TextInput4.type": "The type set on the input field, such as text or email.",
+  "widgets.inputtext.TwoInputsSubmit1": "A form with two text input fields, a submit button and four hidden fields.",
   "widgets.inputtext.module": "Contains widgets for inputting text.",
   "widgets.links.ButtonLink1": "A button link to the page with the given ident, label or url, and two optional get fields.",
   "widgets.links.ButtonLink1.button_text": "The text to be displayed within the button.",
