@@ -1535,8 +1535,12 @@ class SubmitDict1(Widget):
                         'button_class':FieldArg("cssclass", ''),
                         'input_dict':FieldArgDict('text', valdt=False, senddict=True),
                         'input_class':FieldArg("cssclass", ''),
+                        'inputdiv_class':FieldArg("cssclass", ''),
+                        'inputdiv_style':FieldArg("cssstyle", ''),
                         'ul_class':FieldArg("cssclass", ""),
+                        'ul_style':FieldArg("cssstyle", ""),
                         'li_class':FieldArg("cssclass", ""),
+                        'li_style':FieldArg("cssstyle", ""),
                         'hidden_field1':FieldArg("text", '', valdt=True),
                         'hidden_field2':FieldArg("text", '', valdt=True),
                         'hidden_field3':FieldArg("text", '', valdt=True),
@@ -1551,7 +1555,9 @@ class SubmitDict1(Widget):
         input_dict: an ordered dictionary, keys used in the field name, values are the text input
         input_class: Class set on each input field
         ul_class: Unordered list class
+        ul_style: Style applied to ul element
         li_class: list element class
+        li_style: Style applied to li element
         hidden_field1: A hidden field value, leave blank if unused, name used as the get field name
         hidden_field2: A second hidden field value, leave blank if unused, name used as the get field name
         hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
@@ -1561,8 +1567,9 @@ class SubmitDict1(Widget):
         # The form
         self[0] = tag.Part(tag_name='form', attribs={"method":"post"})
         self[0][0] = tag.Part(tag_name='ul')
-        # the submit button
-        self[0][1] = tag.ClosedPart(tag_name="input")
+        # the submit button in a div
+        self[0][1] = tag.Part(tag_name="div")
+        self[0][1][0] = tag.ClosedPart(tag_name="input")
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the form and list"
@@ -1587,6 +1594,8 @@ class SubmitDict1(Widget):
 
         if self.get_field_value("ul_class"):
             self[0][0].update_attribs({"class": self.get_field_value("ul_class")})
+        if self.get_field_value("ul_style"):
+            self[0][0].update_attribs({"style": self.get_field_value("ul_style")})
 
         li_class =  self.get_field_value("li_class")
 
@@ -1616,13 +1625,26 @@ class SubmitDict1(Widget):
                 self[0][0][linumber] = tag.Part(tag_name="li", attribs ={"class":li_class})
             else:
                 self[0][0][linumber] = tag.Part(tag_name="li")
+            if self.get_field_value("li_style"):
+                self[0][0][linumber].update_attribs({"style": self.get_field_value("li_style")})
+
+
             self[0][0][linumber][0] = li_input
 
         # list done, now for submit button
+
+        # the div holding button
+        if self.get_field_value('inputdiv_class') and self.get_field_value('inputdiv_style'):
+            self[0][1].attribs = {"class" : self.get_field_value('inputdiv_class'), "style": self.get_field_value('inputdiv_style')}
+        elif self.get_field_value('inputdiv_class'):
+            self[0][1].attribs = {"class" : self.get_field_value('inputdiv_class')}
+        elif self.get_field_value('inputdiv_style'):
+            self[0][1].attribs = {"style" : self.get_field_value('inputdiv_style')}
+
         if self.get_field_value('button_class'):
-            self[0][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit", "class": self.get_field_value('button_class')}
+            self[0][1][0].attribs = {"value":self.get_field_value('button_text'), "type":"submit", "class": self.get_field_value('button_class')}
         else:
-            self[0][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit"}
+            self[0][1][0].attribs = {"value":self.get_field_value('button_text'), "type":"submit"}
 
         # add ident and four hidden fields
         self.add_hiddens(self[0], page)
@@ -1633,14 +1655,16 @@ class SubmitDict1(Widget):
         return """
 <div> <!-- with class attribute set to widget_class if a class is set -->
   <form method=\"post\"> <!-- action attribute set to action field -->
-    <ul> <!-- with class set to ul_class if a class is set -->
+    <ul> <!-- with class set to ul_class and style to ul_style -->
       <!-- a li is created for each value in the input_dict dictionary -->
-      <li>  <!-- with class set to li_class if a class is set -->
+      <li>  <!-- with class set to li_class and style to li_style -->
         <input type="text" /> <!-- with CSS class input_class -->
              <!-- and with input name 'widgetname:input_dict-keyname' -->
       </li>
     </ul>
-    <input type="submit" /> <!-- with value button_text, and CSS class button_class -->
+    <div> <!-- class attribute set to inputdiv_class, style to inputdiv_style -->
+      <input type="submit" /> <!-- with value button_text, and CSS class button_class -->
+    </div>
     <!-- hidden fields -->                              
   </form>
 </div>"""
