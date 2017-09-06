@@ -1,5 +1,5 @@
 {
-"backcol": "#8e39ad",
+"backcol": "#923e0f",
 "css_links": [
 "w3_css",
 "w3_theme_ski_css",
@@ -64,11 +64,14 @@
 "button_class": "w3-button w3-theme-d4 w3-margin-left",
 "input_class": "ski_input",
 "inputdiv_class": "w3-section",
-"widget_class": "w3-section"
+"widget_class": "w3-section",
+"inputandbutton_class": "ski_nowrap"
 },
 "TextInput4": {
-"label_class": "ski_left_label",
-"input_class": "ski_input"
+"label_class": "",
+"input_class": "ski_input",
+"inputdiv_class": "ski_left_marg_30_percent",
+"labeldiv_class": "ski_left_marg_30_percent"
 },
 "TextInput2": {
 "label_class": "ski_left_label",
@@ -88,7 +91,9 @@
 "outer_class": "w3-section",
 "widget_class": "w3-section",
 "buttondiv_class": "w3-section",
-"inputdiv_class": "w3-section"
+"inputdiv_class": "w3-section",
+"label_class": "ski_left_label",
+"button_label_class": "ski_left_label"
 },
 "TextInput1": {
 "widget_class": "ski_input"
@@ -98,14 +103,23 @@
 "widget_class": "w3-section",
 "error_class": "w3-panel w3-red",
 "input_class1": "ski_input",
-"input_class2": "ski_input  w3-margin-left"
+"input_class2": "ski_input  w3-margin-left",
+"label_class": "ski_left_label"
 },
 "Password2": {
 "error_class": "w3-panel w3-red",
 "input_accepted_class": "ski_input_accepted",
 "input_errored_class": "ski_input_errored",
 "widget_class": "w3-section",
-"input_class": "ski_input"
+"input_class": "ski_input",
+"label_class": "ski_left_label"
+},
+"SubmitDict1": {
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"ul_class": "w3-center",
+"ul_style": "list-style-type: none;",
+"inputdiv_class": "w3-center",
+"widget_style": "width:30%"
 }
 },
 "links": {
@@ -328,7 +342,8 @@
 "boxdiv_class": "w3-modal-content w3-panel w3-theme-d4",
 "inner_class": "w3-panel w3-theme-d4",
 "button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
-"buttondiv_class": "w3-bar"
+"buttondiv_class": "w3-bar",
+"error_class": "w3-panel w3-red"
 },
 "ConfirmBox1": {
 "widget_class": "w3-modal",
