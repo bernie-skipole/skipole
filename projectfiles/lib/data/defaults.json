@@ -3,9 +3,6 @@
 "css_links": [],
 "js_links": [
 "jquery_core",
-"skipole_js",
-"ski_info",
-"ski_error_messages",
-"ski_links"
+"skipole_js"
 ]
 }
