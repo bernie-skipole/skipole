@@ -220,6 +220,35 @@ class HeaderErrorPara(Widget):
 """
 
 
+class HeadText(Widget):
+    """A tag, normally a h1 tag, which can be specified, containing text"""
+
+     # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'tag':FieldArg("text", 'h1'),
+                        'large_text':FieldArg("text", "", jsonset=True)}
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        large_text: The text appearing in the tag
+        """
+        # pass fields to Widget
+        Widget.__init__(self, name=name, tag_name="h1", brief=brief, **field_args)
+        self[0] = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        self.tag_name = self.get_field_value('tag')
+        self[0] = self.get_field_value("large_text")
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<h1>  <!-- default h1, tag can be specified and class widget_class -->
+    <!-- set with large_text -->
+</h1>"""
+
+
 class HeaderText1(Widget):
     """Defines a div with large text (h1) and small text (p)."""
 
