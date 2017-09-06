@@ -487,7 +487,7 @@
   "widgets.inputtext.SubmitDict1.hidden_field4.full": "A fourth hidden field value, leave blank if unused, this field name is used as the submitted field name",
   "widgets.inputtext.SubmitDict1.input_class": "CSS Class set on each input field.",
   "widgets.inputtext.SubmitDict1.input_dict": "This ordered dictionary keys define the fields, and the values are the field values.",
-  "widgets.inputtext.SubmitDict1.input_dict.full": "Set this field to an ordered dictionary with keys that define the number of text input fields, and will be embedded in the field names, and the values are the field values.\r\nOn the form being submitted, the dictionary returned will have the same keys, with user inputted values. If any given values are empty, the submitted key will be missing from the returned dictionary.",
+  "widgets.inputtext.SubmitDict1.input_dict.full": "Set this field to an ordered dictionary with keys that define the number of text input fields, and these keys will be embedded in the field names. The dictionary values will be set as the field values - use empty strings for initial empty values.\r\n\r\nOn the form being submitted, this field will form the widgfield which returns a dictionary of the same keys, with user inputted values. If any given values are empty, the submitted key will be missing from the returned dictionary.",
   "widgets.inputtext.SubmitDict1.inputdiv_class": "The CSS class of the div containing the submit button.",
   "widgets.inputtext.SubmitDict1.inputdiv_style": "The CSS style of the div containing the submit button.",
   "widgets.inputtext.SubmitDict1.li_class": "The CSS class of each li element.",

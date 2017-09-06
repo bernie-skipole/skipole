@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.34",
-"skipole": "0.0.34",
+"version": "0.0.35",
+"skipole": "0.0.35",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -540,7 +540,7 @@ false,
 "hide_if_empty": false,
 "attribs": {
 "class": "w3-sidebar w3-bar-block w3-theme-d1 w3-container",
-"style": "width:20%"
+"style": "width:20%; padding-top:60px;"
 },
 "parts": [
 [
@@ -906,8 +906,43 @@ false,
 "brief": "General header with multiple navigation boxes",
 "show": true,
 "hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "Provides space for fixed heading bar",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line space",
+"show": true
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line space",
+"show": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Fixed top header and nav bar",
+"show": true,
+"hide_if_empty": false,
 "attribs": {
-"class": "w3-container w3-theme-d1"
+"class": "w3-top w3-container w3-theme-d1"
 },
 "parts": [
 [
@@ -973,19 +1008,19 @@ false,
 [
 "Widget",
 {
-"class": "headers.HeaderText2",
+"class": "headers.HeadText",
 "name": "page_head",
-"brief": "Page header text",
+"brief": "large text on page heading",
 "fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
 "large_text": "",
 "show": true,
-"show_error": "",
-"small_text": "",
+"tag": "h3",
 "widget_class": "",
 "widget_style": ""
 }
+}
+]
+]
 }
 ],
 [
@@ -1304,17 +1339,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -2056,17 +2091,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -2415,17 +2450,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -2690,17 +2725,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -3024,17 +3059,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -3816,17 +3851,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -4275,17 +4310,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -5874,17 +5909,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -8105,17 +8140,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -8812,17 +8847,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -9369,17 +9404,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -9793,17 +9828,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -10393,17 +10428,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -10938,17 +10973,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -11531,17 +11566,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -11825,17 +11860,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -12129,17 +12164,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -12462,17 +12497,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -12891,17 +12926,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -13574,17 +13609,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -14314,17 +14349,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -14736,17 +14771,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -15211,17 +15246,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -16126,17 +16161,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -16815,17 +16850,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -17165,17 +17200,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -17968,17 +18003,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -20350,17 +20385,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -20774,17 +20809,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -21497,17 +21532,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -22041,17 +22076,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -22705,17 +22740,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -23238,17 +23273,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -23612,17 +23647,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -23986,17 +24021,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -24285,17 +24320,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -24894,17 +24929,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -25728,17 +25763,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -26076,17 +26111,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -26417,17 +26452,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -27190,17 +27225,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -27561,17 +27596,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -27790,17 +27825,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -28019,17 +28054,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -28574,17 +28609,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -30108,17 +30143,17 @@ false,
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -30521,17 +30556,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -30952,17 +30987,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -32171,17 +32206,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -33152,17 +33187,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -33661,17 +33696,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -34186,17 +34221,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -34921,17 +34956,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -35197,17 +35232,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -35881,17 +35916,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -36507,17 +36542,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [
@@ -36799,17 +36834,17 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
 }
 ],
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
 }
 ],
 [

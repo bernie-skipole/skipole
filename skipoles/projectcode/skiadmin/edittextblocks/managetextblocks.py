@@ -258,12 +258,11 @@ def submit_new_textblock(caller_ident, ident_list, submit_list, submit_dict, cal
     if not new_textblock_ref in result:
         # A new TextBlock is to be created
         try:
-            edittextblocks.set_text(" ", new_textblock_ref, editedproj.default_language, proj_ident)
+            edittextblocks.set_text("Insert text here", new_textblock_ref, editedproj.default_language, proj_ident)
         except:
             raise FailPage(message = "Failed to write to the textblocks database")
     # store the reference, as this goes to textblock edit responder which requires this data
     call_data['textblock'] = new_textblock_ref
-    call_data['status'] = "New TextBlock created"
 
 
 def submit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

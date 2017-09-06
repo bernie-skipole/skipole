@@ -89,6 +89,27 @@ SKIPOLE.headers.HeaderErrorPara.prototype.clear_error = function() {
     };
 
 
+SKIPOLE.headers.HeadText = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.headers.HeadText.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.headers.HeadText.prototype.constructor = SKIPOLE.headers.HeadText;
+SKIPOLE.headers.HeadText.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts field - large_text */
+   if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    /* large_text */
+    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    if (large_text) {
+        the_widg.text(large_text);
+        }
+    };
+
+
+
 SKIPOLE.headers.HeaderText1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     };

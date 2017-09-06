@@ -467,8 +467,6 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     # header information
     if ("adminhead","page_head","large_text") not in page_data:
         page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (call_data['editedprojname'], call_data['editedprojversion'])
-    if ("adminhead","page_head","small_text") not in page_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['editedprojbrief']
 
     if page_type == "TemplatePage":
         # fill in navigation information
@@ -476,7 +474,6 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
 
     # Show the status message
     if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
         page_data['foot', 'foot_status','footer_text'] = call_data['status']
         page_data[("adminhead","show_status","para_text")] = call_data['status']
         page_data[("adminhead","show_status","hide")] = False
