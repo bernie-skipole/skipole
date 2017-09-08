@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.2",
-"skipole": "0.0.33",
+"skipole": "0.0.35",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -50,12 +50,12 @@
 "Section",
 {
 "tag_name": "div",
-"brief": "left sidebar for links",
+"brief": "fixed left sidebar for navigation",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
 "class": "w3-sidebar w3-bar-block w3-theme-l1 w3-container",
-"style": "width:20%"
+"style": "top:0;width:20%"
 },
 "parts": [
 [
@@ -80,11 +80,12 @@
 "Section",
 {
 "tag_name": "div",
-"brief": "container div for header",
+"brief": "fixed container div for header",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-container w3-theme-d1"
+"class": "w3-top w3-container w3-theme-d1",
+"style": "left:20%;"
 },
 "parts": [
 [
@@ -98,31 +99,33 @@
 [
 "Text",
 "This is section topnav - a good place for header text."
-],
-[
-"Widget",
-{
-"class": "error_messages.ErrorClear2",
-"name": "top_error",
-"brief": "Error alert widget",
-"fields": {
-"boxdiv_class": "w3-modal-content w3-panel w3-theme-d3",
-"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
-"buttondiv_class": "w3-bar",
-"buttondiv_style": "",
-"clear_error": false,
-"error_class": "w3-panel w3-center w3-red",
-"get_field1": "",
-"get_field2": "",
-"get_field3": "",
-"hide": true,
-"link_ident": "no_javascript",
-"pre_line": true,
-"show": true,
-"show_error": "An unknown error has occurred",
-"widget_class": "w3-modal",
-"widget_style": ""
+]
+]
 }
+]
+]
+}
+],
+"topspace": [
+"Section",
+{
+"tag_name": "div",
+"brief": "Provides space at the top of a page for the header",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph space",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
 }
 ]
 ]
@@ -189,7 +192,7 @@
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
-"topnav",
+"",
 "top_error"
 ]
 },
@@ -321,6 +324,14 @@
 [
 "SectionPlaceHolder",
 {
+"brief": "Left navigation",
+"section_name": "leftnav",
+"placename": "leftnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
 "brief": "Top header navigation",
 "section_name": "topnav",
 "placename": "topnav"
@@ -329,9 +340,35 @@
 [
 "SectionPlaceHolder",
 {
-"brief": "Left navigation",
-"section_name": "leftnav",
-"placename": "leftnav"
+"brief": "Provides space for fixed heading bar",
+"section_name": "topspace",
+"placename": "topspace"
+}
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorClear2",
+"name": "top_error",
+"brief": "Error alert widget",
+"fields": {
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d3",
+"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"buttondiv_class": "w3-bar",
+"buttondiv_style": "",
+"clear_error": false,
+"error_class": "w3-panel w3-center w3-red",
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"hide": true,
+"link_ident": "no_javascript",
+"pre_line": true,
+"show": true,
+"show_error": "An unknown error has occurred",
+"widget_class": "w3-modal",
+"widget_style": ""
+}
 }
 ],
 [
