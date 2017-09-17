@@ -389,6 +389,9 @@ def _create_templatepage(page_dict, page, ident, proj_ident):
 
     page_args["show_backcol"] = page.show_backcol
     page_args["last_scroll"] = page.last_scroll
+    page_args["interval"] = page.interval
+    page_args["interval_target"] = page.interval_target
+
     page_args["lang"] = page.lang
     if page.backcol:
         page_args["backcol"] = page.backcol

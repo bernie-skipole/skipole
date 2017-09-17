@@ -611,6 +611,14 @@ def _create_templatepage(page_name, brief, page_args):
     "Create a template page"
     show_backcol = page_args["show_backcol"]
     last_scroll = page_args["last_scroll"]
+    if 'interval' in page_args:
+        interval = page_args["interval"]
+    else:
+        interval = 0
+    if 'interval_target' in page_args:
+        interval_target = page_args["interval_target"]
+    else:
+        interval_target = ''
     if 'lang' in page_args:
         lang = page_args["lang"]
     else:
@@ -625,7 +633,15 @@ def _create_templatepage(page_name, brief, page_args):
         default_error_widget = skiboot.WidgField(s=s, w=w, f='', i='')
     else:
         default_error_widget = skiboot.WidgField(s='', w='', f='', i='')
-    return page_class_definition.TemplatePage(page_name, brief, show_backcol, backcol, last_scroll, default_error_widget, lang)
+    return page_class_definition.TemplatePage( name=page_name,
+                                               brief = brief,
+                                               show_backcol=show_backcol,
+                                               backcol=backcol,
+                                               last_scroll=last_scroll,
+                                               default_error_widget=default_error_widget,
+                                               lang=lang,
+                                               interval = interval,
+                                               interval_target = interval_target)
 
 
 def _create_item(item_list, proj_ident):

@@ -50,6 +50,13 @@ SKIPOLE.restorepagepos = function() {
     };
 
 
+SKIPOLE.refreshjson = function( target ) {
+     $.getJSON(target, "ident=" + SKIPOLE.identdata).done(function(result){
+      SKIPOLE.setfields(result);
+      })
+    };
+
+
 SKIPOLE.inallowedlist =  function (item, allowed_values) {
     /* Fail if no allowed values given, otherwise item must be in allowed values */
     if (allowed_values.length === 0) {
