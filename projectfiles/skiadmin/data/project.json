@@ -1109,6 +1109,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -1861,6 +1863,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -2220,6 +2224,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -2579,6 +2585,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -2829,6 +2837,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -3621,6 +3631,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -4080,6 +4092,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -5763,6 +5777,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -7868,6 +7884,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -8631,6 +8649,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -9216,6 +9236,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -9626,6 +9648,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -10198,6 +10222,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -10743,6 +10769,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -11378,6 +11406,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -11672,6 +11702,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -11976,6 +12008,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -12323,6 +12357,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -12738,6 +12774,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -13449,6 +13487,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -14189,6 +14229,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -14625,6 +14667,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -15002,6 +15046,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -15959,6 +16005,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -16676,6 +16724,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -16970,6 +17020,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -17829,6 +17881,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -19915,6 +19969,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -20183,6 +20239,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -20593,6 +20651,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -21344,6 +21404,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -21846,6 +21908,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -22594,6 +22658,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -23113,6 +23179,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -23487,6 +23555,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -23833,6 +23903,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -24174,6 +24246,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -24783,6 +24857,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -25589,6 +25665,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -25937,6 +26015,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -26306,6 +26386,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -27007,6 +27089,190 @@ false,
 "Part",
 {
 "tag_name": "p",
+"brief": "About JSON interval refresh",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Once the template page is displayed on the client browser, you can optionally set it to request a JSON page at regular intervals. This is typically used to display status fields which need continual updating.\r\nInput the refresh time in seconds, and the target label or ident number which, when called, should return a JSON file setting the required widgefields."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.Form1",
+"name": "refresh",
+"brief": "Form to request JSON refreshes",
+"fields": {
+"action": "admin_home",
+"clear_error": false,
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "checkbox.CheckInputs",
+"name": "refreshcheck",
+"brief": "Enables JSON refresh",
+"fields": {
+"checkbox": "enable_refresh",
+"checkbox_class": "w3-check",
+"checked": false,
+"clear_error": false,
+"div_class": "",
+"error_class": "w3-panel w3-red",
+"label_class": "ski_left_label",
+"label_text": "Enable JSON refresh:",
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"brief": "div containing options",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "interval",
+"brief": "Set interval time in seconds",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "",
+"label": "Time between refresh (seconds):",
+"label_class": "ski_left_label",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "interval_target",
+"brief": "The target ident",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "",
+"label": "Target ident or label:",
+"label_class": "ski_left_label",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Holds submit button",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button"
+},
+"parts": [
+[
+"ClosedWidget",
+{
+"class": "inputforms.SubmitButton2",
+"name": "submitrefresh",
+"brief": "SubmitButton2 to submit the refresh form",
+"fields": {
+"button_text": "Submit",
+"show": true,
+"widget_class": "w3-button w3-theme-d4 w3-margin-left",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+}
+]
+]
+}
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "horizontal rule",
+"show": true
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
 "brief": "About template download",
 "show": true,
 "hide_if_empty": false,
@@ -27079,6 +27345,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -27450,6 +27718,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -27679,6 +27949,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -27908,6 +28180,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -28463,6 +28737,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -29997,6 +30273,8 @@ false,
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -30410,6 +30688,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -30841,6 +31121,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -31193,6 +31475,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -31341,6 +31625,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -31592,6 +31878,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -31803,6 +32091,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -32063,6 +32353,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -33041,6 +33333,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -33466,6 +33760,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -34005,6 +34301,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -34796,6 +35094,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -35086,6 +35386,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -35728,6 +36030,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -36368,6 +36672,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -36674,6 +36980,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [
@@ -39112,6 +39420,8 @@ false
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": "",
 "lang": "en",
 "backcol": "#bbbbbb",
 "default_error_widget": [

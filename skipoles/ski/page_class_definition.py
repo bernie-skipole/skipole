@@ -32,6 +32,7 @@ This module defines the page objects
 
 import os, mimetypes, copy, collections, json, re, uuid
 from string import Template
+from urllib.parse import quote
 
 from . import skiboot
 from .tag import Part, ClosedPart, TextBlock, Section
@@ -357,7 +358,15 @@ class TemplatePage(TemplatePageAndSVG):
     """
 
 
-    def __init__(self, name="", brief = "New Page", show_backcol=False, backcol="#FFFFFF", last_scroll=True, default_error_widget=None, lang=None):
+    def __init__(self, name="",
+                       brief = "New Page",
+                       show_backcol=False,
+                       backcol="#FFFFFF",
+                       last_scroll=True,
+                       default_error_widget=None,
+                       lang=None,
+                       interval = 0,
+                       interval_target = ''):
         """Initiates a Page instance
 
         name: a url friendly page name
@@ -404,6 +413,13 @@ class TemplatePage(TemplatePageAndSVG):
 
         # last scroll is True if the page is to be restored to the last scrolled position
         self.last_scroll = last_scroll
+
+        # if requesting a json target to be called at regular intervals,
+        # self.interval is the time in seconds, and self.interval_target
+        # is the target url
+         
+        self.interval = interval
+        self.interval_target = interval_target
 
         # self.validator_scriptlinks is a list of validator module ski_name's
         # calculated when the page is saved, and used 
@@ -504,6 +520,16 @@ $(document).ready(function(){
             scriptend = """
   SKIPOLE.restorepagepos();
 """
+        # and if a regular refresh is required
+        if self.interval:
+            interval = self.interval * 1000
+            intervalurl = ''
+            intervalurl = skiboot.get_url(self.interval_target, self.proj_ident)
+            if intervalurl:
+                intervalurl = quote(intervalurl, safe='/:?&=')
+            scriptend += """
+  setInterval( SKIPOLE.refreshjson, %s, "%s");
+""" % (interval, intervalurl)
         # and set an event to store window position on unload
         scriptend += """
   if(typeof(Storage) !== "undefined") {
