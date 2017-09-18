@@ -390,7 +390,18 @@ def _create_templatepage(page_dict, page, ident, proj_ident):
     page_args["show_backcol"] = page.show_backcol
     page_args["last_scroll"] = page.last_scroll
     page_args["interval"] = page.interval
-    page_args["interval_target"] = page.interval_target
+
+    # convert page.interval_target to ident, label or None
+    interval_target = skiboot.make_ident_or_label(page.interval_target, proj_ident)
+    if isinstance(interval_target, skiboot.Ident):
+        if interval_target.proj == proj_ident:
+            page_args["interval_target"] = interval_target.num
+        else:
+            # ident is another project, put the full ident
+            page_args["interval_target"] = interval_target.to_comma_str()
+    else:
+        # interval_target is label or None
+        page_args["interval_target"] = interval_target
 
     page_args["lang"] = page.lang
     if page.backcol:

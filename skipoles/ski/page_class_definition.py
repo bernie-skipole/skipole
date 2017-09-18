@@ -366,10 +366,18 @@ class TemplatePage(TemplatePageAndSVG):
                        default_error_widget=None,
                        lang=None,
                        interval = 0,
-                       interval_target = ''):
+                       interval_target=None):
         """Initiates a Page instance
 
         name: a url friendly page name
+        brief: description of the page
+        show_backcol: True if colour can be placed in the html tag
+        backcol: The colour to place in the html tag
+        last_scroll: True if the page is to remember its last scroll position
+        default_error_widget: widget name to display errors, if no other widget specified in the error call
+        lang: language string to place in the html tag
+        interval: Time interval in integer seconds for repeated call for JSON update, 0 if not used.
+        interval_target: ident or label (not URL) to call for the JSON update 
         """
 
         TemplatePageAndSVG.__init__(self, name=name, brief=brief)
@@ -419,7 +427,10 @@ class TemplatePage(TemplatePageAndSVG):
         # is the target url
          
         self.interval = interval
-        self.interval_target = interval_target
+        if interval_target:
+            self.interval_target = interval_target
+        else:
+            self.interval_target = None
 
         # self.validator_scriptlinks is a list of validator module ski_name's
         # calculated when the page is saved, and used 
@@ -527,7 +538,7 @@ $(document).ready(function(){
             intervalurl = skiboot.get_url(self.interval_target, self.proj_ident)
             if intervalurl:
                 intervalurl = quote(intervalurl, safe='/:?&=')
-            scriptend += """
+                scriptend += """
   setInterval( SKIPOLE.refreshjson, %s, "%s");
 """ % (interval, intervalurl)
         # and set an event to store window position on unload
