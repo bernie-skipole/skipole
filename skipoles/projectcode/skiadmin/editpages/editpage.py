@@ -33,6 +33,15 @@ from ....skilift import fromjson
 from .. import utils, css_styles
 
 
+def _ident_to_str(ident):
+    "Returns string ident or label"
+    if isinstance(ident, skiboot.Ident):
+        return ident.to_comma_str()
+    if ident is None:
+        return ''
+    return str(ident)
+
+
 def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves data for the edit page"
 
@@ -86,6 +95,20 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[('red', 'disabled')] = True
         page_data[('green', 'disabled')] = True
         page_data[('blue', 'disabled')] = True
+
+    # fills in the JSON refresh checkbox
+    if page.interval and page.interval_target:
+        page_data[("refreshcheck","checked")] = True
+        page_data[('interval', 'disabled')] = False
+        page_data[('interval_target', 'disabled')] = False
+        page_data[('interval', 'input_text')] = str(page.interval)
+        page_data[('interval_target', 'input_text')] = _ident_to_str(page.interval_target)
+    else:
+        page_data[("refreshcheck","checked")] = False
+        page_data[('interval', 'disabled')] = True
+        page_data[('interval_target', 'disabled')] = True
+        page_data[('interval', 'input_text')] = '0'
+        page_data[('interval_target', 'input_text')] = ''
 
     r, g, b = css_styles.hex_int(page.backcol)
     page_data[('red', 'input_text')] = str(r)
@@ -511,6 +534,66 @@ def submit_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_
             text = 'Page will be displayed at the last scroll position'
     except:
         raise FailPage(message="Error setting last_scroll")
+    # save the page
+    utils.save(call_data, page=page)
+    call_data['status'] = text
+
+
+def submit_refresh(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Sets JSON refresh facility"
+
+    editedproj = call_data['editedproj']
+
+    if 'page' in call_data:
+        if call_data['page'].page_type == 'TemplatePage':
+            # page given from session data
+            page = call_data['page']
+        else:
+            raise FailPage(message = "Invalid page")
+        if not page in editedproj:
+            raise FailPage(message = "Invalid page")
+    else:
+        raise FailPage(message = "page missing")
+
+    interval = 0
+    interval_target = None
+
+    try:
+        if ('refreshcheck', 'checkbox') not in call_data:
+            interval = 0
+        elif call_data['refreshcheck', 'checkbox'] != 'enable_refresh':
+            interval = 0
+        elif ('interval', 'input_text') not in call_data:
+            interval = 0
+        elif call_data['interval', 'input_text'] == '0':
+            interval = 0
+        elif ('interval_target', 'input_text') not in call_data:
+            interval = 0
+        elif not call_data['interval_target', 'input_text']:
+            interval = 0
+        else:
+            interval = int(call_data['interval', 'input_text'])
+            interval_target = skiboot.make_ident_or_label(call_data['interval_target', 'input_text'], proj_ident=editedproj.proj_ident)
+    except:
+        raise FailPage(message="Error setting JSON refresh")
+    # set page attributes
+    if (interval == 0) or (not interval_target):
+        text = 'JSON refresh facility disabled'
+        page.interval = 0
+        page.interval_target = None
+    else:
+        text = 'JSON refresh facility enabled'
+        page.interval = interval
+        # if interval target is an ident of this project, only store an integer
+        if isinstance(interval_target, skiboot.Ident):
+            if interval_target.proj == editedproj.proj_ident:
+                page.interval_target = interval_target.num
+            else:
+                # ident is another project, put the full ident
+                page.interval_target = interval_target.to_comma_str()
+        else:
+            page.interval_target = interval_target
+
     # save the page
     utils.save(call_data, page=page)
     call_data['status'] = text

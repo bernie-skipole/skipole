@@ -618,7 +618,7 @@ def _create_templatepage(page_name, brief, page_args):
     if 'interval_target' in page_args:
         interval_target = page_args["interval_target"]
     else:
-        interval_target = ''
+        interval_target = None    
     if 'lang' in page_args:
         lang = page_args["lang"]
     else:
