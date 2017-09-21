@@ -321,7 +321,8 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
 
 class FieldStoreSubmit(Respond):
     """Takes submitted data from the received form with the given field (regardless of widget name - only uses field name to choose data),
-       and stores the data in the dictionary submit_dict.  The dictionary keys used to store are the widgfield tuple of the submitting widgets.
+       and stores the data in the dictionary submit_dict under key 'received'.  The dictionary keys in received used to store are the
+       widgfield tuple of the submitting widgets.
        Then calls the submit_data function, if no fieldname matches are found submit_data is still called, but no widgfield tuple key
        is inserted into submit_dict"""
 
@@ -353,13 +354,16 @@ class FieldStoreSubmit(Respond):
         if not field_name:
             raise ValidateError()
 
+        received = {}
+
         for field, value in form_data.items():
             # field is a widgfield object
             if field_name == field.f:
                if isinstance(value, list) or isinstance(value, dict):
-                   submit_dict[field.to_tuple_no_i()] = value.copy()
+                   received[field.to_tuple_no_i()] = value.copy()
                else:
-                   submit_dict[field.to_tuple_no_i()] = value
+                   received[field.to_tuple_no_i()] = value
+        submit_dict['received'] = received
 
         if caller_page:
             caller_ident = caller_page.ident
@@ -736,6 +740,9 @@ Given media queries and CSS page targets, wraps the targets with the media queri
 
         media_target =  self.fields.copy()
 
+
+        submit_dict = {'environ':environ}
+
         # update media target with result of submit_data
         if self.submit_option:
             if caller_page:
@@ -743,10 +750,11 @@ Given media queries and CSS page targets, wraps the targets with the media queri
             else:
                 caller_ident = None
             try:
+                submit_dict['media_target'] = media_target.copy()
                 mediadict = projectcode.submit_data(caller_ident,
                                        ident_list,
                                        self.submit_list.copy(),
-                                       media_target.copy(),
+                                       submit_dict,
                                        call_data,
                                        page_data,
                                        lang)
