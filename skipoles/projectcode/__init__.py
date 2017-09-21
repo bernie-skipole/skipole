@@ -161,8 +161,11 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     else:
         tuple_caller_ident = caller_ident.to_tuple()
     proj_ident = ident_list[-1].proj
-    if not skiboot.is_project(proj_ident):
+    this_project = skiboot.getproject(proj_ident)
+    if this_project is None:
         raise FailPage()
+    # add project proj_data to submit_dict
+    submit_dict['proj_data'] = this_project.proj_data
     tuple_ident_list = [ ident.to_tuple() for ident in ident_list ]
     try:
         project_code = _import_project_code(proj_ident)
