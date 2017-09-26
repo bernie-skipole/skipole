@@ -76,6 +76,49 @@ SKIPOLE.tables.TwoColTable1.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.tables.ThreeColTable1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.tables.ThreeColTable1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.tables.ThreeColTable1.prototype.constructor = SKIPOLE.tables.ThreeColTable1;
+SKIPOLE.tables.ThreeColTable1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    // columns
+    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    var col3 = this.fieldarg_in_result('col3', result, fieldlist);
+    var self = this;
+    var index = 0;
+    var header = false;
+    if (the_widg.find('th')) {
+        header = true;
+        }
+    the_widg.find('tr').each(function() {
+        if (header) {
+            header = false;
+            }
+        else {
+            // for each row
+            var cells = $(this).children();
+            if (col1) {
+                $(cells[0]).text(col1[index]);
+                 }
+            if (col2) {
+                $(cells[1]).text(col2[index]);
+                 }
+            if (col3) {
+                $(cells[2]).text(col3[index]);
+                 }
+             index=index+1;
+            }
+        })
+    };
+
+
 SKIPOLE.tables.TextBlockTable2 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;

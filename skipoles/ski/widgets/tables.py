@@ -126,8 +126,6 @@ class ColorTable1(Widget):
 </table>"""
 
 
-
-
 class TwoColTable1(Widget):
     """A table of two columns, the columns being text strings
        The first row is two header titles
@@ -212,6 +210,103 @@ class TwoColTable1(Widget):
   <tr> <!-- with class  from even or odd classes -->
     <td> <!-- col1 text string --> </td>
     <td> <!-- col2 text string --> </td>
+  </tr>
+  <!-- rows repeated -->
+</table>"""
+
+
+class ThreeColTable1(Widget):
+    """A table of three columns, the columns being text strings
+       The first row is three header titles
+       Note : there is no error display"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'header_class':FieldArg("cssclass",""),
+                        'even_class':FieldArg("cssclass", ""),
+                        'odd_class':FieldArg("cssclass", ""),
+                        'title1':FieldArg('text', ''),
+                        'title2':FieldArg('text', ''),
+                        'title3':FieldArg('text', ''),
+                        'col1':FieldArgList('text', valdt=False, jsonset=True),
+                        'col2':FieldArgList('text', valdt=False, jsonset=True),
+                        'col3':FieldArgList('text', valdt=False, jsonset=True)
+                        }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        header_class: class of the header row, if empty string, then no class will be applied
+        even_class: class of even rows, if empty string, then no class will be applied
+        odd_class: class of odd rows, if empty string, then no class will be applied
+        title1: The header title over the first text column
+        title2: The header title over the second text column
+        title3: The header title over the third text column
+        col1 : A list of text strings to place in the first column
+        col2: A list of text strings to place in the second column
+        col3: A list of text strings to place in the third column
+        """
+        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the table"
+        col_list1 = self.get_field_value("col1")
+        col_list2 = self.get_field_value("col2")
+        col_list3 = self.get_field_value("col3")
+        header = 0
+        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):
+            header = 1
+            if self.get_field_value('header_class'):
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            else:
+                self[0] = tag.Part(tag_name='tr')
+            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
+            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
+        # set even row colour
+        if self.get_field_value('even_class'):
+            even = self.get_field_value('even_class')
+        else:
+            even = ''
+        # set odd row colour
+        if self.get_field_value('odd_class'):
+            odd = self.get_field_value('odd_class')
+        else:
+            odd = ''
+        # create rows
+        rows = max( len(col_list1), len(col_list2), len(col_list3) )
+        if rows > len(col_list1):
+            col_list1.extend(['']*(rows - len(col_list1)))
+        if rows > len(col_list2):
+            col_list2.extend(['']*(rows - len(col_list2)))
+        if rows > len(col_list3):
+            col_list3.extend(['']*(rows - len(col_list3)))
+
+        for index in range(rows):
+            rownumber = index+header
+            if even and (rownumber % 2) :
+                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":even})
+            elif odd and not (rownumber % 2):
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
+            else:
+                self[rownumber] = tag.Part(tag_name='tr')
+            self[rownumber][0] = tag.Part(tag_name='td', text = col_list1[index])
+            self[rownumber][1] = tag.Part(tag_name='td', text = col_list2[index])
+            self[rownumber][2] = tag.Part(tag_name='td', text = col_list3[index])
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<table>  <!-- with CSS class given by widget_class -->
+  <tr> <!-- with header class -->
+    <th> <!-- title1 --> </th>
+    <th> <!-- title2 --> </th>
+    <th> <!-- title3 --> </th>
+  </tr>
+  <tr> <!-- with class  from even or odd classes -->
+    <td> <!-- col1 text string --> </td>
+    <td> <!-- col2 text string --> </td>
+    <td> <!-- col3 text string --> </td>
   </tr>
   <!-- rows repeated -->
 </table>"""
