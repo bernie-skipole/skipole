@@ -947,7 +947,17 @@ if sys.version_info[0] != 3 or sys.version_info[1] < 2:
     print("Program exiting")
     sys.exit(1)
 
+
+# As default use the Python library web server
 from wsgiref.simple_server import make_server
+
+
+# This commented-out option below uses the waitress web server, if used, the above
+# wsgiref import should be commented out, and the waitress web server imported
+# instead. This requires python3 version of the waitress web server to be installed
+# on your server, package 'python3-waitress' with debian
+
+# from waitress import serve  
 
 import skipoles
 
@@ -1000,13 +1010,18 @@ def application(environ, start_response):
     start_response(status, headers)
     return data
 
-# serve the site, using the python wsgi web server
 
-httpd = make_server("", port, application)
+# serve the site
+
 print("Serving on port " + str(port) + "...")
 print("Press ctrl-c to stop")
 
-# Serve until process is killed
+# if using the waitress wsgi web server, uncomment the line below
+# serve(application, host='0.0.0.0', port=port)
+# and comment out the lines below
+
+# using the python wsgi web server
+httpd = make_server("", port, application)
 httpd.serve_forever()
 """ % (proj_ident, proj_brief, proj_version)
     return runfile
