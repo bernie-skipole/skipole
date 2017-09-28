@@ -164,8 +164,16 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     this_project = skiboot.getproject(proj_ident)
     if this_project is None:
         raise FailPage()
+    # add project name to submit_dict
+    submit_dict['project'] = proj_ident
     # add project proj_data to submit_dict
     submit_dict['proj_data'] = this_project.proj_data
+    # add project option to submit_dict
+    submit_dict['option'] = this_project.option
+    # add boolean rootproject flag to submit_dict, True if this is the root project
+    submit_dict['rootproject'] = this_project.rootproject
+    # add project brief to submit_dict
+    submit_dict['brief'] = this_project.brief
     tuple_ident_list = [ ident.to_tuple() for ident in ident_list ]
     try:
         project_code = _import_project_code(proj_ident)
