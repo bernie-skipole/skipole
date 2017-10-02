@@ -312,7 +312,10 @@ def get_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page
     """Finds any widget submitting 'get_field' with value of a textblock ref, returns
        page_data with key widget with field 'div_content' and value the textblock text"""
     adminproj = call_data['adminproj']
-    for key, val in submit_dict.items():
+    if 'received' not in submit_dict:
+        return
+    received_widgfields = submit_dict['received']
+    for key, val in received_widgfields.items():
         if isinstance(key, tuple) and (key[-1] == 'get_field'):
             text = get_textblock_text(val, lang, project=adminproj.proj_ident).replace('\n', '\n<br />')
             if text is None:

@@ -45,7 +45,6 @@ if sys.version_info[0] != 3 or sys.version_info[1] < 2:
 
 
 import os, argparse
-from wsgiref.simple_server import make_server
 
 import skipoles
 
@@ -102,6 +101,9 @@ parser.add_argument("-a", "--admin", action='store_true', dest="admin", default=
 parser.add_argument("-l", "--list", action='store_true', dest="listprojects", default=False,
                   help="List current projects, then exits.")
 
+parser.add_argument("-w", "--waitress", action='store_true', dest="waitress", default=False,
+                  help="Serve project with the Waitress web server (python3-waitress is required).")
+
 parser.add_argument('--version', action='version', version=('%(prog)s ' + skipoles.version))
 
 parser.add_argument('project', nargs='?', default='',
@@ -110,6 +112,18 @@ parser.add_argument('project', nargs='?', default='',
 args = parser.parse_args()
 
 port = args.port
+
+if args.waitress:
+    # This requires python3 version of the waitress web server to be
+    # installed on your server, package 'python3-waitress' with debian
+    try:
+        from waitress import serve
+    except:
+        print("Unable to import waitress")
+        sys.exit(1)
+else:
+    # As default use the Python library web server
+    from wsgiref.simple_server import make_server
 
 if not (args.SYMLINK or args.admin or args.delete or args.listprojects or args.new or args.option or args.project or args.source or args.symlink or args.tarimport):
     # skipole.py has been called on its own, or just with a port option
@@ -342,8 +356,7 @@ def application(environ, start_response):
     start_response(status, headers)
     return data
 
-# serve the site
-httpd = make_server(host, port, application)
+
 
 print("Serving project %s on port %s... open a browser and go to\nlocalhost:%s%s" % (project, port, port, site.url))
 
@@ -352,8 +365,20 @@ if admin_mode and (project != adminproj) :
 
 print("Press ctrl-c to stop.")
 
-# Serve until process is killed
-httpd.serve_forever()
+
+# serve the site
+
+if args.waitress:
+    if host:
+        serve(application, host=host, port=port)
+    else:
+        serve(application, host='0.0.0.0', port=port)
+else:
+    # using the python wsgi web server
+    httpd = make_server(host, port, application)
+    httpd.serve_forever()
+
+
 
 
 
