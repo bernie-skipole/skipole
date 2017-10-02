@@ -830,7 +830,7 @@ def _tar_contents(proj_ident):
 
     myapp.py                   - Minimal python file holding the wsgi application, for use with other web servers
 
-    __main__.py                - Script holding the wsgi application and runs the python library web server
+    __main__.py                - Runs a web server and serves your wsgi application
 
     projectfiles               - Directory of non-python data and static files
 
@@ -948,17 +948,6 @@ if sys.version_info[0] != 3 or sys.version_info[1] < 2:
     sys.exit(1)
 
 
-# As default use the Python library web server
-from wsgiref.simple_server import make_server
-
-
-# This commented-out option below uses the waitress web server, if used, the above
-# wsgiref import should be commented out, and the waitress web server imported
-# instead. This requires python3 version of the waitress web server to be installed
-# on your server, package 'python3-waitress' with debian
-
-# from waitress import serve  
-
 import skipoles
 
 project = "%s"
@@ -975,11 +964,27 @@ parser.add_argument("-p", "--port", type=int, dest="port", default=8000,
 parser.add_argument("-o", "--option", dest="option",
                   help="An optional value passed to your functions.")
 
+parser.add_argument("-w", "--waitress", action='store_true', dest="waitress", default=False,
+                  help="Serve project with the Waitress web server (python3-waitress is required).")
+
 parser.add_argument('--version', action='version', version=project + ' ' + '%s')
 
 args = parser.parse_args()
 
 port = args.port
+
+if args.waitress:
+    # This requires python3 version of the waitress web server to be
+    # installed on your server, package 'python3-waitress' with debian
+    try:
+        from waitress import serve
+    except:
+        print("Unable to import waitress")
+        sys.exit(1)
+else:
+    # As default use the Python library web server
+    from wsgiref.simple_server import make_server
+
 
 # An 'option' value can be passed to the project, and futher options to subprojects
 # with a dictionary of {project:option,..} where each key is the project or sub project name
@@ -1010,19 +1015,17 @@ def application(environ, start_response):
     start_response(status, headers)
     return data
 
-
 # serve the site
 
 print("Serving on port " + str(port) + "...")
 print("Press ctrl-c to stop")
 
-# if using the waitress wsgi web server, uncomment the line below
-# serve(application, host='0.0.0.0', port=port)
-# and comment out the lines below
-
-# using the python wsgi web server
-httpd = make_server("", port, application)
-httpd.serve_forever()
+if args.waitress:
+    serve(application, host='0.0.0.0', port=port)
+else:
+    # using the python wsgi web server
+    httpd = make_server("", port, application)
+    httpd.serve_forever()
 """ % (proj_ident, proj_brief, proj_version)
     return runfile
 
