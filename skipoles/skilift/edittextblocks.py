@@ -70,16 +70,14 @@ def get_textref_languages(project):
     proj = skiboot.getproject(project)
     if proj is None:
         return {}
-    return proj.textrefs.copy()
+    return proj.textblocks_get_textref_languages()
 
 def get_exact_text(textref, language, project):
     "Get text with given textref and language, gets exact value, does not seek nearest, if not found return None"
     proj = skiboot.getproject(project)
     if proj is None:
         return
-    textblocks = proj.textblocks
-    if (textref,language) in textblocks:
-        return textblocks[(textref,language)]
+    return proj.textblocks_get_exact_text(textref, language)
     
 def set_text(text, textref, language, project):
     "Set text into textblock"
