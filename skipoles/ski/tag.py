@@ -893,7 +893,7 @@ class TextBlock(object):
         if proj is None:
             self._show_failmessage = True
             return
-        result = proj.textblocks_get_text(self.textref, lang)
+        result = proj.textblocks.get_text(self.textref, lang)
         if result is None:
             self._show_failmessage = True
         else:

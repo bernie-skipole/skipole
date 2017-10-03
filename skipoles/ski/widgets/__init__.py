@@ -1541,7 +1541,7 @@ class ClosedWidget(tag.ClosedPart):
                     if (not message) and val.message_ref:
                         project = skiboot.getproject(page.proj_ident)
                         if project is not None:
-                            message = project.textblocks_get_text(val.message_ref, lang)
+                            message = project.textblocks.get_text(val.message_ref, lang)
                     if not message:
                         message = ""
                     one_validator_list.append(message)

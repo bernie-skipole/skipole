@@ -162,11 +162,6 @@ class Project(object):
         return self.textblocks.get_exact_text(textref, language)
 
 
-    def textblocks_get_text(self, textref, lang):
-        """Gets the text from the textblock, trying nearest language, returns None if not found
-           lang is a tuple of preferred language, default_language"""
-        return self.textblocks.get_text(textref, lang)
-
 
     def textblocks_set_text(self, text, textref, language):
         "Sets the text into the textblock, with the given textref and language"
