@@ -46,6 +46,9 @@ from ..ski import skiboot
 # as project code is imported, it is stored in _PROJECTS
 _PROJECTS = {}
 
+# The textblocks modules are installed in _TEXTBLOCKS
+_TEXTBLOCKS = {}
+
 
 def _import_project_code(proj_ident):
     global _PROJECTS
@@ -62,6 +65,25 @@ def _import_project_code(proj_ident):
             raise ServerError(message)
         raise ServerError("Unable to import project code")
     return _PROJECTS[proj_ident]
+
+
+def make_AccessTextBlocks(project, projectfiles, default_language):
+    "Returns an AccessTextBlocks object"
+    global _TEXTBLOCKS
+    try:
+        if project  not in _TEXTBLOCKS:
+            _TEXTBLOCKS[project] = import_module("."+project+".textblocks", __name__)
+    except:
+        if skiboot.get_debug():
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            message = ''
+            for item in str_list:
+                message += item
+            raise ServerError(message)
+        raise ServerError("Unable to import %s.textblocks" % (project,))
+    textblocks_module = _TEXTBLOCKS[project]
+    return textblocks_module.AccessTextBlocks(project, projectfiles, default_language)
 
 
 # returns the projectcode directory
