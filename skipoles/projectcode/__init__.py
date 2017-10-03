@@ -30,10 +30,12 @@
 
 import sys, traceback, re, os
 
-if sys.version_info[0] == 3 and sys.version_info[1] < 4:
-    from imp import reload
-else:
-    from importlib import reload
+#if sys.version_info[0] == 3 and sys.version_info[1] < 4:
+#    from imp import reload
+#else:
+#    from importlib import reload
+
+from importlib import reload, import_module
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
@@ -49,7 +51,7 @@ def _import_project_code(proj_ident):
     global _PROJECTS
     try:
         if proj_ident  not in _PROJECTS:
-            _PROJECTS[proj_ident] = __import__(proj_ident, globals(), locals(), level=1)
+            _PROJECTS[proj_ident] = import_module("."+proj_ident, __name__)
     except:
         if skiboot.get_debug():
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -78,7 +80,7 @@ def code_reload(proj_ident):
         if proj_ident in _PROJECTS:
             _PROJECTS[proj_ident] = reload(_PROJECTS[proj_ident])
         else:
-            _PROJECTS[proj_ident] = __import__(proj_ident, globals(), locals(), level=1)
+            _PROJECTS[proj_ident] = import_module("."+proj_ident, __name__)
     except:
         if skiboot.get_debug():
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -96,7 +98,7 @@ def start_project(proj_ident, path, option):
           Should return the proj_data dictionary"""
     global _PROJECTS
     if proj_ident  not in _PROJECTS:
-        _PROJECTS[proj_ident] = __import__(proj_ident, globals(), locals(), level=1)
+        _PROJECTS[proj_ident] = import_module("."+proj_ident, __name__)
     project_code =  _PROJECTS[proj_ident]
 
     # get projectfiles directory
