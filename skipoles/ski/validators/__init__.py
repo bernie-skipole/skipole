@@ -81,7 +81,7 @@ class Validator(object):
         project = getproject(proj)
         if project is None:
             return ''
-        text = project.textblocks_get_text(self.message_ref, lang)
+        text = project.textblocks.get_text(self.message_ref, lang)
         if text:
             return text
         return ''

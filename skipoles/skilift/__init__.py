@@ -110,7 +110,7 @@ def get_textblock_text(textref, lang, project=None):
     proj = skiboot.getproject(project)
     if proj is None:
         return ''
-    return proj.textblocks_get_text(textref, lang)
+    return proj.textblocks.get_text(textref, lang)
 
 
 def item_info(project, itemnumber):
