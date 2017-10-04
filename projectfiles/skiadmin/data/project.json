@@ -4468,6 +4468,31 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
+"name": "accesstextblocks",
+"brief": "Describes function get_accesstextblocks",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "get_accesstextblocks -",
+"button_show_text": "get_accesstextblocks +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.accesstextblocks",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
 "name": "item_info",
 "brief": "get information about item_info",
 "fields": {

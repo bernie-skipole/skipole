@@ -30,7 +30,6 @@ import re
 _TB = re.compile('[^\w\.]')
 
 from ....ski.excepts import FailPage
-from ....skilift import edittextblocks
 from .... import skilift
 
 
@@ -43,7 +42,10 @@ def retrieve_link_table(caller_ident, ident_list, submit_list, submit_dict, call
     page_data[("adminhead","page_head","large_text")] = "Manage TextBlocks"
     page_data[("adminhead","page_head","small_text")] = "Create and edit TextBlocks"
 
-    result = edittextblocks.get_textrefs(proj_ident)
+
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+
+    result = accesstextblocks.get_textrefs()
     # result is a list of textrefs
 
     #       contents: col 0 is the text to place in the first column,
@@ -102,7 +104,8 @@ def retrieve_more(caller_ident, ident_list, submit_list, submit_dict, call_data,
     page_data[("st1","input_text")] = refdot
 
     # list of textrefs
-    result = edittextblocks.get_textrefs(proj_ident)              
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+    result = accesstextblocks.get_textrefs()              
 
     # set result to a list of textrefs that start with refdot
     result = [ ref for ref in result if ref.startswith(refdot) ]
@@ -166,7 +169,9 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
         edited_textblock = call_data['textblock']
     else:
         raise FailPage("TextBlock Reference not found")
-    result = edittextblocks.get_textref_languages(editedproj.proj_ident)
+
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+    result = accesstextblocks.get_textref_languages()
     # result is a dictionary {textref: [languages],...}
     if not edited_textblock in result:
         raise FailPage("The TextBlock reference has not been found")
@@ -207,14 +212,14 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
     # get submitted textblock language
     if 'language' in call_data:
         textblock_language = call_data['language'].lower()
-        textblock_text = edittextblocks.get_exact_text(edited_textblock, textblock_language, proj_ident)
+        textblock_text = accesstextblocks.get_exact_text(edited_textblock, textblock_language)
         if textblock_text is None:
             page_data['sp1:para_text'] = "No text in this language has been found, edit and submit the text below to set this language text\n"
         else:
              page_data['sp1:para_text'] = textblock_text
     else:
         textblock_language = textblock_lang
-        textblock_text =edittextblocks.get_exact_text(edited_textblock, textblock_language, proj_ident)
+        textblock_text = accesstextblocks.get_exact_text(edited_textblock, textblock_language)
         if textblock_text is None:
             raise FailPage("Failed to find text for the TextBlock reference")
         page_data['sp1:para_text'] = textblock_text
@@ -225,7 +230,7 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
     if 'text' in call_data:
         input_text = call_data['text']
     else:
-        input_text = skilift.get_textblock_text(edited_textblock, (textblock_language,default_language), proj_ident)
+        input_text = accesstextblocks.get_text(edited_textblock, (textblock_language,default_language))
     if input_text is None:
         page_data['sta1:input_text'] = ''
     else:
@@ -253,12 +258,13 @@ def submit_new_textblock(caller_ident, ident_list, submit_list, submit_dict, cal
     if _TB.search(new_textblock_ref):
         raise FailPage(message="Invalid reference")
 
-    result = edittextblocks.get_textref_languages(proj_ident)
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+    result = accesstextblocks.get_textref_languages()
     # result is a dictionary {textref: [languages],...}
     if not new_textblock_ref in result:
         # A new TextBlock is to be created
         try:
-            edittextblocks.set_text("Insert text here", new_textblock_ref, editedproj.default_language, proj_ident)
+            accesstextblocks.set_text("Insert text here", new_textblock_ref, editedproj.default_language)
         except:
             raise FailPage(message = "Failed to write to the textblocks database")
     # store the reference, as this goes to textblock edit responder which requires this data
@@ -278,7 +284,8 @@ def submit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     if "text" not in call_data:
         raise ValidateError(message='Invalid call - no text set')
     # set the text and language in this textblock text
-    edittextblocks.set_text(call_data['text'], call_data['textblock'], call_data['language'], proj_ident)
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+    accesstextblocks.set_text(call_data['text'], call_data['textblock'], call_data['language'])
     call_data['status'] = "TextBlock updated"
 
 
@@ -293,7 +300,8 @@ def submit_delete_language(caller_ident, ident_list, submit_list, submit_dict, c
     if "delete_language" not in call_data:
         raise ValidateError(message='Invalid call - no language to delete set')
     # request a language deletion
-    result = edittextblocks.get_textref_languages(proj_ident)
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+    result = accesstextblocks.get_textref_languages()
     # result is a dictionary {textref: [languages],...}
     if call_data['textblock'] not in result:
         raise FailPage("Failed to find the TextBlock reference")
@@ -304,7 +312,7 @@ def submit_delete_language(caller_ident, ident_list, submit_list, submit_dict, c
     if len(lang_list) < 2:
         raise FailPage("Only one language set, cannot be deleted")
     # delete the block language
-    edittextblocks.del_text(call_data['textblock'], language, proj_ident)
+    accesstextblocks.del_text(call_data['textblock'], language)
     call_data['status'] = "Language deleted"
 
 
@@ -318,10 +326,11 @@ def submit_delete_textblock(caller_ident, ident_list, submit_list, submit_dict, 
     if "delete_textblock" not in call_data:
         raise ValidateError(message='Invalid call - no textblock reference')
     textref = call_data['delete_textblock']
-    if not edittextblocks.textref_exists(textref, proj_ident):
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+    if not accesstextblocks.textref_exists(textref):
         call_data['status'] = "TextBlock not found"
         return
-    edittextblocks.del_textblock(textref, proj_ident)
+    accesstextblocks.del_textblock(textref)
     call_data['status'] = "TextBlock deleted"
 
 
@@ -337,7 +346,8 @@ def submit_copy_textblock(caller_ident, ident_list, submit_list, submit_dict, ca
         raise ValidateError(message='Invalid call - no new textblock reference')
     if _TB.search(call_data['copy_textblock_ref']):
         raise FailPage(message="Invalid reference")
-    edittextblocks.copy_textblock(call_data['textblock'], call_data['copy_textblock_ref'], proj_ident)
+    accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+    accesstextblocks.copy(call_data['textblock'], call_data['copy_textblock_ref'])
     call_data['status'] = "TextBlock ref %s copied to %s" % (call_data['textblock'], call_data['copy_textblock_ref'])
 
 

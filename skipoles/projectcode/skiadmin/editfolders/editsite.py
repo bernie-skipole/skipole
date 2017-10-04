@@ -574,7 +574,7 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
     tar = None
     try:
         # Create textblock json files
-        editedproj.textblocks_to_json()
+        editedproj.textblocks.save()
         # create project.json
         fromjson.project_to_json(proj_ident)
         # open export_tar for writing - first deleting any old version
