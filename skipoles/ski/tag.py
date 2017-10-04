@@ -907,7 +907,7 @@ class TextBlock(object):
         proj = skiboot.getproject(proj_ident)
         if proj is None:
             return False
-        return proj.textblocks_textref_exists(self.textref)
+        return proj.textblocks.textref_exists(self.textref)
 
   
     def __str__(self):

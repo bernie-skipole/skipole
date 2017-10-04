@@ -113,6 +113,21 @@ def get_textblock_text(textref, lang, project=None):
     return proj.textblocks.get_text(textref, lang)
 
 
+def get_accesstextblocks(project=None):
+    """Returns the instance of the AccessTextBlocks class used by the
+       project to get TextBlock text.
+       If project not given, assumes the root project
+       If project is given, returns the AccessTextBlocks of the project"""
+    if project is None:
+        project = skiboot.project_ident()
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return
+    return proj.textblocks
+
+
 def item_info(project, itemnumber):
     """Returns None if page or folder not found, otherwise returns a namedtuple with contents
        project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted

@@ -29,7 +29,6 @@
 import re
 
 from .... import skilift
-from ....skilift import edittextblocks, fromjson
 
 from ....ski import skiboot, tag, widgets
 from .. import utils
@@ -341,7 +340,7 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[('json_enabled','para_text')] = "JSON Enabled : No"
 
     if field_info[8] or field_info[9]:
-        default_value = fromjson.get_widget_default_field_value(editedproj.proj_ident, widget.__class__.__module__.split('.')[-1], widget.__class__.__name__, field_arg)
+        default_value = skilift.fromjson.get_widget_default_field_value(editedproj.proj_ident, widget.__class__.__module__.split('.')[-1], widget.__class__.__name__, field_arg)
         if default_value:
             page_data[('field_default','para_text')] = "Default value : " + default_value
             page_data[('field_default','show')] = True
@@ -359,7 +358,9 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # show the textblock description with .full, or if it doesnt exist, without the .full
     full_textref = field_info[1] + '.full'   # the field reference string
-    if edittextblocks.textref_exists(full_textref, skilift.admin_project()):
+    adminaccesstextblocks = skilift.get_accesstextblocks(skilift.admin_project())
+
+    if adminaccesstextblocks.textref_exists(full_textref):
         page_data[('widget_field_textblock','textblock_ref')] = full_textref
     else:
         page_data[('widget_field_textblock','textblock_ref')] = field_info[1]
@@ -558,7 +559,7 @@ def set_field_default(caller_ident, ident_list, submit_list, submit_dict, call_d
 
     if field_info[8] or field_info[9]:
         # set the default value
-        result = fromjson.save_widget_default_field_value(editedproj.proj_ident,
+        result = skilift.fromjson.save_widget_default_field_value(editedproj.proj_ident,
                                     widget.__module__.split(".")[-1],
                                     widget.__class__.__name__,
                                     field_arg,

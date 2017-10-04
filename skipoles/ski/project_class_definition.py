@@ -157,56 +157,6 @@ class Project(object):
                     maxnum = ident.num
         return maxnum
 
-
-    def textblocks_get_textrefs(self):
-        "Returns a list of the textrefs"
-        return self.textblocks.get_textrefs()
-
-    def textblocks_textref_exists(self, textref):
-        "Return True if the textref exists"
-        return self.textblocks.textref_exists(textref)
-
-
-    def textblocks_get_exact_text(self, textref, language):
-        "Get text with given textref and language, gets exact value, does not seek nearest, if not found return None"
-        return self.textblocks.get_exact_text(textref, language)
-
-
-
-    def textblocks_set_text(self, text, textref, language):
-        "Sets the text into the textblock, with the given textref and language"
-        return self.textblocks.set_text(text, textref, language)
-
-
-    def textblocks_del_text(self, textref, language):
-        "Deletes the text from the textblock with the given language"
-        self.textblocks.del_text(textref, language)
-
-    def textblocks_del_textblock(self, textref):
-        "Deletes the textblock, all languages"
-        self.textblocks.del_textblock(textref)
-
-    def textblocks_copy(self, sourceref, destinationref):
-        "Copies textblock"
-        self.textblocks.copy(sourceref, destinationref)
-
-    def textblocks_get_textref_languages(self):
-        "Return a dictionary {textref: [languages],...}"
-        return self.textblocks.get_textref_languages()
-
-    def textblocks_to_json(self):
-        "Creates json files from the textblocks"
-        self.textblocks.save()
-
-    def textblocks_get_reference_hierarchy(self):
-        """Used to generate a list of nested dictionaries and lists
-            by separating reference strings on the '.' character.
-           returns a list of two elements:
-               pos 0 is the list of top references - those without a dot
-               pos 1 is a dictionary of lists, each list being of this same structure, having
-               two elements.  Each dictionary key will be a name prior to the first dot."""
-        return self.textblocks.get_reference_hierarchy()
-
     def list_section_names(self):
         "Returns a list of section names, alphabetacily ordered"
         if not self.sections:
