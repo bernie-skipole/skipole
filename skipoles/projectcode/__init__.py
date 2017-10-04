@@ -123,10 +123,7 @@ def start_project(proj_ident, path, option):
         _PROJECTS[proj_ident] = import_module("."+proj_ident, __name__)
     project_code =  _PROJECTS[proj_ident]
 
-    # get projectfiles directory
-    projectfiles = os.path.join(skiboot.projectfiles(), proj_ident)
-
-    proj_data = project_code.start_project(proj_ident, projectfiles, path, option)
+    proj_data = project_code.start_project(proj_ident, skiboot.projectfiles(), path, option)
     return proj_data
 
 
