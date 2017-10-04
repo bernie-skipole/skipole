@@ -47,7 +47,6 @@ class Project(object):
         """Initiates a Project instance"""
         self._proj_ident = str(proj_ident)
 
-        self.default_language = skiboot.default_language()
         self.brief = "Project %s" % proj_ident
         self.version = "0.0.0"
         # The url of the root folder
@@ -83,12 +82,23 @@ class Project(object):
 
         # Create an instance of the AccessTextBlocks class for this project
         self.textblocks = projectcode.make_AccessTextBlocks(self._proj_ident, 
-                                                            skiboot.projectpath(self._proj_ident),
-                                                            self.default_language)
+                                                            skiboot.projectfiles(),
+                                                            skiboot.default_language())
 
         # maintain a cach dictionary of paths against idents {path:ident}
         self._paths = {}
 
+
+
+    def set_default_language(self, language):
+        "Sets the project default language"
+        self.textblocks.default_language = language
+
+    def get_default_language(self):
+        "Returns the project default language"
+        return self.textblocks.default_language
+
+    default_language = property(get_default_language, set_default_language)
 
     def clear_cache(self):
         "clear the cache of paths"
