@@ -1,3 +1,32 @@
+#######################################################################################
+#
+# TextBlocks are a mapping of the tuple (textref, language) to a block of text
+#
+# Various widgets that display TextBlocks are given a textref reference string, and
+# the language is generally derived from a browser setting. The widget then obtains
+# the block of text and displays it.
+# 
+# To obtain the text, the framework imports this module and creates an instance
+# of the AccessTextBlocks object, and uses its methods to find the text.
+#
+# Therefore this module, and the AccessTextBlocks class must exist in your code.
+#
+# The example shown here can generally be left as it is. It reads TextBlocks from
+# JSON files, stores them into memory and serves them to the framework when requested.
+#
+# The class also has methods for writing and saving TextBlocks to the JSON files
+# which are used by skiadmin to create TextBlocks.
+#
+# However this class is placed here, rather than in the framework code, as your
+# project may require TextBlocks to be sited elsewhere, such as in a database. If
+# that is the case, you can re-write the AccessTextBlocks, but be sure to provide
+# all the public attributes and methods of the original.
+#
+# Also be aware that if your web server creates multiple processes, then multiple
+# instances AccessTextBlocks will be created.
+#
+########################################################################################
+
 
 import os, json, shutil
 
@@ -8,7 +37,8 @@ class AccessTextBlocks(object):
     def __init__(self, project, projectfiles, default_language):
         """The project imports this module and creates an instance of this class, and uses it to read the
            text of TextBlocks.
-           As default, TextBlocks are stored in JSON files beneath the data/textblocks_json dictionary.
+           As default, TextBlocks are stored in JSON files beneath the directory
+           projectfiles/project/data/textblocks_json
            However if you wish to store them elsewhere, such as in a database somewhere, you can
            re-write this class.
 
@@ -31,7 +61,7 @@ class AccessTextBlocks(object):
         # dictionary of textrefs with keys of reference and values being a list of languages for that textref
         self._textrefs = {}
         # read the json files from this directory and populate the above two dictionaries and self.languages
-        self._textblocks_json_directory = os.path.join(projectfiles, "data", "textblocks_json")
+        self._textblocks_json_directory = os.path.join(projectfiles, project, "data", "textblocks_json")
         # for each language file in the directory, add it to the dictionary
         dir_contents = os.listdir(self._textblocks_json_directory)
         for filename in dir_contents:
@@ -52,7 +82,7 @@ class AccessTextBlocks(object):
                            self._textrefs[textref].append(language)
                    else:
                         self._textrefs[textref] = [language]
-        # sort language lists
+        # sort language lists in self._textrefs
         for langlist in self._textrefs.values():
             langlist.sort()
 
@@ -65,17 +95,14 @@ class AccessTextBlocks(object):
         "Return a dictionary {textref: [languages],...}"
         return self._textrefs.copy()
 
-
     def textref_exists(self, textref):
         "Return True if the textref exists"
         return textref in self._textrefs
-
 
     def get_exact_text(self, textref, language):
         "Get text with given textref and language, gets exact value, does not seek nearest, if not found return None"
         if (textref,language) in self._textblocks:
             return self._textblocks[(textref,language)]
-
 
     def get_text(self, textref, lang):
         """Gets the text from the textblock, trying nearest language, returns None if not found
@@ -84,6 +111,7 @@ class AccessTextBlocks(object):
             return
         language, default_language = lang
         language = language.lower()
+        default_language = default_language.lower()
         # try preferred language
         if (textref,language) in self._textblocks:
             return self._textblocks[(textref,language)]
@@ -107,7 +135,6 @@ class AccessTextBlocks(object):
         rlang = self.textrefs[textref][0]
         if (textref,rlang) in self._textblocks:
             return self._textblocks[(textref,rlang)]
-
 
     def set_text(self, text, textref, language):
         """Sets the text into the textblock, with the given textref and language
@@ -141,7 +168,6 @@ class AccessTextBlocks(object):
             # shortlang does not exist, so add it
             self.set_text(text, textref, shortlang)
 
-
     def del_text(self, textref, language):
         "Deletes the text from the textblock with the given language"
         language = language.lower()
@@ -163,13 +189,11 @@ class AccessTextBlocks(object):
         else:
             self.languages.discard(language)
 
-
     def del_textblock(self, textref):
         "Deletes the textblock, all languages"
         langlist = self._textrefs[textref].copy()
         for language in langlist:
             self.del_text(textref, language)
-
 
     def copy(self, sourceref, destinationref):
         "Copies textblock"
@@ -179,7 +203,6 @@ class AccessTextBlocks(object):
         for language in langlist:
             self._textblocks[(destinationref, language)] = self._textblocks[(sourceref, language)]
             destlanglist.append(language)
-
 
     def save(self):
         "Creates json files from the textblocks"
@@ -201,7 +224,6 @@ class AccessTextBlocks(object):
             # save the json dictionary to file
             with open(filepath, 'w') as fp:
                 json.dump(json_dict, fp, indent=2, sort_keys=True)
-
 
     def get_reference_hierarchy(self):
         """Used to generate a list of nested dictionaries and lists
