@@ -75,9 +75,6 @@ def edit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     location = bits.location
     part = bits.part
 
-    print(location)
-
-
     if 'text' not in call_data:
         raise FailPage(message = "Invalid text")
 
