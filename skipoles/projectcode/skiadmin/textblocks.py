@@ -31,6 +31,14 @@
 import os, json, shutil
 
 
+_docutils_available = True
+try:
+    from docutils import core
+except:
+    _docutils_available = False
+
+
+
 class AccessTextBlocks(object):
 
 
@@ -104,6 +112,23 @@ class AccessTextBlocks(object):
         if (textref,language) in self._textblocks:
             return self._textblocks[(textref,language)]
 
+
+    def get_decoded_text(self, textref, lang):
+        """If the text of a Textblock is encoded in any special way, decode it here.
+           this example decodes references ending with .rst as restructured text to html,
+           it requires python3-docutils to be available, together with the docutils
+           CSS html4css1.css file to be served"""
+        text = self.get_text(textref, lang)
+        if text is None:
+            return
+        if textref.endswith(".rst") and _docutils_available:
+            # decode text as html
+            parts = core.publish_parts(source=text, writer_name='html')
+            return parts['html_body']
+        else:
+            return text
+
+
     def get_text(self, textref, lang):
         """Gets the text from the textblock, trying nearest language, returns None if not found
            lang is a tuple of preferred language, default_language"""
@@ -114,27 +139,26 @@ class AccessTextBlocks(object):
         default_language = default_language.lower()
         # try preferred language
         if (textref,language) in self._textblocks:
-            return self._textblocks[(textref,language)]
+            return self.get_exact_text(textref,language)
         # if not preferred for example en-gb, try en
         shortlang = language.split('-')
         if (textref,shortlang[0]) in self._textblocks:
-            return self._textblocks[(textref,shortlang[0])]
+            return self.get_exact_text(textref,shortlang[0])
         # try default language
         if (textref,default_language) in self._textblocks:
-            return self._textblocks[(textref,default_language)]
+            return self.get_exact_text(textref,default_language)
         shortlang = default_language.split('-')
         if (textref,shortlang[0]) in self._textblocks:
-            return self._textblocks[(textref,shortlang[0])]
+            return self.get_exact_text(textref,shortlang[0])
         # try self.default_language
         if (textref,self.default_language) in self._textblocks:
-            return self._textblocks[(textref,self.default_language)]
+            return self.get_exact_text(textref,self.default_language)
         shortlang = self.default_language.split('-')
         if (textref,shortlang[0]) in self._textblocks:
-            return self._textblocks[(textref,shortlang[0])]
+            return self.get_exact_text(textref,shortlang[0])
         # try whatever language remains
         rlang = self.textrefs[textref][0]
-        if (textref,rlang) in self._textblocks:
-            return self._textblocks[(textref,rlang)]
+        return self.get_exact_text(textref,rlang)
 
     def set_text(self, text, textref, language):
         """Sets the text into the textblock, with the given textref and language

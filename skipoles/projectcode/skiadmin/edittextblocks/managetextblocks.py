@@ -190,7 +190,7 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data['st2:hidden_field1'] = edited_textblock
     page_data[("adminhead","page_head","large_text")] = "Edit TextBlock : " + edited_textblock
     page_data['ts1:para_text'] = _list_to_string(result[edited_textblock])
-    # get default language textblock_lang to display the text block at the top of the page
+    # get default language textblock_lang
     langsplit = language.split('-')
     textblock_lang_list = result[edited_textblock]
     if not textblock_lang_list:
@@ -215,14 +215,11 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
         textblock_text = accesstextblocks.get_exact_text(edited_textblock, textblock_language)
         if textblock_text is None:
             page_data['sp1:para_text'] = "No text in this language has been found, edit and submit the text below to set this language text\n"
-        else:
-             page_data['sp1:para_text'] = textblock_text
     else:
         textblock_language = textblock_lang
         textblock_text = accesstextblocks.get_exact_text(edited_textblock, textblock_language)
         if textblock_text is None:
             raise FailPage("Failed to find text for the TextBlock reference")
-        page_data['sp1:para_text'] = textblock_text
 
     page_data['st1:input_text'] = textblock_language
     page_data['sta1:hidden_field2'] = textblock_language
