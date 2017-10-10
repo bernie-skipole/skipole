@@ -840,7 +840,7 @@ class SectionPlaceHolder(object):
 
 class TextBlock(object):
 
-    def __init__(self, textref='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], show = True, text=''):
+    def __init__(self, textref='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], decode=False, show = True, text=''):
         # set show to False if this textblock is not to be shown
         self.show = show
         self.textref = textref
@@ -850,6 +850,7 @@ class TextBlock(object):
         self.text=text
         self.linebreaks=linebreaks
         self.escape=escape
+        self.decode=decode
         # uses the % operator
         self.replace_strings=replace_strings
         self._show_failmessage = False
@@ -893,7 +894,10 @@ class TextBlock(object):
         if proj is None:
             self._show_failmessage = True
             return
-        result = proj.textblocks.get_text(self.textref, lang)
+        if self.decode:
+            result = proj.textblocks.get_decoded_text(self.textref, lang)
+        else:
+            result = proj.textblocks.get_text(self.textref, lang)
         if result is None:
             self._show_failmessage = True
         else:
@@ -916,6 +920,8 @@ class TextBlock(object):
             return expand_text(self.text, escape=self.escape, linebreaks=self.linebreaks, replace_strings=self.replace_strings)
         if self._show_failmessage:
             return expand_text(self.failmessage, escape=self.escape, linebreaks=self.linebreaks)
+        if self.decode:
+            return self._displayedtext
         return expand_text(self._displayedtext, escape=self.escape, linebreaks=self.linebreaks, replace_strings=self.replace_strings)
 
 

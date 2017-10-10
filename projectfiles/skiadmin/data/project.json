@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.37",
-"skipole": "0.0.37",
+"version": "0.0.38",
+"skipole": "0.0.38",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -154,6 +154,7 @@
 "set_brief": 20,
 "set_colour": 34,
 "set_comment": 41220,
+"set_decode": 42060,
 "set_default_error_widget": 3250,
 "set_escape": 42050,
 "set_fail_ident": 6070,
@@ -5990,7 +5991,8 @@ false,
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -6029,7 +6031,8 @@ false,
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -6120,7 +6123,8 @@ false,
 "failmessage": "failed to read textblocks database with ref index_background_colors",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -6231,7 +6235,8 @@ false,
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -6331,7 +6336,8 @@ false,
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -6498,7 +6504,8 @@ false,
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -10787,6 +10794,83 @@ false,
 }
 ],
 [
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Call get_decoded_text method of AccessTextBlocks object to obtain text (disables the above two options):"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "decodeform",
+"brief": "SubmitForm2",
+"fields": {
+"action": "set_decode",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ski_left_label",
+"left_label": "Decode text:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+"Widget",
+{
+"class": "radio.RadioButton1",
+"name": "setdecode",
+"brief": "RadioButton",
+"fields": {
+"clear_error": false,
+"div_class": "",
+"error_class": "w3-panel w3-red",
+"inputdiv_class": "",
+"label_class": "ski_right_label",
+"radio_checked": "",
+"radio_text": [],
+"radio_values": [],
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": "margin-left:30%;"
+},
+"validators": {
+"radio_checked": [
+{
+"class": "basic.AllowedValuesOnly",
+"allowed_values": [
+"ON",
+"OFF"
+]
+}
+]
+}
+}
+]
+}
+],
+[
 "SectionPlaceHolder",
 {
 "brief": "Section admin_footer with alias foot",
@@ -11373,6 +11457,23 @@ false,
 "setescape:radio_checked": "setescape",
 "textblock_failed:input_text": "textblock_failed",
 "textblock_ref:input_text": "textblock_ref"
+}
+}
+},
+"validate_decode": {
+"ident": 52062,
+"brief": "validate new textblock decode",
+"RespondPage": {
+"class": "StoreDataKeyed",
+"original_args": {
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 52060,
+"validate_fail_ident": 52017,
+"validate_option": true
+},
+"original_fields": {
+"setdecode:radio_checked": "setdecode"
 }
 }
 },
@@ -13321,7 +13422,8 @@ false,
 "failmessage": "failed to read textblocks database with ref validators.description4",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -13817,7 +13919,8 @@ false,
 "failmessage": "failed to read textblocks database with ref validators.modules",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -18329,6 +18432,27 @@ false
 "original_fields": {}
 }
 },
+"set_decode": {
+"ident": 42060,
+"brief": "check textblock decode",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+52019
+],
+"alternate_ident": "admin_home",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 52062,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"setdecode:radio_checked": ""
+}
+}
+},
 "set_escape": {
 "ident": 42050,
 "brief": "check textblock escape",
@@ -18346,8 +18470,7 @@ false
 "validate_option": false
 },
 "original_fields": {
-"setescape:radio_checked": "",
-"setescapeform:button_text": ""
+"setescape:radio_checked": ""
 }
 }
 },
@@ -30513,7 +30636,8 @@ false,
 "failmessage": "failed to read textblocks database with ref managesections.about_sections",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -30533,7 +30657,8 @@ false,
 "failmessage": "failed to read textblocks database with ref managesections.new_section",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -30553,7 +30678,8 @@ false,
 "failmessage": "failed to read textblocks database with ref managesections.more_about_sections",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -32590,7 +32716,8 @@ false
 "failmessage": "failed to read textblocks database with ref managespecialpages.about_pages",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -32680,7 +32807,8 @@ false
 "failmessage": "failed to read textblocks database with ref managespecialpages.about_libfiles",
 "show": true,
 "escape": true,
-"linebreaks": false
+"linebreaks": false,
+"decode": false
 }
 ]
 ]
@@ -32763,7 +32891,8 @@ false
 "failmessage": "failed to read textblocks database with ref managespecialpages.user_pages",
 "show": true,
 "escape": true,
-"linebreaks": false
+"linebreaks": false,
+"decode": false
 }
 ]
 ]
@@ -35409,7 +35538,8 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -35689,7 +35819,8 @@ false
 "failmessage": "failed to read textblocks database with ref index_test_colors",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ],
 [
@@ -37577,7 +37708,8 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -37823,7 +37955,8 @@ false
 "failmessage": "failed to read textblocks database with ref index_sub_projects",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -39685,7 +39818,8 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]

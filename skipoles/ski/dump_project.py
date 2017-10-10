@@ -475,6 +475,7 @@ def _create_textblock(part, proj_ident):
     part_dict["show"] = part.show
     part_dict["escape"] = part.escape
     part_dict["linebreaks"] = part.linebreaks
+    part_dict["decode"] = part.decode
     if part.replace_strings:
         part_dict["replace_strings"] = _make_list(part.replace_strings, proj_ident)
     return ['TextBlock', part_dict]

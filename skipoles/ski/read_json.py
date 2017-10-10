@@ -748,7 +748,11 @@ def _create_textblock(part_dict, proj_ident):
         replace_strings = part_dict["replace_strings"]
     else:
         replace_strings = []
-    return tag.TextBlock(textref=textref, failmessage=failmessage, escape=escape, linebreaks=linebreaks, replace_strings=replace_strings, show=show, text=text)
+    if "decode" in part_dict:
+        decode = part_dict["decode"]
+    else:
+        decode = False
+    return tag.TextBlock(textref=textref, failmessage=failmessage, escape=escape, linebreaks=linebreaks, replace_strings=replace_strings, decode=decode, show=show, text=text)
 
 
 def _create_sectionplaceholder(part_dict, proj_ident):

@@ -76,17 +76,25 @@ def retrieve_textblockref(caller_ident, ident_list, submit_list, submit_dict, ca
 
     page_data[("linebreaks","radio_values")]=['ON', 'OFF']
     page_data[("linebreaks","radio_text")]=['On', 'Off']
-    if part.linebreaks:
+    if part.linebreaks and not part.decode:
         page_data[("linebreaks","radio_checked")] = 'ON'
     else:
         page_data[("linebreaks","radio_checked")] = 'OFF'
 
     page_data[("setescape","radio_values")]=['ON', 'OFF']
     page_data[("setescape","radio_text")]=['On', 'Off']
-    if part.escape:
+    if part.escape and not part.decode:
         page_data[("setescape","radio_checked")] = 'ON'
     else:
         page_data[("setescape","radio_checked")] = 'OFF'
+
+    page_data[("setdecode","radio_values")]=['ON', 'OFF']
+    page_data[("setdecode","radio_text")]=['On', 'Off']
+    if part.decode:
+        page_data[("setdecode","radio_checked")] = 'ON'
+    else:
+        page_data[("setdecode","radio_checked")] = 'OFF'
+
 
 
 def set_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -124,7 +132,10 @@ def set_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data,
     elif 'linebreaks' in call_data:
         if call_data['linebreaks'] == 'ON':
             part.linebreaks = True
-            message = 'Linebreaks set on'
+            if part.decode:
+                message = "Decode is on; linbreaks setting is overridden"
+            else:
+                message = 'Linebreaks set on'
         else:
             part.linebreaks = False
             message = 'Linebreaks set off'
@@ -132,11 +143,22 @@ def set_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data,
     elif 'setescape' in call_data:
         if call_data['setescape'] == 'ON':
             part.escape = True
-            message = 'HTML escape set on'
+            if part.decode:
+                message = "Decode is on; escape setting is overridden"
+            else:
+                message = 'HTML escape set on'
         else:
             part.escape = False
             message = 'HTML escape set off'
         widget_name='setescape'
+    elif 'setdecode' in call_data:
+        if call_data['setdecode'] == 'ON':
+            part.decode = True
+            message = 'Text Decode set on'
+        else:
+            part.decode = False
+            message = 'Text Decode off'
+        widget_name='setdecode'
     else:
         raise FailPage("A TextBlock value to edit has not been found")
 
@@ -180,6 +202,10 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page_data[("setescape","radio_values")]=['ON', 'OFF']
     page_data[("setescape","radio_text")]=['On', 'Off']
     page_data[("setescape","radio_checked")] = 'ON'
+
+    page_data[("decode","radio_values")]=['ON', 'OFF']
+    page_data[("decode","radio_text")]=['On', 'Off']
+    page_data[("decode","radio_checked")] = 'OFF'
 
 
 def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -249,6 +275,12 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
             textblock.escape = True
         else:
             textblock.escape = False
+
+    if 'decode' in call_data:
+        if call_data['decode'] == 'ON':
+            textblock.decode = True
+        else:
+            textblock.decode = False
 
     if (location[1] is not None) and (not location[2])  and (not isinstance(part, tag.Part)):
         # part is the top part of a container
