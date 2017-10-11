@@ -517,7 +517,6 @@ class TextBlockPara(Widget):
                         'text_refnotfound':FieldArg("text", ""),
                         'text_replaceblock':FieldArg("text", "" ,jsonset=True),
                         'replace_strings':FieldArgList("text"),
-                        'project_ident':FieldArg("text", ""),
                         'linebreaks':FieldArg("boolean", True),
                         'error_class':FieldArg("cssclass", "")
                        }
@@ -528,7 +527,6 @@ class TextBlockPara(Widget):
         text_refnotfound: text to appear if the textblock is not found
         text_replaceblock: text set here will replace the textblock
         replace_strings: A list of strings, if given, will be used with python % operator on the text
-        project_ident: If empty, the current project database will be used, otherwise a subproject database can be checked
         linebreaks: Set True if linebreaks in the text are to be shown as html breaks
         error_class: The class of the error text - which provides the appearance via CSS
                      replaces widget_class on error.
@@ -543,10 +541,6 @@ class TextBlockPara(Widget):
             tblock = self.get_field_value("textblock_ref")
             tblock.text = self.get_field_value('text_replaceblock')
             tblock.failmessage = self.get_field_value('text_refnotfound')
-            if self.get_field_value('project_ident'):
-                tblock.proj_ident = self.get_field_value('project_ident')
-            else:
-                tblock.proj_ident = page.proj_ident
             tblock.linebreaks = bool(self.get_field_value('linebreaks'))
             if self.get_field_value('replace_strings'):
                 tblock.replace_strings = self.get_field_value('replace_strings')
@@ -565,6 +559,43 @@ class TextBlockPara(Widget):
 <p>  <!-- with class widget_class replaced by error_class on failure -->
    <!-- set with either text_replaceblock or textblock content, replaced by error message on error -->
 </p>"""
+
+
+
+class DecodedTextBlock(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'textblock_ref':FieldArg("textblock_ref", ""),
+                        'text_refnotfound':FieldArg("text", ""),
+                        'hide':FieldArg("boolean", False, jsonset=True)}
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A div, containing a TextBlock, so show, class and hide can be set
+           The TextBlock has decode set, so when text is inserted the
+           get_decoded_text method of AccessTextBlocks will be called"""
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self[0] =  ""  # where the textblock is located
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        # Hides widget if hide is True
+        self.widget_hide(self.get_field_value("hide"))
+        # define the textblock
+        tblock = self.get_field_value("textblock_ref")
+        tblock.failmessage = self.get_field_value('text_refnotfound')
+        tblock.decode = True
+        # place it at location 0
+        self[0] = tblock
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with class widget_class -->
+       <!-- and attribute style=display:none if hide is True -->
+  <!-- The decoded TextBlock -->
+</div>"""
 
 
 class ShowPara1(Widget):
