@@ -583,6 +583,34 @@ SKIPOLE.paras.TextBlockPara.prototype.clear_error = function() {
     };
 
 
+SKIPOLE.paras.DecodedTextBlock = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.paras.DecodedTextBlock.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.paras.DecodedTextBlock.prototype.constructor = SKIPOLE.paras.DecodedTextBlock;
+SKIPOLE.paras.DecodedTextBlock.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - hide */
+   if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (the_widg.is(":visible")) {
+                the_widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(the_widg.is(":visible"))) {
+                the_widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+
+
 SKIPOLE.paras.ShowPara1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     };
