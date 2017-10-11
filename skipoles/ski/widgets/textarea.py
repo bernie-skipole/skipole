@@ -47,6 +47,7 @@ class SubmitTextArea(Widget):
                         'inputdiv_class':FieldArg("cssclass", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'textarea_class':FieldArg("cssclass", ''),
+                        'textarea_style':FieldArg("cssstyle", ''),
                         'rows':FieldArg("text", '4'),
                         'cols':FieldArg("text", '40')
                        }
@@ -65,6 +66,7 @@ class SubmitTextArea(Widget):
         error_class: The class applied to the paragraph containing the error message on error.
         input_text: The default text in the text area, field name used as the name attribute
         textarea_class: The class applied to the textarea
+        textarea_style: The style applied to the textarea
         rows:  The number of rows of the text area
         cols: The number of columns of the text area
         """
@@ -115,6 +117,9 @@ class SubmitTextArea(Widget):
 
         if self.get_field_value('textarea_class'):
             self[1][0][0].update_attribs({"class": self.get_field_value('textarea_class')})
+
+        if self.get_field_value("textarea_style"):
+            self[1][0][0].update_attribs({"style":self.get_field_value("textarea_style")})
 
         if self.get_field_value('input_text'):
             self[1][0][0][0] = self.get_field_value('input_text')
@@ -214,6 +219,7 @@ class TextArea2(Widget):
                         'error_class':FieldArg("cssclass", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'textarea_class':FieldArg("cssclass", ''),
+                        'textarea_style':FieldArg("cssstyle", ''),
                         'redstar':FieldArg("boolean", False),
                         'rows':FieldArg("text", '4'),
                         'cols':FieldArg("text", '40')
@@ -226,6 +232,7 @@ class TextArea2(Widget):
         input_text: The default text in the text input field, field name used as name attribute
         redstar: If True a red asterix is shown by the side of the input field
         textarea_class: The class applied to the textarea
+        textarea_style: The style applied to the textarea
         rows:  The number of rows of the text area
         cols: The number of columns of the text area
         """
@@ -257,6 +264,9 @@ class TextArea2(Widget):
         self[2].update_attribs({"name":self.get_formname('input_text')})
         if self.get_field_value('textarea_class'):
             self[2].update_attribs({"class": self.get_field_value('textarea_class')})
+        if self.get_field_value("textarea_style"):
+            self[2].update_attribs({"style":self.get_field_value("textarea_style")})
+
         if self.get_field_value('rows'):
             self[2].update_attribs({"rows": self.get_field_value('rows')})
         if self.get_field_value('cols'):
@@ -279,8 +289,8 @@ class TextArea2(Widget):
   <label> <!-- with class set to label_class -->
           <!-- content set to label -->
   </label>
-    <textarea> <!-- class attribute set to textarea_class. Rows, cols set to the given rows and columns -->
-      <!-- textarea content set to input_text -->
-    </textarea>
+  <textarea> <!-- class attribute set to textarea_class. Rows, cols set to the given rows and columns -->
+    <!-- textarea content set to input_text -->
+  </textarea>
   <span style="color:red;">&nbsp;*</span> <!-- shown if redstar is True -->
 </div>"""
