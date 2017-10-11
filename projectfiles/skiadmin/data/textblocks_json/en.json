@@ -1045,6 +1045,7 @@
   "widgets.tables.TwoColTable1.title2": "The header title over the second text column.",
   "widgets.tables.TwoColTable1.title2.full": "The header title over the second text column.",
   "widgets.tables.module": "Text tables.",
+  "widgets.textarea.SubmitTextArea.textarea_style": "The CSS style to apply to the text area.",
   "widgets.textarea.module": "Widgets containing a textarea to insert into a form.",
   "widgets.upload.module": "Widgets containing an upload input button to insert into a form.",
   "widgets.widget_class": "The class attribute set in the widget.",

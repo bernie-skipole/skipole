@@ -12397,6 +12397,7 @@ false,
 "show": true,
 "show_error": "Invalid input",
 "textarea_class": "ski_input",
+"textarea_style": "",
 "widget_class": "w3-section",
 "widget_style": ""
 },
@@ -20696,6 +20697,7 @@ false
 "show": true,
 "show_error": "Invalid properties",
 "textarea_class": "",
+"textarea_style": "",
 "widget_class": "w3-section",
 "widget_style": ""
 },
@@ -34839,6 +34841,7 @@ false
 "show": true,
 "show_error": "Invalid TextBlock",
 "textarea_class": "ski_input",
+"textarea_style": "font-family:\"Lucida Console\", Monaco, monospace",
 "widget_class": "",
 "widget_style": ""
 },
@@ -36699,6 +36702,7 @@ false
 "show": true,
 "show_error": "",
 "textarea_class": "ski_input",
+"textarea_style": "",
 "widget_class": "w3-section",
 "widget_style": ""
 }
