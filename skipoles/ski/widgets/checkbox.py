@@ -281,7 +281,7 @@ class CheckedText(Widget):
     </label>
     <input type='checkbox' /> <!-- checked if checked field is True, and value to the checkbox value -->
                               <!-- and class set to checkbox_class -->
-    <input type=\"text\" /> <!-- input text value set to input_text -->
+    <input type=\"text\" /> <!-- class set to input_class and text value set to input_text -->
   </div>
 </div>"""
 
@@ -308,7 +308,7 @@ class CheckInputs(Widget):
                        }
     def __init__(self, name=None, brief='', **field_args):
         """
-        div_class: The class attribute of the div
+        div_class: The class attribute of the inner div holding input fields.
         checkbox: The name of the checkbox, with the value returned, value normally empty, as the checkbox purpose is only
                   to enable the contained fields, however if a value is given, it is returned if checked
         checkbox_class: The css class of the checkbox input field
@@ -367,7 +367,7 @@ class CheckInputs(Widget):
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
-  <div>
+  <div>  <!-- with class set to div_class -->
     <label> <!-- with class set to label_class and content to label_text -->
     </label>
     <input type='checkbox' /> <!-- checked if checked field is True, and value to the checkbox value -->
