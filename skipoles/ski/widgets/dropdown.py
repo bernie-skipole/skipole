@@ -52,10 +52,10 @@ class DropDown1(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """
         selectvalue: The option selected, field name is used as the widgfield attribute
-        left_label: The text displayed to the left of the checkbox
-        left_class: The css class of the label to the left of the checkbox
-        right_label: The text displayed to the right of the checkbox
-        right_class: The css class of the label to the right of the checkbox
+        left_label: The text displayed to the left of the dropdown
+        left_class: The css class of the label to the left of the dropdown
+        right_label: The text displayed to the right of the dropdown
+        right_class: The css class of the label to the right of the dropdown
         select_class: The css class of the select tag
         option_list: A list of options
         error_class: css class applied to the normally hidden error paragraph
