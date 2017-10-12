@@ -266,7 +266,7 @@ class SubmitDropDown1(Widget):
   </div>
   <form role="form" method="post"> <!-- action attribute set to action field -->
     <div> <!-- class attribute set to inputdiv_class -->
-      <label> <!-- with class set to label_class and content to label, for set to input text id -->
+      <label> <!-- with class set to label_class and content to label -->
       </label>
       <select> <!-- with class set to select_class -->
        <option> <!-- with multiple options -->
