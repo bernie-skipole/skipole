@@ -52,7 +52,7 @@ alternate_ident has been set - send the call there.  If it has not, then it
 calls the project validate error page.
 
 If submit_data option is True, then received data is placed in the submit_dict dictionary
-Note : NOT the call_data dictionary, with keys of widgfield tuples.
+under key 'received_data' which contains a dictionary of widgfield tuples:values.
 """
 
     # This indicates a target page ident is required
@@ -151,12 +151,15 @@ Note : NOT the call_data dictionary, with keys of widgfield tuples.
 
         # call user submit_data
         if self.submit_option:
+            received_data = {}
             for field in self.fields:
                 formvalue =  validated_form_data[field]
                 if isinstance(formvalue, list) or isinstance(formvalue, dict):
-                    submit_dict[field.to_tuple_no_i()] = formvalue.copy()
+                    received_data[field.to_tuple_no_i()] = formvalue.copy()
                 else:
-                    submit_dict[field.to_tuple_no_i()] = formvalue
+                    received_data[field.to_tuple_no_i()] = formvalue
+
+            submit_dict['received_data'] = received_data
 
             try:
                 projectcode.submit_data(caller_page.ident,
