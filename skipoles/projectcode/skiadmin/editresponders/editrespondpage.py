@@ -212,6 +212,7 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
                 page_data['add_field_value_para:para_text'] = "Add widgfield and value"
         else:
             page_data['add_field_value_para:para_text'] = "Add items"
+            page_data['add_field_value','label'] = "Items:"
         if f_options['empty_values_allowed']:
            page_data['add_field_value_para:para_text'] += ", empty values are allowed:"
         else:
