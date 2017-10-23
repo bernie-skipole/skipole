@@ -289,7 +289,7 @@ class HeaderText1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!--  class to widget_class --:
+<div> <!--  class to widget_class -->
   <h1> <!-- content set to large_text --> </h1>
   <p> <!-- content set to small_text --> </p>
   <div style="display:none;"> <!-- class set to error_class -->
@@ -339,7 +339,7 @@ class HeaderText2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!--  class to widget_class --:
+<div> <!--  class to widget_class -->
   <h2> <!-- content set to large_text --> </h2>
   <p> <!-- content set to small_text --> </p>
   <div style="display:none;"> <!-- class set to error_class -->
@@ -389,7 +389,7 @@ class HeaderText3(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!--  class to widget_class --:
+<div> <!--  class to widget_class -->
   <h3> <!-- content set to large_text --> </h3>
   <p> <!-- content set to small_text --> </p>
   <div style="display:none;"> <!-- class set to error_class -->
@@ -439,7 +439,7 @@ class HeaderText4(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!--  class to widget_class --:
+<div> <!--  class to widget_class -->
   <h4> <!-- content set to large_text --> </h4>
   <p> <!-- content set to small_text --> </p>
   <div style="display:none;"> <!-- class set to error_class -->
@@ -489,7 +489,7 @@ class HeaderText5(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!--  class to widget_class --:
+<div> <!--  class to widget_class -->
   <h5> <!-- content set to large_text --> </h5>
   <p> <!-- content set to small_text --> </p>
   <div style="display:none;"> <!-- class set to error_class -->
@@ -539,7 +539,7 @@ class HeaderText6(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!--  class to widget_class --:
+<div> <!--  class to widget_class -->
   <h6> <!-- content set to large_text --> </h6>
   <p> <!-- content set to small_text --> </p>
   <div style="display:none;"> <!-- class set to error_class -->
