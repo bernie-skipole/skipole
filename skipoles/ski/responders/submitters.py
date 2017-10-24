@@ -355,6 +355,8 @@ class FieldStoreSubmit(Respond):
         if not field_name:
             raise ValidateError()
 
+        submit_dict['field'] = field_name
+
         received = {}
 
         for field, value in form_data.items():
