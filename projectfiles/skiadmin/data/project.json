@@ -40093,10 +40093,11 @@ false
 "ident": 85002,
 "brief": "test",
 "RespondPage": {
-"class": "FieldStoreSubmit",
+"class": "MediaQuery",
 "original_args": {
-"fail_ident": "",
-"target_ident": ""
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false
 },
 "original_fields": {}
 }
