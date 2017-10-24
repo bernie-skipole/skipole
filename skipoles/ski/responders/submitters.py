@@ -126,6 +126,7 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
                                    ident_list,
                                    self.submit_list.copy(),
                                    {'target_ident':self.ident_for_user(self.target_ident),
+                                    'fail_ident':self.ident_for_user(self.fail_ident),
                                     'environ':environ},
                                    call_data,
                                    page_data,
@@ -741,7 +742,8 @@ Given media queries and CSS page targets, wraps the targets with the media queri
         media_target =  self.fields.copy()
 
 
-        submit_dict = {'environ':environ}
+        submit_dict = {'fail_ident':self.ident_for_user(self.fail_ident),
+                       'environ':environ}
 
         # update media target with result of submit_data
         if self.submit_option:
