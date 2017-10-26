@@ -40089,20 +40089,7 @@ false
 }
 }
 },
-"test": {
-"ident": 85002,
-"brief": "test",
-"RespondPage": {
-"class": "MediaQuery",
-"original_args": {
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false
-},
-"original_fields": {}
-}
-},
-"w3-theme-ski.css": {
+"w3-theme-ski-52520.css": {
 "ident": 220,
 "brief": "sets colour in w3-theme-ski.css",
 "RespondPage": {

@@ -271,6 +271,18 @@ main purpose is to act as a parent class for all other respond objects.
         return string_dict
 
 
+    def make_submit_dict(self, environ):
+        "Used to create the initial submit_dict"
+        submit_dict = {'environ':environ}
+        if self.target_ident_required:
+            submit_dict['target_ident'] = self.ident_for_user(self.target_ident)
+        if self.submit_required or self.submit_option_available:
+            submit_dict['fail_ident'] = self.ident_for_user(self.fail_ident)
+        if self.alternate_ident_required:
+            submit_dict['alternate_ident'] = self.ident_for_user(self.alternate_ident)
+        return submit_dict
+
+
     def _check_allowed_callers(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         """Method to check allowed callers, raises a ValidateError if caller not in list of allowed callers
            Only useful for responders that have 'allowed_callers_required'"""
