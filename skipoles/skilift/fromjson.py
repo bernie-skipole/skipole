@@ -335,8 +335,20 @@ def save_defaults(project, defaults):
     # create defaults.json
     defaults_json_filename = skiboot.project_defaults(project)
     # write out the project defaults dictionary to a json file
+    ordered_defaults = collections.OrderedDict(sorted(defaults.items(), key=lambda t: t[0]))
+    # put the 'widgets' key dictionary in order
+    modules = ordered_defaults['widgets']
+    ordered_modules = collections.OrderedDict(sorted(modules.items(), key=lambda t: t[0]))
+    ordered_defaults['widgets'] = ordered_modules
+    # modules are in correct order, for each module, sort its classes
+    for module, classdict in ordered_modules.items():
+        ordered_modules[module] = collections.OrderedDict(sorted(classdict.items(), key=lambda t: t[0]))
+    # modules and classes are in correct order, for each class, sort its fields
+    for classdict in ordered_modules.values():
+        for widgclass, widgfield in classdict.items():
+            classdict[widgclass] = collections.OrderedDict(sorted(widgfield.items(), key=lambda t: t[0]))
     with open(defaults_json_filename, 'w') as fp:
-        json.dump(defaults, fp, indent=0)
+        json.dump(ordered_defaults, fp, indent=0)
 
 
 def save_widget_default_field_value(project, widg_module, widg_class, widg_field, value):
@@ -345,18 +357,18 @@ def save_widget_default_field_value(project, widg_module, widg_class, widg_field
         return False
     widg_defaults_dict = get_defaults(project, key='widgets')
     if widg_defaults_dict is None:
-        widg_defaults_dict = collections.OrderedDict()
+        widg_defaults_dict = {}
     # widg_defaults_dict is a dictionary of keys being module names, values being another dictionary
     if widg_module in widg_defaults_dict:
         widg_module_dict = widg_defaults_dict[widg_module]
     else:
-        widg_module_dict = collections.OrderedDict()
+        widg_module_dict = {}
         widg_defaults_dict[widg_module] = widg_module_dict
     # widg_module_dict is a dictionary of keys being widget class names in the module, values being another dictionary
     if widg_class in widg_module_dict:
         widg_class_dict = widg_module_dict[widg_class]
     else:
-        widg_class_dict = collections.OrderedDict()
+        widg_class_dict = {}
         widg_module_dict[widg_class] = widg_class_dict
     # widg_class_dict is a dictionary of keys being widget field arg names in the module, values being the default field value
     widg_class_dict[widg_field] = value
@@ -365,5 +377,6 @@ def save_widget_default_field_value(project, widg_module, widg_class, widg_field
     except e:
         return False
     return True
+
 
 

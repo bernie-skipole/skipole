@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "0.0.32",
+"skipole": "0.0.39",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -14,12 +14,12 @@
 "home": 1,
 "jquery_core": "lib,jquery_core",
 "no_javascript": 540,
-"normalize_css": 1002,
 "redirector": 530,
 "server_error": 520,
 "ski_basic": "lib,ski_basic",
 "ski_checkbox": "lib,ski_checkbox",
 "ski_confirm": "lib,ski_confirm",
+"ski_css": 1004,
 "ski_debug_tools": "lib,ski_debug_tools",
 "ski_dropdown": "lib,ski_dropdown",
 "ski_error_messages": "lib,ski_error_messages",
@@ -41,7 +41,9 @@
 "ski_upload": "lib,ski_upload",
 "skipole_js": "lib,skipole_js",
 "url_not_found": 550,
-"validate_error": 510
+"validate_error": 510,
+"w3_css": 1002,
+"w3_theme_ski_css": 1008
 },
 "sections": {},
 "RootFolder": {
@@ -56,11 +58,29 @@
 "restricted": false,
 "folders": {},
 "pages": {
-"normalize.css": {
-"ident": 1002,
-"brief": "From necolas.github.io/normalize.css/",
+"ski.css": {
+"ident": 1004,
+"brief": "skipole css",
 "FilePage": {
-"filepath": "newproj/static/css/normalize.css",
+"filepath": "newproj/static/css/ski.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+},
+"w3-theme-ski.css": {
+"ident": 1008,
+"brief": "color theme",
+"FilePage": {
+"filepath": "newproj/static/css/w3-theme-ski.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+},
+"w3.css": {
+"ident": 1002,
+"brief": "From www.w3schools.com/w3css/",
+"FilePage": {
+"filepath": "newproj/static/css/w3.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
@@ -78,10 +98,12 @@
 "ident": 2001,
 "brief": "The template for the index page",
 "TemplatePage": {
-"show_backcol": false,
+"show_backcol": true,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
-"backcol": "#ffffff",
+"backcol": "#fbf892",
 "default_error_widget": [
 "",
 "top_error"
@@ -137,10 +159,36 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to normalize_css",
+"brief": "css link to w3_css",
 "show": true,
 "attribs": {
-"href": "{normalize_css}",
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski.css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -182,6 +230,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Text",
@@ -196,6 +247,7 @@
 "system": {
 "ident": 500,
 "brief": "Folder holding required system pages",
+"default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
@@ -213,8 +265,10 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
-"backcol": "#ffffff",
+"backcol": "#fbf892",
 "default_error_widget": [
 "",
 "top_error"
@@ -270,10 +324,36 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to normalize_css",
+"brief": "css link to w3_css",
 "show": true,
 "attribs": {
-"href": "{normalize_css}",
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski.css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -315,6 +395,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Widget",
@@ -343,8 +426,10 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
-"backcol": "#ffffff",
+"backcol": "#fbf892",
 "default_error_widget": [
 "",
 "diagnostic"
@@ -400,10 +485,36 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to normalize_css",
+"brief": "css link to w3_css",
 "show": true,
 "attribs": {
-"href": "{normalize_css}",
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski.css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -445,6 +556,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -540,8 +654,10 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
-"backcol": "#ffffff",
+"backcol": "#fbf892",
 "default_error_widget": [
 "",
 "url"
@@ -597,10 +713,36 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to normalize_css",
+"brief": "css link to w3_css",
 "show": true,
 "attribs": {
-"href": "{normalize_css}",
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski.css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -642,6 +784,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -674,9 +819,8 @@
 "brief": "TextBlockPara",
 "fields": {
 "clear_error": false,
-"error_class": "errorcol",
+"error_class": "w3-panel w3-red",
 "linebreaks": true,
-"project_ident": "",
 "replace_strings": [],
 "show": true,
 "show_error": "",
@@ -749,8 +893,10 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
-"backcol": "#ffffff",
+"backcol": "#fbf892",
 "default_error_widget": [
 "",
 "diagnostic"
@@ -806,10 +952,36 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to normalize_css",
+"brief": "css link to w3_css",
 "show": true,
 "attribs": {
-"href": "{normalize_css}",
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski.css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -851,6 +1023,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -943,8 +1118,10 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
-"backcol": "#ffffff",
+"backcol": "#fbf892",
 "default_error_widget": [
 "",
 "top_error"
@@ -1010,19 +1187,29 @@
 }
 ],
 [
-"Comment",
+"ClosedPart",
 {
-"text": "HTML5shiv - included as a TextBlock"
+"tag_name": "link",
+"brief": "css link to w3_theme_ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
-"TextBlock",
+"ClosedPart",
 {
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
+"tag_name": "link",
+"brief": "css link to ski.css",
 "show": true,
-"escape": false,
-"linebreaks": false
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
@@ -1061,6 +1248,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Widget",
@@ -1098,7 +1288,8 @@
 "failmessage": "Javascript failure - This page requires javascript to be enabled in your browser.",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]

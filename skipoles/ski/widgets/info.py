@@ -149,7 +149,7 @@ class PageName(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!--  class set to widget_class -->
-  <!-- The page name -->
+  <!-- The page name, or span_text -->
 </span>
 """
 
