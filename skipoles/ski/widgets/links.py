@@ -493,7 +493,7 @@ class ButtonLink2(Widget):
         button_wait_text: A 'please wait' message shown on the button if a JSON call is made
         button_class: A CSS class applied to the button
         buttondiv_class: A CSS class applied to the div containing the button
-        buttondiv_style: A CSS class applied to the div containing the button
+        buttondiv_style: A CSS style applied to the div containing the button
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
         widget_class: The class applied to the widget
@@ -579,8 +579,7 @@ class ButtonLink2(Widget):
 
 class ImageLink1(Widget):
     """A link to the page with the given ident, with three optional get fields.
-       The displayed contents of the link is an image page given by img_ident
-       On error replace the link by the error message"""
+       The displayed contents of the link is an image page given by img_ident"""
 
     # This class does not display any error messages
     display_errors = False

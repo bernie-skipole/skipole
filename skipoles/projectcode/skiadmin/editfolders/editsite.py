@@ -26,7 +26,7 @@
 
 
 
-import os, shutil, copy, pickle, tarfile, tempfile, random
+import os, shutil, copy, pickle, tarfile, tempfile, random, collections
 
 from .... import skilift
 from ....skilift import off_piste, fromjson, editpage
@@ -673,7 +673,8 @@ def submit_hex_color(caller_ident, ident_list, submit_list, submit_dict, call_da
     skilift.set_proj_data(adminproj.proj_ident, 'colours', colours)
     # set test colours in defaults.json
     fromjson.set_defaults(adminproj.proj_ident, key="backcol", value=adminbackcol)
-    fromjson.set_defaults(adminproj.proj_ident, key="colours", value=colours)
+    ordered_colours = collections.OrderedDict(sorted(colours.items(), key=lambda t: t[0]))
+    fromjson.set_defaults(adminproj.proj_ident, key="colours", value=ordered_colours)
     # change name of 220 to avoid css cache
     newname = "w3-theme-ski-" + str(random.randint(10000, 99999)) + ".css"
     editpage.rename_page(adminproj.proj_ident, 220, newname)

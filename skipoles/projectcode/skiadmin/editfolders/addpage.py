@@ -176,6 +176,10 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     css_links = fromjson.get_defaults(editedproj.proj_ident, key="css_links")
     js_links = fromjson.get_defaults(editedproj.proj_ident, key="js_links")
     _make_head(newpage, editedproj.proj_ident, new_ident, title="", css_links=css_links, js_links=js_links)
+    # body class
+    body_class = fromjson.get_defaults(editedproj.proj_ident, key="body_class")
+    if body_class:
+        newpage.body.set_class(body_class)
     # add this new page to the parent folder
     page = parent.add_page(newpage, new_ident)
     #  clear and re-populate call_data for edit page

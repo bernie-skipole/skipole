@@ -6195,6 +6195,302 @@ false,
 "Part",
 {
 "tag_name": "div",
+"brief": "section",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "heading",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_top_bot_marg_10px"
+},
+"parts": [
+[
+"Text",
+"Default CSS links"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About css defaults",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Set a list of labels here, these should be labels which point to CSS pages and will be included as default when new template pages are created.  This saves you the trouble of adding these links every time you create a new page."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "links.Table1_Buttons4",
+"name": "css_links",
+"brief": "Table of default css links",
+"fields": {
+"btn_col1": true,
+"btn_col2": true,
+"btn_col3": true,
+"btn_col4": false,
+"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
+"button_text1": "&uarr;",
+"button_text2": "&darr;",
+"button_text3": "Remove",
+"button_text4": "",
+"col0_classes": [],
+"contents": [
+[
+"",
+"",
+"",
+"",
+"",
+false,
+false,
+false,
+false
+]
+],
+"even_class": "",
+"link_ident1": 80012,
+"link_ident2": 80013,
+"link_ident3": 80011,
+"link_ident4": "",
+"maximize_text_col": true,
+"odd_class": "w3-theme-d2",
+"show": true,
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered ski_wide_80",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.SubmitTextInput1",
+"name": "add_default_css",
+"brief": "Adds a default CSS file",
+"fields": {
+"action": 80010,
+"action_json": "",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Add label",
+"clear_error": false,
+"error_class": "",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputandbutton_class": "",
+"inputdiv_class": "w3-section",
+"label": "Add default label:",
+"label_class": "ski_left_label",
+"maxlength": "",
+"new_window": false,
+"pattern": "",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.NotEmpty",
+"message": "Default CSS label cannot be empty"
+}
+]
+}
+}
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
+"show": true
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "section",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "heading",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_top_bot_marg_10px"
+},
+"parts": [
+[
+"Text",
+"Default javascript links"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About javascript defaults",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Similarly, a list of labels which should be links to javascript files should be set here. These should always include the jquery_core label linking to the jquery library and the skipole_js label."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "links.Table1_Buttons4",
+"name": "js_links",
+"brief": "Table of default javascript links",
+"fields": {
+"btn_col1": true,
+"btn_col2": true,
+"btn_col3": true,
+"btn_col4": false,
+"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
+"button_text1": "&uarr;",
+"button_text2": "&darr;",
+"button_text3": "Remove",
+"button_text4": "",
+"col0_classes": [],
+"contents": [
+[
+"",
+"",
+"",
+"",
+"",
+false,
+false,
+false,
+false
+]
+],
+"even_class": "",
+"link_ident1": 80022,
+"link_ident2": 80023,
+"link_ident3": 80021,
+"link_ident4": "",
+"maximize_text_col": true,
+"odd_class": "w3-theme-d2",
+"show": true,
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered ski_wide_80",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.SubmitTextInput1",
+"name": "add_default_js",
+"brief": "Adds a default javascript file",
+"fields": {
+"action": 80020,
+"action_json": "",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Add label",
+"clear_error": false,
+"error_class": "",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputandbutton_class": "",
+"inputdiv_class": "w3-section",
+"label": "Add default label:",
+"label_class": "ski_left_label",
+"maxlength": "",
+"new_window": false,
+"pattern": "",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.NotEmpty",
+"message": "A label to a javascript file must be input"
+}
+]
+}
+}
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
+"show": true
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
 "brief": "Body class",
 "show": true,
 "hide_if_empty": false,
@@ -6645,6 +6941,110 @@ false,
 }
 },
 "pages": {
+"add_default_css": {
+"ident": 80010,
+"brief": "Adds a default CSS link",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"add_default_css"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": 80001,
+"validate_option": true
+},
+"original_fields": {
+"add_default_css:input_text": "new_css_label"
+}
+}
+},
+"add_default_js": {
+"ident": 80020,
+"brief": "Adds a default javascript link",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"add_default_js"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"add_default_js:input_text": "new_js_label"
+}
+}
+},
+"css_down": {
+"ident": 80013,
+"brief": "Moves CSS link down",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"css_down"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"css_links:btn_col2": "css_label"
+}
+}
+},
+"css_up": {
+"ident": 80012,
+"brief": "Moves CSS link up",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"css_up"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"css_links:btn_col1": "css_label"
+}
+}
+},
 "index": {
 "ident": 80001,
 "brief": "Responder to fill template page",
@@ -6686,6 +7086,110 @@ false,
 "original_fields": {
 "insert_css_link_brief:input_text": "",
 "insert_css_link_label:input_text": ""
+}
+}
+},
+"js_down": {
+"ident": 80023,
+"brief": "Moves javascript link down",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"js_down"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"js_links:btn_col2": "js_label"
+}
+}
+},
+"js_up": {
+"ident": 80022,
+"brief": "Moves javascript link up",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"js_up"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"js_links:btn_col1": "js_label"
+}
+}
+},
+"remove_css_link": {
+"ident": 80011,
+"brief": "Removes the default CSS link",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"css_remove"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"css_links:btn_col3": "css_label"
+}
+}
+},
+"remove_js_link": {
+"ident": 80021,
+"brief": "Removes the default javascript link",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"editfolders",
+"operations",
+"js_remove"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"js_links:btn_col3": "js_label"
 }
 }
 },
@@ -20260,6 +20764,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
+"class": "w3-theme",
 "style": "padding-left:20px; font-family:'Courier New'"
 },
 "parts": [
@@ -32631,6 +33136,9 @@ false
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -33100,250 +33608,6 @@ false
 ]
 ]
 }
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "section",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-section"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About css defaults",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Set a list of labels here, these should be labels (created above) which point to CSS pages and will be included as default when new template pages are created.  This saves you the trouble of adding these links every time you create a new page."
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "links.Table1_Buttons4",
-"name": "css_links",
-"brief": "Table of default css links",
-"fields": {
-"btn_col1": true,
-"btn_col2": true,
-"btn_col3": true,
-"btn_col4": false,
-"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
-"button_text1": "&uarr;",
-"button_text2": "&darr;",
-"button_text3": "Remove",
-"button_text4": "",
-"col0_classes": [],
-"contents": [
-[
-"",
-"",
-"",
-"",
-"",
-false,
-false,
-false,
-false
-]
-],
-"even_class": "",
-"link_ident1": 5061,
-"link_ident2": 5062,
-"link_ident3": 5063,
-"link_ident4": "",
-"maximize_text_col": true,
-"odd_class": "w3-theme-d2",
-"show": true,
-"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered ski_wide_80",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "add_default_css",
-"brief": "Adds a default CSS file",
-"fields": {
-"action": 5060,
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Add label",
-"clear_error": false,
-"error_class": "",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputdiv_class": "w3-section",
-"label": "Add default label:",
-"label_class": "ski_left_label",
-"maxlength": "",
-"new_window": false,
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "",
-"title": "",
-"type": "text",
-"widget_class": "",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "Default CSS label cannot be empty"
-}
-]
-}
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "section",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-section"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About javascript defaults",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Similarly, a list of labels which should be links to javascript files should be set here. These should always include the jquery_core label linking to the jquery library and the skipole_js label."
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "links.Table1_Buttons4",
-"name": "js_links",
-"brief": "Table of default javascript links",
-"fields": {
-"btn_col1": true,
-"btn_col2": true,
-"btn_col3": true,
-"btn_col4": false,
-"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
-"button_text1": "&uarr;",
-"button_text2": "&darr;",
-"button_text3": "Remove",
-"button_text4": "",
-"col0_classes": [],
-"contents": [
-[
-"",
-"",
-"",
-"",
-"",
-false,
-false,
-false,
-false
-]
-],
-"even_class": "",
-"link_ident1": 5071,
-"link_ident2": 5072,
-"link_ident3": 5073,
-"link_ident4": "",
-"maximize_text_col": true,
-"odd_class": "w3-theme-d2",
-"show": true,
-"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered ski_wide_80",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "add_default_js",
-"brief": "Adds a default javascript file",
-"fields": {
-"action": 5070,
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Add label",
-"clear_error": false,
-"error_class": "",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputdiv_class": "w3-section",
-"label": "Add default label:",
-"label_class": "ski_left_label",
-"maxlength": "",
-"new_window": false,
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "",
-"title": "",
-"type": "text",
-"widget_class": "",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A label to a javascript file must be input"
-}
-]
-}
-}
-]
 ]
 }
 ],
@@ -35740,7 +36004,7 @@ false
 "parts": [
 [
 "Text",
-"These admin pages use CSS from the w3.css library. Your own project could use this or any other library - under the 'Page Labels' section, create labels to the CSS files of your choice and at the bottom of that section, ensure they are included in each new page created.\r\n\r\nWhen you add widgets with new CSS class fields, you can set your CSS classes to be defaults, and your project will be tailored to use your preferred CSS files.\r\n\r\nFurther information about w3.css can be found here:"
+"These admin pages use CSS from the w3.css library. Your own project could use this or any other library - under the 'Page Labels' section, create labels to the CSS files of your choice, and within the 'Operations' section, ensure they are included in each new page created.\r\n\r\nIf you do use another CSS library you will have to choose different widget CSS classes. When you add widgets with new CSS class fields, you can set your CSS classes to be defaults, and your project will be tailored to use your preferred CSS files.\r\n\r\nFurther information about w3.css can be found here:"
 ]
 ]
 }
@@ -38745,46 +39009,6 @@ false
 "restricted": false,
 "folders": {},
 "pages": {
-"add_default_css": {
-"ident": 5060,
-"brief": "Add a default css label",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-25001
-],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": 5001,
-"validate_option": true
-},
-"original_fields": {
-"add_default_css:input_text": "new_css_label"
-}
-}
-},
-"add_default_js": {
-"ident": 5070,
-"brief": "Add a default javascript file label",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": 5001,
-"validate_option": true
-},
-"original_fields": {
-"add_default_js:input_text": "new_js_label"
-}
-}
-},
 "add_user_page": {
 "ident": 5500,
 "brief": "adds a page label and target",
@@ -38809,69 +39033,6 @@ false
 "original_fields": {
 "setlabel:input_text": "label",
 "settarget:input_text": "ident_or_url"
-}
-}
-},
-"css_down": {
-"ident": 5062,
-"brief": "Move css link down",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-25001
-],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"css_links:btn_col2": "css_label"
-}
-}
-},
-"css_remove": {
-"ident": 5063,
-"brief": "Remove css link",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-25001
-],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"css_links:btn_col3": "css_label"
-}
-}
-},
-"css_up": {
-"ident": 5061,
-"brief": "Move css link up",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-25001
-],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"css_links:btn_col1": "css_label"
 }
 }
 },
@@ -38942,69 +39103,6 @@ false
 "user:button_text2": "",
 "user:col_input": "",
 "user:hidden_field1": ""
-}
-}
-},
-"js_down": {
-"ident": 5072,
-"brief": "Move Javascript link down",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-25001
-],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"js_links:btn_col2": "js_label"
-}
-}
-},
-"js_remove": {
-"ident": 5073,
-"brief": "Remove Javascript link",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-25001
-],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"js_links:btn_col3": "js_label"
-}
-}
-},
-"js_up": {
-"ident": 5071,
-"brief": "Move Javascript link up",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-25001
-],
-"alternate_ident": "admin_home",
-"fail_ident": 5001,
-"submit_option": true,
-"target_ident": 5001,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"js_links:btn_col1": "js_label"
 }
 }
 },
@@ -39270,6 +39368,149 @@ false
 }
 },
 "pages": {
+"aa": {
+"ident": 85002,
+"brief": "aa",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#2f0e69",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Page 85002"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": []
+}
+]
+},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
@@ -40089,7 +40330,7 @@ false
 }
 }
 },
-"w3-theme-ski-52520.css": {
+"w3-theme-ski-17849.css": {
 "ident": 220,
 "brief": "sets colour in w3-theme-ski.css",
 "RespondPage": {

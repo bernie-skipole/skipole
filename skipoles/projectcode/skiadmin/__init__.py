@@ -78,14 +78,6 @@ _CALL_SUBMIT_DATA = {
                         4001: managetextblocks.retrieve_link_table,     # fill manage text blocks page link table
                         4005: managetextblocks.retrieve_more,           # fill more text blocks link tables
                         4006: managetextblocks.retrieve_more,           # fill more text blocks link tables
-                        5060: managespecialpages.add_default_css,       # adds new label to default css links list
-                        5061: managespecialpages.css_up,                # moves link in the css links list up
-                        5062: managespecialpages.css_down,              # moves link in the css links list down
-                        5063: managespecialpages.css_remove,            # removes link in the css links list
-                        5070: managespecialpages.add_default_js,        # adds new label to default javascript links list
-                        5071: managespecialpages.js_up,                 # moves link in the javascript links list up
-                        5072: managespecialpages.js_down,               # moves link in the javascript links list down
-                        5073: managespecialpages.js_remove,             # removes link in the javascript links list
                         6250: editrespondpage.set_validate_option,      # enables or disables validate option
                         6260: editrespondpage.set_submit_option,        # enables or disables submit option
                         6320: editrespondpage.set_single_field,         # sets the field, number = 1 option
@@ -617,7 +609,8 @@ def set_navigation(identnum, call_data, page_data):
                                                             [3, "Root Folder", False, ''],
                                                             ["manage_specialpages", "Page Labels", False, ''],
                                                             ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, '']
+                                                            ["manage_sections", "Sections", False, ''],
+                                                            ['operations', "Operations", False, '']
                                                            ]
 
     elif identnum == 70101:
@@ -636,7 +629,8 @@ def set_navigation(identnum, call_data, page_data):
                                                             ['admin_home', "Admin", False, ''],
                                                             [3, "Root Folder", False, ''],
                                                             ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, '']
+                                                            ["manage_sections", "Sections", False, ''],
+                                                            ['operations', "Operations", False, '']
                                                            ]
 
 
