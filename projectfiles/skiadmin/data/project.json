@@ -16174,21 +16174,6 @@ false
 }
 ],
 [
-"Part",
-{
-"tag_name": "p",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"This field can have its name changed (alphanumeric and underscore only) if desired, and a value can also be set."
-]
-]
-}
-],
-[
 "Widget",
 {
 "class": "inputtext.SubmitTextInput1",
