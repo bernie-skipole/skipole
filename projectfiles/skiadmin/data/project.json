@@ -2,7 +2,7 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.39",
+"version": "0.0.40",
 "skipole": "0.0.39",
 "subprojects": {
 "lib": {
@@ -17093,7 +17093,7 @@ false
 "clear_error": false,
 "error_class": "w3-panel w3-red",
 "para_class": "",
-"para_text": "These fields take a list of values - follow the link to edit:",
+"para_text": "These fields take a list of values - follow the link for further information and to edit:",
 "pre_line": true,
 "show": true,
 "show_error": "",
@@ -17152,7 +17152,7 @@ false
 "clear_error": false,
 "error_class": "w3-panel w3-red",
 "para_class": "",
-"para_text": "These fields take a list of lists - follow the link to edit:",
+"para_text": "These fields take a list of lists - follow the link for further information and to edit:",
 "pre_line": true,
 "show": true,
 "show_error": "",
@@ -17211,7 +17211,7 @@ false
 "clear_error": false,
 "error_class": "w3-panel w3-red",
 "para_class": "",
-"para_text": "These fields take a dictionary - follow the link to edit:",
+"para_text": "These fields take a dictionary- follow the link for further information and to edit:",
 "pre_line": true,
 "show": true,
 "show_error": "",
@@ -39492,7 +39492,32 @@ false
 "attribs": {
 "class": "w3-theme"
 },
-"parts": []
+"parts": [
+[
+"Widget",
+{
+"class": "links.ListLinks",
+"name": "test",
+"brief": "test",
+"fields": {
+"force_ident": false,
+"li_class": "",
+"link_class": "",
+"links": [
+[
+"",
+"",
+""
+]
+],
+"new_window": false,
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
 }
 ]
 },
