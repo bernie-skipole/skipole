@@ -83,8 +83,8 @@ parser.add_argument("-a", "--add", dest="projdir",
 parser.add_argument("-c", "--copy", dest="source",
                   help="Create a new project by copying an existing project.")
 
-parser.add_argument("-n", "--new", action='store_true', dest="new", default=False,
-                  help="Create a new project with the given project name.")
+parser.add_argument("-n", "--new", dest="newproj", nargs=2, metavar=('NEWPROJDIR','NEWPROJNAME'),
+                  help="Create a new project with the given project directory and project name.")
 
 parser.add_argument("-r", "--remove", action='store_true', dest="remove", default=False,
                   help="Remove the given project (deletes symlinks).")
@@ -104,11 +104,12 @@ parser.add_argument("-w", "--waitress", action='store_true', dest="waitress", de
 parser.add_argument('--version', action='version', version=('%(prog)s ' + skipoles.version))
 
 parser.add_argument('project', nargs='?', default='',
-                   help="A project name (lowercase, no funny characters). Either an existing project, or, with the -n argument, a new project to be created.\nNot used with -l or -i options")
+                   help="An existing project name to run.")
 
 args = parser.parse_args()
 
 port = args.port
+
 
 if args.waitress:
     # This requires python3 version of the waitress web server to be
@@ -122,7 +123,7 @@ else:
     # As default use the Python library web server
     from wsgiref.simple_server import make_server
 
-if not (args.projdir or args.skiadmin or args.remove or args.listprojects or args.new or args.option or args.project or args.source or args.tarimport):
+if not (args.projdir or args.skiadmin or args.remove or args.listprojects or args.newproj or args.option or args.project or args.source or args.tarimport):
     # skipole.py has been called on its own, or just with a port option
     # create interactive session to build a new project
     admin_mode = True
@@ -195,18 +196,22 @@ if not (args.projdir or args.skiadmin or args.remove or args.listprojects or arg
 
 else:
     # take options from parser
-    project = args.project
 
-    if args.listprojects and (project or args.remove or args.new or args.skiadmin or args.tarimport or args.projdir or args.source):
+    if args.newproj:
+        project = args.newproj[1]
+    else:
+        project = args.project
+
+    if args.listprojects and (project or args.remove or args.newproj or args.skiadmin or args.tarimport or args.projdir or args.source):
         parser.error("The -l/--list option cannot be used with any other option.")
 
-    if args.projdir and (args.remove or args.new or args.skiadmin or args.tarimport or args.source):
+    if args.projdir and (args.remove or args.newproj or args.skiadmin or args.tarimport or args.source):
         parser.error("The -a/--add option can only be used with a directory path, and project name, not with any other option.")
 
-    if args.source and (args.remove or args.new  or args.skiadmin or args.tarimport):
+    if args.source and (args.remove or args.newproj or args.skiadmin or args.tarimport):
         parser.error("The arguments combination is invalid")
 
-    if args.tarimport and (project or args.remove or args.new or args.skiadmin):
+    if args.tarimport and (project or args.remove or args.newproj or args.skiadmin):
         parser.error("The -i/--import option can only be used with a path to a tar file")
 
 
@@ -260,10 +265,10 @@ else:
 
     project_path = os.path.join(projectfiles, project)
 
-    if args.new or args.source:
+    if args.newproj or args.source:
         # new project is to be created
         if os.path.isdir(project_path):
-            print("Error - This project name - or at least the directory %s already exists." % (project_path,))
+            print("Error - This project name - or at least the symlink %s already exists." % (project_path,))
             sys.exit(5)
     else:
         # an existing project is to be loaded
@@ -271,16 +276,15 @@ else:
             print("Error - Project not found. Try 'skipole.py -l' option to list projects.")
             sys.exit(6)
 
-#    if args.new:
-#        if args.symlink:
-#            # Create a new project in directory and symlink it
-#            sympath = os.path.expanduser(args.symlink)
-#            skipoles.copy_newproj_to_symlink(sympath, project)
-#        else:
-#            # Create a new project
-#            skipoles.copy_newproj_to(project)
-#        print("Project %s created." % (project,))
-#        sys.exit(0)
+    if args.newproj:
+        # Create a new project in directory and symlink it
+        sympath = os.path.expanduser(args.newproj[0])
+        if not os.path.exists(sympath):
+            os.mkdir(sympath)
+            print("New directory created,")
+        skipoles.copy_newproj_to_symlink(sympath, project)
+        print("Project %s created." % (project,))
+        sys.exit(0)
 
 #    if args.source:
 #        if args.symlink:
