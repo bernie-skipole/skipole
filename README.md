@@ -16,7 +16,7 @@ This creates and serves a new project using the python standard library wsgiref.
 
 To serve and administer an already existing project, run:
 
-python3 skipole.py -a myprojectname
+python3 skipole.py -s myprojectname
 
 It is intended that in a finished project the application could be served via any wsgi server.
 
