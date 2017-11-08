@@ -156,7 +156,7 @@ def remove_project(proj_ident):
             print("Removed Symlink: %s" % (project_dir,))
             projecfiles_deleted = True
     else:
-        print("Directory %s not found" % (project_dir,))
+        print("Symlink %s not found" % (project_dir,))
 
     # delete project code directory
     if os.path.isdir(code_dir) or os.path.islink(code_dir):
@@ -171,7 +171,7 @@ def remove_project(proj_ident):
             print("Removed Symlink: %s" % (code_dir,))
             projectcode_deleted = True
     else:
-        print("Directory %s not found" % (code_dir,))
+        print("Symlink %s not found" % (code_dir,))
 
     if projecfiles_deleted and projectcode_deleted:
         print("Project Removed.")
@@ -289,8 +289,25 @@ def copy_proj_to_symlink(symlinkdir, source_id, project):
     make_symlink_from_project(symlinkdir, project)
 
 
+
+def import_project_to_symlink(symlinkdir, tarfilepath):
+    "Import project, then symlink it"
+    # first, check symlinkdir
+    if not os.path.isdir(symlinkdir):
+        print("Error - Directory %s not found." % (symlinkdir,))
+        sys.exit(8)
+    if os.listdir(symlinkdir):
+        print("Error - Directory %s has contents." % (symlinkdir,))
+        sys.exit(8)
+    # Now import project
+    project = import_project(tarfilepath)
+    # Now copy and symlink
+    make_symlink_from_project(symlinkdir, project)
+
+
+
 def import_project(tarfilepath):
-    "imports a project tar file"
+    "imports a project tar file, returns the project name"
     if not os.path.isfile(tarfilepath):
         print("Error - File %s not found." % (tarfilepath,))
         sys.exit(8)
@@ -300,24 +317,20 @@ def import_project(tarfilepath):
         sys.exit(8)
 
     with tarfile.open(tarfilepath, "r") as tar:
-        # first item should be proj_ident/__main__.py
-        pyfile = tar.getnames()[0]
+        # first item should be proj_ident/xxxxx, such as proj_ident/myapp.py or proj_ident/__main__.py
+        firstitem = tar.getnames()[0]
 
-    proj_main = pyfile.split('/')
-    if len(proj_main) != 2:
-        proj_main = pyfile.split('\\')
-    if len(proj_main) != 2:
+    proj_file = firstitem.split('/')
+    if len(proj_file) != 2:
+        proj_file = firstitem.split('\\')
+    if len(proj_file) != 2:
         print("Error - Cannot parse contents of file %s" % (tarfilepath,))
         sys.exit(8)
 
-    main_name = proj_main[1]
-    if main_name != '__main__.py':
-        print("Error - Cannot parse contents of file %s" % (tarfilepath,))
-        sys.exit(8)
-
-    project = proj_main[0]
+    project = proj_file[0]
 
     # get project location, if project dir exits, return
+    # project_dir being projectfiles/project
     project_dir = skiboot.projectpath(project)
     if os.path.isdir(project_dir):
         print("Error - Project %s found in the file already exists." % (project,))
@@ -343,19 +356,32 @@ def import_project(tarfilepath):
             # delete data directory and copy from export directory
             destination = skiboot.projectdata(project)
             if os.path.isdir(destination):
-                shutil.rmtree(destination)
+                if os.path.islink(destination):
+                    real_destination = os.path.realpath(destination)
+                    os.unlink(destination)
+                    shutil.rmtree(real_destination)
+                    shutil.copytree(source, real_destination)
+                    os.symlink(real_destination, destination)
+                else:
+                    shutil.rmtree(destination)
             source = os.path.join(exportdir, project, 'projectfiles', project, 'data')
             shutil.copytree(source, destination)
 
             # delete static directory and copy from export directory
             destination = skiboot.projectstatic(project)
             if os.path.isdir(destination):
-                shutil.rmtree(destination)
+                if os.path.islink(destination):
+                    real_destination = os.path.realpath(destination)
+                    os.unlink(destination)
+                    shutil.rmtree(real_destination)
+                    shutil.copytree(source, real_destination)
+                    os.symlink(real_destination, destination)
+                else:
+                    shutil.rmtree(destination)
             source = os.path.join(exportdir, project, 'projectfiles', project, 'static')
             shutil.copytree(source, destination)
 
             # delete project code directory and copy from export directory
-            source = os.path.join(exportdir, project, 'skipoles', 'projectcode', project)
             destination = skiboot.projectcode(project)
             if os.path.isdir(destination):
                 if os.path.islink(destination):
@@ -366,7 +392,8 @@ def import_project(tarfilepath):
                     os.symlink(real_destination, destination)
                 else:
                     shutil.rmtree(destination)
-                    shutil.copytree(source, destination)
+            source = os.path.join(exportdir, project, 'skipoles', 'projectcode', project)
+            shutil.copytree(source, destination)
 
     except ServerError as e:
         print(e.message)
@@ -398,7 +425,8 @@ def import_project(tarfilepath):
             print("Import failed but invalid data may remain under projectfiles and projectcode directories")
         sys.exit(8)
 
-    print("Project imported; run 'skipole.py -a %s' to administer the project." % (project,))
+    print("Project imported; run 'skipole.py -s %s' to administer the project." % (project,))
+    return project
 
 
 
