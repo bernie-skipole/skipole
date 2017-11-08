@@ -71,39 +71,42 @@ And an existing project can be administered with:
 skipole.py -s myprojectname
 ''')
 
+parser.add_argument('--version', action='version', version=('%(prog)s ' + skipoles.version))
+
 parser.add_argument("-p", "--port", type=int, dest="port", default=8000,
                   help="The port the web server will listen at, default 8000.")
 
 parser.add_argument("-o", "--option", dest="option",
                   help="An optional value passed to your functions.")
 
-parser.add_argument("-a", "--add", dest="addproj", nargs=2, metavar=('PROJDIR','PROJNAME'),
-                  help="From an external project directory, add the project (creates symlinks).")
-
-parser.add_argument("-c", "--copy", dest="cpproj", nargs=3, metavar=('NEWPROJDIR','NEWPROJNAME', 'SOURCEPROJNAME'),
-                  help="Create a new project by copying an existing project.")
-
-parser.add_argument("-n", "--new", dest="newproj", nargs=2, metavar=('NEWPROJDIR','NEWPROJNAME'),
-                  help="Create a new project with the given project directory and project name.")
-
-parser.add_argument("-r", "--remove", nargs=1, metavar=('PROJNAME',),
-                  help="Remove the given project (deletes symlinks).")
-
-parser.add_argument("-i", "--import", dest="tarimport", nargs=2, metavar=('NEWPROJDIR','TARFILEPATH'),
-                  help="Import a project tar.gz file.")
+parser.add_argument("-w", "--waitress", action='store_true', dest="waitress", default=False,
+                  help="Serve project with the Waitress web server (python3-waitress is required).")
 
 parser.add_argument("-s", "--skiadmin", action='store_true', dest="skiadmin", default=False,
                   help="Load the %s project to administrate the given project. With your browser call project_url/%s" % (adminproj,adminproj))
 
-parser.add_argument("-l", "--list", action='store_true', dest="listprojects", default=False,
+
+group = parser.add_mutually_exclusive_group()
+
+group.add_argument("-a", "--add", dest="addproj", nargs=2, metavar=('PROJDIR','PROJNAME'),
+                  help="From an external project directory, add the project (creates symlinks).")
+
+group.add_argument("-c", "--copy", dest="cpproj", nargs=3, metavar=('NEWPROJDIR','NEWPROJNAME', 'SOURCEPROJNAME'),
+                  help="Create a new project by copying an existing project.")
+
+group.add_argument("-n", "--new", dest="newproj", nargs=2, metavar=('NEWPROJDIR','NEWPROJNAME'),
+                  help="Create a new project with the given project directory and project name.")
+
+group.add_argument("-r", "--remove", nargs=1, metavar=('PROJNAME',),
+                  help="Remove the given project (deletes symlinks).")
+
+group.add_argument("-i", "--import", dest="tarimport", nargs=2, metavar=('NEWPROJDIR','TARFILEPATH'),
+                  help="Import a project tar.gz file.")
+
+group.add_argument("-l", "--list", action='store_true', dest="listprojects", default=False,
                   help="List current projects, then exits.")
 
-parser.add_argument("-w", "--waitress", action='store_true', dest="waitress", default=False,
-                  help="Serve project with the Waitress web server (python3-waitress is required).")
-
-parser.add_argument('--version', action='version', version=('%(prog)s ' + skipoles.version))
-
-parser.add_argument('project', nargs='?', default='',
+group.add_argument('project', nargs='?', default='',
                    help="An existing project name to run, and (if -s used) to administer.")
 
 args = parser.parse_args()
@@ -207,18 +210,6 @@ else:
         project = args.remove[0]  # project to be removed
     else:
         project = args.project
-
-    if args.listprojects and (project or args.remove or args.newproj or args.skiadmin or args.tarimport or args.addproj or args.cpproj):
-        parser.error("The -l/--list option cannot be used with any other option.")
-
-    if args.addproj and (args.remove or args.newproj or args.skiadmin or args.tarimport or args.cpproj):
-        parser.error("The -a/--add option can only be used with a directory path, and project name, not with any other option.")
-
-    if args.cpproj and (args.remove or args.newproj or args.skiadmin or args.tarimport):
-        parser.error("The arguments combination is invalid")
-
-    if args.tarimport and (project or args.remove or args.newproj or args.skiadmin):
-        parser.error("The -i/--import option can only be used with a path to a tar file")
 
 
     # List projects
