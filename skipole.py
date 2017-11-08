@@ -89,8 +89,8 @@ parser.add_argument("-c", "--copy", dest="source",
 parser.add_argument("-n", "--new", action='store_true', dest="new", default=False,
                   help="Create a new project with the given project name.")
 
-parser.add_argument("-d", "--delete", action='store_true', dest="delete", default=False,
-                  help="Delete the given project (deletes symlinks).")
+parser.add_argument("-r", "--remove", action='store_true', dest="remove", default=False,
+                  help="Remove the given project (deletes symlinks).")
 
 parser.add_argument("-i", "--import", dest="tarimport",
                   help="Import a project tar.gz file.")
@@ -125,7 +125,7 @@ else:
     # As default use the Python library web server
     from wsgiref.simple_server import make_server
 
-if not (args.SYMLINK or args.admin or args.delete or args.listprojects or args.new or args.option or args.project or args.source or args.symlink or args.tarimport):
+if not (args.SYMLINK or args.admin or args.remove or args.listprojects or args.new or args.option or args.project or args.source or args.symlink or args.tarimport):
     # skipole.py has been called on its own, or just with a port option
     # create interactive session to build a new project
     admin_mode = True
@@ -200,19 +200,19 @@ else:
     # take options from parser
     project = args.project
 
-    if args.listprojects and (project or args.delete or args.new or args.admin or args.tarimport or args.symlink or args.SYMLINK or args.source):
+    if args.listprojects and (project or args.remove or args.new or args.admin or args.tarimport or args.symlink or args.SYMLINK or args.source):
         parser.error("The -l/--list option cannot be used with any other option.")
 
-    if args.symlink and (args.delete or args.admin or args.tarimport or args.SYMLINK):
+    if args.symlink and (args.remove or args.admin or args.tarimport or args.SYMLINK):
         parser.error("The -s/--symlink option can only be used with a directory path and project name, with only -n and -c options allowed.")
 
-    if args.SYMLINK and (args.delete or args.new or args.admin or args.tarimport or args.source or args.symlink):
+    if args.SYMLINK and (args.remove or args.new or args.admin or args.tarimport or args.source or args.symlink):
         parser.error("The -S/--SYMLINK option can only be used with a directory path, and project name, not with any other option.")
 
-    if args.source and (args.delete or args.new  or args.admin or args.tarimport):
+    if args.source and (args.remove or args.new  or args.admin or args.tarimport):
         parser.error("The arguments combination is invalid")
 
-    if args.tarimport and (project or args.delete or args.new or args.admin):
+    if args.tarimport and (project or args.remove or args.new or args.admin):
         parser.error("The -i/--import option can only be used with a path to a tar file")
 
 
@@ -243,8 +243,8 @@ else:
         sys.exit(3)
 
     if (project == adminproj) or (project == skipoles.newproj) or (project == skipoles.libproj):
-        if args.delete:
-            print("Error - %s should not be deleted." % (project,))
+        if args.remove:
+            print("Error - %s should not be removed." % (project,))
             sys.exit(4)
         print("Warning - %s is a system project and should not normally be altered." % (project,))
         print("Are you sure you wish to continue?")
@@ -265,9 +265,9 @@ else:
         skipoles.make_symlink_to_project(sympath, project)
         sys.exit(0)
 
-    # Delete project
-    if args.delete:
-        skipoles.delete_project(project)
+    # Remove project
+    if args.remove:
+        skipoles.remove_project(project)
         sys.exit(0)
 
     project_path = os.path.join(projectfiles, project)

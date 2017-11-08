@@ -108,19 +108,19 @@ def _get_files(members, proj_ident):
             yield tarinfo
 
 
-def delete_project(proj_ident):
-    "Deletes the project"
+def remove_project(proj_ident):
+    "Removes the project by deleting symlinks"
 
     if proj_ident == adminproj:
-        print("Cannot delete the admin project %s" % (adminproj,))
+        print("Cannot remove the admin project %s" % (adminproj,))
         return
 
     if proj_ident == newproj:
-        print("Cannot delete %s, this is used to generate new projects." % (newproj,))
+        print("Cannot remove %s, this is used to generate new projects." % (newproj,))
         return
 
     if proj_ident == libproj:
-        print("Cannot delete %s, this is used to provide static libraries." % (libproj,))
+        print("Cannot remove %s, this is used to provide static libraries." % (libproj,))
         return
 
     project_dir = skiboot.projectpath(proj_ident)
@@ -131,13 +131,13 @@ def delete_project(proj_ident):
         print("This project has not been found")
         return
 
-    print("This operation deletes project %s" % (proj_ident,))
+    print("This operation removes project %s" % (proj_ident,))
     print("Are you sure you wish to do this?")
     responce = input('Type Yes to proceed :')
     if responce == 'Yes':
-        print("Deleting project...")
+        print("Removing project...")
     else:
-        print("Project not deleted. Command terminated.")
+        print("Project not removed. Command terminated.")
         return
 
     projecfiles_deleted = False
@@ -151,9 +151,9 @@ def delete_project(proj_ident):
             else:
                 shutil.rmtree(project_dir)
         except:
-            print("Error while attempting to delete %s" % (project_dir,))
+            print("Error while attempting to remove %s" % (project_dir,))
         else:
-            print("Deleted: %s" % (project_dir,))
+            print("Removed Symlink: %s" % (project_dir,))
             projecfiles_deleted = True
     else:
         print("Directory %s not found" % (project_dir,))
@@ -166,21 +166,21 @@ def delete_project(proj_ident):
             else:
                 shutil.rmtree(code_dir)
         except:
-            print("Error while attempting to delete %s" % (code_dir,))
+            print("Error while attempting to remove %s" % (code_dir,))
         else:
-            print("Deleted: %s" % (code_dir,))
+            print("Removed Symlink: %s" % (code_dir,))
             projectcode_deleted = True
     else:
         print("Directory %s not found" % (code_dir,))
 
     if projecfiles_deleted and projectcode_deleted:
-        print("Project deleted.")
+        print("Project Removed.")
     elif projecfiles_deleted:
-        print("Project files directory deleted, however the project code directory was not deleted")
+        print("Project files symlink deleted, however the project code was not!")
     elif projectcode_deleted:
-        print("Project code directory deleted, however the project files directory was not deleted")
+        print("Project code symlink deleted, however the project files was not!")
     else:
-        print("Unable to delete directories")
+        print("Unable to delete symlinks")
 
 
 def copy_newproj_to(project):
