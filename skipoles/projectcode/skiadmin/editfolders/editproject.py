@@ -140,69 +140,6 @@ def submit_suburl(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = "Sub project URL set."
 
 
-def submit_copy_project(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Copies the project"
-
-    editedproj = call_data['editedproj']
-    source_id = editedproj.proj_ident
-
-    if "copy_project" not in call_data:
-        raise ValidateError(message='Invalid call')
-    #  get the project to be created
-    proj_id = call_data['copy_project']
-    if not proj_id:
-        raise ValidateError(message="Error - a project name must be given")
-    if not (proj_id.isalnum() and proj_id.islower()):
-        raise FailPage(message="Error - the project name must be lower case alphanumeric only")
-    if proj_id.isdigit():
-        raise FailPage(message="Error - the project name must have some letters")
-    if source_id == proj_id:
-        raise FailPage(message="Error - cannot copy to itself")
-    if proj_id == 'skiadmin':
-        raise FailPage(message="Error - skiadmin is a reserved name")
-    if proj_id == skiboot.admin_project():
-        raise FailPage(message="Error - Sorry, this is a reserved name")
-    if proj_id == skiboot.new_project():
-        raise FailPage(message="Error - Sorry, this is a reserved name")
-    proj_dir =  skiboot.projectpath(proj_ident=proj_id)
-    if os.path.isdir(proj_dir):
-        raise FailPage(message="Error - project directory already exists")
-    try:
-        # create directory structure
-        os.mkdir(proj_dir)
-        # copy data directory and contents
-        newproject_data = skiboot.projectdata(proj_id)
-        source_project_data = skiboot.projectdata(source_id)
-        shutil.copytree(source_project_data, newproject_data)
-        # copy static directory and contents
-        newproject_static = skiboot.projectstatic(proj_id)
-        source_project_static = skiboot.projectstatic(source_id)
-        shutil.copytree(source_project_static, newproject_static)
-
-        # get project.json and swap out
-        # "filepath": "source_id
-        # for
-        # "filepath": "proj_id
-        # where it occurs in the project.json file
-        newproject_json = skiboot.project_json(proj_id)
-        current_loc = "\"filepath\": \"%s" % source_id
-        new_loc = "\"filepath\": \"%s" % proj_id
-        with open(newproject_json, 'r') as f:
-            read_data = f.read()
-        new_data = read_data.replace(current_loc, new_loc)
-        with open(newproject_json, 'w') as f:
-            f.write(new_data)
-
-        # copy code
-        current_project_code = skiboot.projectcode(source_id)
-        newproject_code = skiboot.projectcode(proj_id)
-        shutil.copytree(current_project_code, newproject_code, ignore=shutil.ignore_patterns('*.pyc'))
-    except:
-        raise FailPage(message="Sorry an error occurred, partial files may have been created and may need cleaning up")
-    call_data['status'] = "Project %s copied to project %s" % (source_id, proj_id)
-
-
-
 def retrieve_about_code(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "About your code page"
     editedproj = call_data['editedproj']

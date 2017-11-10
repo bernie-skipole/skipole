@@ -89,7 +89,6 @@ _CALL_SUBMIT_DATA = {
                        20111: editproject.submit_removeproject,         # remove the project
                        20121: editproject.retrieve_edit_project,        # gets field data for edit project page
                        20139: editproject.submit_suburl,                # sets the url of a sub project
-                       20159: editproject.submit_copy_project,          # copies the project
                        22307: addpage.retrieve_add_page,                # gets field data for add page
                        22410: addpage.submit_new_template,              # add a new template page
                        22420: addpage.retrieve_new_responder,           # gets data for creating a new responder

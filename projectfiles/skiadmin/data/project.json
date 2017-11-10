@@ -114,7 +114,6 @@
 "new_append": 43103,
 "new_copypage": 2460,
 "new_insert": 43102,
-"new_project": 150,
 "new_section": 7060,
 "new_textblock": 4002,
 "new_uploadpage": 2470,
@@ -38304,92 +38303,6 @@ false
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "br",
-"show": true
-}
-],
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Copy Project",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Copy Project"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"You can also create a copy of your project with a new project name.\nNote: This option copies pages, folders and widgets, it also copies your static and code files to a new project structure, however it does not alter them, so if you refer to the project name in your code, any such references will have to be changed manually."
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "newproj",
-"brief": "Copy to new project",
-"fields": {
-"action": "new_project",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputdiv_class": "w3-section",
-"label": "Copy to new project:",
-"label_class": "ski_left_label",
-"maxlength": "50",
-"new_window": false,
-"pattern": "",
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "Invalid project name",
-"size": "20",
-"title": "",
-"type": "text",
-"widget_class": "",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A project name is required"
-}
-]
-}
-}
-],
-[
 "SectionPlaceHolder",
 {
 "brief": "Section admin_footer with alias foot",
@@ -38432,18 +38345,6 @@ false
 "original_args": {
 "fail_ident": 1,
 "target_ident": 20129
-},
-"original_fields": {}
-}
-},
-"set_project_copy": {
-"ident": 20159,
-"brief": "Creates the project copy",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": "admin_home",
-"target_ident": "admin_home"
 },
 "original_fields": {}
 }
@@ -38540,23 +38441,6 @@ false
 },
 "original_fields": {
 "sdd1:selectvalue": "add_project"
-}
-}
-},
-"validate_copy_project": {
-"ident": 20150,
-"brief": "validate project to be copied",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20159,
-"validate_fail_ident": "admin_home",
-"validate_option": true
-},
-"original_fields": {
-"newproj:input_text": "copy_project"
 }
 }
 },
@@ -39574,27 +39458,6 @@ false
 },
 "original_fields": {
 "colhextest:input_text": "hexcol"
-}
-}
-},
-"copy_project": {
-"ident": 150,
-"brief": "Check new project name",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-20001
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20150,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"newproj:input_text": ""
 }
 }
 },
