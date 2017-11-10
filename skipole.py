@@ -71,7 +71,7 @@ And an existing project can be administered with:
 skipole.py -s myprojectname
 ''')
 
-parser.add_argument('--version', action='version', version=('%(prog)s ' + skipoles.version))
+parser.add_argument('--version', action='version', version=skipoles.version)
 
 parser.add_argument("-p", "--port", type=int, dest="port", default=8000,
                   help="The port the web server will listen at, default 8000.")
@@ -189,7 +189,7 @@ if not (args.addproj or args.skiadmin or args.remove or args.listprojects or arg
             break
     print("Building project %s in folder %s" % (project, path))
     print("For future use - to run the project use 'skipole.py %s'" %(project,))
-    print("Or to administer the project, use 'skipole.py -a %s'" %(project,))
+    print("Or to administer the project, use 'skipole.py -s %s'" %(project,))
     if projectcopy:
         # copy an existing project in directory and symlink it
         skipoles.copy_proj_to_symlink(path, projectcopy, project)

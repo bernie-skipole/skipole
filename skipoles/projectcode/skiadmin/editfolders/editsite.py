@@ -26,7 +26,7 @@
 
 
 
-import os, shutil, copy, pickle, tarfile, tempfile, random, collections
+import os, shutil, copy, tarfile, tempfile, random, collections
 
 from .... import skilift
 from ....skilift import off_piste, fromjson, editpage
