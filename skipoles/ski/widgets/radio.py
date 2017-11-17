@@ -119,7 +119,7 @@ class RadioButton1(Widget):
     <p> <!-- Any error text appears here --> </p>
   </div>
   <div>  <!-- with class attribute set to div_class if a class is set -->
-    <!-- Then for each radio button -->
+    <!-- Then for each radio field -->
     <div> <!-- with class set to inputdiv_class if a class is set -->
       <input type='radio' /> <!-- with name from 'radio_checked' widgfield and values from radio_values -->
       <label> <!-- with class set to label_class and content from radio_text -->
