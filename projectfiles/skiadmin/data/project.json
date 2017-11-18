@@ -39376,39 +39376,7 @@ false
 "attribs": {
 "class": "w3-theme"
 },
-"parts": [
-[
-"Widget",
-{
-"class": "radio.RadioTable",
-"name": "zim",
-"brief": "zam",
-"fields": {
-"clear_error": false,
-"contents": [
-[
-"",
-"",
-"",
-""
-]
-],
-"error_class": "",
-"even_class": "",
-"header_class": "",
-"odd_class": "",
-"radio_checked": "",
-"show": true,
-"show_error": "",
-"table_class": "",
-"title1": "",
-"title2": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-]
-]
+"parts": []
 }
 ]
 },
