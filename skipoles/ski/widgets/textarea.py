@@ -230,7 +230,7 @@ class TextArea2(Widget):
         label_class: The css class of the label to the left of the input field
         error_class: The class applied to the hidden paragraph on error.
         input_text: The default text in the text input field, field name used as name attribute
-        redstar: If True a red asterix is shown by the side of the input field
+        redstar: If True a red asterisk is shown by the side of the input field
         textarea_class: The class applied to the textarea
         textarea_style: The style applied to the textarea
         rows:  The number of rows of the text area

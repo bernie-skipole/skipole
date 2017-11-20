@@ -130,7 +130,7 @@ class SimpleText(Widget):
         dx: x displacement from absolute value, for example 0
         dy: y displacement from absolute value, for example 0
         font_family: font-family css  attribute, such as Arial
-        font_size: font_size css  attribute, such as 20
+        font_size: font-size css  attribute, such as 20
         fill: The fill colour, use none for no fill
         stroke: The outline edge colour
         stroke_width: The outline edge width
