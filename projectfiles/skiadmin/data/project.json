@@ -39420,10 +39420,9 @@ false
 "validators": {
 "input_text": [
 {
-"class": "basic.IntMinMax",
+"class": "paths.NameNotInFolder",
 "val_args": {
-"maxval": "255",
-"minval": "0"
+"folder_ident_field": ""
 }
 }
 ]
