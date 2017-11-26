@@ -80,7 +80,7 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Gets the target page, filling in the form data"
         if caller_page is None:
             if self.alternate_ident:
@@ -95,7 +95,7 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
         self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # previous caller is allowed, now check the form data
 
-        submit_dict = self.make_submit_dict(environ)
+
 
         if not self.fields:
             if form_data :
@@ -198,7 +198,7 @@ class StoreData(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
 
         if self.validate_option:
             if caller_page is None:
@@ -223,7 +223,7 @@ class StoreData(Respond):
                 caller_ident = None
             else:
                 caller_ident = caller_page.ident
-            submit_dict = self.make_submit_dict(environ)
+
             try:
                 projectcode.submit_data(caller_ident,
                                        ident_list,
@@ -261,7 +261,7 @@ class StoreDataKeyed(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
     
         if self.validate_option:
             if caller_page is None:
@@ -286,7 +286,7 @@ class StoreDataKeyed(Respond):
                 caller_ident = None
             else:
                 caller_ident = caller_page.ident
-            submit_dict = self.make_submit_dict(environ)
+
             try:
                 projectcode.submit_data(caller_page.ident,
                                        ident_list,
@@ -341,7 +341,7 @@ with keys equal to the field values set here.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Gets the target page, filling in the form data"
 
         if caller_page is None:
@@ -359,7 +359,7 @@ with keys equal to the field values set here.
             else:
                 # no form_data received, no fields to check, go to target page or submit_data
                 if self.submit_option:
-                    submit_dict = self.make_submit_dict(environ)
+
                     try:
                         projectcode.submit_data(caller_page.ident,
                                        ident_list,
@@ -398,7 +398,7 @@ with keys equal to the field values set here.
 
         # call user submit_data
         if self.submit_option:
-            submit_dict = self.make_submit_dict(environ)
+
             try:
                 projectcode.submit_data(caller_page.ident,
                                        ident_list,
@@ -441,7 +441,7 @@ class AllowStore(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
 
    
         if caller_page is None:
@@ -469,7 +469,7 @@ class AllowStore(Respond):
             else:
                 # no form_data received, no fields to check, go to target page or submit_data
                 if self.submit_option:
-                    submit_dict = self.make_submit_dict(environ)
+
                     try:
                         projectcode.submit_data(caller_page.ident,
                                        ident_list,
@@ -512,7 +512,7 @@ class AllowStore(Respond):
                     
         # call user submit_data
         if self.submit_option:
-            submit_dict = self.make_submit_dict(environ)
+
             try:
                 projectcode.submit_data(caller_page.ident,
                                        ident_list,
@@ -550,10 +550,10 @@ class PrettyFormData(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
 
 
-        submit_dict = self.make_submit_dict(environ)
+
 
         if form_data:
             new_dict = { key.to_tuple_no_i():val for key, val in form_data.items() }
@@ -618,9 +618,9 @@ class Accept(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
 
-        submit_dict = self.make_submit_dict(environ)
+
 
         # rawformdata is a FieldStorage object
 
@@ -683,7 +683,7 @@ class AllowedAccept(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
 
         if caller_page is None:
             if self.alternate_ident:
@@ -698,7 +698,7 @@ class AllowedAccept(Respond):
         self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # previous caller is allowed, now store the received form data
 
-        submit_dict = self.make_submit_dict(environ)
+
         received_data = {}
         if form_data:
             for key, value in form_data.items():
@@ -743,7 +743,7 @@ class PageData(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Places given widgfields and values into page_data"
         for field, value in self.fields.items():
             str_field = str(field)

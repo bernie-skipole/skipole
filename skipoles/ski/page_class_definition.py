@@ -37,7 +37,7 @@ from urllib.parse import quote
 from . import skiboot
 from .tag import Part, ClosedPart, TextBlock, Section
 from .widgets import links
-from .excepts import ValidateError, ServerError, PageError, SkiError
+from .excepts import ValidateError, ServerError, SkiError
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
@@ -724,7 +724,7 @@ class RespondPage(ParentPage):
         # - or more usually, an instance of a child of the Respond class
         self.responder = responder
 
-    def call_responder(self, environ, lang, form_data, caller_ident, ident_list, call_data, page_data, rawformdata):
+    def call_responder(self, environ, lang, form_data, caller_ident, ident_list, call_data, page_data, rawformdata, error_dict=None):
         """Checks for circulating calls, then updates ident_list with this pages ident,
            then calls the respond objects call method, note rawformdata is a cgi.FieldStorage object"""
         if self.responder is None:
@@ -733,7 +733,7 @@ class RespondPage(ParentPage):
             raise ServerError(message="Circulating call to Respond page: ident %s in %s" % (self.ident, ident_list))
         ident_list.append(self.ident)
         proj = self.ident.proj
-        page = self.responder(environ, lang, form_data, caller_ident, ident_list, call_data, page_data, proj, rawformdata)
+        page = self.responder(environ, lang, form_data, caller_ident, ident_list, call_data, page_data, proj, rawformdata, error_dict)
         return page
 
     def set_values(self, page_data):

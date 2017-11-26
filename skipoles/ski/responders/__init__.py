@@ -271,18 +271,6 @@ main purpose is to act as a parent class for all other respond objects.
         return string_dict
 
 
-    def make_submit_dict(self, environ):
-        "Used to create the initial submit_dict"
-        submit_dict = {'environ':environ}
-        if self.target_ident_required:
-            submit_dict['target_ident'] = self.ident_for_user(self.target_ident)
-        if self.submit_required or self.submit_option_available:
-            submit_dict['fail_ident'] = self.ident_for_user(self.fail_ident)
-        if self.alternate_ident_required:
-            submit_dict['alternate_ident'] = self.ident_for_user(self.alternate_ident)
-        return submit_dict
-
-
     def _check_allowed_callers(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         """Method to check allowed callers, raises a ValidateError if caller not in list of allowed callers
            Only useful for responders that have 'allowed_callers_required'"""
@@ -324,7 +312,10 @@ main purpose is to act as a parent class for all other respond objects.
         
         # for each field and value, validate the value, placing data into validated_form_data
         # If any value fails, then place any errors into e_list
+        # e_list is a list of ErrorMessage exceptions with message to be displayed, and where to display them
         e_list = []
+        # error_dict is a dictionary of errored widgfields: original value
+        error_dict = {}
 
         for field in self.fields:
             # check every widget to be tested is present in the caller page
@@ -338,29 +329,25 @@ main purpose is to act as a parent class for all other respond objects.
             validated_form_data[field], errors = caller_page.validate(field, value, environ, lang, validated_form_data, call_data, page_data)
             if errors:
                 e_list.extend(errors)
+                if field.s:
+                    error_dict[field.s, field.w, field.f] = value
+                else:
+                    error_dict[field.w, field.f] = value
 
-        # validated_form_data now hold values
+        # validated_form_data now holds new values
         # e_list holds errors occurred
         if e_list:
-            # on validation errors, call the validate_fail_ident page, and show the errors
-            page = self.get_page_from_ident(self.validate_fail_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            # on validation errors, call the validate_fail_ident page, get final target template, and show the errors
+            page = self.get_next_page_from_ident(self.validate_fail_ident, proj_ident)
+            if hasattr(page, 'page_type') and page.page_type == 'RespondPage':
+                # must call the pages respond object, with an error_dict and obtain final template page
+                page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata, error_dict)
             raise PageError(page, e_list)
         # so all ok, return the validated form data
         return validated_form_data
- 
-    def get_target_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
-        return self.get_page_from_ident(self.target_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
-    def get_fail_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
-        return self.get_page_from_ident(self.fail_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-
-    def get_alternate_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
-        "Gets the alternate page, if the alternate page has an ident, if it is an external url, get the redirector page with this url"
-        return self.get_page_from_ident(self.alternate_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-
-    def get_page_from_ident(self, ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
-        """Calls the next responder or template page given by ident (which can be an ident, label or url)
-           - and if a responder, calls its respond object to finally return a further target page."""
+    def get_next_page_from_ident(self, ident, proj_ident):
+        """Calls the next responder or template page given by ident (which can be an ident, label or url)."""
         if isinstance(ident, str) and ('/' in ident):
             # this is a URL
             return ident
@@ -381,7 +368,24 @@ main purpose is to act as a parent class for all other respond objects.
             page = page.default_page
             if not page:
                 raise ValidateError()
-        if page.page_type == 'RespondPage':
+        return page
+
+ 
+    def get_target_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+        return self.get_page_from_ident(self.target_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+
+    def get_fail_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+        return self.get_page_from_ident(self.fail_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+
+    def get_alternate_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+        "Gets the alternate page, if the alternate page has an ident, if it is an external url, get the redirector page with this url"
+        return self.get_page_from_ident(self.alternate_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+
+    def get_page_from_ident(self, ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+        """Calls the next responder or template page given by ident (which can be an ident, label or url)
+           - and if a responder, calls its respond object to finally return a further target page."""
+        page = self.get_next_page_from_ident(ident, proj_ident)
+        if hasattr(page, 'page_type') and page.page_type == 'RespondPage':
             # must call the pages respond object
             page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
         return page
@@ -393,10 +397,24 @@ main purpose is to act as a parent class for all other respond objects.
         raise PageError(page, e_list)
 
 
-    def __call__(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def __call__(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, error_dict=None):
         "gets the project ident, and page messages and calls self._respond"
+
+        # create submit_dict
+        if error_dict:
+            submit_dict = {'environ':environ, 'error_dict':error_dict}
+        else:
+            submit_dict = {'environ':environ, 'error_dict':{}}
+
+        if self.target_ident_required:
+            submit_dict['target_ident'] = self.ident_for_user(self.target_ident)
+        if self.submit_required or self.submit_option_available:
+            submit_dict['fail_ident'] = self.ident_for_user(self.fail_ident)
+        if self.alternate_ident_required:
+            submit_dict['alternate_ident'] = self.ident_for_user(self.alternate_ident)
+        # call self._respond
         try:
-            page = self._respond(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            page = self._respond(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict)
         except GoTo as e:
             e.proj_ident=proj_ident
             raise e
@@ -419,7 +437,7 @@ main purpose is to act as a parent class for all other respond objects.
         return page
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Should be overridden
         this method then returns the target page - or the ultimate page
         if the target is itself another Respond page
