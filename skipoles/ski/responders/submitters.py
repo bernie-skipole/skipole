@@ -66,7 +66,7 @@ If submit_data raises a FailPage then the fail_ident page will be called.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
 
         if caller_page:
@@ -74,7 +74,7 @@ If submit_data raises a FailPage then the fail_ident page will be called.
         else:
             caller_ident = None
 
-        submit_dict = self.make_submit_dict(environ)
+
         try:
             projectcode.submit_data(caller_ident,
                                    ident_list,
@@ -115,14 +115,14 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
         if caller_page:
             caller_ident = caller_page.ident
         else:
             caller_ident = None
 
-        submit_dict = self.make_submit_dict(environ)
+
 
         try:
             colours = projectcode.submit_data(caller_ident,
@@ -163,14 +163,14 @@ Sets a language cookie with a persistance of 30 days
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data to get a language string such as 'en'"""
         if caller_page:
             caller_ident = caller_page.ident
         else:
             caller_ident = None
 
-        submit_dict = self.make_submit_dict(environ)
+
 
         try:
             language_string = projectcode.submit_data(caller_ident,
@@ -219,14 +219,14 @@ Sets cookies, submit_data should return an instance of http.cookies.BaseCookie
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data to get a http.cookies.BaseCookie object"""
         if caller_page:
             caller_ident = caller_page.ident
         else:
             caller_ident = None
         self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-        submit_dict = self.make_submit_dict(environ)
+
         try:
             sendcookies = projectcode.submit_data(caller_ident,
                                    ident_list,
@@ -280,13 +280,13 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
 
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Gets the target page, filling in the form data"
         if caller_page is None:
             raise ValidateError()
         self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # previous caller is allowed
-        submit_dict = self.make_submit_dict(environ)
+
         submit_dict['widgfield']=self.widgfield.to_tuple_no_i()
         try:
             # and send the widgfield to submit_data
@@ -342,7 +342,7 @@ class FieldStoreSubmit(Respond):
                      'single_field': True}            # A single field is accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
 
         # field_name
         field_name = ''
@@ -350,7 +350,7 @@ class FieldStoreSubmit(Respond):
             field_name = key
         if not field_name:
             raise ValidateError()
-        submit_dict = self.make_submit_dict(environ)
+
         submit_dict['field'] = field_name
 
         received = {}
@@ -453,14 +453,14 @@ the error message ignored.
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
         if caller_page:
             caller_ident = caller_page.ident
         else:
             caller_ident = None
 
-        submit_dict = self.make_submit_dict(environ)
+
         try:
             jsondict = projectcode.submit_data(caller_ident,
                                    ident_list,
@@ -539,13 +539,13 @@ Only page_data['status'] and page_data['headers'] will be used if given
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
         if caller_page:
             caller_ident = caller_page.ident
         else:
             caller_ident = None
-        submit_dict = self.make_submit_dict(environ)
+
         try:
             text = projectcode.submit_data(caller_ident,
                                    ident_list,
@@ -692,13 +692,13 @@ list of two element lists acting as css declaration blocks.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
         if caller_page:
             caller_ident = caller_page.ident
         else:
             caller_ident = None
-        submit_dict = self.make_submit_dict(environ)
+
         try:
             styledict = projectcode.submit_data(caller_ident,
                                    ident_list,
@@ -735,13 +735,13 @@ Given media queries and CSS page targets, wraps the targets with the media queri
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Matches the value given in field self.widgfield against the fields given"
 
         media_target =  self.fields.copy()
 
 
-        submit_dict = self.make_submit_dict(environ)
+
 
         # update media target with result of submit_data
         if self.submit_option:
@@ -861,13 +861,13 @@ submit_data should return a binary file iterator
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
+    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
         if caller_page:
             caller_ident = caller_page.ident
         else:
             caller_ident = None
-        submit_dict = self.make_submit_dict(environ)
+
         try:
             biniterator = projectcode.submit_data(caller_ident,
                                    ident_list,
