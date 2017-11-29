@@ -559,7 +559,7 @@ def extendparts(rows, item, part_loc, contents, no_link, empty, indent=1):
             contents.append(empty)
 
         # DOWN ARROW
-        if (indent == 1) and (index == last_index):
+        if (indent == 2) and (index == last_index):
             # the last line at this top indent has been added, no down arrow
             contents.append(empty)
         else:
