@@ -17,13 +17,13 @@
 # The class also has methods for writing and saving TextBlocks to the JSON files
 # which are used by skiadmin to create TextBlocks.
 #
-# However this class is placed here, rather than in the framework code, as your
-# project may require TextBlocks to be sited elsewhere, such as in a database. If
-# that is the case, you can re-write the AccessTextBlocks, but be sure to provide
+# This class is placed here, rather than in the framework code, as your project
+# may require TextBlocks to be sited elsewhere, such as in a database. If that
+# is the case, you can re-write the AccessTextBlocks, but be sure to provide
 # all the public attributes and methods of the original.
 #
 # Also be aware that if your web server creates multiple processes, then multiple
-# instances AccessTextBlocks will be created.
+# instances of AccessTextBlocks will be created.
 #
 ########################################################################################
 
@@ -97,7 +97,7 @@ class AccessTextBlocks(object):
 
     def get_textrefs(self):
         "Returns a list of the textrefs"
-        return [textref for textref in self._textrefs]
+        return list(self._textrefs.keys())
 
     def get_textref_languages(self):
         "Return a dictionary {textref: [languages],...}"
@@ -249,43 +249,4 @@ class AccessTextBlocks(object):
             with open(filepath, 'w') as fp:
                 json.dump(json_dict, fp, indent=2, sort_keys=True)
 
-    def get_reference_hierarchy(self):
-        """Used to generate a list of nested dictionaries and lists
-            by separating reference strings on the '.' character.
-           returns a list of two elements:
-               pos 0 is the list of top references - those without a dot
-               pos 1 is a dictionary of lists, each list being of this same structure, having
-               two elements.  Each dictionary key will be a name prior to the first dot."""
-        reference_list = [self._textrefs.keys()]
-        return self._make_hierarchy(reference_list)
-
-
-    def _make_hierarchy(self, reference_list):
-        """Recursive function used by get_reference_hierarchy
-               reference_list should be a list of reference strings"""
-        if not reference_list:
-            return [[], {}]
-        # unitstructure will be a list of strings with no . in them
-        unit_structure = []
-        for textref in reference_list:
-            reflist = textref.split('.')
-            if len(reflist) == 1:
-                unit_structure.append(textref)
-        for textref in unit_structure:
-            reference_list.remove(textref)
-        if not reference_list:
-            return [unit_structure, {}]
-        # any references still existing in reference_list must have more than one element
-        # put first element as a dictionary key, with value a list of all sub reference strings
-        temp_dict = {}
-        for textref in reference_list:
-            reflist = textref.split('.')
-            if reflist[0] in temp_dict:
-                temp_dict[reflist[0]].append('.'.join(reflist[1:]))
-            else:
-                temp_dict[reflist[0]] = ['.'.join(reflist[1:])]
-        new_dict = {}
-        for element, sublist in temp_dict.items():
-            new_dict[element] = self._make_hierarchy(sublist)
-        return [unit_structure, new_dict]
 
