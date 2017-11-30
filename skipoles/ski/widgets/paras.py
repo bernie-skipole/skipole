@@ -57,7 +57,7 @@ class TagBlock(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with div tag, or any other specified and class widget_class -->
+<div>  <!-- with widget id and class widget_class, and with div tag, or any other specified -->
                <!-- and attribute style=display:none if hide is True -->
   <!-- further html and widgets can be contained here -->
 </div>"""
@@ -90,7 +90,7 @@ class DivStyleDiv(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class widget_class -->
+<div>  <!-- with widget id and class widget_class -->
   <div>  <!-- with div tag, or any other specified and the set style -->
     <!-- set with text -->
   </div>
@@ -116,7 +116,7 @@ class DivHTML(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class widget_class -->
+<div>  <!-- with widget id and class widget_class -->
     <!-- set with the set_html string -->
 </div>"""
 
@@ -143,7 +143,7 @@ class PreText(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<pre>  <!-- with class widget_class -->
+<pre>  <!-- with widget id and class widget_class -->
     <!-- set with text, replaced by error message on error -->
 </pre>"""
 
@@ -170,7 +170,7 @@ class SpanText(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!-- with class widget_class -->
+<span>  <!-- with widget id and class widget_class -->
     <!-- set with text -->
 </span>"""
 
@@ -202,7 +202,7 @@ class TagText(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with div tag, or any other specified and class widget_class -->
+<div>  <!-- with widget id and class widget_class and with div tag, or any other specified -->
                <!-- and attribute style=display:none if hide is True -->
     <!-- set with text -->
 </div>"""
@@ -230,7 +230,7 @@ class ParaText(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<p>  <!-- with class widget_class -->
+<p>  <!-- with widget id and class widget_class -->
     <!-- set with text -->
 </p>"""
 
@@ -283,7 +283,7 @@ class DivPara(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class widget_class -->
+<div>  <!-- with widget id and class widget_class -->
     <p style = "white-space: pre-line;">
     <!-- with class para_class, and style set if pre_line is True -->
     <!-- and class changed to error_class on error -->
@@ -393,7 +393,7 @@ class JSONTextLink(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class widget_class -->
+<div>  <!-- with widget id and class widget_class -->
   <a href="#" role="button">  <!-- with class button_class -->
     <!-- set with button_show_text or button_hide_text -->
   </a>
@@ -497,7 +497,7 @@ class JSONDivLink(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class widget_class -->
+<div>  <!-- with widget id and class widget_class -->
   <a href="#" role="button">  <!-- with class button_class -->
     <!-- set with button_show_text or button_hide_text -->
   </a>
@@ -556,7 +556,7 @@ class TextBlockPara(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<p>  <!-- with class widget_class replaced by error_class on failure -->
+<p>  <!-- with widget id, and class widget_class replaced by error_class on failure -->
    <!-- set with either text_replaceblock or textblock content, replaced by error message on error -->
 </p>"""
 
@@ -592,7 +592,7 @@ class DecodedTextBlock(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class widget_class -->
+<div>  <!-- with widget id and class widget_class -->
        <!-- and attribute style=display:none if hide is True -->
   <!-- The decoded TextBlock -->
 </div>"""
@@ -657,7 +657,7 @@ class ShowPara1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class widget_class -->
+<div> <!-- with widget id and class widget_class -->
   <p style = "white-space: pre-line;">
     <!-- with class para_class, and style set if pre_line is True -->
     <!-- hidden if show_para is False -->
@@ -715,7 +715,7 @@ class ShowPara2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class widget_class -->
+<div>  <!-- with widget id and class widget_class -->
   <div onclick="this.parentElement.style.display='none'"> <!-- with class close_class and style close_style -->
     &times;
   </div>

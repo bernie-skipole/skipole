@@ -142,7 +142,7 @@ class SubmitTextArea(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class widget_class -->
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden paragraph, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -196,7 +196,7 @@ class TextArea1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-    <textarea> <!-- class attribute set to widget_class. Rows, cols set to the given rows and columns -->
+    <textarea> <!-- with widget id and class widget_class. Rows, cols set to the given rows and columns -->
       <!-- textarea content set to input_text -->
     </textarea>
 """
@@ -282,7 +282,7 @@ class TextArea2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden paragraph, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>

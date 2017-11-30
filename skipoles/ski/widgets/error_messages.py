@@ -74,7 +74,7 @@ class ErrorDiv(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- div has class set to widget_class, normally hidden -->
+<div>  <!-- with widget id and class widget_class, normally hidden -->
   <div>  !-- class set to error_class -->
     <p> <!-- error message appears in this paragraph --> </p>
   </div>
@@ -107,8 +107,8 @@ class ErrorPara(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<p>  <!-- paragraph normally hidden, shown when an error is displayed.
-          With class set to widget_class -->
+<p>  <!-- with widget id and class widget_class, normally hidden,
+          shown when an error is displayed. -->
   <!-- error message appears in this paragraph -->
 </p>
 """
@@ -211,8 +211,8 @@ class ErrorClear1(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        display_string = """
-<div> <!-- With class set by widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- With boxdiv_class -->
     <div> <!-- With class set by error_class -->
       <p style = "white-space: pre-line;"> <!-- style set if pre_line is True -->
@@ -227,7 +227,6 @@ class ErrorClear1(Widget):
     </div>
   </div>
 </div>"""
-        return display_string
 
 
 class ErrorClear2(Widget):
@@ -325,8 +324,8 @@ class ErrorClear2(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        display_string = """
-<div> <!-- With class set by widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- With boxdiv_class -->
     <div>    <!-- with class set by buttondiv_class and style by buttondiv_style -->
       <a role="button" href="#">
@@ -341,5 +340,5 @@ class ErrorClear2(Widget):
     </div>
   </div>
 </div>"""
-        return display_string
+
 

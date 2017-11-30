@@ -16953,6 +16953,21 @@ false
 }
 ],
 [
+"Part",
+{
+"tag_name": "p",
+"brief": "About widget id",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The widget name will be used as the widget id, unless the widget is in a section, in which case the id will be \"sectionalias-name\"."
+]
+]
+}
+],
+[
 "Widget",
 {
 "class": "inputtext.SubmitTextInput1",

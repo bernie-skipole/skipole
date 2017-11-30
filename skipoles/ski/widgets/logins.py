@@ -231,7 +231,7 @@ class Pin4(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div>  <!-- with class attribute set to inner_div_class if a class is set -->
     <div> <!-- normally hidden div, with class error_class -->
       <p> <!-- Any error text appears here --> </p>

@@ -114,7 +114,7 @@ class RadioButton1(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div>  <!-- with class attribute set to widget_class if a class is set -->
+        return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -245,7 +245,7 @@ class RadioTable(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with CSS class given by widget_class -->
+<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden paragraph, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -343,7 +343,7 @@ class TwoRadioOptions(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div>  <!-- with class attribute set to div_class1 if a class is set -->
     <label>
       <input type='radio' /> <!-- with name from 'radio_checked' widgfield and value from value1 -->
@@ -453,7 +453,7 @@ class BooleanRadio(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div>  <!-- with class attribute set to div_class1 if a class is set -->
       <label> <!-- with class set to left_class1 and content to left_label1 -->
       </label>

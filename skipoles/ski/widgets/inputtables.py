@@ -285,7 +285,7 @@ class InputTable5(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>   <!-- with CSS class attribute set to widget_class if a class is set -->
+<div>   <!-- with widget id and class widget_class -->
   <!-- Then a div containing a form, label, input field, buttons and hidden fields, repeated for each list  item -->
   <div> <!-- with CSS class attribute set to div_class if a class is set -->
     <form method=\"post\"> <!-- action attribute set to action field -->

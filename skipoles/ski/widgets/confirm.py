@@ -173,8 +173,8 @@ class ConfirmBox1(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        display_string = """
-<div> <!-- With class set by widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- With boxdiv_class -->
     <div> <!-- With paradiv_class -->
       <p> <!-- With class set by para_class -->
@@ -193,7 +193,6 @@ class ConfirmBox1(Widget):
     </div>
   </div>
 </div>"""
-        return display_string
 
 
 class ConfirmBox2(Widget):
@@ -321,8 +320,8 @@ class ConfirmBox2(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        display_string = """
-<div> <!-- With class set by widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- With boxdiv_class -->
     <div> <!-- With paradiv_class -->
       <p> <!-- With class set by para_class -->
@@ -341,8 +340,6 @@ class ConfirmBox2(Widget):
     </div>
   </div>
 </div>"""
-        return display_string
-
 
 
 class AlertClear1(Widget):
@@ -449,8 +446,8 @@ class AlertClear1(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        display_string = """
-<div> <!-- With class set by widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- With boxdiv_class -->
     <div>    <!-- with class set by buttondiv_class and style by buttondiv_style -->
       <a role="button" href="#">
@@ -465,5 +462,5 @@ class AlertClear1(Widget):
     </div>
   </div>
 </div>"""
-        return display_string
+
 
