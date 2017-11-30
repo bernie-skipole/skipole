@@ -1845,8 +1845,6 @@ class ClosedWidget(tag.ClosedPart):
         else:
             self.set_block()
 
-
-
     def __repr__(self):
         if self.name:
             return self.__class__.__name__ + '(' + self.name + ')'

@@ -56,7 +56,8 @@ class HiddenField(ClosedWidget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<input type="hidden" />
+        return """
+<input type="hidden" /> <!-- with widget id and class widget_class -->
   <!-- with value of the "hidden_field" value, and name being the widgfield -->"""
 
 
@@ -83,7 +84,8 @@ class SubmitButton1(ClosedWidget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<input type="button_text" />
+        return """
+<input type="button_text" /> <!-- with widget id and class widget_class -->
   <!-- with value of the "button_text" value, and name being the 'button_text widgfield -->"""
 
 
@@ -108,7 +110,8 @@ class SubmitButton2(ClosedWidget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<input type="button_text" />
+        return """
+<input type="button_text" /> <!-- with widget id and class widget_class -->
   <!-- with value of the "button_text" value, but no name, so does not submit a widgfield -->"""
 
 
@@ -185,7 +188,7 @@ class Form1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class attribute set to widget_class if a class is set -->
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -325,7 +328,7 @@ class SubmitForm1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class attribute set to widget_class if a class is set -->
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>

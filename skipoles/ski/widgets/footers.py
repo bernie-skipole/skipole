@@ -80,7 +80,7 @@ class SimpleFooter(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div {str_attribs}> <!-- div with class widget_class -->
+        return """<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p>       <!-- Any error text appears here --> </p>
   </div>
@@ -90,5 +90,5 @@ class SimpleFooter(Widget):
     </p>
   </div>
 </div>
-""".format(str_attribs=self.attributes_string)
+"""
 

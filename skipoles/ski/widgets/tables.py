@@ -111,7 +111,7 @@ class ColorTable1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with header class -->
     <th> <!-- title taken from titles list --> </th>
     <!-- continued with number of titles in titles list -->
@@ -202,7 +202,7 @@ class TwoColTable1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with header class -->
     <th> <!-- title1 --> </th>
     <th> <!-- title2 --> </th>
@@ -297,7 +297,7 @@ class ThreeColTable1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with header class -->
     <th> <!-- title1 --> </th>
     <th> <!-- title2 --> </th>
@@ -380,7 +380,7 @@ class TextBlockTable2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with header class -->
     <th> <!-- title1 --> </th>
     <th> <!-- title2 --> </th>
@@ -538,7 +538,7 @@ class ButtonTextBlockTable1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class widget_class -->
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden paragraph, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>

@@ -169,7 +169,7 @@ class SubmitUploadFile1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class widget_class -->
+<div> <!-- with widget id and class widget_class -->
   <div>  <!-- div hidden when no error is displayed, with class set to error_class on error -->
     <p> <!-- error message appears in this paragraph --> </p>
   </div>
@@ -252,7 +252,7 @@ class UploadFile1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>

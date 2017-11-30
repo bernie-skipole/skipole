@@ -91,7 +91,7 @@ class Link(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<a href="#">  <!-- with class widget_class and href the url -->
+<a href="#">  <!-- with widget id and class widget_class and href the url -->
   <!-- content or url if no content given -->
 </a>"""
 
@@ -192,7 +192,7 @@ class ImageOrTextLink(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<a href="#">  <!-- with class widget_class and href the url -->
+<a href="#">  <!-- with widget id and class widget_class and href the url -->
   <!-- The link_text, if any. If no text given, then the following image -->
   <img src="#" />   <!-- with src set to url of img_ident -->
 </a>"""
@@ -245,7 +245,7 @@ class CloseButton(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<a role="button" href="#"> <!-- With class set by widget_class, and the href link will be the url of the link_ident -->
+<a role="button" href="#"> <!-- with widget id and class widget_class, and the href link will be the url of the link_ident -->
       <!-- However if javascipt enabled the link will not be called, but the target widget will be hidden -->
       <!-- Content is the &times; symbol -->
 </a>"""
@@ -298,7 +298,7 @@ class OpenButton(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<a role="button" href="#"> <!-- With class set by widget_class, and the href link will be the url of the link_ident -->
+<a role="button" href="#"> <!-- with widget id and class widget_class, and the href link will be the url of the link_ident -->
       <!-- However if javascipt enabled the link will not be called, but the target widget will be displayed -->
       <!-- Content is the &#9776; hamburger symbol -->
 </a>"""
@@ -380,7 +380,7 @@ class JSONButtonLink(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <a role="button" href="#">
-      <!-- With class set by widget_class, and the href link will be the url of the link_ident -->
+      <!-- with widget id and class widget_class, and the href link will be the url of the link_ident -->
       <!-- However if javascipt enabled the json_ident link will be called on button click -->
       <!-- the button will show the button_text, and button_wait_text while pressed (if the
            client browser has javascript enabled). -->
@@ -460,7 +460,7 @@ class ButtonLink1(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <a role="button" href="#">
- <!-- With class set by widget_class, and the href link will be the url of the link_ident with the two get_fields -->
+ <!-- with widget id and class widget_class, and the href link will be the url of the link_ident with the two get_fields -->
  <!-- the button will show the button_text, on error this will be replaced by the error message -->
 </a>"""
 
@@ -561,7 +561,7 @@ class ButtonLink2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class attribute set to widget_class if a class is set -->
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -647,7 +647,7 @@ class ImageLink1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<a href="#">  <!-- with class widget_class and href the url -->
+<a href="#">  <!-- with widget id and class widget_class and href the url -->
   <img src="#" />   <!-- with src set to url of img_ident -->
 </a>"""
 
@@ -685,7 +685,7 @@ class CSSLink(ClosedWidget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<link rel="stylesheet" type="text/css" />  <!-- with href and media set as per fields -->"""
+<link rel="stylesheet" type="text/css" />  <!-- with widget id and class widget_class and with href and media set as per fields -->"""
 
 
 class FaviconLink(ClosedWidget):
@@ -717,7 +717,7 @@ class FaviconLink(ClosedWidget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<link rel="icon" type="image/png" />  <!-- with href given by favicon_ident -->"""
+<link rel="icon" type="image/png" />  <!-- with widget id and class widget_class and with href given by favicon_ident -->"""
 
 
 class ScriptLink(Widget):
@@ -748,7 +748,7 @@ class ScriptLink(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<script>  <!-- with src given by script_ident -->
+<script>  <!-- with widget id and class widget_class with src given by script_ident -->
 </script>"""
 
 
@@ -875,7 +875,7 @@ class LinkTextBlockTable1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with class header_class -->
     <th> <!-- col1_link_title --> </th>   <th> <!-- col2_text_title --> </th>
   </tr>
@@ -1027,7 +1027,7 @@ class LinkTextBlockTable2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with class header_class -->
     <th> <!-- col_link_title --> </th>   <th> <!-- col_text_title --> </th>   <th> <!-- col_textblock_title --> </th>
   </tr>
@@ -1092,7 +1092,7 @@ class ListLinks(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<ul>  <!-- with CSS class given by widget_class -->
+<ul>  <!-- with widget id and class widget_class -->
   <li> <!-- with class  given by li_class -->
     <a href="#">  <!-- with class link_class and href the url -->
     <!-- content or url if no content given -->
@@ -1223,7 +1223,7 @@ class Table1_Button(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
                    <!-- and attribute style=display:none if hide is True -->
   <tr> <!-- with header class -->
     <th> <!-- title1 --> </th>
@@ -1360,7 +1360,7 @@ class Table2_Button(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
                    <!-- and attribute style=display:none if hide is True -->
   <tr> <!-- with header class -->
     <th> <!-- title 1 --> </th>
@@ -1552,7 +1552,7 @@ class Table3_Buttons2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with header class -->
     <th> <!-- title 1 --> </th>
     <th> <!-- title 2 --> </th>
@@ -1776,7 +1776,7 @@ class Table1_Buttons4(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<table>  <!-- with CSS class given by widget_class -->
+<table>  <!-- with widget id and class widget_class -->
   <tr> <!-- with class  from even or odd classes -->
     <td> <!-- with style = width : 100% if maximize_text_col is True -->
          <!-- and with a class from col0_classes list if a list is given -->

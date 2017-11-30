@@ -68,7 +68,7 @@ class ServerTimeStamp(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class -->
+<span>  <!-- with widget id and class widget_class -->
   <!-- Normally timestamp -->
 </span>
 """
@@ -106,7 +106,7 @@ class PageIdent(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class -->
+<span>  <!-- with widget id and class widget_class -->
   <!-- string value of the page_ident, or span_text -->
 </span>
 """
@@ -148,7 +148,7 @@ class PageName(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class -->
+<span>  <!-- with widget id and class widget_class -->
   <!-- The page name, or span_text -->
 </span>
 """
@@ -189,7 +189,7 @@ class PageDescription(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class -->
+<span>  <!-- with widget id and class widget_class -->
   <!-- The page description -->
 </span>
 """
@@ -217,7 +217,7 @@ class Version(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class -->
+<span>  <!-- with widget id and class widget_class -->
   <!-- string of the project version -->
 </span>
 """
@@ -245,7 +245,7 @@ class SkipoleVersion(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<span>  <!--  class set to widget_class -->
+<span>  <!-- with widget id and class widget_class -->
   <!-- string of the skipole framework version -->
 </span>
 """
@@ -300,7 +300,7 @@ class Redirector(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!--  class set to widget_class -->
+<div>  <!-- with widget id and class widget_class -->
   <script type="text/javascript">
      <!-- window.location.replace("url"); -->
   </script>

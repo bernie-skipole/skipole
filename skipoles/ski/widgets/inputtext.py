@@ -117,9 +117,9 @@ class TextInput1(ClosedWidget):
         """Returns a text string to illustrate the widget"""
         return """
   <input type='text' />
-  <!-- with class widget_class and input_accepted_class added if set_input_accepted
-       is set to True, and input_errored_class added if set_input_errored
-       is set to True, (which will remove input_accepted_class) -->
+  <!-- with widget id and class widget_class and input_accepted_class added if
+       set_input_accepted is set to True, and input_errored_class added if
+       set_input_errored is set to True, (which will remove input_accepted_class) -->
 """
 
 
@@ -194,9 +194,9 @@ class Password1(ClosedWidget):
         """Returns a text string to illustrate the widget"""
         return """
   <input type='password' />
-  <!-- with class widget_class and input_accepted_class added if set_input_accepted
-       is set to True, and input_errored_class added if set_input_errored
-       is set to True, (which will remove input_accepted_class) -->
+  <!-- with widget id and class widget_class and input_accepted_class added if
+       set_input_accepted is set to True, and input_errored_class added if
+       set_input_errored is set to True, (which will remove input_accepted_class) -->
 """
 
 
@@ -342,7 +342,7 @@ class TextInput2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -487,7 +487,7 @@ class Password2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden paragraph, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -614,7 +614,7 @@ class TextInput3(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <label> <!-- with class set to left_class and content to left_label -->
   </label>
   <input type='text' /> <!-- with attributes set appropriately -->
@@ -762,7 +762,7 @@ class TextInput4(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div>  <!-- with class attribute set to widget_class if a class is set -->
+<div>  <!-- with widget id and class widget_class -->
   <div> <!-- with class set to labeldiv_class -->
     <label> <!-- with class set to label_class -->
             <!-- content set to label -->
@@ -969,7 +969,7 @@ class SubmitTextInput1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class widget_class -->
+<div> <!-- with widget id and class widget_class -->
   <div>  <!-- div hidden when no error is displayed, with class set to error_class on error -->
     <p> <!-- error message appears in this paragraph --> </p>
   </div>
@@ -1236,7 +1236,7 @@ class SubmitTextInput3(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class attribute set to widget_class if a class is set -->
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -1507,7 +1507,7 @@ class TwoInputsSubmit1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class attribute set to widget_class if a class is set -->
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -1653,7 +1653,7 @@ class SubmitDict1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<div> <!-- with class attribute set to widget_class if a class is set -->
+<div> <!-- with widget id and class widget_class -->
   <form method=\"post\"> <!-- action attribute set to action field -->
     <ul> <!-- with class set to ul_class and style to ul_style -->
       <!-- a li is created for each value in the input_dict dictionary -->

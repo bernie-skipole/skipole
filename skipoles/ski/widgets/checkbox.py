@@ -98,7 +98,7 @@ class CheckBox1(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div>  <!-- with class attribute set to widget_class if a class is set -->
+        return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   <div>
@@ -170,7 +170,7 @@ class CheckBox2(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<span>  <!-- with class attribute set to widget_class if a class is set -->
+        return """<span>  <!-- with widget id and class widget_class -->
   <label> <!-- with class set to left_class and content to left_label -->
   </label>
   <input type='checkbox' /> <!-- checked if checked field is True, and value to the checkbox value -->
@@ -272,7 +272,7 @@ class CheckedText(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div>  <!-- with class attribute set to widget_class if a class is set -->
+        return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -363,7 +363,7 @@ class CheckInputs(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div>  <!-- with class attribute set to widget_class if a class is set -->
+        return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>

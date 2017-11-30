@@ -76,7 +76,8 @@ class ShowEnviron(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div{str_attribs}> <!-- div with class widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -86,8 +87,7 @@ class ShowEnviron(Widget):
   <pre>
   <!-- environ variables are displayed here -->
   </pre>
-</div>
-""".format(str_attribs=self.attributes_string)
+</div>"""
 
 
 class ShowCallData(Widget):
@@ -130,7 +130,8 @@ class ShowCallData(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div{str_attribs}> <!-- div with class widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -140,8 +141,7 @@ class ShowCallData(Widget):
   <pre>
   <!-- The call_data displayed here -->
   </pre>
-</div>
-""".format(str_attribs=self.attributes_string)
+</div>"""
 
 
 class ShowResponders(Widget):
@@ -206,7 +206,8 @@ class ShowResponders(Widget):
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
-        return """<div{str_attribs}> <!-- div with class widget_class -->
+        return """
+<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
     <p> <!-- Any error text appears here --> </p>
   </div>
@@ -218,7 +219,6 @@ class ShowResponders(Widget):
   <table>   <!-- with class table_class -->
    <!-- a row for every Responder page visited, with columns; page ident, responder class, page brief --> 
   </table>
-</div>
-""".format(str_attribs=self.attributes_string)
+</div>"""
 
 
