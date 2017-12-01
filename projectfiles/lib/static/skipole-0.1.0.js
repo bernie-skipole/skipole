@@ -361,6 +361,23 @@ SKIPOLE.BaseWidget.prototype.fieldarg_in_result = function (fieldarg, result, fi
         }
     };
 
+SKIPOLE.BaseWidget.prototype.set_attribute = function (attname, fieldarg, result, fieldlist) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    var attval = this.fieldarg_in_result(fieldarg, result, fieldlist);
+    if (attval != undefined) {
+        if (attval) {
+            the_widg.attr(attname, attval);
+            }
+        else {
+            the_widg.removeAttr(attname);
+            }
+        }
+    };
+
+
 
 // given href, and a get field with new value, returns new href with changed get field
 SKIPOLE.BaseWidget.prototype.setgetfield = function(href, fieldarg, fieldvalue) {

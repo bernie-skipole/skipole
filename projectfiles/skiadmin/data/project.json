@@ -39393,60 +39393,106 @@ false
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "svg",
+"brief": "test svg",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "400",
+"width": "400"
+},
+"parts": [
+[
 "Widget",
 {
-"class": "inputtext.SubmitTextInput1",
-"name": "test",
-"brief": "test",
+"class": "svgbasics.SimpleText",
+"name": "toptext",
+"brief": "svg text",
 "fields": {
-"action": "",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
+"dx": "0",
+"dy": "30",
+"fill": "white",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "This is the element text",
+"widget_class": "",
+"widget_style": "",
+"x": "50",
+"y": "200"
+}
+}
+],
+[
+"ClosedWidget",
+{
+"class": "svgbasics.Rect",
+"name": "toprect",
+"brief": "top rectangle",
+"fields": {
+"fill": "red",
+"height": "150",
+"rx": "20",
+"ry": "20",
+"show": true,
+"stroke": "black",
+"stroke_width": "5",
+"widget_class": "",
+"widget_style": "",
+"width": "150",
+"x": "50",
+"y": "20"
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
+"name": "calljson",
+"brief": "calls for a json",
+"fields": {
+"button_text": "call",
+"button_wait_text": "Please wait...",
 "clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
+"error_class": "w3-button w3-block w3-theme-action",
+"get_field1": "",
+"get_field2": "",
 "hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputdiv_class": "w3-section",
-"label": "",
-"label_class": "ski_left_label",
-"maxlength": "",
-"new_window": false,
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
+"json_ident": 85003,
+"link_ident": "no_javascript",
 "show": true,
 "show_error": "",
-"size": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
+"widget_class": "w3-button w3-block w3-theme-d4",
 "widget_style": ""
+}
+}
+]
+]
+}
+]
 },
-"validators": {
-"input_text": [
-{
-"class": "basic.MaxLength",
-"val_args": {
-"maxlength": "2"
+"aab": {
+"ident": 85003,
+"brief": "call submit",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": 85002,
+"submit_list": [
+"calltest"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
 }
-}
-]
-}
-}
-]
-]
-}
-]
 },
 "about_export": {
 "ident": 500,
