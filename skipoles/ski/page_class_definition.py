@@ -483,10 +483,6 @@ class TemplatePage(TemplatePageAndSVG):
                 if not location:
                     return self.body
                 return self.body.get_location_value(location)
-            elif part_text == 'svg':
-                if not location:
-                    return self.svg
-                return self.svg.get_location_value(location)
             else:
                 return
         except Exception:

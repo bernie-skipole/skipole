@@ -410,6 +410,15 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Call the appropriate submit_data function"
 
+
+    ######## test routine, if submit_list has first element 'calltest'
+    if submit_list and (submit_list[0] == 'calltest'):
+        page_data['toptext', 'fill'] = 'blue'
+        page_data['toptext', 'text'] = 'Hello world'
+
+        return
+    ##################################################################
+
     # Trying this new way of routing
     if submit_list and (len(submit_list) > 2):
         if submit_list[0] == 'editfolders':

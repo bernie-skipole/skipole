@@ -25,11 +25,11 @@
 #   limitations under the License.
 
 from .. import tag
-from . import Widget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
+from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
 
-class Rect(Widget):
+class Rect(ClosedWidget):
     """An svg rect tag
 
     If the fill, stroke and stroke_width fields are set to empty,
@@ -45,15 +45,15 @@ class Rect(Widget):
     # This class does not display any error messages
     display_errors = False
 
-    arg_descriptions = {'x':FieldArg("text", "0"),
-                        'y':FieldArg("text", "0"),
-                        'rx':FieldArg("text", "0"),
-                        'ry':FieldArg("text", "0"),
-                        'width':FieldArg("text", "100"),
-                        'height':FieldArg("text", "100"),
-                        'fill':FieldArg("text", "none"),
-                        'stroke':FieldArg("text", "black"),
-                        'stroke_width':FieldArg("text", "1")
+    arg_descriptions = {'x':FieldArg("text", "0", jsonset=True),
+                        'y':FieldArg("text", "0", jsonset=True),
+                        'rx':FieldArg("text", "0", jsonset=True),
+                        'ry':FieldArg("text", "0", jsonset=True),
+                        'width':FieldArg("text", "100", jsonset=True),
+                        'height':FieldArg("text", "100", jsonset=True),
+                        'fill':FieldArg("text", "none", jsonset=True),
+                        'stroke':FieldArg("text", "black", jsonset=True),
+                        'stroke_width':FieldArg("text", "1", jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -69,29 +69,24 @@ class Rect(Widget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="rect", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, tag_name="rect", brief=brief, **field_args)
         self.hide_if_empty=False
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self.attribs = {"x":self.get_field_value("x"),
-                        "y":self.get_field_value("y"),
-                        "rx":self.get_field_value("rx"),
-                        "ry":self.get_field_value("ry"),
-                        "width":self.get_field_value("width"),
-                        "height":self.get_field_value("height")}
-        if self.get_field_value("fill"):
-            self.update_attribs({"fill":self.get_field_value("fill")})
-        if self.get_field_value("stroke"):
-            self.update_attribs({"stroke":self.get_field_value("stroke")})
-        if self.get_field_value("stroke_width"):
-            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
-
+        "Set the attributes"
+        # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
+        # attribute stroke-width. So update the tag with each item from arg_descriptions
+        for att in self.arg_descriptions.keys():
+            if self.get_field_value(att):
+                if att == "stroke_width":
+                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                else:
+                    self.update_attribs({att:self.get_field_value(att)})   
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<rect> <!-- creates rectangle -->
-</rect>"""
+<rect /> <!-- creates rectangle with the given attributes -->"""
 
 
 
@@ -111,16 +106,16 @@ class SimpleText(Widget):
     # This class does not display any error messages
     display_errors = False
 
-    arg_descriptions = {'x':FieldArg("text", "0"),
-                        'y':FieldArg("text", "0"),
-                        'dx':FieldArg("text", "0"),
-                        'dy':FieldArg("text", "0"),
-                        'font_family':FieldArg("text", "Arial"),
-                        'font_size':FieldArg("text", "20"),
-                        'fill':FieldArg("text", "white"),
-                        'stroke':FieldArg("text", ""),
-                        'stroke_width':FieldArg("text", ""),
-                        'text':FieldArg("text", "")
+    arg_descriptions = {'x':FieldArg("text", "0", jsonset=True),
+                        'y':FieldArg("text", "0", jsonset=True),
+                        'dx':FieldArg("text", "0", jsonset=True),
+                        'dy':FieldArg("text", "0", jsonset=True),
+                        'font_family':FieldArg("text", "Arial", jsonset=True),
+                        'font_size':FieldArg("text", "20", jsonset=True),
+                        'fill':FieldArg("text", "white", jsonset=True),
+                        'stroke':FieldArg("text", "", jsonset=True),
+                        'stroke_width':FieldArg("text", "", jsonset=True),
+                        'text':FieldArg("text", "", jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -142,11 +137,15 @@ class SimpleText(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self.attribs = {"x":self.get_field_value("x"),
-                        "y":self.get_field_value("y"),
-                        "dx":self.get_field_value("dx"),
-                        "dy":self.get_field_value("dy")}
-
+        "Set the attributes"
+        if self.get_field_value("x"):
+            self.update_attribs({"x":self.get_field_value("x")})
+        if self.get_field_value("y"):
+            self.update_attribs({"y":self.get_field_value("y")})
+        if self.get_field_value("dx"):
+            self.update_attribs({"dx":self.get_field_value("dx")})
+        if self.get_field_value("dy"):
+            self.update_attribs({"dy":self.get_field_value("dy")})
         if self.get_field_value("font_family"):
             self.update_attribs({"font-family":self.get_field_value("font_family")})
         if self.get_field_value("font_size"):

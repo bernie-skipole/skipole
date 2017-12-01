@@ -36,6 +36,21 @@ SKIPOLE.svgbasics.Rect = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.svgbasics.Rect.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.svgbasics.Rect.prototype.constructor = SKIPOLE.svgbasics.Rect;
+SKIPOLE.svgbasics.Rect.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    this.set_attribute('x', 'x', result, fieldlist);
+    this.set_attribute('y', 'y', result, fieldlist);
+    this.set_attribute('rx', 'rx', result, fieldlist);
+    this.set_attribute('ry', 'ry', result, fieldlist);
+    this.set_attribute('width', 'width', result, fieldlist);
+    this.set_attribute('height', 'height', result, fieldlist);
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
+    };
 
 
 
@@ -45,7 +60,27 @@ SKIPOLE.svgbasics.SimpleText = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.svgbasics.SimpleText.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.svgbasics.SimpleText.prototype.constructor = SKIPOLE.svgbasics.SimpleText;
+SKIPOLE.svgbasics.SimpleText.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    this.set_attribute('x', 'x', result, fieldlist);
+    this.set_attribute('y', 'y', result, fieldlist);
+    this.set_attribute('dx', 'dx', result, fieldlist);
+    this.set_attribute('dy', 'dy', result, fieldlist);
+    this.set_attribute('font-family', 'font_family', result, fieldlist);
+    this.set_attribute('font-size', 'font_size', result, fieldlist);
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
 
+    var element_text = this.fieldarg_in_result('text', result, fieldlist);
+    if (element_text) {
+        this.widg.text(element_text);
+        }
+
+    };
 
 
 
