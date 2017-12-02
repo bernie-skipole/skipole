@@ -253,3 +253,46 @@ class Circle(ClosedWidget):
 <circle /> <!-- creates circle with widget id, class widget_class and the given attributes -->"""
 
 
+class Line(ClosedWidget):
+    """An svg line tag
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'x1':FieldArg("text", "0", jsonset=True),
+                        'y1':FieldArg("text", "0", jsonset=True),
+                        'x2':FieldArg("text", "100", jsonset=True),
+                        'y2':FieldArg("text", "100", jsonset=True),
+                        'stroke':FieldArg("text", "black", jsonset=True),
+                        'stroke_width':FieldArg("text", "1", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        x1,y1: coordinates of line start
+        x2,y2: coordinates of line end
+        stroke: The line colour
+        stroke_width: The outline edge width
+        """
+        # pass fields to Widget
+        ClosedWidget.__init__(self, name=name, tag_name="line", brief=brief, **field_args)
+        self.hide_if_empty=False
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Set the attributes"
+        # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
+        # attribute stroke-width. So update the tag with each item from arg_descriptions
+        for att in self.arg_descriptions.keys():
+            if self.get_field_value(att):
+                if att == "stroke_width":
+                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                else:
+                    self.update_attribs({att:self.get_field_value(att)})   
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<line /> <!-- creates line with widget id, class widget_class and the given attributes -->"""
+
+

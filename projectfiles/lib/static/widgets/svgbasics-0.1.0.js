@@ -127,4 +127,22 @@ SKIPOLE.svgbasics.Circle.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svgbasics.Line = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.Line.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.Line.prototype.constructor = SKIPOLE.svgbasics.Line;
+SKIPOLE.svgbasics.Line.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('x1', 'x1', result, fieldlist);
+    this.set_attribute('y1', 'y1', result, fieldlist);
+    this.set_attribute('x2', 'x2', result, fieldlist);
+    this.set_attribute('y2', 'y2', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
+    };
+
 
