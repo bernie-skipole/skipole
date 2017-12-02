@@ -108,5 +108,23 @@ SKIPOLE.svgbasics.SimpleText.prototype.setvalues = function (fieldlist, result) 
     };
 
 
+SKIPOLE.svgbasics.Circle = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.Circle.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.Circle.prototype.constructor = SKIPOLE.svgbasics.Circle;
+SKIPOLE.svgbasics.Circle.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('cx', 'cx', result, fieldlist);
+    this.set_attribute('cy', 'cy', result, fieldlist);
+    this.set_attribute('r', 'r', result, fieldlist);
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
+    };
+
 
 

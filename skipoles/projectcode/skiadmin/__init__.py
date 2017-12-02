@@ -419,6 +419,11 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         page_data['toparrow', 'stroke_width'] = '8'
         page_data['toparrow', 'stroke'] = 'white'
         page_data['toparrow', 'fill'] = 'black'
+        page_data['topcircle', 'stroke'] = 'white'
+        page_data['topcircle', 'fill'] = 'black'
+        page_data['topcircle', 'r'] = '20'
+        page_data['topcircle', 'stroke_width'] = '20'
+
 
         return
     ##################################################################

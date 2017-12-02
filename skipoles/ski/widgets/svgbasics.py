@@ -90,15 +90,6 @@ class Group(Widget):
 
 class Rect(ClosedWidget):
     """An svg rect tag
-
-    If the fill, stroke and stroke_width fields are set to empty,
-    the svg image containing this rectangle should link to a css page
-    with appropriate style settings for the rect tag.
-    (Note stroke_width changes to stroke-width in a css context)
-
-    For example:
-
-    rect {fill:"red";stroke:"blue";stroke-width:3}
     """
 
     # This class does not display any error messages
@@ -151,15 +142,6 @@ class Rect(ClosedWidget):
 
 class SimpleText(Widget):
     """An svg text tag
-
-    If the fill, stroke, font_family and font_size fields are empty,
-    the svg image containing this text should link to a css page
-    with appropriate style settings for the text tag.
-    (Note font_family etc., changes to font-family... in a css context)
-
-    For example:
-
-    text {fill:"red";stroke:"blue";font-family:"Arial"}
     """
 
     # This class does not display any error messages
@@ -224,5 +206,50 @@ class SimpleText(Widget):
 <text> <!-- with widget id, class widget_class and the given attributes -->
   <!-- contains given text -->
 </text>"""
+
+
+class Circle(ClosedWidget):
+    """An svg circle tag
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'cx':FieldArg("text", "50", jsonset=True),
+                        'cy':FieldArg("text", "50", jsonset=True),
+                        'r':FieldArg("text", "40", jsonset=True),
+                        'fill':FieldArg("text", "none", jsonset=True),
+                        'stroke':FieldArg("text", "black", jsonset=True),
+                        'stroke_width':FieldArg("text", "1", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        cx: centre x coords, for example 0
+        cy: centre y coords, for example 0
+        r: radius, for example 0
+        fill: The fill colour, use none for no fill
+        stroke: The outline edge colour
+        stroke_width: The outline edge width
+        """
+        # pass fields to Widget
+        ClosedWidget.__init__(self, name=name, tag_name="circle", brief=brief, **field_args)
+        self.hide_if_empty=False
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Set the attributes"
+        # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
+        # attribute stroke-width. So update the tag with each item from arg_descriptions
+        for att in self.arg_descriptions.keys():
+            if self.get_field_value(att):
+                if att == "stroke_width":
+                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                else:
+                    self.update_attribs({att:self.get_field_value(att)})   
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<circle /> <!-- creates circle with widget id, class widget_class and the given attributes -->"""
 
 
