@@ -36,23 +36,34 @@ SKIPOLE.svgarrows.Arrow1 = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.svgarrows.Arrow1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.svgarrows.Arrow1.prototype.constructor = SKIPOLE.svgarrows.Arrow1;
+SKIPOLE.svgarrows.Arrow1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
+    };
 
 
-SKIPOLE.svgarrows.Arrow_U_R = function (widg_id, error_message, fieldmap) {
+SKIPOLE.svgarrows.Arrow2 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
     };
-SKIPOLE.svgarrows.Arrow_U_R.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.svgarrows.Arrow_U_R.prototype.constructor = SKIPOLE.svgarrows.Arrow_U_R;
-
-
-
-SKIPOLE.svgarrows.Arrow_D_R = function (widg_id, error_message, fieldmap) {
-    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
-    this.display_errors = false;
+SKIPOLE.svgarrows.Arrow2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgarrows.Arrow2.prototype.constructor = SKIPOLE.svgarrows.Arrow2;
+SKIPOLE.svgarrows.Arrow2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
     };
-SKIPOLE.svgarrows.Arrow_D_R.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.svgarrows.Arrow_D_R.prototype.constructor = SKIPOLE.svgarrows.Arrow_D_R;
+
+
 
 
 

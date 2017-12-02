@@ -39444,6 +39444,38 @@ false
 }
 ],
 [
+"Part",
+{
+"tag_name": "svg",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "200",
+"width": "200"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "svgarrows.Arrow2",
+"name": "toparrow",
+"brief": "thin",
+"fields": {
+"fill": "green",
+"show": true,
+"stroke": "black",
+"stroke_width": "1",
+"transform": "",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
 "Widget",
 {
 "class": "links.JSONButtonLink",
