@@ -30,6 +30,35 @@
 SKIPOLE.svgbasics = {};
 
 
+SKIPOLE.svgbasics.SVGContainer = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.SVGContainer.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.SVGContainer.prototype.constructor = SKIPOLE.svgbasics.SVGContainer;
+SKIPOLE.svgbasics.SVGContainer.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('width', 'width', result, fieldlist);
+    this.set_attribute('height', 'height', result, fieldlist);
+    };
+
+
+SKIPOLE.svgbasics.Group = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.Group.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.Group.prototype.constructor = SKIPOLE.svgbasics.Group;
+SKIPOLE.svgbasics.Group.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    };
+
+
 SKIPOLE.svgbasics.Rect = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
@@ -40,7 +69,6 @@ SKIPOLE.svgbasics.Rect.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
     this.set_attribute('x', 'x', result, fieldlist);
     this.set_attribute('y', 'y', result, fieldlist);
     this.set_attribute('rx', 'rx', result, fieldlist);
@@ -53,7 +81,6 @@ SKIPOLE.svgbasics.Rect.prototype.setvalues = function (fieldlist, result) {
     };
 
 
-
 SKIPOLE.svgbasics.SimpleText = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
@@ -64,7 +91,6 @@ SKIPOLE.svgbasics.SimpleText.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
     this.set_attribute('x', 'x', result, fieldlist);
     this.set_attribute('y', 'y', result, fieldlist);
     this.set_attribute('dx', 'dx', result, fieldlist);
@@ -79,7 +105,6 @@ SKIPOLE.svgbasics.SimpleText.prototype.setvalues = function (fieldlist, result) 
     if (element_text) {
         this.widg.text(element_text);
         }
-
     };
 
 
