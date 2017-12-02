@@ -39406,14 +39406,26 @@ false
 "width": "100"
 },
 "container_0": [
+"Widget",
+{
+"class": "svgbasics.Group",
+"name": "topgroup",
+"brief": "group to hold rectangle",
+"fields": {
+"show": true,
+"transform": "",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
 "ClosedWidget",
 {
 "class": "svgbasics.Rect",
 "name": "toprect",
-"brief": "top rectangle",
+"brief": "rectangle",
 "fields": {
 "fill": "red",
-"height": "100",
+"height": "50",
 "rx": "0",
 "ry": "0",
 "show": true,
@@ -39421,10 +39433,12 @@ false
 "stroke_width": "1",
 "widget_class": "",
 "widget_style": "",
-"width": "100",
-"x": "0",
-"y": "0"
+"width": "50",
+"x": "20",
+"y": "20"
 }
+}
+]
 }
 ]
 }
