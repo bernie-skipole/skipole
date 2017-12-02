@@ -39393,6 +39393,14 @@ false
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
 "Widget",
 {
 "class": "svgbasics.SVGContainer",
@@ -39442,7 +39450,18 @@ false
 }
 ]
 }
+]
+]
+}
 ],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
 [
 "Part",
 {
@@ -39470,6 +39489,54 @@ false
 "widget_class": "",
 "widget_style": ""
 }
+}
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "100",
+"width": "100"
+},
+"parts": [
+[
+"ClosedWidget",
+{
+"class": "svgbasics.Circle",
+"name": "topcircle",
+"brief": "svg circle",
+"fields": {
+"cx": "50",
+"cy": "50",
+"fill": "#669819",
+"r": "40",
+"show": true,
+"stroke": "black",
+"stroke_width": "1",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
 }
 ]
 ]
