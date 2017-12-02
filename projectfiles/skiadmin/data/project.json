@@ -39543,6 +39543,51 @@ false
 }
 ],
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "200",
+"width": "200"
+},
+"parts": [
+[
+"ClosedWidget",
+{
+"class": "svgbasics.Line",
+"name": "topline",
+"brief": "svg line",
+"fields": {
+"show": true,
+"stroke": "black",
+"stroke_width": "15",
+"widget_class": "",
+"widget_style": "",
+"x1": "30",
+"x2": "100",
+"y1": "30",
+"y2": "100"
+}
+}
+]
+]
+}
+]
+]
+}
+],
+[
 "Widget",
 {
 "class": "links.JSONButtonLink",
