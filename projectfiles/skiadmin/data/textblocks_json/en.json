@@ -1422,7 +1422,7 @@
   "widgets.svgbasics.SimpleText.text": "The text to display.",
   "widgets.svgbasics.SimpleText.x": "x coords, for example 0.",
   "widgets.svgbasics.SimpleText.y": "y coords, for example 0.",
-  "widgets.svgbasics.module": "SVG rectangles and text shapes.",
+  "widgets.svgbasics.module": "SVG basic tags and shapes.",
   "widgets.tables.ButtonTextBlockTable1": "A form consisting of a two column table of submit buttons and TextBlocks.",
   "widgets.tables.ButtonTextBlockTable1.action": "The target ident or label called when a button is pressed.",
   "widgets.tables.ButtonTextBlockTable1.button_class": "The CSS class applied to the submit buttons.",
