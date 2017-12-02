@@ -415,6 +415,10 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     if submit_list and (submit_list[0] == 'calltest'):
         page_data['toprect', 'fill'] = 'blue'
         page_data['topgroup', 'transform'] = 'rotate(45 50 50)'
+        page_data['toparrow', 'transform'] = 'rotate(45 50 50) translate(70 30)'
+        page_data['toparrow', 'stroke_width'] = '8'
+        page_data['toparrow', 'stroke'] = 'white'
+        page_data['toparrow', 'fill'] = 'black'
 
         return
     ##################################################################
