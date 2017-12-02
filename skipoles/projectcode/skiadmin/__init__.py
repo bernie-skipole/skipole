@@ -414,7 +414,7 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     ######## test routine, if submit_list has first element 'calltest'
     if submit_list and (submit_list[0] == 'calltest'):
         page_data['toprect', 'fill'] = 'blue'
-        page_data['svgimage', 'width'] = '50'
+        page_data['topgroup', 'transform'] = 'rotate(45 50 50)'
 
         return
     ##################################################################
