@@ -39393,41 +39393,19 @@ false
 },
 "parts": [
 [
-"Part",
-{
-"tag_name": "svg",
-"brief": "test svg",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"height": "400",
-"width": "400"
-},
-"parts": [
-[
 "Widget",
 {
-"class": "svgbasics.SimpleText",
-"name": "toptext",
-"brief": "svg text",
+"class": "svgbasics.SVGContainer",
+"name": "svgimage",
+"brief": "holds the svg image",
 "fields": {
-"dx": "0",
-"dy": "30",
-"fill": "white",
-"font_family": "Arial",
-"font_size": "20",
+"height": "100",
 "show": true,
-"stroke": "",
-"stroke_width": "",
-"text": "This is the element text",
 "widget_class": "",
 "widget_style": "",
-"x": "50",
-"y": "200"
-}
-}
-],
-[
+"width": "100"
+},
+"container_0": [
 "ClosedWidget",
 {
 "class": "svgbasics.Rect",
@@ -39435,20 +39413,19 @@ false
 "brief": "top rectangle",
 "fields": {
 "fill": "red",
-"height": "150",
-"rx": "20",
-"ry": "20",
+"height": "100",
+"rx": "0",
+"ry": "0",
 "show": true,
 "stroke": "black",
-"stroke_width": "5",
+"stroke_width": "1",
 "widget_class": "",
 "widget_style": "",
-"width": "150",
-"x": "50",
-"y": "20"
+"width": "100",
+"x": "0",
+"y": "0"
 }
 }
-]
 ]
 }
 ],

@@ -29,6 +29,65 @@ from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, Field
 
 
 
+class SVGContainer(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'width':FieldArg("text", "100", jsonset=True),
+                        'height':FieldArg("text", "100", jsonset=True)
+                       }
+
+    _container = (0,)
+
+    def __init__(self, name=None, brief='', **field_args):
+        """Acts as an SVG widget, containing other widgets, so show, class and dimensions can be set"""
+        Widget.__init__(self, name=name, tag_name="svg", brief=brief, **field_args)
+        self[0] =  ""  # where items can be contained
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("width"):
+            self.update_attribs({"width":self.get_field_value("width")})
+        if self.get_field_value("height"):
+            self.update_attribs({"height":self.get_field_value("height")})        
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<svg>  <!-- with widget id and class widget_class, and the given attributes -->
+  <!-- further svg elements and widgets can be contained here -->
+</svg>"""
+
+
+class Group(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True)
+                       }
+
+    _container = (0,)
+
+    def __init__(self, name=None, brief='', **field_args):
+        """Acts as an g widget, containing other widgets, so group class, style, transform can be set"""
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self[0] =  ""  # where items can be contained
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <!-- further svg elements and widgets can be contained here -->
+</g>"""
+
+
 class Rect(ClosedWidget):
     """An svg rect tag
 
@@ -86,7 +145,7 @@ class Rect(ClosedWidget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<rect /> <!-- creates rectangle with the given attributes -->"""
+<rect /> <!-- creates rectangle with widget id, class widget_class and the given attributes -->"""
 
 
 
@@ -162,7 +221,7 @@ class SimpleText(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<text>
+<text> <!-- with widget id, class widget_class and the given attributes -->
   <!-- contains given text -->
 </text>"""
 
