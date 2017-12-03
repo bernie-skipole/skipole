@@ -1,6 +1,6 @@
 ####### SKIPOLE WEB FRAMEWORK #######
 #
-# arrows.py  - defines SVG arrow images
+# svgmeters.py  - defines SVG meters for displaying data
 #
 # This file is part of the Skipole web framework
 #

@@ -204,8 +204,8 @@
 "ski_paras": "lib,ski_paras",
 "ski_paths": "lib,ski_paths",
 "ski_radio": "lib,ski_radio",
-"ski_svgarrows": "lib,ski_svgarrows",
 "ski_svgbasics": "lib,ski_svgbasics",
+"ski_svgmeters": "lib,ski_svgmeters",
 "ski_tables": "lib,ski_tables",
 "ski_textarea": "lib,ski_textarea",
 "ski_upload": "lib,ski_upload",
@@ -39477,7 +39477,7 @@ false
 [
 "Widget",
 {
-"class": "svgarrows.Arrow2",
+"class": "svgmeters.Arrow2",
 "name": "toparrow",
 "brief": "thin",
 "fields": {

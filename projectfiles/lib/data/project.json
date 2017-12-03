@@ -28,7 +28,7 @@
 "ski_paras": 623,
 "ski_paths": 102,
 "ski_radio": 624,
-"ski_svgarrows": 606,
+"ski_svgmeters": 606,
 "ski_svgbasics": 620,
 "ski_tables": 604,
 "ski_textarea": 605,
@@ -1073,11 +1073,11 @@
 "mimetype": "application/javascript"
 }
 },
-"svgarrows-0.1.0.js": {
+"svgmeters-0.1.0.js": {
 "ident": 606,
-"brief": "Link to lib/static/widgets/svgarrows-0.1.0.js",
+"brief": "Link to lib/static/widgets/svgmeters-0.1.0.js",
 "FilePage": {
-"filepath": "lib/static/widgets/svgarrows-0.1.0.js",
+"filepath": "lib/static/widgets/svgmeters-0.1.0.js",
 "enable_cache": false,
 "mimetype": "application/javascript"
 }
