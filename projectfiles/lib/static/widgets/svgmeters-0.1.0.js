@@ -1,7 +1,7 @@
 /*
 ####### SKIPOLE WEB FRAMEWORK #######
 
- svgarrows-0.1.0.js  - javascript widgets
+ svgmeters-0.1.0.js  - javascript widgets
 
  This file is part of the Skipole web framework
 
@@ -27,16 +27,16 @@
 */
 
 
-SKIPOLE.svgarrows = {};
+SKIPOLE.svgmeters = {};
 
 
-SKIPOLE.svgarrows.Arrow1 = function (widg_id, error_message, fieldmap) {
+SKIPOLE.svgmeters.Arrow1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
     };
-SKIPOLE.svgarrows.Arrow1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.svgarrows.Arrow1.prototype.constructor = SKIPOLE.svgarrows.Arrow1;
-SKIPOLE.svgarrows.Arrow1.prototype.setvalues = function (fieldlist, result) {
+SKIPOLE.svgmeters.Arrow1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgmeters.Arrow1.prototype.constructor = SKIPOLE.svgmeters.Arrow1;
+SKIPOLE.svgmeters.Arrow1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
@@ -47,13 +47,13 @@ SKIPOLE.svgarrows.Arrow1.prototype.setvalues = function (fieldlist, result) {
     };
 
 
-SKIPOLE.svgarrows.Arrow2 = function (widg_id, error_message, fieldmap) {
+SKIPOLE.svgmeters.Arrow2 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
     };
-SKIPOLE.svgarrows.Arrow2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.svgarrows.Arrow2.prototype.constructor = SKIPOLE.svgarrows.Arrow2;
-SKIPOLE.svgarrows.Arrow2.prototype.setvalues = function (fieldlist, result) {
+SKIPOLE.svgmeters.Arrow2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgmeters.Arrow2.prototype.constructor = SKIPOLE.svgmeters.Arrow2;
+SKIPOLE.svgmeters.Arrow2.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
