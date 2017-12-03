@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.43",
-"skipole": "0.0.43",
+"version": "0.0.44",
+"skipole": "0.0.44",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -39408,7 +39408,9 @@ false
 "brief": "holds the svg image",
 "fields": {
 "height": "100",
+"preserveAspectRatio": "",
 "show": true,
+"viewBox": "",
 "widget_class": "",
 "widget_style": "",
 "width": "100"
@@ -39578,6 +39580,51 @@ false
 "x2": "100",
 "y1": "30",
 "y2": "100"
+}
+}
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "200",
+"width": "200"
+},
+"parts": [
+[
+"ClosedWidget",
+{
+"class": "svgbasics.Polygon",
+"name": "toppoly",
+"brief": "polygon",
+"fields": {
+"points": [
+[
+"",
+""
+]
+],
+"show": true,
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
