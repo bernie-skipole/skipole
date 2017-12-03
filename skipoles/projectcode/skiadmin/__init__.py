@@ -246,6 +246,15 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     # check the path is a request for the tar.gz file, and route the call to the responder which sets the file
     # to be returned in a file page
 
+
+    #################### test
+    if called_ident[1] == 85002:
+        page_data["toppoly","points"] = [[50,50], [100, 20], [70, 150]]
+        return called_ident, call_data, page_data, lang
+    ######################
+
+
+
     if called_ident is None:
         tarfile = editedproj.proj_ident + ".tar.gz"
         if path.endswith(tarfile):
@@ -260,7 +269,6 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     # If caller_ident is not given there should be no further session data
     if not caller_ident:
         return called_ident, call_data, page_data, lang
-
 
     # If the called page does not use session data, do not bother getting any
     if identnum in (
@@ -425,6 +433,7 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         page_data['topcircle', 'stroke_width'] = '20'
         page_data['topline', 'stroke'] = 'yellow'
         page_data['topline', 'x1'] = '150'
+        page_data["toppoly","points"] = [[20,10], [130, 100], [60, 150], [99,36]]
 
 
         return

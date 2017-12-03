@@ -42,6 +42,8 @@ SKIPOLE.svgbasics.SVGContainer.prototype.setvalues = function (fieldlist, result
         }
     this.set_attribute('width', 'width', result, fieldlist);
     this.set_attribute('height', 'height', result, fieldlist);
+    this.set_attribute('viewBox', 'viewBox', result, fieldlist);
+    this.set_attribute('preserveAspectRatio', 'preserveAspectRatio', result, fieldlist);
     };
 
 
@@ -144,5 +146,52 @@ SKIPOLE.svgbasics.Line.prototype.setvalues = function (fieldlist, result) {
     this.set_attribute('stroke', 'stroke', result, fieldlist);
     this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
     };
+
+
+SKIPOLE.svgbasics.Ellipse = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.Ellipse.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.Ellipse.prototype.constructor = SKIPOLE.svgbasics.Ellipse;
+SKIPOLE.svgbasics.Ellipse.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('cx', 'cx', result, fieldlist);
+    this.set_attribute('cy', 'cy', result, fieldlist);
+    this.set_attribute('rx', 'rx', result, fieldlist);
+    this.set_attribute('ry', 'ry', result, fieldlist);
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
+    };
+
+
+SKIPOLE.svgbasics.Polygon = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.Polygon.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.Polygon.prototype.constructor = SKIPOLE.svgbasics.Polygon;
+SKIPOLE.svgbasics.Polygon.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var points_table = this.fieldarg_in_result('points', result, fieldlist);
+    if (!points_table) {
+        return;
+        }
+    var points = "";
+    for(var i = 0, size = points_table.length; i < size ; i++){
+        var point = points_table[i];
+        points = points.concat(point[0], ",", point[1], " ");
+        }
+    this.widg.attr("points", points);
+    };
+
+
+
+
 
 

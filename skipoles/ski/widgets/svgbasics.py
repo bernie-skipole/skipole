@@ -36,7 +36,9 @@ class SVGContainer(Widget):
 
     arg_descriptions = {
                         'width':FieldArg("text", "100", jsonset=True),
-                        'height':FieldArg("text", "100", jsonset=True)
+                        'height':FieldArg("text", "100", jsonset=True),
+                        'viewBox':FieldArg("text", "", jsonset=True),
+                        'preserveAspectRatio':FieldArg("text", "", jsonset=True)
                        }
 
     _container = (0,)
@@ -50,7 +52,11 @@ class SVGContainer(Widget):
         if self.get_field_value("width"):
             self.update_attribs({"width":self.get_field_value("width")})
         if self.get_field_value("height"):
-            self.update_attribs({"height":self.get_field_value("height")})        
+            self.update_attribs({"height":self.get_field_value("height")})
+        if self.get_field_value("viewBox"):
+            self.update_attribs({"viewBox":self.get_field_value("viewBox")})
+        if self.get_field_value("preserveAspectRatio"):
+            self.update_attribs({"preserveAspectRatio":self.get_field_value("preserveAspectRatio")})
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
@@ -120,7 +126,7 @@ class Rect(ClosedWidget):
         """
         # pass fields to Widget
         ClosedWidget.__init__(self, name=name, tag_name="rect", brief=brief, **field_args)
-        self.hide_if_empty=False
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Set the attributes"
@@ -234,7 +240,7 @@ class Circle(ClosedWidget):
         """
         # pass fields to Widget
         ClosedWidget.__init__(self, name=name, tag_name="circle", brief=brief, **field_args)
-        self.hide_if_empty=False
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Set the attributes"
@@ -277,7 +283,7 @@ class Line(ClosedWidget):
         """
         # pass fields to Widget
         ClosedWidget.__init__(self, name=name, tag_name="line", brief=brief, **field_args)
-        self.hide_if_empty=False
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Set the attributes"
@@ -294,5 +300,90 @@ class Line(ClosedWidget):
         """Returns a text string to illustrate the widget"""
         return """
 <line /> <!-- creates line with widget id, class widget_class and the given attributes -->"""
+
+
+class Ellipse(ClosedWidget):
+    """An svg ellipse tag
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'cx':FieldArg("text", "50", jsonset=True),
+                        'cy':FieldArg("text", "50", jsonset=True),
+                        'rx':FieldArg("text", "40", jsonset=True),
+                        'ry':FieldArg("text", "20", jsonset=True),
+                        'fill':FieldArg("text", "none", jsonset=True),
+                        'stroke':FieldArg("text", "black", jsonset=True),
+                        'stroke_width':FieldArg("text", "1", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        cx: centre x coords, for example 50
+        cy: centre y coords, for example 50
+        rx: the horizontal radius, for example 40
+        ry: the vertical radius, for example 20
+        fill: The fill colour, use none for no fill
+        stroke: The outline edge colour
+        stroke_width: The outline edge width
+        """
+        # pass fields to Widget
+        ClosedWidget.__init__(self, name=name, tag_name="ellipse", brief=brief, **field_args)
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Set the attributes"
+        # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
+        # attribute stroke-width. So update the tag with each item from arg_descriptions
+        for att in self.arg_descriptions.keys():
+            if self.get_field_value(att):
+                if att == "stroke_width":
+                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                else:
+                    self.update_attribs({att:self.get_field_value(att)})
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<ellipse /> <!-- creates ellipse with widget id, class widget_class and the given attributes -->"""
+
+
+
+class Polygon(ClosedWidget):
+    """An svg polygon tag
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'points':FieldArgTable(['text', 'text'], jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        points : a list of two element lists, each inner list being a point
+        """
+        # pass fields to Widget
+        ClosedWidget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Set the single 'points' attribute"
+        if not self.get_field_value('points'):
+            return
+
+        points_att = ""
+        points = self.get_field_value('points')
+        for x,y in points:
+            points_att += "%s,%s " % (x,y)
+        self.update_attribs({'points':points_att})   
+  
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<polygon /> <!-- creates polygon with widget id, class widget_class and the given points -->"""
 
 
