@@ -387,3 +387,40 @@ class Polygon(ClosedWidget):
 <polygon /> <!-- creates polygon with widget id, class widget_class and the given points -->"""
 
 
+
+class Polyline(ClosedWidget):
+    """An svg polyline tag
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'points':FieldArgTable(['text', 'text'], jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        points : a list of two element lists, each inner list being a point
+        """
+        # pass fields to Widget
+        ClosedWidget.__init__(self, name=name, tag_name="polyline", brief=brief, **field_args)
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Set the single 'points' attribute"
+        if not self.get_field_value('points'):
+            return
+
+        points_att = ""
+        points = self.get_field_value('points')
+        for x,y in points:
+            points_att += "%s,%s " % (x,y)
+        self.update_attribs({'points':points_att})   
+  
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<polyline /> <!-- creates polyline with widget id, class widget_class and the given points -->"""
+

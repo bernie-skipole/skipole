@@ -191,6 +191,27 @@ SKIPOLE.svgbasics.Polygon.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svgbasics.Polyline = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.Polyline.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.Polyline.prototype.constructor = SKIPOLE.svgbasics.Polyline;
+SKIPOLE.svgbasics.Polyline.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var points_table = this.fieldarg_in_result('points', result, fieldlist);
+    if (!points_table) {
+        return;
+        }
+    var points = "";
+    for(var i = 0, size = points_table.length; i < size ; i++){
+        var point = points_table[i];
+        points = points.concat(point[0], ",", point[1], " ");
+        }
+    this.widg.attr("points", points);
+    };
 
 
 

@@ -1398,6 +1398,8 @@
   "widgets.svgbasics.Line.y2": "The line end y coordinate, for example 100",
   "widgets.svgbasics.Polygon": "An SVG polygon.",
   "widgets.svgbasics.Polygon.points": "A list of two element lists, each inner list being an x,y point.",
+  "widgets.svgbasics.Polyline": "An SVG polyline.",
+  "widgets.svgbasics.Polyline.points": "A list of two element lists, each inner list being an x,y point.",
   "widgets.svgbasics.Rect": "An SVG rectangle.",
   "widgets.svgbasics.Rect.fill": "The fill colour.",
   "widgets.svgbasics.Rect.height": "A height value, for example 100",
