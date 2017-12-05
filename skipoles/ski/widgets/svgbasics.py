@@ -424,3 +424,46 @@ class Polyline(ClosedWidget):
         return """
 <polyline /> <!-- creates polyline with widget id, class widget_class and the given points -->"""
 
+
+
+class Path(ClosedWidget):
+    """An svg path tag
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'d':FieldArg("text", "", jsonset=True),
+                        'fill':FieldArg("text", "none", jsonset=True),
+                        'stroke':FieldArg("text", "black", jsonset=True),
+                        'stroke_width':FieldArg("text", "1", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        d: The path data
+        fill: The fill colour, use none for no fill
+        stroke: The outline edge colour
+        stroke_width: The outline edge width
+        """
+        # pass fields to Widget
+        ClosedWidget.__init__(self, name=name, tag_name="path", brief=brief, **field_args)
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Set the attributes"
+        # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
+        # attribute stroke-width. So update the tag with each item from arg_descriptions
+        for att in self.arg_descriptions.keys():
+            if self.get_field_value(att):
+                if att == "stroke_width":
+                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                else:
+                    self.update_attribs({att:self.get_field_value(att)})   
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<path /> <!-- creates path with widget id, class widget_class and the given attributes -->"""
+
+

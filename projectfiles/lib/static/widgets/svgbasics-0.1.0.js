@@ -215,4 +215,21 @@ SKIPOLE.svgbasics.Polyline.prototype.setvalues = function (fieldlist, result) {
 
 
 
+SKIPOLE.svgbasics.Path = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.Path.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.Path.prototype.constructor = SKIPOLE.svgbasics.Path;
+SKIPOLE.svgbasics.Path.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('d', 'd', result, fieldlist);
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
+    };
+
+
 
