@@ -178,6 +178,9 @@ SKIPOLE.svgbasics.Polygon.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
     var points_table = this.fieldarg_in_result('points', result, fieldlist);
     if (!points_table) {
         return;
@@ -201,6 +204,9 @@ SKIPOLE.svgbasics.Polyline.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
+    this.set_attribute('fill', 'fill', result, fieldlist);
+    this.set_attribute('stroke', 'stroke', result, fieldlist);
+    this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
     var points_table = this.fieldarg_in_result('points', result, fieldlist);
     if (!points_table) {
         return;

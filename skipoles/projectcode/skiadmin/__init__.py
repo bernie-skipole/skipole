@@ -434,6 +434,8 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         page_data['topline', 'stroke'] = 'yellow'
         page_data['topline', 'x1'] = '150'
         page_data["toppoly","points"] = [[20,10], [130, 100], [60, 150], [99,36]]
+        page_data["toppoly","stroke"] = "yellow"
+        page_data["toppoly","stroke_width"] = "10"
 
 
         return
