@@ -24,12 +24,14 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+from decimal import Decimal
+
 from .. import tag
 
-from . import Widget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
+from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
-class Arrow1(Widget):
+class Arrow1(ClosedWidget):
     """An svg arrow shape, fitting in a 100x100 space
     """
 
@@ -51,8 +53,7 @@ class Arrow1(Widget):
         stroke_width: The outline edge thickness
         transform: The svg transform object, use it to scals and rotate
         """
-        Widget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
-        self.hide_if_empty=False
+        ClosedWidget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "create arrow"                  
@@ -74,12 +75,11 @@ class Arrow1(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<polygon> <!-- arrow shape with widget id, class widget_class and the given attributes -->
-</polygon>"""
+<polygon /> <!-- arrow shape with widget id, class widget_class and the given attributes -->"""
 
 
 
-class Arrow2(Widget):
+class Arrow2(ClosedWidget):
     """A slim svg arrow shape, fitting in a 50x200 space
     """
 
@@ -101,8 +101,7 @@ class Arrow2(Widget):
         stroke_width: The outline edge thickness
         transform: The svg transform object, use it to scals and rotate
         """
-        Widget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
-        self.hide_if_empty=False
+        ClosedWidget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "create arrow"                  
@@ -124,9 +123,156 @@ class Arrow2(Widget):
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
-<polygon> <!-- arrow shape with widget id, class widget_class and the given attributes -->
-</polygon>"""
+<polygon /> <!-- arrow shape with widget id, class widget_class and the given attributes -->"""
 
 
+class Vertical1(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+    _points = ((110,49), (110,50), (81,98), (79,98), (79,60), (13,60), (13,39), (79,39), (79,1), (81,1))
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'arrow_fill':FieldArg("text", "blue", jsonset=True),
+                        'minimum':FieldArg("text", "0"),
+                        'maximum':FieldArg("text", "100"),
+                        'smallintervals':FieldArg("text", "10"),
+                        'largeintervals':FieldArg("text", "20"),
+                        'measurement':FieldArg("text", "50", jsonset=True),
+                       }
+
+
+    def _make_scale(self, minimum, maximum, smallintervals, largeintervals):
+        "Returns two lists of Decimal values"
+
+        minvalue = Decimal(minimum)
+        maxvalue = Decimal(maximum)
+        smallint = Decimal(smallintervals)
+        largeint = Decimal(largeintervals)
+       
+        # start at the bottom of the scale with minvalue
+        minscale = [minvalue]
+        maxscale = [minvalue]
+        mns = minvalue
+        mxs = minvalue
+
+        while mxs < maxvalue:
+            mxs += largeint
+            maxscale.append(mxs)
+
+        while True:
+            mns += smallint
+            if mns > maxscale[-1]:
+                break
+            minscale.append(mns)
+        return minscale, maxscale
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a vertical scale and arrow, held in a 600 high x 250 wide space"""
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"100",
+                                                           "y":"1",
+                                                           "rx":"2",
+                                                           "ry":"2",
+                                                           "width":"149",
+                                                           "height":"598",
+                                                           "fill":"white",
+                                                           "stroke":"black",
+                                                           "stroke-width":"1"})
+        arrow_points = ""
+        for p in self._points:
+            point = "%s, %s " % p
+            arrow_points += point
+        self[1] = tag.ClosedPart(tag_name='polygon', attribs={
+                                                           "fill":"white",
+                                                           "stroke":"black",
+                                                           "stroke-width":"2",
+                                                           "points":arrow_points })
+        self[2] = tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'120',
+                                                            'y1':'50',
+                                                            'x2':'120',
+                                                            'y2':'550',
+                                                            'stroke':"black",
+                                                            'stroke-width':"2"  })
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.get_field_value("arrow_fill"):
+            self[1].update_attribs({"fill":self.get_field_value("arrow_fill")})
+        # make the scale
+        minscale, maxscale = self._make_scale(self.get_field_value("minimum"),
+                                              self.get_field_value("maximum"),
+                                              self.get_field_value("smallintervals"),
+                                              self.get_field_value("largeintervals"))
+
+        # small lines
+        minitems = len(minscale)
+        scalemins = Decimal('500.0') / (minitems-1)
+        n = 3
+        for index, item in enumerate(minscale):
+            vert = Decimal(550) - index*scalemins
+            self[n] = tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'120',
+                                                            'y1': str(vert),
+                                                            'x2':'150',
+                                                            'y2':str(vert),
+                                                            'stroke':"black",
+                                                            'stroke-width':"1"  })
+            n += 1
+
+        # large lines
+        maxitems = len(maxscale)
+        scalemaxs = Decimal('500.0') / (maxitems-1)
+        for index, item in enumerate(maxscale):
+            vert = Decimal('550') - index*scalemaxs
+            self[n] = tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'119',
+                                                            'y1': str(vert),
+                                                            'x2':'210',
+                                                            'y2':str(vert),
+                                                            'stroke':"black",
+                                                            'stroke-width':"3"  })
+
+            n += 1
+            self[n] = tag.Part(tag_name='text', text=str(item), attribs={
+                                                            'x':'160',
+                                                            'y': str(vert-10),
+                                                            'font-size': '20',
+                                                            'font-family': 'arial',
+                                                            'stroke':"black",
+                                                            'stroke-width':"1"  })
+
+            n += 1
+
+        # now place arrow at the measurement point
+        measurement = Decimal(self.get_field_value("measurement"))
+        self._minvalue = maxscale[0]
+        self._maxvalue = maxscale[-1]
+        if measurement >= self._maxvalue:
+            return
+        if measurement <= self._minvalue:
+            self[1].update_attribs({"transform" : "translate(0, 500)"})
+            return
+        m = Decimal('500.0') - (measurement - self._minvalue)*500/(self._maxvalue-self._minvalue)
+        self[1].update_attribs({"transform" : "translate(0, %s)" % (m,)})
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sends scaling factor for mapping measurement to scale"""
+        return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue))
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <rect /> <!-- the scale rectangle -->
+  <!-- lines and text dependent on the input scale values -->
+  <polygon /> <!-- the arrow, with translate linked to the input value -->
+</g>"""
 
 

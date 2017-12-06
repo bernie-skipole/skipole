@@ -64,6 +64,62 @@ SKIPOLE.svgmeters.Arrow2.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svgmeters.Vertical1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgmeters.Vertical1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgmeters.Vertical1.prototype.constructor = SKIPOLE.svgmeters.Vertical1;
+SKIPOLE.svgmeters.Vertical1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    var the_widg = this.widg;
+    // set the fill attribute of the polygon
+    var arrow = the_widg.find('polygon');
+    if (arrow == undefined) {
+        return;
+        }
+    var arrow_fill = this.fieldarg_in_result('arrow_fill', result, fieldlist);
+    if (arrow_fill) {
+        arrow.attr('fill', arrow_fill);
+        }
+
+    // set the measurement
+    var measurement = this.fieldarg_in_result('measurement', result, fieldlist);
+    if (measurement == undefined) {
+        return;
+        }
+
+    var minvalue = this.fieldvalues["minvalue"];
+    var maxvalue = this.fieldvalues["maxvalue"];
+    if (minvalue == undefined) {
+        return;
+        }
+    if (maxvalue == undefined) {
+        return;
+        }
+
+    var m = parseFloat(measurement);
+    var mn = parseFloat(minvalue);
+    var mx = parseFloat(maxvalue);
+
+    if (m >= mx) {
+        arrow.attr('transform', "translate(0, 0)");
+        return;
+        }
+    if (m <= mn) {
+        arrow.attr('transform', "translate(0, 500)");
+        return;
+        }
+
+    var scale = Math.round(500 - (m - mn)*500/(mx-mn));
+    arrow.attr('transform', "translate(0, " + scale + ")");
+    };
+
+
+
 
 
 

@@ -24,7 +24,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import pkgutil, re, collections, uuid, os
+import pkgutil, re, collections, uuid, os, random
 
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets
 
@@ -246,15 +246,6 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     # check the path is a request for the tar.gz file, and route the call to the responder which sets the file
     # to be returned in a file page
 
-
-    #################### test
-    if called_ident[1] == 85002:
-        page_data["toppoly","points"] = [[50,50], [100, 20], [70, 150]]
-        return called_ident, call_data, page_data, lang
-    ######################
-
-
-
     if called_ident is None:
         tarfile = editedproj.proj_ident + ".tar.gz"
         if path.endswith(tarfile):
@@ -281,7 +272,6 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
                    80001          # operations
                     ):
         return called_ident, call_data, page_data, lang
-
 
     # get session data from received ident_data
     if ident_data in _SESSION_DATA:
@@ -419,27 +409,16 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     "Call the appropriate submit_data function"
 
 
-    ######## test routine, if submit_list has first element 'calltest'
-    if submit_list and (submit_list[0] == 'calltest'):
-        page_data['toprect', 'fill'] = 'blue'
-        page_data['topgroup', 'transform'] = 'rotate(45 50 50)'
-        page_data['toparrow', 'transform'] = 'rotate(45 50 50) translate(70 30)'
-        page_data['toparrow', 'stroke_width'] = '8'
-        page_data['toparrow', 'stroke'] = 'white'
-        page_data['toparrow', 'fill'] = 'black'
-        page_data['topcircle', 'stroke'] = 'white'
-        page_data['topcircle', 'fill'] = 'black'
-        page_data['topcircle', 'r'] = '20'
-        page_data['topcircle', 'stroke_width'] = '20'
-        page_data['topline', 'stroke'] = 'yellow'
-        page_data['topline', 'x1'] = '150'
-        page_data["toppoly","points"] = [[20,10], [130, 100], [60, 150], [99,36]]
-        page_data["toppoly","stroke"] = "yellow"
-        page_data["toppoly","stroke_width"] = "10"
-
-
+############## test
+    if submit_list and (submit_list[0] == 'scale'):
+        page_data['scale', 'arrow_fill'] = 'red'
+        measurement = str(random.choice([1,2,3,4,5,6,7,8,9,10, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10]))
+        page_data['scale', 'measurement'] = measurement
+        page_data['para', 'para_text'] = measurement
         return
-    ##################################################################
+#####################
+
+
 
     # Trying this new way of routing
     if submit_list and (len(submit_list) > 2):
