@@ -177,7 +177,7 @@ class Vertical1(Widget):
                                                            "rx":"2",
                                                            "ry":"2",
                                                            "width":"149",
-                                                           "height":"598",
+                                                           "height":"698",
                                                            "fill":"white",
                                                            "stroke":"black",
                                                            "stroke-width":"1"})
@@ -194,7 +194,7 @@ class Vertical1(Widget):
                                                             'x1':'120',
                                                             'y1':'50',
                                                             'x2':'120',
-                                                            'y2':'550',
+                                                            'y2':'650',
                                                             'stroke':"black",
                                                             'stroke-width':"2"  })
 
@@ -212,10 +212,10 @@ class Vertical1(Widget):
 
         # small lines
         minitems = len(minscale)
-        scalemins = Decimal('500.0') / (minitems-1)
+        scalemins = Decimal('600.0') / (minitems-1)
         n = 3
         for index, item in enumerate(minscale):
-            vert = Decimal(550) - index*scalemins
+            vert = Decimal(650) - index*scalemins
             self[n] = tag.ClosedPart(tag_name='line', attribs={
                                                             'x1':'120',
                                                             'y1': str(vert),
@@ -227,9 +227,9 @@ class Vertical1(Widget):
 
         # large lines
         maxitems = len(maxscale)
-        scalemaxs = Decimal('500.0') / (maxitems-1)
+        scalemaxs = Decimal('600.0') / (maxitems-1)
         for index, item in enumerate(maxscale):
-            vert = Decimal('550') - index*scalemaxs
+            vert = Decimal('650') - index*scalemaxs
             self[n] = tag.ClosedPart(tag_name='line', attribs={
                                                             'x1':'119',
                                                             'y1': str(vert),
@@ -256,9 +256,9 @@ class Vertical1(Widget):
         if measurement >= self._maxvalue:
             return
         if measurement <= self._minvalue:
-            self[1].update_attribs({"transform" : "translate(0, 500)"})
+            self[1].update_attribs({"transform" : "translate(0, 600)"})
             return
-        m = Decimal('500.0') - (measurement - self._minvalue)*500/(self._maxvalue-self._minvalue)
+        m = Decimal('600.0') - (measurement - self._minvalue)*600/(self._maxvalue-self._minvalue)
         self[1].update_attribs({"transform" : "translate(0, %s)" % (m,)})
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
