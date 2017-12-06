@@ -358,19 +358,33 @@ class Polygon(ClosedWidget):
     display_errors = False
 
     arg_descriptions = {
-                        'points':FieldArgTable(['text', 'text'], jsonset=True)
+                        'points':FieldArgTable(['text', 'text'], jsonset=True),
+                        'fill':FieldArg("text", "none", jsonset=True),
+                        'stroke':FieldArg("text", "black", jsonset=True),
+                        'stroke_width':FieldArg("text", "1", jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
         """
         points : a list of two element lists, each inner list being a point
+        fill: The fill colour, use none for no fill
+        stroke: The outline edge colour
+        stroke_width: The outline edge width
         """
         # pass fields to Widget
         ClosedWidget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        "Set the single 'points' attribute"
+        "Set the attributes"
+
+        if self.get_field_value("fill"):
+            self.update_attribs({"fill":self.get_field_value("fill")})
+        if self.get_field_value("stroke"):
+            self.update_attribs({"stroke":self.get_field_value("stroke")})
+        if self.get_field_value("stroke_width"):
+            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
+
         if not self.get_field_value('points'):
             return
 
@@ -396,19 +410,33 @@ class Polyline(ClosedWidget):
     display_errors = False
 
     arg_descriptions = {
-                        'points':FieldArgTable(['text', 'text'], jsonset=True)
+                        'points':FieldArgTable(['text', 'text'], jsonset=True),
+                        'fill':FieldArg("text", "none", jsonset=True),
+                        'stroke':FieldArg("text", "black", jsonset=True),
+                        'stroke_width':FieldArg("text", "1", jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
         """
         points : a list of two element lists, each inner list being a point
+        fill: The fill colour, use none for no fill
+        stroke: The outline edge colour
+        stroke_width: The outline edge width
         """
         # pass fields to Widget
         ClosedWidget.__init__(self, name=name, tag_name="polyline", brief=brief, **field_args)
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        "Set the single 'points' attribute"
+        "Set the attributes"
+
+        if self.get_field_value("fill"):
+            self.update_attribs({"fill":self.get_field_value("fill")})
+        if self.get_field_value("stroke"):
+            self.update_attribs({"stroke":self.get_field_value("stroke")})
+        if self.get_field_value("stroke_width"):
+            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
+
         if not self.get_field_value('points'):
             return
 
@@ -459,7 +487,7 @@ class Path(ClosedWidget):
                 if att == "stroke_width":
                     self.update_attribs({"stroke-width":self.get_field_value(att)})
                 else:
-                    self.update_attribs({att:self.get_field_value(att)})   
+                    self.update_attribs({att:self.get_field_value(att)})
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""

@@ -39612,10 +39612,11 @@ false
 [
 "ClosedWidget",
 {
-"class": "svgbasics.Polygon",
+"class": "svgbasics.Polyline",
 "name": "toppoly",
-"brief": "polygon",
+"brief": "polyline",
 "fields": {
+"fill": "none",
 "points": [
 [
 "",
@@ -39623,6 +39624,8 @@ false
 ]
 ],
 "show": true,
+"stroke": "black",
+"stroke_width": "1",
 "widget_class": "",
 "widget_style": ""
 }
