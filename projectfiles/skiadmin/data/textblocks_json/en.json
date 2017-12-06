@@ -1449,7 +1449,7 @@
   "widgets.svgmeters.Arrow2.stroke": "The outline edge colour.",
   "widgets.svgmeters.Arrow2.stroke_width": "The outline edge width.",
   "widgets.svgmeters.Arrow2.transform": "A transform string such as translate and rotate can be set here. Can be set by JSON.",
-  "widgets.svgmeters.Vertical1": "A vertical scale, with arrow indicating the measurement value.",
+  "widgets.svgmeters.Vertical1": "A vertical scale, fitting in a 300x700 space, with arrow indicating the measurement value.",
   "widgets.svgmeters.Vertical1.arrow_fill": "The fill colour for the arrow.",
   "widgets.svgmeters.Vertical1.largeintervals": "An incremental value at which large ticks will be placed on the scale, with text value labels.",
   "widgets.svgmeters.Vertical1.maximum": "The maximum value, at the top of the scale.",

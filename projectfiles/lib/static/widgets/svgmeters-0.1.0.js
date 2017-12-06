@@ -110,11 +110,11 @@ SKIPOLE.svgmeters.Vertical1.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     if (m <= mn) {
-        arrow.attr('transform', "translate(0, 500)");
+        arrow.attr('transform', "translate(0, 600)");
         return;
         }
 
-    var scale = Math.round(500 - (m - mn)*500/(mx-mn));
+    var scale = Math.round(600 - (m - mn)*600/(mx-mn));
     arrow.attr('transform', "translate(0, " + scale + ")");
     };
 
