@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.45",
-"skipole": "0.0.45",
+"version": "0.0.46",
+"skipole": "0.0.46",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -39253,19 +39253,183 @@ false
 },
 "pages": {
 "aa": {
-"ident": 85003,
+"ident": 85002,
 "brief": "aa",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 85002,
-"submit_list": [
-"scale"
-],
-"target_ident": "general_json"
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#2f0e69",
+"default_error_widget": [
+"",
+"top_error"
+]
 },
-"original_fields": {}
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
 }
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Page 85002"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "400",
+"width": "700"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "svgmeters.Traditional1",
+"name": "scale",
+"brief": "meter",
+"fields": {
+"arrow_stroke": "yellow",
+"largeintervals": "0.05",
+"maximum": "0.2",
+"measurement": "0.05",
+"minimum": "-0.1",
+"show": true,
+"smallintervals": "0.01",
+"transform": "translate(10,10)",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
 },
 "about_export": {
 "ident": 500,
@@ -39870,222 +40034,6 @@ false
 },
 "original_fields": {}
 }
-},
-"scale": {
-"ident": 85002,
-"brief": "scale",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 5,
-"interval_target": 85003,
-"lang": "en",
-"backcol": "#2f0e69",
-"default_error_widget": [
-"",
-"top_error"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The viewport meta declaration",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Page 85002"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "svg",
-"brief": "Holds the scale",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"height": "700",
-"width": "300"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "svgmeters.Vertical1",
-"name": "scale",
-"brief": "scale",
-"fields": {
-"arrow_fill": "blue",
-"largeintervals": "5",
-"maximum": "10",
-"measurement": "0.07",
-"minimum": "-10",
-"show": true,
-"smallintervals": "1",
-"transform": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ParaText",
-"name": "para",
-"brief": "para",
-"fields": {
-"para_text": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.JSONButtonLink",
-"name": "test",
-"brief": "test",
-"fields": {
-"button_text": "call",
-"button_wait_text": "Please wait...",
-"clear_error": false,
-"error_class": "w3-button w3-block w3-theme-action",
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"json_ident": 85003,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-button w3-block w3-theme-d4",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
 },
 "set_colour": {
 "ident": 34,
