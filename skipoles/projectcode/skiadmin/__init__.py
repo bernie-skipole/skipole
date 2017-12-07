@@ -408,22 +408,6 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Call the appropriate submit_data function"
 
-
-############## test
-    if submit_list and (submit_list[0] == 'scale'):
-        
-        measurement = random.choice([1,2,3,4,5,6,7,8,9,10, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10])
-        if measurement > 6:
-            page_data['scale', 'arrow_fill'] = 'red'
-        else:
-            page_data['scale', 'arrow_fill'] = 'green'
-        page_data['scale', 'measurement'] = str(measurement)
-        page_data['para', 'para_text'] = str(measurement)
-        return
-#####################
-
-
-
     # Trying this new way of routing
     if submit_list and (len(submit_list) > 2):
         if submit_list[0] == 'editfolders':
