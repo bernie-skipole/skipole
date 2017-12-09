@@ -128,51 +128,6 @@ def get_accesstextblocks(project=None):
     return proj.textblocks
 
 
-def get_reference_hierarchy(project=None):
-    """Used to generate a list of nested dictionaries and lists
-       of the textblock references in a project.
-       Separates reference strings on the '.' character.
-       returns a list of two elements:
-           pos 0 is the list of top references - those without a dot
-           pos 1 is a dictionary of lists, each list being of this same structure, having
-           two elements.  Each dictionary key will be a name prior to the first dot."""
-    accesstextblocks = get_accesstextblocks(project)
-    if accesstextblocks is None:
-        return
-    reference_list = accesstextblocks.get_textrefs()
-    return _make_hierarchy(reference_list)
-
-
-def _make_hierarchy(reference_list):
-    """Recursive function used by get_reference_hierarchy
-       reference_list should be a list of reference strings"""
-    if not reference_list:
-        return [[], {}]
-    # unitstructure will be a list of strings with no . in them
-    unit_structure = []
-    for textref in reference_list:
-        reflist = textref.split('.')
-        if len(reflist) == 1:
-            unit_structure.append(textref)
-    for textref in unit_structure:
-        reference_list.remove(textref)
-    if not reference_list:
-        return [unit_structure, {}]
-    # any references still existing in reference_list must have more than one element
-    # put first element as a dictionary key, with value a list of all sub reference strings
-    temp_dict = {}
-    for textref in reference_list:
-        reflist = textref.split('.')
-        if reflist[0] in temp_dict:
-            temp_dict[reflist[0]].append('.'.join(reflist[1:]))
-        else:
-            temp_dict[reflist[0]] = ['.'.join(reflist[1:])]
-    new_dict = {}
-    for element, sublist in temp_dict.items():
-        new_dict[element] = _make_hierarchy(sublist)
-    return [unit_structure, new_dict]
-
-
 def item_info(project, itemnumber):
     """Returns None if page or folder not found, otherwise returns a namedtuple with contents
        project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted

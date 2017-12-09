@@ -39411,14 +39411,14 @@ false
 "name": "scale",
 "brief": "meter",
 "fields": {
-"arrow_stroke": "yellow",
+"arrow_stroke": "grey",
 "largeintervals": "0.05",
 "maximum": "0.2",
 "measurement": "0.05",
 "minimum": "-0.1",
 "show": true,
 "smallintervals": "0.01",
-"transform": "translate(10,10)",
+"transform": "",
 "widget_class": "",
 "widget_style": ""
 }
