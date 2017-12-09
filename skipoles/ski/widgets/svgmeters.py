@@ -521,8 +521,7 @@ A %s %s 0 0 1 %s %s
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sends scaling factor for mapping measurement to scale"""
-        centre = str(self._cx) + " " + str(self._cy)
-        return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue), centre=centre, scale_angle=str(self._scale_angle))
+        return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue))
 
 
     def __str__(self):
