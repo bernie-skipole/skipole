@@ -279,6 +279,7 @@ class Vertical1(Widget):
 
 
 
+
 class Traditional1(Widget):
 
     # This class does not display any error messages
@@ -292,7 +293,7 @@ class Traditional1(Widget):
                         'maximum':FieldArg("text", "100"),
                         'smallintervals':FieldArg("text", "10"),
                         'largeintervals':FieldArg("text", "20"),
-                        'arrow_stroke':FieldArg("text", "red", jsonset=True),
+                        'arrow_stroke':FieldArg("text", "grey", jsonset=True),
                         'measurement':FieldArg("text", "50", jsonset=True),
                        }
 
@@ -328,106 +329,113 @@ class Traditional1(Widget):
 
         # A path which holds the curved shape which will contain the meter
 
-        # the angle of the white backing to the scale, 140 degrees
-        white_angle = 140
-
-        # the angle to the horizontal, 20 degrees, get it in radians
-        white_out_angle = math.radians((180-white_angle)/2.0)
-
-        # radius of the outside of the white backing
-        outer_r = 320
-        centre_x = outer_r * math.cos(white_out_angle)
-        outer_x = 2 * centre_x
-        outer_y = outer_r - outer_r * math.sin(white_out_angle)
-
-        # radius of the inside of the white backing
-        inner_r = 200
-        inner_right_x = centre_x + inner_r * math.cos(white_out_angle)
-        inner_right_y = outer_r - inner_r * math.sin(white_out_angle)
-        inner_left_x = centre_x - inner_r * math.cos(white_out_angle)
+        # the angle of the white backing is 140 degrees, this makes an
+        # angle of 20 degrees to the horizonta. So get this in radians
+        back_horizontal_angle = math.radians(20.0)
 
         # The scale
 
         # the angle of the scale, 120 degrees
         scale_angle = 120
+        self._scale_angle = Decimal(scale_angle)
 
         # the angle to the horizontal, 30 degrees, get it in radians
-        scale_out_angle = math.radians((180-scale_angle)/2.0)
+        scale_horizontal_angle = math.radians((180-scale_angle)/2.0)
 
-        # scale curved line radius
-        scale_r = inner_r + 30
-        # still centred on centre_x, outer_r
-        scale_left_x = centre_x - scale_r * math.cos(scale_out_angle)
-        scale_left_y = outer_r - scale_r * math.sin(scale_out_angle)
-        scale_right_x = centre_x + scale_r * math.cos(scale_out_angle)
+        # radius of outside of white backing shape
+        r1 = 320
+
+        # radius of scale line
+        r2 = 230
+        self._scale_r = r2
+
+        # radius of inside of white backing shape
+        r3 = 200
+
+        # coordinates of rotation centre of the meter
+        cx = 350
+        cy = 350
+        self._cx = cx
+        self._cy = cy
+
+        # create white backing shape
+        left_out_x = cx - r1*math.cos(back_horizontal_angle)
+        left_out_y = cy - r1*math.sin(back_horizontal_angle)
+
+        right_out_x = cx + r1*math.cos(back_horizontal_angle)
+        right_out_y = left_out_y
+
+        right_in_x = cx + r3*math.cos(back_horizontal_angle)
+        right_in_y = cy - r3*math.sin(back_horizontal_angle)
+
+        left_in_x = cx - r3*math.cos(back_horizontal_angle)
+        left_in_y = right_in_y
 
         path_data = """
-M 0 %s
+M %s %s
 A %s %s 0 0 1 %s %s
 L %s %s
 A %s %s 0 0 0 %s %s
-Z""" % (outer_y,
-       outer_r, outer_r, outer_x, outer_y,
-       inner_right_x, inner_right_y,
-       inner_r, inner_r, inner_left_x, inner_right_y)
+Z""" % (left_out_x, left_out_y,
+        r1, r1, right_out_x, right_out_y,
+        right_in_x, right_in_y,
+        r3, r3, left_in_x, left_in_y)
 
-        self[0] = tag.ClosedPart(tag_name='path', attribs={
-                                                            "fill":"white",
-                                                            "stroke":"black",
-                                                            "stroke-width":"1",
-                                                            "d":path_data
-                                                           })
-        # The arrow points
-        arrow_points = ""
-        # move all points to the right and down,
-        # note 24.5 is x distance to arrow point
-        x_move = centre_x - 24.5
-        # moves arrow down to just touch the scale
-        y_move = outer_r - scale_r
-        for p in self._points:
-            point = "%s, %s " % (p[0] + x_move, p[1] + y_move)
-            arrow_points += point
-        self[1] = tag.ClosedPart(tag_name='polygon', attribs={
-                                                           "fill":"black",
-                                                           "stroke":"red",
-                                                           "stroke-width":"2",
-                                                           "points":arrow_points })
+        self[0] = tag.ClosedPart(tag_name='path',
+                                 attribs={"fill":"white", "stroke":"black", "stroke-width":"1", "d":path_data})
 
-        # insert a circle at arrow hub
-        self[2] = tag.ClosedPart(tag_name='circle', attribs={
-                                                           "cx": str(centre_x),
-                                                           "cy": str(outer_r),
-                                                           "r": "50",
-                                                           "fill":"black",
-                                                           "stroke":"red",
-                                                           "stroke-width":"2" })
+        # create the scale curve
+
+        # still centred on cx, cy
+        scale_left_x = cx - r2 * math.cos(scale_horizontal_angle)
+        scale_left_y = cy - r2 * math.sin(scale_horizontal_angle)
+        scale_right_x = cx + r2 * math.cos(scale_horizontal_angle)
+        scale_right_y = scale_left_y
 
         # Draw the scale curve
         scale_data = """
 M %s %s
 A %s %s 0 0 1 %s %s
 """ % (scale_left_x, scale_left_y,
-       scale_r, scale_r, scale_right_x, scale_left_y,)
+       r2, r2, scale_right_x, scale_right_y,)
 
-        self[3] = tag.ClosedPart(tag_name='path', attribs={ "fill":"none",
-                                                            "stroke":"black",
-                                                            "stroke-width":"2",
-                                                            "d":scale_data
-                                                           })
+        self[1] = tag.ClosedPart(tag_name='path',
+                                 attribs={ "fill":"none", "stroke":"black", "stroke-width":"2", "d":scale_data})
 
-        # store these values for use in build
-        self._centre_x = centre_x
-        self._centre_y = outer_r
-        self._scale_r = scale_r
-        self._scale_angle = Decimal(scale_angle)
+
+        # The arrow points
+        arrow_points = ""
+        # move all points to the right and down,
+        # note 24.5 is x distance to arrow point
+        x_move = cx - 24.5
+        # moves arrow down to just touch the scale
+        y_move = cy - r2
+        for p in self._points:
+            point = "%s, %s " % (p[0] + x_move, p[1] + y_move)
+            arrow_points += point
+        self[2] = tag.ClosedPart(tag_name='polygon', attribs={
+                                                           "fill":"black",
+                                                           "stroke":"grey",
+                                                           "stroke-width":"2",
+                                                           "points":arrow_points })
+
+        # insert a circle at arrow hub, of radius 40
+        self[3] = tag.ClosedPart(tag_name='circle', attribs={
+                                                           "cx": str(cx),
+                                                           "cy": str(cy),
+                                                           "r": "40",
+                                                           "fill":"black",
+                                                           "stroke":"grey",
+                                                           "stroke-width":"2" })
+
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value("transform"):
             self.update_attribs({"transform":self.get_field_value("transform")})
         if self.get_field_value("arrow_stroke"):
-            self[1].update_attribs({"stroke":self.get_field_value("arrow_stroke")})
             self[2].update_attribs({"stroke":self.get_field_value("arrow_stroke")})
+            self[3].update_attribs({"stroke":self.get_field_value("arrow_stroke")})
         # make the scale
         minscale, maxscale = self._make_scale(self.get_field_value("minimum"),
                                               self.get_field_value("maximum"),
@@ -446,10 +454,10 @@ A %s %s 0 0 1 %s %s
             angle = start_angle + index*scalemindegs
             rads = math.radians(float(angle))
 
-            x1 = self._centre_x - self._scale_r * math.cos(rads)
-            y1 = self._centre_y - self._scale_r * math.sin(rads)
-            x2 = self._centre_x - line_r * math.cos(rads)
-            y2 = self._centre_y - line_r * math.sin(rads)
+            x1 = self._cx - self._scale_r * math.cos(rads)
+            y1 = self._cy - self._scale_r * math.sin(rads)
+            x2 = self._cx - line_r * math.cos(rads)
+            y2 = self._cy - line_r * math.sin(rads)
 
             self[n] = tag.ClosedPart(tag_name='line', attribs={
                                                             'x1':str(x1),
@@ -470,10 +478,10 @@ A %s %s 0 0 1 %s %s
             angle = start_angle + index*scalemaxdegs
             rads = math.radians(float(angle))
 
-            x1 = self._centre_x - reduced_r * math.cos(rads)
-            y1 = self._centre_y - reduced_r * math.sin(rads)
-            x2 = self._centre_x - line_r * math.cos(rads)
-            y2 = self._centre_y - line_r * math.sin(rads)
+            x1 = self._cx - reduced_r * math.cos(rads)
+            y1 = self._cy - reduced_r * math.sin(rads)
+            x2 = self._cx - line_r * math.cos(rads)
+            y2 = self._cy - line_r * math.sin(rads)
 
             self[n] = tag.ClosedPart(tag_name='line', attribs={
                                                             'x1':str(x1),
@@ -497,19 +505,36 @@ A %s %s 0 0 1 %s %s
         measurement = Decimal(self.get_field_value("measurement"))
         self._minvalue = maxscale[0]
         self._maxvalue = maxscale[-1]
-        centre_string = " " + str(self._centre_x) + " " + str(self._centre_y) + ")"
+        centre_string = " " + str(self._cx) + " " + str(self._cy) + ")"
         if measurement >= self._maxvalue:
-            self[1].update_attribs({"transform" : "rotate(" + str(self._scale_angle/2) + centre_string})
+            self[2].update_attribs({"transform" : "rotate(" + str(self._scale_angle/2) + centre_string})
             return
         if measurement <= self._minvalue:
-            self[1].update_attribs({"transform" : "rotate(-" + str(self._scale_angle/2) + centre_string})
+            self[2].update_attribs({"transform" : "rotate(-" + str(self._scale_angle/2) + centre_string})
             return
 
         measurement_angle = (measurement - self._minvalue)*self._scale_angle/(self._maxvalue-self._minvalue) - self._scale_angle/2
 
         rotate_string = "rotate(" + str(measurement_angle) + centre_string
-        self[1].update_attribs({"transform" : rotate_string})
+        self[2].update_attribs({"transform" : rotate_string})
 
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sends scaling factor for mapping measurement to scale"""
+        centre = str(self._cx) + " " + str(self._cy)
+        return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue), centre=centre, scale_angle=str(self._scale_angle))
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <path /> <!-- the white backing arc of the scale -->
+  <path /> <!-- the scale curved line -->
+  <polygon /> <!-- the arrow, with rotation linked to the measurement -->
+  <circle /> <!-- the hub of the arrow -->
+  <!-- lines and text giving the scale values -->
+</g>"""
 
 
 
