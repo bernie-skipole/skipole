@@ -1826,7 +1826,7 @@ class GeneralButtonTable1(Widget):
                         'button_class':FieldArg("cssclass", ""),
                         'new_window':FieldArg("boolean", False),
                         'force_ident':FieldArg("boolean", False),
-                        'contents':FieldArgTable(['textblock_ref', 'boolean', 'url', 'text', 'text'], valdt=True)
+                        'contents':FieldArgTable(['textblock_ref', 'boolean', 'text', 'url', 'text'], valdt=True)
                         }
 
     def __init__(self, name=None, brief='', **field_args):
