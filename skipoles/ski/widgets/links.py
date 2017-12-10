@@ -2175,14 +2175,20 @@ class GeneralButtonTable2(Widget):
                 self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
             else:
                 self[rownumber] = tag.Part(tag_name='tr')
+            if dragtable[rownumber][1]:
+                dragurl = skiboot.get_url(dragtable[rownumber][1], proj_ident=page.proj_ident)
+            else:
+                dragurl = ""
+            if dragtable[rownumber][2]:
+                dragdata = dragtable[rownumber][2]
+            else:
+                dragdata = ""
             if dragtable[rownumber][0]:
                 self[rownumber].update_attribs(
 {"draggable":"true",
  "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{url}', '{data}')".format(ident = self.get_id(),
-                                                                                           url = dragtable[rownumber][1],
-                                                                                           data = dragtable[rownumber][2])})
-
-
+                                                                                           url = dragurl,
+                                                                                           data = dragdata)})
 
             for colnumber in range(cols):
                 cell += 1
