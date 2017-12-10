@@ -674,5 +674,8 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
     e.preventDefault();
     };
 
-
+SKIPOLE.links.GeneralButtonTable2.prototype.dragstartfunc = function (e, url, data) {
+    e.dataTransfer.setData("text/uri-list", url);
+    e.dataTransfer.setData("text/plain", data);
+    };
 

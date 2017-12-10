@@ -31,6 +31,7 @@ from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 from .... import skilift
 from ....skilift import editpage, editfolder, fromjson
 from .. import utils
+from ....ski import skiboot
 
 
 def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -87,9 +88,13 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
         raise FailPage(message = "Invalid folder")
 
 
-    contents, rows = _foldertree(editedprojname, folder_number)
+    contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
     page_data['ftree', 'contents'] = contents
-    page_data['ftree', 'rows'] = rows
+
+    # old code, was just rows 
+
+    page_data['ftree', 'dragrows'] = dragrows
+    page_data['ftree', 'droprows'] = droprows
 
     page_data['ftree', 'cols'] = [ ["edit_action", ""],
                                    ["edit_action", ""],
@@ -367,6 +372,8 @@ def _foldertree(projectname, foldernumber):
 
     # This creates a contents of cell's, each row of the table has eight columns
     contents = []
+    dragrows = []
+    droprows = []
 
     # first cell is the folder URL, no style, Not a link, no get field
     contents.append( (folder_path, '', False, '') )
@@ -399,17 +406,18 @@ def _foldertree(projectname, foldernumber):
     # eighth cell is remove line - but no remove link for the top line
     contents.append( ('', '', False, '') )
 
-    rownumber = 1
+    dragrows.append([False, "", ""])
+    droprows.append([True, folder_ident])
 
     # place all sub pages in rows beneath the folder
     if finfo.contains_pages:
-        rownumber = _show_pages(contents, projectname, foldernumber, rownumber, 2)
+        _show_pages(contents, projectname, foldernumber, dragrows, droprows, 2)
     if finfo.contains_folders:
-        rownumber = _show_folders(contents, projectname, foldernumber, rownumber, 2)
-    return contents, rownumber
+        _show_folders(contents, projectname, foldernumber, dragrows, droprows, 2)
+    return contents, dragrows, droprows
 
 
-def _show_pages(contents, projectname, foldernumber, rownumber, indent):
+def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent):
     """Used to create pages  beneath the folder"""
 
     # pinfo attributes are 'name', 'number', 'restricted', 'brief', 'item_type', 'responder'
@@ -418,8 +426,12 @@ def _show_pages(contents, projectname, foldernumber, rownumber, indent):
     padding = "padding-left : %sem;" % (indent,)
 
     for pinfo in skilift.pages(projectname, foldernumber):
-        rownumber += 1
+
+        drop_url = skilift.page_path(skiboot.admin_project(), "admin_home")
+
         page_ident = ident + str(pinfo.number)
+        dragrows.append([True, drop_url, page_ident])
+        droprows.append([False, ""])
 
         # first column is the page name, style includes padding, not a link, no get field
         contents.append( (pinfo.name, padding, False, '') )
@@ -469,10 +481,10 @@ def _show_pages(contents, projectname, foldernumber, rownumber, indent):
         # eighth column is remove page
         contents.append( ('Remove', 'width : 1%;text-align: center;', True, page_ident) )
 
-    return rownumber
+    return
 
 
-def _show_folders(contents, projectname, foldernumber, rownumber, indent):
+def _show_folders(contents, projectname, foldernumber, dragrows, droprows, indent):
 
 
     # finfo attributes are 'name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders'
@@ -481,8 +493,12 @@ def _show_folders(contents, projectname, foldernumber, rownumber, indent):
     padding = "padding-left : %sem;" % (indent,)
 
     for finfo in skilift.folders(projectname, foldernumber):
-        rownumber += 1
+
+        drop_url = skilift.page_path(skiboot.admin_project(), "admin_home")
+
         folder_ident = ident + str(finfo.number)
+        dragrows.append([True, drop_url, folder_ident])
+        droprows.append([True, folder_ident])
 
         # first column is the folder path from parent, with padding style, Not a link, no get field
         contents.append( (finfo.name+"/", padding, False, '') )
@@ -519,12 +535,12 @@ def _show_folders(contents, projectname, foldernumber, rownumber, indent):
 
         # place all sub pages in rows beneath the subfolder
         if finfo.contains_pages:
-            rownumber = _show_pages(contents, projectname, finfo.number, rownumber, indent+1)
+            _show_pages(contents, projectname, finfo.number, dragrows, droprows, indent+1)
 
         if finfo.contains_folders:
-            rownumber = _show_folders(contents, projectname, finfo.number, rownumber, indent+1)
+            _show_folders(contents, projectname, finfo.number, dragrows, droprows, indent+1)
 
-    return rownumber
+    return
 
 
 

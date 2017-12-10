@@ -353,4 +353,11 @@ def parent_list(project, itemnumber):
     return item.parent_list()
 
 
+def page_path(project, item):
+    "Returns a url path given a page or folder number or label, if not found, return None"
+    # raise error if invalid project
+    project_loaded(project)
+    return skiboot.get_url(item, project)
+
+
 

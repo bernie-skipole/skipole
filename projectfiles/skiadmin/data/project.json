@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
 "version": "0.0.47",
-"skipole": "0.0.46",
+"skipole": "0.0.47",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -26074,10 +26074,22 @@ false,
 ""
 ]
 ],
+"dragrows": [
+[
+false,
+"",
+""
+]
+],
+"droprows": [
+[
+false,
+""
+]
+],
 "even_class": "",
 "hide": false,
 "odd_class": "w3-theme-d2",
-"rows": "0",
 "show": true,
 "widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
 "widget_style": ""
