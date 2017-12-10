@@ -54,8 +54,6 @@ def goto_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_
         call_data['edit_folder'] = widgfields['ftree','edited_item']
 
 
-
-
 def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit folder page, including the tree of folder contents"
 
@@ -164,6 +162,11 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
     else:
         # Only give a default page option if pages are present
         page_data['sdd1:show'] = False
+
+
+
+def drop_item(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    pass
 
 
 def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -427,7 +430,7 @@ def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent)
     for pinfo in skilift.pages(projectname, foldernumber):
 
         page_ident = ident + str(pinfo.number)
-        dragrows.append([True, "admin_home", page_ident])
+        dragrows.append([True, "drop_rows", page_ident])
         droprows.append([False, ""])
 
         # first column is the page name, style includes padding, not a link, no get field
@@ -492,7 +495,7 @@ def _show_folders(contents, projectname, foldernumber, dragrows, droprows, inden
     for finfo in skilift.folders(projectname, foldernumber):
 
         folder_ident = ident + str(finfo.number)
-        dragrows.append([True, "admin_home", folder_ident])
+        dragrows.append([True, "drop_rows", folder_ident])
         droprows.append([True, folder_ident])
 
         # first column is the folder path from parent, with padding style, Not a link, no get field
