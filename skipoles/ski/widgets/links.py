@@ -2082,7 +2082,7 @@ class GeneralButtonTable2(Widget):
 
     arg_descriptions = {
                         'dragrows':FieldArgTable(["boolean", "url", "text"], valdt=True),
-                        'droprows':FieldArgTable(["boolean", "text"]),
+                        'droprows':FieldArgTable(["boolean", "text"], valdt=True),
                         'cols':FieldArgTable(['url', 'url']),
                         'even_class':FieldArg("cssclass", ""),
                         'odd_class':FieldArg("cssclass", ""),
@@ -2096,10 +2096,10 @@ class GeneralButtonTable2(Widget):
         dragrows: A three element list for every row in the table, could be empty if no drag operation
                   col 0 - True if draggable, False if not
                   col 1 - If col 0 is True, this is the URL called on being dropped
-                  col 2 - If col 0 is True, this is data sent with the call
+                  col 2 - If col 0 is True, this is data sent with the call wnen a row is dropped
         droprows: A two element list for every row in the table, could be empty if no drop operation
                   col 0 - True if droppable, False if not
-                  col 1 - text to send with the 'dagrows' call when a row is dropped here
+                  col 1 - text to send with the call when a row is dropped here
         cols: A two element list for every column in the table, must be given with empty values if no links
                   col 0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
                   col 1 - target JSON page link ident of buttons in each column, 

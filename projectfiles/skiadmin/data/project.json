@@ -64,6 +64,7 @@
 "downloadpage": 3260,
 "downloadpart": 43060,
 "downloadsection": 7050,
+"drop_rows": 2005,
 "dynamic_css": 200,
 "e_message": 46011,
 "e_message_ref": 46021,
@@ -5399,6 +5400,33 @@ false,
 },
 "original_fields": {
 "page_delete:get_field2_1": ""
+}
+}
+},
+"drop_item": {
+"ident": 2005,
+"brief": "Drops a page or folder into a folder",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"editfolders",
+"editfolder",
+"drop_item"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"ftree:dragrows": "",
+"ftree:droprows": ""
 }
 }
 },

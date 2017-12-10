@@ -689,15 +689,18 @@ SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
     if (!url) {
         return;
         }
-    // now make a call
-    var data = e.dataTransfer.getData("text/plain");
-    var widgfield = this.formname('dragrows');
+    // now make a call, including data from the drag element and the drop element
+    var dragwidgfield = this.formname('dragrows');
+    var dropwidgfield = this.formname('droprows');
+
+    var getstring = "?" + "ident=" + SKIPOLE.identdata;
     if (data) {
-        window.location = e.dataTransfer.getData("text/uri-list") + "?" + "ident=" + SKIPOLE.identdata + "&" + widgfield + "=" + data;
+        getstring = getstring + "&" + dropwidgfield + "=" + data;
         }
-    else {
-        window.location = e.dataTransfer.getData("text/uri-list") + "?" + "ident=" + SKIPOLE.identdata;
+    if (e.dataTransfer.getData("text/plain")) {
+        getstring = getstring + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
         }
+    window.location = url + getstring;
     };
 SKIPOLE.links.GeneralButtonTable2.prototype.allowdropfunc = function (e) {
      e.preventDefault();
