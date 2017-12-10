@@ -31,7 +31,6 @@ from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 from .... import skilift
 from ....skilift import editpage, editfolder, fromjson
 from .. import utils
-from ....ski import skiboot
 
 
 def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -427,10 +426,8 @@ def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent)
 
     for pinfo in skilift.pages(projectname, foldernumber):
 
-        drop_url = skilift.page_path(skiboot.admin_project(), "admin_home")
-
         page_ident = ident + str(pinfo.number)
-        dragrows.append([True, drop_url, page_ident])
+        dragrows.append([True, "admin_home", page_ident])
         droprows.append([False, ""])
 
         # first column is the page name, style includes padding, not a link, no get field
@@ -494,10 +491,8 @@ def _show_folders(contents, projectname, foldernumber, dragrows, droprows, inden
 
     for finfo in skilift.folders(projectname, foldernumber):
 
-        drop_url = skilift.page_path(skiboot.admin_project(), "admin_home")
-
         folder_ident = ident + str(finfo.number)
-        dragrows.append([True, drop_url, folder_ident])
+        dragrows.append([True, "admin_home", folder_ident])
         droprows.append([True, folder_ident])
 
         # first column is the folder path from parent, with padding style, Not a link, no get field
