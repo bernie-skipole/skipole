@@ -335,11 +335,13 @@ class FieldArgTable(ParentFieldArg):
         "Sets the value"
         # val should be a list of row lists
         # ie [[r1c1, r1c2, r1c3], [r2c1, r2c2, r2c3], [r3c1, r3c2, r3c3]]
-        if not val:
-            val = [[None]]
-        elif (not isinstance(val, list)) and (not isinstance(val, tuple)):
-            val = [[val]]
         self._value = []
+        if val is 0:
+             val = [[0]]
+        elif not val:
+            return
+        elif (not isinstance(val, list)) and (not isinstance(val, tuple)):
+            val = [[val]] 
         cols = len(self.field_type)
         for row in val:
             if (not isinstance(row, list)) and (not isinstance(row, tuple)):

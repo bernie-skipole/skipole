@@ -2093,14 +2093,14 @@ class GeneralButtonTable2(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """
-        dragrows: A three element list for every row in the table
+        dragrows: A three element list for every row in the table, could be empty if no drag operation
                   col 0 - True if draggable, False if not
                   col 1 - If col 0 is True, this is the URL called on being dropped
                   col 2 - If col 0 is True, this is data sent with the call
-        droprows: A two element list for every row in the table
+        droprows: A two element list for every row in the table, could be empty if no drop operation
                   col 3 - True if droppable, False if not
                   col 4 - text to send with the 'dagrows' call when a row is dropped here
-        cols: A two element list for every column in the table
+        cols: A two element list for every column in the table, must be given with empty values if no links
                   col 0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
                   col 1 - target JSON page link ident of buttons in each column, 
               col0, col1 values should be emty strings if no url applied to column
@@ -2128,19 +2128,23 @@ class GeneralButtonTable2(Widget):
         fieldtable = self.get_field_value("contents")
         button_class = self.get_field_value('button_class')
         get_field_name = self.get_formname("contents")
-        elements = len(fieldtable)
-        rows = len(self.get_field_value("dragrows"))
-        if rows != len(self.get_field_value("droprows")):
-            self._error = "Invalid table size : rows in dragrows and droprows must be equal"
-            return
         dragtable = self.get_field_value("dragrows")
+        droptable = self.get_field_value("droprows")
         colidents = self.get_field_value("cols")
         cols = len(colidents)
-        if (not rows) or (not cols):
+        if not cols:
             self.show = False
             return
+        elements = len(fieldtable)
+        rows = elements//cols
         if elements != rows*cols:
-            self._error = "Invalid table size : rows (%s) by cols (%s) not equal to given number of table elements (%s)" % (rows, cols, elements)
+            self._error = "Invalid table size : number of columns does not match table length"
+            return
+        if dragtable and (len(dragtable) != rows):
+            self._error = "Invalid table size : dragrows length does not match table rows"
+            return
+        if droptable and (len(droptable) != rows):
+            self._error = "Invalid table size : droprows length does not match table rows"
             return
         # list of json url's
         self._jsonurl_list = [ skiboot.get_url(item[1], proj_ident=page.proj_ident) for item in colidents ]
@@ -2175,16 +2179,17 @@ class GeneralButtonTable2(Widget):
                 self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
             else:
                 self[rownumber] = tag.Part(tag_name='tr')
-            if dragtable[rownumber][1]:
-                dragurl = skiboot.get_url(dragtable[rownumber][1], proj_ident=page.proj_ident)
-            else:
-                dragurl = ""
-            if dragtable[rownumber][2]:
-                dragdata = dragtable[rownumber][2]
-            else:
-                dragdata = ""
-            if dragtable[rownumber][0]:
-                self[rownumber].update_attribs(
+            if dragtable:
+                if dragtable[rownumber][1]:
+                    dragurl = skiboot.get_url(dragtable[rownumber][1], proj_ident=page.proj_ident)
+                else:
+                    dragurl = ""
+                if dragtable[rownumber][2]:
+                    dragdata = dragtable[rownumber][2]
+                else:
+                    dragdata = ""
+                if dragtable[rownumber][0]:
+                    self[rownumber].update_attribs(
 {"draggable":"true",
  "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{url}', '{data}')".format(ident = self.get_id(),
                                                                                            url = dragurl,
