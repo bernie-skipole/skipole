@@ -2098,8 +2098,8 @@ class GeneralButtonTable2(Widget):
                   col 1 - If col 0 is True, this is the URL called on being dropped
                   col 2 - If col 0 is True, this is data sent with the call
         droprows: A two element list for every row in the table, could be empty if no drop operation
-                  col 3 - True if droppable, False if not
-                  col 4 - text to send with the 'dagrows' call when a row is dropped here
+                  col 0 - True if droppable, False if not
+                  col 1 - text to send with the 'dagrows' call when a row is dropped here
         cols: A two element list for every column in the table, must be given with empty values if no links
                   col 0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
                   col 1 - target JSON page link ident of buttons in each column, 
@@ -2194,7 +2194,15 @@ class GeneralButtonTable2(Widget):
  "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{url}', '{data}')".format(ident = self.get_id(),
                                                                                            url = dragurl,
                                                                                            data = dragdata)})
-
+            if droptable:
+                if droptable[rownumber][1]:
+                    dropdata = droptable[rownumber][1]
+                else:
+                    dropdata = ""
+                if droptable[rownumber][0]:
+                    self[rownumber].update_attribs(
+{"ondrop":"SKIPOLE.widgets['{ident}'].dropfunc(event, '{data}')".format(ident = self.get_id(), data = dropdata),
+ "ondragover":"SKIPOLE.widgets['{ident}'].allowdropfunc(event)".format(ident = self.get_id())})
             for colnumber in range(cols):
                 cell += 1
                 element = fieldtable[cell]

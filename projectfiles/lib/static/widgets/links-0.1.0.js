@@ -676,6 +676,30 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
 
 SKIPOLE.links.GeneralButtonTable2.prototype.dragstartfunc = function (e, url, data) {
     e.dataTransfer.setData("text/uri-list", url);
+    e.dataTransfer.setData("text/widgid", this.widg_id);
     e.dataTransfer.setData("text/plain", data);
+    };
+SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
+    e.preventDefault();
+    var widg_id = e.dataTransfer.getData("text/widgid");
+    if (widg_id != this.widg_id) {
+        return;
+        }
+    var url = e.dataTransfer.getData("text/uri-list");
+    if (!url) {
+        return;
+        }
+    // now make a call
+    var data = e.dataTransfer.getData("text/plain");
+    var widgfield = this.formname('dragrows');
+    if (data) {
+        window.location = e.dataTransfer.getData("text/uri-list") + "?" + "ident=" + SKIPOLE.identdata + "&" + widgfield + "=" + data;
+        }
+    else {
+        window.location = e.dataTransfer.getData("text/uri-list") + "?" + "ident=" + SKIPOLE.identdata;
+        }
+    };
+SKIPOLE.links.GeneralButtonTable2.prototype.allowdropfunc = function (e) {
+     e.preventDefault();
     };
 
