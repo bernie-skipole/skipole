@@ -674,8 +674,7 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
     e.preventDefault();
     };
 
-SKIPOLE.links.GeneralButtonTable2.prototype.dragstartfunc = function (e, url, data) {
-    e.dataTransfer.setData("text/uri-list", url);
+SKIPOLE.links.GeneralButtonTable2.prototype.dragstartfunc = function (e, data) {
     e.dataTransfer.setData("text/widgid", this.widg_id);
     e.dataTransfer.setData("text/plain", data);
     };
@@ -685,7 +684,7 @@ SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
     if (widg_id != this.widg_id) {
         return;
         }
-    var url = e.dataTransfer.getData("text/uri-list");
+    var url = this.fieldvalues["dropurl"];
     if (!url) {
         return;
         }

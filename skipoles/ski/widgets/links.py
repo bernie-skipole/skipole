@@ -2081,8 +2081,9 @@ class GeneralButtonTable2(Widget):
     display_errors = False
 
     arg_descriptions = {
-                        'dragrows':FieldArgTable(["boolean", "url", "text"], valdt=True),
+                        'dragrows':FieldArgTable(["boolean", "text"], valdt=True),
                         'droprows':FieldArgTable(["boolean", "text"], valdt=True),
+                        'dropident':FieldArg("url", ""),
                         'cols':FieldArgTable(['url', 'url']),
                         'even_class':FieldArg("cssclass", ""),
                         'odd_class':FieldArg("cssclass", ""),
@@ -2095,11 +2096,11 @@ class GeneralButtonTable2(Widget):
         """
         dragrows: A three element list for every row in the table, could be empty if no drag operation
                   col 0 - True if draggable, False if not
-                  col 1 - If col 0 is True, this is the URL called on being dropped
-                  col 2 - If col 0 is True, this is data sent with the call wnen a row is dropped
+                  col 1 - If col 0 is True, this is data sent with the call wnen a row is dropped
         droprows: A two element list for every row in the table, could be empty if no drop operation
                   col 0 - True if droppable, False if not
                   col 1 - text to send with the call when a row is dropped here
+        dropident: ident or label of target, called when a drop occurs which returns a JSON page
         cols: A two element list for every column in the table, must be given with empty values if no links
                   col 0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
                   col 1 - target JSON page link ident of buttons in each column, 
@@ -2159,6 +2160,8 @@ class GeneralButtonTable2(Widget):
             if not url:
                 url = ''
             url_list.append(url)
+        # dropurl
+        self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
         # set even row class
         if self.get_field_value('even_class'):
             even = self.get_field_value('even_class')
@@ -2181,19 +2184,14 @@ class GeneralButtonTable2(Widget):
                 self[rownumber] = tag.Part(tag_name='tr')
             if dragtable:
                 if dragtable[rownumber][1]:
-                    dragurl = skiboot.get_url(dragtable[rownumber][1], proj_ident=page.proj_ident)
-                else:
-                    dragurl = ""
-                if dragtable[rownumber][2]:
-                    dragdata = dragtable[rownumber][2]
+                    dragdata = dragtable[rownumber][1]
                 else:
                     dragdata = ""
                 if dragtable[rownumber][0]:
                     self[rownumber].update_attribs(
 {"draggable":"true",
- "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{url}', '{data}')".format(ident = self.get_id(),
-                                                                                           url = dragurl,
-                                                                                           data = dragdata)})
+ "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
+                                                                                  data = dragdata)})
             if droptable:
                 if droptable[rownumber][1]:
                     dropdata = droptable[rownumber][1]
@@ -2245,7 +2243,7 @@ class GeneralButtonTable2(Widget):
     }});
 """.format(ident = self.get_id())
         if self._jsonurl_list:
-            return jscript + self._make_fieldvalues(url=self._jsonurl_list)
+            return jscript + self._make_fieldvalues(url=self._jsonurl_list, dropurl=self._dropurl)
         return jscript
 
 
