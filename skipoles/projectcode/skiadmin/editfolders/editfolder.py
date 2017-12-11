@@ -92,6 +92,7 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
 
     page_data['ftree', 'dragrows'] = dragrows
     page_data['ftree', 'droprows'] = droprows
+    page_data['ftree', 'dropident'] = 'drop_rows' # label of responder
 
     page_data['ftree', 'cols'] = [ ["edit_action", ""],
                                    ["edit_action", ""],
@@ -408,7 +409,7 @@ def _foldertree(projectname, foldernumber):
     # eighth cell is remove line - but no remove link for the top line
     contents.append( ('', '', False, '') )
 
-    dragrows.append([False, "", ""])
+    dragrows.append([False, ""])
     droprows.append([True, folder_ident])
 
     # place all sub pages in rows beneath the folder
@@ -430,7 +431,7 @@ def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent)
     for pinfo in skilift.pages(projectname, foldernumber):
 
         page_ident = ident + str(pinfo.number)
-        dragrows.append([True, "drop_rows", page_ident])
+        dragrows.append([True, page_ident])
         droprows.append([False, ""])
 
         # first column is the page name, style includes padding, not a link, no get field
@@ -495,7 +496,7 @@ def _show_folders(contents, projectname, foldernumber, dragrows, droprows, inden
     for finfo in skilift.folders(projectname, foldernumber):
 
         folder_ident = ident + str(finfo.number)
-        dragrows.append([True, "drop_rows", folder_ident])
+        dragrows.append([True, folder_ident])
         droprows.append([True, folder_ident])
 
         # first column is the folder path from parent, with padding style, Not a link, no get field
