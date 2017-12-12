@@ -5413,14 +5413,14 @@ false,
 22009
 ],
 "alternate_ident": "admin_home",
-"fail_ident": 22008,
+"fail_ident": "general_json",
 "submit_list": [
 "editfolders",
 "editfolder",
 "drop_item"
 ],
 "submit_option": true,
-"target_ident": 22008,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -26105,10 +26105,10 @@ false,
 "dragrows": [
 [
 false,
-"",
 ""
 ]
 ],
+"dropident": "",
 "droprows": [
 [
 false,

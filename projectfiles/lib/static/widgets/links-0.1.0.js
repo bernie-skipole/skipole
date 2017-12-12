@@ -692,16 +692,20 @@ SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
     var dragwidgfield = this.formname('dragrows');
     var dropwidgfield = this.formname('droprows');
 
-    var getstring = "?" + "ident=" + SKIPOLE.identdata;
+    var senddata = "ident=" + SKIPOLE.identdata;
     if (data) {
-        getstring = getstring + "&" + dropwidgfield + "=" + data;
+        senddata = senddata + "&" + dropwidgfield + "=" + data;
         }
     if (e.dataTransfer.getData("text/plain")) {
-        getstring = getstring + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
+        senddata = senddata + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
         }
-    window.location = url + getstring;
+    $.getJSON(url, senddata)
+        .done(function(result){
+            SKIPOLE.setfields(result);
+            });
     };
 SKIPOLE.links.GeneralButtonTable2.prototype.allowdropfunc = function (e) {
      e.preventDefault();
     };
+
 
