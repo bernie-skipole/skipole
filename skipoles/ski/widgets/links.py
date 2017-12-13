@@ -2089,7 +2089,7 @@ class GeneralButtonTable2(Widget):
                         'odd_class':FieldArg("cssclass", ""),
                         'hide':FieldArg("boolean", False, jsonset=True),
                         'button_class':FieldArg("cssclass", ""),
-                        'contents':FieldArgTable(['text', 'text', 'boolean', 'text'], valdt=True)
+                        'contents':FieldArgTable(['text', 'text', 'boolean', 'text'], valdt=True, jsonset=True)
                         }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -2120,6 +2120,8 @@ class GeneralButtonTable2(Widget):
         """
         Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
         self._jsonurl_list = []
+        self._dropurl = ''
+        self._htmlurl_list = []
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -2150,16 +2152,7 @@ class GeneralButtonTable2(Widget):
         # list of json url's
         self._jsonurl_list = [ skiboot.get_url(item[1], proj_ident=page.proj_ident) for item in colidents ]
         # list of html url's
-        url_list = []
-        for item in colidents:
-            url = ''
-            if item[0]:
-                url = skiboot.get_url(item[0], proj_ident=page.proj_ident)
-            if not url:
-                url = skiboot.get_url('no_javascript', proj_ident=page.proj_ident)
-            if not url:
-                url = ''
-            url_list.append(url)
+        self._htmlurl_list = [ skiboot.get_url(item[0], proj_ident=page.proj_ident) for item in colidents ]
         # dropurl
         self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
         # set even row class
@@ -2215,7 +2208,7 @@ class GeneralButtonTable2(Widget):
                 else:
                     self[rownumber][colnumber] = tag.Part(tag_name='td')
                 # get html url for this column
-                url = url_list[colnumber]
+                url = self._htmlurl_list[colnumber]
                 # is it a button link
                 if url and element[2]:
                     # its a link, apply button class
@@ -2242,8 +2235,10 @@ class GeneralButtonTable2(Widget):
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """.format(ident = self.get_id())
-        if self._jsonurl_list:
-            return jscript + self._make_fieldvalues(url=self._jsonurl_list, dropurl=self._dropurl)
+        if self._jsonurl_list or self._dropurl or self._htmlurl_list:
+            return jscript + self._make_fieldvalues(json_url=self._jsonurl_list,
+                                                    dropurl=self._dropurl,
+                                                    html_url = self._htmlurl_list)
         return jscript
 
 

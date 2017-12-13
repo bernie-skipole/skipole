@@ -94,13 +94,13 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['ftree', 'droprows'] = droprows
     page_data['ftree', 'dropident'] = 'drop_rows' # label of responder
 
-    page_data['ftree', 'cols'] = [ ["edit_action", ""],
+    page_data['ftree', 'cols'] = [ ["", ""],
+                                   ["", ""],
+                                   ["", ""],
+                                   ["", ""],
                                    ["edit_action", ""],
-                                   ["edit_action", ""],
-                                   ["edit_action", ""],
-                                   ["edit_action", ""],
-                                   ["edit_action", ""],
-                                   ["edit_action", ""],
+                                   ["", ""],
+                                   ["", ""],
                                    ["no_javascript", "2004"]  ]
 
     if 'status' not in call_data:
@@ -167,7 +167,25 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
 
 
 def drop_item(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    pass
+    page_data['ftree', 'contents'] = [['one', '', False, ''],
+                                      ['two', '', False, ''],
+                                      ['three', '', False, ''],
+                                      ['four', '', False, ''],
+                                      ['five', '', False, ''],
+                                      ['six', '', False, ''],
+                                      ['seven', '', False, ''],
+                                      ['eight', '', False, ''],
+
+                                      ['1', '', False, ''],
+                                      ['2', '', False, ''],
+                                      ['3', '', False, ''],
+                                      ['4', '', False, ''],
+                                      ['5', '', False, ''],
+                                      ['6', '', False, ''],
+                                      ['7', '', False, ''],
+                                      ['8', '', False, '']
+                                     ]
+
 
 
 def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
