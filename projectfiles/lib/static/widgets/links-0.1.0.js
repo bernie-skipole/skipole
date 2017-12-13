@@ -626,26 +626,6 @@ SKIPOLE.links.GeneralButtonTable2 = function (widg_id, error_message, fieldmap) 
     };
 SKIPOLE.links.GeneralButtonTable2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.links.GeneralButtonTable2.prototype.constructor = SKIPOLE.links.GeneralButtonTable2;
-SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, result) {
-    /* This widget accepts fields - hide */
-   if (!this.widg_id) {
-        return;
-        }
-    var the_widg = this.widg;
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (set_hide != undefined) {
-        if (set_hide) {
-            if (the_widg.is(":visible")) {
-                the_widg.fadeOut('slow');
-                }
-            }
-        else {
-            if (!(the_widg.is(":visible"))) {
-                the_widg.fadeIn('slow');
-                 }
-            }
-        }
-    };
 SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
@@ -656,18 +636,18 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
     if (!href) {
         return;
         }
-    if (!fieldvalues["url"]) {
+    if (!fieldvalues["json_url"]) {
         return;
         }
     var senddata = href.substring(href.indexOf('?')+1);
-    /* fieldvalues["url"] is a list of column urls
+    /* fieldvalues["json_url"] is a list of column json urls
        need to get the column index to find which of these
        urls to send the call to */
     var col = button.parent().index();
-    if (!fieldvalues["url"][col]) {
+    if (!fieldvalues["json_url"][col]) {
         return;
         }
-    $.getJSON(fieldvalues["url"][col], senddata)
+    $.getJSON(fieldvalues["json_url"][col], senddata)
         .done(function(result){
             SKIPOLE.setfields(result);
             });
@@ -706,6 +686,54 @@ SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
     };
 SKIPOLE.links.GeneralButtonTable2.prototype.allowdropfunc = function (e) {
      e.preventDefault();
+    };
+
+SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, result) {
+   if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    var fieldvalues = this.fieldvalues;
+    // hide the widget
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (the_widg.is(":visible")) {
+                the_widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(the_widg.is(":visible"))) {
+                the_widg.fadeIn('slow');
+                 }
+            }
+        }
+    // get column urls and number of columns
+    var json_url = fieldvalues["json_url"];
+    var html_url = fieldvalues["html_url"];
+    if (json_url == undefined) {
+        return;
+        }
+    if (html_url == undefined) {
+        return;
+        }
+    var cols = html_url.length;
+    if (cols != json_url.length) {
+        return;
+        }
+    // cols is the number of columns
+
+    // The table contents
+    var contents = this.fieldarg_in_result('contents', result, fieldlist);
+    if (!contents) {
+        return;
+        }
+    var rows = Math.floor(contents.length/cols);
+    if (rows*cols != contents.length) {
+        return;
+        }
+    alert(rows);
+
     };
 
 
