@@ -167,25 +167,14 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
 
 
 def drop_item(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    page_data['ftree', 'contents'] = [['one', '', False, ''],
-                                      ['two', '', False, ''],
-                                      ['three', '', False, ''],
-                                      ['four', '', False, ''],
-                                      ['five', '', False, ''],
-                                      ['six', '', False, ''],
-                                      ['seven', '', False, ''],
-                                      ['eight', '', False, ''],
-
-                                      ['1', '', False, ''],
-                                      ['2', '', False, ''],
-                                      ['3', '', False, ''],
-                                      ['4', '', False, ''],
-                                      ['5', '', False, ''],
-                                      ['6', '', False, ''],
-                                      ['7', '', False, ''],
-                                      ['8', '', False, '']
-                                     ]
-
+    "Refreshes ftree via JSON call"
+    editedprojname = call_data['editedprojname']
+    if 'folder_number' in call_data:
+        folder_number = call_data['folder_number']
+    else:
+        raise FailPage(message = "Folder missing")
+    contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
+    page_data['ftree', 'contents'] = contents
 
 
 def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

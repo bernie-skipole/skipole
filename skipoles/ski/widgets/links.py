@@ -2122,6 +2122,7 @@ class GeneralButtonTable2(Widget):
         self._jsonurl_list = []
         self._dropurl = ''
         self._htmlurl_list = []
+        self._button_class = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -2129,7 +2130,7 @@ class GeneralButtonTable2(Widget):
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
         fieldtable = self.get_field_value("contents")
-        button_class = self.get_field_value('button_class')
+        self._button_class = self.get_field_value('button_class')
         get_field_name = self.get_formname("contents")
         dragtable = self.get_field_value("dragrows")
         droptable = self.get_field_value("droprows")
@@ -2212,8 +2213,8 @@ class GeneralButtonTable2(Widget):
                 # is it a button link
                 if url and element[2]:
                     # its a link, apply button class
-                    if button_class:
-                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":button_class})
+                    if self._button_class:
+                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self._button_class})
                     else:
                         self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                      # apply button text
@@ -2238,7 +2239,8 @@ class GeneralButtonTable2(Widget):
         if self._jsonurl_list or self._dropurl or self._htmlurl_list:
             return jscript + self._make_fieldvalues(json_url=self._jsonurl_list,
                                                     dropurl=self._dropurl,
-                                                    html_url = self._htmlurl_list)
+                                                    html_url = self._htmlurl_list,
+                                                    button_class = self._button_class)
         return jscript
 
 
