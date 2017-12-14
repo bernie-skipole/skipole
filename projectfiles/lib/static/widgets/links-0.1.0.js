@@ -765,12 +765,20 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
             if (url && element[2]) {
                 // its a link, apply button class
                 if (button_class) {
-                    htmlcontent +=  "<a role = \"button\" class = \"" + button_class + "\">";
+                    htmlcontent +=  "<a role = \"button\" class = \"" + button_class + "\"";
                     }
                 else {
-                    htmlcontent +=  "<a role = \"button\">";
+                    htmlcontent +=  "<a role = \"button\"";
                     }
-                // apply button text and close a
+                // get url and create href attribute
+                if (element[3]) {
+                    url += "?ident=" + SKIPOLE.identdata + "&" + this.formname("contents") + "=" + element[3];
+                    }
+                else {
+                    url += "?ident=" + SKIPOLE.identdata
+                    }
+                htmlcontent +=  " href = \"" + url + "\">";
+                // apply button text and close <a> tag
                 if (celltext) {
                     htmlcontent += celltext + "</a>";
                     }
