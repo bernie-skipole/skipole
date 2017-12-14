@@ -708,6 +708,8 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
                  }
             }
         }
+    // the class of the button's if any
+    var button_class = fieldvalues["button_class"];
     // get column urls and number of columns
     var json_url = fieldvalues["json_url"];
     var html_url = fieldvalues["html_url"];
@@ -732,8 +734,60 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
     if (rows*cols != contents.length) {
         return;
         }
-    alert(rows);
+    // empty the table
+    the_widg.empty();
+    // and now start filling it again
+    var htmlcontent = "";
+    var cell = -1;
+    for (row = 0; row < rows; row++) {
+        htmlcontent += "<tr>";
+        // row content to be added here
 
+
+        for (col = 0; col < cols; col++) {
+            cell += 1;
+            var element = contents[cell];
+            // cell text
+            var celltext = '';
+            if (element[0]) {
+                celltext = element[0];
+                }
+            // cell style
+            if (element[1]) {
+                htmlcontent += "<td " + "style = \"" + element[1] + "\">";
+                }
+            else {
+                htmlcontent += "<td>";
+                }
+            // get html url for this column
+            var url = html_url[col];
+            // is it a button link
+            if (url && element[2]) {
+                // its a link, apply button class
+                if (button_class) {
+                    htmlcontent +=  "<a role = \"button\" class = \"" + button_class + "\">";
+                    }
+                else {
+                    htmlcontent +=  "<a role = \"button\">";
+                    }
+                // apply button text and close a
+                if (celltext) {
+                    htmlcontent += celltext + "</a>";
+                    }
+                else {
+                    htmlcontent += url + "</a>";
+                    }
+                }
+            else {
+                // not a link
+                htmlcontent += celltext;
+                }
+
+            htmlcontent += "</td>";
+            }
+        htmlcontent += "</tr>";
+        }
+    the_widg.html(htmlcontent);
     };
 
 
