@@ -32,9 +32,6 @@ from .... import skilift
 from ....skilift import editpage, editfolder, fromjson
 from .. import utils
 
-######
-from ....ski import skiboot
-
 
 def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Go to edit root folder, with no other call_data contents other than those set here"
@@ -171,6 +168,8 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
 def move_to_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "moves item defined by dragrows to folder defined by droprows and refreshes ftree via JSON call"
     editedprojname = call_data['editedprojname']
+
+    # folder_number is the top folder of ftree
     if 'folder_number' in call_data:
         folder_number = call_data['folder_number']
     else:
@@ -179,47 +178,41 @@ def move_to_folder(caller_ident, ident_list, submit_list, submit_dict, call_data
     # item_ident is the item to move
     item_ident = call_data['ftree', 'dragrows']
 
-    item_proj, item_num = item_ident.split("_")
-    if item_proj != editedprojname:
+    if '_' not in item_ident:
         raise FailPage(message="No valid item to move given")
 
-    item = skiboot.from_ident(item_ident, proj_ident=editedprojname, import_sections=False)
-    if not item:
+    item_proj, item_num = item_ident.split("_")
+    if item_proj != editedprojname:
         raise FailPage(message="No valid item to move given")
 
     # folder_ident is the target folder
     folder_ident = call_data['ftree', 'droprows']
 
+    if '_' not in folder_ident:
+        raise FailPage(message="No valid target folder given")
+
     folder_proj, folder_num = folder_ident.split("_")
     if folder_proj != editedprojname:
         raise FailPage(message="No valid target folder given")
 
-    folder = skiboot.from_ident(folder_ident, proj_ident=editedprojname, import_sections=False)
-    if not folder:
-        raise FailPage(message="No valid target folder given")
-
-    if folder.page_type != 'Folder':
-        raise FailPage(message="Target item is not a folder")
-
-    old_parent = item.parentfolder
-    if old_parent == folder:
-       raise FailPage(message="Parent folder unchanged?")
-
-    if item.name in folder:
-        raise FailPage("The folder already contains an item with this name")
-
-    editedproj = skiboot.getproject(editedprojname)
     try:
-        editedproj.save_item(item, folder.ident)
+        folder_num = int(folder_num)
+        item_num = int(item_num)
+    except:
+        raise FailPage(message="Submission not recognised - integer numbers of item idents are require")
+
+    # call function in skilift.editfolder
+    try:
+        editfolder.move_to_folder(editedprojname, item_num, folder_num)
     except ServerError as e:
-        print(e.message)
         raise FailPage(message=e.message)
     call_data['status'] = 'Item moved'
-
+    # refresh ftree
     contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
     page_data['ftree', 'contents'] = contents
     page_data['ftree', 'dragrows'] = dragrows
     page_data['ftree', 'droprows'] = droprows
+    # this is sent by json to the page
 
 
 def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
