@@ -354,8 +354,12 @@ class Project(object):
         old_parent = self.identitems[item_ident].parentfolder
         old_name = self.identitems[item_ident].name
         if new_parent_ident is not None:
-            # So its a folder change
-            new_parent = self.identitems[new_parent_ident]
+            # So its a parent folder change
+            if new_parent_ident.num is 0:
+                # new parent is root
+                new_parent = self.root
+            else:
+                new_parent = self.identitems[new_parent_ident]
             if new_parent == old_parent:
                 new_parent_ident = None
         if (item.page_type == 'TemplatePage') or (item.page_type == 'SVG'):
@@ -419,8 +423,12 @@ class Project(object):
         old_parent = self.identitems[item_ident].parentfolder
         old_name = self.identitems[item_ident].name
         if new_parent_ident is not None:
-            # So its a folder change
-            new_parent = self.identitems[new_parent_ident]
+            # So its a parent folder change
+            if new_parent_ident.num is 0:
+                # new parent is root
+                new_parent = self.root
+            else:
+                new_parent = self.identitems[new_parent_ident]
             if new_parent == old_parent:
                 new_parent_ident = None
         item.change = uuid.uuid4().hex
