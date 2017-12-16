@@ -5417,7 +5417,7 @@ false,
 "submit_list": [
 "editfolders",
 "editfolder",
-"drop_item"
+"move_to_folder"
 ],
 "submit_option": true,
 "target_ident": "general_json",

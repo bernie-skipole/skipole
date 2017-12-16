@@ -692,6 +692,7 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
    if (!this.widg_id) {
         return;
         }
+    var widg_id = this.widg_id
     var the_widg = this.widg;
     var fieldvalues = this.fieldvalues;
     // hide the widget
@@ -710,6 +711,9 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
         }
     // the class of the button's if any
     var button_class = fieldvalues["button_class"];
+    // the class of the rows
+    var even_class = fieldvalues["even_class"];
+    var odd_class = fieldvalues["odd_class"];
     // get column urls and number of columns
     var json_url = fieldvalues["json_url"];
     var html_url = fieldvalues["html_url"];
@@ -727,75 +731,137 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
 
     // The table contents
     var contents = this.fieldarg_in_result('contents', result, fieldlist);
-    if (!contents) {
-        return;
-        }
-    var rows = Math.floor(contents.length/cols);
-    if (rows*cols != contents.length) {
-        return;
-        }
-    // empty the table
-    the_widg.empty();
-    // and now start filling it again
-    var htmlcontent = "";
-    var cell = -1;
-    for (row = 0; row < rows; row++) {
-        htmlcontent += "<tr>";
-        // row content to be added here
-
-
-        for (col = 0; col < cols; col++) {
-            cell += 1;
-            var element = contents[cell];
-            // cell text
-            var celltext = '';
-            if (element[0]) {
-                celltext = element[0];
-                }
-            // cell style
-            if (element[1]) {
-                htmlcontent += "<td " + "style = \"" + element[1] + "\">";
-                }
-            else {
-                htmlcontent += "<td>";
-                }
-            // get html url for this column
-            var url = html_url[col];
-            // is it a button link
-            if (url && element[2]) {
-                // its a link, apply button class
-                if (button_class) {
-                    htmlcontent +=  "<a role = \"button\" class = \"" + button_class + "\"";
-                    }
-                else {
-                    htmlcontent +=  "<a role = \"button\"";
-                    }
-                // get url and create href attribute
-                if (element[3]) {
-                    url += "?ident=" + SKIPOLE.identdata + "&" + this.formname("contents") + "=" + element[3];
-                    }
-                else {
-                    url += "?ident=" + SKIPOLE.identdata
-                    }
-                htmlcontent +=  " href = \"" + url + "\">";
-                // apply button text and close <a> tag
-                if (celltext) {
-                    htmlcontent += celltext + "</a>";
-                    }
-                else {
-                    htmlcontent += url + "</a>";
-                    }
-                }
-            else {
-                // not a link
-                htmlcontent += celltext;
-                }
-
-            htmlcontent += "</td>";
+    if (contents) {
+        // If a request to renew the table is recieved, this bock
+        // empties the existing table, and re-draws it
+        var rows = Math.floor(contents.length/cols);
+        if (rows*cols != contents.length) {
+            return;
             }
-        htmlcontent += "</tr>";
+        // empty the table
+        the_widg.empty();
+        // and now start filling it again
+        var htmlcontent = "";
+        var cell = -1;
+        for (row = 0; row < rows; row++) {
+            // for each row in the table
+            // row class
+            if (even_class && (row % 2)) {
+                htmlcontent += "<tr class = \"" + even_class + "\">";
+                }
+            else if (odd_class && (!(row % 2))) {
+                htmlcontent += "<tr class = \"" + odd_class + "\">";
+                }
+            else {
+                htmlcontent += "<tr>";
+                }
+
+            for (col = 0; col < cols; col++) {
+                cell += 1;
+                var element = contents[cell];
+                // cell text
+                var celltext = '';
+                if (element[0]) {
+                    celltext = element[0];
+                    }
+                // cell style
+                if (element[1]) {
+                    htmlcontent += "<td " + "style = \"" + element[1] + "\">";
+                    }
+                else {
+                    htmlcontent += "<td>";
+                    }
+                // get html url for this column
+                var url = html_url[col];
+                // is it a button link
+                if (url && element[2]) {
+                    // its a link, apply button class
+                    if (button_class) {
+                        htmlcontent +=  "<a role = \"button\" class = \"" + button_class + "\"";
+                        }
+                    else {
+                        htmlcontent +=  "<a role = \"button\"";
+                        }
+                    // get url and create href attribute
+                    if (element[3]) {
+                        url += "?ident=" + SKIPOLE.identdata + "&" + this.formname("contents") + "=" + element[3];
+                        }
+                    else {
+                        url += "?ident=" + SKIPOLE.identdata
+                        }
+                    htmlcontent +=  " href = \"" + url + "\">";
+                    // apply button text and close <a> tag
+                    if (celltext) {
+                        htmlcontent += celltext + "</a>";
+                        }
+                    else {
+                        htmlcontent += url + "</a>";
+                        }
+                    }
+                else {
+                    // not a link
+                    htmlcontent += celltext;
+                    }
+                // close the cell
+                htmlcontent += "</td>";
+                }
+            htmlcontent += "</tr>";
+            }
+        the_widg.html(htmlcontent);
         }
-    the_widg.html(htmlcontent);
+    // dragrows and droprows
+    var dragrows = this.fieldarg_in_result('dragrows', result, fieldlist);
+    var droprows = this.fieldarg_in_result('droprows', result, fieldlist);
+    if (dragrows || droprows) {
+        // count the number of rows in the current table
+        var tablerows = $("#" + this.widg_id + " tr");
+        var rows = tablerows.length;
+        }
+    else {
+        return;
+        }
+    if (dragrows) {
+        if (dragrows.length != rows) {
+            return;
+            }
+        tablerows.each(function( row ) {
+            if (dragrows[row][1]) {
+                var dragdata = dragrows[row][1];
+                }
+            else {
+                var dragdata = "";
+                }
+            if (dragrows[row][0]) {
+                $(this).attr("draggable","true");
+                $(this).attr("ondragstart","SKIPOLE.widgets['" + widg_id + "'].dragstartfunc(event, '" + dragdata + "')");
+                }
+            else {
+                $(this).attr("draggable",null);
+                $(this).attr("ondragstart",null);
+                }
+            });
+        }
+    if (droprows) {
+        if (droprows.length != rows) {
+            return;
+            }
+        tablerows.each(function( row ) {
+            if (droprows[row][1]) {
+                var dropdata = droprows[row][1];
+                }
+            else {
+                var dropdata = "";
+                }
+            if (droprows[row][0]) {
+                $(this).attr("ondrop","SKIPOLE.widgets['" + widg_id + "'].dropfunc(event, '" + dropdata + "')");
+                $(this).attr("ondragover","SKIPOLE.widgets['" + widg_id + "'].allowdropfunc(event)");
+                }
+            else {
+                $(this).attr("ondrop",null);
+                $(this).attr("ondragover",null);
+                }
+            });
+        }
     };
 
 
