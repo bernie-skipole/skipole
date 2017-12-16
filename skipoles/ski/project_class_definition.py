@@ -330,6 +330,15 @@ class Project(object):
         self.clear_cache()
 
 
+    def save_item(self, item, new_parent_ident=None):
+        """Saves the page or folder - used to save an altered item, not to add a new one
+           If new_parent_ident is not None, indicates the item has moved to a different folder"""
+        if item.page_type == 'Folder':
+            self.save_folder(item, new_parent_ident)
+        else:
+            self.save_page(item, new_parent_ident)
+
+
     def save_page(self, item, new_parent_ident=None):
         """Saves the page - used to save an altered page, not to add a new one
            If new_parent_ident is not None, indicates the page has moved to a different folder"""

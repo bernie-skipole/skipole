@@ -1937,143 +1937,6 @@ class GeneralButtonTable1(Widget):
                     self[rownumber][colnumber][0] = textblk
 
 
-class GeneralButtonTable2old(Widget):
-    """A table of buttons and text."""
-
-    # This class does not display any error messages
-    display_errors = False
-
-    arg_descriptions = {
-                        'rows':FieldArg("integer", ""),
-                        'cols':FieldArgTable(['url', 'url']),
-                        'even_class':FieldArg("cssclass", ""),
-                        'odd_class':FieldArg("cssclass", ""),
-                        'hide':FieldArg("boolean", False, jsonset=True),
-                        'button_class':FieldArg("cssclass", ""),
-                        'contents':FieldArgTable(['text', 'text', 'boolean', 'text'], valdt=True)
-                        }
-
-    def __init__(self, name=None, brief='', **field_args):
-        """
-        rows: number of rows in the table
-        cols: A two element list for every column in the table
-                  col 0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
-                  col 1 - target JSON page link ident of buttons in each column, 
-              col0, col1 values should be emty strings if no url applied to column
-        even_class: class of even rows, if empty string, then no class will be applied
-        odd_class: class of odd rows, if empty string, then no class will be applied
-        hide: if True, table will be hidden
-        button_class: The CSS class to apply to the buttons
-        contents: A list for every element in the table, should be row*col lists
-                   col 0 - text string, either text to display or button text
-                   col 1 - A 'style' string set on the td cell, if empty string, no style applied
-                   col 2 - Is button? If False only text will be shown, not a button, button class will not be applied
-                           If True a link to link_ident/json_ident will be set with button_class applied to it
-                   col 3 - The get field value of the button link, empty string if no get field
- 
-                  This fieldname used as the widgfield for the get data
-        """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
-        self._jsonurl_list = []
-
-
-    def _build(self, page, ident_list, environ, call_data, lang):
-        "Build the table"
-        # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        fieldtable = self.get_field_value("contents")
-        button_class = self.get_field_value('button_class')
-        get_field_name = self.get_formname("contents")
-        elements = len(fieldtable)
-        rows = self.get_field_value("rows")
-        colidents = self.get_field_value("cols")
-        cols = len(colidents)
-        if (not rows) or (not cols):
-            self.show = False
-            return
-        if elements != rows*cols:
-            self._error = "Invalid table size : rows (%s) by cols (%s) not equal to given number of table elements (%s)" % (rows, cols, elements)
-            return
-        # list of json url's
-        self._jsonurl_list = [ skiboot.get_url(item[1], proj_ident=page.proj_ident) for item in colidents ]
-        # list of html url's
-        url_list = []
-        for item in colidents:
-            url = ''
-            if item[0]:
-                url = skiboot.get_url(item[0], proj_ident=page.proj_ident)
-            if not url:
-                url = skiboot.get_url('no_javascript', proj_ident=page.proj_ident)
-            if not url:
-                url = ''
-            url_list.append(url)
-        # set even row class
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
-        else:
-            even = ''
-        # set odd row class
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
-        else:
-            odd = ''
-        # cell  increments for every table cell
-        cell = -1
-        # create rows
-        for rownumber  in range(rows):
-            if even and (rownumber % 2) :
-                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":even})
-            elif odd and not (rownumber % 2):
-                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
-            else:
-                self[rownumber] = tag.Part(tag_name='tr')
-            for colnumber in range(cols):
-                cell += 1
-                element = fieldtable[cell]
-                # cell text
-                if element[0]:
-                    celltext = element[0]
-                else:
-                    celltext = ''
-                # cell class
-                if element[1]:
-                    self[rownumber][colnumber] = tag.Part(tag_name='td', attribs={"style":element[1]})
-                else:
-                    self[rownumber][colnumber] = tag.Part(tag_name='td')
-                # get html url for this column
-                url = url_list[colnumber]
-                # is it a button link
-                if url and element[2]:
-                    # its a link, apply button class
-                    if button_class:
-                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":button_class})
-                    else:
-                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
-                     # apply button text
-                    if celltext:
-                        self[rownumber][colnumber][0][0] = celltext
-                    else:
-                        self[rownumber][colnumber][0][0] = url
-                    # create a url for the href
-                    cellurl = self.make_get_url(page, url, {get_field_name:element[3]}, True)
-                    # apply url and href
-                    self[rownumber][colnumber][0].update_attribs({"href": cellurl})
-                else:
-                    # not a link
-                    self[rownumber][colnumber][0] = celltext
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-""".format(ident = self.get_id())
-        if self._jsonurl_list:
-            return jscript + self._make_fieldvalues(url=self._jsonurl_list)
-        return jscript
-
-
-
 class GeneralButtonTable2(Widget):
     """A table of buttons and text."""
 
@@ -2081,8 +1944,8 @@ class GeneralButtonTable2(Widget):
     display_errors = False
 
     arg_descriptions = {
-                        'dragrows':FieldArgTable(["boolean", "text"], valdt=True),
-                        'droprows':FieldArgTable(["boolean", "text"], valdt=True),
+                        'dragrows':FieldArgTable(["boolean", "text"], valdt=True, jsonset=True),
+                        'droprows':FieldArgTable(["boolean", "text"], valdt=True, jsonset=True),
                         'dropident':FieldArg("url", ""),
                         'cols':FieldArgTable(['url', 'url']),
                         'even_class':FieldArg("cssclass", ""),
@@ -2123,6 +1986,8 @@ class GeneralButtonTable2(Widget):
         self._dropurl = ''
         self._htmlurl_list = []
         self._button_class = ''
+        self._even = ''
+        self._odd = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -2158,22 +2023,18 @@ class GeneralButtonTable2(Widget):
         self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
         # set even row class
         if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
-        else:
-            even = ''
+            self._even = self.get_field_value('even_class')
         # set odd row class
         if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
-        else:
-            odd = ''
+            self._odd = self.get_field_value('odd_class')
         # cell  increments for every table cell
         cell = -1
         # create rows
         for rownumber  in range(rows):
-            if even and (rownumber % 2) :
-                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":even})
-            elif odd and not (rownumber % 2):
-                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
+            if self._even and (rownumber % 2) :
+                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":self._even})
+            elif self._odd and not (rownumber % 2):
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":self._odd})
             else:
                 self[rownumber] = tag.Part(tag_name='tr')
             if dragtable:
@@ -2240,7 +2101,9 @@ class GeneralButtonTable2(Widget):
             return jscript + self._make_fieldvalues(json_url=self._jsonurl_list,
                                                     dropurl=self._dropurl,
                                                     html_url = self._htmlurl_list,
-                                                    button_class = self._button_class)
+                                                    button_class = self._button_class,
+                                                    even_class = self._even,
+                                                    odd_class = self._odd)
         return jscript
 
 

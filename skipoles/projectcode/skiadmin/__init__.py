@@ -453,11 +453,11 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     if projname != skilift.admin_project():
         return
 
-    # header information
-    if ("adminhead","page_head","large_text") not in page_data:
-        page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (call_data['editedprojname'], call_data['editedprojversion'])
 
     if page_type == "TemplatePage":
+        # header information
+        if ("adminhead","page_head","large_text") not in page_data:
+            page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (call_data['editedprojname'], call_data['editedprojversion'])
         # fill in navigation information
         set_navigation(identnum, call_data, page_data)
 
