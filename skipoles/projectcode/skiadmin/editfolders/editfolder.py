@@ -168,24 +168,8 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
         page_data['sdd1:show'] = False
 
 
-
-def drop_item(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Refreshes ftree via JSON call"
-    editedprojname = call_data['editedprojname']
-    if 'folder_number' in call_data:
-        folder_number = call_data['folder_number']
-    else:
-        raise FailPage(message = "Folder missing")
-    contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
-    page_data['ftree', 'contents'] = contents
-    page_data['ftree', 'dragrows'] = dragrows
-    page_data['ftree', 'droprows'] = droprows
-
-
-
-
 def move_to_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "moves dragrows to droprows"
+    "moves item defined by dragrows to folder defined by droprows and refreshes ftree via JSON call"
     editedprojname = call_data['editedprojname']
     if 'folder_number' in call_data:
         folder_number = call_data['folder_number']
@@ -228,6 +212,7 @@ def move_to_folder(caller_ident, ident_list, submit_list, submit_dict, call_data
     try:
         editedproj.save_item(item, folder.ident)
     except ServerError as e:
+        print(e.message)
         raise FailPage(message=e.message)
     call_data['status'] = 'Item moved'
 

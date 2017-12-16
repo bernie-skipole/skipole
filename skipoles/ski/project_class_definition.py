@@ -451,6 +451,14 @@ class Project(object):
             self.clear_cache()
             return
         # change of folder
+        # A folder cannot be moved into a sub folder of itself
+
+        folder_list = new_parent.parent_list()
+        # folder list is a list of (name, identnumber) starting at root
+        folder_ident_numbers = [ identnumber for name,identnumber in folder_list ]
+        if item.ident.num in folder_ident_numbers:
+            # item is a parent of new_parent
+            raise ServerError(message="Sorry, a folder cannot be moved into a subfolder of itself.")
         if item.name in new_parent.pages:
             raise ServerError(message="Sorry, a page with that name already exists")
         if item.name in new_parent.folders:
