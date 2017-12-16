@@ -26075,7 +26075,7 @@ false
 "parts": [
 [
 "Text",
-"Choose a folder or page to edit:"
+"Choose a folder or page to edit:\r\nAlso, if your browser supports the function, you can drag and drop items into another parent folder."
 ]
 ]
 }

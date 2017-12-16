@@ -102,8 +102,8 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
                                    ["", ""],
                                    ["", ""],
                                    ["edit_action", ""],
-                                   ["", ""],
-                                   ["", ""],
+                                   ["edit_action", ""],
+                                   ["edit_action", ""],
                                    ["no_javascript", "2004"]  ]
 
     if 'status' not in call_data:
