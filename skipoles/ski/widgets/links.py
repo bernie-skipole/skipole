@@ -1957,7 +1957,7 @@ class GeneralButtonTable2(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """
-        dragrows: A three element list for every row in the table, could be empty if no drag operation
+        dragrows: A two element list for every row in the table, could be empty if no drag operation
                   col 0 - True if draggable, False if not
                   col 1 - If col 0 is True, this is data sent with the call wnen a row is dropped
         droprows: A two element list for every row in the table, could be empty if no drop operation
