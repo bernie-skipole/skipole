@@ -224,6 +224,36 @@ def _check_parent_number(project, parent_number):
     return parentinfo
 
 
+def move_to_folder(project, item_number, new_folder_number):
+    "Moves a given item - a folder or page, to a new parent folder"
+    project_loaded(project)
+    if not isinstance(item_number, int):
+        raise ServerError(message="item_number is not an integer")
+    if not isinstance(new_folder_number, int):
+        raise ServerError(message="new parent folder number is not an integer")
+
+    item = skiboot.from_ident(item_number, proj_ident=project, import_sections=False)
+    if not item:
+        raise ServerError(message="No valid item to move given")
+
+    folder = skiboot.from_ident(new_folder_number, proj_ident=project, import_sections=False)
+    if not folder:
+        raise ServerError(message="No valid target folder given")
+
+    if folder.page_type != 'Folder':
+        raise ServerError(message="Target item is not a folder")
+
+    old_parent = item.parentfolder
+    if old_parent == folder:
+       raise ServerError(message="Parent folder unchanged?")
+
+    if item.name in folder:
+        raise ServerError(message="The folder already contains an item with this name")
+
+    editedproj = skiboot.getproject(project)
+    editedproj.save_item(item, folder.ident)
+
+
 def make_new_folder(project, parent_number, folder_dict):
     """Creates a new folder, raise ServerError on failure, returns new folder ident number
     folder_dict is something like:
