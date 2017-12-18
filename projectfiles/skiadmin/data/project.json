@@ -15613,6 +15613,9 @@ false
 "name": "upload_description",
 "brief": "div holding further info about upload",
 "fields": {
+"drag": "",
+"drop": "",
+"dropident": "",
 "hide": false,
 "show": true,
 "tag": "div",
