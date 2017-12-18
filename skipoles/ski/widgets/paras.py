@@ -40,25 +40,57 @@ class TagBlock(Widget):
     display_errors = False
 
     arg_descriptions = {'tag':FieldArg("text", 'div'),
-                        'hide':FieldArg("boolean", False, jsonset=True)}
+                        'hide':FieldArg("boolean", False, jsonset=True),
+                        'drag':FieldArg("text", '', valdt=True, jsonset=True),
+                        'drop':FieldArg("text", '', valdt=True, jsonset=True),
+                        'dropident':FieldArg("url", "")}
 
     _container = (0,)
 
     def __init__(self, name=None, brief='', **field_args):
-        """Acts as a widget, containing other widgets, so show, class and hide can be set"""
+        """Acts as a widget, containing other widgets, so show, class and hide can be set
+           drag - if given this is text data sent with a JSON call when this item is dropped
+                  if nothing set here, this item will not be set as draggable.
+           drop - if given this is text data sent with a JSON call when another item is dropped here
+                  if nothing set here, this item will not be set as droppable.
+           dropident - ident or label of target which returns a JSON page, called when a drop occurs here
+
+        """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] =  ""  # where items can be contained
+        self._dropurl = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         self.tag_name = self.get_field_value('tag')
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
+        # dropurl
+        self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
+        # drag
+        drag = self.get_field_value("drag")
+        if drag:
+            self.update_attribs(
+{"draggable":"true",
+"ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
+                                                                                 data = drag)})
+        # drop
+        drop = self.get_field_value("drop")
+        if drop:
+            self.update_attribs(
+{"ondrop":"SKIPOLE.widgets['{ident}'].dropfunc(event, '{data}')".format(ident = self.get_id(), data = drop),
+"ondragover":"SKIPOLE.widgets['{ident}'].allowdropfunc(event)".format(ident = self.get_id())})
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets drop and drag"""
+        if self._dropurl:
+            return self._make_fieldvalues(dropurl=self._dropurl)
+
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class, and with div tag, or any other specified -->
-               <!-- and attribute style=display:none if hide is True -->
+       <!-- attribute style=display:none if hide is True, with drag and drop events if enabled -->
   <!-- further html and widgets can be contained here -->
 </div>"""
 
