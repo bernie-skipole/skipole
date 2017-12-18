@@ -56,9 +56,13 @@ SKIPOLE.paras.TagBlock.prototype.dropfunc = function (e, data) {
     if (e.dataTransfer.getData("text/plain")) {
         senddata = senddata + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
         }
+    $("body").css('cursor','wait');
     $.getJSON(url, senddata)
         .done(function(result){
             SKIPOLE.setfields(result);
+            })
+        .always(function(){
+            $("body").css('cursor','auto');
             });
     };
 SKIPOLE.paras.TagBlock.prototype.allowdropfunc = function (e) {

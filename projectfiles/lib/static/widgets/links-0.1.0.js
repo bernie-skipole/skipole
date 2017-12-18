@@ -836,10 +836,12 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
                 var dragdata = "";
                 }
             if (dragrows[row][0]) {
+                $(this).attr("style","cursor:move;");
                 $(this).attr("draggable","true");
                 $(this).attr("ondragstart","SKIPOLE.widgets['" + widg_id + "'].dragstartfunc(event, '" + dragdata + "')");
                 }
             else {
+                $(this).attr("style",null);
                 $(this).attr("draggable",null);
                 $(this).attr("ondragstart",null);
                 }
