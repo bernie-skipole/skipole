@@ -2044,7 +2044,8 @@ class GeneralButtonTable2(Widget):
                     dragdata = ""
                 if dragtable[rownumber][0]:
                     self[rownumber].update_attribs(
-{"draggable":"true",
+{"style":"cursor:move;",
+ "draggable":"true",
  "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
                                                                                   data = dragdata)})
             if droptable:
