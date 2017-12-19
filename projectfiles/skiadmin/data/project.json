@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.47",
-"skipole": "0.0.47",
+"version": "0.0.48",
+"skipole": "0.0.48",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -454,6 +454,60 @@
 "size": "20",
 "title": "",
 "type": "color",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+"editdom": [
+"Section",
+{
+"tag_name": "div",
+"brief": "Creates table of parts and widgets",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "parts_error",
+"brief": "Displays any errors for the table",
+"fields": {
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"hide": true,
+"show": true,
+"show_error": "Invalid action",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
+}
+],
+[
+"Widget",
+{
+"class": "links.GeneralButtonTable2",
+"name": "parts",
+"brief": "Table of parts with movement and edit links",
+"fields": {
+"button_class": "",
+"cols": [],
+"contents": [],
+"dragrows": [],
+"dropident": "",
+"droprows": [],
+"even_class": "",
+"hide": false,
+"odd_class": "",
+"show": true,
 "widget_class": "",
 "widget_style": ""
 }
