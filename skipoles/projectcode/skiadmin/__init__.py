@@ -58,6 +58,7 @@ _MODULES_TUPLE = tuple(name for (module_loader, name, ispkg) in pkgutil.iter_mod
 # 'page' or 'folder' as a tuple of its ident
 # 'pchange', 'fchange', 'schange' as the page, folder, section integer change number
 _SESSION_DATA = collections.OrderedDict()
+_IDENT_DATA = 0
 
 
 # This dictionary maps responder ident numbers to the submit_data functions
@@ -441,7 +442,7 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     """Stores session data under a random generated key in _SESSION_DATA and send the key as ident_data
        Also limits the length of _SESSION_DATA by popping the oldest member"""
 
-    global _SESSION_DATA
+    global _SESSION_DATA, _IDENT_DATA
 
     # do not include session data for these types of pages
     if page_type in ('FilePage', 'CSS'):
@@ -537,9 +538,11 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     if sent_session_data:
         # store in _SESSION_DATA, and send the key as ident_data
         # generate a key
-        ident_data = uuid.uuid4().hex
-        while ident_data in _SESSION_DATA:
-            ident_data = uuid.uuid4().hex
+        _IDENT_DATA += 1
+        if "ident_data" in call_data:
+            ident_data = str(_IDENT_DATA) + "a" + str(random.randrange(1000, 9999)) + "b" + str(call_data["ident_data"])
+        else:
+            ident_data = str(_IDENT_DATA) + "a" + str(random.randrange(1000, 9999)) + "b0"
         _SESSION_DATA[ident_data] = sent_session_data
         # if length of _SESSION_DATA is longer than 50, remove old values
         if len(_SESSION_DATA)>50:
