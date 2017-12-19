@@ -495,10 +495,10 @@
 "Widget",
 {
 "class": "links.GeneralButtonTable2",
-"name": "parts",
+"name": "domtable",
 "brief": "Table of parts with movement and edit links",
 "fields": {
-"button_class": "",
+"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
 "cols": [],
 "contents": [],
 "dragrows": [],
@@ -506,9 +506,9 @@
 "droprows": [],
 "even_class": "",
 "hide": false,
-"odd_class": "",
+"odd_class": "w3-theme-d2",
 "show": true,
-"widget_class": "",
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
 "widget_style": ""
 }
 }
@@ -32083,6 +32083,37 @@ false
 "brief": "Table of section contents",
 "section_name": "editparts",
 "placename": "editparts"
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"editdom section with widget domtable"
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "New Tag",
+"show": true
+}
+]
+]
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "editdom with widget domtable",
+"section_name": "editdom",
+"placename": "editdom"
 }
 ],
 [
