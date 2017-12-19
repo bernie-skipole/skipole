@@ -601,3 +601,175 @@ def extendparts(rows, item, part_loc, contents, no_link, empty, indent=1):
 
     return rows
 
+
+def domcontents(item, part_loc, contents, rows=1, indent=1):
+    "Creates the contents of the domtable"
+
+    #    contents: A list for every element in the table, should be row*col lists
+    #               0 - text string, either text to display or button text
+    #               1 - A 'style' string set on the td cell, if empty string, no style applied
+    #               2 - Is button? If False only text will be shown, not a button, button class will not be applied
+    #                       If True a link to link_ident/json_ident will be set with button_class applied to it
+    #               3 - The get field value of the button link, empty string if no get field
+
+    if not isinstance(item, tag.Part):
+        raise ServerError("utils.domcontents incorrectly called")
+    indent += 1
+    padding = "padding-left : %sem;" % (indent,)
+    last_index = len(item)-1
+    u_r_flag = False
+
+    last_row_at_this_level = 0
+
+    #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert   #remove
+
+    for index, part in enumerate(item.parts):
+        part_location_string = part_loc + '-' + str(index)
+        rows += 1
+        # the row text
+        if isinstance(part, widgets.Widget) or isinstance(part, widgets.ClosedWidget):
+            part_name = 'Widget ' + part.name
+            if len(part_name)>40:
+                part_name = part_name[:35] + '...'
+            contents.append([part_name, padding, False, ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        elif isinstance(part, tag.TextBlock):
+            contents.append(['TextBlock', padding, False, ''])
+            part_ref = part.textref
+            if len(part_ref)>40:
+                part_ref = part_ref[:35] + '...'
+            if not part_ref:
+                part_ref = '-'
+            contents.append([part_ref, '', False, ''])
+        elif isinstance(part, tag.SectionPlaceHolder):
+            section_name = part.placename
+            if section_name:
+                section_name = "Section " + section_name
+            else:
+                section_name = "Section -None-"
+            if len(section_name)>40:
+                section_name = section_name[:35] + '...'
+            contents.append([section_name, padding, False, ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        elif isinstance(part, str):
+            contents.append(['Text', padding, False, ''])
+            if len(part)<40:
+                part_str = part
+            else:
+                part_str = part[:35] + '...'
+            if not part_str:
+                part_str = '-'
+            contents.append([part_str, '', False, ''])
+        elif isinstance(part, tag.HTMLSymbol):
+            contents.append(['Symbol', padding, False, ''])
+            if len(part.text)<40:
+                part_str = part.text
+            else:
+                part_str = part.text[:35] + '...'
+            if not part_str:
+                part_str = '-'
+            contents.append([part_str, '', False, ''])
+        elif isinstance(part, tag.Comment):
+            contents.append(['Comment', padding, False, ''])
+            if len(part.text)<33:
+                part_str =  "<!--"+part.text + '-->'
+            else:
+                part_str = "<!--"+part.text[:31] + '...'
+            if not part_str:
+                part_str = '<!---->'
+            contents.append([part_str, '', False, ''])
+        elif isinstance(part, tag.ClosedPart):
+            if part.attribs:
+                tag_name = "<%s ... />" % part.tag_name
+            else:
+                tag_name = "<%s />" % part.tag_name
+            contents.append([tag_name, padding, False, ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        elif isinstance(part, tag.Part):
+            if part.attribs:
+                tag_name = "<%s ... >" % part.tag_name
+            else:
+                tag_name = "<%s>" % part.tag_name
+            contents.append([tag_name, padding, False, ''])
+            part_brief = part.brief
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        else:
+            contents.append(['UNKNOWN', padding, False, ''])
+            contents.append(['ERROR', '', False, ''])
+
+        # UP ARROW
+        if rows == 2:
+            # second line in table cannot move upwards
+            contents.append(['', '', False, '' ])
+        else:
+            contents.append(['&uarr;', 'width : 1%;', True, part_location_string])
+
+        # UP RIGHT ARROW
+        if u_r_flag:
+            contents.append(['&nearr;', 'width : 1%;', True, part_location_string])
+        else:
+            contents.append(['', '', False, '' ])
+
+        # DOWN ARROW
+        if (indent == 2) and (index == last_index):
+            # the last line at this top indent has been added, no down arrow
+            contents.append(['', '', False, '' ])
+        else:
+            contents.append(['&darr;', 'width : 1%;', True, part_location_string])
+
+        # DOWN RIGHT ARROW
+        # set to empty, when next line is created if down-right not applicable
+        contents.append(['', '', False, '' ])
+
+        # EDIT
+        contents.append(['Edit', 'width : 1%;', True, part_location_string])
+
+        # INSERT or APPEND
+        if isinstance(part, tag.Part) and not isinstance(part, widgets.Widget):
+            if part.tag_name == 'script' and part.has_attrib('src'):
+                contents.append(['Append', 'width : 1%;text-align: center;', True, part_location_string])
+            else:
+                contents.append(['Insert', 'width : 1%;text-align: center;', True, part_location_string])
+        else:
+            contents.append(['Append', 'width : 1%;text-align: center;', True, part_location_string])
+
+        # REMOVE
+        contents.append(['Remove', 'width : 1%;', True, part_location_string])
+
+        u_r_flag = False
+        if isinstance(part, tag.Part) and not isinstance(part, widgets.Widget):
+            if last_row_at_this_level and (part.tag_name != 'script') and (part.tag_name != 'pre'):
+                # add down right arrow in previous row at this level, get loc_string from adjacent edit cell
+                editcell = contents[last_row_at_this_level *9-3]
+                loc_string = editcell[3]
+                contents[last_row_at_this_level *9-4] = ['&searr;', 'width : 1%;', True, loc_string]
+            last_row_at_this_level = rows
+            rows = domcontents(part, part_location_string, contents, rows, indent)
+            # set u_r_flag for next item below this one
+            if  (part.tag_name != 'script') and (part.tag_name != 'pre'):
+                u_r_flag = True
+        else:
+            last_row_at_this_level =rows
+
+    return rows
+
+

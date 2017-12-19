@@ -144,6 +144,53 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     page_data['editparts', 'parts', 'contents']  = contents
     page_data['editparts', 'parts', 'rows']  = rows
 
+    ####################################################
+    # new editdom,domtable
+
+
+    #    cols: A two element list for every column in the table, must be given with empty values if no links
+    #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
+    #              1 - target JSON page link ident of buttons in each column,
+
+    #    contents: A list for every element in the table, should be row*col lists
+    #               0 - text string, either text to display or button text
+    #               1 - A 'style' string set on the td cell, if empty string, no style applied
+    #               2 - Is button? If False only text will be shown, not a button, button class will not be applied
+    #                       If True a link to link_ident/json_ident will be set with button_class applied to it
+    #               3 - The get field value of the button link, empty string if no get field
+
+    # create first row of the table
+    domcontents = [
+                   [tag_name, '', False, '' ],
+                   [section_brief, '', False, '' ],
+                   ['', '', False, '' ],                                             # no up arrow for top line
+                   ['', '', False, '' ],                                             # no up_right arrow for top line
+                   ['', '', False, '' ],                                             # no down arrow for top line
+                   ['', '', False, '' ],                                             # no down_right arrow for top line
+                   ['Edit',  'width : 1%;', True, section_name],                     # edit - link to part_edit = 43101
+                   ['Insert','width : 1%;text-align: center;', True, section_name],  # insert - link to page 43102
+                   ['', '', False, '' ],                                             # no remove image for top line
+                ]
+
+    # add further items to domcontents
+    rows = utils.domcontents(section, section_name, domcontents)
+
+
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],            # tag name
+                                                      ['',''],            # brief
+                                                      ['admin_home',''],  # up arrow
+                                                      ['admin_home',''],  # up right
+                                                      ['admin_home',''],  # down
+                                                      ['admin_home',''],  # down right
+                                                      ['admin_home',''],  # edit
+                                                      ['admin_home',''],  # insert/append
+                                                      ['admin_home',''],  # remove
+                                                   ]
+
+    ###############################################################
+
+
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
         del call_data['location']

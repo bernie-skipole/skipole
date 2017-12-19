@@ -2082,6 +2082,8 @@ class GeneralButtonTable2(Widget):
                      # apply button text
                     if celltext:
                         self[rownumber][colnumber][0][0] = celltext
+                        # escape html
+                        self[rownumber][colnumber][0].htmlescaped = False
                     else:
                         self[rownumber][colnumber][0][0] = url
                     # create a url for the href

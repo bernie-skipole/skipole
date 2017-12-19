@@ -264,6 +264,11 @@
 "odd_class": "w3-theme-d2",
 "widget_class": "w3-table w3-theme-d1 w3-border w3-bordered"
 },
+"GeneralButtonTable2": {
+"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
+"odd_class": "w3-theme-d2",
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered"
+},
 "JSONButtonLink": {
 "error_class": "w3-button w3-block w3-theme-action",
 "widget_class": "w3-button w3-block w3-theme-d4"
