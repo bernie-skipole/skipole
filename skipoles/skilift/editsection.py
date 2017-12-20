@@ -60,3 +60,26 @@ def sectionchange(project, section_name):
     if section is None:
         return
     return section.change
+
+
+def del_item(part_info):
+    "Deletes the item given by part_info"
+    if part_info is None:
+        raise ServerError(message="Item not found")
+    project = part_info.project
+    section_name = part_info.section_name
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if not section_name:
+         raise ServerError(message="Given section_name is invalid")
+    section = proj.section(section_name, makecopy=False)
+    if section is None:
+        raise ServerError(message="Given Section not found")
+    # remove the item
+    try:
+        section.del_location_value(part_info.location_list)
+    except:
+        raise ServerError(message="Unable to delete item")
+
+

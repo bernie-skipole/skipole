@@ -25,7 +25,7 @@
 #   limitations under the License.
 
 
-import pkgutil, re
+import pkgutil, re, html
 
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
@@ -117,7 +117,7 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     else:
         tag_name = '<' + section.tag_name + '>'
 
-    section_brief = section.brief
+    section_brief = html.escape(section.brief)
 
     if len( section_brief)>40:
         section_brief =  section_brief[:35] + '...'
@@ -191,7 +191,7 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
                                                       ['admin_home',''],          # down right
                                                       ['edit_section_dom',''],    # edit
                                                       ['admin_home',''],          # insert/append
-                                                      ['admin_home',''],          # remove
+                                                      ['remove_section_dom','']   # remove
                                                    ]
 
     ###############################################################
