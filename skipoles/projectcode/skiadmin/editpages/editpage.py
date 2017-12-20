@@ -1278,6 +1278,38 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     raise FailPage("Item to edit has not been recognised")
 
 
+def add_to_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """Called by domtable to either insert or append an item in a section
+       sets page_data to populate the insert or append page and then go to appropriate template page"""
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+    insert = False
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the section name
+        location_integers = []
+    else:
+        location_integers = [ int(i) for i in location_list[1:]]
+    part_tuple = part_info(editedprojname, None, location_list[0], [location_list[0], None, location_integers])
+    if part_tuple is None:
+        raise FailPage("Item to append to has not been recognised")
+    # goto either the install or append page
+    if part_tuple.insert:
+        # insert
+
+
+        raise GoTo(target = '23609', clear_submitted=True)
+    else:
+        # append
+
+
+        raise GoTo(target = '23509', clear_submitted=True)
+
+
 def remove_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to remove an item in a section"
 
