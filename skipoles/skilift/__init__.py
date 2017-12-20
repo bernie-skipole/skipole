@@ -37,7 +37,7 @@ from ..ski import skiboot
 
 ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'])
 
-PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'widget_name', 'container_number', 'location_list', 'part_type'])
+PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'widget_name', 'container_number', 'location_list', 'part_type', 'insert'])
 
 PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder'])
 
@@ -168,7 +168,7 @@ def part_info(project, pagenumber, section_name, location):
        a container integer, such as 0 for widget container 0, or None if not in container
        a tuple or list of location integers
        returns None if part not found, otherwise returns a namedtuple with items
-       project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type
+       project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type, insert
     """
     # raise error if invalid project
     project_loaded(project)
@@ -179,6 +179,7 @@ def part_info(project, pagenumber, section_name, location):
     page_part = None
     widget_name = None
     part_type = None
+    insert = False
 
     # get page or section - an error if both are present
     if pagenumber is not None:
@@ -222,7 +223,12 @@ def part_info(project, pagenumber, section_name, location):
     if hasattr(part, 'name'):
         widget_name = part.name
 
-    return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type)
+    # insert is True if the item is a tag.Part which can have further items inserted, False otherwise
+    if part_type == 'Part':
+        if not (part.tag_name == 'script' and part.has_attrib('src')):
+            insert = True
+
+    return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type, insert)
 
 
 def ident_exists(project, itemnumber):
