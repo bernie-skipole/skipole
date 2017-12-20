@@ -160,8 +160,14 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     #               3 - The get field value of the button link, empty string if no get field
 
     # create first row of the table
+
+    if section.attribs:
+        section_tag = '&lt;' + section.tag_name + ' ... &gt;'
+    else:
+        section_tag = '&lt;' + section.tag_name + '&gt;'
+
     domcontents = [
-                   [tag_name, '', False, '' ],
+                   [section_tag, '', False, '' ],
                    [section_brief, '', False, '' ],
                    ['', '', False, '' ],                                             # no up arrow for top line
                    ['', '', False, '' ],                                             # no up_right arrow for top line
@@ -177,15 +183,15 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
 
 
     page_data['editdom', 'domtable', 'contents']  = domcontents
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],            # tag name
-                                                      ['',''],            # brief
-                                                      ['admin_home',''],  # up arrow
-                                                      ['admin_home',''],  # up right
-                                                      ['admin_home',''],  # down
-                                                      ['admin_home',''],  # down right
-                                                      ['admin_home',''],  # edit
-                                                      ['admin_home',''],  # insert/append
-                                                      ['admin_home',''],  # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                    # tag name
+                                                      ['',''],                    # brief
+                                                      ['admin_home',''],          # up arrow
+                                                      ['admin_home',''],          # up right
+                                                      ['admin_home',''],          # down
+                                                      ['admin_home',''],          # down right
+                                                      ['edit_section_dom',''],    # edit
+                                                      ['admin_home',''],          # insert/append
+                                                      ['admin_home',''],          # remove
                                                    ]
 
     ###############################################################

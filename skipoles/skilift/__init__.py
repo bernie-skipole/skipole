@@ -219,6 +219,9 @@ def part_info(project, pagenumber, section_name, location):
     if hasattr(part, '__class__'):
         part_type = part.__class__.__name__
 
+    if hasattr(part, 'name'):
+        widget_name = part.name
+
     return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type)
 
 

@@ -682,17 +682,17 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
         elif isinstance(part, tag.Comment):
             contents.append(['Comment', padding, False, ''])
             if len(part.text)<33:
-                part_str =  "<!--"+part.text + '-->'
+                part_str =  "&lt;!--"+part.text + '--&gt;'
             else:
-                part_str = "<!--"+part.text[:31] + '...'
+                part_str = "&lt;!--"+part.text[:31] + '...'
             if not part_str:
-                part_str = '<!---->'
+                part_str = '&lt;!----&gt;'
             contents.append([part_str, '', False, ''])
         elif isinstance(part, tag.ClosedPart):
             if part.attribs:
-                tag_name = "<%s ... />" % part.tag_name
+                tag_name = "&lt;%s ... /&gt;" % part.tag_name
             else:
-                tag_name = "<%s />" % part.tag_name
+                tag_name = "&lt;%s /&gt;" % part.tag_name
             contents.append([tag_name, padding, False, ''])
             part_brief = part.brief
             if len(part_brief)>40:
@@ -702,9 +702,9 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
             contents.append([part_brief, '', False, ''])
         elif isinstance(part, tag.Part):
             if part.attribs:
-                tag_name = "<%s ... >" % part.tag_name
+                tag_name = "&lt;%s ... &gt;" % part.tag_name
             else:
-                tag_name = "<%s>" % part.tag_name
+                tag_name = "&lt;%s&gt;" % part.tag_name
             contents.append([tag_name, padding, False, ''])
             part_brief = part.brief
             if len(part_brief)>40:
