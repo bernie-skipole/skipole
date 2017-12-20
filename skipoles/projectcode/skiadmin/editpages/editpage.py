@@ -28,7 +28,7 @@
 
 from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
-from ....skilift import fromjson
+from ....skilift import fromjson, part_info
 
 from .. import utils, css_styles
 
@@ -1216,3 +1216,55 @@ def downloadpage(caller_ident, ident_list, submit_list, submit_dict, call_data, 
         line_list.append(binline)
     page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
     return line_list
+
+
+
+def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to edit an item in a section"
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is section name with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the section name
+        # edit the top section html part
+        call_data['part'] = part
+        raise GoTo(target = 53007, clear_submitted=True)
+
+    location_integers = [ int(i) for i in location_list[1:]]
+    part_tuple = part_info(editedprojname, None, location_list[0], [location_list[0], None, location_integers])
+    if part_tuple.widget_name:
+        # item to edit is a widget
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 54006, clear_submitted=True)  # calls a del widget_name responder, may be removable in future
+    if part_tuple.part_type == "Part":
+        # edit the html part
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 53007, clear_submitted=True)
+    if part_tuple.part_type == "ClosedPart":
+        # edit the html part
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 53007, clear_submitted=True)
+    if part_tuple.part_type == "HTMLSymbol":
+        # edit the symbol
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51107, clear_submitted=True)
+
+
+    print(part_tuple.part_type)
+
+
+
+
+
+
+
