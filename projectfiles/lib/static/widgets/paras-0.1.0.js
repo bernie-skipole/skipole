@@ -115,6 +115,7 @@ SKIPOLE.paras.TagBlock.prototype.setvalues = function (fieldlist, result) {
         }
     };
 
+
 SKIPOLE.paras.DivStyleDiv = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
@@ -129,14 +130,86 @@ SKIPOLE.paras.DivHTML = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.paras.DivHTML.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.paras.DivHTML.prototype.constructor = SKIPOLE.paras.DivHTML;
+SKIPOLE.paras.DivHTML.prototype.dragstartfunc = function (e, data) {
+    e.dataTransfer.setData("text/formname", this.formname('drag'));
+    e.dataTransfer.setData("text/plain", data);
+    };
+SKIPOLE.paras.DivHTML.prototype.dropfunc = function (e, data) {
+    e.preventDefault();
+    var dragwidgfield = e.dataTransfer.getData("text/formname");
+    var url = this.fieldvalues["dropurl"];
+    if (!url) {
+        return;
+        }
+    // now make a call, including data from the drag element and the drop element
+    var dropwidgfield = this.formname('drop');
+    var senddata = "ident=" + SKIPOLE.identdata;
+    if (data) {
+        senddata = senddata + "&" + dropwidgfield + "=" + data;
+        }
+    if (e.dataTransfer.getData("text/plain")) {
+        senddata = senddata + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
+        }
+    $("body").css('cursor','wait');
+    $.getJSON(url, senddata)
+        .done(function(result){
+            SKIPOLE.setfields(result);
+            })
+        .always(function(){
+            $("body").css('cursor','auto');
+            });
+    };
+SKIPOLE.paras.DivHTML.prototype.allowdropfunc = function (e) {
+     e.preventDefault();
+    };
+
 SKIPOLE.paras.DivHTML.prototype.setvalues = function (fieldlist, result) {
-    /* This widget accepts fields - set_html */
    if (!this.widg_id) {
         return;
         }
+    var widg_id = this.widg_id
+    var the_widg = this.widg;
     var set_html = this.fieldarg_in_result('set_html', result, fieldlist);
     if (set_html) {
-        this.widg.html(set_html);
+        the_widg.html(set_html);
+        }
+    // hide the widget
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (the_widg.is(":visible")) {
+                the_widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(the_widg.is(":visible"))) {
+                the_widg.fadeIn('slow');
+                 }
+            }
+        }
+    // enable or disable drag if a drag value is given
+    var drag = this.fieldarg_in_result('drag', result, fieldlist);
+    if (drag !== undefined) {
+        if (drag) {
+            the_widg.attr("draggable","true");
+            the_widg.attr("ondragstart","SKIPOLE.widgets['" + widg_id + "'].dragstartfunc(event, '" + drag + "')");
+            }
+        else {
+            the_widg.attr("draggable",null);
+            the_widg.attr("ondragstart",null);
+            }
+        }
+    // enable or disable drop if a drop value is given
+    var drop = this.fieldarg_in_result('drop', result, fieldlist);
+    if (drop !== undefined) {
+        if (drop) {
+            the_widg.attr("ondrop","SKIPOLE.widgets['" + widg_id + "'].dropfunc(event, '" + drop + "')");
+            the_widg.attr("ondragover","SKIPOLE.widgets['" + widg_id + "'].allowdropfunc(event)");
+            }
+        else {
+            the_widg.attr("ondrop",null);
+            the_widg.attr("ondragover",null);
+            }
         }
     };
 
