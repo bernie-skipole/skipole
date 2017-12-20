@@ -28,7 +28,7 @@
 
 from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
-from ....skilift import fromjson, part_info
+from ....skilift import fromjson, part_info, editsection
 
 from .. import utils, css_styles
 
@@ -1242,6 +1242,9 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
 
     location_integers = [ int(i) for i in location_list[1:]]
     part_tuple = part_info(editedprojname, None, location_list[0], [location_list[0], None, location_integers])
+    if part_tuple is None:
+        raise FailPage("Item to edit has not been recognised")
+
     if part_tuple.widget_name:
         # item to edit is a widget
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
@@ -1251,16 +1254,71 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
         raise GoTo(target = 53007, clear_submitted=True)
     if part_tuple.part_type == "ClosedPart":
-        # edit the html part
+        # edit the html closed part
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
         raise GoTo(target = 53007, clear_submitted=True)
     if part_tuple.part_type == "HTMLSymbol":
         # edit the symbol
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
         raise GoTo(target = 51107, clear_submitted=True)
+    if part_tuple.part_type == "str":
+        # edit the text
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51017, clear_submitted=True)
+    if part_tuple.part_type == "TextBlock":
+        # edit the TextBlock
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 52017, clear_submitted=True)
+    if part_tuple.part_type == "Comment":
+        # edit the Comment
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51207, clear_submitted=True)
+
+    # note : a sectionplaceholder cannot appear in a section
+    raise FailPage("Item to edit has not been recognised")
 
 
-    print(part_tuple.part_type)
+def remove_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to remove an item in a section"
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is section name with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers
+        raise FailPage("Item to edit has not been recognised")
+
+    location_integers = [ int(i) for i in location_list[1:]]
+    part_tuple = part_info(editedprojname, None, location_list[0], [location_list[0], None, location_integers])
+    if part_tuple is None:
+        raise FailPage("Item to edit has not been recognised")
+
+    # once item is deleted, no info on the item should be
+    # left in call_data - this may not be required in future
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # remove the item
+    try:
+        editsection.del_item(part_tuple)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    call_data['status'] = 'Item deleted'
 
 
 

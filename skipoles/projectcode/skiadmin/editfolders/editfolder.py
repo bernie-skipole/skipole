@@ -24,6 +24,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+import html
 
 from collections import OrderedDict
 
@@ -437,9 +438,9 @@ def _foldertree(projectname, foldernumber):
 
     # fourth cell is the folder brief
     if len(finfo.brief)>40:
-        contents.append( (finfo.brief[:35] + "...", '', False, '') )
+        contents.append( (html.escape(finfo.brief[:35] + "..."), '', False, '') )
     else:
-        contents.append( (finfo.brief[:35], '', False, '') )
+        contents.append( (html.escape(finfo.brief[:35]), '', False, '') )
 
     # fifth cell is an Edit link
     # top folder does not have an edit link
@@ -493,9 +494,9 @@ def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent)
 
         # fourth cell is the page brief
         if len(pinfo.brief)>40:
-            contents.append( (pinfo.brief[:35] + "...", '', False, '') )
+            contents.append( (html.escape(pinfo.brief[:35] + "..."), '', False, '') )
         else:
-            contents.append( (pinfo.brief[:35], '', False, '') )
+            contents.append( (html.escape(pinfo.brief[:35]), '', False, '') )
 
         # fifth column is an Edit link
         contents.append( ('Edit', 'width: 1%;text-align: center;', True, 'edit_page_' + page_ident) )
@@ -558,9 +559,9 @@ def _show_folders(contents, projectname, foldernumber, dragrows, droprows, inden
 
         # fourth cell is the folder brief
         if len(finfo.brief)>40:
-            contents.append( (finfo.brief[:35] + "...", '', False, '') )
+            contents.append( (html.escape(finfo.brief[:35] + "..."), '', False, '') )
         else:
-            contents.append( (finfo.brief[:35], '', False, '') )
+            contents.append( (html.escape(finfo.brief[:35]), '', False, '') )
 
         # fifth column is an Edit link
         contents.append( ('Edit', 'width: 1%;text-align: center;', True, 'edit_folder_' + folder_ident) )

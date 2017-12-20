@@ -24,7 +24,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import collections, json, os
+import collections, json, os, html
 
 from ...ski import skiboot, widgets, tag
 from ...ski.excepts import FailPage, ServerError
@@ -632,7 +632,7 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
             if len(part_name)>40:
                 part_name = part_name[:35] + '...'
             contents.append([part_name, padding, False, ''])
-            part_brief = part.brief
+            part_brief = html.escape(part.brief)
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
@@ -655,7 +655,7 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
             if len(section_name)>40:
                 section_name = section_name[:35] + '...'
             contents.append([section_name, padding, False, ''])
-            part_brief = part.brief
+            part_brief = html.escape(part.brief)
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
@@ -664,18 +664,18 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
         elif isinstance(part, str):
             contents.append(['Text', padding, False, ''])
             if len(part)<40:
-                part_str = part
+                part_str = html.escape(part)
             else:
-                part_str = part[:35] + '...'
+                part_str = html.escape(part[:35] + '...')
             if not part_str:
                 part_str = '-'
             contents.append([part_str, '', False, ''])
         elif isinstance(part, tag.HTMLSymbol):
             contents.append(['Symbol', padding, False, ''])
             if len(part.text)<40:
-                part_str = part.text
+                part_str = html.escape(part.text)
             else:
-                part_str = part.text[:35] + '...'
+                part_str = html.escape(part.text[:35] + '...')
             if not part_str:
                 part_str = '-'
             contents.append([part_str, '', False, ''])
@@ -694,7 +694,7 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
             else:
                 tag_name = "&lt;%s /&gt;" % part.tag_name
             contents.append([tag_name, padding, False, ''])
-            part_brief = part.brief
+            part_brief = html.escape(part.brief)
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
@@ -706,7 +706,7 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
             else:
                 tag_name = "&lt;%s&gt;" % part.tag_name
             contents.append([tag_name, padding, False, ''])
-            part_brief = part.brief
+            part_brief = html.escape(part.brief)
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
