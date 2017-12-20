@@ -2082,7 +2082,6 @@ class GeneralButtonTable2(Widget):
                      # apply button text
                     if celltext:
                         self[rownumber][colnumber][0][0] = celltext
-                        # escape html
                         self[rownumber][colnumber][0].htmlescaped = False
                     else:
                         self[rownumber][colnumber][0][0] = url
@@ -2093,6 +2092,7 @@ class GeneralButtonTable2(Widget):
                 else:
                     # not a link
                     self[rownumber][colnumber][0] = celltext
+                    self[rownumber][colnumber].htmlescaped = False
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
