@@ -37,7 +37,7 @@ from ..ski import skiboot
 
 ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'])
 
-PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'widget_name', 'container_number', 'location_list', 'part_type', 'insert'])
+PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'widget_name', 'container_number', 'location_list', 'part_type'])
 
 PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder'])
 
@@ -223,12 +223,7 @@ def part_info(project, pagenumber, section_name, location):
     if hasattr(part, 'name'):
         widget_name = part.name
 
-    # insert is True if the item is a tag.Part which can have further items inserted, False otherwise
-    if part_type == 'Part':
-        if not (part.tag_name == 'script' and part.has_attrib('src')):
-            insert = True
-
-    return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type, insert)
+    return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type)
 
 
 def ident_exists(project, itemnumber):

@@ -1286,27 +1286,62 @@ def add_to_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
         raise FailPage(message = "item to edit missing")
     editedprojname = call_data['editedprojname']
     part = call_data['editdom', 'domtable', 'contents']
-    insert = False
     location_list = part.split('-')
     # first item should be a string, rest integers
     if len(location_list) == 1:
         # no location integers, so location_list[0] is the section name
-        location_integers = []
+        location_integers = ()
     else:
-        location_integers = [ int(i) for i in location_list[1:]]
-    part_tuple = part_info(editedprojname, None, location_list[0], [location_list[0], None, location_integers])
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    section_name = location_list[0]
+
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    location = (section_name, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, None, section_name, location)
     if part_tuple is None:
         raise FailPage("Item to append to has not been recognised")
     # goto either the install or append page
-    if part_tuple.insert:
+
+    call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+    call_data['location'] = location         ########## also part_tuple should replace location
+
+    page_data[("adminhead","page_head","small_text")] = "Pick an item type"
+
+    # navigator boxes
+    boxes = [['back_to_section', section_name, True, '']]    # label to 7040
+    if 'extend_nav_buttons' in call_data:
+        call_data['extend_nav_buttons'].extend(boxes)
+    else:
+        call_data['extend_nav_buttons'] = boxes
+
+    # Fill in menu of items, Part items have insert, others have append
+    # as this is to be input into a section, a further section is not present in this list
+
+
+    if (part_tuple.part_type == "Part") or (part_tuple.part_type == "Section"):
         # insert
-
-
+        page_data[("adminhead","page_head","large_text")] = "Choose an item to insert"
+        page_data[("insertlist","links")] = [
+                                                ["Insert text", "inserttext", ""],
+                                                ["Insert a TextBlock", "insert_textblockref", ""],
+                                                ["Insert html symbol", "insertsymbol", ""],
+                                                ["Insert comment", "insertcomment", ""],
+                                                ["Insert an html element", "part_insert", ""],
+                                                ["Insert a Widget", "list_widget_modules", ""]
+                                            ]
         raise GoTo(target = '23609', clear_submitted=True)
     else:
         # append
-
-
+        page_data[("adminhead","page_head","large_text")] = "Choose an item to append"
+        page_data[("appendlist","links")] = [
+                                                ["Append text", "inserttext", ""],
+                                                ["Append a TextBlock", "insert_textblockref", ""],
+                                                ["Append html symbol", "insertsymbol", ""],
+                                                ["Append comment", "insertcomment", ""],
+                                                ["Append an html element", "part_insert", ""],
+                                                ["Append a Widget", "list_widget_modules", ""]
+                                            ]
         raise GoTo(target = '23509', clear_submitted=True)
 
 
