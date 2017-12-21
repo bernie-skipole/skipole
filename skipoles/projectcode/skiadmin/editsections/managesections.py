@@ -190,7 +190,7 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
                                                       ['admin_home',''],          # down
                                                       ['admin_home',''],          # down right
                                                       ['edit_section_dom',''],    # edit
-                                                      ['admin_home',''],          # insert/append
+                                                      ['add_to_section_dom',''],  # insert/append
                                                       ['remove_section_dom','']   # remove
                                                    ]
 

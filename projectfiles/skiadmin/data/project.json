@@ -24,6 +24,7 @@
 "add_selector": 8100,
 "add_submit_list_string": 6410,
 "add_tag_attrib": 43030,
+"add_to_section_dom": 420,
 "add_user_page": 5500,
 "admin_home": 1,
 "alternate_ident": 6040,
@@ -39417,6 +39418,30 @@ false
 },
 "original_fields": {
 "sdd1:selectvalue": ""
+}
+}
+},
+"add_to_section_dom": {
+"ident": 420,
+"brief": "fill page to append or insert an item in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"add_to_section_dom"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
 }
 }
 },
