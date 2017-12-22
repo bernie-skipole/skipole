@@ -183,15 +183,15 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
 
 
     page_data['editdom', 'domtable', 'contents']  = domcontents
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                    # tag name
-                                                      ['',''],                    # brief
-                                                      ['admin_home',''],          # up arrow
-                                                      ['admin_home',''],          # up right
-                                                      ['admin_home',''],          # down
-                                                      ['admin_home',''],          # down right
-                                                      ['edit_section_dom',''],    # edit
-                                                      ['add_to_section_dom',''],  # insert/append
-                                                      ['remove_section_dom','']   # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                # tag name
+                                                      ['',''],                                # brief
+                                                      ['move_up_in_section_dom',''],          # up arrow
+                                                      ['admin_home',''],                      # up right
+                                                      ['admin_home',''],                      # down
+                                                      ['admin_home',''],                      # down right
+                                                      ['edit_section_dom',''],                # edit
+                                                      ['add_to_section_dom',''],              # insert/append
+                                                      ['remove_section_dom','']               # remove
                                                    ]
 
     ###############################################################

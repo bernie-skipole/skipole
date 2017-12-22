@@ -83,3 +83,35 @@ def del_item(part_info):
         raise ServerError(message="Unable to delete item")
 
 
+def move_item(project, section_name, from_location_integers, to_location_integers):
+    """Move an item in the given section from one spot to another, defined by its location integers"""
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if not section_name:
+         raise ServerError(message="Given section_name is invalid")
+    section = proj.section(section_name, makecopy=False)
+    if section is None:
+        raise ServerError(message="Given Section not found")
+
+    try:
+        # get the part at from_location_integers
+        part = section.get_location_value(from_location_integers)
+        # delete part from current location
+        section.del_location_value(from_location_integers)
+        # and insert it in the new location
+        section.insert_location_value(to_location_integers, part)
+    except:
+        raise ServerError(message="Unable to move item")
+
+
+
+
+
+
+
+
+
+
+
+
