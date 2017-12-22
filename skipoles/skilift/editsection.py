@@ -93,16 +93,50 @@ def move_item(project, section_name, from_location_integers, to_location_integer
     section = proj.section(section_name, makecopy=False)
     if section is None:
         raise ServerError(message="Given Section not found")
+    if to_location_integers == from_location_integers:
+        # no movement
+        return
+    up = False
+    i = 0
+    while True:
+        if to_location_integers[i] < from_location_integers[i]:
+            up = True
+            break
+        if to_location_integers[i] > from_location_integers[i]:
+            # up is False
+            break
+        # so this digit is the same
+        i += 1
+        if len(to_location_integers) == i:
+            up = True
+            break
+    if up:
+        # move in the upwards direction
+        #    delete it from original location
+        #    insert it into new location
+        try:
+            # get the part at from_location_integers
+            part = section.get_location_value(from_location_integers)
+            # delete part from current location
+            section.del_location_value(from_location_integers)
+            # and insert it in the new location
+            section.insert_location_value(to_location_integers, part)
+        except:
+            raise ServerError(message="Unable to move item")
+    else:
+        # move in the downwards direction
+        #    insert it into new location
+        #    delete it from original location
+        try:
+            # get the part at from_location_integers
+            part = section.get_location_value(from_location_integers)
+            # and insert it in the new location
+            section.insert_location_value(to_location_integers, part)
+            # delete part from current location
+            section.del_location_value(from_location_integers)
+        except:
+            raise ServerError(message="Unable to move item")
 
-    try:
-        # get the part at from_location_integers
-        part = section.get_location_value(from_location_integers)
-        # delete part from current location
-        section.del_location_value(from_location_integers)
-        # and insert it in the new location
-        section.insert_location_value(to_location_integers, part)
-    except:
-        raise ServerError(message="Unable to move item")
 
 
 

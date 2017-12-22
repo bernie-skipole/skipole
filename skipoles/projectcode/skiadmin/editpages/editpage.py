@@ -28,7 +28,7 @@
 
 from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
-from ....skilift import fromjson, part_info, editsection
+from ....skilift import fromjson, part_info, part_contents, editsection
 
 from .. import utils, css_styles
 
@@ -1410,8 +1410,8 @@ def move_up_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, c
     location_list = part.split('-')
     # first item should be a string, rest integers
     if len(location_list) == 1:
-        # no location integers, so location_list[0] is the section name
-        location_integers = ()
+        # no location integers
+        return
     else:
         location_integers = tuple( int(i) for i in location_list[1:] )
     section_name = location_list[0]
@@ -1451,7 +1451,70 @@ def move_up_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, c
     except ServerError as e:
         raise FailPage(message = e.message)
 
-    #raise GoTo(target = "back_to_section", clear_submitted=True)    # label to 7040
+
+def move_up_right_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a section up and to the right"
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is section name with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the section name
+        return
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    section_name = location_list[0]
+
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    location = (section_name, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, None, section_name, location)
+    if part_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+
+    if location_integers[-1] == 0:
+        # at top of a part, cannot be moved
+        raise FailPage("Cannot be moved up")
+    new_parent_integers = list(location_integers[:-1])
+    new_parent_integers.append(location_integers[-1] - 1)
+    new_parent_location = (section_name, None, new_parent_integers)
+
+    new_parent_tuple = part_info(editedprojname, None, section_name, new_parent_location)
+
+    if new_parent_tuple is None:
+        raise FailPage("Cannot be moved up")
+    if new_parent_tuple.part_type != "Part":
+        raise FailPage("Cannot be moved up")
+
+    new_location_integers =  tuple(new_parent_integers + [len(part_contents(editedprojname, None, section_name, new_parent_location))])
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
 
 
 
