@@ -168,7 +168,7 @@ def part_info(project, pagenumber, section_name, location):
        a container integer, such as 0 for widget container 0, or None if not in container
        a tuple or list of location integers
        returns None if part not found, otherwise returns a namedtuple with items
-       project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type, insert
+       project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type
     """
     # raise error if invalid project
     project_loaded(project)
@@ -224,6 +224,72 @@ def part_info(project, pagenumber, section_name, location):
         widget_name = part.name
 
     return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type)
+
+
+def part_contents(project, pagenumber, section_name, location):
+    "If the given part is a Part, returns a list of PartInfo tuples, one for each content"
+    # raise error if invalid project
+    project_loaded(project)
+
+    location_string, container_number, location_list = location
+
+    ident = None
+    page_part = None
+    widget_name = None
+    part_type = None
+    insert = False
+
+    # get page or section - an error if both are present
+    if pagenumber is not None:
+        if section_name:
+            # page and section should not both be given
+            return
+        ident = skiboot.find_ident(pagenumber, project)
+        if not ident:
+            return
+        page = skiboot.get_item(ident)
+        if not page:
+            return
+        if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
+            return
+        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
+            # part not in a widget
+            page_part = location_string
+        else:
+            widget_name = location_string
+            # find page_part containing widget
+            widget = page.widgets[widget_name]
+            if widget is not None:
+               ident_top = widget.ident_string.split("-", 1)
+               # ident_top[0] will be of the form proj_pagenum_head
+               page_part = ident_top[0].split("_")[2]
+    elif section_name:
+        # location_string is either a section_name or a widget
+        if location_string != section_name:
+            widget_name = location_string
+    else:
+        # return None
+        return
+
+    part = skiboot.get_part(project, ident, page_part, section_name, widget_name, container_number, location_list)
+    if part is None:
+        return
+    if hasattr(part, '__class__'):
+        part_type = part.__class__.__name__
+    if part_type != "Part":
+        return
+
+    subpart_list = []
+
+    index = 0
+    for subpart in part:
+        if hasattr(subpart, '__class__'):
+            subpart_type = subpart.__class__.__name__
+        sub_tuple = PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location_list+[index], subpart_type)
+        subpart_list.append(sub_tuple)
+        index += 1
+    return subpart_list
+
 
 
 def ident_exists(project, itemnumber):
