@@ -100,53 +100,7 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     else:
         page_data[("adminhead","page_head","small_text")] = "Set section contents"
 
-
-    #        contents: A list for every element in the table, should be row*col lists
-    #              col 0 - text string (This will be either text to display, button text, or Textblock reference)
-    #               col 1 - True if this is a TextBlock, False if not
-    #               col 2 - A 'style' string set on the td cell, if empty string, no style applied
-    #               col 3 - Link ident, if empty, only text will be shown, not a button
-    #                             if given, a link will be set with button_class applied to it
-    #              col 4 - The get field value of the button link, empty string if no get field, ignored if no link ident given
-
-    page_data['editparts', 'parts', 'cols']  = 9
-    rows = 1
-
-    if section.attribs:
-        tag_name = '<' + section.tag_name + ' ... >'
-    else:
-        tag_name = '<' + section.tag_name + '>'
-
-    section_brief = html.escape(section.brief)
-
-    if len( section_brief)>40:
-        section_brief =  section_brief[:35] + '...'
-    if not section_brief:
-         section_brief = '-'
-
-    no_link = [False, '', '']
-    empty = ['', False, '', '']
-
-    contents = [
-                   [tag_name] + no_link,              # col 0 the <div> text (or whatever section tag is used)
-                   [section_brief] + no_link,
-                   empty,                                       # no up arrow for top line
-                   empty,                                       # no up_right arrow for top line
-                   empty,                                       # no down arrow for top line
-                   empty,                                       # no down_right arrow for top line
-                   ['Edit', False, 'width : 1%;', 'get_part_edit', section_name],                 # edit - link to part_edit = 43101
-                   ['Insert', False, 'width : 1%;text-align: center;', 'new_insert', section_name],             # insert - link to page 43102
-                   empty                                       # no remove image for top line
-                ]
-
-    rows = utils.extendparts(rows, section, section_name, contents, no_link, empty)
-
-    page_data['editparts', 'parts', 'contents']  = contents
-    page_data['editparts', 'parts', 'rows']  = rows
-
-    ####################################################
-    # new editdom,domtable
-
+    # widget editdom,domtable is populated with fields cols and contents
 
     #    cols: A two element list for every column in the table, must be given with empty values if no links
     #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
@@ -166,6 +120,13 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     else:
         section_tag = '&lt;' + section.tag_name + '&gt;'
 
+    section_brief = html.escape(section.brief)
+
+    if len( section_brief)>40:
+        section_brief =  section_brief[:35] + '...'
+    if not section_brief:
+         section_brief = '-'
+
     domcontents = [
                    [section_tag, '', False, '' ],
                    [section_brief, '', False, '' ],
@@ -181,7 +142,6 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     # add further items to domcontents
     rows = utils.domcontents(section, section_name, domcontents)
 
-
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
@@ -190,14 +150,11 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
                                                       ['move_up_in_section_dom',''],          # up arrow
                                                       ['move_up_right_in_section_dom',''],    # up right
                                                       ['move_down_in_section_dom',''],        # down
-                                                      ['admin_home',''],                      # down right
+                                                      ['move_down_right_in_section_dom',''],  # down right
                                                       ['edit_section_dom',''],                # edit
                                                       ['add_to_section_dom',''],              # insert/append
                                                       ['remove_section_dom','']               # remove
                                                    ]
-
-    ###############################################################
-
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
