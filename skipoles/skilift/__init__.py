@@ -227,11 +227,13 @@ def part_info(project, pagenumber, section_name, location):
 
 
 def part_contents(project, pagenumber, section_name, location):
-    "If the given part is a Part, returns a list of PartInfo tuples, one for each content"
+    "If the given part is a Part or Section, returns a list of PartInfo tuples, one for each content"
     # raise error if invalid project
     project_loaded(project)
 
     location_string, container_number, location_list = location
+
+    location_list = list(location_list)
 
     ident = None
     page_part = None
@@ -276,7 +278,7 @@ def part_contents(project, pagenumber, section_name, location):
         return
     if hasattr(part, '__class__'):
         part_type = part.__class__.__name__
-    if part_type != "Part":
+    if (part_type != "Part") and (part_type != "Section"):
         return
 
     subpart_list = []
