@@ -1496,7 +1496,9 @@ def move_up_right_in_section_dom(caller_ident, ident_list, submit_list, submit_d
     if new_parent_tuple.part_type != "Part":
         raise FailPage("Cannot be moved up")
 
-    new_location_integers =  tuple(new_parent_integers + [len(part_contents(editedprojname, None, section_name, new_parent_location))])
+    items_in_new_parent = len(part_contents(editedprojname, None, section_name, new_parent_location))
+
+    new_location_integers =  tuple(new_parent_integers + [items_in_new_parent])
 
     # after a move, location is wrong, so remove from call_data
     if 'location' in call_data:

@@ -183,10 +183,12 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
 
 
     page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    # for each column: html link, JSON link
     page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                # tag name
                                                       ['',''],                                # brief
                                                       ['move_up_in_section_dom',''],          # up arrow
-                                                      ['admin_home',''],                      # up right
+                                                      ['move_up_right_in_section_dom',''],    # up right
                                                       ['admin_home',''],                      # down
                                                       ['admin_home',''],                      # down right
                                                       ['edit_section_dom',''],                # edit
