@@ -24,7 +24,7 @@
 "add_selector": 8100,
 "add_submit_list_string": 6410,
 "add_tag_attrib": 43030,
-"add_to_section_dom": 420,
+"add_to_section_dom": 7430,
 "add_user_page": 5500,
 "admin_home": 1,
 "alternate_ident": 6040,
@@ -79,7 +79,7 @@
 "edit_placeholder": 45002,
 "edit_project": 120,
 "edit_section": 7030,
-"edit_section_dom": 400,
+"edit_section_dom": 7410,
 "edit_section_responder": 27032,
 "edit_selector": 8300,
 "edit_symbol": 41110,
@@ -114,10 +114,10 @@
 "manage_specialpages": 5001,
 "manage_textblocks": 4001,
 "mimetype_page": 9200,
-"move_down_in_section_dom": 427,
-"move_down_right_in_section_dom": 428,
-"move_up_in_section_dom": 425,
-"move_up_right_in_section_dom": 426,
+"move_down_in_section_dom": 7460,
+"move_down_right_in_section_dom": 7470,
+"move_up_in_section_dom": 7440,
+"move_up_right_in_section_dom": 7450,
 "new_append": 43103,
 "new_copypage": 2460,
 "new_insert": 43102,
@@ -144,7 +144,7 @@
 "remove_field_value": 6100,
 "remove_item": 43104,
 "remove_project": 110,
-"remove_section_dom": 415,
+"remove_section_dom": 7420,
 "remove_selector": 8200,
 "remove_textblock": 4052,
 "remove_validator": 46221,
@@ -38811,7 +38811,185 @@ false
 "brief": "New Folder",
 "default_page_name": "index",
 "restricted": false,
+"folders": {
+"dom_html": {
+"ident": 7400,
+"brief": "Edit section dom - html calls",
+"default_page_name": "index",
+"restricted": false,
 "folders": {},
+"pages": {
+"add_to_section_dom": {
+"ident": 7430,
+"brief": "fill page to append or insert an item in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"add_to_section_dom"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"edit_section_dom": {
+"ident": 7410,
+"brief": "Edit an item, such as widget, text in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"edit_section_dom"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_in_section_dom": {
+"ident": 7460,
+"brief": "moves a dom item down in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"move_down_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_right_in_section_dom": {
+"ident": 7470,
+"brief": "moves a dom item down and to the right in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"move_down_right_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_in_section_dom": {
+"ident": 7440,
+"brief": "moves a dom item up in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"move_up_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_right_in_section_dom": {
+"ident": 7450,
+"brief": "moves a dom item up and to the right in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"move_up_right_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"remove_section_dom": {
+"ident": 7420,
+"brief": "Remove an item from a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"remove_section_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+}
+}
+}
+},
 "pages": {
 "back_to_section": {
 "ident": 7040,
@@ -39400,30 +39578,6 @@ false
 }
 }
 },
-"add_to_section_dom": {
-"ident": 420,
-"brief": "fill page to append or insert an item in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editpages",
-"editpage",
-"add_to_section_dom"
-],
-"submit_option": true,
-"target_ident": "admin_home",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
 "colours": {
 "ident": 300,
 "brief": "Set data, including colour palett in colour page",
@@ -39596,30 +39750,6 @@ false
 "original_fields": {}
 }
 },
-"edit_section_dom": {
-"ident": 400,
-"brief": "Edit an item, such as widget, text in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editpages",
-"editpage",
-"edit_section_dom"
-],
-"submit_option": true,
-"target_ident": "admin_home",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
 "export.tar": {
 "ident": 90,
 "brief": "Finds filepath of project export.tar",
@@ -39688,102 +39818,6 @@ false
 "target_ident": 20001
 },
 "original_fields": {}
-}
-},
-"move_down_in_section_dom": {
-"ident": 427,
-"brief": "moves a dom item down in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editpages",
-"editpage",
-"move_down_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_down_right_in_section_dom": {
-"ident": 428,
-"brief": "moves a dom item down and to the right in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editpages",
-"editpage",
-"move_down_right_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_in_section_dom": {
-"ident": 425,
-"brief": "moves a dom item up in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editpages",
-"editpage",
-"move_up_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_right_in_section_dom": {
-"ident": 426,
-"brief": "moves a dom item up and to the right in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editpages",
-"editpage",
-"move_up_right_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
 }
 },
 "no_javascript": {
@@ -40062,30 +40096,6 @@ false
 },
 "original_fields": {
 "projtable:remove_project": ""
-}
-}
-},
-"remove_section_dom": {
-"ident": 415,
-"brief": "Remove an item from a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editpages",
-"editpage",
-"remove_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
 }
 }
 },

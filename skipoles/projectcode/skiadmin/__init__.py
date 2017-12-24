@@ -26,7 +26,7 @@
 
 import pkgutil, re, collections, uuid, os, random
 
-from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets
+from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections
 
 from .editfolders import editproject, addpage
 from .editpages import common, editpage, insert
@@ -427,6 +427,9 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
             return editspecialpages.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
         elif submit_list[0] == 'editwidgets':
             return editwidgets.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        elif submit_list[0] == 'editsections':
+            return editsections.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
 
 
     # the routing method below is being replaced by above method
