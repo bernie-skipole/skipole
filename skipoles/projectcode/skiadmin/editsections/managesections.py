@@ -100,6 +100,29 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     else:
         page_data[("adminhead","page_head","small_text")] = "Set section contents"
 
+    # fill in the table
+    retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
+
+def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "this call fills in the section dom table"
+
+    editedproj = call_data['editedproj']
+
+    if "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "Section name missing")
+
+    if not section_name:
+        raise FailPage(message = "Section name missing")
+
+    section_list = editedproj.list_section_names()
+    if section_name not in section_list:
+        raise FailPage(message = "Section name invalid", widget="table_error")
+
+    section = editedproj.section(section_name)
+
     # widget editdom,domtable is populated with fields cols and contents
 
     #    cols: A two element list for every column in the table, must be given with empty values if no links
@@ -145,15 +168,15 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                # tag name
-                                                      ['',''],                                # brief
-                                                      ['move_up_in_section_dom',''],          # up arrow
-                                                      ['move_up_right_in_section_dom',''],    # up right
-                                                      ['move_down_in_section_dom',''],        # down
-                                                      ['move_down_right_in_section_dom',''],  # down right
-                                                      ['edit_section_dom',''],                # edit
-                                                      ['add_to_section_dom',''],              # insert/append
-                                                      ['remove_section_dom','']               # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                  # tag name, no link
+                                                      ['',''],                                  # brief, no link
+                                                      ['move_up_in_section_dom',7540],          # up arrow
+                                                      ['move_up_right_in_section_dom',7550],    # up right
+                                                      ['move_down_in_section_dom',7560],        # down
+                                                      ['move_down_right_in_section_dom',7570],  # down right
+                                                      ['edit_section_dom',''],                  # edit, html only
+                                                      ['add_to_section_dom',''],                # insert/append, html only
+                                                      ['remove_section_dom',7520]               # remove
                                                    ]
 
     # remove any unwanted fields from session call_data
@@ -174,6 +197,7 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
 
     # set the section into call_data
     call_data['section'] = section
+
 
 
 def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

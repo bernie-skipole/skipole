@@ -255,14 +255,6 @@
 },
 "parts": [
 [
-"ClosedPart",
-{
-"tag_name": "hr",
-"brief": "Horizontal rule",
-"show": true
-}
-],
-[
 "Part",
 {
 "tag_name": "h2",
@@ -319,6 +311,14 @@
 }
 ]
 ]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
+"show": true
 }
 ],
 [
@@ -31023,1202 +31023,6 @@ false,
 }
 }
 },
-"sectionmanagement": {
-"ident": 27000,
-"brief": "New Folder",
-"default_page_name": "index",
-"restricted": true,
-"folders": {},
-"pages": {
-"management": {
-"ident": 27009,
-"brief": "Page lists all sections",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#bbbbbb",
-"default_error_widget": [
-"adminhead",
-"show_status"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Manage Sections"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"SectionPlaceHolder",
-{
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Main content page div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container",
-"style": "margin-left:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"TextBlock",
-{
-"textref": "managesections.about_sections",
-"failmessage": "failed to read textblocks database with ref managesections.about_sections",
-"show": true,
-"escape": true,
-"linebreaks": true,
-"decode": false
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"TextBlock",
-{
-"textref": "managesections.new_section",
-"failmessage": "failed to read textblocks database with ref managesections.new_section",
-"show": true,
-"escape": true,
-"linebreaks": true,
-"decode": false
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"TextBlock",
-{
-"textref": "managesections.more_about_sections",
-"failmessage": "failed to read textblocks database with ref managesections.more_about_sections",
-"show": true,
-"escape": true,
-"linebreaks": true,
-"decode": false
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.SubmitTextInput3",
-"name": "newsection",
-"brief": "Input widget for a new section name",
-"fields": {
-"action": "new_section",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4",
-"button_label": "New section:",
-"button_label_class": "ski_left_label",
-"button_text": "Submit",
-"buttondiv_class": "w3-section",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputdiv_class": "w3-section",
-"label": "Set a new section name:",
-"label_class": "ski_left_label",
-"maxlength": "",
-"new_window": false,
-"outer_class": "w3-section",
-"para_text": "",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"show_para1": true,
-"show_para2": true,
-"size": "",
-"textblock_ref": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.TextBlockPara",
-"name": "tabledescription",
-"brief": "TextBlock description of the table",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_ref": "managesections.section_table",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "error_messages.ErrorPara",
-"name": "table_error",
-"brief": "ErrorPara",
-"fields": {
-"clear_error": false,
-"hide": true,
-"show": false,
-"show_error": "",
-"widget_class": "w3-panel w3-red",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "set table responsive",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-responsive"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "links.Table1_Buttons4",
-"name": "sectiontable",
-"brief": "Lists sections",
-"fields": {
-"btn_col1": true,
-"btn_col2": true,
-"btn_col3": false,
-"btn_col4": false,
-"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
-"button_text1": "Edit",
-"button_text2": "Remove",
-"button_text3": "",
-"button_text4": "",
-"col0_classes": [],
-"contents": [
-[
-"",
-"",
-"",
-"",
-"",
-false,
-false,
-false,
-false
-]
-],
-"even_class": "",
-"link_ident1": "edit_section",
-"link_ident2": "delete_section",
-"link_ident3": "",
-"link_ident4": "",
-"maximize_text_col": true,
-"odd_class": "w3-theme-d2",
-"show": true,
-"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
-"widget_style": ""
-},
-"validators": {
-"btn_col1": [
-{
-"class": "basic.NotEmpty",
-"message": "Get field missing"
-}
-],
-"btn_col2": [
-{
-"class": "basic.NotEmpty",
-"message": "get field missing"
-}
-]
-}
-}
-]
-]
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section admin_footer with alias foot",
-"section_name": "admin_footer",
-"placename": "foot"
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-},
-"newsection": {
-"ident": 27010,
-"brief": "page to create or download a new section",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#bbbbbb",
-"default_error_widget": [
-"adminhead",
-"show_status"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Manage Sections"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"SectionPlaceHolder",
-{
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Main content page div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container",
-"style": "margin-left:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "either",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Either create a new section by defining the top tag (generally a div):"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputforms.SubmitForm1",
-"name": "newsection",
-"brief": "Generate new section",
-"fields": {
-"action": 7010,
-"action_json": "",
-"button_class": "w3-button w3-theme-d4",
-"button_text": "Submit",
-"clear_error": false,
-"div_class": "w3-section",
-"enctype": "",
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"left_class": "ski_left_label",
-"left_label": "Create new section:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-"Part",
-{
-"tag_name": "div",
-"brief": "div for new tag",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "new_tag",
-"brief": "top tag for section",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "div",
-"inputdiv_class": "",
-"label": "New tag:",
-"label_class": "ski_left_label",
-"maxlength": "",
-"pattern": "",
-"redstar": false,
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "Section tag must be set"
-}
-]
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "description",
-"brief": "Description of new tag",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputdiv_class": "",
-"label": "Description:",
-"label_class": "ski_left_label",
-"maxlength": "",
-"pattern": "",
-"redstar": false,
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "Section tag description must be set"
-}
-]
-}
-}
-]
-]
-}
-],
-"set_names": {
-"hidden_field1": "section_name"
-},
-"validators": {
-"section_name": [
-{
-"class": "basic.NotEmpty",
-"message": "Section name missing"
-}
-]
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "hr",
-"brief": "Horizontal line",
-"show": true,
-"attribs": {
-"style": "margin-top:20px;margin-bottom:20px;"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "or",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Or generate a new section by uploading a block definition file:"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "upload.SubmitUploadFile1",
-"name": "uploadsection",
-"brief": "Uploads a section definition file",
-"fields": {
-"action": 7011,
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"filebutton_class": "w3-button w3-theme-d4",
-"filebutton_label": "Section definition file:",
-"filebuttonlabel_class": "ski_left_label",
-"fileinputdiv_class": "w3-section",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"required": false,
-"show": true,
-"show_error": "",
-"submitbutton_class": "w3-button w3-theme-d4",
-"submitbutton_label": "Upload:",
-"submitbutton_text": "Submit",
-"submitbuttonlabel_class": "ski_left_label",
-"submitinputdiv_class": "w3-section",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"set_names": {
-"hidden_field1": "section_name"
-}
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section admin_footer with alias foot",
-"section_name": "admin_footer",
-"placename": "foot"
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-},
-"retrieve_management": {
-"ident": 27003,
-"brief": "Gets data for section management page",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 1,
-"target_ident": 27009
-},
-"original_fields": {}
-}
-},
-"retrieve_section_contents": {
-"ident": 27047,
-"brief": "Sets data into the section edit page",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 1,
-"target_ident": 27049
-},
-"original_fields": {}
-}
-},
-"section_contents": {
-"ident": 27049,
-"brief": "Page to edit a section",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#bbbbbb",
-"default_error_widget": [
-"adminhead",
-"show_status"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Edit Section"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"SectionPlaceHolder",
-{
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead"
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Main content page div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container",
-"style": "margin-left:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About id",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"When a section is added to a page, it is given an alias name unique within the page, this allows a section to be added multiple times within the page.\r\n\r\nIf the top tag is not given an id attribute here, it will automatically be given an id equal to the alias name. This is used by JSON calls when setting values to the section, so we strongly suggest you do not give the top tag an id."
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "New Tag",
-"show": true
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "New Tag",
-"show": true
-}
-]
-]
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "editdom with widget domtable",
-"section_name": "editdom",
-"placename": "editdom"
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About download",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "ski_top_marg10px"
-},
-"parts": [
-[
-"Text",
-"You may optionally download a file holding this section's definition, this can subsequently be uploaded to create a new copy of the section."
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for download",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "ski_mid_button"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "sectiondownload",
-"brief": "Button link to download a section",
-"fields": {
-"button_text": "Download",
-"clear_error": false,
-"error_class": "w3-button w3-block w3-theme-action",
-"force_ident": true,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"link_ident": "downloadsection",
-"new_window": false,
-"show": true,
-"show_error": "",
-"widget_class": "w3-button w3-block w3-theme-d4",
-"widget_style": ""
-}
-}
-]
-]
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section admin_footer with alias foot",
-"section_name": "admin_footer",
-"placename": "foot"
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-},
-"submit_delete_section": {
-"ident": 27022,
-"brief": "submits the section delete",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 27003,
-"target_ident": 27003
-},
-"original_fields": {}
-}
-},
-"validate_delete_section": {
-"ident": 27021,
-"brief": "check section to be deleted",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 27022,
-"validate_fail_ident": 27003,
-"validate_option": true
-},
-"original_fields": {
-"sectiontable:btn_col2": "delete_section"
-}
-}
-},
-"validate_edit_section": {
-"ident": 27031,
-"brief": "check section to be edited",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 27047,
-"validate_fail_ident": 27003,
-"validate_option": true
-},
-"original_fields": {
-"sectiontable:btn_col1": "section_name"
-}
-}
-}
-}
-},
 "special": {
 "ident": 21000,
 "brief": "New Folder",
@@ -38984,6 +37788,1348 @@ false
 },
 "original_fields": {
 "editdom-domtable:contents": ""
+}
+}
+}
+}
+},
+"dom_json": {
+"ident": 7500,
+"brief": "Edit section dom - html calls",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"move_down_in_section_dom": {
+"ident": 7560,
+"brief": "moves a dom item down in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"move_down_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27040,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_right_in_section_dom": {
+"ident": 7570,
+"brief": "moves a dom item down and to the right in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"move_down_right_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27040,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_in_section_dom": {
+"ident": 7540,
+"brief": "moves a dom item up in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"move_up_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27040,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_right_in_section_dom": {
+"ident": 7550,
+"brief": "moves a dom item up and to the right in a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"move_up_right_in_section_dom"
+],
+"submit_option": true,
+"target_ident": 27040,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"remove_section_dom": {
+"ident": 7520,
+"brief": "Remove an item from a section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"remove_section_dom"
+],
+"submit_option": true,
+"target_ident": 27040,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+}
+}
+},
+"restricted": {
+"ident": 27000,
+"brief": "Restricted folder for section management",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"management": {
+"ident": 27009,
+"brief": "Page lists all sections",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#bbbbbb",
+"default_error_widget": [
+"adminhead",
+"show_status"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Manage Sections"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Sets class w3-theme",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Main content page div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container",
+"style": "margin-left:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "managesections.about_sections",
+"failmessage": "failed to read textblocks database with ref managesections.about_sections",
+"show": true,
+"escape": true,
+"linebreaks": true,
+"decode": false
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "managesections.new_section",
+"failmessage": "failed to read textblocks database with ref managesections.new_section",
+"show": true,
+"escape": true,
+"linebreaks": true,
+"decode": false
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "managesections.more_about_sections",
+"failmessage": "failed to read textblocks database with ref managesections.more_about_sections",
+"show": true,
+"escape": true,
+"linebreaks": true,
+"decode": false
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.SubmitTextInput3",
+"name": "newsection",
+"brief": "Input widget for a new section name",
+"fields": {
+"action": "new_section",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_label": "New section:",
+"button_label_class": "ski_left_label",
+"button_text": "Submit",
+"buttondiv_class": "w3-section",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "w3-section",
+"label": "Set a new section name:",
+"label_class": "ski_left_label",
+"maxlength": "",
+"new_window": false,
+"outer_class": "w3-section",
+"para_text": "",
+"pattern": "",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"show_para1": true,
+"show_para2": true,
+"size": "",
+"textblock_ref": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "tabledescription",
+"brief": "TextBlock description of the table",
+"fields": {
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"linebreaks": true,
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "",
+"text_replaceblock": "",
+"textblock_ref": "managesections.section_table",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorPara",
+"name": "table_error",
+"brief": "ErrorPara",
+"fields": {
+"clear_error": false,
+"hide": true,
+"show": false,
+"show_error": "",
+"widget_class": "w3-panel w3-red",
+"widget_style": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "set table responsive",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-responsive"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.Table1_Buttons4",
+"name": "sectiontable",
+"brief": "Lists sections",
+"fields": {
+"btn_col1": true,
+"btn_col2": true,
+"btn_col3": false,
+"btn_col4": false,
+"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
+"button_text1": "Edit",
+"button_text2": "Remove",
+"button_text3": "",
+"button_text4": "",
+"col0_classes": [],
+"contents": [
+[
+"",
+"",
+"",
+"",
+"",
+false,
+false,
+false,
+false
+]
+],
+"even_class": "",
+"link_ident1": "edit_section",
+"link_ident2": "delete_section",
+"link_ident3": "",
+"link_ident4": "",
+"maximize_text_col": true,
+"odd_class": "w3-theme-d2",
+"show": true,
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
+"widget_style": ""
+},
+"validators": {
+"btn_col1": [
+{
+"class": "basic.NotEmpty",
+"message": "Get field missing"
+}
+],
+"btn_col2": [
+{
+"class": "basic.NotEmpty",
+"message": "get field missing"
+}
+]
+}
+}
+]
+]
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section admin_footer with alias foot",
+"section_name": "admin_footer",
+"placename": "foot"
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"newsection": {
+"ident": 27010,
+"brief": "page to create or download a new section",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#bbbbbb",
+"default_error_widget": [
+"adminhead",
+"show_status"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Manage Sections"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Sets class w3-theme",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Main content page div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container",
+"style": "margin-left:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "either",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Either create a new section by defining the top tag (generally a div):"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "newsection",
+"brief": "Generate new section",
+"fields": {
+"action": 7010,
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "w3-section",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ski_left_label",
+"left_label": "Create new section:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"brief": "div for new tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "new_tag",
+"brief": "top tag for section",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "div",
+"inputdiv_class": "",
+"label": "New tag:",
+"label_class": "ski_left_label",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.NotEmpty",
+"message": "Section tag must be set"
+}
+]
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "description",
+"brief": "Description of new tag",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "",
+"label": "Description:",
+"label_class": "ski_left_label",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.NotEmpty",
+"message": "Section tag description must be set"
+}
+]
+}
+}
+]
+]
+}
+],
+"set_names": {
+"hidden_field1": "section_name"
+},
+"validators": {
+"section_name": [
+{
+"class": "basic.NotEmpty",
+"message": "Section name missing"
+}
+]
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal line",
+"show": true,
+"attribs": {
+"style": "margin-top:20px;margin-bottom:20px;"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "or",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Or generate a new section by uploading a block definition file:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "upload.SubmitUploadFile1",
+"name": "uploadsection",
+"brief": "Uploads a section definition file",
+"fields": {
+"action": 7011,
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"filebutton_class": "w3-button w3-theme-d4",
+"filebutton_label": "Section definition file:",
+"filebuttonlabel_class": "ski_left_label",
+"fileinputdiv_class": "w3-section",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"required": false,
+"show": true,
+"show_error": "",
+"submitbutton_class": "w3-button w3-theme-d4",
+"submitbutton_label": "Upload:",
+"submitbutton_text": "Submit",
+"submitbuttonlabel_class": "ski_left_label",
+"submitinputdiv_class": "w3-section",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"set_names": {
+"hidden_field1": "section_name"
+}
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section admin_footer with alias foot",
+"section_name": "admin_footer",
+"placename": "foot"
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"retrieve_management": {
+"ident": 27003,
+"brief": "Gets data for section management page",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": 1,
+"target_ident": 27009
+},
+"original_fields": {}
+}
+},
+"retrieve_section_contents": {
+"ident": 27047,
+"brief": "Sets data into the section edit page",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": 1,
+"target_ident": 27049
+},
+"original_fields": {}
+}
+},
+"retrieve_section_dom": {
+"ident": 27040,
+"brief": "Returns JSON refresh of section dom table",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"retrieve_section_dom"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+},
+"section_contents": {
+"ident": 27049,
+"brief": "Page to edit a section",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#bbbbbb",
+"default_error_widget": [
+"adminhead",
+"show_status"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Edit Section"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Sets class w3-theme",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead"
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Main content page div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container",
+"style": "margin-left:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About id",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"When a section is added to a page, it is given an alias name unique within the page, this allows a section to be added multiple times within the page.\r\n\r\nIf the top tag is not given an id attribute here, it will automatically be given an id equal to the alias name. This is used by JSON calls when setting values to the section, so we strongly suggest you do not give the top tag an id."
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "New Tag",
+"show": true
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "New Tag",
+"show": true
+}
+]
+]
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "editdom with widget domtable",
+"section_name": "editdom",
+"placename": "editdom"
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About download",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_top_marg10px"
+},
+"parts": [
+[
+"Text",
+"You may optionally download a file holding this section's definition, this can subsequently be uploaded to create a new copy of the section."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for download",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "sectiondownload",
+"brief": "Button link to download a section",
+"fields": {
+"button_text": "Download",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "downloadsection",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section admin_footer with alias foot",
+"section_name": "admin_footer",
+"placename": "foot"
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"submit_delete_section": {
+"ident": 27022,
+"brief": "submits the section delete",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": 27003,
+"target_ident": 27003
+},
+"original_fields": {}
+}
+},
+"validate_delete_section": {
+"ident": 27021,
+"brief": "check section to be deleted",
+"RespondPage": {
+"class": "StoreDataKeyed",
+"original_args": {
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 27022,
+"validate_fail_ident": 27003,
+"validate_option": true
+},
+"original_fields": {
+"sectiontable:btn_col2": "delete_section"
+}
+}
+},
+"validate_edit_section": {
+"ident": 27031,
+"brief": "check section to be edited",
+"RespondPage": {
+"class": "StoreDataKeyed",
+"original_args": {
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 27047,
+"validate_fail_ident": 27003,
+"validate_option": true
+},
+"original_fields": {
+"sectiontable:btn_col1": "section_name"
 }
 }
 }
