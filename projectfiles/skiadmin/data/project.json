@@ -255,6 +255,14 @@
 },
 "parts": [
 [
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
+"show": true
+}
+],
+[
 "Part",
 {
 "tag_name": "h2",
@@ -311,14 +319,6 @@
 }
 ]
 ]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "hr",
-"brief": "Horizontal rule",
-"show": true
 }
 ],
 [
