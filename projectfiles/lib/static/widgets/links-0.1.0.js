@@ -812,6 +812,10 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
             htmlcontent += "</tr>";
             }
         the_widg.html(htmlcontent);
+        // as table was emptied, a new click event has to be applied to the buttons
+        $("#" + widg_id + " a").click(function (e) {
+              SKIPOLE.widgets[widg_id].eventfunc(e);
+              });
         }
     // dragrows and droprows
     var dragrows = this.fieldarg_in_result('dragrows', result, fieldlist);
