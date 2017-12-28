@@ -602,7 +602,7 @@ def extendparts(rows, item, part_loc, contents, no_link, empty, indent=1):
     return rows
 
 
-def domcontents(item, part_loc, contents, rows=1, indent=1):
+def domcontents(item, part_loc, contents, part_string_list, rows=1, indent=1):
     "Creates the contents of the domtable"
 
     #    contents: A list for every element in the table, should be row*col lists
@@ -625,6 +625,7 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
 
     for index, part in enumerate(item.parts):
         part_location_string = part_loc + '-' + str(index)
+        part_string_list.append(part_location_string)
         rows += 1
         # the row text
         if isinstance(part, widgets.Widget) or isinstance(part, widgets.ClosedWidget):
@@ -763,7 +764,7 @@ def domcontents(item, part_loc, contents, rows=1, indent=1):
                 loc_string = editcell[3]
                 contents[last_row_at_this_level *9-4] = ['&searr;', 'width : 1%;', True, loc_string]
             last_row_at_this_level = rows
-            rows = domcontents(part, part_location_string, contents, rows, indent)
+            rows = domcontents(part, part_location_string, contents, part_string_list, rows, indent)
             # set u_r_flag for next item below this one
             if  (part.tag_name != 'script') and (part.tag_name != 'pre'):
                 u_r_flag = True
