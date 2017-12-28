@@ -123,7 +123,15 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
     section = editedproj.section(section_name)
 
-    # widget editdom,domtable is populated with fields cols and contents
+    # widget editdom,domtable is populated with fields
+
+    #    dragrows: A two element list for every row in the table, could be empty if no drag operation
+    #              0 - True if draggable, False if not
+    #              1 - If 0 is True, this is data sent with the call wnen a row is dropped
+    #    droprows: A two element list for every row in the table, could be empty if no drop operation
+    #              0 - True if droppable, False if not
+    #              1 - text to send with the call when a row is dropped here
+    #    dropident: ident or label of target, called when a drop occurs which returns a JSON page
 
     #    cols: A two element list for every column in the table, must be given with empty values if no links
     #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
@@ -163,7 +171,8 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
                 ]
 
     # add further items to domcontents
-    rows = utils.domcontents(section, section_name, domcontents)
+    part_string_list = []
+    rows = utils.domcontents(section, section_name, domcontents, part_string_list)
 
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
@@ -178,6 +187,21 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
                                                       ['add_to_section_dom',''],                # insert/append, html only
                                                       ['remove_section_dom',7520]               # remove
                                                    ]
+    # for every row in the table
+    dragrows = [ [ False, '']]
+    droprows = [ [ True, section_name ]]
+
+    # for each row (minus 1 as the first row is done)
+    for row in range(0, rows-1):
+        dragrows.append( [ True, part_string_list[row]] )
+        droprows.append( [ True, part_string_list[row]] )
+
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+
+    page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
+
+
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
@@ -784,6 +808,95 @@ def move_down_right_in_section_dom(caller_ident, ident_list, submit_list, submit
     # move the item
     try:
         editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+
+def move_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a section after a drag and drop"
+
+    if ('editdom', 'domtable', 'dragrows') not in call_data:
+        raise FailPage(message = "item to drop missing")
+    editedprojname = call_data['editedprojname']
+    part_to_move = call_data['editdom', 'domtable', 'dragrows']
+
+    # so part_to_move is section name with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_to_move_list = part_to_move.split('-')
+    # first item should be a string, rest integers
+    if len(location_to_move_list) == 1:
+        # no location integers, the section top cannot be moved
+        return
+    else:
+        location_to_move_integers = tuple( int(i) for i in location_to_move_list[1:] )
+    section_name = location_to_move_list[0]
+
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    location_to_move = (section_name, None, location_to_move_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_to_move_tuple = part_info(editedprojname, None, section_name, location_to_move)
+    if part_to_move_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+
+
+    # new location
+
+    target_part = call_data['editdom', 'domtable', 'droprows']
+
+    # so target_part is section name with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    target_location_list = target_part.split('-')
+    # first item should be a string, rest integers
+    if len(target_location_list) == 1:
+        # no location integers
+        target_location_integers = ()
+    else:
+        target_location_integers = tuple( int(i) for i in target_location_list[1:] )
+
+    if section_name != target_location_list[0]:
+        raise FailPage("Target location has not been recognised")
+
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    target_location = (section_name, None, target_location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    target_part_tuple = part_info(editedprojname, None, section_name, target_location)
+    if target_part_tuple is None:
+        raise FailPage("Target has not been recognised")
+
+    if (target_part_tuple.part_type == "Part") or (target_part_tuple.part_type == "Section"):
+        # insert
+        if target_location_integers:
+            new_location_integers = list(target_location_integers)
+            new_location_integers.append(0)
+        else:
+            new_location_integers = [0]
+    else:
+        # append
+        new_location_integers = list(target_location_integers)
+        new_location_integers[-1] = new_location_integers[-1] + 1
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        editsection.move_item(editedprojname, section_name, location_to_move_integers, new_location_integers)
     except ServerError as e:
         raise FailPage(message = e.message)
 
