@@ -77,8 +77,9 @@ def del_item(part_info):
     if section is None:
         raise ServerError(message="Given Section not found")
     # remove the item
+    location_integers = part_info.location[2]
     try:
-        section.del_location_value(part_info.location_list)
+        section.del_location_value(location_integers)
     except:
         raise ServerError(message="Unable to delete item")
 

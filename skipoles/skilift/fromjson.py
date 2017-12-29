@@ -49,7 +49,7 @@ def _raise_server_error(message=''):
     raise ServerError(message)
 
 
-def create_part(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type, json_data):
+def create_part(project, pagenumber, page_part, section_name, name, location, part_type, brief, json_data):
     """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
        currently at the given part location, or if not an element that can accept contents, inserted after the element."""
     # raise error if invalid project
@@ -59,66 +59,85 @@ def create_part(project, pagenumber, page_part, section_name, widget_name, conta
     else:
         ident = skiboot.make_ident(pagenumber, proj_ident=project)
 
-    if location_list == 0:
-        location_list = [0]
+    # is item contained in a widget
+    container = location[1]
+    if container is not None:
+        parent_widget = location[0]
+    else:
+        parent_widget = None
 
-    if widget_name and (not location_list):
+    location_integers = location[2]
+
+    if parent_widget and (not location_integers):
         # Specifies a container part, if a Part, then an insert can be done
         # however if not, then the container part must be replaced
         if part_type != 'Part':
             # The container part cannot have stuff inserted, therefore it must be replaced
             # get the widget
-            widget = skiboot.get_part(project, ident, page_part, section_name, widget_name, None, [])
+            widget = skiboot.get_part(project, ident, page_part, section_name, parent_widget, None, [])
             # insert json data into widget at the container
             try:
-                read_json.create_part_in_widget(project, ident, section_name, widget, container_number, json_data)
+                read_json.create_part_in_widget(project, ident, section_name, widget, container, json_data)
             except:
                 _raise_server_error("Unable to create part")
             return
 
     if (part_type == 'Part') or (part_type == 'Section'):
         # insert in the part at the given location
-        part = skiboot.get_part(project, ident, page_part, section_name, widget_name, container_number, location_list)
+        part = skiboot.get_part(project, ident, page_part, section_name, parent_widget, container, location_integers)
         # insert at position 0
         loc = 0
     else:
         # append after the part given, by inserting in the parent
-        parent_location_list = location_list[:-1]
-        part = skiboot.get_part(project, ident, page_part, section_name, widget_name, container_number, parent_location_list)
+        parent_location_integers = location_integers[:-1]
+        part = skiboot.get_part(project, ident, page_part, section_name, parent_widget, container, parent_location_integers)
         # append after part
-        loc = location_list[-1] + 1
+        loc = location_integers[-1] + 1
     try:
         read_json.create_part(project, ident, section_name, part, loc, json_data)
     except:
         _raise_server_error("Unable to create part")
 
 
-def part_to_OD(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type):
+def part_to_OD(project, pagenumber, section_name, location):
     """Builds an Ordered Dictionary from the part, ServerError if not found"""
     # raise error if invalid project
     project_loaded(project)
-    if (part_type != 'Part') and (part_type != 'Section'):
-        raise ServerError("Invalid part type")
+
+    page_part = None
+
+    # is item contained in a widget
+    container = location[1]
+    if container is not None:
+        parent_widget = location[0]
+    else:
+        parent_widget = None
+        if (location[0] == 'head') or (location[0] == 'body') or (location[0] == 'svg'):
+            # part not in a widget
+            page_part = location[0]
+
+    location_integers = location[2]
+
     # part is either in a page or a section
     if pagenumber is None:
         if not section_name:
             raise ServerError("Page and section both missing")
-        part = skiboot.get_part(project, None, None, section_name, widget_name, container_number, location_list)
+        part = skiboot.get_part(project, None, None, section_name, parent_widget, container, location_integers)
     else:
         if section_name:
             raise ServerError("Part cannot be in both a page and a section")
         ident = skiboot.make_ident(pagenumber, project)
         if ident is None:
             raise ServerError("Part not recognised")
-        part = skiboot.get_part(project, ident, page_part, None, widget_name, container_number, location_list)
+        part = skiboot.get_part(project, ident, page_part, None, parent_widget, container, location_integers)
     if part is None:
         raise ServerError("Part not recognised")
     return dump_project.part_to_OD(project, part)
 
 
-def part_to_json(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type, indent=0):
+def part_to_json(project, pagenumber, section_name, location, indent=0):
     """Builds a json string from the part, ServerError if not found"""
-    part_dict = part_to_OD(project, pagenumber, page_part, section_name, widget_name, container_number, location_list, part_type)
+    part_dict = part_to_OD(project, pagenumber, section_name, location)
     return json.dumps(part_dict, indent=indent, separators=(',', ':'))
 
 

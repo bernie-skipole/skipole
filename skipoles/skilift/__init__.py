@@ -37,7 +37,7 @@ from ..ski import skiboot
 
 ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'])
 
-PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'widget_name', 'container_number', 'location', 'location_list', 'part_type', 'brief'])
+PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'name', 'location', 'part_type', 'brief'])
 
 PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder'])
 
@@ -168,7 +168,7 @@ def part_info(project, pagenumber, section_name, location):
        a container integer, such as 0 for widget container 0, or None if not in container
        a tuple or list of location integers
        returns None if part not found, otherwise returns a namedtuple with items
-       project, pagenumber, page_part, section_name, widget_name, container_number, location, location_list, part_type, tag, attributes, brief
+       project, pagenumber, page_part, section_name, name, location, part_type, brief
     """
     # raise error if invalid project
     project_loaded(project)
@@ -221,14 +221,16 @@ def part_info(project, pagenumber, section_name, location):
         part_type = part.__class__.__name__
 
     if hasattr(part, 'name'):
-        widget_name = part.name
+        name = part.name
+    else:
+        name = None
 
     if hasattr(part, 'brief'):
         brief = part.brief
     else:
         brief = None
 
-    return PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, location, location_list, part_type, brief)
+    return PartInfo(project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
 
 def part_contents(project, pagenumber, section_name, location):
@@ -293,6 +295,11 @@ def part_contents(project, pagenumber, section_name, location):
         if hasattr(subpart, '__class__'):
             subpart_type = subpart.__class__.__name__
 
+        if hasattr(subpart, 'name'):
+            name = subpart.name
+        else:
+            name = None
+
         if hasattr(subpart, 'brief'):
             brief = subpart.brief
         else:
@@ -300,7 +307,7 @@ def part_contents(project, pagenumber, section_name, location):
 
         sublocation = (location[0], location[1], location_list+[index])
 
-        sub_tuple = PartInfo(project, pagenumber, page_part, section_name, widget_name, container_number, sublocation, location_list+[index], subpart_type, brief)
+        sub_tuple = PartInfo(project, pagenumber, page_part, section_name, name, sublocation, subpart_type, brief)
         subpart_list.append(sub_tuple)
         index += 1
     return subpart_list

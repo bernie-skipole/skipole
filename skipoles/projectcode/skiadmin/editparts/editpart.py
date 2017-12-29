@@ -231,7 +231,7 @@ def downloadpart(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     if not part_info:
         raise FailPage("Part not identified")
 
-    jsonstring =  fromjson.part_to_json(*part_info, indent=4)
+    jsonstring =  fromjson.part_to_json(editedprojname, pagenumber, section_name, call_data['location'], indent=4)
     line_list = []
     n = 0
     for line in jsonstring.splitlines(True):

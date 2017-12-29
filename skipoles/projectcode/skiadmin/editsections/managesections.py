@@ -406,12 +406,14 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
         call_data['part'] = part
         raise GoTo(target = 53007, clear_submitted=True)
 
+    section_name = location_list[0]
+
     location_integers = [ int(i) for i in location_list[1:]]
-    part_tuple = part_info(editedprojname, None, location_list[0], [location_list[0], None, location_integers])
+    part_tuple = part_info(editedprojname, None, section_name, [section_name, None, location_integers])
     if part_tuple is None:
         raise FailPage("Item to edit has not been recognised")
 
-    if part_tuple.widget_name:
+    if part_tuple.name:
         # item to edit is a widget
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
         raise GoTo(target = 54006, clear_submitted=True)  # calls a del widget_name responder, may be removable in future
