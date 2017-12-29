@@ -107,7 +107,6 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
 def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call fills in the section dom table"
 
-    editedproj = call_data['editedproj']
     editedprojname = call_data['editedprojname']
 
     if "section_name" in call_data:
@@ -118,19 +117,14 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     if not section_name:
         raise FailPage(message = "Section name missing")
 
-    section_list = editedproj.list_section_names()
-    if section_name not in section_list:
-        raise FailPage(message = "Section name invalid", widget="table_error")
-
-    section = editedproj.section(section_name)
-
-
     # section location is a tuple of section_name, None for no container, () tuple of location integers
     section_location = (section_name, None, ())
     # get section_tuple from project, pagenumber, section_name, section_location
     section_tuple = part_info(editedprojname, None, section_name, section_location)
     if section_tuple is None:
         raise FailPage("The section has not been recognised")
+
+    partdict = fromjson.part_to_OD(editedprojname, None, section_name, section_location)
 
     # widget editdom,domtable is populated with fields
 
@@ -155,12 +149,12 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
     # create first row of the table
 
-    if section.attribs:
-        section_tag = '&lt;' + section.tag_name + ' ... &gt;'
+    if "attribs" in partdict:
+        section_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
     else:
-        section_tag = '&lt;' + section.tag_name + '&gt;'
+        section_tag = '&lt;' + partdict['tag_name'] + '&gt;'
 
-    section_brief = html.escape(section_tuple.brief)
+    section_brief = html.escape(partdict['brief'])
 
     if len( section_brief)>40:
         section_brief =  section_brief[:35] + '...'
@@ -181,10 +175,11 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
     # add further items to domcontents
     part_string_list = []
-    #rows = utils.domcontents(section, section_name, domcontents, part_string_list)
 
-    rows = utils.domtree(editedprojname, None, section_name, (section_name, None, ()), domcontents, part_string_list)
-
+    if 'parts' not in partdict:
+        rows = 1
+    else:
+        rows = utils.domtree(partdict, section_name, domcontents, part_string_list)
     
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
@@ -229,8 +224,9 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     if 'widgetclass' in call_data:
         del call_data['widgetclass']
 
-    # set the section into call_data
-    call_data['section'] = section
+    # set the section into call_data, to be replaced by section_tuple in due course
+    editedproj = call_data['editedproj']
+    call_data['section'] = editedproj.section(section_name)
 
 
 
