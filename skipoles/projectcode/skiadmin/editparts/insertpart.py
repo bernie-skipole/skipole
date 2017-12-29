@@ -185,8 +185,14 @@ def file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data,
         raise FailPage("Part to locate block not identified")
 
     label = "admin_home"
+    # is item contained in a widget
+    container = part_info.location[1]
+    if container is not None:
+        parent_widget = part_info.location[0]
+    else:
+        parent_widget = None
 
-    if part_info.widget_name is None:
+    if parent_widget is None:
         if section_name:
             label = "back_to_section"   # label to 7040
         else:
@@ -217,8 +223,8 @@ def file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data,
     else:
         call_data['page'] = skiboot.from_ident(page.ident, import_sections=False)
 
-    if part_info.widget_name:
-        call_data['widget_name'] = part_info.widget_name
+    if parent_widget:
+        call_data['widget_name'] = parent_widget
 
 
 
