@@ -30,7 +30,6 @@ import pkgutil, re, html
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 from ....ski import tag
-from ....ski import widgets
 from ....skilift import fromjson, part_info, part_contents, editsection
 
 # a search for anything none-alphanumeric and not an underscore
