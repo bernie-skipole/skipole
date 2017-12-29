@@ -181,8 +181,11 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
     # add further items to domcontents
     part_string_list = []
-    rows = utils.domcontents(section, section_name, domcontents, part_string_list)
+    #rows = utils.domcontents(section, section_name, domcontents, part_string_list)
 
+    rows = utils.domtree(editedprojname, None, section_name, (section_name, None, ()), domcontents, part_string_list)
+
+    
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
