@@ -108,6 +108,7 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     "this call fills in the section dom table"
 
     editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
     if "section_name" in call_data:
         section_name = call_data["section_name"]
@@ -122,6 +123,14 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
         raise FailPage(message = "Section name invalid", widget="table_error")
 
     section = editedproj.section(section_name)
+
+
+    # section location is a tuple of section_name, None for no container, () tuple of location integers
+    section_location = (section_name, None, ())
+    # get section_tuple from project, pagenumber, section_name, section_location
+    section_tuple = part_info(editedprojname, None, section_name, section_location)
+    if section_tuple is None:
+        raise FailPage("The section has not been recognised")
 
     # widget editdom,domtable is populated with fields
 
@@ -151,7 +160,7 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     else:
         section_tag = '&lt;' + section.tag_name + '&gt;'
 
-    section_brief = html.escape(section.brief)
+    section_brief = html.escape(section_tuple.brief)
 
     if len( section_brief)>40:
         section_brief =  section_brief[:35] + '...'
@@ -200,8 +209,6 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     page_data['editdom', 'domtable', 'droprows']  = droprows
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
-
-
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:

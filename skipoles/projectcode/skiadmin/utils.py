@@ -612,8 +612,6 @@ def domcontents(item, part_loc, contents, part_string_list, rows=1, indent=1):
     #                       If True a link to link_ident/json_ident will be set with button_class applied to it
     #               3 - The get field value of the button link, empty string if no get field
 
-    if not isinstance(item, tag.Part):
-        raise ServerError("utils.domcontents incorrectly called")
     indent += 1
     padding = "padding-left : %sem;" % (indent,)
     last_index = len(item)-1
