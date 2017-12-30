@@ -59,8 +59,8 @@
 "delete_submit_list_string": 6400,
 "delete_textbox": 4050,
 "displaywidget": 46031,
-"down": 3530,
-"down_right": 3540,
+"down": 3130,
+"down_right": 3140,
 "downloadfolder": 2250,
 "downloadpage": 3260,
 "downloadpart": 43060,
@@ -225,8 +225,8 @@
 "submit_text": 4100,
 "svg_file_cache": 3410,
 "tar_link": 90,
-"up": 3510,
-"up_right": 3520,
+"up": 3110,
+"up_right": 3120,
 "upload_folder": 2480,
 "url_not_found": 21001,
 "validate_error": 21002,
@@ -7399,15 +7399,15 @@ false
 "default_page_name": "index",
 "restricted": false,
 "folders": {
-"contents": {
-"ident": 3500,
+"aa_old_moves": {
+"ident": 3100,
 "brief": "New Folder",
 "default_page_name": "index",
 "restricted": false,
 "folders": {},
 "pages": {
 "down": {
-"ident": 3530,
+"ident": 3130,
 "brief": "moves item down",
 "RespondPage": {
 "class": "AllowStoreKeyed",
@@ -7432,7 +7432,7 @@ false
 }
 },
 "down_right": {
-"ident": 3540,
+"ident": 3140,
 "brief": "Move item down and to the right",
 "RespondPage": {
 "class": "AllowStoreKeyed",
@@ -7457,7 +7457,7 @@ false
 }
 },
 "up": {
-"ident": 3510,
+"ident": 3110,
 "brief": "Moves item up",
 "RespondPage": {
 "class": "AllowStoreKeyed",
@@ -7482,7 +7482,7 @@ false
 }
 },
 "up_right": {
-"ident": 3520,
+"ident": 3120,
 "brief": "Move item up and to the right",
 "RespondPage": {
 "class": "AllowStoreKeyed",
@@ -10691,10 +10691,10 @@ false
 54529,
 51209,
 43104,
-3510,
-3520,
-3530,
-3540,
+3110,
+3120,
+3130,
+3140,
 51109,
 23509,
 43070
@@ -10752,10 +10752,10 @@ false
 51109,
 51209,
 43104,
-3510,
-3520,
-3530,
-3540,
+3110,
+3120,
+3130,
+3140,
 23509,
 43070
 ],
@@ -10801,10 +10801,10 @@ false
 54529,
 51209,
 43104,
-3510,
-3520,
-3530,
-3540,
+3110,
+3120,
+3130,
+3140,
 43070
 ],
 "alternate_ident": "admin_home",
@@ -22626,10 +22626,10 @@ false
 51109,
 51209,
 43104,
-3510,
-3520,
-3530,
-3540,
+3110,
+3120,
+3130,
+3140,
 43070
 ],
 "alternate_ident": "admin_home",
@@ -39192,10 +39192,10 @@ false
 51109,
 43104,
 51209,
-3510,
-3520,
-3530,
-3540,
+3110,
+3120,
+3130,
+3140,
 43070
 ],
 "alternate_ident": "admin_home",
