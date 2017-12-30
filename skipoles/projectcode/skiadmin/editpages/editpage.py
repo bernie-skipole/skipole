@@ -26,6 +26,8 @@
 
 "Functions implementing admin page editing"
 
+import html
+
 from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 from ....skilift import fromjson, part_info, part_contents, editsection
@@ -205,6 +207,117 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data['editparts', 'parts', 'contents']  = contents
     page_data['editparts', 'parts', 'rows']  = rows
 
+    # fill in the table
+    call_data['location_string'] = 'head'
+    retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
+
+def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "this call fills in the section dom table"
+
+    editedprojname = call_data['editedprojname']
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    location_string = call_data['location_string']
+
+    # page location is a tuple of either 'body' 'head' or 'svg', None for no container, () tuple of location integers
+    page_location = (location_string, None, ())
+    # get page_tuple from project, pagenumber, section_name, page_location
+    page_tuple = part_info(editedprojname, pagenumber, None, page_location)
+    if page_tuple is None:
+        raise FailPage("The page element has not been recognised")
+
+    partdict = fromjson.part_to_OD(editedprojname, pagenumber, None, page_location)
+
+    # widget editdom,domtable is populated with fields
+
+    #    dragrows: A two element list for every row in the table, could be empty if no drag operation
+    #              0 - True if draggable, False if not
+    #              1 - If 0 is True, this is data sent with the call wnen a row is dropped
+    #    droprows: A two element list for every row in the table, could be empty if no drop operation
+    #              0 - True if droppable, False if not
+    #              1 - text to send with the call when a row is dropped here
+    #    dropident: ident or label of target, called when a drop occurs which returns a JSON page
+
+    #    cols: A two element list for every column in the table, must be given with empty values if no links
+    #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
+    #              1 - target JSON page link ident of buttons in each column,
+
+    #    contents: A list for every element in the table, should be row*col lists
+    #               0 - text string, either text to display or button text
+    #               1 - A 'style' string set on the td cell, if empty string, no style applied
+    #               2 - Is button? If False only text will be shown, not a button, button class will not be applied
+    #                       If True a link to link_ident/json_ident will be set with button_class applied to it
+    #               3 - The get field value of the button link, empty string if no get field
+
+    # create first row of the table
+
+    if "attribs" in partdict:
+        part_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
+    else:
+        part_tag = '&lt;' + partdict['tag_name'] + '&gt;'
+
+    part_brief = html.escape(partdict['brief'])
+
+    if len(part_brief)>40:
+        part_brief =  part_brief[:35] + '...'
+    if not part_brief:
+         part_brief = '-'
+
+    domcontents = [
+                   [part_tag, '', False, '' ],
+                   [part_brief, '', False, '' ],
+                   ['', '', False, '' ],                                                # no up arrow for top line
+                   ['', '', False, '' ],                                                # no up_right arrow for top line
+                   ['', '', False, '' ],                                                # no down arrow for top line
+                   ['', '', False, '' ],                                                # no down_right arrow for top line
+                   ['Edit',  'width : 1%;', True, location_string],                     # edit
+                   ['Insert','width : 1%;text-align: center;', True, location_string],  # insert
+                   ['', '', False, '' ],                                                # no remove image for top line
+                ]
+
+    # add further items to domcontents
+    part_string_list = []
+
+    if 'parts' not in partdict:
+        rows = 1
+    else:
+        rows = utils.domtree(partdict, location_string, domcontents, part_string_list)
+    
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    # for each column: html link, JSON link
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                             # tag name, no link
+                                                      ['',''],                             # brief, no link
+                                                      ['move_up_in_page_dom',''],          # up arrow
+                                                      ['move_up_right_in_page_dom',''],    # up right
+                                                      ['move_down_in_page_dom',''],        # down
+                                                      ['move_down_right_in_page_dom',''],  # down right
+                                                      ['edit_page_dom',''],                # edit, html only
+                                                      ['add_to_page_dom',''],              # insert/append, html only
+                                                      ['remove_page_dom','']               # remove
+                                                   ]
+    # for every row in the table
+    dragrows = [ [ False, '']]
+    droprows = [ [ True, location_string ]]
+
+    # for each row (minus 1 as the first row is done)
+    for row in range(0, rows-1):
+        dragrows.append( [ True, part_string_list[row]] )
+        droprows.append( [ True, part_string_list[row]] )
+
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+
+    page_data['editdom', 'domtable', 'dropident']  = ''
+
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
         del call_data['location']
@@ -220,6 +333,7 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
         del call_data['container']
     if 'widgetclass' in call_data:
         del call_data['widgetclass']
+
 
 
 def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -292,21 +406,9 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data['editparts', 'parts', 'contents']  = contents
     page_data['editparts', 'parts', 'rows']  = rows
 
-    # remove any unwanted fields from session call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'field_arg' in call_data:
-        del call_data['field_arg']
-    if 'validx' in call_data:
-        del call_data['validx']
-    if 'module' in call_data:
-        del call_data['module']
-    if 'widget_name' in call_data:
-        del call_data['widget_name']
-    if 'container' in call_data:
-        del call_data['container']
-    if 'widgetclass' in call_data:
-        del call_data['widgetclass']
+    # fill in the table
+    call_data['location_string'] = 'body'
+    retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
 def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -432,21 +534,9 @@ def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_d
     page_data['editparts', 'parts', 'contents']  = contents
     page_data['editparts', 'parts', 'rows']  = rows
 
-    # remove any unwanted fields from session call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'field_arg' in call_data:
-        del call_data['field_arg']
-    if 'validx' in call_data:
-        del call_data['validx']
-    if 'module' in call_data:
-        del call_data['module']
-    if 'widget_name' in call_data:
-        del call_data['widget_name']
-    if 'container' in call_data:
-        del call_data['container']
-    if 'widgetclass' in call_data:
-        del call_data['widgetclass']
+    # fill in the table
+    call_data['location_string'] = 'svg'
+    retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
 def set_html_lang(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

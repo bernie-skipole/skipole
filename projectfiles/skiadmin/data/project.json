@@ -24,6 +24,7 @@
 "add_selector": 8100,
 "add_submit_list_string": 6410,
 "add_tag_attrib": 43030,
+"add_to_page_dom": 3530,
 "add_to_section_dom": 7430,
 "add_user_page": 5500,
 "admin_home": 1,
@@ -76,6 +77,7 @@
 "edit_item": 2,
 "edit_jq_page": 5200,
 "edit_page": 8,
+"edit_page_dom": 3510,
 "edit_placeholder": 45002,
 "edit_project": 120,
 "edit_section": 7030,
@@ -114,10 +116,14 @@
 "manage_specialpages": 5001,
 "manage_textblocks": 4001,
 "mimetype_page": 9200,
+"move_down_in_page_dom": 3560,
 "move_down_in_section_dom": 7460,
+"move_down_right_in_page_dom": 3570,
 "move_down_right_in_section_dom": 7470,
 "move_in_section_dom": 7510,
+"move_up_in_page_dom": 3540,
 "move_up_in_section_dom": 7440,
+"move_up_right_in_page_dom": 3550,
 "move_up_right_in_section_dom": 7450,
 "new_append": 43103,
 "new_copypage": 2460,
@@ -144,6 +150,7 @@
 "remove_field": 6110,
 "remove_field_value": 6100,
 "remove_item": 43104,
+"remove_page_dom": 3520,
 "remove_project": 110,
 "remove_section_dom": 7420,
 "remove_selector": 8200,
@@ -7508,6 +7515,183 @@ false
 }
 }
 },
+"dom_html": {
+"ident": 3500,
+"brief": "Edit section dom - html calls",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"add_to_page_dom": {
+"ident": 3530,
+"brief": "fill page to append or insert an item in a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"add_to_page_dom"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"edit_page_dom": {
+"ident": 3510,
+"brief": "Edit an item, such as widget, text in a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"edit_page_dom"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_in_page_dom": {
+"ident": 3560,
+"brief": "moves a dom item down in a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"move_down_in_page_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_right_in_page_dom": {
+"ident": 3570,
+"brief": "moves a dom item down and to the right in a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"move_down_right_in_page_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_in_page_dom": {
+"ident": 3540,
+"brief": "moves a dom item up in a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"move_up_in_page_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_right_in_page_dom": {
+"ident": 3550,
+"brief": "moves a dom item up and to the right in a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"move_up_right_in_page_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"remove_page_dom": {
+"ident": 3520,
+"brief": "Remove an item from a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"remove_page_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+}
+}
+},
 "json": {
 "ident": 3700,
 "brief": "For editing json pages",
@@ -9643,7 +9827,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": 1,
+"fail_ident": "admin_home",
 "target_ident": 23349
 },
 "original_fields": {}
@@ -9845,6 +10029,14 @@ false
 "brief": "Table of the page body",
 "section_name": "editparts",
 "placename": "editparts"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "editdom with widget domtable",
+"section_name": "editdom",
+"placename": "editdom"
 }
 ]
 ]
@@ -10077,6 +10269,14 @@ false
 "section_name": "editparts",
 "placename": "editparts"
 }
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "editdom with widget domtable",
+"section_name": "editdom",
+"placename": "editdom"
+}
 ]
 ]
 }
@@ -10291,6 +10491,17 @@ false
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "section",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
 "SectionPlaceHolder",
 {
 "brief": "Table of svg contents",
@@ -10299,10 +10510,14 @@ false
 }
 ],
 [
-"ClosedPart",
+"SectionPlaceHolder",
 {
-"tag_name": "br",
-"show": true
+"brief": "editdom with widget domtable",
+"section_name": "editdom",
+"placename": "editdom"
+}
+]
+]
 }
 ],
 [
@@ -38799,7 +39014,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": 1,
+"fail_ident": "admin_home",
 "target_ident": 27049
 },
 "original_fields": {}
@@ -39712,6 +39927,32 @@ false
 }
 },
 "pages": {
+"aaaaa.svg": {
+"ident": 85002,
+"brief": "test page",
+"SVG": {
+"enable_cache": false,
+"width": "100",
+"height": "100"
+},
+"svg": [
+"Part",
+{
+"tag_name": "svg",
+"brief": "The svg section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"baseProfile": "full",
+"height": "100",
+"version": "1.1",
+"width": "100",
+"xmlns": "http://www.w3.org/2000/svg"
+},
+"parts": []
+}
+]
+},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
