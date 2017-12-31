@@ -30,7 +30,7 @@ import html
 
 from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
-from ....skilift import fromjson, part_info, part_contents, editsection
+from ....skilift import fromjson, part_info, part_contents, editpage
 
 from .. import utils, css_styles
 
@@ -163,49 +163,6 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[("adminhead","page_head","small_text")] = page.brief
 
     call_data['extend_nav_buttons'] = [['back_to_page', "Back to page", True, '']]
-
-    #        contents: A list for every element in the table, should be row*col lists
-    #              col 0 - text string (This will be either text to display, button text, or Textblock reference)
-    #               col 1 - True if this is a TextBlock, False if not
-    #               col 2 - A 'style' string set on the td cell, if empty string, no style applied
-    #               col 3 - Link ident, if empty, only text will be shown, not a button
-    #                             if given, a link will be set with button_class applied to it
-    #              col 4 - The get field value of the button link, empty string if no get field, ignored if no link ident given
-
-    page_data['editparts', 'parts', 'cols']  = 9
-    rows = 1
-
-    if page.head.attribs:
-        head_string = '<head ... >'
-    else:
-        head_string = '<head>'
-
-    head_brief = page.head.brief
-
-    if len( head_brief)>40:
-        head_brief =  head_brief[:35] + '...'
-    if not  head_brief:
-         head_brief = '-'
-
-    no_link = [False, '', '']
-    empty = ['', False, '', '']
-
-    contents = [
-                               [head_string] + no_link,              # col 0 the <head> text
-                               [ head_brief] + no_link,
-                               empty,                                       # no up arrow for top line
-                               empty,                                       # no up_right arrow for top line
-                               empty,                                       # no down arrow for top line
-                               empty,                                       # no down_right arrow for top line
-                               ['Edit', False, 'width : 1%;', 'get_part_edit', 'head'],                 # edit - link to part_edit = 43101
-                               ['Insert', False, 'width : 1%;text-align: center;', 'new_insert', 'head'],             # insert - link to page 43102
-                               empty                                       # no remove image for top line
-                            ]
-
-    rows = utils.extendparts(rows, page.head, 'head', contents, no_link, empty)
-
-    page_data['editparts', 'parts', 'contents']  = contents
-    page_data['editparts', 'parts', 'rows']  = rows
 
     # fill in the table
     call_data['location_string'] = 'head'
@@ -363,49 +320,6 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
 
     call_data['extend_nav_buttons'] = [['back_to_page', "Back to page", True, '']]
 
-
-    #        contents: A list for every element in the table, should be row*col lists
-    #              col 0 - text string (This will be either text to display, button text, or Textblock reference)
-    #               col 1 - True if this is a TextBlock, False if not
-    #               col 2 - A 'style' string set on the td cell, if empty string, no style applied
-    #               col 3 - Link ident, if empty, only text will be shown, not a button
-    #                             if given, a link will be set with button_class applied to it
-    #              col 4 - The get field value of the button link, empty string if no get field, ignored if no link ident given
-
-    page_data['editparts', 'parts', 'cols']  = 9
-    rows = 1
-
-    if page.body.attribs:
-        body_string = '<body ... >'
-    else:
-        body_string = '<body>'
-
-    body_brief = page.body.brief
-    if len(body_brief)>40:
-        body_brief = body_brief[:35] + '...'
-    if not body_brief:
-        body_brief = '-'
-
-    no_link = [False, '', '']
-    empty = ['', False, '', '']
-
-    contents = [
-                   [body_string] + no_link,              # col 0 the <body> text
-                   [body_brief] + no_link,
-                   empty,                                       # no up arrow for top line
-                   empty,                                       # no up_right arrow for top line
-                   empty,                                       # no down arrow for top line
-                   empty,                                       # no down_right arrow for top line
-                   ['Edit', False, 'width : 1%;', 'get_part_edit', 'body'],                 # edit - link to part_edit = 43101
-                   ['Insert', False, 'width : 1%;text-align: center;', 'new_insert', 'body'],             # insert - link to page 43102
-                   empty                                       # no remove image for top line
-                ]
-
-    rows = utils.extendparts(rows, page.body, 'body', contents, no_link, empty)
-
-    page_data['editparts', 'parts', 'contents']  = contents
-    page_data['editparts', 'parts', 'rows']  = rows
-
     # fill in the table
     call_data['location_string'] = 'body'
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -490,49 +404,6 @@ def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_d
         page_data[("adminhead","page_head","small_text")] = page.brief
 
     call_data['extend_nav_buttons'] = [['back_to_svgpage', "Back to page", True, '']]
-
-    #        contents: A list for every element in the table, should be row*col lists
-    #              col 0 - text string (This will be either text to display, button text, or Textblock reference)
-    #               col 1 - True if this is a TextBlock, False if not
-    #               col 2 - A 'style' string set on the td cell, if empty string, no style applied
-    #               col 3 - Link ident, if empty, only text will be shown, not a button
-    #                             if given, a link will be set with button_class applied to it
-    #              col 4 - The get field value of the button link, empty string if no get field, ignored if no link ident given
-
-    page_data['editparts', 'parts', 'cols']  = 9
-    rows = 1
-
-    if page.svg.attribs:
-        svg_string = '<svg ... >'
-    else:
-        svg_string = '<svg>'
-
-    svg_brief = page.svg.brief
-
-    if len( svg_brief)>40:
-        svg_brief =  svg_brief[:35] + '...'
-    if not svg_brief:
-         svg_brief = '-'
-
-    no_link = [False, '', '']
-    empty = ['', False, '', '']
-
-    contents = [
-                   [svg_string] + no_link,              # col 0 the <svg> text
-                   [svg_brief] + no_link,
-                   empty,                                       # no up arrow for top line
-                   empty,                                       # no up_right arrow for top line
-                   empty,                                       # no down arrow for top line
-                   empty,                                       # no down_right arrow for top line
-                   ['Edit', False, 'width : 1%;', 'get_part_edit', 'svg'],                 # edit - link to part_edit = 43101
-                   ['Insert', False, 'width : 1%;text-align: center;', 'new_insert', 'svg'],             # insert - link to page 43102
-                   empty                                       # no remove image for top line
-                ]
-
-    rows = utils.extendparts(rows, page.svg, 'svg', contents, no_link, empty)
-
-    page_data['editparts', 'parts', 'contents']  = contents
-    page_data['editparts', 'parts', 'rows']  = rows
 
     # fill in the table
     call_data['location_string'] = 'svg'
@@ -1306,5 +1177,643 @@ def downloadpage(caller_ident, ident_list, submit_list, submit_dict, call_data, 
         line_list.append(binline)
     page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
     return line_list
+
+
+def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a page up"
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers
+        return
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    if part_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+
+    if (len(location_integers) == 1) and (location_integers[0] == 0):
+        # at top, cannot be moved
+        raise FailPage("Cannot be moved up")
+
+    if location_integers[-1] == 0:
+        # move up to next level
+        new_location_integers = location_integers[:-1]
+    else:
+        # swap parts on same level
+        new_location_integers = list(location_integers[:-1])
+        new_location_integers.append(location_integers[-1] - 1)
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['location_string'] = location_string
+
+    # move the item
+    try:
+        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a page up and to the right"
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the location_string
+        return
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    if part_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+
+    if location_integers[-1] == 0:
+        # at top of a part, cannot be moved
+        raise FailPage("Cannot be moved up")
+    new_parent_integers = list(location_integers[:-1])
+    new_parent_integers.append(location_integers[-1] - 1)
+    new_parent_location = (location_string, None, new_parent_integers)
+
+    new_parent_tuple = part_info(editedprojname, pagenumber, None, new_parent_location)
+
+    if new_parent_tuple is None:
+        raise FailPage("Cannot be moved up")
+    if new_parent_tuple.part_type != "Part":
+        raise FailPage("Cannot be moved up")
+
+    items_in_new_parent = len(part_contents(editedprojname, pagenumber, None, new_parent_location))
+
+    new_location_integers =  tuple(new_parent_integers + [items_in_new_parent])
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['location_string'] = location_string
+
+    # move the item
+    try:
+        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a page down"
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, the location_string top cannot be moved
+        return
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    if part_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+
+    if len(location_integers) == 1:
+        # Just at immediate level below top
+        parent_location = (location_string, None, ())
+        items_in_parent = len(part_contents(editedprojname, pagenumber, None, parent_location))
+        if location_integers[0] == (items_in_parent-1):
+            # At end, cannot be moved
+            raise FailPage("Cannot be moved down")
+        new_location_integers = (location_integers[0]+2,)
+    else:
+        parent_integers = tuple(location_integers[:-1])
+        parent_location = (location_string, None, parent_integers)
+        items_in_parent = len(part_contents(editedprojname, pagenumber, None, parent_location))
+        if location_integers[-1] == (items_in_parent-1):
+            # At end of a part, so move up a level
+            new_location_integers = list(parent_integers[:-1])
+            new_location_integers.append(parent_integers[-1] + 1)
+        else:
+            # just insert into current level
+            new_location_integers = list(parent_integers)
+            new_location_integers.append(location_integers[-1] + 2)
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['location_string'] = location_string
+
+    # move the item
+    try:
+        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a page down and to the right"
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, the location_string top cannot be moved
+        return
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    if part_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+
+    if len(location_integers) == 1:
+        parent_location = (location_string, None, ())
+    else:
+        parent_integers = list(location_integers[:-1])
+        parent_location = (location_string, None, parent_integers)
+    items_in_parent = len(part_contents(editedprojname, pagenumber, None, parent_location))
+    if location_integers[-1] == (items_in_parent-1):
+        # At end of a block, cannot be moved
+        raise FailPage("Cannot be moved down")
+    new_parent_integers = list(location_integers[:-1])
+    new_parent_integers.append(location_integers[-1] + 1)
+    new_parent_location = (location_string, None, new_parent_integers)
+    new_parent_tuple = part_info(editedprojname, pagenumber, None, new_parent_location)
+
+    if new_parent_tuple is None:
+        raise FailPage("Cannot be moved down")
+    if not (new_parent_tuple.part_type == 'Part' or new_parent_tuple.part_type == 'Section'):
+        raise FailPage("Cannot be moved down")
+
+    new_location_integers = tuple(new_parent_integers+[0])
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['location_string'] = location_string
+
+    # move the item
+    try:
+        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+
+def after_dom_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called after a dom edit to refresh the correct page"
+
+    # hopefully, in due course these next three lines will not be needed
+    pagenumber = call_data["page_number"]
+    editedprojname = call_data['editedprojname']
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+
+    if 'location_string' not in call_data:
+        raise FailPage("Cannot return to item")
+    if call_data['location_string'] == 'head':
+        del call_data['location_string']
+        raise GoTo(target = 23321, clear_submitted=True)
+    if call_data['location_string'] == 'body':
+        del call_data['location_string']
+        raise GoTo(target = 23341, clear_submitted=True)
+    if call_data['location_string'] == 'svg':
+        del call_data['location_string']
+        raise GoTo(target = 23421, clear_submitted=True)
+
+
+
+def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a page after a drag and drop"
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'dragrows') not in call_data:
+        raise FailPage(message = "item to drop missing")
+    editedprojname = call_data['editedprojname']
+    part_to_move = call_data['editdom', 'domtable', 'dragrows']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_to_move_list = part_to_move.split('-')
+    # first item should be a string, rest integers
+    if len(location_to_move_list) == 1:
+        # no location integers, the location_string top cannot be moved
+        return
+    else:
+        location_to_move_integers = tuple( int(i) for i in location_to_move_list[1:] )
+    location_string = location_to_move_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location_to_move = (location_string, None, location_to_move_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_to_move_tuple = part_info(editedprojname, pagenumber, None, location_to_move)
+    if part_to_move_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+
+
+    # new location
+
+    target_part = call_data['editdom', 'domtable', 'droprows']
+
+    # so target_part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    target_location_list = target_part.split('-')
+    # first item should be a string, rest integers
+    if len(target_location_list) == 1:
+        # no location integers
+        target_location_integers = ()
+    else:
+        target_location_integers = tuple( int(i) for i in target_location_list[1:] )
+
+    if location_string != target_location_list[0]:
+        raise FailPage("Target location has not been recognised")
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    target_location = (location_string, None, target_location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    target_part_tuple = part_info(editedprojname, pagenumber, None, target_location)
+    if target_part_tuple is None:
+        raise FailPage("Target has not been recognised")
+
+    if (target_part_tuple.part_type == "Part") or (target_part_tuple.part_type == "Section"):
+        # insert
+        if target_location_integers:
+            new_location_integers = list(target_location_integers)
+            new_location_integers.append(0)
+        else:
+            new_location_integers = [0]
+    else:
+        # append
+        new_location_integers = list(target_location_integers)
+        new_location_integers[-1] = new_location_integers[-1] + 1
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        editpage.move_item(editedprojname, pagenumber, location_string, location_to_move_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to edit an item in a page"
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the location_string
+        # edit the top location_string html part
+        call_data['part'] = part
+        raise GoTo(target = 53007, clear_submitted=True)
+
+    location_string = location_list[0]
+
+    location_integers = [ int(i) for i in location_list[1:]]
+    part_tuple = part_info(editedprojname, pagenumber, None, [location_string, None, location_integers])
+    if part_tuple is None:
+        raise FailPage("Item to edit has not been recognised")
+
+    if part_tuple.name:
+        # item to edit is a widget
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 54006, clear_submitted=True)
+    if part_tuple.part_type == "Part":
+        # edit the html part
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 53007, clear_submitted=True)
+    if part_tuple.part_type == "ClosedPart":
+        # edit the html closed part
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 53007, clear_submitted=True)
+    if part_tuple.part_type == "HTMLSymbol":
+        # edit the symbol
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51107, clear_submitted=True)
+    if part_tuple.part_type == "str":
+        # edit the text
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51017, clear_submitted=True)
+    if part_tuple.part_type == "TextBlock":
+        # edit the TextBlock
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 52017, clear_submitted=True)
+    if part_tuple.part_type == "Comment":
+        # edit the Comment
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51207, clear_submitted=True)
+    if part_tuple.part_type == "SectionPlaceHolder":
+        # edit the SectionPlaceHolder
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 55007, clear_submitted=True)
+
+    # note : a sectionplaceholder cannot appear in a section
+    raise FailPage("Item to edit has not been recognised")
+
+
+def add_to_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """Called by domtable to either insert or append an item in a page
+       sets page_data to populate the insert or append page and then go to appropriate template page"""
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the location_string
+        location_integers = ()
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    if part_tuple is None:
+        raise FailPage("Item to append to has not been recognised")
+    # goto either the install or append page
+
+    call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+    call_data['location'] = location         ########## also part_tuple should replace location
+
+    page_data[("adminhead","page_head","small_text")] = "Pick an item type"
+
+    # navigator boxes
+    if location_string == 'head':
+        boxes = [['page_head', "Head", True, '']]    # label to 3320
+    elif location_string == 'body':
+        boxes = [['page_body', "Body", True, '']]    # label to 3340
+    elif location_string == 'svg':
+        boxes = [['page_svg', "SVG", True, '']]    # label to 3420
+    else:
+        raise FailPage("Item to add to has not been recognised")
+
+    if 'extend_nav_buttons' in call_data:
+        call_data['extend_nav_buttons'].extend(boxes)
+    else:
+        call_data['extend_nav_buttons'] = boxes
+
+    # Fill in menu of items, Part items have insert, others have append
+    # as this is to be input into a section, a further section is not present in this list
+
+
+    if part_tuple.part_type == "Part":
+        # insert
+        page_data[("adminhead","page_head","large_text")] = "Choose an item to insert"
+        page_data[("insertlist","links")] = [
+                                                ["Insert text", "inserttext", ""],
+                                                ["Insert a TextBlock", "insert_textblockref", ""],
+                                                ["Insert html symbol", "insertsymbol", ""],
+                                                ["Insert comment", "insertcomment", ""],
+                                                ["Insert an html element", "part_insert", ""],
+                                                ["Insert a Widget", "list_widget_modules", ""],
+                                                ["Insert a Section", "placeholder_insert", ""]
+                                            ]
+        raise GoTo(target = '23609', clear_submitted=True)
+    else:
+        # append
+        page_data[("adminhead","page_head","large_text")] = "Choose an item to append"
+        page_data[("appendlist","links")] = [
+                                                ["Append text", "inserttext", ""],
+                                                ["Append a TextBlock", "insert_textblockref", ""],
+                                                ["Append html symbol", "insertsymbol", ""],
+                                                ["Append comment", "insertcomment", ""],
+                                                ["Append an html element", "part_insert", ""],
+                                                ["Append a Widget", "list_widget_modules", ""],
+                                                ["Append a Section", "placeholder_insert", ""]
+                                            ]
+        raise GoTo(target = '23509', clear_submitted=True)
+
+
+def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to remove an item in a page"
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers
+        raise FailPage("Item to remove has not been recognised")
+
+    location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    if part_tuple is None:
+        raise FailPage("Item to remove has not been recognised")
+
+    # once item is deleted, no info on the item should be
+    # left in call_data - this may not be required in future
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['location_string'] = location_string
+
+    # remove the item
+    try:
+        editpage.del_item(editedprojname, pagenumber, location_string, location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    call_data['status'] = 'Item deleted'
+
+
 
 

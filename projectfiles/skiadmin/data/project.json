@@ -28,6 +28,7 @@
 "add_to_section_dom": 7430,
 "add_user_page": 5500,
 "admin_home": 1,
+"after_dom_edit": 23010,
 "alternate_ident": 6040,
 "alternate_ident_json": 6041,
 "arg_edit": 46101,
@@ -1759,14 +1760,6 @@ false,
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
-],
-[
 "Part",
 {
 "tag_name": "p",
@@ -1774,6 +1767,14 @@ false,
 "show": true,
 "hide_if_empty": false,
 "parts": [
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+],
 [
 "Text",
 "Your code can optionally import further useful functions from the skilift package."
@@ -1812,14 +1813,6 @@ false,
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
-],
-[
 "Part",
 {
 "tag_name": "p",
@@ -1827,6 +1820,14 @@ false,
 "show": true,
 "hide_if_empty": false,
 "parts": [
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+],
 [
 "Text",
 "After you have edited your code, You generally need to stop and restart your server. However as an experimental feature (perhaps not to be trusted yet) you can reload it by choosing the link:"
@@ -7578,14 +7579,14 @@ false
 "original_args": {
 "allowed_callers": [],
 "alternate_ident": "admin_home",
-"fail_ident": "admin_home",
+"fail_ident": "after_dom_edit",
 "submit_list": [
 "editpages",
 "editpage",
 "move_down_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": 27047,
+"target_ident": "after_dom_edit",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -7602,14 +7603,14 @@ false
 "original_args": {
 "allowed_callers": [],
 "alternate_ident": "admin_home",
-"fail_ident": "admin_home",
+"fail_ident": "after_dom_edit",
 "submit_list": [
 "editpages",
 "editpage",
 "move_down_right_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": 27047,
+"target_ident": "after_dom_edit",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -7626,14 +7627,14 @@ false
 "original_args": {
 "allowed_callers": [],
 "alternate_ident": "admin_home",
-"fail_ident": "admin_home",
+"fail_ident": "after_dom_edit",
 "submit_list": [
 "editpages",
 "editpage",
 "move_up_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": 27047,
+"target_ident": "after_dom_edit",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -7650,14 +7651,14 @@ false
 "original_args": {
 "allowed_callers": [],
 "alternate_ident": "admin_home",
-"fail_ident": "admin_home",
+"fail_ident": "after_dom_edit",
 "submit_list": [
 "editpages",
 "editpage",
 "move_up_right_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": 27047,
+"target_ident": "after_dom_edit",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -7674,14 +7675,14 @@ false
 "original_args": {
 "allowed_callers": [],
 "alternate_ident": "admin_home",
-"fail_ident": "admin_home",
+"fail_ident": "after_dom_edit",
 "submit_list": [
 "editpages",
 "editpage",
 "remove_page_dom"
 ],
 "submit_option": true,
-"target_ident": 27047,
+"target_ident": "after_dom_edit",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -8484,6 +8485,23 @@ false
 }
 },
 "pages": {
+"after_dom_edit": {
+"ident": 23010,
+"brief": "Call the correct page after a dom edit",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"after_dom_edit"
+],
+"target_ident": "admin_home"
+},
+"original_fields": {}
+}
+},
 "edit": {
 "ident": 23207,
 "brief": "Sets data into the page edit page",
@@ -10026,14 +10044,6 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Table of the page body",
-"section_name": "editparts",
-"placename": "editparts"
-}
-],
-[
-"SectionPlaceHolder",
-{
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom"
@@ -10265,14 +10275,6 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Table of the page head",
-"section_name": "editparts",
-"placename": "editparts"
-}
-],
-[
-"SectionPlaceHolder",
-{
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom"
@@ -10501,14 +10503,6 @@ false
 "class": "w3-section"
 },
 "parts": [
-[
-"SectionPlaceHolder",
-{
-"brief": "Table of svg contents",
-"section_name": "editparts",
-"placename": "editparts"
-}
-],
 [
 "SectionPlaceHolder",
 {

@@ -414,7 +414,7 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     if part_tuple.name:
         # item to edit is a widget
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
-        raise GoTo(target = 54006, clear_submitted=True)  # calls a del widget_name responder, may be removable in future
+        raise GoTo(target = 54006, clear_submitted=True)
     if part_tuple.part_type == "Part":
         # edit the html part
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
@@ -552,7 +552,7 @@ def remove_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # remove the item
     try:
-        editsection.del_item(part_tuple)
+        editsection.del_item(editedprojname, section_name, location_integers)
     except ServerError as e:
         raise FailPage(message = e.message)
 
