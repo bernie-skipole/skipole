@@ -121,6 +121,7 @@
 "move_down_in_section_dom": 7460,
 "move_down_right_in_page_dom": 3570,
 "move_down_right_in_section_dom": 7470,
+"move_in_page_dom": 3610,
 "move_in_section_dom": 7510,
 "move_up_in_page_dom": 3540,
 "move_up_in_section_dom": 7440,
