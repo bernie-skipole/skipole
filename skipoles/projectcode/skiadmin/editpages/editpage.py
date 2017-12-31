@@ -265,15 +265,19 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
     dragrows = [ [ False, '']]
     droprows = [ [ True, location_string ]]
 
+    # send project and page number with dragrow info to avoid items being dragged across web screens showing different pages
+    proj_page = editedprojname+"_"+str(pagenumber)+"_"
+
     # for each row (minus 1 as the first row is done)
     for row in range(0, rows-1):
-        dragrows.append( [ True, part_string_list[row]] )
+        row_string = proj_page + part_string_list[row]
+        dragrows.append( [ True, row_string] )
         droprows.append( [ True, part_string_list[row]] )
 
     page_data['editdom', 'domtable', 'dragrows']  = dragrows
     page_data['editdom', 'domtable', 'droprows']  = droprows
 
-    page_data['editdom', 'domtable', 'dropident']  = ''
+    page_data['editdom', 'domtable', 'dropident']  = 'move_in_page_dom'
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
@@ -1247,6 +1251,9 @@ def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call
     except ServerError as e:
         raise FailPage(message = e.message)
 
+    # page has changed, hopefully, in due course, this line will not be needed
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+
 
 def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to move an item in a page up and to the right"
@@ -1321,6 +1328,9 @@ def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict
         editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # page has changed, hopefully, in due course, this line will not be needed
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
 
 
 def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -1400,6 +1410,9 @@ def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, ca
     except ServerError as e:
         raise FailPage(message = e.message)
 
+    # page has changed, hopefully, in due course, this line will not be needed
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+
 
 def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to move an item in a page down and to the right"
@@ -1478,15 +1491,13 @@ def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_di
     except ServerError as e:
         raise FailPage(message = e.message)
 
+    # page has changed, hopefully, in due course, this line will not be needed
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+
 
 
 def after_dom_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called after a dom edit to refresh the correct page"
-
-    # hopefully, in due course these next three lines will not be needed
-    pagenumber = call_data["page_number"]
-    editedprojname = call_data['editedprojname']
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
 
     if 'location_string' not in call_data:
         raise FailPage("Cannot return to item")
@@ -1516,7 +1527,18 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     if ('editdom', 'domtable', 'dragrows') not in call_data:
         raise FailPage(message = "item to drop missing")
     editedprojname = call_data['editedprojname']
-    part_to_move = call_data['editdom', 'domtable', 'dragrows']
+
+    projpartsplit = call_data['editdom', 'domtable', 'dragrows'].split('_', 2)
+    if len(projpartsplit) != 3:
+        raise FailPage(message = "Invalid move")
+
+    if projpartsplit[0] != editedprojname:
+        raise FailPage(message = "Invalid move")
+
+    if projpartsplit[1] != str(pagenumber):
+        raise FailPage(message = "Invalid move")
+
+    part_to_move = projpartsplit[2]
 
     # so part is location_string with string of integers
 
@@ -1539,7 +1561,6 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     part_to_move_tuple = part_info(editedprojname, pagenumber, None, location_to_move)
     if part_to_move_tuple is None:
         raise FailPage("Item to move has not been recognised")
-
 
     # new location
 
@@ -1591,11 +1612,16 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     if 'part_loc' in call_data:
         del call_data['part_loc']
 
+    call_data['location_string'] = location_string
+
     # move the item
     try:
         editpage.move_item(editedprojname, pagenumber, location_string, location_to_move_integers, new_location_integers)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # page has changed, hopefully, in due course, this line will not be needed
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
 
 
 def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -1813,6 +1839,9 @@ def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage(message = e.message)
 
     call_data['status'] = 'Item deleted'
+
+    # page has changed, hopefully, in due course, this line will not be needed
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
 
 
 
