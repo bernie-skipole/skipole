@@ -170,7 +170,7 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
 
 
 def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "this call fills in the section dom table"
+    "this call fills in the page dom table"
 
     editedprojname = call_data['editedprojname']
 
@@ -251,15 +251,15 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                             # tag name, no link
-                                                      ['',''],                             # brief, no link
-                                                      ['move_up_in_page_dom',''],          # up arrow
-                                                      ['move_up_right_in_page_dom',''],    # up right
-                                                      ['move_down_in_page_dom',''],        # down
-                                                      ['move_down_right_in_page_dom',''],  # down right
-                                                      ['edit_page_dom',''],                # edit, html only
-                                                      ['add_to_page_dom',''],              # insert/append, html only
-                                                      ['remove_page_dom','']               # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                               # tag name, no link
+                                                      ['',''],                               # brief, no link
+                                                      ['move_up_in_page_dom',3640],          # up arrow
+                                                      ['move_up_right_in_page_dom',3650],    # up right
+                                                      ['move_down_in_page_dom',3660],        # down
+                                                      ['move_down_right_in_page_dom',3670],  # down right
+                                                      ['edit_page_dom',''],                  # edit, html only
+                                                      ['add_to_page_dom',''],                # insert/append, html only
+                                                      ['remove_page_dom',3620]               # remove
                                                    ]
     # for every row in the table
     dragrows = [ [ False, '']]
