@@ -116,3 +116,91 @@ def delete_page(project, pagenumber):
         return e.message
 
 
+def del_item(project, pagenumber, location_string, location_integers):
+    "Deletes the item"
+    page, error_message = _get_page(project, pagenumber)
+    if page is None:
+        raise ServerError(message=error_message)
+    if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
+        raise ServerError(message = "Invalid page")
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        raise ServerError(message = "Project not loaded")
+    if location_string == 'body':
+        top = page.body
+    elif location_string == 'head':
+        top = page.head
+    elif location_string == 'svg':
+        top = page.svg
+    else:
+        raise ServerError(message="Given location_string is invalid")
+    # remove the item
+    try:
+        top.del_location_value(location_integers)
+    except:
+        raise ServerError(message="Unable to delete item")
+    # And save this page copy to the project
+    editedproj.save_page(page)
+
+
+def move_item(project, pagenumber, location_string, from_location_integers, to_location_integers):
+    """Move an item in the given page from one spot to another, defined by it
+       location_string, being head, body or svg, and location integers"""
+    page, error_message = _get_page(project, pagenumber)
+    if page is None:
+        raise ServerError(message=error_message)
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        raise ServerError(message="Project not loaded")
+    if to_location_integers == from_location_integers:
+        # no movement
+        return
+    up = False
+    i = 0
+    while True:
+        if to_location_integers[i] < from_location_integers[i]:
+            up = True
+            break
+        if to_location_integers[i] > from_location_integers[i]:
+            # up is False
+            break
+        # so this digit is the same
+        i += 1
+        if len(to_location_integers) == i:
+            up = True
+            break
+    if up:
+        # move in the upwards direction
+        #    delete it from original location
+        #    insert it into new location
+        try:
+            # get top part such as head, body, svg
+            top_part = page.get_part(location_string, ())
+            # get the part at from_location_integers
+            part = top_part.get_location_value(from_location_integers)
+            # delete part from top part location
+            top_part.del_location_value(from_location_integers)
+            # and insert it in the new location
+            top_part.insert_location_value(to_location_integers, part)
+        except:
+            raise ServerError(message="Unable to move item")
+    else:
+        # move in the downwards direction
+        #    insert it into new location
+        #    delete it from original location
+        try:
+            # get top part such as head, body, svg
+            top_part = page.get_part(location_string, ())
+            # get the part at from_location_integers
+            part = top_part.get_location_value(from_location_integers)
+            # and insert it in the new location
+            top_part.insert_location_value(to_location_integers, part)
+            # delete part from current location
+            top_part.del_location_value(from_location_integers)
+        except:
+            raise ServerError(message="Unable to move item")
+    # And save this page copy to the project
+    editedproj.save_page(page)
+
+
+
