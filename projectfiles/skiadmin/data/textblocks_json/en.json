@@ -568,6 +568,7 @@
   "widgets.info.module": "Widgets which display information - for example timestamp, page ident, etc.",
   "widgets.inputforms.Form1": "A form, initially without content, used to contain further input fields and submit button.",
   "widgets.inputforms.Form1.action": "The page ident, label or url this form links to.",
+  "widgets.inputforms.Form1.container0": "This widget is a form, which normally submits one or more input fields. You can insert further input widgets and html here.",
   "widgets.inputforms.Form1.enctype": "If given, sets the enctype attribute.",
   "widgets.inputforms.Form1.error_class": "CSS class applied to a normally hidden div which appears if an error is displayed by the widget.",
   "widgets.inputforms.Form1.hidden_field1": "A hidden field value, leave blank if unused.",
