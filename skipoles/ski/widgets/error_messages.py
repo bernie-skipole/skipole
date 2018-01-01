@@ -40,7 +40,7 @@ class ErrorDiv(Widget):
        Can contain further html / widgets after the error div
        On displaying an error, the both div's are shown, and paragraph text set to error message."""
 
-    _container = (1,)
+    _container = ((1,0),)
 
     error_location = (0,0,0)
 
@@ -59,8 +59,9 @@ class ErrorDiv(Widget):
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
-        # The location 1 is available as a container
-        self[1] = ''
+        # The location 1,0 is available as a container
+        self[1] = tag.Part(tag_name="div")
+        self[1][0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # Hides widget if no error and hide is True
@@ -78,7 +79,9 @@ class ErrorDiv(Widget):
   <div>  !-- class set to error_class -->
     <p> <!-- error message appears in this paragraph --> </p>
   </div>
-  <!-- container 0 for further html -->
+  <div>
+    <!-- container 0 for further html -->
+  </div>
 </div>"""
 
 

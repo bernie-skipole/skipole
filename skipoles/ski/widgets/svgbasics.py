@@ -46,6 +46,7 @@ class SVGContainer(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an SVG widget, containing other widgets, so show, class and dimensions can be set"""
         Widget.__init__(self, name=name, tag_name="svg", brief=brief, **field_args)
+        # container parent is the widget
         self[0] =  ""  # where items can be contained
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -80,6 +81,7 @@ class Group(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an g widget, containing other widgets, so group class, style, transform can be set"""
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        # container parent is the widget
         self[0] =  ""  # where items can be contained
 
     def _build(self, page, ident_list, environ, call_data, lang):

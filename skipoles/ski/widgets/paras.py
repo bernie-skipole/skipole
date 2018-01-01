@@ -57,6 +57,7 @@ class TagBlock(Widget):
 
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        # container parent is the widget
         self[0] =  ""  # where items can be contained
         self._dropurl = ''
 
