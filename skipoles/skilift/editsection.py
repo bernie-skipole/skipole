@@ -86,7 +86,7 @@ def move_item(project, section_name, from_location_integers, to_location_integer
     proj = skiboot.getproject(project)
     if not section_name:
          raise ServerError(message="Given section_name is invalid")
-    section = proj.section(section_name, makecopy=False)
+    section = proj.section(section_name, makecopy=True)
     if section is None:
         raise ServerError(message="Given Section not found")
     if to_location_integers == from_location_integers:
@@ -132,16 +132,7 @@ def move_item(project, section_name, from_location_integers, to_location_integer
             section.del_location_value(from_location_integers)
         except:
             raise ServerError(message="Unable to move item")
-
-
-
-
-
-
-
-
-
-
-
+    # And save this section copy to the project
+    proj.add_section(section_name, section)
 
 

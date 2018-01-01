@@ -26,9 +26,10 @@
 
 "Functions implementing widget editing"
 
-import re
+import re, html
 
 from .... import skilift
+from ....skilift import fromjson
 
 from ....ski import skiboot, tag, widgets
 from .. import utils
@@ -814,6 +815,128 @@ def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data
 
     page_data['editparts', 'parts', 'contents']  = contents
     page_data['editparts', 'parts', 'rows']  = rows
+
+    # fill in the table
+    call_data['location_string'] = widget.name
+    retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
+
+def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "this call fills in the container dom table"
+
+    editedprojname = call_data['editedprojname']
+
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+
+    # location_string is the widget name
+    location_string = call_data['location_string']
+
+    container = call_data["container"]
+
+    # location is a tuple of widget_name, container number, () tuple of location integers
+    location = (location_string, container, ())
+    # get location_tuple from project, pagenumber, section_name, location
+    info = skilift.part_info(editedprojname, pagenumber, section_name, location)
+    if info is None:
+        raise FailPage("The widget container has not been recognised")
+
+    if info.part_type != 'Part':
+        return
+
+    partdict = fromjson.part_to_OD(editedprojname, pagenumber, section_name, location)
+
+    # widget editdom,domtable is populated with fields
+
+    #    dragrows: A two element list for every row in the table, could be empty if no drag operation
+    #              0 - True if draggable, False if not
+    #              1 - If 0 is True, this is data sent with the call wnen a row is dropped
+    #    droprows: A two element list for every row in the table, could be empty if no drop operation
+    #              0 - True if droppable, False if not
+    #              1 - text to send with the call when a row is dropped here
+    #    dropident: ident or label of target, called when a drop occurs which returns a JSON page
+
+    #    cols: A two element list for every column in the table, must be given with empty values if no links
+    #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
+    #              1 - target JSON page link ident of buttons in each column,
+
+    #    contents: A list for every element in the table, should be row*col lists
+    #               0 - text string, either text to display or button text
+    #               1 - A 'style' string set on the td cell, if empty string, no style applied
+    #               2 - Is button? If False only text will be shown, not a button, button class will not be applied
+    #                       If True a link to link_ident/json_ident will be set with button_class applied to it
+    #               3 - The get field value of the button link, empty string if no get field
+
+    # create first row of the table
+
+    if "attribs" in partdict:
+        part_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
+    else:
+        part_tag = '&lt;' + partdict['tag_name'] + '&gt;'
+
+    part_brief = html.escape(partdict['brief'])
+
+    if len(part_brief)>40:
+        part_brief =  part_brief[:35] + '...'
+    if not part_brief:
+         part_brief = '-'
+
+    top_location_string = location_string + "-" + str(container)
+
+    domcontents = [
+                   [part_tag, '', False, '' ],
+                   [part_brief, '', False, '' ],
+                   ['', '', False, '' ],                                                    # no up arrow for top line
+                   ['', '', False, '' ],                                                    # no up_right arrow for top line
+                   ['', '', False, '' ],                                                    # no down arrow for top line
+                   ['', '', False, '' ],                                                    # no down_right arrow for top line
+                   ['Edit',  'width : 1%;', True, top_location_string],                     # edit
+                   ['Insert','width : 1%;text-align: center;', True, top_location_string],  # insert
+                   ['Remove','width : 1%;', True, top_location_string]                      # remove
+                ]
+
+    # add further items to domcontents
+    part_string_list = []
+
+    if 'parts' not in partdict:
+        rows = 1
+    else:
+        rows = utils.domtree(partdict, top_location_string, domcontents, part_string_list)
+    
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    # for each column: html link, JSON link
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                               # tag name, no link
+                                                      ['',''],                               # brief, no link
+                                                      ['move_up_in_page_dom',''],          # up arrow
+                                                      ['move_up_right_in_page_dom',''],    # up right
+                                                      ['move_down_in_page_dom',''],        # down
+                                                      ['move_down_right_in_page_dom',''],  # down right
+                                                      ['edit_page_dom',''],                  # edit, html only
+                                                      ['add_to_page_dom',''],                # insert/append, html only
+                                                      ['remove_page_dom','']               # remove
+                                                   ]
+    # for every row in the table
+    dragrows = [ [ False, '']]
+    droprows = [ [ True, top_location_string ]]
+
+    # for each row (minus 1 as the first row is done)
+    for row in range(0, rows-1):
+        dragrows.append( [ True, part_string_list[row]] )
+        droprows.append( [ True, part_string_list[row]] )
+
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'dropident']  = ''
+
+
 
 
 def empty_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
