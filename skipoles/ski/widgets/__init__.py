@@ -555,10 +555,24 @@ class Widget(tag.Part):
         "Creates a dictionary of names against field arguments"
         self._names = { field.name:field_arg for field_arg, field in self.fields.items() }
 
+    # original container methods are depracated, new methods are given a ####ok flag until changeover done
 
-    # container methods.  Widgets can optionally have containers, which are pre-set to specific
-    # locations as a class attribute
-    # these locations hold further sub parts, widgets or strings within each container
+    ####ok
+    def get_container_parts(self, index):
+        """"index is the index in the self._container list
+           If index out of range, return None"""
+        if (index < 0) or (index >= len(self._container)):
+            return None
+        location = self._container[index]
+        # location is a tuple of integers
+        if (location == (0,)) or (location == 0):
+            # the parent is the widget itself
+            return self.parts
+        parent_location = list(location[:-1])
+        if location[-1] != 0:
+            parent_location.append(location[-1] - 1)
+        parent = self.get_location_value(parent_location)
+        return parent.parts
 
 
     def set_container_part(self, index, value):
