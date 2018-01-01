@@ -120,7 +120,7 @@ class Form1(Widget):
        On error - the error message is displayed before any of the contents
        Does not include a submit button, therefore requires one to be inserted with the contents"""
 
-    _container = ((1,0),)
+    _container = ((1,0,0),)
 
     error_location = (0,0,0)
 
@@ -150,8 +150,9 @@ class Form1(Widget):
         self[0][0][0] = ''
         # The form
         self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
-        # The location 1,0 is available as a container
-        self[1][0] = ''
+        self[1][0] = tag.Part(tag_name="div")
+        # The location 1,0,0 is available as a container
+        self[1][0][0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
@@ -193,7 +194,9 @@ class Form1(Widget):
     <p> <!-- Any error text appears here --> </p>
   </div>
   <form method=\"post\"> <!-- action attribute set to action field -->
-    <!-- container 0 for further html -->
+    <div>
+      <!-- container 0 for further html -->
+    </div>
     <!-- hidden input fields -->                              
   </form>
 </div>"""
@@ -204,7 +207,7 @@ class SubmitForm1(Widget):
        Used with further input fields set within it. On error - the error message is displayed
        below the form tag, before any of the contents"""
 
-    _container = ((1,0),)
+    _container = ((1,0,0),)
 
     error_location = (0,0,0)
 
@@ -250,8 +253,9 @@ class SubmitForm1(Widget):
         self[0][0][0] = ''
         # The form
         self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
-        # The location 1,0 is available as a container
-        self[1][0] = ''
+        self[1][0] = tag.Part(tag_name='div')
+        # The location 1,0,0 is available as a container
+        self[1][0][0] = ''
         # tag containing label and button
         self[1][1] = tag.Part(tag_name='div')
         # the left label
@@ -333,7 +337,9 @@ class SubmitForm1(Widget):
     <p> <!-- Any error text appears here --> </p>
   </div>
   <form method="post"> <!-- action attribute set to action field -->
-    <!-- container 0 for further html -->
+    <div>
+      <!-- container 0 for further html -->
+    </div>
     <div>  <!-- this div has the class attribute set to div_class -->
       <label> <!-- with class set to left_class and content to left_label -->
       </label>
