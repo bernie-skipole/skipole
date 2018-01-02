@@ -833,7 +833,7 @@ def _create_widget(part_dict, proj_ident):
                     part = _create_item(item_list, proj_ident)
                     # as this is going into a container, remove any placeholders
                     _remove_sectionplaceholders(part)
-                    widg.set_container_part(cont, part)
+                    widg.append_to_container(cont, part)
     if "set_names" in part_dict:
         fields_names = part_dict["set_names"]
         for field, name in fields_names.items():

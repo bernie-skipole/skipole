@@ -590,10 +590,12 @@ class Widget(tag.Part):
             # parent part is always a level up
             parent_location = location[:-1]
             parent = self.get_location_value(parent_location)
-        # append the value to the parent
-        parent.append(value)
-
-
+        if (len(parent.parts) == 1) and (parent.parts[0] == ''):
+            # replace the empty string
+            parent.parts[0] = value
+        else:
+            # append the value to the parent
+            parent.append(value)
 
 
     def set_container_part(self, index, value):
