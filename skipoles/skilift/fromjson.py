@@ -168,6 +168,27 @@ def section_to_json(project, section_name, indent=0):
     return json.dumps(section_dict, indent=indent, separators=(',', ':'))
 
 
+def container_to_OD(project, pagenumber, section_name, widget_name, container):
+    """Builds an Ordered Dictionary from the widget container, ServerError if not found"""
+    # raise error if invalid project
+    project_loaded(project)
+    # widget is either in a page or a section
+    if pagenumber is None:
+        if not section_name:
+            raise ServerError("Page and section both missing")
+        widget = skiboot.get_part(project, None, None, section_name, widget_name, None, ())
+    else:
+        if section_name:
+            raise ServerError("Widget cannot be in both a page and a section")
+        ident = skiboot.make_ident(pagenumber, project)
+        if ident is None:
+            raise ServerError("Widget not recognised")
+        widget = skiboot.get_part(project, ident, "", None, widget_name, None, ())
+    if widget is None:
+        raise ServerError("widget not recognised")
+    return dump_project.container_to_OD(project, container, widget)
+
+
 def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_data):
     """Builds a page from the given json string / ordered dictionary, and adds it to project"""
     # raise error if invalid project

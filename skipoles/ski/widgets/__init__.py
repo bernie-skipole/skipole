@@ -562,17 +562,38 @@ class Widget(tag.Part):
         """"index is the index in the self._container list
            If index out of range, return None"""
         if (index < 0) or (index >= len(self._container)):
-            return None
+            return
         location = self._container[index]
         # location is a tuple of integers
         if (location == (0,)) or (location == 0):
             # the parent is the widget itself
             return self.parts
-        parent_location = list(location[:-1])
-        if location[-1] != 0:
-            parent_location.append(location[-1] - 1)
+        # every container location tuple ends in zero, so the
+        # parent part is always a level up
+        parent_location = location[:-1]
         parent = self.get_location_value(parent_location)
         return parent.parts
+
+    ####ok
+    def append_to_container(self, index, value):
+        """appends value into the container, in this case index is not the part location,
+           it is the index in the self._container list"""
+        if (index < 0) or (index >= len(self._container)):
+            return
+        location = self._container[index]
+        # location is a tuple of integers
+        if (location == (0,)) or (location == 0):
+            # the parent is the widget itself
+            parent = self
+        else:
+            # every container location tuple ends in zero, so the
+            # parent part is always a level up
+            parent_location = location[:-1]
+            parent = self.get_location_value(parent_location)
+        # append the value to the parent
+        parent.append(value)
+
+
 
 
     def set_container_part(self, index, value):
