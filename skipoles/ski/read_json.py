@@ -69,26 +69,27 @@ def create_part(proj_ident, ident, section_name, part, loc, json_data):
 
 
 def _remove_sectionplaceholders(part):
-    "Given a part - before being added to the project, swap out any tag.SectionPlaceHolder for a text string"
-    parts = part.parts
-    index_list = []
-    for index, item in enumerate(parts):
-        if isinstance(item, tag.SectionPlaceHolder):
-            index_list.append(index)
-        if hasattr(item, 'parts'):
-            _remove_sectionplaceholders(item)
-    for index in index_list:
-        parts[index] = "Section Place Holder Removed"    
+    "Given a part - swap out any tag.SectionPlaceHolder for a text string"
+    if isinstance(part, tag.Part) or isinstance(part, tag.Section):
+        parts = part.parts
+        index_list = []
+        for index, item in enumerate(parts):
+            if isinstance(item, tag.SectionPlaceHolder):
+                index_list.append(index)
+            if hasattr(item, 'parts'):
+                _remove_sectionplaceholders(item)
+        for index in index_list:
+            parts[index] = "Section Place Holder Removed"
 
 
 def create_part_in_widget(proj_ident, ident, section_name, widget, container_number, json_data):
-    """Builds the part from the given json string, or ordered dictionary and sets it to container"""
+    """Builds the part from the given json string, or ordered dictionary and sets it to container
+       Note: containers cannot contain sections so section place holders are removed"""
     if isinstance(json_data, str):
         part_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
     else:
         part_dict = json_data
     newpart =  _create_part(part_dict, proj_ident)
-    # save the page or section
     project = skiboot.getproject(proj_ident)
     if ident:
         page = project.get_item(ident)
@@ -96,6 +97,8 @@ def create_part_in_widget(proj_ident, ident, section_name, widget, container_num
             # ensure widgets and placeholders in newpart have unique names
             name_list = list(page.widgets.keys()) + list(page.section_places.keys())
             newpart.set_unique_names(name_list)
+            # as this is going into a container, remove any placeholders
+            _remove_sectionplaceholders(newpart)
             # insert newpart into given widget
             widget.set_container_part(container_number, newpart)
             # save the altered page
@@ -108,7 +111,7 @@ def create_part_in_widget(proj_ident, ident, section_name, widget, container_num
             # ensure widgets and placeholders in newpart have unique names
             name_list = list(section.widgets.keys()) + list(section.section_places.keys())
             newpart.set_unique_names(name_list)
-            # as this is going into a section, remove any placeholders
+            # as this is going into a container, remove any placeholders
             _remove_sectionplaceholders(newpart)
             # insert newpart into given widget
             widget.set_container_part(container_number, newpart)
@@ -725,7 +728,10 @@ def _create_section(part_dict, proj_ident):
     # now the section contents in a list
     parts = part_dict["parts"]
     for index,item_list in enumerate(parts):
-        section[index] = _create_item(item_list, proj_ident)
+        part = _create_item(item_list, proj_ident)
+        # as this is going into a section, remove any placeholders
+        _remove_sectionplaceholders(part)
+        section[index] = part
     return section
 
 
@@ -815,8 +821,19 @@ def _create_widget(part_dict, proj_ident):
             container = "container_%s" % (cont,)
             if container in part_dict:
                 item_list = part_dict[container]
-                part = _create_item(item_list, proj_ident)
-                widg.set_container_part(cont, part)
+                # test for list until all projects have containers changed to lists
+                if isinstance(item_list[0], list):
+                    for itempart in item_list:
+                        part = _create_item(itempart, proj_ident)
+                        # as this is going into a container, remove any placeholders
+                        _remove_sectionplaceholders(part)
+                        widg.append_to_container(cont, part)
+                else:
+                    # can be removed once projects converted
+                    part = _create_item(item_list, proj_ident)
+                    # as this is going into a container, remove any placeholders
+                    _remove_sectionplaceholders(part)
+                    widg.set_container_part(cont, part)
     if "set_names" in part_dict:
         fields_names = part_dict["set_names"]
         for field, name in fields_names.items():

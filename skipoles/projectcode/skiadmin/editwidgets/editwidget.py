@@ -838,20 +838,11 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
 
     # location_string is the widget name
     location_string = call_data['location_string']
-
     container = call_data["container"]
 
-    # location is a tuple of widget_name, container number, () tuple of location integers
-    location = (location_string, container, ())
-    # get location_tuple from project, pagenumber, section_name, location
-    info = skilift.part_info(editedprojname, pagenumber, section_name, location)
-    if info is None:
-        raise FailPage("The widget container has not been recognised")
+    contdict = fromjson.container_to_OD(editedprojname, pagenumber, section_name, location_string, container)
 
-    if info.part_type != 'Part':
-        return
-
-    partdict = fromjson.part_to_OD(editedprojname, pagenumber, section_name, location)
+    partdict = {'parts': contdict['container']}
 
     # widget editdom,domtable is populated with fields
 
@@ -876,39 +867,15 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
 
     # create first row of the table
 
-    if "attribs" in partdict:
-        part_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
-    else:
-        part_tag = '&lt;' + partdict['tag_name'] + '&gt;'
 
-    part_brief = html.escape(partdict['brief'])
-
-    if len(part_brief)>40:
-        part_brief =  part_brief[:35] + '...'
-    if not part_brief:
-         part_brief = '-'
-
-    top_location_string = location_string + "-" + str(container)
-
-    domcontents = [
-                   [part_tag, '', False, '' ],
-                   [part_brief, '', False, '' ],
-                   ['', '', False, '' ],                                                    # no up arrow for top line
-                   ['', '', False, '' ],                                                    # no up_right arrow for top line
-                   ['', '', False, '' ],                                                    # no down arrow for top line
-                   ['', '', False, '' ],                                                    # no down_right arrow for top line
-                   ['Edit',  'width : 1%;', True, top_location_string],                     # edit
-                   ['Insert','width : 1%;text-align: center;', True, top_location_string],  # insert
-                   ['Remove','width : 1%;', True, top_location_string]                      # remove
-                ]
+    domcontents = []
 
     # add further items to domcontents
     part_string_list = []
 
-    if 'parts' not in partdict:
-        rows = 1
-    else:
-        rows = utils.domtree(partdict, top_location_string, domcontents, part_string_list)
+    part_loc = location_string + '-' + str(container)
+
+    rows = utils.domtree(partdict, part_loc, domcontents, part_string_list)
     
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
@@ -924,16 +891,16 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
                                                       ['remove_page_dom','']               # remove
                                                    ]
     # for every row in the table
-    dragrows = [ [ False, '']]
-    droprows = [ [ True, top_location_string ]]
+    dragrows = []
+    droprows = []
 
-    # for each row (minus 1 as the first row is done)
-    for row in range(0, rows-1):
-        dragrows.append( [ True, part_string_list[row]] )
-        droprows.append( [ True, part_string_list[row]] )
+    # for each row
+    for row in range(0, rows):
+        dragrows.append( [ False, ''] )
+        droprows.append( [ False, ''] )
 
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'dragrows']  = []
+    page_data['editdom', 'domtable', 'droprows']  = []
     page_data['editdom', 'domtable', 'dropident']  = ''
 
 
