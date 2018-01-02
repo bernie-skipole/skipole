@@ -590,21 +590,25 @@ def _create_widget(widg, proj_ident):
     if widg.can_contain():
         for cont in range(widg.len_containers()):
             container_name = "container_%s" % (cont,)
-            item = widg.get_container_part(cont)
-            if isinstance(item, widgets.Widget) or isinstance(item, widgets.ClosedWidget):
-                part_dict[container_name] = _create_widget(item, proj_ident)
-            elif isinstance(item, tag.Part):
-                part_dict[container_name] = _create_part(item, proj_ident)
-            elif isinstance(item, tag.ClosedPart):
-                part_dict[container_name] = _create_closedpart(item, proj_ident)
-            elif isinstance(item, tag.TextBlock):
-                part_dict[container_name] = _create_textblock(item, proj_ident)
-            elif isinstance(item, tag.HTMLSymbol):
-                part_dict[container_name] = _create_htmlsymbol(item, proj_ident)
-            elif isinstance(item, tag.Comment):
-                part_dict[container_name] = _create_comment(item, proj_ident)
-            else:
-                part_dict[container_name] = _create_text(item, proj_ident)
+            # get list of parts in the container
+            parts = widg.get_container_parts(cont)
+            item_list = []
+            for item in parts:
+                if isinstance(item, widgets.Widget) or isinstance(item, widgets.ClosedWidget):
+                    item_list.append( _create_widget(item, proj_ident) )
+                elif isinstance(item, tag.Part):
+                    item_list.append( _create_part(item, proj_ident) )
+                elif isinstance(item, tag.ClosedPart):
+                    item_list.append( _create_closedpart(item, proj_ident) )
+                elif isinstance(item, tag.TextBlock):
+                    item_list.append( _create_textblock(item, proj_ident) )
+                elif isinstance(item, tag.HTMLSymbol):
+                    item_list.append( _create_htmlsymbol(item, proj_ident) )
+                elif isinstance(item, tag.Comment):
+                    item_list.append( _create_comment(item, proj_ident) )
+                else:
+                    item_list.append(  _create_text(item, proj_ident) )
+            part_dict[container_name] = item_list
     # set widget field names
     if fields_dict:
         # check if any field name is not equal to f_arg
