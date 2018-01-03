@@ -865,8 +865,7 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
     #                       If True a link to link_ident/json_ident will be set with button_class applied to it
     #               3 - The get field value of the button link, empty string if no get field
 
-    # create first row of the table
-
+    # create the table
 
     domcontents = []
 
@@ -880,15 +879,15 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                               # tag name, no link
-                                                      ['',''],                               # brief, no link
-                                                      ['move_up_in_page_dom',''],          # up arrow
-                                                      ['move_up_right_in_page_dom',''],    # up right
-                                                      ['move_down_in_page_dom',''],        # down
-                                                      ['move_down_right_in_page_dom',''],  # down right
-                                                      ['edit_page_dom',''],                  # edit, html only
-                                                      ['add_to_page_dom',''],                # insert/append, html only
-                                                      ['remove_page_dom','']               # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                    # tag name, no link
+                                                      ['',''],                                    # brief, no link
+                                                      ['move_up_in_container_dom',''],            # up arrow
+                                                      ['move_up_right_in_container_dom',''],      # up right
+                                                      ['move_down_in_container_dom',''],          # down
+                                                      ['move_down_right_in_container_dom',''],    # down right
+                                                      ['edit_container_dom',''],                  # edit, html only
+                                                      ['add_to_container_dom',''],                # insert/append, html only
+                                                      ['remove_container_dom','']                 # remove
                                                    ]
     # for every row in the table
     dragrows = []
@@ -948,5 +947,79 @@ def back_to_parent_container(caller_ident, ident_list, submit_list, submit_dict,
     call_data['widget_name'] = bits.parent_widget.name
     call_data['container'] = bits.parent_container
 
+
+
+def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to edit an item in a container"
+
+    editedprojname = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is widget_name, container with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item to edit has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_integers = [ int(i) for i in location_list[2:]]
+    except:
+        raise FailPage("Item to edit has not been recognised")
+
+
+    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, [widget_name, container, location_integers])
+    if part_tuple is None:
+        raise FailPage("Item to edit has not been recognised")
+
+    if part_tuple.name:
+        # item to edit is a widget
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 54006, clear_submitted=True)
+    if part_tuple.part_type == "Part":
+        # edit the html part
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 53007, clear_submitted=True)
+    if part_tuple.part_type == "ClosedPart":
+        # edit the html closed part
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 53007, clear_submitted=True)
+    if part_tuple.part_type == "HTMLSymbol":
+        # edit the symbol
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51107, clear_submitted=True)
+    if part_tuple.part_type == "str":
+        # edit the text
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51017, clear_submitted=True)
+    if part_tuple.part_type == "TextBlock":
+        # edit the TextBlock
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 52017, clear_submitted=True)
+    if part_tuple.part_type == "Comment":
+        # edit the Comment
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 51207, clear_submitted=True)
+
+    # note : a sectionplaceholder cannot appear in a container
+    raise FailPage("Item to edit has not been recognised")
 
 

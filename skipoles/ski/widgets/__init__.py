@@ -479,7 +479,11 @@ class Widget(tag.Part):
     # tuple _container, which is a tuple of location tuples, giving the location of the container within the widget
     # that is, the location tuple is relative to the widget, not the page.
 
-    _container=()
+    # This container is the widget itself
+    # _container=((), )
+
+    _container = None
+    # _container is set to None if no container is available in the widget
 
     # js_validators is a class attribute, True if javascript validation is enabled
     js_validators=False
@@ -561,41 +565,44 @@ class Widget(tag.Part):
     def get_container_parts(self, index):
         """"index is the index in the self._container list
            If index out of range, return None"""
-        if (index < 0) or (index >= len(self._container)):
+        container_part = self._container_part(index)
+        if container_part is None:
             return
-        location = self._container[index]
-        # location is a tuple of integers
-        if (location == (0,)) or (location == 0):
-            # the parent is the widget itself
-            return self.parts
-        # every container location tuple ends in zero, so the
-        # parent part is always a level up
-        parent_location = location[:-1]
-        parent = self.get_location_value(parent_location)
-        return parent.parts
+        return container_part.parts
 
     ####ok
     def append_to_container(self, index, value):
         """appends value into the container, in this case index is not the part location,
            it is the index in the self._container list"""
+        container_part = self._container_part(index)
+        if container_part is None:
+            return
+        if (len(container_part.parts) == 1) and (container_part.parts[0] == ''):
+            # replace the empty string
+            container_part.parts[0] = value
+        else:
+            # append the value to the container
+            container_part.append(value)
+
+    ####ok
+    @classmethod
+    def can_contain(cls):
+        if cls._container is None:
+            return False
+        return True
+
+    ####ok
+    def _container_part(self, index):
+        "Returns element, genearlly a div which is the container holding element, used internally"
+        if self._container is None:
+            return
         if (index < 0) or (index >= len(self._container)):
             return
         location = self._container[index]
-        # location is a tuple of integers
-        if (location == (0,)) or (location == 0):
-            # the parent is the widget itself
-            parent = self
-        else:
-            # every container location tuple ends in zero, so the
-            # parent part is always a level up
-            parent_location = location[:-1]
-            parent = self.get_location_value(parent_location)
-        if (len(parent.parts) == 1) and (parent.parts[0] == ''):
-            # replace the empty string
-            parent.parts[0] = value
-        else:
-            # append the value to the parent
-            parent.append(value)
+        if location == ():
+            # the container is the widget itself
+            return self
+        return self.get_location_value(location)
 
 
     def set_container_part(self, index, value):
@@ -607,8 +614,7 @@ class Widget(tag.Part):
     def set_in_container(self, index, location, value):
         """Sets a value within a container, index is the container index
            and location is an integer or tuple within the container.
-           for example index=0, location=(0,1) referes to location (0,1) inside container 0
-           If location is an empty tuple, this sets the container part"""
+           for example index=0, location=(0,1) referes to location (0,1) inside container 0"""
         if location is 0:
             cont_part = self.get_container_part(index)
             cont_part.set_location_value(0, value)
@@ -623,7 +629,7 @@ class Widget(tag.Part):
            and location is an integer or tuple within the container.
            for example index=0, location=(0,1) referes to location (0,1) inside container 0
            If location is an empty tuple, this returns the container part"""
-        if location is 0:
+        if location is 0 :
             cont_part = self.get_container_part(index)
             return cont_part[0]
         if not location:
@@ -632,15 +638,6 @@ class Widget(tag.Part):
             cont_part = self.get_container_part(index)
             return cont_part.get_location_value(location)
 
-    def del_at_container_location(self, location):    ## depracated, to be removed
-        """Deletes the value at location, where the first index of location is the container
-           for example location 0,1 referes to location 1 inside container 0"""
-        index = location.index_tuple[0]
-        if len(location.index_tuple) == 1:
-            self.del_container_part(index)
-        else:
-            cont_part = self.get_container_part(index)
-            cont_part.del_location_value(location.index_tuple[1:])
 
     def del_from_container(self, index, location):
         """Deletes the value from within a container, index is the container index
@@ -671,37 +668,47 @@ class Widget(tag.Part):
         location = self._container[index]
         return self.get_location_value(location)
 
+    ####ok
     @classmethod
     def get_container_ref(cls, index):
         """Returns the textblock reference of the container, in this case index is not
            the part location, it is the index in the self._container list"""
+        if cls._container is None:
+            return
+        if (index < 0) or (index >= len(cls._container)):
+            return
         module_name = cls.__module__.split('.')[-1]
         return "widgets." + module_name + "." + cls.__name__ + "." + "container" + str(index)
 
+    ####ok
     @classmethod
     def len_containers(cls):
+        "Returns number of containers"
+        if cls._container is None:
+            return 0
         return len(cls._container)
 
-    @classmethod
-    def can_contain(cls):
-        return bool(cls._container)
-
+    ####ok
     @classmethod
     def get_container_loc(cls, index):
         """Returns the location tuple of the container, in this case index is not
            the part location, it is the index in the self._container list"""
-        location = cls._container[index]
-        if isinstance(location, int):
-            return (location,)
-        return location
+        if cls._container is None:
+            return
+        if (index < 0) or (index >= len(cls._container)):
+            return
+        return cls._container[index]
 
+    ####ok
     @classmethod
     def get_container_string_loc(cls, index):
         """Returns the string location of the container, in this case index is not
            the part location, it is the index in the self._container list"""
+        if cls._container is None:
+            return
+        if (index < 0) or (index >= len(cls._container)):
+            return
         location = cls._container[index]
-        if isinstance(location, int):
-            return str(location)
         return '_'.join(str(i) for i in location)
 
 

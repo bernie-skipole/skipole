@@ -335,7 +335,7 @@ def get_part(proj_ident, ident, page_part, section_name, widget_name, container_
             return
         if container_number is None:
             return widget
-        if widget.can_contain() and not (container_number is None):
+        if widget.can_contain():
             return widget.get_from_container(container_number, location_list)
         else:
             return

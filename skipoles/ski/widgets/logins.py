@@ -36,7 +36,7 @@ class Pin4(Widget):
     """Defines a form containing four single character input fields."""
 
 
-    _container = ((0,1,0),)
+    _container = ((0,1),)
 
     error_location = (0,0,0,0)
 
@@ -84,8 +84,8 @@ class Pin4(Widget):
         self[0][0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0][0] = tag.Part(tag_name="p")
         self[0][0][0][0] = ''
+        # container at 0,1
         self[0][1] = tag.Part(tag_name="div")
-        # container at 0,1,0
         self[0][1][0] = ""
         # form containing input text fields and button
         self[0][2] = tag.Part(tag_name="form", attribs={"role":"form", "method":"post"})
