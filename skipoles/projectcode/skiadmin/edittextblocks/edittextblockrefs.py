@@ -282,8 +282,8 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
         else:
             textblock.decode = False
 
-    if (location[1] is not None) and (not location[2])  and (not isinstance(part, tag.Part)):
-        # part is the top part of a container
+    if (location[1] is not None) and (len(location[2]) == 1):
+        # part is within a container
         utils.set_part(textblock, 
                        location,
                        page=page,

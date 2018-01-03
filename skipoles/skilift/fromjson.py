@@ -68,19 +68,14 @@ def create_part(project, pagenumber, page_part, section_name, name, location, pa
 
     location_integers = location[2]
 
-    if parent_widget and (not location_integers):
-        # Specifies a container part, if a Part, then an insert can be done
-        # however if not, then the container part must be replaced
-        if part_type != 'Part':
-            # The container part cannot have stuff inserted, therefore it must be replaced
-            # get the widget
-            widget = skiboot.get_part(project, ident, page_part, section_name, parent_widget, None, [])
-            # insert json data into widget at the container
-            try:
-                read_json.create_part_in_widget(project, ident, section_name, widget, container, json_data)
-            except:
-                _raise_server_error("Unable to create part")
-            return
+    if parent_widget and (len(location_integers) == 1):
+        # Specifies a container part
+        # insert json data into widget at the container
+        try:
+            read_json.create_part_in_widget(project, ident, section_name, parent_widget, container, json_data)
+        except:
+            _raise_server_error("Unable to create part")
+        return
 
     if (part_type == 'Part') or (part_type == 'Section'):
         # insert in the part at the given location

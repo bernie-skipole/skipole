@@ -19931,14 +19931,6 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "Lists widget contents",
-"section_name": "editparts",
-"placename": "editparts"
-}
-],
-[
-"SectionPlaceHolder",
-{
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom"
@@ -40531,6 +40523,34 @@ false
 "hide_if_empty": false,
 "parts": []
 }
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "checkbox.CheckInputs",
+"name": "test2",
+"brief": "test2",
+"fields": {
+"checkbox": "",
+"checkbox_class": "w3-check",
+"checked": false,
+"clear_error": false,
+"div_class": "",
+"error_class": "w3-panel w3-red",
+"label_class": "",
+"label_text": "",
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+[
+"Text",
+""
 ]
 ]
 }

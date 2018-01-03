@@ -579,8 +579,6 @@ def set_field_default(caller_ident, ident_list, submit_list, submit_dict, call_d
 def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Edits a widget container"
 
-    editedproj = call_data['editedproj']
-
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
         del call_data['location']
@@ -853,5 +851,94 @@ def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # note : a sectionplaceholder cannot appear in a container
     raise FailPage("Item to edit has not been recognised")
+
+
+def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """Called by domtable to either insert or append an item in a container
+       sets page_data to populate the insert or append page and then go to appropriate template page"""
+
+    editedprojname = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to append to missing")
+
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is widget_name, container with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item to append to has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_integers = [ int(i) for i in location_list[2:]]
+    except:
+        raise FailPage("Item to append to has not been recognised")
+
+    # location is a tuple of widget_name, container, tuple of location integers
+    location = (widget_name, container, location_integers)
+
+    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, location)
+    if part_tuple is None:
+        raise FailPage("Item to append to has not been recognised")
+
+    # goto either the install or append page
+
+    call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+    call_data['location'] = location         ########## also part_tuple should replace location
+
+    page_data[("adminhead","page_head","small_text")] = "Pick an item type"
+
+    # navigator boxes
+    boxes = [['back_to_container', "Container", True, '']]
+    if 'extend_nav_buttons' in call_data:
+        call_data['extend_nav_buttons'].extend(boxes)
+    else:
+        call_data['extend_nav_buttons'] = boxes
+
+    # Fill in menu of items, Part items have insert, others have append
+    # as this is to be input into a section, a further section is not present in this list
+
+
+    if (part_tuple.part_type == "Part") or (part_tuple.part_type == "Section"):
+        # insert
+        page_data[("adminhead","page_head","large_text")] = "Choose an item to insert"
+        page_data[("insertlist","links")] = [
+                                                ["Insert text", "inserttext", ""],
+                                                ["Insert a TextBlock", "insert_textblockref", ""],
+                                                ["Insert html symbol", "insertsymbol", ""],
+                                                ["Insert comment", "insertcomment", ""],
+                                                ["Insert an html element", "part_insert", ""],
+                                                ["Insert a Widget", "list_widget_modules", ""]
+                                            ]
+        raise GoTo(target = '23609', clear_submitted=True)
+    else:
+        # append
+        page_data[("adminhead","page_head","large_text")] = "Choose an item to append"
+        page_data[("appendlist","links")] = [
+                                                ["Append text", "inserttext", ""],
+                                                ["Append a TextBlock", "insert_textblockref", ""],
+                                                ["Append html symbol", "insertsymbol", ""],
+                                                ["Append comment", "insertcomment", ""],
+                                                ["Append an html element", "part_insert", ""],
+                                                ["Append a Widget", "list_widget_modules", ""]
+                                            ]
+        raise GoTo(target = '23509', clear_submitted=True)
+
 
 

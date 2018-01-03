@@ -584,7 +584,6 @@ class Widget(tag.Part):
             # append the value to the container
             container_part.append(value)
 
-
     ####ok
     def is_container_empty(self, index):
         """"index is the index in the self._container list
@@ -594,7 +593,7 @@ class Widget(tag.Part):
             return
         if container_part.parts:
             # has contents
-            if len(container_part.parts == 1) and (container_part.parts[0] == ""):
+            if (len(container_part.parts) == 1) and (container_part.parts[0] == ""):
                 return True
         else:
             return True
@@ -708,7 +707,7 @@ class Widget(tag.Part):
 
 
     def get_parent_widget(self, page_or_section):
-        """Returns the parent widget and container  index of this widget"""
+        """Returns the parent widget and container index of this widget"""
         section_name, parent_widget_name, parent_container = self.embedded
         if not parent_widget_name:
             return None, None

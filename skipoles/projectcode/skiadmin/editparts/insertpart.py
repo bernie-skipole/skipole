@@ -125,8 +125,8 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     else:
         newpart = tag.ClosedPart(tag_name=call_data['newpartname'], brief=call_data['newbrief'])
 
-    if (location[1] is not None) and (not location[2]) and (not isinstance(part, tag.Part)):
-        # part is the top part of a container
+    if (location[1] is not None) and (len(location[2]) == 1):
+        # part is within a container
         utils.set_part(newpart, 
                        location,
                        page=page,
@@ -225,8 +225,6 @@ def file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
     if parent_widget:
         call_data['widget_name'] = parent_widget
-
-
 
     # new part created
     call_data['status'] = 'New block created'
