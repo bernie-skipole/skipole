@@ -113,15 +113,16 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if part is None:
         raise FailPage("Part not identified")
 
-    if (location[1] is not None) and (not location[2])  and (not isinstance(part, tag.Part)):
-        # part is the top part of a container
+
+    if (location[1] is not None) and (len(location[2]) == 1):
+        # part is within a container
         utils.set_part('Set text here', 
-                       location,
-                       page=page,
-                       section=section,
-                       section_name=bits.section_name,
-                       widget=widget,
-                       failmessage='Part to have text inserted not identified')
+                           location,
+                           page=page,
+                           section=section,
+                           section_name=bits.section_name,
+                           widget=widget,
+                           failmessage='Part to have text inserted not identified')
         new_location = location
     elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
         # insert at position 0 inside the part
@@ -170,8 +171,8 @@ def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
 
     sym = tag.HTMLSymbol(text="&nbsp;")
 
-    if (location[1] is not None) and (not location[2])  and (not isinstance(part, tag.Part)):
-        # part is the top part of a container
+    if (location[1] is not None) and (len(location[2]) == 1):
+        # part is within a container
         utils.set_part(sym, 
                        location,
                        page=page,
@@ -368,7 +369,7 @@ def create_insert_comment(caller_ident, ident_list, submit_list, submit_dict, ca
 
     com = tag.Comment(text="comment here")
 
-    if (location[1] is not None) and (not location[2])  and (not isinstance(part, tag.Part)):
+    if (location[1] is not None) and (len(location[2]) == 1):
         # part is the top part of a container
         utils.set_part(com, 
                        location,

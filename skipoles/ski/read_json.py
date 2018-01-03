@@ -82,7 +82,7 @@ def _remove_sectionplaceholders(part):
             parts[index] = "Section Place Holder Removed"
 
 
-def create_part_in_widget(proj_ident, ident, section_name, widget, container_number, json_data):
+def create_part_in_widget(proj_ident, ident, section_name, widget_name, container_number, json_data):
     """Builds the part from the given json string, or ordered dictionary and sets it to container
        Note: containers cannot contain sections so section place holders are removed"""
     if isinstance(json_data, str):
@@ -99,6 +99,9 @@ def create_part_in_widget(proj_ident, ident, section_name, widget, container_num
             newpart.set_unique_names(name_list)
             # as this is going into a container, remove any placeholders
             _remove_sectionplaceholders(newpart)
+            widget = page.widgets.get(widget_name)
+            if widget is None:
+                raise excepts.ServerError("Unable to find widget %s in page %s" % (widget_name, page.ident.num))
             # insert newpart into given widget
             widget.append_to_container(container_number, newpart)
             # save the altered page
@@ -113,6 +116,9 @@ def create_part_in_widget(proj_ident, ident, section_name, widget, container_num
             newpart.set_unique_names(name_list)
             # as this is going into a container, remove any placeholders
             _remove_sectionplaceholders(newpart)
+            widget = section.widgets.get(widget_name)
+            if widget is None:
+                raise excepts.ServerError("Unable to find widget %s in section %s" % (widget_name, section_name))
             # insert newpart into given widget
             widget.append_to_container(container_number, newpart)
             project.add_section(section_name, section)

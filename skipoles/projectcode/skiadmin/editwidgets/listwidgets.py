@@ -333,8 +333,8 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
     except e:
         raise FailPage("Unable to obtain defaults from defaults.json")
 
-    if (location[1] is not None) and (not location[2]) and (not isinstance(part, tag.Part)):
-        # part is the top part of a container
+    if (location[1] is not None) and (len(location[2]) == 1):
+        # part is within a container
         utils.set_part(widget_instance, 
                        location,
                        page=page,
