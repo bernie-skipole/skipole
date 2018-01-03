@@ -41,13 +41,13 @@ class SVGContainer(Widget):
                         'preserveAspectRatio':FieldArg("text", "", jsonset=True)
                        }
 
-    _container = (0,)
+    _container = ((),)
 
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an SVG widget, containing other widgets, so show, class and dimensions can be set"""
         Widget.__init__(self, name=name, tag_name="svg", brief=brief, **field_args)
-        # container parent is the widget
-        self[0] =  ""  # where items can be contained
+        # the widget is a container
+        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value("width"):
@@ -76,13 +76,13 @@ class Group(Widget):
                         'transform':FieldArg("text", "", jsonset=True)
                        }
 
-    _container = (0,)
+    _container = ((),)
 
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an g widget, containing other widgets, so group class, style, transform can be set"""
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
-        # container parent is the widget
-        self[0] =  ""  # where items can be contained
+        # The widget is a container
+        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value("transform"):

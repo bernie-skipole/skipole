@@ -120,7 +120,7 @@ class Form1(Widget):
        On error - the error message is displayed before any of the contents
        Does not include a submit button, therefore requires one to be inserted with the contents"""
 
-    _container = ((1,0,0),)
+    _container = ((1,0),)
 
     error_location = (0,0,0)
 
@@ -150,8 +150,8 @@ class Form1(Widget):
         self[0][0][0] = ''
         # The form
         self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
+        # The location 1,0 is available as a container
         self[1][0] = tag.Part(tag_name="div")
-        # The location 1,0,0 is available as a container
         self[1][0][0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -207,7 +207,7 @@ class SubmitForm1(Widget):
        Used with further input fields set within it. On error - the error message is displayed
        below the form tag, before any of the contents"""
 
-    _container = ((1,0,0),)
+    _container = ((1,0),)
 
     error_location = (0,0,0)
 
@@ -253,8 +253,8 @@ class SubmitForm1(Widget):
         self[0][0][0] = ''
         # The form
         self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
+        # The location 1,0 is available as a container
         self[1][0] = tag.Part(tag_name='div')
-        # The location 1,0,0 is available as a container
         self[1][0][0] = ''
         # tag containing label and button
         self[1][1] = tag.Part(tag_name='div')

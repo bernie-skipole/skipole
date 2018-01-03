@@ -45,7 +45,7 @@ class TagBlock(Widget):
                         'drop':FieldArg("text", '', valdt=True, jsonset=True),
                         'dropident':FieldArg("url", "")}
 
-    _container = (0,)
+    _container = ((),)
 
     def __init__(self, name=None, brief='', **field_args):
         """Acts as a widget, containing other widgets, so show, class and hide can be set
@@ -57,8 +57,8 @@ class TagBlock(Widget):
 
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-        # container parent is the widget
-        self[0] =  ""  # where items can be contained
+        # container is the widget itself
+        self[0] =  ""
         self._dropurl = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):

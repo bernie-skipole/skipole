@@ -294,7 +294,7 @@ class CheckInputs(Widget):
        The contained input fields are only enabled when the checkbox is checked
        uses jquery"""
 
-    _container = ((1,2,0),)
+    _container = ((1,2),)
 
     error_location = (0,0,0)
 
@@ -324,8 +324,9 @@ class CheckInputs(Widget):
         self[1] = tag.Part(tag_name="div")
         self[1][0] = tag.Part(tag_name="label", hide_if_empty=True)
         self[1][1] = tag.ClosedPart(tag_name="input", attribs = {"type":"checkbox"})
-        self[1][2] = tag.Part(tag_name="div") # container parent
-        self[1][2][0] = ""  # where items can be contained
+        # The location (1,2) is available as a container
+        self[1][2] = tag.Part(tag_name="div")
+        self[1][2][0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the checkbox"

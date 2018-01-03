@@ -100,7 +100,7 @@ def create_part_in_widget(proj_ident, ident, section_name, widget, container_num
             # as this is going into a container, remove any placeholders
             _remove_sectionplaceholders(newpart)
             # insert newpart into given widget
-            widget.set_container_part(container_number, newpart)
+            widget.append_to_container(container_number, newpart)
             # save the altered page
             project.save_page(page)
             return
@@ -114,12 +114,11 @@ def create_part_in_widget(proj_ident, ident, section_name, widget, container_num
             # as this is going into a container, remove any placeholders
             _remove_sectionplaceholders(newpart)
             # insert newpart into given widget
-            widget.set_container_part(container_number, newpart)
+            widget.append_to_container(container_number, newpart)
             project.add_section(section_name, section)
             return
     # only get here if unsuccessfull
     raise excepts.ServerError("Unable to create part")
-
 
 
 def create_section(proj_ident, section_name, json_data):

@@ -24,6 +24,7 @@
 "add_selector": 8100,
 "add_submit_list_string": 6410,
 "add_tag_attrib": 43030,
+"add_to_container_dom": 44430,
 "add_to_page_dom": 3530,
 "add_to_section_dom": 7430,
 "add_user_page": 5500,
@@ -74,6 +75,7 @@
 "edit_action": 2002,
 "edit_comment": 41210,
 "edit_container": 44700,
+"edit_container_dom": 44410,
 "edit_from_top_nav": 9,
 "edit_item": 2,
 "edit_jq_page": 5200,
@@ -117,14 +119,18 @@
 "manage_specialpages": 5001,
 "manage_textblocks": 4001,
 "mimetype_page": 9200,
+"move_down_in_container_dom": 44460,
 "move_down_in_page_dom": 3560,
 "move_down_in_section_dom": 7460,
+"move_down_right_in_container_dom": 44470,
 "move_down_right_in_page_dom": 3570,
 "move_down_right_in_section_dom": 7470,
 "move_in_page_dom": 3610,
 "move_in_section_dom": 7510,
+"move_up_in_container_dom": 44440,
 "move_up_in_page_dom": 3540,
 "move_up_in_section_dom": 7440,
+"move_up_right_in_container_dom": 44450,
 "move_up_right_in_page_dom": 3550,
 "move_up_right_in_section_dom": 7450,
 "new_append": 43103,
@@ -149,6 +155,7 @@
 "redirector": 21005,
 "reload_code": 70002,
 "remove_allowed_value": 46051,
+"remove_container_dom": 44420,
 "remove_field": 6110,
 "remove_field_value": 6100,
 "remove_item": 43104,
@@ -19431,6 +19438,183 @@ false
 "default_page_name": "index",
 "restricted": false,
 "folders": {
+"dom_html": {
+"ident": 44400,
+"brief": "Edit section dom - html calls",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"add_to_container_dom": {
+"ident": 44430,
+"brief": "fill page to append or insert an item in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"add_to_container_dom"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"edit_container_dom": {
+"ident": 44410,
+"brief": "Edit an item, such as widget, text in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"edit_container_dom"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_in_container_dom": {
+"ident": 44460,
+"brief": "moves a dom item down in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_down_in_container_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_right_in_container_dom": {
+"ident": 44470,
+"brief": "moves a dom item down and to the right in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_down_right_in_container_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_in_container_dom": {
+"ident": 44440,
+"brief": "moves a dom item up in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_up_in_container_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_right_in_container_dom": {
+"ident": 44450,
+"brief": "moves a dom item up and to the right in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_up_right_in_container_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"remove_container_dom": {
+"ident": 44420,
+"brief": "Remove an item from a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"remove_container_dom"
+],
+"submit_option": true,
+"target_ident": 27047,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+}
+}
+},
 "restricted": {
 "ident": 54000,
 "brief": "restricted pages for widgetedit",
