@@ -584,6 +584,22 @@ class Widget(tag.Part):
             # append the value to the container
             container_part.append(value)
 
+
+    ####ok
+    def is_container_empty(self, index):
+        """"index is the index in the self._container list
+           If index out of range, return None, otherwise True if empty, False if not"""
+        container_part = self._container_part(index)
+        if container_part is None:
+            return
+        if container_part.parts:
+            # has contents
+            if len(container_part.parts == 1) and (container_part.parts[0] == ""):
+                return True
+        else:
+            return True
+        return False
+
     ####ok
     @classmethod
     def can_contain(cls):
@@ -606,67 +622,46 @@ class Widget(tag.Part):
 
 
     def set_container_part(self, index, value):
-        """Sets the value of the container, in this case index is not the part location,
-           it is the index in the self._container list"""
-        location = self._container[index]
-        self.set_location_value(location, value)
+        """Depracated"""
+        return
 
+    ####ok
     def set_in_container(self, index, location, value):
         """Sets a value within a container, index is the container index
            and location is an integer or tuple within the container.
            for example index=0, location=(0,1) referes to location (0,1) inside container 0"""
-        if location is 0:
-            cont_part = self.get_container_part(index)
-            cont_part.set_location_value(0, value)
-        elif not location:
-            self.set_container_part(index, value)
-        else:
-            cont_part = self.get_container_part(index)
-            cont_part.set_location_value(location, value)
+        container_part = self._container_part(index)
+        if container_part is None:
+            return
+        container_part.set_location_value(location, value)
 
+    ####ok
     def get_from_container(self, index, location):
         """gets the value from within a container, index is the container index
            and location is an integer or tuple within the container.
-           for example index=0, location=(0,1) referes to location (0,1) inside container 0
-           If location is an empty tuple, this returns the container part"""
-        if location is 0 :
-            cont_part = self.get_container_part(index)
-            return cont_part[0]
-        if not location:
-            return self.get_container_part(index)
-        else:
-            cont_part = self.get_container_part(index)
-            return cont_part.get_location_value(location)
+           for example index=0, location=(0,1) referes to location (0,1) inside container 0"""
+        container_part = self._container_part(index)
+        if container_part is None:
+            return
+        return container_part.get_location_value(location)
 
-
+    ####ok
     def del_from_container(self, index, location):
         """Deletes the value from within a container, index is the container index
            and location is an integer or tuple within the container.
-           for example index=0, location=(0,1) referes to location (0,1) inside container 0
-           If location is an empty tuple, this deletes the container part"""
-        if location is 0:
-            cont_part = self.get_container_part(index)
-            cont_part.del_location_value(0)
-        if not location:
-            self.del_container_part(index)
-        else:
-            cont_part = self.get_container_part(index)
-            cont_part.del_location_value(location)
+           for example index=0, location=(0,1) referes to location (0,1) inside container 0"""
+        container_part = self._container_part(index)
+        if container_part is None:
+            return
+        container_part.del_location_value(location)
 
     def del_container_part(self, index):
-        """Sets the container location to empty string, in this case index is not
-           the part location, it is the index in the self._container list"""
-        location = self._container[index]
-        self.set_location_value(location, '')
+        """Depracated"""
+        return
 
     def get_container_part(self, index):
-        """Returns the value of the container, in this case index is not
-           the part location, it is the index in the self._container list
-           If index out of range, return None"""
-        if (index < 0) or (index >= len(self._container)):
-            return None
-        location = self._container[index]
-        return self.get_location_value(location)
+        """Depracated"""
+        return
 
     ####ok
     @classmethod
