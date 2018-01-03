@@ -608,12 +608,6 @@ def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data
 
     # and this is the container to be edited, it is now set into session data
     call_data['container'] = container
-    # delete submitted container_part to avoid any confusion
-    if 'container_part' in call_data:
-        del call_data['container_part']
-
-    part_top = widget.name
-    part_loc = str(container)
 
     # Fill in header
 
@@ -630,37 +624,22 @@ def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data
     # so header text and navigation done, now continue with the page contents
     page_data[('container_description','textblock_ref')] = widget.get_container_ref(container)
 
-    # part is the item actually at the container location, an empty string if nothing there
-    part = widget.get_container_part(container)
-
-    if isinstance(part, str) and (not part):
+    if widget.is_container_empty(container):
         # empty container
         page_data[('further_description','para_text')] = "The container is empty. Please choose an item to insert."
-        # do not show the edit item
-        page_data[('editparts', 'show')] = False
-        if page is not None:
-            # table contents includes 'insert a section'
-            page_data[("insertlist","links")] = [
-                    ["Insert text", "inserttext", ""],
-                    ["Insert a TextBlock", "insert_textblockref", ""],
-                    ["Insert html symbol", "insertsymbol", ""],
-                    ["Insert comment", "insertcomment", ""],
-                    ["Insert an html element", "part_insert", ""],
-                    ["Insert a Widget", "list_widget_modules", ""],
-                    ["Insert a Section", "placeholder_insert", ""]
-                                                                            ]
-        else:
-            # table contents do not include Insert a section
-            page_data[("insertlist","links")] = [
-                    ["Insert text", "inserttext", ""],
-                    ["Insert a TextBlock", "insert_textblockref", ""],
-                    ["Insert html symbol", "insertsymbol", ""],
-                    ["Insert comment", "insertcomment", ""],
-                    ["Insert an html element", "part_insert", ""],
-                    ["Insert a Widget", "list_widget_modules", ""]
-                                                                            ]
+        # do not show the container table
+        page_data[('editdom', 'show')] = False
+        # table contents do not include Insert a section
+        page_data[("insertlist","links")] = [
+                ["Insert text", "inserttext", ""],
+                ["Insert a TextBlock", "insert_textblockref", ""],
+                ["Insert html symbol", "insertsymbol", ""],
+                ["Insert comment", "insertcomment", ""],
+                ["Insert an html element", "part_insert", ""],
+                ["Insert a Widget", "list_widget_modules", ""]
+                ]
         # set location, where item is to be inserted
-        call_data['location'] = (widget.name, container, ())
+        call_data['location'] = (widget.name, container, (0,))
         return
 
     # part has content, do not show insertlist or upload button
@@ -668,153 +647,6 @@ def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data
     page_data[('insertlist', 'show')] = False
     page_data['upload_description', 'show'] = False
     page_data['uploadpart', 'show'] = False
-
-
-    #        contents: A list for every element in the table, should be row*col lists
-    #              col 0 - text string (This will be either text to display, button text, or Textblock reference)
-    #               col 1 - True if this is a TextBlock, False if not
-    #               col 2 - A 'style' string set on the td cell, if empty string, no style applied
-    #               col 3 - Link ident, if empty, only text will be shown, not a button
-    #                             if given, a link will be set with button_class applied to it
-    #              col 4 - The get field value of the button link, empty string if no get field, ignored if no link ident given
-
-    page_data['editparts', 'parts', 'cols']  = 4
-    rows = 1
-
-    part_location_string = part_top + "-" + part_loc
-
-    no_link = [False, '', '']
-    empty = ['', False, '', '']
-    # link to empty container
-    empty_container = ['Remove', False, 'width : 1%;', 'delete_container', part_location_string]  # delete link to 44701
-
-    if isinstance(part, str):
-        if len(part)<40:
-            part_text = part
-        else:
-            part_text = part[:35] + '...'
-        contents = [
-                       ["Text"] + no_link,
-                       [part_text] + no_link,
-                       ['Edit', False, 'width : 1%;', 'edit_text', part_location_string],                 # edit - link to text edit 41001
-                       empty_container
-                    ]
-    elif isinstance(part, tag.TextBlock):
-        part_ref = part.textref
-        if len(part_ref)>40:
-            part_ref = part_ref[:35] + '...'
-        if not part_ref:
-            part_ref = '-'
-        contents = [
-                       ["TextBlock"] + no_link,
-                       [part_ref] + no_link,
-                       ['Edit', False, 'width : 1%;', 'edit_textblockref', part_location_string],                 # edit textblock ref - link to 42001
-                       empty_container
-                    ]
-    elif isinstance(part, tag.SectionPlaceHolder):
-        part_brief = part.brief
-        if len(part_brief)>40:
-            part_brief = part_brief[:35] + '...'
-        if not part_brief:
-            part_brief = '-'
-        section_name = part.placename
-        if section_name:
-            section_name = "Section " + section_name
-        else:
-            section_name = "Section -None-"
-        if len(section_name)>40:
-            section_name = section_name[:35] + '...'
-        contents = [
-                       [section_name] + no_link,
-                       [part_brief] + no_link,
-                       ['Edit', False, 'width : 1%;', 'edit_placeholder', part_location_string],                 # edit - link to placeholder edit 45002
-                       empty_container
-                    ]
-    elif isinstance(part, tag.HTMLSymbol):
-        part_str = part.text
-        if len(part_str)>40:
-            part_str = part_str[:35] + '...'
-        if not part_str:
-            part_str = '-'
-        contents = [
-                       ["Symbol"] + no_link,
-                       [part_str] + no_link,
-                       ['Edit', False, 'width : 1%;', 'edit_symbol', part_location_string],                 # edit - link to symbol edit 41110
-                       empty_container
-                    ]
-    elif isinstance(part, tag.Comment):
-        if len(part.text)<33:
-            part_str =  "<!--"+part.text + '-->'
-        else:
-            part_str = "<!--"+part.text[:31] + '...'
-        if not part_str:
-            part_str = '<!---->'
-        contents = [
-                       ["Comment"] + no_link,
-                       [part_str] + no_link,
-                       ['Edit', False, 'width : 1%;', 'edit_comment', part_location_string],                 # edit - link to comment edit 41210
-                       empty_container
-                    ]
-    elif isinstance(part, widgets.Widget) or isinstance(part, widgets.ClosedWidget):
-        part_name = 'Widget ' + part.name
-        if len(part_name)>40:
-            part_name = part_name[:35] + '...'
-        part_brief = part.brief
-        if len(part_brief)>40:
-            part_brief = part_brief[:35] + '...'
-        if not part_brief:
-            part_brief = '-'
-        contents = [
-                       [part_name] + no_link,
-                       [part_brief] + no_link,
-                       ['Edit', False, 'width : 1%;', 'edit_widget', part_location_string],                 # edit widget - link to 44100
-                       empty_container
-                    ]
-    elif isinstance(part, tag.ClosedPart):
-        if part.attribs:
-            tag_name = "<%s ... />" % part.tag_name
-        else:
-            tag_name = "<%s />" % part.tag_name
-        part_brief = part.brief
-        if len(part_brief)>40:
-            part_brief = part_brief[:35] + '...'
-        if not part_brief:
-            part_brief = '-'
-        contents = [
-                       [tag_name] + no_link,
-                       [part_brief] + no_link,
-                       ['Edit', False, 'width : 1%;', 'get_part_edit', part_location_string],                 # edit - link to 43101
-                       empty_container
-                    ]
-    elif isinstance(part, tag.Part):
-        page_data['editparts', 'parts', 'cols']  = 9
-        if part.attribs:
-            tag_name = "<%s... >" % part.tag_name
-        else:
-            tag_name = "<%s>" % part.tag_name
-        part_brief = part.brief
-        if len(part_brief)>40:
-            part_brief = part_brief[:35] + '...'
-        if not part_brief:
-            part_brief = '-'
-        contents = [
-                       [tag_name] + no_link,
-                       [part_brief] + no_link,
-                       empty,                                       # no up arrow for top line
-                       empty,                                       # no up_right arrow for top line
-                       empty,                                       # no down arrow for top line
-                       empty,                                       # no down_right arrow for top line
-                       ['Edit', False, 'width : 1%;', 'get_part_edit', part_location_string],     # edit Part - link to 43101
-                       ['Insert', False, 'width : 1%;text-align: center;', 'new_insert', part_location_string],   # insert into part - link to 43102
-                       empty_container
-                    ]
-        # extends the dictionary
-        rows = utils.extendparts(rows, part, part_location_string, contents, no_link, empty)
-    else:
-        raise FailPage(message="Item in container not recognised")
-
-    page_data['editparts', 'parts', 'contents']  = contents
-    page_data['editparts', 'parts', 'rows']  = rows
 
     # fill in the table
     call_data['location_string'] = widget.name
