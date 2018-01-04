@@ -113,21 +113,28 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if part is None:
         raise FailPage("Part not identified")
 
+    location_integers = [int(i) for i in location[2]]
 
-    if (location[1] is not None) and (len(location[2]) == 1):
-        # part is within a container
+    if (location[1] is not None) and (widget.is_container_empty(location[1])):
+        # text is to be set as the first item in a container
+        new_location = (location[0], location[1], (0,))
         utils.set_part('Set text here', 
-                           location,
+                           new_location,
                            page=page,
                            section=section,
                            section_name=bits.section_name,
                            widget=widget,
                            failmessage='Part to have text inserted not identified')
-        new_location = location
     elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
         # insert at position 0 inside the part
         part.insert(0,'Set text here')
-        new_location = (location[0], location[1], location[2] + (0,))
+        new_location = (location[0], location[1], tuple(location_integers + [0]))
+    elif (location[1] is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so insert after the part
+        position = location_integers[0] + 1
+        widget.insert_into_container(location[1], position, 'Set text here')
+        new_location = (location[0], location[1], (position,))
     else:
         # do an append, rather than an insert
         # get parent part
@@ -136,12 +143,12 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
                                                bits.section_name,
                                                location_string=location[0],
                                                container=location[1],
-                                               location_integers=location[2][:-1])
+                                               location_integers=location_integers[:-1])
         # find location digit
-        loc = location[2][-1] + 1
+        loc = location_integers[-1] + 1
         # insert text at loc in parent_part
         parent_part.insert(loc,'Set text here')
-        new_location = (location[0], location[1], location[2][:-1] + (loc,))
+        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
 
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
     # goes to edit text, with location set to the new location
@@ -171,20 +178,28 @@ def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
 
     sym = tag.HTMLSymbol(text="&nbsp;")
 
-    if (location[1] is not None) and (len(location[2]) == 1):
-        # part is within a container
+    location_integers = [int(i) for i in location[2]]
+
+    if (location[1] is not None) and (widget.is_container_empty(location[1])):
+        # text is to be set as the first item in a container
+        new_location = (location[0], location[1], (0,))
         utils.set_part(sym, 
-                       location,
+                       new_location,
                        page=page,
                        section=section,
                        section_name=bits.section_name,
                        widget=widget,
                        failmessage='Part to have symbol inserted not identified')
-        new_location = location
     elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
         # insert at position 0 inside the part
         part.insert(0,sym)
-        new_location = (location[0], location[1], location[2] + (0,))
+        new_location = (location[0], location[1], tuple(location_integers + [0]))
+    elif (location[1] is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so insert after the part
+        position = location_integers[0] + 1
+        widget.insert_into_container(location[1], position, sym)
+        new_location = (location[0], location[1], (position,))
     else:
         # do an append, rather than an insert
         # get parent part
@@ -193,12 +208,12 @@ def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
                                                bits.section_name,
                                                location_string=location[0],
                                                container=location[1],
-                                               location_integers=location[2][:-1])
+                                               location_integers=location_integers[:-1])
         # find location digit
-        loc = location[2][-1] + 1
+        loc = location_integers[-1] + 1
         # insert symbol at loc in parent_part
         parent_part.insert(loc,sym)
-        new_location = (location[0], location[1], location[2][:-1] + (loc,))
+        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
 
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
     # goes to edit symbol, with location set to the new location
@@ -369,20 +384,28 @@ def create_insert_comment(caller_ident, ident_list, submit_list, submit_dict, ca
 
     com = tag.Comment(text="comment here")
 
-    if (location[1] is not None) and (len(location[2]) == 1):
-        # part is the top part of a container
+    location_integers = [int(i) for i in location[2]]
+
+    if (location[1] is not None) and (widget.is_container_empty(location[1])):
+        # text is to be set as the first item in a container
+        new_location = (location[0], location[1], (0,))
         utils.set_part(com, 
-                       location,
+                       new_location,
                        page=page,
                        section=section,
                        section_name=bits.section_name,
                        widget=widget,
                        failmessage='Part to have comment inserted not identified')
-        new_location = location
     elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
         # insert at position 0 inside the part
         part.insert(0,com)
-        new_location = (location[0], location[1], location[2] + (0,))
+        new_location = (location[0], location[1], tuple(location_integers + [0]))
+    elif (location[1] is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so insert after the part
+        position = location_integers[0] + 1
+        widget.insert_into_container(location[1], position, com)
+        new_location = (location[0], location[1], (position,))
     else:
         # do an append, rather than an insert
         # get parent part
@@ -391,12 +414,14 @@ def create_insert_comment(caller_ident, ident_list, submit_list, submit_dict, ca
                                                bits.section_name,
                                                location_string=location[0],
                                                container=location[1],
-                                               location_integers=location[2][:-1])
+                                               location_integers=location_integers[:-1])
+
         # find location digit
-        loc = location[2][-1] + 1
+        loc = location_integers[-1] + 1
         # insert comment at loc in parent_part
         parent_part.insert(loc,com)
-        new_location = (location[0], location[1], location[2][:-1] + (loc,))
+        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
+
 
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
     # goes to edit comment, with location set to the new location
