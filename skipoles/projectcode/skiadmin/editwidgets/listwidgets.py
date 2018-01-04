@@ -333,10 +333,16 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
     except e:
         raise FailPage("Unable to obtain defaults from defaults.json")
 
-    if (location[1] is not None) and (len(location[2]) == 1):
-        # part is within a container
+
+    location_integers = [int(i) for i in location[2]]
+
+    # widget is the parent widget if this widget_instance is to be placed inside
+    # a parent container
+    if (location[1] is not None) and (widget.is_container_empty(location[1])):
+        # widget_instance is to be set as the first item in a container
+        new_location = (location[0], location[1], (0,))
         utils.set_part(widget_instance, 
-                       location,
+                       new_location,
                        page=page,
                        section=section,
                        section_name=bits.section_name,
@@ -345,6 +351,13 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
     elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
         # insert at position 0 inside the part
         part.insert(0,widget_instance)
+        new_location = (location[0], location[1], tuple(location_integers + [0]))
+    elif (location[1] is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so append after the part by inserting at the right place in the container
+        position = location_integers[0] + 1
+        widget.insert_into_container(location[1], position, widget_instance)
+        new_location = (location[0], location[1], (position,))
     else:
         # do an append, rather than an insert
         # get parent part
@@ -353,11 +366,12 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
                                                bits.section_name,
                                                location_string=location[0],
                                                container=location[1],
-                                               location_integers=location[2][:-1])
+                                               location_integers=location_integers[:-1])
         # find location digit
-        loc = location[2][-1] + 1
-        # insert widget at loc in parent_part
+        loc = location_integers[-1] + 1
+        # insert widget_instance at loc in parent_part
         parent_part.insert(loc,widget_instance)
+        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
 
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
 
