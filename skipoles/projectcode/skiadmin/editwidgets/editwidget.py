@@ -29,7 +29,7 @@
 import re, html
 
 from .... import skilift
-from ....skilift import fromjson
+from ....skilift import fromjson, editsection, editpage
 
 from ....ski import skiboot, tag, widgets
 from .. import utils
@@ -953,6 +953,78 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
                                                 ["Append a Widget", "list_widget_modules", ""]
                                             ]
         raise GoTo(target = '23509', clear_submitted=True)
+
+
+def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to remove an item in a container"
+
+    editedprojname = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to remove missing")
+
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is widget_name, container with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item to remove has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_integers = [ int(i) for i in location_list[2:]]
+    except:
+        raise FailPage("Item to remove has not been recognised")
+
+    # location is a tuple of widget_name, container, tuple of location integers
+    location = (widget_name, container, location_integers)
+
+    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, location)
+    if part_tuple is None:
+        raise FailPage("Item to remove has not been recognised")
+
+    # once item is deleted, no info on the item should be
+    # left in call_data - this may not be required in future
+    #if 'location' in call_data:
+    #    del call_data['location']
+    #if 'part' in call_data:
+    #    del call_data['part']
+    #if 'part_loc' in call_data:
+    #    del call_data['part_loc']
+
+    # remove the item
+    #if pagenumber is None:
+    #    try:
+    #        editsection.del_item(editedprojname, section_name, xlocation_integers)
+    #    except ServerError as e:
+    #        raise FailPage(message = e.message)
+    #else:
+    #    # remove the item
+    #    try:
+    #        editpage.del_item(editedprojname, pagenumber, location_string, xlocation_integers)
+    #    except ServerError as e:
+    #        raise FailPage(message = e.message)
+    #    # page has changed, hopefully, in due course, this line will not be needed
+    #    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+
+
+    #call_data['status'] = 'Item deleted'
+
 
 
 

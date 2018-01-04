@@ -230,6 +230,12 @@ def part_info(project, pagenumber, section_name, location):
     else:
         brief = None
 
+    if hasattr(part, 'ident_string'):
+        ident_string = part.ident_string
+    else:
+        # find its parent
+        pass
+
     return PartInfo(project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
 
