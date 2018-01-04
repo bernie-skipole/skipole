@@ -697,7 +697,21 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
 
     # create the table
 
-    domcontents = []
+    top_row_widget = "Widget %s" % location_string
+    top_row_container = "Container %s" % container
+
+    domcontents = [
+                   [top_row_widget, '', False, '' ],
+                   [top_row_container, '', False, '' ],
+                   ['', '', False, '' ],
+                   ['', '', False, '' ],
+                   ['', '', False, '' ],
+                   ['', '', False, '' ],
+                   ['', '', False, '' ],
+                   ['', '', False, '' ],
+                   ['', '', False, '' ]
+                ]
+
 
     # add further items to domcontents
     part_string_list = []
@@ -724,7 +738,7 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
     droprows = []
 
     # for each row
-    for row in range(0, rows):
+    for row in range(0, rows-1):
         dragrows.append( [ False, ''] )
         droprows.append( [ False, ''] )
 
