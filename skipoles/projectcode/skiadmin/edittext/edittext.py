@@ -131,7 +131,7 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
         new_location = (location[0], location[1], tuple(location_integers + [0]))
     elif (location[1] is not None) and (len(location_integers) == 1):
         # part is inside a container with parent being the containing div
-        # so insert after the part
+        # so append after the part by inserting at the right place in the container
         position = location_integers[0] + 1
         widget.insert_into_container(location[1], position, 'Set text here')
         new_location = (location[0], location[1], (position,))
@@ -196,7 +196,7 @@ def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
         new_location = (location[0], location[1], tuple(location_integers + [0]))
     elif (location[1] is not None) and (len(location_integers) == 1):
         # part is inside a container with parent being the containing div
-        # so insert after the part
+        # so append after the part by inserting at the right place in the container
         position = location_integers[0] + 1
         widget.insert_into_container(location[1], position, sym)
         new_location = (location[0], location[1], (position,))
@@ -402,7 +402,7 @@ def create_insert_comment(caller_ident, ident_list, submit_list, submit_dict, ca
         new_location = (location[0], location[1], tuple(location_integers + [0]))
     elif (location[1] is not None) and (len(location_integers) == 1):
         # part is inside a container with parent being the containing div
-        # so insert after the part
+        # so append after the part by inserting at the right place in the container
         position = location_integers[0] + 1
         widget.insert_into_container(location[1], position, com)
         new_location = (location[0], location[1], (position,))

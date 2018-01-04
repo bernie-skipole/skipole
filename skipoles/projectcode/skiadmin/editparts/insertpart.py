@@ -119,16 +119,19 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
         else:
             raise FailPage("Invalid location")
 
+    location_integers = [int(i) for i in location[2]]
+
     # create the item
     if call_data['newopenclosed'] == 'open':
         newpart = tag.Part(tag_name=call_data['newpartname'], brief=call_data['newbrief'])
     else:
         newpart = tag.ClosedPart(tag_name=call_data['newpartname'], brief=call_data['newbrief'])
 
-    if (location[1] is not None) and (len(location[2]) == 1):
-        # part is within a container
+    if (location[1] is not None) and (widget.is_container_empty(location[1])):
+        # newpart is to be set as the first item in a container
+        new_location = (location[0], location[1], (0,))
         utils.set_part(newpart, 
-                       location,
+                       new_location,
                        page=page,
                        section=section,
                        section_name=bits.section_name,
@@ -137,6 +140,13 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
         # insert at position 0 inside the part
         part.insert(0,newpart)
+        new_location = (location[0], location[1], tuple(location_integers + [0]))
+    elif (location[1] is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so append newpart after the part by inserting at the right place in the container
+        position = location_integers[0] + 1
+        widget.insert_into_container(location[1], position, newpart)
+        new_location = (location[0], location[1], (position,))
     else:
         # do an append, rather than an insert
         # get parent part
@@ -145,11 +155,12 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
                                                bits.section_name,
                                                location_string=location[0],
                                                container=location[1],
-                                               location_integers=location[2][:-1])
+                                               location_integers=location_integers[:-1])
         # find location digit
-        loc = location[2][-1] + 1
-        # insert part at loc in parent_part
+        loc = location_integers[-1] + 1
+        # insert newpart at loc in parent_part
         parent_part.insert(loc,newpart)
+        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
 
     utils.save(call_data, page=page, section_name=bits.section_name, section=section)
 
