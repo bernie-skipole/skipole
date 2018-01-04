@@ -634,6 +634,21 @@ class Widget(tag.Part):
             return
         container_part.set_location_value(location, value)
 
+
+    ####ok
+    def insert_into_container(self, index, position, value):
+        """Inserts a value within a container at position, index is the container index
+           and position is an integer within the container.
+           for example index=0, position=0 referes to the first position inside container 0"""
+        container_part = self._container_part(index)
+        if container_part is None:
+            return
+        if not isinstance(position, int):
+            return
+        container_part.insert(position, value)        
+
+
+
     ####ok
     def get_from_container(self, index, location):
         """gets the value from within a container, index is the container index
