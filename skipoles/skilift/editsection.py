@@ -69,7 +69,7 @@ def del_item(project, section_name, location_integers):
     proj = skiboot.getproject(project)
     if not section_name:
          raise ServerError(message="Given section_name is invalid")
-    section = proj.section(section_name, makecopy=False)
+    section = proj.section(section_name, makecopy=True)
     if section is None:
         raise ServerError(message="Given Section not found")
     # remove the item
@@ -77,6 +77,8 @@ def del_item(project, section_name, location_integers):
         section.del_location_value(location_integers)
     except:
         raise ServerError(message="Unable to delete item")
+    # And save this section copy to the project
+    proj.add_section(section_name, section)
 
 
 def move_item(project, section_name, from_location_integers, to_location_integers):
