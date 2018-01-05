@@ -1000,30 +1000,31 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
     # once item is deleted, no info on the item should be
     # left in call_data - this may not be required in future
-    #if 'location' in call_data:
-    #    del call_data['location']
-    #if 'part' in call_data:
-    #    del call_data['part']
-    #if 'part_loc' in call_data:
-    #    del call_data['part_loc']
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
 
-    # remove the item
-    #if pagenumber is None:
-    #    try:
-    #        editsection.del_item(editedprojname, section_name, xlocation_integers)
-    #    except ServerError as e:
-    #        raise FailPage(message = e.message)
-    #else:
-    #    # remove the item
-    #    try:
-    #        editpage.del_item(editedprojname, pagenumber, location_string, xlocation_integers)
-    #    except ServerError as e:
-    #        raise FailPage(message = e.message)
-    #    # page has changed, hopefully, in due course, this line will not be needed
-    #    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+    # remove the item using functions from skilift.editsection and skilift.editpage
+    if pagenumber is None:
+        # remove the item from a section
+        try:
+            editsection.del_location(editedprojname, section_name, location)
+        except ServerError as e:
+            raise FailPage(message = e.message)
+    else:
+        # remove the item from a page
+        try:
+            editpage.del_location(editedprojname, pagenumber, location)
+        except ServerError as e:
+            raise FailPage(message = e.message)
+        # page has changed, hopefully, in due course, this line will not be needed
+        call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
 
 
-    #call_data['status'] = 'Item deleted'
+    call_data['status'] = 'Item deleted'
 
 
 

@@ -552,7 +552,7 @@ def remove_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # remove the item
     try:
-        editsection.del_item(editedprojname, section_name, location_integers)
+        editsection.del_location(editedprojname, section_name, location)
     except ServerError as e:
         raise FailPage(message = e.message)
 

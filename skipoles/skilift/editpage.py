@@ -116,31 +116,72 @@ def delete_page(project, pagenumber):
         return e.message
 
 
-def del_item(project, pagenumber, location_string, location_integers):
-    "Deletes the item"
+
+def del_location(project, pagenumber, location):
+    "Deletes the item at the given location in the page"
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
     page, error_message = _get_page(project, pagenumber)
     if page is None:
         raise ServerError(message=error_message)
     if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
         raise ServerError(message = "Invalid page")
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        raise ServerError(message = "Project not loaded")
-    if location_string == 'body':
+
+    location_string, container, location_integers = location
+
+    # location string is either a widget name, or body, head, or svg
+    # if a widget_name, container must be given
+
+    if container is None:
+        # not in a widget
+        if location_string == 'body':
+            top = page.body
+        elif location_string == 'head':
+            top = page.head
+        elif location_string == 'svg':
+            top = page.svg
+        else:
+            raise ServerError(message="Given location is invalid")
+        # remove the item
+        try:
+            top.del_location_value(location_integers)
+        except:
+            raise ServerError(message="Unable to delete item")
+        # And save this page copy to the project
+        proj.save_page(page)
+        return
+
+    # so item is in a widget, location_string is the widget name
+    widget = page.widgets[location_string]
+    ident_string = widget.ident_string
+
+    # ident_string is of the form; project_pageidentnumber_body-x-y
+
+    splitstring = ident_string.split("_")
+    splitloc = splitstring[2].split("-")
+    loc_top = splitloc[0]
+    widg_ints = [ int(i) for i in splitloc[1:] ]
+
+    widg_container_ints = list(widget.get_container_loc(container))
+
+    item_location_ints = widg_ints + widg_container_ints + list(location_integers)
+
+    if loc_top == 'body':
         top = page.body
-    elif location_string == 'head':
+    elif loc_top == 'head':
         top = page.head
-    elif location_string == 'svg':
+    elif loc_top == 'svg':
         top = page.svg
     else:
-        raise ServerError(message="Given location_string is invalid")
+        raise ServerError(message="Given location is invalid")
     # remove the item
     try:
-        top.del_location_value(location_integers)
+        top.del_location_value(item_location_ints)
     except:
         raise ServerError(message="Unable to delete item")
-    # And save this page copy to the project
-    editedproj.save_page(page)
+        # And save this page copy to the project
+    proj.save_page(page)
 
 
 def move_item(project, pagenumber, location_string, from_location_integers, to_location_integers):

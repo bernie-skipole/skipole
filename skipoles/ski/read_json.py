@@ -826,6 +826,11 @@ def _create_widget(part_dict, proj_ident):
             container = "container_%s" % (cont,)
             if container in part_dict:
                 item_list = part_dict[container]
+                # item_list may be an empty list
+                if not item_list:
+                    # if an empty list, place an empty string in the container
+                    widg.append_to_container(cont, '')
+                    continue
                 # test for list until all projects have containers changed to lists
                 if isinstance(item_list[0], list):
                     for itempart in item_list:
