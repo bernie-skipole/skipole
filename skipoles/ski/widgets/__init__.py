@@ -657,6 +657,9 @@ class Widget(tag.Part):
         container_part = self._container_part(index)
         if container_part is None:
             return
+        # empty container contains an empty string
+        if self.is_container_empty(index) and ((not location) or (location == (0,)) or (location == [0])):
+            return ''
         return container_part.get_location_value(location)
 
     ####ok

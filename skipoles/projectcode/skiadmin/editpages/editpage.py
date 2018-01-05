@@ -1834,11 +1834,9 @@ def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     # remove the item
     try:
-        editpage.del_item(editedprojname, pagenumber, location_string, location_integers)
+        editpage.del_location(editedprojname, pagenumber, location)
     except ServerError as e:
         raise FailPage(message = e.message)
-
-    call_data['status'] = 'Item deleted'
 
     # page has changed, hopefully, in due course, this line will not be needed
     call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)

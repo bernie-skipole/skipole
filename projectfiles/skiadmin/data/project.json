@@ -19604,7 +19604,7 @@ false
 "remove_container_dom"
 ],
 "submit_option": true,
-"target_ident": 27047,
+"target_ident": 54706,
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -40492,7 +40492,31 @@ false
 "attribs": {
 "class": "w3-theme"
 },
-"parts": []
+"parts": [
+[
+"Widget",
+{
+"class": "checkbox.CheckInputs",
+"name": "test1",
+"brief": "test1",
+"fields": {
+"checkbox": "",
+"checkbox_class": "w3-check",
+"checked": false,
+"clear_error": false,
+"div_class": "",
+"error_class": "w3-panel w3-red",
+"label_class": "",
+"label_text": "",
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": []
+}
+]
+]
 }
 ]
 },
