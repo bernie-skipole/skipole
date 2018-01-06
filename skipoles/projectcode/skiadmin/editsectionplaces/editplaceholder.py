@@ -241,10 +241,13 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
                                             placename=placename,
                                             brief=call_data['newbrief'])
 
-    if (location[1] is not None) and (not location[2])  and (not isinstance(part, tag.Part)):
-        # part is the top part of a container
+    location_integers = [int(i) for i in location[2]]
+
+    if (location[1] is not None) and (widget.is_container_empty(location[1])):
+        # text is to be set as the first item in a container
+        new_location = (location[0], location[1], (0,))
         utils.set_part(newplaceholder, 
-                       location,
+                       new_location,
                        page=page,
                        section=None,
                        section_name='',
@@ -253,6 +256,13 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
         # insert at position 0 inside the part
         part.insert(0,newplaceholder)
+        new_location = (location[0], location[1], tuple(location_integers + [0]))
+    elif (location[1] is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so append after the part by inserting at the right place in the container
+        position = location_integers[0] + 1
+        widget.insert_into_container(location[1], position, newplaceholder)
+        new_location = (location[0], location[1], (position,))
     else:
         # do an append, rather than an insert
         # get parent part
@@ -261,11 +271,12 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
                                                '',
                                                location_string=location[0],
                                                container=location[1],
-                                               location_integers=location[2][:-1])
+                                               location_integers=location_integers[:-1])
         # find location digit
-        loc = location[2][-1] + 1
+        loc = location_integers[-1] + 1
         # insert placeholder at loc in parent_part
         parent_part.insert(loc,newplaceholder)
+        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
 
     utils.save(call_data, page=page)
     call_data['status'] = "Section placeholder inserted"
