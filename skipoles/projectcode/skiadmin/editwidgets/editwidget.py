@@ -636,6 +636,9 @@ def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data
                 ["Insert an html element", "part_insert", ""],
                 ["Insert a Widget", "list_widget_modules", ""]
                 ]
+        if section is None:
+            # going into a page, so a sectionplaceholder can be added
+            page_data[("insertlist","links")].append(["Insert a Section", "placeholder_insert", ""])
         # set location, where item is to be inserted
         call_data['location'] = (widget.name, container, (0,))
         return

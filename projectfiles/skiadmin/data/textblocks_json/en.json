@@ -325,7 +325,7 @@
   "widgets.checkbox.CheckInputs.checkbox": "The name of the checkbox, with the value returned. The value is normally left empty, as the checkbox purpose is to enable the contained fields, however if a value is given, it is returned if checked when the containing form is submitted.",
   "widgets.checkbox.CheckInputs.checkbox_class": "The CSS class of the checkbox element.",
   "widgets.checkbox.CheckInputs.checked": "True if checkbox ticked, False otherwise, JSON settable. Contained input fields must initially be set appropriately.",
-  "widgets.checkbox.CheckInputs.container0": "Further html and widgets can be placed here, however sections cannot be inserted within a widget.",
+  "widgets.checkbox.CheckInputs.container0": "Further html and widgets can be placed here.",
   "widgets.checkbox.CheckInputs.div_class": "The CSS class attribute of the inner div holding input fields.",
   "widgets.checkbox.CheckInputs.error_class": "The CSS class applied to the normally hidden error paragraph.",
   "widgets.checkbox.CheckInputs.label_class": "The CSS class applied to the label to the left of the checkbox element.",
