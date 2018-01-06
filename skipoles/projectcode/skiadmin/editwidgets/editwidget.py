@@ -926,7 +926,6 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
         call_data['extend_nav_buttons'] = boxes
 
     # Fill in menu of items, Part items have insert, others have append
-    # as this is to be input into a section, a further section is not present in this list
 
 
     if (part_tuple.part_type == "Part") or (part_tuple.part_type == "Section"):
@@ -940,6 +939,9 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
                                                 ["Insert an html element", "part_insert", ""],
                                                 ["Insert a Widget", "list_widget_modules", ""]
                                             ]
+        if not section_name:
+            # going into a page, so a sectionplaceholder can be added
+            page_data[("insertlist","links")].append(["Insert a Section", "placeholder_insert", ""])
         raise GoTo(target = '23609', clear_submitted=True)
     else:
         # append
@@ -952,6 +954,9 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
                                                 ["Append an html element", "part_insert", ""],
                                                 ["Append a Widget", "list_widget_modules", ""]
                                             ]
+        if not section_name:
+            # going into a page, so a sectionplaceholder can be added
+            page_data[("appendlist","links")].append(["Append a Section", "placeholder_insert", ""])
         raise GoTo(target = '23509', clear_submitted=True)
 
 
@@ -1022,7 +1027,6 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
             raise FailPage(message = e.message)
         # page has changed, hopefully, in due course, this line will not be needed
         call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
-
 
     call_data['status'] = 'Item deleted'
 

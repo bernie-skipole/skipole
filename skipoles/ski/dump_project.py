@@ -62,6 +62,8 @@ def container_to_OD(proj_ident, container, widget):
             item_list.append( _create_closedpart(item, proj_ident) )
         elif isinstance(item, tag.TextBlock):
             item_list.append( _create_textblock(item, proj_ident) )
+        elif isinstance(item, tag.SectionPlaceHolder):
+            item_list.append(_create_sectionplaceholder(item, proj_ident) )
         elif isinstance(item, tag.HTMLSymbol):
             item_list.append( _create_htmlsymbol(item, proj_ident) )
         elif isinstance(item, tag.Comment):
@@ -602,6 +604,8 @@ def _create_widget(widg, proj_ident):
                     item_list.append( _create_closedpart(item, proj_ident) )
                 elif isinstance(item, tag.TextBlock):
                     item_list.append( _create_textblock(item, proj_ident) )
+                elif isinstance(item, tag.SectionPlaceHolder):
+                    item_list.append(_create_sectionplaceholder(item, proj_ident))
                 elif isinstance(item, tag.HTMLSymbol):
                     item_list.append( _create_htmlsymbol(item, proj_ident) )
                 elif isinstance(item, tag.Comment):

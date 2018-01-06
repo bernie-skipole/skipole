@@ -83,8 +83,7 @@ def _remove_sectionplaceholders(part):
 
 
 def create_part_in_widget(proj_ident, ident, section_name, widget_name, container_number, json_data):
-    """Builds the part from the given json string, or ordered dictionary and sets it to container
-       Note: containers cannot contain sections so section place holders are removed"""
+    """Builds the part from the given json string, or ordered dictionary and sets it to container"""
     if isinstance(json_data, str):
         part_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
     else:
@@ -114,7 +113,7 @@ def create_part_in_widget(proj_ident, ident, section_name, widget_name, containe
             # ensure widgets and placeholders in newpart have unique names
             name_list = list(section.widgets.keys()) + list(section.section_places.keys())
             newpart.set_unique_names(name_list)
-            # as this is going into a container, remove any placeholders
+            # as this is going into a section, remove any placeholders
             _remove_sectionplaceholders(newpart)
             widget = section.widgets.get(widget_name)
             if widget is None:
@@ -835,14 +834,10 @@ def _create_widget(part_dict, proj_ident):
                 if isinstance(item_list[0], list):
                     for itempart in item_list:
                         part = _create_item(itempart, proj_ident)
-                        # as this is going into a container, remove any placeholders
-                        _remove_sectionplaceholders(part)
                         widg.append_to_container(cont, part)
                 else:
                     # can be removed once projects converted
                     part = _create_item(item_list, proj_ident)
-                    # as this is going into a container, remove any placeholders
-                    _remove_sectionplaceholders(part)
                     widg.append_to_container(cont, part)
     if "set_names" in part_dict:
         fields_names = part_dict["set_names"]
