@@ -1035,4 +1035,280 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
 
 
+def _item_to_move(call_data):
+    "Gets the item to be moved"
+    editedprojname = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to move missing")
+
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is widget_name, container with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item to move has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_integers = [ int(i) for i in location_list[2:]]
+    except:
+        raise FailPage("Item to move has not been recognised")
+
+    # location is a tuple of widget_name, container, tuple of location integers
+    location = (widget_name, container, location_integers)
+
+    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, location)
+    if part_tuple is None:
+        raise FailPage("Item to move has not been recognised")
+    return part_tuple
+
+
+def move_up_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a container up"
+
+    part_tuple = _item_to_move(call_data)
+
+    location = part_tuple.location
+
+    location_integers = location[2]
+
+    if (len(location_integers) == 1) and (location_integers[0] == 0):
+        # at top, cannot be moved
+        raise FailPage("Cannot be moved up")
+
+    if location_integers[-1] == 0:
+        # move up to next level
+        new_location_integers = location_integers[:-1]
+    else:
+        # swap parts on same level
+        new_location_integers = list(location_integers[:-1])
+        new_location_integers.append(location_integers[-1] - 1)
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        if part_tuple.section_name:
+            # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
+            editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
+        else:
+            # move the part in a page
+            pass
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+def move_up_right_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a container up and to the right"
+
+    part_tuple = _item_to_move(call_data)
+
+    if location_integers[-1] == 0:
+        # at top of a part, cannot be moved
+        raise FailPage("Cannot be moved up")
+    new_parent_integers = list(location_integers[:-1])
+    new_parent_integers.append(location_integers[-1] - 1)
+    new_parent_location = (section_name, None, new_parent_integers)
+
+    new_parent_tuple = part_info(editedprojname, None, section_name, new_parent_location)
+
+    if new_parent_tuple is None:
+        raise FailPage("Cannot be moved up")
+    if new_parent_tuple.part_type != "Part":
+        raise FailPage("Cannot be moved up")
+
+    items_in_new_parent = len(part_contents(editedprojname, None, section_name, new_parent_location))
+
+    new_location_integers =  tuple(new_parent_integers + [items_in_new_parent])
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a container down"
+
+    part_tuple = _item_to_move(call_data)
+
+    if len(location_integers) == 1:
+        # Just at immediate level below top
+        parent_location = (section_name, None, ())
+        items_in_parent = len(part_contents(editedprojname, None, section_name, parent_location))
+        if location_integers[0] == (items_in_parent-1):
+            # At end, cannot be moved
+            raise FailPage("Cannot be moved down")
+        new_location_integers = (location_integers[0]+2,)
+    else:
+        parent_integers = tuple(location_integers[:-1])
+        parent_location = (section_name, None, parent_integers)
+        items_in_parent = len(part_contents(editedprojname, None, section_name, parent_location))
+        if location_integers[-1] == (items_in_parent-1):
+            # At end of a part, so move up a level
+            new_location_integers = list(parent_integers[:-1])
+            new_location_integers.append(parent_integers[-1] + 1)
+        else:
+            # just insert into current level
+            new_location_integers = list(parent_integers)
+            new_location_integers.append(location_integers[-1] + 2)
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a container down and to the right"
+
+    part_tuple = _item_to_move(call_data)
+
+    if len(location_integers) == 1:
+        parent_location = (section_name, None, ())
+    else:
+        parent_integers = list(location_integers[:-1])
+        parent_location = (section_name, None, parent_integers)
+    items_in_parent = len(part_contents(editedprojname, None, section_name, parent_location))
+    if location_integers[-1] == (items_in_parent-1):
+        # At end of a block, cannot be moved
+        raise FailPage("Cannot be moved down")
+    new_parent_integers = list(location_integers[:-1])
+    new_parent_integers.append(location_integers[-1] + 1)
+    new_parent_location = (section_name, None, new_parent_integers)
+    new_parent_tuple = part_info(editedprojname, None, section_name, new_parent_location)
+
+    if new_parent_tuple is None:
+        raise FailPage("Cannot be moved down")
+    if not (new_parent_tuple.part_type == 'Part' or new_parent_tuple.part_type == 'Section'):
+        raise FailPage("Cannot be moved down")
+
+    new_location_integers = tuple(new_parent_integers+[0])
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+
+
+def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Called by domtable to move an item in a container after a drag and drop"
+
+    part_tuple = _item_to_move(call_data)
+
+
+    # new location
+
+    target_part = call_data['editdom', 'domtable', 'droprows']
+
+    # so target_part is section name with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    target_location_list = target_part.split('-')
+    # first item should be a string, rest integers
+    if len(target_location_list) == 1:
+        # no location integers
+        target_location_integers = ()
+    else:
+        target_location_integers = tuple( int(i) for i in target_location_list[1:] )
+
+    if section_name != target_location_list[0]:
+        raise FailPage("Target location has not been recognised")
+
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    target_location = (section_name, None, target_location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    target_part_tuple = part_info(editedprojname, None, section_name, target_location)
+    if target_part_tuple is None:
+        raise FailPage("Target has not been recognised")
+
+    if (target_part_tuple.part_type == "Part") or (target_part_tuple.part_type == "Section"):
+        # insert
+        if target_location_integers:
+            new_location_integers = list(target_location_integers)
+            new_location_integers.append(0)
+        else:
+            new_location_integers = [0]
+    else:
+        # append
+        new_location_integers = list(target_location_integers)
+        new_location_integers[-1] = new_location_integers[-1] + 1
+
+    # after a move, location is wrong, so remove from call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_top' in call_data:
+        del call_data['part_top']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    # move the item
+    try:
+        editsection.move_item(editedprojname, section_name, location_to_move_integers, new_location_integers)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
 
