@@ -184,64 +184,99 @@ def del_location(project, pagenumber, location):
     proj.save_page(page)
 
 
-def move_item(project, pagenumber, location_string, from_location_integers, to_location_integers):
-    """Move an item in the given page from one spot to another, defined by it
-       location_string, being head, body or svg, and location integers"""
+
+def move_location(project, pagenumber, from_location, to_location):
+    """Move an item in the given page from one spot to another, defined by its location"""
     page, error_message = _get_page(project, pagenumber)
     if page is None:
         raise ServerError(message=error_message)
     editedproj = skiboot.getproject(project)
     if editedproj is None:
         raise ServerError(message="Project not loaded")
-    if to_location_integers == from_location_integers:
+    if to_location == from_location:
         # no movement
         return
-    up = False
-    i = 0
-    while True:
-        if to_location_integers[i] < from_location_integers[i]:
-            up = True
-            break
-        if to_location_integers[i] > from_location_integers[i]:
-            # up is False
-            break
-        # so this digit is the same
-        i += 1
-        if len(to_location_integers) == i:
-            up = True
-            break
-    if up:
-        # move in the upwards direction
-        #    delete it from original location
-        #    insert it into new location
-        try:
-            # get top part such as head, body, svg
-            top_part = page.get_part(location_string, ())
-            # get the part at from_location_integers
-            part = top_part.get_location_value(from_location_integers)
-            # delete part from top part location
-            top_part.del_location_value(from_location_integers)
-            # and insert it in the new location
-            top_part.insert_location_value(to_location_integers, part)
-        except:
+
+    from_location_string, from_container, from_location_integers = from_location
+    to_location_string, to_container, to_location_integers = to_location
+
+    if (from_location_string != to_location_string) or (from_container != to_container):
+        raise ServerError(message="Unable to move")
+
+    location_string = from_location_string
+
+    if from_container is None:
+        # item to move is not in a widget
+        if (location_string != 'head') and (location_string != 'body') and (location_string != 'svg'):
             raise ServerError(message="Unable to move item")
-    else:
-        # move in the downwards direction
-        #    insert it into new location
-        #    delete it from original location
-        try:
-            # get top part such as head, body, svg
-            top_part = page.get_part(location_string, ())
-            # get the part at from_location_integers
-            part = top_part.get_location_value(from_location_integers)
-            # and insert it in the new location
-            top_part.insert_location_value(to_location_integers, part)
-            # delete part from current location
-            top_part.del_location_value(from_location_integers)
-        except:
-            raise ServerError(message="Unable to move item")
-    # And save this page copy to the project
-    editedproj.save_page(page)
+        # location integers are integers within the page, move it 
+        up = False
+        i = 0
+        while True:
+            if to_location_integers[i] < from_location_integers[i]:
+                up = True
+                break
+            if to_location_integers[i] > from_location_integers[i]:
+                # up is False
+                break
+            # so this digit is the same
+            i += 1
+            if len(to_location_integers) == i:
+                up = True
+                break
+        if up:
+            # move in the upwards direction
+            #    delete it from original location
+            #    insert it into new location
+            try:
+                # get top part such as head, body, svg
+                top_part = page.get_part(location_string, ())
+                # get the part at from_location_integers
+                part = top_part.get_location_value(from_location_integers)
+                # delete part from top part location
+                top_part.del_location_value(from_location_integers)
+                # and insert it in the new location
+                top_part.insert_location_value(to_location_integers, part)
+            except:
+                raise ServerError(message="Unable to move item")
+        else:
+            # move in the downwards direction
+            #    insert it into new location
+            #    delete it from original location
+            try:
+                # get top part such as head, body, svg
+                top_part = page.get_part(location_string, ())
+                # get the part at from_location_integers
+                part = top_part.get_location_value(from_location_integers)
+                # and insert it in the new location
+                top_part.insert_location_value(to_location_integers, part)
+                # delete part from current location
+                top_part.del_location_value(from_location_integers)
+            except:
+                raise ServerError(message="Unable to move item")
+        # And save this page copy to the project
+        editedproj.save_page(page)
+        return
+
+    # so item is in a widget, location_string is the widget name
+    widget = page.widgets[location_string]
+    ident_string = widget.ident_string
+
+    # ident_string is of the form; project_pageidentnumber_body-x-y
+
+    splitstring = ident_string.split("_")
+    splitloc = splitstring[2].split("-")
+    loc_top = splitloc[0]
+    widg_ints = [ int(i) for i in splitloc[1:] ]
+
+    widg_container_ints = list(widget.get_container_loc(from_container))
+
+    from_location_ints = widg_ints + widg_container_ints + list(from_location_integers)
+    to_location_ints = widg_ints + widg_container_ints + list(to_location_integers)
+
+    # and move this item by calling this function again
+    move_location(project, pagenumber, (loc_top, None, from_location_ints), (loc_top, None, to_location_ints))
+
 
 
 

@@ -1247,7 +1247,7 @@ def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call
 
     # move the item
     try:
-        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1325,7 +1325,7 @@ def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict
 
     # move the item
     try:
-        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1406,7 +1406,7 @@ def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, ca
 
     # move the item
     try:
-        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1487,7 +1487,7 @@ def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_di
 
     # move the item
     try:
-        editpage.move_item(editedprojname, pagenumber, location_string, location_integers, new_location_integers)
+        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1616,7 +1616,7 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
 
     # move the item
     try:
-        editpage.move_item(editedprojname, pagenumber, location_string, location_to_move_integers, new_location_integers)
+        editpage.move_location(editedprojname, pagenumber, location_to_move, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
