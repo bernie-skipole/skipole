@@ -47,6 +47,8 @@ from ...ski import skiboot, widgets
 from ... import skilift
 from ...skilift import fromjson
 
+from ...skilift.editsection import sectionchange
+
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
@@ -451,6 +453,8 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     if page_type in ('FilePage', 'CSS'):
         return
 
+    editedprojname = call_data['editedprojname']
+
     projname, identnum = page_ident
 
     # do not include session data if target page is in another project
@@ -518,10 +522,10 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     # either a section is being edited, or a folder/page - not both
     section_name = call_data.get('section_name', '')
     if section_name:
-        section = call_data.get('section', None)
-        if section is not None:
+        schange = sectionchange(editedprojname, section_name)
+        if schange is not None:
             sent_session_data['section_name'] = section_name
-            sent_session_data['schange'] = section.change
+            sent_session_data['schange'] = schange
     else:
         # send page or folder as a tuple of its ident
         if 'page_number' in call_data:

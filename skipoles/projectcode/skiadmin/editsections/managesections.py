@@ -613,7 +613,7 @@ def move_up_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, c
 
     # move the item
     try:
-        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+        editsection.move_location(editedprojname, section_name, location, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -678,7 +678,7 @@ def move_up_right_in_section_dom(caller_ident, ident_list, submit_list, submit_d
 
     # move the item
     try:
-        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+        editsection.move_location(editedprojname, section_name, location, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -746,7 +746,7 @@ def move_down_in_section_dom(caller_ident, ident_list, submit_list, submit_dict,
 
     # move the item
     try:
-        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+        editsection.move_location(editedprojname, section_name, location, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -814,7 +814,7 @@ def move_down_right_in_section_dom(caller_ident, ident_list, submit_list, submit
 
     # move the item
     try:
-        editsection.move_item(editedprojname, section_name, location_integers, new_location_integers)
+        editsection.move_location(editedprojname, section_name, location, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -903,7 +903,7 @@ def move_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call
 
     # move the item
     try:
-        editsection.move_item(editedprojname, section_name, location_to_move_integers, new_location_integers)
+        editsection.move_location(editedprojname, section_name, location_to_move, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 

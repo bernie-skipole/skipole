@@ -248,6 +248,10 @@ def get_bits(call_data):
     field_arg = None        # Derived from form call_data['field_arg'], checked exists in widget, if not then None
     validator = None        # Derived from form call_data['validx'], field and widget, if not then None
 
+
+    editedprojname = call_data['editedprojname']
+    editedproj = skiboot.getproject(editedprojname)
+
     # get page or section - an error if both are present
     if 'page' in call_data:
         if 'section_name' in call_data:

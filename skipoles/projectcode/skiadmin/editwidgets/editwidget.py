@@ -33,7 +33,7 @@ from ....skilift import fromjson, editsection, editpage
 
 from ....ski import skiboot, tag, widgets
 from .. import utils
-from ....ski.excepts import FailPage, ValidateError, GoTo
+from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
@@ -1134,14 +1134,14 @@ def move_up_right_in_container_dom(caller_ident, ident_list, submit_list, submit
     new_parent_integers.append(location_integers[-1] - 1)
     new_parent_location = (location[0], location[1], new_parent_integers)
 
-    new_parent_tuple = part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
+    new_parent_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
 
     if new_parent_tuple is None:
         raise FailPage("Cannot be moved up")
     if new_parent_tuple.part_type != "Part":
         raise FailPage("Cannot be moved up")
 
-    items_in_new_parent = len(part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location))
+    items_in_new_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location))
 
     new_location_integers =  tuple(new_parent_integers + [items_in_new_parent])
 
@@ -1178,7 +1178,7 @@ def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dic
     if len(location_integers) == 1:
         # Just at immediate level below top
         parent_location = (location[0], location[1], ())
-        items_in_parent = len(part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
+        items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
         if location_integers[0] == (items_in_parent-1):
             # At end, cannot be moved
             raise FailPage("Cannot be moved down")
@@ -1186,7 +1186,7 @@ def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dic
     else:
         parent_integers = tuple(location_integers[:-1])
         parent_location = (location[0], location[1], parent_integers)
-        items_in_parent = len(part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
+        items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
         if location_integers[-1] == (items_in_parent-1):
             # At end of a part, so move up a level
             new_location_integers = list(parent_integers[:-1])
@@ -1231,14 +1231,14 @@ def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, subm
     else:
         parent_integers = list(location_integers[:-1])
         parent_location = (location[0], location[1], parent_integers)
-    items_in_parent = len(part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
+    items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
     if location_integers[-1] == (items_in_parent-1):
         # At end of a block, cannot be moved
         raise FailPage("Cannot be moved down")
     new_parent_integers = list(location_integers[:-1])
     new_parent_integers.append(location_integers[-1] + 1)
     new_parent_location = (location[0], location[1], new_parent_integers)
-    new_parent_tuple = part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
+    new_parent_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
 
     if new_parent_tuple is None:
         raise FailPage("Cannot be moved down")
@@ -1297,7 +1297,7 @@ def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, ca
     # location is a tuple of widget_name, container, tuple of location integers
     target_location = (location[0], location[1], target_location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    target_part_tuple = part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, target_location)
+    target_part_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, target_location)
     if target_part_tuple is None:
         raise FailPage("Target has not been recognised")
 
