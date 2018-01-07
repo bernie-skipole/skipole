@@ -109,6 +109,92 @@ def del_location(project, section_name, location):
     proj.add_section(section_name, section)
 
 
+def move_location(project, section_name, from_location, to_location):
+    """Move an item in the given section from one spot to another, defined by its location"""
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if not section_name:
+         raise ServerError(message="Given section_name is invalid")
+    section = proj.section(section_name, makecopy=True)
+    if section is None:
+        raise ServerError(message="Given Section not found")
+
+    if to_location == from_location:
+        # no movement
+        return
+
+    from_location_string, from_container, from_location_integers = from_location
+    to_location_string, to_container, to_location_integers = to_location
+
+    if (from_location_string != to_location_string) or (from_container != to_container):
+        raise ServerError(message="Unable to move")
+
+    if container is None:
+        if from_location_string != section_name:
+            raise ServerError(message="Unable to move item")
+        # location integers are integers within the section, move it 
+        up = False
+        i = 0
+        while True:
+            if to_location_integers[i] < from_location_integers[i]:
+                up = True
+                break
+            if to_location_integers[i] > from_location_integers[i]:
+                # up is False
+                break
+            # so this digit is the same
+            i += 1
+            if len(to_location_integers) == i:
+                up = True
+                break
+        if up:
+            # move in the upwards direction
+            #    delete it from original location
+            #    insert it into new location
+            try:
+                # get the part at from_location_integers
+                part = section.get_location_value(from_location_integers)
+                # delete part from current location
+                section.del_location_value(from_location_integers)
+                # and insert it in the new location
+                section.insert_location_value(to_location_integers, part)
+            except:
+                raise ServerError(message="Unable to move item")
+        else:
+            # move in the downwards direction
+            #    insert it into new location
+            #    delete it from original location
+            try:
+                # get the part at from_location_integers
+                part = section.get_location_value(from_location_integers)
+                # and insert it in the new location
+                section.insert_location_value(to_location_integers, part)
+                # delete part from current location
+                section.del_location_value(from_location_integers)
+            except:
+                raise ServerError(message="Unable to move item")
+        # And save this section copy to the project
+        proj.add_section(section_name, section)
+        return
+
+    # part is within a widget, so get its location relative to the section
+    widget = section.widgets[from_location_string]
+    ident_string = widget.ident_string
+
+    # ident_string is sectionname-x-y
+
+    splitstring = ident_string.split("-")
+    widg_ints = [ int(i) for i in splitstring[1:] ]
+
+    widg_container_ints = list(widget.get_container_loc(container))
+
+    from_location_ints = widg_ints + widg_container_ints + list(from_location_integers)
+    to_location_ints = widg_ints + widg_container_ints + list(to_location_integers)
+
+    # and move this item by calling this function again
+    move_location(project, section_name, (section_name, None, from_location_ints), (section_name, None, to_location_ints))
+
 
 
 def move_item(project, section_name, from_location_integers, to_location_integers):
