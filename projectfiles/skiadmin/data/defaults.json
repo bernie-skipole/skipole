@@ -260,10 +260,6 @@
 "error_class": "w3-panel w3-red",
 "widget_class": "w3-section"
 },
-"GeneralButtonTable": {
-"odd_class": "w3-theme-d2",
-"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered"
-},
 "GeneralButtonTable2": {
 "button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
 "odd_class": "w3-theme-d2",

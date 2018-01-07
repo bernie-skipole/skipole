@@ -549,78 +549,6 @@
 ]
 }
 ],
-"editparts": [
-"Section",
-{
-"tag_name": "div",
-"brief": "Creates table of parts and widgets",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "error_messages.ErrorDiv",
-"name": "parts_error",
-"brief": "Displays any errors for the table",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hide": true,
-"show": true,
-"show_error": "Invalid action",
-"widget_class": "",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-""
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "links.GeneralButtonTable1",
-"name": "parts",
-"brief": "Table of parts with movement and edit links",
-"fields": {
-"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
-"cols": "0",
-"contents": [
-[
-"",
-false,
-"",
-"",
-""
-]
-],
-"even_class": "",
-"force_ident": false,
-"hide": false,
-"new_window": false,
-"odd_class": "w3-theme-d2",
-"rows": "0",
-"show": true,
-"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
-"widget_style": ""
-},
-"validators": {
-"contents": [
-{
-"class": "basic.NotEmpty",
-"message": "contents field empty"
-}
-]
-}
-}
-]
-]
-}
-],
 "left_nav": [
 "Section",
 {
@@ -40494,6 +40422,16 @@ false
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": []
+}
+],
+[
 "Widget",
 {
 "class": "checkbox.CheckInputs",
@@ -40527,12 +40465,6 @@ false
 "Set text here"
 ],
 [
-"Comment",
-{
-"text": "comment here"
-}
-],
-[
 "Part",
 {
 "tag_name": "div",
@@ -40540,6 +40472,12 @@ false
 "show": true,
 "hide_if_empty": false,
 "parts": [
+[
+"Comment",
+{
+"text": "comment here"
+}
+],
 [
 "HTMLSymbol",
 {

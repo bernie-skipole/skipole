@@ -592,34 +592,6 @@ SKIPOLE.links.Table1_Buttons4.prototype = Object.create(SKIPOLE.BaseWidget.proto
 SKIPOLE.links.Table1_Buttons4.prototype.constructor = SKIPOLE.links.Table1_Buttons4;
 
 
-SKIPOLE.links.GeneralButtonTable1 = function (widg_id, error_message, fieldmap) {
-    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
-    this.display_errors = false;
-    };
-SKIPOLE.links.GeneralButtonTable1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.links.GeneralButtonTable1.prototype.constructor = SKIPOLE.links.GeneralButtonTable1;
-SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, result) {
-    /* This widget accepts fields - hide */
-   if (!this.widg_id) {
-        return;
-        }
-    var the_widg = this.widg;
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (set_hide != undefined) {
-        if (set_hide) {
-            if (the_widg.is(":visible")) {
-                the_widg.fadeOut('slow');
-                }
-            }
-        else {
-            if (!(the_widg.is(":visible"))) {
-                the_widg.fadeIn('slow');
-                 }
-            }
-        }
-    };
-
-
 SKIPOLE.links.GeneralButtonTable2 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;

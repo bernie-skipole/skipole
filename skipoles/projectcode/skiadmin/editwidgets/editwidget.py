@@ -1114,8 +1114,8 @@ def move_up_in_container_dom(caller_ident, ident_list, submit_list, submit_dict,
             # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
             editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
         else:
-            # move the part in a page
-            pass
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
+            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1161,8 +1161,8 @@ def move_up_right_in_container_dom(caller_ident, ident_list, submit_list, submit
             # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
             editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
         else:
-            # move the part in a page
-            pass
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
+            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1212,8 +1212,8 @@ def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dic
             # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
             editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
         else:
-            # move the part in a page
-            pass
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
+            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1263,8 +1263,8 @@ def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, subm
             # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
             editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
         else:
-            # move the part in a page
-            pass
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
+            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1329,8 +1329,8 @@ def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, ca
             # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
             editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
         else:
-            # move the part in a page
-            pass
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
+            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
