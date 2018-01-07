@@ -565,7 +565,7 @@ class Widget(tag.Part):
     def get_container_parts(self, index):
         """"index is the index in the self._container list
            If index out of range, return None"""
-        container_part = self._container_part(index)
+        container_part = self.container_part(index)
         if container_part is None:
             return
         return container_part.parts
@@ -574,7 +574,7 @@ class Widget(tag.Part):
     def append_to_container(self, index, value):
         """appends value into the container, in this case index is not the part location,
            it is the index in the self._container list"""
-        container_part = self._container_part(index)
+        container_part = self.container_part(index)
         if container_part is None:
             return
         if (len(container_part.parts) == 1) and (container_part.parts[0] == ''):
@@ -588,7 +588,7 @@ class Widget(tag.Part):
     def is_container_empty(self, index):
         """"index is the index in the self._container list
            If index out of range, return None, otherwise True if empty, False if not"""
-        container_part = self._container_part(index)
+        container_part = self.container_part(index)
         if container_part is None:
             return
         if container_part.parts:
@@ -607,7 +607,7 @@ class Widget(tag.Part):
         return True
 
     ####ok
-    def _container_part(self, index):
+    def container_part(self, index):
         "Returns element, genearlly a div which is the container holding element, used internally"
         if self._container is None:
             return
@@ -629,7 +629,7 @@ class Widget(tag.Part):
         """Sets a value within a container, index is the container index
            and location is an integer or tuple within the container.
            for example index=0, location=(0,1) referes to location (0,1) inside container 0"""
-        container_part = self._container_part(index)
+        container_part = self.container_part(index)
         if container_part is None:
             return
         container_part.set_location_value(location, value)
@@ -640,7 +640,7 @@ class Widget(tag.Part):
         """Inserts a value within a container at position, index is the container index
            and position is an integer within the container.
            for example index=0, position=0 referes to the first position inside container 0"""
-        container_part = self._container_part(index)
+        container_part = self.container_part(index)
         if container_part is None:
             return
         if not isinstance(position, int):
@@ -654,7 +654,7 @@ class Widget(tag.Part):
         """gets the value from within a container, index is the container index
            and location is an integer or tuple within the container.
            for example index=0, location=(0,1) referes to location (0,1) inside container 0"""
-        container_part = self._container_part(index)
+        container_part = self.container_part(index)
         if container_part is None:
             return
         # empty container contains an empty string
@@ -667,7 +667,7 @@ class Widget(tag.Part):
         """Deletes the value from within a container, index is the container index
            and location is an integer or tuple within the container.
            for example index=0, location=(0,1) referes to location (0,1) inside container 0"""
-        container_part = self._container_part(index)
+        container_part = self.container_part(index)
         if container_part is None:
             return
         container_part.del_location_value(location)

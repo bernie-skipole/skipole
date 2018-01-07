@@ -237,6 +237,7 @@ def part_contents(project, pagenumber, section_name, location):
     "If the given part is a Part or Section, returns a list of PartInfo tuples, one for each content"
     # raise error if invalid project
     project_loaded(project)
+    proj = skiboot.getproject(project)
 
     location_string, container_number, location_list = location
 
@@ -245,6 +246,7 @@ def part_contents(project, pagenumber, section_name, location):
     ident = None
     page_part = None
     widget_name = None
+    widget = None
     part_type = None
     insert = False
 
@@ -276,11 +278,17 @@ def part_contents(project, pagenumber, section_name, location):
         # location_string is either a section_name or a widget
         if location_string != section_name:
             widget_name = location_string
+            section = proj.section(section_name, makecopy=True)
+            widget = section.widgets[widget_name]
     else:
         # return None
         return
 
-    part = skiboot.get_part(project, ident, page_part, section_name, widget_name, container_number, location_list)
+    if (widget is not None) and (not location_list):
+        # The part is the widget container
+        part = widget.container_part(container_number)
+    else:
+        part = skiboot.get_part(project, ident, page_part, section_name, widget_name, container_number, location_list)
     if part is None:
         return
     if hasattr(part, '__class__'):
