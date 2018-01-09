@@ -746,11 +746,11 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
                                                       ['move_down_right_in_container_dom',44570],    # down right
                                                       ['edit_container_dom',''],                     # edit, html only
                                                       ['add_to_container_dom',''],                   # insert/append, html only
-                                                      ['remove_container_dom',44520]                 # remove
+                                                      ['remove_container_dom','']                    # remove, html only
                                                    ]
     # for every row in the table
     dragrows = [[ False, '']]
-    droprows = [[ False, '']]
+    droprows = [[ True, part_loc]]
 
     # for each row
     if rows>1:
@@ -1048,8 +1048,6 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
     call_data['container'] = container
     call_data['widget_name'] = widget_name
-    call_data['status'] = 'Item deleted'
-
 
 
 def _item_to_move(call_data):
@@ -1341,7 +1339,7 @@ def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, ca
 
     location_list = target_part.split('-')
     # first item should be a string, rest integers
-    if len(location_list) < 3:
+    if len(location_list) < 2:
         raise FailPage("target of move has not been recognised")
  
     if widget_name != location_list[0]:
@@ -1350,30 +1348,34 @@ def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, ca
     if container != int(location_list[1]):
         raise FailPage("Invalid move, container number differs")
 
-    try:
-        target_location_integers = [ int(i) for i in location_list[2:]]
-    except:
-        raise FailPage("Invalid move, location not accepted")
-
-    # location is a tuple of widget_name, container, tuple of location integers
-    target_location = (widget_name, container, target_location_integers)
-
-    # get target part_tuple from project, pagenumber, section_name, target_location
-    target_part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, target_location)
-    if target_part_tuple is None:
-        raise FailPage("Target has not been recognised")
-
-    if (target_part_tuple.part_type == "Part") or (target_part_tuple.part_type == "Section"):
-        # insert
-        if target_location_integers:
-            new_location_integers = list(target_location_integers)
-            new_location_integers.append(0)
-        else:
+    if len(location_list) == 2:
+            # At the container top row
             new_location_integers = [0]
     else:
-        # append
-        new_location_integers = list(target_location_integers)
-        new_location_integers[-1] = new_location_integers[-1] + 1
+        try:
+            target_location_integers = [ int(i) for i in location_list[2:]]
+        except:
+            raise FailPage("Invalid move, location not accepted")
+
+        # location is a tuple of widget_name, container, tuple of location integers
+        target_location = (widget_name, container, target_location_integers)
+
+        # get target part_tuple from project, pagenumber, section_name, target_location
+        target_part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, target_location)
+        if target_part_tuple is None:
+            raise FailPage("Target has not been recognised")
+
+        if (target_part_tuple.part_type == "Part") or (target_part_tuple.part_type == "Section"):
+            # insert
+            if target_location_integers:
+                new_location_integers = list(target_location_integers)
+                new_location_integers.append(0)
+            else:
+                new_location_integers = [0]
+        else:
+            # append
+            new_location_integers = list(target_location_integers)
+            new_location_integers[-1] = new_location_integers[-1] + 1
 
     # after a move, location is wrong, so remove from call_data
     if 'location' in call_data:
