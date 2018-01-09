@@ -167,8 +167,8 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
                    ['', '', False, '' ],                                             # no up_right arrow for top line
                    ['', '', False, '' ],                                             # no down arrow for top line
                    ['', '', False, '' ],                                             # no down_right arrow for top line
-                   ['Edit',  'width : 1%;', True, section_name],                     # edit - link to part_edit = 43101
-                   ['Insert','width : 1%;text-align: center;', True, section_name],  # insert - link to page 43102
+                   ['Edit',  'width : 1%;', True, section_name],                     # edit
+                   ['Insert','width : 1%;text-align: center;', True, section_name],  # insert
                    ['', '', False, '' ],                                             # no remove image for top line
                 ]
 

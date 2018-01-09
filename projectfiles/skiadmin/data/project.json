@@ -131,9 +131,7 @@
 "move_up_right_in_container_dom": 44450,
 "move_up_right_in_page_dom": 3550,
 "move_up_right_in_section_dom": 7450,
-"new_append": 43103,
 "new_copypage": 2460,
-"new_insert": 43102,
 "new_section": 7060,
 "new_textblock": 4002,
 "new_uploadpage": 2470,
@@ -12708,56 +12706,6 @@ false
 "validate_option": false
 },
 "original_fields": {}
-}
-},
-"new_append": {
-"ident": 43103,
-"brief": "Gets page to choose an item to append",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-23329,
-23349,
-23429,
-27049,
-54709
-],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_option": true,
-"target_ident": 23509,
-"validate_fail_ident": "admin_home",
-"validate_option": true
-},
-"original_fields": {
-"editparts-parts:contents": "part"
-}
-}
-},
-"new_insert": {
-"ident": 43102,
-"brief": "Gets page to choose an item to insert",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-23329,
-23349,
-23429,
-27049,
-54709
-],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_option": true,
-"target_ident": 23609,
-"validate_fail_ident": "admin_home",
-"validate_option": true
-},
-"original_fields": {
-"editparts-parts:contents": "part"
-}
 }
 },
 "part.json": {
