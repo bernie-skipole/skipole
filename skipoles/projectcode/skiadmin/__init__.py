@@ -140,7 +140,6 @@ _CALL_SUBMIT_DATA = {
                        43050: editpart.remove_tag_attribute,            # removes the part attribute
                        43102: insert.retrieve_insert,                   # sets data into insert a part page
                        43103: insert.retrieve_append,                   # sets data into append a part page
-                       43104: editpage.remove_part,                     # Removes an item from a page
                        51022: edittext.edit_text,                       # sets the new text
                        51017: edittext.retrieve_edittextpage,           # gets data for edit text page
                        51107: edittext.retrieve_edit_symbol,            # edits an html symbol
