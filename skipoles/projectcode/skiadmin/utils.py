@@ -456,7 +456,7 @@ def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
             if len(part_name)>40:
                 part_name = part_name[:35] + '...'
             contents.append([part_name, padding, False, ''])
-            part_brief = html.escape(part_dict['brief'])
+            part_brief = html.escape(part_dict.get('brief',''))
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
@@ -479,7 +479,7 @@ def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
             if len(section_name)>40:
                 section_name = section_name[:35] + '...'
             contents.append([section_name, padding, False, ''])
-            part_brief = html.escape(part_dict['brief'])
+            part_brief = html.escape(part_dict.get('brief',''))
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
@@ -521,7 +521,7 @@ def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
             else:
                 tag_name = "&lt;%s /&gt;" % part_dict['tag_name']
             contents.append([tag_name, padding, False, ''])
-            part_brief = html.escape(part_dict['brief'])
+            part_brief = html.escape(part_dict.get('brief',''))
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
@@ -533,7 +533,7 @@ def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
             else:
                 tag_name = "&lt;%s&gt;" % part_dict['tag_name']
             contents.append([tag_name, padding, False, ''])
-            part_brief = html.escape(part_dict['brief'])
+            part_brief = html.escape(part_dict.get('brief',''))
             if len(part_brief)>40:
                 part_brief = part_brief[:35] + '...'
             if not part_brief:
