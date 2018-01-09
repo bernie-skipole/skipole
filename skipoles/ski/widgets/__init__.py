@@ -559,9 +559,7 @@ class Widget(tag.Part):
         "Creates a dictionary of names against field arguments"
         self._names = { field.name:field_arg for field_arg, field in self.fields.items() }
 
-    # original container methods are depracated, new methods are given a ####ok flag until changeover done
 
-    ####ok
     def get_container_parts(self, index):
         """"index is the index in the self._container list
            If index out of range, return None"""
@@ -570,7 +568,7 @@ class Widget(tag.Part):
             return
         return container_part.parts
 
-    ####ok
+
     def append_to_container(self, index, value):
         """appends value into the container, in this case index is not the part location,
            it is the index in the self._container list"""
@@ -584,7 +582,7 @@ class Widget(tag.Part):
             # append the value to the container
             container_part.append(value)
 
-    ####ok
+
     def is_container_empty(self, index):
         """"index is the index in the self._container list
            If index out of range, return None, otherwise True if empty, False if not"""
@@ -599,14 +597,14 @@ class Widget(tag.Part):
             return True
         return False
 
-    ####ok
+
     @classmethod
     def can_contain(cls):
         if cls._container is None:
             return False
         return True
 
-    ####ok
+
     def container_part(self, index):
         "Returns element, genearlly a div which is the container holding element, used internally"
         if self._container is None:
@@ -619,7 +617,7 @@ class Widget(tag.Part):
             return self
         return self.get_location_value(location)
 
-    ####ok
+
     def set_in_container(self, index, location, value):
         """Sets a value within a container, index is the container index
            and location is an integer or tuple within the container.
@@ -630,7 +628,6 @@ class Widget(tag.Part):
         container_part.set_location_value(location, value)
 
 
-    ####ok
     def insert_into_container(self, index, position, value):
         """Inserts a value within a container at position, index is the container index
            and position is an integer within the container.
@@ -643,8 +640,6 @@ class Widget(tag.Part):
         container_part.insert(position, value)        
 
 
-
-    ####ok
     def get_from_container(self, index, location):
         """gets the value from within a container, index is the container index
            and location is an integer or tuple within the container.
@@ -657,7 +652,7 @@ class Widget(tag.Part):
             return ''
         return container_part.get_location_value(location)
 
-    ####ok
+
     def del_from_container(self, index, location):
         """Deletes the value from within a container, index is the container index
            and location is an integer or tuple within the container.
@@ -667,15 +662,7 @@ class Widget(tag.Part):
             return
         container_part.del_location_value(location)
 
-    def del_container_part(self, index):
-        """Depracated"""
-        return
 
-    def get_container_part(self, index):
-        """Depracated"""
-        return
-
-    ####ok
     @classmethod
     def get_container_ref(cls, index):
         """Returns the textblock reference of the container, in this case index is not
@@ -687,7 +674,7 @@ class Widget(tag.Part):
         module_name = cls.__module__.split('.')[-1]
         return "widgets." + module_name + "." + cls.__name__ + "." + "container" + str(index)
 
-    ####ok
+
     @classmethod
     def len_containers(cls):
         "Returns number of containers"
@@ -695,7 +682,7 @@ class Widget(tag.Part):
             return 0
         return len(cls._container)
 
-    ####ok
+
     @classmethod
     def get_container_loc(cls, index):
         """Returns the location tuple of the container, in this case index is not
@@ -706,7 +693,7 @@ class Widget(tag.Part):
             return
         return cls._container[index]
 
-    ####ok
+
     @classmethod
     def get_container_string_loc(cls, index):
         """Returns the string location of the container, in this case index is not
