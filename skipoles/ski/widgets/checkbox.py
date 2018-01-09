@@ -302,7 +302,8 @@ class CheckInputs(Widget):
                         'checkbox':FieldArg("text", '', valdt=True),
                         'checkbox_class':FieldArg("cssclass", ''),
                         'label_text':FieldArg("text", ''),
-                        'label_class':FieldArg("text", ''),
+                        'label_class':FieldArg("cssclass", ''),
+                        'container_class':FieldArg("cssclass", ''),
                         'error_class':FieldArg("cssclass", ""),
                         'checked':FieldArg("boolean", False, jsonset=True)
                        }
@@ -314,6 +315,7 @@ class CheckInputs(Widget):
         checkbox_class: The css class of the checkbox input field
         label_text: The text displayed to the left of the checkbox
         label_class: The css class of the label to the left of the checkbox
+        container_class: the class attribute of the div holding the container
         checked: True if checkbox ticked, False otherwise
         error_class: css class applied to the normally hidden error paragraph
         """
@@ -349,6 +351,9 @@ class CheckInputs(Widget):
             self[1][1].update_attribs({"value":self.get_field_value('checkbox')})
         if self.get_field_value('checkbox_class'):
             self[1][1].update_attribs({"class": self.get_field_value('checkbox_class')})
+        # the div holding the container
+        if self.get_field_value('container_class'):
+            self[1][2].attribs = {"class": self.get_field_value('container_class')}
         # set an id in the checkbox for the 'label for' tag
         self[1][1].insert_id()
         # set the label 'for' attribute
