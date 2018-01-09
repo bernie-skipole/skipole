@@ -198,9 +198,10 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     droprows = [ [ True, section_name ]]
 
     # for each row (minus 1 as the first row is done)
-    for row in range(0, rows-1):
-        dragrows.append( [ True, part_string_list[row]] )
-        droprows.append( [ True, part_string_list[row]] )
+    if rows > 1:
+        for row in range(0, rows-1):
+            dragrows.append( [ True, part_string_list[row]] )
+            droprows.append( [ True, part_string_list[row]] )
 
     page_data['editdom', 'domtable', 'dragrows']  = dragrows
     page_data['editdom', 'domtable', 'droprows']  = droprows

@@ -125,6 +125,7 @@
 "move_down_right_in_container_dom": 44470,
 "move_down_right_in_page_dom": 3570,
 "move_down_right_in_section_dom": 7470,
+"move_in_container_dom": 44510,
 "move_in_page_dom": 3610,
 "move_in_section_dom": 7510,
 "move_up_in_container_dom": 44440,
@@ -168,6 +169,7 @@
 "rename_folder": 2600,
 "rename_page": 3021,
 "responder_widgfield": 6030,
+"retrieve_container_dom": 54520,
 "retrieve_page_dom": 23020,
 "save_project": 40,
 "selector_down": 8340,
@@ -19543,6 +19545,160 @@ false
 }
 }
 },
+"dom_json": {
+"ident": 44500,
+"brief": "Edit container dom - json calls",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"move_down_in_container_dom": {
+"ident": 44560,
+"brief": "moves a dom item down in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_down_in_container_dom"
+],
+"submit_option": true,
+"target_ident": "retrieve_container_dom",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_down_right_in_container_dom": {
+"ident": 44570,
+"brief": "moves a dom item down and to the right in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_down_right_in_container_dom"
+],
+"submit_option": true,
+"target_ident": "retrieve_container_dom",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_in_container_dom": {
+"ident": 44510,
+"brief": "Called when a dom element is dropped",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_in_container_dom"
+],
+"submit_option": true,
+"target_ident": "retrieve_container_dom",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:dragrows": "",
+"editdom-domtable:droprows": ""
+}
+}
+},
+"move_up_in_container_dom": {
+"ident": 44540,
+"brief": "moves a dom item up in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_up_in_container_dom"
+],
+"submit_option": true,
+"target_ident": "retrieve_container_dom",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"move_up_right_in_container_dom": {
+"ident": 44550,
+"brief": "moves a dom item up and to the right in a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"move_up_right_in_container_dom"
+],
+"submit_option": true,
+"target_ident": "retrieve_container_dom",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"remove_container_dom": {
+"ident": 44520,
+"brief": "Remove an item from a container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"remove_container_dom"
+],
+"submit_option": true,
+"target_ident": "retrieve_container_dom",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+}
+}
+},
 "restricted": {
 "ident": 54000,
 "brief": "restricted pages for widgetedit",
@@ -22499,6 +22655,23 @@ false
 ]
 }
 ]
+},
+"retrieve_container_dom": {
+"ident": 54520,
+"brief": "Fills dom for a json call",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"retrieve_container_dom"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
 },
 "retrieve_editfield": {
 "ident": 54020,
@@ -40465,6 +40638,15 @@ false
 "Set text here"
 ],
 [
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+]
+]
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -40476,15 +40658,6 @@ false
 "Comment",
 {
 "text": "comment here"
-}
-],
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-]
-]
 }
 ]
 ]
