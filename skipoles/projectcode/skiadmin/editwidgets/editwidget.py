@@ -670,12 +670,24 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
         raise FailPage(message = "No page or section given")
 
     # location_string is the widget name
-    location_string = call_data['location_string']
+
+    if 'location_string' in call_data:
+        location_string = call_data['location_string']
+    elif 'widget_name' in call_data:
+        location_string = call_data['widget_name']
+    else:
+        raise FailPage(message = "widget_name not in call_data")
+
+
+    if 'container' not in call_data:
+        raise FailPage(message = "container not in call_data")
     container = call_data["container"]
 
-    contdict = fromjson.container_to_OD(editedprojname, pagenumber, section_name, location_string, container)
-
-    partdict = {'parts': contdict['container']}
+    try:
+        contdict = fromjson.container_to_OD(editedprojname, pagenumber, section_name, location_string, container)
+        partdict = {'parts': contdict['container']}
+    except:
+       raise FailPage(message = "call to fromjson.container_to_OD failed")
 
     # widget editdom,domtable is populated with fields
 
@@ -726,29 +738,29 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                    # tag name, no link
-                                                      ['',''],                                    # brief, no link
-                                                      ['move_up_in_container_dom',''],            # up arrow
-                                                      ['move_up_right_in_container_dom',''],      # up right
-                                                      ['move_down_in_container_dom',''],          # down
-                                                      ['move_down_right_in_container_dom',''],    # down right
-                                                      ['edit_container_dom',''],                  # edit, html only
-                                                      ['add_to_container_dom',''],                # insert/append, html only
-                                                      ['remove_container_dom','']                 # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                       # tag name, no link
+                                                      ['',''],                                       # brief, no link
+                                                      ['move_up_in_container_dom',44540],            # up arrow
+                                                      ['move_up_right_in_container_dom',44550],      # up right
+                                                      ['move_down_in_container_dom',44560],          # down
+                                                      ['move_down_right_in_container_dom',44570],    # down right
+                                                      ['edit_container_dom',''],                     # edit, html only
+                                                      ['add_to_container_dom',''],                   # insert/append, html only
+                                                      ['remove_container_dom',44520]                 # remove
                                                    ]
     # for every row in the table
-    dragrows = []
-    droprows = []
+    dragrows = [[ False, '']]
+    droprows = [[ False, '']]
 
     # for each row
-    for row in range(0, rows-1):
-        dragrows.append( [ False, ''] )
-        droprows.append( [ False, ''] )
+    if rows>1:
+        for row in range(0, rows-1):
+            dragrows.append( [ True, part_string_list[row]] )
+            droprows.append( [ True, part_string_list[row]] )
 
-    page_data['editdom', 'domtable', 'dragrows']  = []
-    page_data['editdom', 'domtable', 'droprows']  = []
-    page_data['editdom', 'domtable', 'dropident']  = ''
-
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'dropident'] = 'move_in_container_dom'
 
 
 
@@ -865,8 +877,11 @@ def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_
         # edit the Comment
         call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
         raise GoTo(target = 51207, clear_submitted=True)
+    if (not section_name) and (part_tuple.part_type == "SectionPlaceHolder"):
+        # edit the SectionPlaceHolder
+        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        raise GoTo(target = 55007, clear_submitted=True)
 
-    # note : a sectionplaceholder cannot appear in a container
     raise FailPage("Item to edit has not been recognised")
 
 
@@ -1031,6 +1046,8 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
         # page has changed, hopefully, in due course, this line will not be needed
         call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
 
+    call_data['container'] = container
+    call_data['widget_name'] = widget_name
     call_data['status'] = 'Item deleted'
 
 
@@ -1072,6 +1089,8 @@ def _item_to_move(call_data):
 
     # location is a tuple of widget_name, container, tuple of location integers
     location = (widget_name, container, location_integers)
+    call_data['container'] = container
+    call_data['widget_name'] = widget_name
 
     part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, location)
     if part_tuple is None:
@@ -1225,7 +1244,6 @@ def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, subm
     location = part_tuple.location
     location_integers = location[2]
 
-
     if len(location_integers) == 1:
         parent_location = (location[0], location[1], ())
     else:
@@ -1272,32 +1290,76 @@ def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, subm
 def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to move an item in a container after a drag and drop"
 
-    part_tuple = _item_to_move(call_data)
-    location = part_tuple.location
-    location_integers = location[2]
+    if ('editdom', 'domtable', 'dragrows') not in call_data:
+        raise FailPage(message = "item to drop missing")
+    editedprojname = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
 
-    # new location
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+
+    part_to_move = call_data['editdom', 'domtable', 'dragrows']
+
+    # so part_to_move is widget name with container and location string of integers
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part_to_move.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item to move has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_to_move_integers = [ int(i) for i in location_list[2:]]
+    except:
+        raise FailPage("Item to move has not been recognised")
+
+    # location is a tuple of widget_name, container, tuple of location integers
+    location_to_move = (widget_name, container, location_to_move_integers)
+    call_data['container'] = container
+    call_data['widget_name'] = widget_name
+
+
+    # new target location
 
     target_part = call_data['editdom', 'domtable', 'droprows']
 
-    # so target_part is section name with location string of integers
+    # so target_part is widget name with location string of integers
 
     # create location which is a tuple or list consisting of three items:
-    # a string of section name
-    # a container integer, in this case always None
+    # a string of widget name
+    # a container integer
     # a tuple or list of location integers
-    target_location_list = target_part.split('-')
+
+    location_list = target_part.split('-')
     # first item should be a string, rest integers
-    if len(target_location_list) == 1:
-        # no location integers
-        target_location_integers = ()
-    else:
-        target_location_integers = tuple( int(i) for i in target_location_list[1:] )
+    if len(location_list) < 3:
+        raise FailPage("target of move has not been recognised")
+ 
+    if widget_name != location_list[0]:
+        raise FailPage("Invalid move, widget name differs")
+
+    if container != int(location_list[1]):
+        raise FailPage("Invalid move, container number differs")
+
+    try:
+        target_location_integers = [ int(i) for i in location_list[2:]]
+    except:
+        raise FailPage("Invalid move, location not accepted")
 
     # location is a tuple of widget_name, container, tuple of location integers
-    target_location = (location[0], location[1], target_location_integers)
-    # get part_tuple from project, pagenumber, section_name, location
-    target_part_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, target_location)
+    target_location = (widget_name, container, target_location_integers)
+
+    # get target part_tuple from project, pagenumber, section_name, target_location
+    target_part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, target_location)
     if target_part_tuple is None:
         raise FailPage("Target has not been recognised")
 
@@ -1325,12 +1387,12 @@ def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, ca
 
     # move the item
     try:
-        if part_tuple.section_name:
+        if section_name:
             # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
-            editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
+            editsection.move_location(editedprojname, section_name, location_to_move, (widget_name, container, new_location_integers))
         else:
             # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
-            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
+            editpage.move_location(editedprojname, pagenumber, location_to_move, (widget_name, container, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
