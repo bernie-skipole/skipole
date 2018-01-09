@@ -130,6 +130,7 @@ class Form1(Widget):
                         'hidden_field2':FieldArg("text", '', valdt=True),
                         'hidden_field3':FieldArg("text", '', valdt=True),
                         'hidden_field4':FieldArg("text", '', valdt=True),
+                        'container_class':FieldArg("cssclass", ''),
                         'error_class':FieldArg("cssclass", '')
                        }
 
@@ -141,6 +142,7 @@ class Form1(Widget):
         hidden_field2: A second hidden field value, leave blank if unused
         hidden_field3: A third hidden field value, leave blank if unused
         hidden_field4: A fourth hidden field value, leave blank if unused
+        container_class: the class attribute of the div holding the container
         error_class: The class applied to the paragraph containing the error message on error."""
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self.update_attribs({"role":"form", "method":"post"})
@@ -174,6 +176,10 @@ class Form1(Widget):
         if self.get_field_value('enctype'):
             self[1].update_attribs({"enctype": self.get_field_value('enctype')})
 
+        # the div holding the container
+        if self.get_field_value('container_class'):
+            self[1][0].attribs = {"class": self.get_field_value('container_class')}
+
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
 
@@ -194,7 +200,7 @@ class Form1(Widget):
     <p> <!-- Any error text appears here --> </p>
   </div>
   <form method=\"post\"> <!-- action attribute set to action field -->
-    <div>
+    <div> <!-- this div has the class attribute set to container_class -->
       <!-- container 0 for further html -->
     </div>
     <!-- hidden input fields -->                              
@@ -225,6 +231,7 @@ class SubmitForm1(Widget):
                         'button_text':FieldArg("text",'Submit'),
                         'button_class':FieldArg("cssclass", ''),
                         'div_class':FieldArg("cssclass", ''),
+                        'container_class':FieldArg("cssclass", ''),
                         'error_class':FieldArg("cssclass", ''),
                        }
 
@@ -244,6 +251,7 @@ class SubmitForm1(Widget):
         button_text: The text on the button
         button_class: The css class of the button
         div_class: the class attribute of the div tag which contains the label and button
+        container_class: the class attribute of the div holding the container
         error_class: The class applied to the paragraph containing the error message on error.
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
@@ -286,6 +294,10 @@ class SubmitForm1(Widget):
         self[1].update_attribs({"action": actionurl})
         if self.get_field_value('enctype'):
             self[1].update_attribs({"enctype": self.get_field_value('enctype')})
+
+        # the div holding the container
+        if self.get_field_value('container_class'):
+            self[1][0].attribs = {"class": self.get_field_value('container_class')}
 
         # the div holding label and button
         if self.get_field_value('div_class'):
@@ -337,7 +349,7 @@ class SubmitForm1(Widget):
     <p> <!-- Any error text appears here --> </p>
   </div>
   <form method="post"> <!-- action attribute set to action field -->
-    <div>
+    <div>  <!-- this div has the class attribute set to container_class -->
       <!-- container 0 for further html -->
     </div>
     <div>  <!-- this div has the class attribute set to div_class -->
