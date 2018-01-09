@@ -764,30 +764,6 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
 
 
 
-def empty_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Sets call_data['part'] to container"
-
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    widget = bits.widget
-    container = bits.container
-
-    if (widget is None) or (container is None):
-        raise FailPage(message="Invalid container")
-
-    if 'location' in call_data:
-        del call_data['location']
-
-    widget.set_container_part(container, '')
-
-    utils.save(call_data, page=bits.page, section_name=bits.section_name, section=bits.section)
-
-    call_data['status'] = "Item deleted"
-
-
 def back_to_parent_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets call_data['widget_name'] to parent_widget and call_data['container'] to parent_container"
 

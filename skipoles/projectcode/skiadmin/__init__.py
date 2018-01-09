@@ -71,10 +71,6 @@ _CALL_SUBMIT_DATA = {
                         2470: addpage.submit_upload_page,           # copies an uploaded page definition file to create a new one
                         3230: editpage.set_html_lang,                   # sets page html lang tag
                         3260: editpage.downloadpage,                      # downloads json file of given page ident
-                        3110: editpage.move_up,                         # moves part upwards
-                        3120: editpage.move_up_right,                   # moves part upwards and rightwards
-                        3130: editpage.move_down,                       # moves part downwards
-                        3140: editpage.move_down_right,                 # moves part downwards and rightwards
                         3710: editpage.set_json_cache,                  # sets json page cache setting
                         3720: editpage.remove_json_widgfield,                # remove widgfield and value from a json page
                         3730: editpage.add_json_widgfield,                # add widgfield and value to a json page
@@ -145,7 +141,6 @@ _CALL_SUBMIT_DATA = {
                        43102: insert.retrieve_insert,                   # sets data into insert a part page
                        43103: insert.retrieve_append,                   # sets data into append a part page
                        43104: editpage.remove_part,                     # Removes an item from a page
-                       44701: editwidget.empty_container,               # empty the container
                        51022: edittext.edit_text,                       # sets the new text
                        51017: edittext.retrieve_edittextpage,           # gets data for edit text page
                        51107: edittext.retrieve_edit_symbol,            # edits an html symbol
