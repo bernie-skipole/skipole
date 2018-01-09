@@ -619,11 +619,6 @@ class Widget(tag.Part):
             return self
         return self.get_location_value(location)
 
-
-    def set_container_part(self, index, value):
-        """Depracated"""
-        return
-
     ####ok
     def set_in_container(self, index, location, value):
         """Sets a value within a container, index is the container index
