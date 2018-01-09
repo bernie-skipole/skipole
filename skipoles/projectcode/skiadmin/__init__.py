@@ -29,7 +29,7 @@ import pkgutil, re, collections, uuid, os, random
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections
 
 from .editfolders import editproject, addpage
-from .editpages import common, editpage, insert
+from .editpages import common, editpage
 from .editresponders import editrespondpage
 from .editfiles import editfile
 from .edittextblocks import managetextblocks, edittextblockrefs
@@ -138,8 +138,6 @@ _CALL_SUBMIT_DATA = {
                        41200: edittext.create_insert_comment,           # creates new html comment
                        41220: edittext.set_edit_comment,                # changes an html comment
                        43050: editpart.remove_tag_attribute,            # removes the part attribute
-                       43102: insert.retrieve_insert,                   # sets data into insert a part page
-                       43103: insert.retrieve_append,                   # sets data into append a part page
                        51022: edittext.edit_text,                       # sets the new text
                        51017: edittext.retrieve_edittextpage,           # gets data for edit text page
                        51107: edittext.retrieve_edit_symbol,            # edits an html symbol
