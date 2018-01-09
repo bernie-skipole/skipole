@@ -25,7 +25,7 @@
 #   limitations under the License.
 
 
-from . import common, editpage, insert
+from . import common, editpage
 from ....ski.excepts import FailPage
 
 
@@ -48,11 +48,8 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         except:
             raise FailPage("submit_list contains 'editpages', 'editpage', but the required function is not recognised")
         return submitfunc(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    elif submit_list[1] == 'insert':
-        try:
-            submitfunc = getattr(insert, submit_list[2])
-        except:
-            raise FailPage("submit_list contains 'editpages', 'insert', but the required function is not recognised")
-        return submitfunc(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
     raise FailPage("submit_list module string %s not recognised" % (submit_list[1],))
+
+
+
