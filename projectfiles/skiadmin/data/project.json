@@ -8768,6 +8768,7 @@ false
 "Part",
 {
 "tag_name": "p",
+"brief": "Default Error widget paragraph",
 "show": true,
 "hide_if_empty": false,
 "parts": [
@@ -8934,13 +8935,6 @@ false
 },
 "container_0": [
 [
-"Part",
-{
-"tag_name": "div",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
 "Widget",
 {
 "class": "checkbox.CheckInputs",
@@ -8951,6 +8945,7 @@ false
 "checkbox_class": "w3-check",
 "checked": false,
 "clear_error": false,
+"container_class": "ski_inline",
 "div_class": "",
 "error_class": "w3-panel w3-red",
 "label_class": "ski_left_label",
@@ -8961,6 +8956,18 @@ false
 "widget_style": ""
 },
 "container_0": [
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
 [
 "Part",
 {
@@ -9184,9 +9191,6 @@ false
 ]
 ]
 }
-]
-]
-}
 ],
 [
 "Part",
@@ -9258,6 +9262,7 @@ false
 "checkbox_class": "w3-check",
 "checked": false,
 "clear_error": false,
+"container_class": "",
 "div_class": "",
 "error_class": "w3-panel w3-red",
 "label_class": "ski_left_label",
@@ -9833,6 +9838,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"retrieve_page_body"
+],
 "target_ident": 23349
 },
 "original_fields": {}
@@ -10063,7 +10073,12 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": 1,
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"retrieve_page_head"
+],
 "target_ident": 23329
 },
 "original_fields": {}
@@ -22499,6 +22514,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"listwidgets",
+"retrieve_module_list"
+],
 "target_ident": 54509
 },
 "original_fields": {}
@@ -22523,6 +22543,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"listwidgets",
+"retrieve_widgets_list"
+],
 "target_ident": 54519
 },
 "original_fields": {}
@@ -40232,6 +40257,149 @@ false
 }
 },
 "pages": {
+"aatest": {
+"ident": 85002,
+"brief": "test page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#2f0e69",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Page 85002"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": []
+}
+]
+},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
@@ -40372,7 +40540,7 @@ false
 ],
 "submit_option": true,
 "target_ident": 1,
-"validate_fail_ident": 1,
+"validate_fail_ident": "admin_home",
 "validate_option": true
 },
 "original_fields": {

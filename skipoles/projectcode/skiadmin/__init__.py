@@ -104,8 +104,6 @@ _CALL_SUBMIT_DATA = {
                        23229: editpage.submit_last_scroll,              # sets last scroll flag
                        23259: editpage.submit_default_error_widget,     # sets default error widget
                        23309: editpage.submit_backcol,                  # sets page background colour
-                       23321: editpage.retrieve_page_head,              # gets data for page head
-                       23341: editpage.retrieve_page_body,              # gets data for page body
                        23419: editpage.submit_cache,                    # sets cache header
                        23421: editpage.retrieve_page_svg,               # gets data for page svg
                        24003: managetextblocks.submit_new_textblock,    # adds a textblock from manage textblock page
@@ -156,8 +154,6 @@ _CALL_SUBMIT_DATA = {
                        54027: editwidget.set_field_value,               # sets the widget field value
                        54032: editwidget.set_widget_params,             # sets the widget name
                        54042: editwidget.set_widget_params,             # sets the widget brief
-                       54507: listwidgets.retrieve_module_list,         # gets data for widget modules list page
-                       54517: listwidgets.retrieve_widgets_list,        # gets data for widgets list page
                        54527: listwidgets.retrieve_new_widget,          # gets data for new widget page
                        54537: listwidgets.create_new_widget,            # creates the new widget
                        54706: editwidget.edit_container,                # edit a container

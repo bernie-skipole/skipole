@@ -30,7 +30,7 @@ import html
 
 from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
-from ....skilift import fromjson, part_info, part_contents, editpage
+from ....skilift import fromjson, part_info, item_info, part_contents, editpage
 
 from .. import utils, css_styles
 
@@ -138,31 +138,31 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
 def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the page head"
 
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
     else:
-        raise FailPage(message = "page missing")
+        raise FailPage(message = "Page number missing")
 
-    page_ident = str(page.ident)
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
 
-    # fills in header
+    page_info = item_info(editedprojname, pagenumber)
+    if page_info is None:
+        raise FailPage("The page has not been recognised")
 
-    page_data[("adminhead","page_head","large_text")] = page.name + ' head'
+    if page_info.item_type != 'TemplatePage':
+        raise FailPage(message = "Invalid page")
+
+    page_data[("adminhead","page_head","large_text")] = page_info.name + ' head'
 
     if 'status' in call_data:
         page_data[("adminhead","page_head","small_text")] = call_data['status']
     else:
-        page_data[("adminhead","page_head","small_text")] = page.brief
+        page_data[("adminhead","page_head","small_text")] = page_info.brief
 
-    call_data['extend_nav_buttons'] = [['back_to_page', "Back to page", True, '']]
+    call_data['extend_nav_buttons'] = [['back_to_page', page_info.name, True, '']]
 
     # fill in the table
     call_data['location_string'] = 'head'
@@ -300,29 +300,31 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
 def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the page body"
 
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
     else:
-        raise FailPage(message = "page missing")
+        raise FailPage(message = "Page number missing")
 
-    page_ident = str(page.ident)
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
 
-    page_data[("adminhead","page_head","large_text")] = page.name + ' body'
+    page_info = item_info(editedprojname, pagenumber)
+    if page_info is None:
+        raise FailPage("The page has not been recognised")
+
+    if page_info.item_type != 'TemplatePage':
+        raise FailPage(message = "Invalid page")
+
+    page_data[("adminhead","page_head","large_text")] = page_info.name + ' body'
 
     if 'status' in call_data:
         page_data[("adminhead","page_head","small_text")] = call_data['status']
     else:
-        page_data[("adminhead","page_head","small_text")] = page.brief
+        page_data[("adminhead","page_head","small_text")] = page_info.brief
 
-    call_data['extend_nav_buttons'] = [['back_to_page', "Back to page", True, '']]
+    call_data['extend_nav_buttons'] = [['back_to_page', page_info.name, True, '']]
 
     # fill in the table
     call_data['location_string'] = 'body'
@@ -383,31 +385,31 @@ def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, ca
 def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the page svg part"
 
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'SVG':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
     else:
-        raise FailPage(message = "page missing")
+        raise FailPage(message = "Page number missing")
 
-    page_ident = str(page.ident)
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
 
-    # fills in header
+    page_info = item_info(editedprojname, pagenumber)
+    if page_info is None:
+        raise FailPage("The page has not been recognised")
 
-    page_data[("adminhead","page_head","large_text")] = "Edit: " + page.name
+    if page_info.item_type != 'SVG':
+        raise FailPage(message = "Invalid page")
+
+    page_data[("adminhead","page_head","large_text")] = page_info.name + ' svg'
 
     if 'status' in call_data:
         page_data[("adminhead","page_head","small_text")] = call_data['status']
     else:
-        page_data[("adminhead","page_head","small_text")] = page.brief
+        page_data[("adminhead","page_head","small_text")] = page_info.brief
 
-    call_data['extend_nav_buttons'] = [['back_to_svgpage', "Back to page", True, '']]
+    call_data['extend_nav_buttons'] = [['back_to_svgpage', page_info.name, True, '']]
 
     # fill in the table
     call_data['location_string'] = 'svg'
