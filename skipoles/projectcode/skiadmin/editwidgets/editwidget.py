@@ -77,10 +77,8 @@ def retrieve_editwidget(caller_ident, ident_list, submit_list, submit_dict, call
     else:
         parent_widget, parent_container = widget.get_parent_widget(section)
 
-    # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, parent_container)
+    if parent_container is not None:
+        call_data['extend_nav_buttons'].append(['back_to_parent_container', "Parent", True, ''])
 
     page_data[("adminhead","page_head","large_text")] = widget.name
 

@@ -378,6 +378,7 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
     utils.no_ident_data(call_data)
     if page is not None:
         call_data['page'] = page
+        call_data['page_number'] = page.ident.num
     if section is not None:
         call_data['section_name'] = bits.section_name
         call_data['section'] = section
