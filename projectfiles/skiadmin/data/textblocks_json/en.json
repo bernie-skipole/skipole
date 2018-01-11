@@ -326,6 +326,7 @@
   "widgets.checkbox.CheckInputs.checkbox_class": "The CSS class of the checkbox element.",
   "widgets.checkbox.CheckInputs.checked": "True if checkbox ticked, False otherwise, JSON settable. Contained input fields must initially be set appropriately.",
   "widgets.checkbox.CheckInputs.container0": "Further html and widgets can be placed here.",
+  "widgets.checkbox.CheckInputs.container_class": "The CSS class attribute of the div tag of the container holding further elements.",
   "widgets.checkbox.CheckInputs.div_class": "The CSS class attribute of the inner div holding input fields.",
   "widgets.checkbox.CheckInputs.error_class": "The CSS class applied to the normally hidden error paragraph.",
   "widgets.checkbox.CheckInputs.label_class": "The CSS class applied to the label to the left of the checkbox element.",
