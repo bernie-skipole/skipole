@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.0.49",
-"skipole": "0.0.50",
+"version": "0.0.6",
+"skipole": "0.0.6",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -10755,34 +10755,7 @@ false
 "RespondPage": {
 "class": "AllowedFields",
 "original_args": {
-"allowed_callers": [
-23329,
-23349,
-53009,
-23509,
-23609,
-53509,
-53607,
-51019,
-55009,
-55509,
-55607,
-52019,
-52509,
-52607,
-54009,
-54509,
-54021,
-54709,
-56009,
-56109,
-56309,
-56319,
-54519,
-54529,
-51109,
-51209
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,
@@ -10894,34 +10867,7 @@ false
 "RespondPage": {
 "class": "AllowedFields",
 "original_args": {
-"allowed_callers": [
-23209,
-53009,
-23609,
-53509,
-53607,
-51019,
-55009,
-55509,
-55607,
-52019,
-52509,
-52607,
-54009,
-54509,
-54021,
-54709,
-56009,
-56109,
-56309,
-56319,
-54519,
-54529,
-51209,
-51109,
-23509,
-43070
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,
@@ -10949,34 +10895,7 @@ false
 "RespondPage": {
 "class": "AllowedFields",
 "original_args": {
-"allowed_callers": [
-23209,
-53009,
-23609,
-53509,
-53607,
-51019,
-55009,
-55509,
-55607,
-52019,
-52509,
-52607,
-54009,
-54509,
-54021,
-54709,
-56009,
-56109,
-56309,
-56319,
-54519,
-54529,
-51109,
-51209,
-23509,
-43070
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,
@@ -10993,33 +10912,7 @@ false
 "RespondPage": {
 "class": "AllowedFields",
 "original_args": {
-"allowed_callers": [
-23409,
-53009,
-23509,
-23609,
-53509,
-53607,
-51019,
-55009,
-55509,
-55607,
-52019,
-52509,
-52607,
-54009,
-54509,
-54021,
-54709,
-56009,
-56109,
-56309,
-56319,
-54519,
-54529,
-51209,
-43070
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,
@@ -23231,28 +23124,7 @@ false
 "RespondPage": {
 "class": "AllowedFields",
 "original_args": {
-"allowed_callers": [
-54021,
-54709,
-56009,
-56109,
-56309,
-56319,
-51019,
-52509,
-52019,
-53509,
-53009,
-23509,
-23609,
-55009,
-55509,
-54509,
-54519,
-54529,
-51209,
-51109
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,
@@ -39719,30 +39591,7 @@ false
 "RespondPage": {
 "class": "AllowedFields",
 "original_args": {
-"allowed_callers": [
-53009,
-23509,
-23609,
-53509,
-53607,
-51019,
-52019,
-52509,
-52607,
-54009,
-54509,
-54021,
-54709,
-56009,
-56109,
-56309,
-56319,
-54519,
-54529,
-51109,
-51209,
-43070
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,
@@ -40396,7 +40245,45 @@ false
 "attribs": {
 "class": "w3-theme"
 },
-"parts": []
+"parts": [
+[
+"Widget",
+{
+"class": "checkbox.CheckInputs",
+"name": "zoom",
+"brief": "zoom2",
+"fields": {
+"checkbox": "",
+"checkbox_class": "w3-check",
+"checked": false,
+"clear_error": false,
+"container_class": "",
+"div_class": "",
+"error_class": "w3-panel w3-red",
+"label_class": "",
+"label_text": "",
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+[
+"Text",
+""
+]
+]
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "test",
+"section_name": "admin_footer",
+"placename": "footer"
+}
+]
+]
 }
 ]
 },

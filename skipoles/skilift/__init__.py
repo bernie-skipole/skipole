@@ -322,6 +322,46 @@ def part_contents(project, pagenumber, section_name, location):
 
 
 
+########################## still to finish this!!!!!
+
+def part_parents(project, pagenumber, section_name, location):
+    """If the given location is in a widget, or series of widgets, returns a list of two
+       element lists, each inner list being widget_name, container index
+       For example [[grandparent,0], [parent, 0]]
+       If not in a widget container, returns []"""
+
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+
+    if location[1] is None:
+        return []
+    
+    parent_widget = [location[0], location[1]]
+
+    if section_name:
+        section = proj.section(section_name, makecopy=False)
+        widget = section.widgets[location[0]]
+        parent,container = widget.get_parent_widget(section)
+
+    elif pagenumber:
+        ident = skiboot.Ident.to_ident((project, pagenumber))
+        if ident is None:
+            return []
+        page = skiboot.from_ident(ident, project, import_sections=False)
+        if page is None:
+            return []
+        if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
+            return []
+        widget = page.widgets[location[0]]
+        parent,container = widget.get_parent_widget(page)
+    else:
+        return []
+
+    # so we have the widget, and parent,container
+
+
+
 def ident_exists(project, itemnumber):
     "Return True if ident exists, False otherwise"
     return skiboot.ident_exists((project, itemnumber))

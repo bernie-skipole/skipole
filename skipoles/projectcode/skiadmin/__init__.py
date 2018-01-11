@@ -554,22 +554,22 @@ def set_navigation(identnum, call_data, page_data):
 
     page_data["adminhead","top_nav","nav_links"] = [ [3, "Root Folder", False, ''] ]
 
+    editedprojname = call_data['editedprojname']
+
     item_number = None
 
     if 'page_number' in call_data:
         item_number = call_data['page_number']
-    elif 'page' in call_data:
-        page_ident = skiboot.make_ident(call_data['page'])
-        item_number = page_ident.num
     elif 'folder_number' in call_data:
         item_number = call_data['folder_number']
 
     if item_number:
-        parents = skilift.parent_list(call_data['editedprojname'], item_number)
+        # get list of [(name,number),...] of parents
+        parents = skilift.parent_list(editedprojname, item_number)
         for item in parents:
             # for each item apart from root
             if item[1]:
-                edited_folder = call_data['editedprojname'] + '_' + str(item[1])
+                edited_folder = editedprojname + '_' + str(item[1])
                 page_data["adminhead","top_nav","nav_links"].append(['edit_from_top_nav', item[0], False, edited_folder])
     # Top navigation lists in reverse order as the float right keeps making the next link the rightmost
     page_data["adminhead","top_nav","nav_links"].reverse()
@@ -639,9 +639,27 @@ def set_navigation(identnum, call_data, page_data):
                                                             ["manage_sections", "Sections", False, '']
                                                            ]
 
+    if item_number:
+        item_info = skilift.item_info(editedprojname, item_number)
+        if item_info:
+            if item_info.item_type != 'Folder':
+                # add page name to navbuttons
+                page_data["left_nav","navbuttons","nav_links"].append(['back_to_page', item_info.name, True, ''])
+                if item_info.item_type == 'TemplatePage':
+                    page_data["left_nav","navbuttons","nav_links"].append(['page_head', 'Head', True, ''])
+                    page_data["left_nav","navbuttons","nav_links"].append(['page_body', 'Body', True, ''])
+                if item_info.item_type == 'SVG':
+                    page_data["left_nav","navbuttons","nav_links"].append(['page_svg', 'SVG', True, ''])
+    elif 'section_name' in call_data:
+        page_data["left_nav","navbuttons","nav_links"].append(['back_to_section', call_data['section_name'], True, ''])
+
+    if 'widget_name' in call_data:
+        page_data["left_nav","navbuttons","nav_links"].append(['back_to_widget_edit', call_data['widget_name'], True, ''])
+
     # add further buttons which may be set in call_data['extend_nav_buttons']
     if 'extend_nav_buttons' in call_data:
-        page_data["left_nav","navbuttons","nav_links"].extend(call_data['extend_nav_buttons'])
+        if call_data['extend_nav_buttons']:
+            page_data["left_nav","navbuttons","nav_links"].extend(call_data['extend_nav_buttons'])
 
 
 
