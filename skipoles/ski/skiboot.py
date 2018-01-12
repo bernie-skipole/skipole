@@ -354,62 +354,6 @@ def get_part(proj_ident, ident, page_part, section_name, widget_name, container_
     return
 
 
-def get_part_from_location(proj_ident, pagenumber, section_name, location):
-    """location is a tuple or list consisting of three items:
-       a string (such as head or section name or widget name)
-       a container integer, such as 0 for widget container 0, or None if not in container
-       a tuple or list of location integers
-       returns None if part not found, otherwise returns a namedtuple with items
-       project, pagenumber, page_part, section_name, name, location, part_type, brief
-    """
-    # return None if invalid project
-    proj = getproject(proj_ident)
-    if proj is None:
-        return
-
-    location_string, container_number, location_list = location
-
-    ident = None
-    page_part = None
-    widget_name = None
-    part_type = None
-    insert = False
-
-    # get page or section - an error if both are present
-    if pagenumber is not None:
-        if section_name:
-            # page and section should not both be given
-            return
-        ident = find_ident(pagenumber, proj_ident)
-        if not ident:
-            return
-        page = proj.get_item(ident)
-        if not page:
-            return
-        if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
-            return
-        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
-            # part not in a widget
-            page_part = location_string
-        else:
-            widget_name = location_string
-            # find page_part containing widget
-            widget = page.widgets[widget_name]
-            if widget is not None:
-               ident_top = widget.ident_string.split("-", 1)
-               # ident_top[0] will be of the form proj_pagenum_head
-               page_part = ident_top[0].split("_")[2]
-    elif section_name:
-        # location_string is either a section_name or a widget
-        if location_string != section_name:
-            widget_name = location_string
-    else:
-        # return None
-        return
-
-    return get_part(proj_ident, ident, page_part, section_name, widget_name, container_number, location_list)
-
-
 
 def widget_from_part(part, widget_name):
     """Given a part and widget name, searches down through part contents and returns a

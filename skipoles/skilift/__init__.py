@@ -321,44 +321,51 @@ def part_contents(project, pagenumber, section_name, location):
     return subpart_list
 
 
-
-########################## still to finish this!!!!!
-
-def part_parents(project, pagenumber, section_name, location):
-    """If the given location is in a widget, or series of widgets, returns a list of two
-       element lists, each inner list being widget_name, container index
-       For example [[grandparent,0], [parent, 0]]
-       If not in a widget container, returns []"""
-
+def widget_location(project, pagenumber, section_name, widget_name):
+    "Returns the location tuple of the widget given by widget name"
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
-
-    if location[1] is None:
-        return []
-    
-    parent_widget = [location[0], location[1]]
-
+    location = None
+    # get the widget
     if section_name:
         section = proj.section(section_name, makecopy=False)
-        widget = section.widgets[location[0]]
-        parent,container = widget.get_parent_widget(section)
-
+        if section is None:
+            return
+        if widget_name not in section.widgets:
+            return
+        widget = section.widgets[widget_name]
+        if widget is None:
+            return
+        parent, container = widget.get_parent_widget(section)
+        ident_items = widget.ident_string.split('-', 1)
+        ident_integers = ident_items[1].split('-')
+        if parent is None:
+            location = (section_name, None, tuple(int(i) for i in ident_integers))
     elif pagenumber:
-        ident = skiboot.Ident.to_ident((project, pagenumber))
-        if ident is None:
-            return []
-        page = skiboot.from_ident(ident, project, import_sections=False)
-        if page is None:
-            return []
-        if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
-            return []
-        widget = page.widgets[location[0]]
-        parent,container = widget.get_parent_widget(page)
+        page = proj.get_item(pagenumber)
+        if widget_name not in page.widgets:
+            return
+        widget = page.widgets[widget_name]
+        if widget is None:
+            return
+        parent, container = widget.get_parent_widget(page)
+        ident_items = widget.ident_string.split('-', 1)
+        ident_integers = ident_items[1].split('-')
+        ident_locs = ident_items[0].split('_')
+        # ident_locs are project, pagenumber, (head,body or svg)
+        if parent is None:
+            location = (ident_locs[2], None, tuple(int(i) for i in ident_integers))
     else:
-        return []
-
-    # so we have the widget, and parent,container
+        return
+    if location is None:
+        parent_ident_items = parent.ident_string.split('-', 1)
+        parent_ident_integers = parent_ident_items[1].split('-')
+        length_of_container_location = len(parent_ident_integers) + len(parent.get_container_loc(container))
+         # widget location integers, are the integers beyond the parent + container integers
+        location_integers = ident_integers[length_of_container_location:]
+        location = (parent.name, container, tuple(location_integers))
+    return location
 
 
 

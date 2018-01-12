@@ -51,6 +51,7 @@ def retrieve_editwidget(caller_ident, ident_list, submit_list, submit_dict, call
     section = bits.section
     widget = bits.widget
 
+
     if widget is None:
         # widget not derived from session data, must be from submitted data
         widget = bits.part
@@ -69,8 +70,11 @@ def retrieve_editwidget(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['widget_name'] = widget.name
     if section:
         call_data['section'] = section
+        print(skilift.widget_location(call_data['editedprojname'], None, call_data['section_name'], widget.name))
+
     if page:
         call_data['page'] = page
+        print(skilift.widget_location(call_data['editedprojname'], page.ident.num, None, widget.name))
 
     if page is not None:
         parent_widget, parent_container = widget.get_parent_widget(page)
