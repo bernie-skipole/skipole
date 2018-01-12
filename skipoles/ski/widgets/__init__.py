@@ -703,6 +703,8 @@ class Widget(tag.Part):
         if (index < 0) or (index >= len(cls._container)):
             return
         location = cls._container[index]
+        if not location:
+            return ''
         return '_'.join(str(i) for i in location)
 
 
@@ -868,7 +870,7 @@ class Widget(tag.Part):
         # update all parts, including those created by self._build
         try:
             for index, part in enumerate(self.parts):
-                part_ident_string = self.ident_string + "_" + str(index)
+                part_ident_string = self.ident_string + "-" + str(index)
                 if hasattr(part, "update"):
                     part.update(page, ident_list, environ, call_data, lang, part_ident_string, self.placename, embedded_parts)
         except ValidateError as e:

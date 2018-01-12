@@ -113,7 +113,11 @@ class ParentPart(object):
             parent_widget = widgets[embedded[1]]
             # check the parent_widget containers
             for cont in range(parent_widget.len_containers()):
-                container_ident_string = parent_widget.ident_string + '-' + parent_widget.get_container_string_loc(cont)
+                parent_container_string = parent_widget.get_container_string_loc(cont)
+                if parent_container_string:
+                    container_ident_string = parent_widget.ident_string + '-' + parent_container_string
+                else:
+                    container_ident_string = parent_widget.ident_string
                 if self.ident_string.startswith(container_ident_string):
                     parent_container = cont
                     break
