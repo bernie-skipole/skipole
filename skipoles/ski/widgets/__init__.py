@@ -705,7 +705,7 @@ class Widget(tag.Part):
         location = cls._container[index]
         if not location:
             return ''
-        return '_'.join(str(i) for i in location)
+        return '-'.join(str(i) for i in location)
 
 
     def get_parent_widget(self, page_or_section):
