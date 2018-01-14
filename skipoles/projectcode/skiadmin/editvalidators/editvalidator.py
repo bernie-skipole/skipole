@@ -69,8 +69,6 @@ def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, c
     if validator is None:
         raise FailPage("Validator not identified")
 
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget)
     call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
 
     page_data[("adminhead","page_head","large_text")] = "Edit : %s on field %s" % (validator, field.name)
@@ -318,8 +316,6 @@ def retrieve_arg(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     if validator is None:
         raise FailPage("Validator not identified")
 
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget)
     call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["back_to_validator", "Back to validator", True, '']])
 
     if 'arg_name' not in call_data:
@@ -510,8 +506,6 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
     if field_arg is None:
         raise FailPage("Field not identified")
 
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, bits.widget)
     call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
 
     page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget.name, field.name)
@@ -567,8 +561,6 @@ def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, 
     if field_arg is None:
         raise FailPage("Field not identified")
 
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, bits.widget)
     call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["validator_modules", "Modules", True, '']])
 
     page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget.name, field.name)

@@ -389,24 +389,6 @@ def get_bits(call_data):
                         part, container_part, part_top, page_top, part_string, field, field_arg, validator)
 
 
-def nav_boxes(call_data, page, section, pagetop=None, parent=None, widget=None, container=None):
-    """Extends list of navigation boxes in call_data['extend_nav_buttons']"""
-
-    boxes = []
-
-    if parent is not None:
-        boxes.append(['back_to_parent_container', "Parent", True, ''])    # label to 44720
-
-    if widget is not None:
-        boxes.append(['back_to_widget_edit', "Widget", True, ''])    # label to 44002
-
-    if boxes:
-        if 'extend_nav_buttons' in call_data:
-            call_data['extend_nav_buttons'].extend(boxes)
-        else:
-            call_data['extend_nav_buttons'] = boxes
-
-
 def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
     "Creates the contents of the domtable"
 

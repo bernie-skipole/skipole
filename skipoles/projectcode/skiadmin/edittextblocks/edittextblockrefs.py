@@ -52,10 +52,6 @@ def retrieve_textblockref(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage("Page/section not identified")
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
-
     page_data[("adminhead","page_head","large_text")] = "TextBlock"
 
     if 'status' in call_data:
@@ -183,10 +179,6 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage("Page/section not identified")
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
-
     page_data[("adminhead","page_head","large_text")] = "Insert TextBlock"
     if isinstance(part, str):
         page_data[("adminhead","page_head","small_text")] = "At location " + bits.part_string
