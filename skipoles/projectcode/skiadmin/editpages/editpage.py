@@ -74,9 +74,6 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
     # fills in the data for editing page name, brief, parent, etc., 
     utils.retrieve_edit_page(call_data, page_data)
 
-    # add links to head and body into left navigation
-    call_data['extend_nav_buttons'] = [['page_head', "Head", True, ''], ['page_body', "Body", True, '']]
-
     # page language
     page_data[("setlang","input_text")] = page.lang
 
@@ -161,8 +158,6 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[("adminhead","page_head","small_text")] = call_data['status']
     else:
         page_data[("adminhead","page_head","small_text")] = page_info.brief
-
-    call_data['extend_nav_buttons'] = [['back_to_page', page_info.name, True, '']]
 
     # fill in the table
     call_data['location_string'] = 'head'
@@ -324,8 +319,6 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
     else:
         page_data[("adminhead","page_head","small_text")] = page_info.brief
 
-    call_data['extend_nav_buttons'] = [['back_to_page', page_info.name, True, '']]
-
     # fill in the table
     call_data['location_string'] = 'body'
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -359,9 +352,6 @@ def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, ca
 
     # fills in the data for editing page name, brief, parent, etc., 
     utils.retrieve_edit_page(call_data, page_data)
-
-    # add link to svg into left navigation
-    call_data['extend_nav_buttons'] = [['page_svg', "SVG", True, '']]
 
     page_data['enable_cache:radio_checked'] = page.enable_cache
 
@@ -408,8 +398,6 @@ def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_d
         page_data[("adminhead","page_head","small_text")] = call_data['status']
     else:
         page_data[("adminhead","page_head","small_text")] = page_info.brief
-
-    call_data['extend_nav_buttons'] = [['back_to_svgpage', page_info.name, True, '']]
 
     # fill in the table
     call_data['location_string'] = 'svg'

@@ -33,7 +33,7 @@
 "alternate_ident": 6040,
 "alternate_ident_json": 6041,
 "arg_edit": 46101,
-"back_to_container": 44704,
+"back_to_container": 54710,
 "back_to_css_page": 8003,
 "back_to_field_edit": 44019,
 "back_to_page": 3201,
@@ -164,8 +164,10 @@
 "rename_folder": 2600,
 "rename_page": 3021,
 "responder_widgfield": 6030,
+"retrieve_container": 44710,
 "retrieve_container_dom": 54520,
 "retrieve_page_dom": 23020,
+"retrieve_widget": 44700,
 "save_project": 40,
 "selector_down": 8340,
 "selector_up": 8320,
@@ -19258,7 +19260,7 @@ false
 "remove_container_dom"
 ],
 "submit_option": true,
-"target_ident": 54706,
+"target_ident": "back_to_container",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -19406,6 +19408,23 @@ false
 "restricted": true,
 "folders": {},
 "pages": {
+"back_to_container": {
+"ident": 54710,
+"brief": "edit container, found from session data",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"retrieve_container"
+],
+"target_ident": 54709
+},
+"original_fields": {}
+}
+},
 "back_to_parent_container": {
 "ident": 54721,
 "brief": "Pick container from parent of widget",
@@ -19429,18 +19448,6 @@ false
 "original_fields": {
 "widget_name": ""
 }
-}
-},
-"container_edit": {
-"ident": 54706,
-"brief": "Populate container edit page",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 54007,
-"target_ident": 54709
-},
-"original_fields": {}
 }
 },
 "create_new_widget": {
@@ -22383,6 +22390,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"retrieve_editfield"
+],
 "target_ident": 54021
 },
 "original_fields": {}
@@ -22395,6 +22407,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"retrieve_editwidget"
+],
 "target_ident": 54009
 },
 "original_fields": {}
@@ -23020,42 +23037,6 @@ false
 }
 },
 "pages": {
-"back_to_container": {
-"ident": 44704,
-"brief": "Go back to the container",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-51019,
-52509,
-52019,
-52607,
-53509,
-53607,
-53009,
-23509,
-23609,
-55009,
-55509,
-55607,
-54509,
-54519,
-54529,
-51109,
-51209,
-43070
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 54706,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {}
-}
-},
 "back_to_field_edit": {
 "ident": 44019,
 "brief": "Routes back to edit field",
@@ -23197,40 +23178,13 @@ false
 }
 }
 },
-"edit_container": {
-"ident": 44700,
-"brief": "Checks container to edit",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-54009
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 54706,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"left_nav-navbuttons:nav_links": "container_part"
-}
-}
-},
 "edit_widget": {
 "ident": 44100,
 "brief": "Checks data for edit widget",
 "RespondPage": {
 "class": "AllowStoreKeyed",
 "original_args": {
-"allowed_callers": [
-23329,
-23349,
-23429,
-27049,
-54709
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,
@@ -23364,6 +23318,54 @@ false
 },
 "original_fields": {
 "widgets:widget": ""
+}
+}
+},
+"retrieve_container": {
+"ident": 44710,
+"brief": "retrieves container from nav link",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"retrieve_container"
+],
+"submit_option": true,
+"target_ident": 54709,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"left_nav-navbuttons:nav_links": ""
+}
+}
+},
+"retrieve_widget": {
+"ident": 44700,
+"brief": "Retrieves widget from nav link",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"retrieve_widget"
+],
+"submit_option": true,
+"target_ident": 54009,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"left_nav-navbuttons:nav_links": ""
 }
 }
 },

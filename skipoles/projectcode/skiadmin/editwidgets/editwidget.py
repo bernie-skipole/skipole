@@ -70,19 +70,9 @@ def retrieve_editwidget(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['widget_name'] = widget.name
     if section:
         call_data['section'] = section
-        print(skilift.widget_location(call_data['editedprojname'], None, call_data['section_name'], widget.name))
 
     if page:
         call_data['page'] = page
-        print(skilift.widget_location(call_data['editedprojname'], page.ident.num, None, widget.name))
-
-    if page is not None:
-        parent_widget, parent_container = widget.get_parent_widget(page)
-    else:
-        parent_widget, parent_container = widget.get_parent_widget(section)
-
-    if parent_container is not None:
-        call_data['extend_nav_buttons'].append(['back_to_parent_container', "Parent", True, ''])
 
     page_data[("adminhead","page_head","large_text")] = widget.name
 
@@ -212,14 +202,178 @@ def retrieve_editwidget(caller_ident, ident_list, submit_list, submit_dict, call
 
     if widget.can_contain():
         page_data[('containerdesc','show')] = True
-        if widget.len_containers() == 1:
-            call_data['extend_nav_buttons'].append(['edit_container', 'Container', True, '0'])
-        else:
-            # multiple containers
-            for n in range(widget.len_containers()):
-                # set up a link for each container
-                link_text = "Container %s" % n
-                call_data['extend_nav_buttons'].append(['edit_container', link_text, True, str(n)])
+
+    # remove any unwanted fields from session call_data
+    if 'container' in call_data:
+        del call_data['container']
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'field_arg' in call_data:
+        del call_data['field_arg']
+    if 'validx' in call_data:
+        del call_data['validx']
+
+
+def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fills in the edit a widget page"
+
+    # get data
+    if ("left_nav","navbuttons","nav_links") in call_data:
+        # should be submitted as widgetname
+        widget_name = call_data["left_nav","navbuttons","nav_links"]
+    elif 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Invalid widget")
+
+    # and this is the widget to be edited, it is now set into session data
+    call_data['widget_name'] = widget_name
+
+    # Fill in header
+    page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name
+
+
+    ## these bits may eventually be replaced by skilift api
+
+    editedprojname = call_data['editedprojname']
+    editedproj = skiboot.getproject(editedprojname)
+    section = None
+    page = None
+    if 'section_name' in call_data:
+        section = editedproj.section(call_data['section_name'])
+    elif 'page_number' in call_data:
+        page = editedproj.get_item(call_data['page_number'])  # actual page, not a copy
+    else:
+        raise FailPage(message="No section or page given")
+    if section:
+        widget = section.widgets.get(widget_name)
+    else:
+        widget = page.widgets.get(widget_name)
+    if widget is None:
+        raise FailPage(message="Widget not found")
+
+    if 'status' in call_data:
+        page_data[("adminhead","page_head","small_text")] = call_data['status']
+    else:
+        page_data[("adminhead","page_head","small_text")] = ""
+
+    page_data[('widget_type','para_text')] = "This widget is of type %s.%s." % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
+    page_data[('widget_textblock','textblock_ref')] = widget.description_ref()
+    page_data[('widget_name','input_text')] = widget.name
+    page_data[('widget_brief','input_text')] = widget.brief
+
+    args, arg_list, arg_table, arg_dict = widget.classargs()
+    # lists of [ field arg, field ref, field type]
+
+    if arg_list or arg_table or arg_dict:
+        page_data[('args_multi','show')] = True
+    else:
+        page_data[('args_multi','show')] = False
+
+
+    # args is shown on a LinkTextBlockTable2
+
+    # contents row is
+    # col 0 is the visible text to place in the link,
+    # col 1 is the get field of the link
+    # col 2 is the second get field of the link
+    # col 3 is text appearing in the second table column
+    # col 4 is the reference string of a textblock to appear the third table column
+    # col 5 is text to appear if the reference cannot be found in the database
+    # col 6 normally empty string, if set to text it will replace the textblock
+
+    args_valdt = False
+
+    args_content = []
+    if args:
+        for arg in args:
+            # get string value
+            field_info = widget.field_arg_info(arg[0])
+            # (field name, field description ref, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
+            if not field_info:
+                raise FailPage(message = "Error in widget")
+            name = field_info[0]
+            if field_info[6]:
+                name = "* " + name
+                args_valdt = True
+            # if value is an Ident of this project, just put ident number
+            if isinstance(field_info[2], skiboot.Ident) and (field_info[2].proj == editedproj.proj_ident):
+                field_value = str(field_info[2].num)
+            else:
+                field_value = field_info[3]
+            if len(field_value) > 20:
+                field_value = field_value[:18]
+                field_value += '...'
+            arg_row = [ name, arg[0], '',field_value, arg[1], 'No description for %s' % (arg[1],), '']
+            args_content.append(arg_row)
+        page_data[('args','link_table')] = args_content
+    else:
+        page_data[('args','show')] = False
+        page_data[('args_description','show')] = False
+
+
+    # arg_list, arg_table and arg_dict are shown on LinkTextBlockTable widgets
+
+    # contents row is
+    # col 0 is the visible text to place in the link,
+    # col 1 is the get field of the link
+    # col 2 is the second get field of the link
+    # col 3 is the reference string of a textblock to appear in the column adjacent to the link
+    # col 4 is text to appear if the reference cannot be found in the database
+    # col 5 normally empty string, if set to text it will replace the textblock
+
+
+    arg_list_content = []
+    if arg_list:
+        for arg in arg_list:
+            name = widget.get_name(arg[0])
+            if widget.get_field_valdt(name):
+                name = "* " + name
+                args_valdt = True
+            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
+            arg_list_content.append(arg_row)
+        page_data[('arg_list','link_table')] = arg_list_content
+    else:
+        page_data[('arg_list','show')] = False
+        page_data[('arg_list_description','show')] = False
+
+    arg_table_content = []
+    if arg_table:
+        for arg in arg_table:
+            name = widget.get_name(arg[0])
+            if widget.get_field_valdt(name):
+                name = "* " + name
+                args_valdt = True
+            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
+            arg_table_content.append(arg_row)
+        page_data[('arg_table','link_table')] = arg_table_content
+    else:
+        page_data[('arg_table','show')] = False
+        page_data[('arg_table_description','show')] = False
+
+    arg_dict_content = []
+    if arg_dict:
+        for arg in arg_dict:
+            name = widget.get_name(arg[0])
+            if widget.get_field_valdt(name):
+                name = "* " + name
+                args_valdt = True
+            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
+            arg_dict_content.append(arg_row)
+        page_data[('arg_dict','link_table')] = arg_dict_content
+    else:
+        page_data[('arg_dict','show')] = False
+        page_data[('arg_dict_description','show')] = False
+
+    page_data[('args_valdt','show')] = args_valdt
+
+    # display the widget html
+    page_data[('widget_code','pre_text')] = str(widget)
+
+    if widget.can_contain():
+        page_data[('containerdesc','show')] = True
 
     # remove any unwanted fields from session call_data
     if 'container' in call_data:
@@ -313,10 +467,6 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[("adminhead","page_head","small_text")] = "Edit the widget field"
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget)
-
 
     if 'field' in call_data:
         field_arg = call_data['field']
@@ -578,7 +728,7 @@ def set_field_default(caller_ident, ident_list, submit_list, submit_dict, call_d
 
 
 
-def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Edits a widget container"
 
     # remove any unwanted fields from session call_data
@@ -588,38 +738,52 @@ def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data
         del call_data['part']
 
     # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-
-    # container is either from submitted container_part, or from container
-
-    if bits.container_part is None:
-        # container_part not submitted, therefore must be derived from session data
-        container = bits.container
+    if ("left_nav","navbuttons","nav_links") in call_data:
+        # should be submitted as widgetname-containernumber
+        widget_container = call_data["left_nav","navbuttons","nav_links"].split("-")
+        if len(widget_container) != 2:
+            raise FailPage(message="Invalid container")
+        widget_name = widget_container[0]
+        try:
+            container = int(widget_container[1])
+        except:
+            raise FailPage(message="Invalid container")
+    elif ('widget_name' in call_data) and ('container' in call_data):
+        widget_name = call_data['widget_name']
+        container = call_data['container']
     else:
-        # container from submitted container_part
-        container = bits.container_part
-
-    if container is None:
         raise FailPage(message="Invalid container")
 
     # and this is the container to be edited, it is now set into session data
+    call_data['widget_name'] = widget_name
     call_data['container'] = container
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget)
-
-    page_data[("adminhead","page_head","large_text")] = "Edit Widget Container"
+    page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name + " container: " + str(container)
 
     if 'status' in call_data:
         page_data[("adminhead","page_head","small_text")] = call_data['status']
     else:
-        page_data[("adminhead","page_head","small_text")] = widget.name + " container: " + str(container)
+        page_data[("adminhead","page_head","small_text")] = ''
+
+    ## these bits may eventually be replaced by skilift api
+
+    editedprojname = call_data['editedprojname']
+    editedproj = skiboot.getproject(editedprojname)
+    section = None
+    page = None
+    if 'section_name' in call_data:
+        section = editedproj.section(call_data['section_name'])
+    elif 'page_number' in call_data:
+        page = editedproj.get_item(call_data['page_number'])  # actual page, not a copy
+    else:
+        raise FailPage(message="No section or page given")
+    if section:
+        widget = section.widgets.get(widget_name)
+    else:
+        widget = page.widgets.get(widget_name)
+    if widget is None:
+        raise FailPage(message="Widget not found")
 
     # so header text and navigation done, now continue with the page contents
     page_data[('container_description','textblock_ref')] = widget.get_container_ref(container)
@@ -654,6 +818,8 @@ def edit_container(caller_ident, ident_list, submit_list, submit_dict, call_data
     # fill in the table
     call_data['location_string'] = widget.name
     retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
+
 
 
 def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

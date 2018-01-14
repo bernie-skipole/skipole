@@ -43,6 +43,8 @@ PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'ite
 
 FolderInfo = namedtuple('FolderInfo', ['name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders'])
 
+WidgetInfo = namedtuple('WidgetInfo', ['project', 'pagenumber', 'section_name', 'name', 'location', 'containers', 'display_errors', 'brief'])
+
 
 def project_loaded(project, error_if_not=True):
     "Returns True if the project is loaded, False if not, or raise ServerError"
@@ -321,8 +323,11 @@ def part_contents(project, pagenumber, section_name, location):
     return subpart_list
 
 
-def widget_location(project, pagenumber, section_name, widget_name):
-    "Returns the location tuple of the widget given by widget name"
+def widget_info(project, pagenumber, section_name, widget_name):
+    """returns None if widget not found, otherwise returns a namedtuple with items
+       project, pagenumber, section_name, name, location, containers, display_errors, brief
+       where containers is the number of containers this widget has, zero if it has none,
+       and display_errors is True if this widget can display an error"""
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
@@ -365,7 +370,7 @@ def widget_location(project, pagenumber, section_name, widget_name):
          # widget location integers, are the integers beyond the parent + container integers
         location_integers = ident_integers[length_of_container_location:]
         location = (parent.name, container, tuple(location_integers))
-    return location
+    return WidgetInfo(project, pagenumber, section_name, widget_name, location, widget.len_containers(), widget.display_errors, widget.brief)
 
 
 

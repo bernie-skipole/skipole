@@ -115,7 +115,7 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     # could be a widget container
     if label is None:
         if (widget is not None) and bits.part_top == widget.name: 
-            label = "back_to_container"   # label to 44704
+            label = "back_to_container"  # label to 54709
         else:
             raise FailPage("Invalid location")
 
