@@ -392,31 +392,13 @@ def get_bits(call_data):
 def nav_boxes(call_data, page, section, pagetop=None, parent=None, widget=None, container=None):
     """Extends list of navigation boxes in call_data['extend_nav_buttons']"""
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
     boxes = []
-
-    if page is not None:
-        if page.page_type == 'TemplatePage':
-            if pagetop == 'head':
-                boxes.append(['page_head', "Head", True, ''])    # label to 3320
-            elif pagetop == 'body':
-                boxes.append(['page_body', "Body", True, ''])    # label to 3340
-        else:
-            if pagetop == 'svg':
-                boxes.append(['page_svg', "SVG", True, ''])    # label to 3420
-    else:
-        boxes.append(['back_to_section', "Section", True, ''])    # label to 7040
 
     if parent is not None:
         boxes.append(['back_to_parent_container', "Parent", True, ''])    # label to 44720
 
     if widget is not None:
         boxes.append(['back_to_widget_edit', "Widget", True, ''])    # label to 44002
-
-    if container is not None:
-        boxes.append(["back_to_container", "Container", True, ''])   # label to 44704
 
     if boxes:
         if 'extend_nav_buttons' in call_data:
