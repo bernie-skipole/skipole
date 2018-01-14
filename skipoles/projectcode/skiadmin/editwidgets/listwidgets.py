@@ -62,10 +62,6 @@ def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, cal
         raise FailPage("Part not identified")
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
-
     page_data[("adminhead","page_head","large_text")] = "Choose module"
     if isinstance(part, str):
         page_data[("adminhead","page_head","small_text")] = "For widget insert at location " + bits.part_string
@@ -118,8 +114,6 @@ def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage("Part not identified")
 
     # Fill in header
-
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
     call_data['extend_nav_buttons'].append(["list_widget_modules", "Modules", True, ''])
 
     if isinstance(part, str):
@@ -186,8 +180,6 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
         raise FailPage("Part not identified")
 
     # Fill in header
-
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
     call_data['extend_nav_buttons'].extend([["list_widget_modules", "Modules", True, ''], ["back_widget_list", "Widgets", True, '']])
 
     if isinstance(part, str):

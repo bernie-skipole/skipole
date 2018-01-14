@@ -45,10 +45,6 @@ def retrieve_edittextpage(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage("Page/section not identified")
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
-
     page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
     page_data[("adminhead","page_head","small_text")] = "Edit the text string."
 
@@ -237,10 +233,6 @@ def retrieve_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
         raise FailPage("Page/section not identified")
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
-
     page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
 
     if 'status' in call_data:
@@ -307,10 +299,6 @@ def retrieve_edit_comment(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage("Page/section not identified")
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
-
     page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
 
     if 'status' in call_data:

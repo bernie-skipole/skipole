@@ -51,10 +51,6 @@ def retrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage("Page/section not identified")
 
     # Fill in header
-
-    # navigator boxes
-    utils.nav_boxes(call_data, page, section, bits.page_top, bits.parent_container, widget, bits.container)
-
     page_data[("adminhead","page_head","large_text")] = "Edit the html element."
 
     if 'status' in call_data:
