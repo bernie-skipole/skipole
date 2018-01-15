@@ -665,12 +665,8 @@ def set_navigation(identnum, call_data, page_data):
             widget_info = skilift.widget_info(editedprojname, None, call_data['section_name'], call_data['widget_name'])
 
     if widget_info:
-        widget_location = widget_info.location
-        if widget_location[1] is not None:
-            # widget is in a container, so display its parent
-            page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', widget_location[0], True, widget_location[0]])
-            page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', widget_location[0] + " " + str(widget_location[1]), True, widget_location[0] + "-" + str(widget_location[1])])
-
+        # if widget has parent, dsiplay parent links
+        display_parent(widget_info, page_data)
         page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', widget_info.name, True, widget_info.name])
         # if widget has containers, display links to them
         if widget_info.containers:
@@ -682,6 +678,26 @@ def set_navigation(identnum, call_data, page_data):
     if 'extend_nav_buttons' in call_data:
         if call_data['extend_nav_buttons']:
             page_data["left_nav","navbuttons","nav_links"].extend(call_data['extend_nav_buttons'])
+
+
+def display_parent(widget_info, page_data):
+    "Appends link to parent widget in navigation buttons"
+    location = widget_info.location
+    # location is (parent, container, location integers) where parent is section_name, head/body or parent widget name
+    # if container is None then there is no parent widget
+    if location[1] is None:
+        return
+    # widget is in a container
+    # does the parent have parents?
+    parent_name = location[0]
+    parent_info = skilift.widget_info(widget_info.project, widget_info.pagenumber, widget_info.section_name, parent_name)
+    # recursively display grandparents
+    display_parent(parent_info, page_data)
+    # display links to the parent widget
+    page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', parent_name, True, parent_name])
+    page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', parent_name + " " + str(location[1]), True, parent_name + "-" + str(location[1])])
+
+
 
 
 
