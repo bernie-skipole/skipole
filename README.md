@@ -26,6 +26,8 @@ With web based admin functions at localhost:8000/skiadmin
 
 The web functions allow you to create a tar file containing a wsgi application bundled with the widget support code and your own code, this can then be served by any wsgi web server of your choice.
 
-The framework is available as a tar file in the Downloads section. It can be downloaded, extracted and the skipole.py script will be found within, it has no dependencies other than python 3.2 or above. So far it has been developed on Linux only, may work on Windows, not sure!
+The framework is available as a tar file in the Downloads section. It can be downloaded, extracted and the skipole.py script will be found within, it has no dependencies other than python 3.2 or above.
+
+Developed on Linux. It has been found to work on Windows, but the command terminal should be run in Admin mode as symbolic links to folders are created, so escalated privelidges are needed. Internet Explorer seems to do peculiar things, so I would suggest installing the latest Firefox.
 
 Further information can be found from the wiki pages of this site, and the admin web interface contains its own documentation.
