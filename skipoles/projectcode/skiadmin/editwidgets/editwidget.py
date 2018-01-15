@@ -39,192 +39,20 @@ from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
 _AN = re.compile('[^\w]')
 
 
-def retrieve_editwidget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Fills in the edit a widget page"
-
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-
-
-    if widget is None:
-        # widget not derived from session data, must be from submitted data
-        widget = bits.part
-
-    if (widget is None) and ('widget_name' in call_data):
-        widget_name = call_data['widget_name']
-        if section:
-            widget = section.widgets.get(widget_name)
-        if page:
-            widget = page.widgets.get(widget_name)
-
-    if not (isinstance(widget, widgets.Widget) or isinstance(widget, widgets.ClosedWidget)):
-        raise FailPage("Widget to edit not identified")
-
-    # and this is the widget to be edited, it is now set into session data
-    call_data['widget_name'] = widget.name
-    if section:
-        call_data['section'] = section
-
-    if page:
-        call_data['page'] = page
-
-    page_data[("adminhead","page_head","large_text")] = widget.name
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the widget"
-
-    page_data[('widget_type','para_text')] = "This widget is of type %s.%s." % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
-    page_data[('widget_textblock','textblock_ref')] = widget.description_ref()
-    page_data[('widget_name','input_text')] = widget.name
-    page_data[('widget_brief','input_text')] = widget.brief
-
-    args, arg_list, arg_table, arg_dict = widget.classargs()
-    # lists of [ field arg, field ref, field type]
-
-    if arg_list or arg_table or arg_dict:
-        page_data[('args_multi','show')] = True
-    else:
-        page_data[('args_multi','show')] = False
-
-
-    # args is shown on a LinkTextBlockTable2
-
-    # contents row is
-    # col 0 is the visible text to place in the link,
-    # col 1 is the get field of the link
-    # col 2 is the second get field of the link
-    # col 3 is text appearing in the second table column
-    # col 4 is the reference string of a textblock to appear the third table column
-    # col 5 is text to appear if the reference cannot be found in the database
-    # col 6 normally empty string, if set to text it will replace the textblock
-
-    args_valdt = False
-
-    args_content = []
-    if args:
-        for arg in args:
-            # get string value
-            field_info = widget.field_arg_info(arg[0])
-            # (field name, field description ref, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
-            if not field_info:
-                raise FailPage(message = "Error in widget")
-            name = field_info[0]
-            if field_info[6]:
-                name = "* " + name
-                args_valdt = True
-            # if value is an Ident of this project, just put ident number
-            if isinstance(field_info[2], skiboot.Ident) and (field_info[2].proj == editedproj.proj_ident):
-                field_value = str(field_info[2].num)
-            else:
-                field_value = field_info[3]
-            if len(field_value) > 20:
-                field_value = field_value[:18]
-                field_value += '...'
-            arg_row = [ name, arg[0], '',field_value, arg[1], 'No description for %s' % (arg[1],), '']
-            args_content.append(arg_row)
-        page_data[('args','link_table')] = args_content
-    else:
-        page_data[('args','show')] = False
-        page_data[('args_description','show')] = False
-
-
-    # arg_list, arg_table and arg_dict are shown on LinkTextBlockTable widgets
-
-    # contents row is
-    # col 0 is the visible text to place in the link,
-    # col 1 is the get field of the link
-    # col 2 is the second get field of the link
-    # col 3 is the reference string of a textblock to appear in the column adjacent to the link
-    # col 4 is text to appear if the reference cannot be found in the database
-    # col 5 normally empty string, if set to text it will replace the textblock
-
-
-    arg_list_content = []
-    if arg_list:
-        for arg in arg_list:
-            name = widget.get_name(arg[0])
-            if widget.get_field_valdt(name):
-                name = "* " + name
-                args_valdt = True
-            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
-            arg_list_content.append(arg_row)
-        page_data[('arg_list','link_table')] = arg_list_content
-    else:
-        page_data[('arg_list','show')] = False
-        page_data[('arg_list_description','show')] = False
-
-    arg_table_content = []
-    if arg_table:
-        for arg in arg_table:
-            name = widget.get_name(arg[0])
-            if widget.get_field_valdt(name):
-                name = "* " + name
-                args_valdt = True
-            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
-            arg_table_content.append(arg_row)
-        page_data[('arg_table','link_table')] = arg_table_content
-    else:
-        page_data[('arg_table','show')] = False
-        page_data[('arg_table_description','show')] = False
-
-    arg_dict_content = []
-    if arg_dict:
-        for arg in arg_dict:
-            name = widget.get_name(arg[0])
-            if widget.get_field_valdt(name):
-                name = "* " + name
-                args_valdt = True
-            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
-            arg_dict_content.append(arg_row)
-        page_data[('arg_dict','link_table')] = arg_dict_content
-    else:
-        page_data[('arg_dict','show')] = False
-        page_data[('arg_dict_description','show')] = False
-
-    page_data[('args_valdt','show')] = args_valdt
-
-    # display the widget html
-    page_data[('widget_code','pre_text')] = str(widget)
-
-    #          append further nav links for containers
-    #          0 : The url, label or ident of the target page of the link
-    #          1 : The displayed text of the link
-    #          2 : If True, ident is appended to link even if there is no get field
-    #          3 : The get field data to send with the link
-
-    if widget.can_contain():
-        page_data[('containerdesc','show')] = True
-
-    # remove any unwanted fields from session call_data
-    if 'container' in call_data:
-        del call_data['container']
-    if 'location' in call_data:
-        del call_data['location']
-    if 'part' in call_data:
-        del call_data['part']
-    if 'field_arg' in call_data:
-        del call_data['field_arg']
-    if 'validx' in call_data:
-        del call_data['validx']
-
-
 def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit a widget page"
 
     # get data
     if ("left_nav","navbuttons","nav_links") in call_data:
-        # should be submitted as widgetname
+        # should be submitted as widgetname from left navigation links
         widget_name = call_data["left_nav","navbuttons","nav_links"]
     elif 'widget_name' in call_data:
         widget_name = call_data['widget_name']
+    elif 'part_tuple' in call_data:
+        # called from dom table, via responder that finds what is being edited
+        # and has set it into part_tuple
+        part_tuple = call_data['part_tuple']
+        widget_name = part_tuple.name
     else:
         raise FailPage(message="Invalid widget")
 
@@ -233,7 +61,6 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name
-
 
     ## these bits may eventually be replaced by skilift api
 
@@ -995,7 +822,7 @@ def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_
 
     if part_tuple.name:
         # item to edit is a widget
-        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        call_data['part_tuple'] = part_tuple
         raise GoTo(target = 54006, clear_submitted=True)
     if part_tuple.part_type == "Part":
         # edit the html part

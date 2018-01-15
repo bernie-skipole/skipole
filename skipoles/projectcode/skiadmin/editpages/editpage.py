@@ -1220,7 +1220,7 @@ def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
     if part_tuple.name:
         # item to edit is a widget
-        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        call_data['part_tuple'] = part_tuple
         raise GoTo(target = 54006, clear_submitted=True)
     if part_tuple.part_type == "Part":
         # edit the html part

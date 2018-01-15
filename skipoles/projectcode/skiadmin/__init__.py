@@ -648,12 +648,12 @@ def set_navigation(identnum, call_data, page_data):
     if item_number:
         item_info = skilift.item_info(editedprojname, item_number)
         if item_info:
-            if item_info.item_type != 'Folder':
+            if (item_info.item_type == 'TemplatePage') or (item_info.item_type == 'SVG'):
                 # add page name to navbuttons
                 page_data["left_nav","navbuttons","nav_links"].append(['back_to_page', item_info.name, True, ''])
                 if item_info.item_type == 'TemplatePage':
-                    page_data["left_nav","navbuttons","nav_links"].append(['page_head', 'Head', True, ''])
-                    page_data["left_nav","navbuttons","nav_links"].append(['page_body', 'Body', True, ''])
+                    page_data["left_nav","navbuttons","nav_links"].append(['page_head', item_info.name + ' - Head', True, ''])
+                    page_data["left_nav","navbuttons","nav_links"].append(['page_body', item_info.name + ' - Body', True, ''])
                 if item_info.item_type == 'SVG':
                     page_data["left_nav","navbuttons","nav_links"].append(['page_svg', 'SVG', True, ''])
                 if ('widget_name' in call_data) and ((item_info.item_type == 'TemplatePage') or (item_info.item_type == 'SVG')):
@@ -669,14 +669,14 @@ def set_navigation(identnum, call_data, page_data):
         if widget_location[1] is not None:
             # widget is in a container, so display its parent
             page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', widget_location[0], True, widget_location[0]])
-            page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', "container " + str(widget_location[1]), True, widget_location[0] + "-" + str(widget_location[1])])
+            page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', widget_location[0] + " " + str(widget_location[1]), True, widget_location[0] + "-" + str(widget_location[1])])
 
-        page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', call_data['widget_name'], True, call_data['widget_name']])
+        page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', widget_info.name, True, widget_info.name])
         # if widget has containers, display links to them
         if widget_info.containers:
             for cont in range(widget_info.containers):
                 str_cont = str(cont)
-                page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', "container " + str_cont, True, call_data['widget_name'] + "-" + str_cont])
+                page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', widget_info.name + " " + str_cont, True, widget_info.name + "-" + str_cont])
 
     # add further buttons which may be set in call_data['extend_nav_buttons']
     if 'extend_nav_buttons' in call_data:
