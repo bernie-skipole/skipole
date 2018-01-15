@@ -154,11 +154,6 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
 
     page_data[("adminhead","page_head","large_text")] = page_info.name + ' head'
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = page_info.brief
-
     # fill in the table
     call_data['location_string'] = 'head'
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -314,11 +309,6 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
 
     page_data[("adminhead","page_head","large_text")] = page_info.name + ' body'
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = page_info.brief
-
     # fill in the table
     call_data['location_string'] = 'body'
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -393,11 +383,6 @@ def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage(message = "Invalid page")
 
     page_data[("adminhead","page_head","large_text")] = page_info.name + ' svg'
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = page_info.brief
 
     # fill in the table
     call_data['location_string'] = 'svg'
@@ -1290,8 +1275,6 @@ def add_to_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
     call_data['location'] = location         ########## also part_tuple should replace location
-
-    page_data[("adminhead","page_head","small_text")] = "Pick an item type"
 
     # navigator boxes
     if location_string == 'head':

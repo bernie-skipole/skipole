@@ -60,7 +60,6 @@ def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_d
     parent_ident = str(parent.ident)
 
     page_data[("adminhead","page_head","large_text")] = "Add page to : %s" % (parent.url,)
-    page_data[("adminhead","page_head","small_text")] = "Choose options to add the page:"
 
     page_data['st1:parent'] = parent_ident
 
@@ -224,7 +223,6 @@ def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_da
     parent_ident = str(parent.ident)
 
     page_data[("adminhead","page_head","large_text")] = "Add SVG image page to : %s" % (parent.url,)
-    page_data[("adminhead","page_head","small_text")] = "Choose options to create the svg page:"
 
     # information paragraphs
     page_data[('page_name_text','para_text')] = "New page name : " + new_name
@@ -299,7 +297,6 @@ def retrieve_new_file(caller_ident, ident_list, submit_list, submit_dict, call_d
     parent_ident = str(parent.ident)
 
     page_data[("adminhead","page_head","large_text")] = "Add File Link page to : %s" % (parent.url,)
-    page_data[("adminhead","page_head","small_text")] = "Choose options to create the file page:"
 
     # information paragraphs
     page_data['page_name_text:para_text'] = "New page name : " + new_name
@@ -356,7 +353,6 @@ def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, c
     parent_ident = str(parent.ident)
 
     page_data[("adminhead","page_head","large_text")] = "Add a responder page to : %s" % (parent.url,)
-    page_data[("adminhead","page_head","small_text")] = "Choose options to create the responder:"
 
     # information paragraphs
     page_data['page_name_text:para_text'] = "New page name : " + new_name
@@ -420,7 +416,6 @@ def retrieve_new_copypage(caller_ident, ident_list, submit_list, submit_dict, ca
     parent_ident = str(parent.ident)
 
     page_data[("adminhead","page_head","large_text")] = "Add a page copy to : %s" % (parent.url,)
-    page_data[("adminhead","page_head","small_text")] = "Choose options to create the page copy:"
 
     # information paragraphs
     page_data['page_name_text:para_text'] = "New page name : " + new_name

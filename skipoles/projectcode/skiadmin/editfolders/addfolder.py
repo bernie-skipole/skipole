@@ -59,7 +59,6 @@ def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call
     parent_ident = str(parent.ident)
 
     page_data[("adminhead","page_head","large_text")] = "Add folder to : %s" % (parent.url,)
-    page_data[("adminhead","page_head","small_text")] = "Choose options to add the folder:"
 
     page_data[('staticpath','input_text')] = os.path.join(editedproj.proj_ident, 'static')
 

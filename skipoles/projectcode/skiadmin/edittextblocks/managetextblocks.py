@@ -40,8 +40,6 @@ def retrieve_link_table(caller_ident, ident_list, submit_list, submit_dict, call
     proj_ident = editedproj.proj_ident
 
     page_data[("adminhead","page_head","large_text")] = "Manage TextBlocks"
-    page_data[("adminhead","page_head","small_text")] = "Create and edit TextBlocks"
-
 
     accesstextblocks = skilift.get_accesstextblocks(proj_ident)
 
@@ -88,7 +86,6 @@ def retrieve_more(caller_ident, ident_list, submit_list, submit_dict, call_data,
     proj_ident = editedproj.proj_ident
 
     page_data[("adminhead","page_head","large_text")] = "Further TextBlocks"
-    page_data[("adminhead","page_head","small_text")] = "Create and edit TextBlocks"
     call_data['extend_nav_buttons'] = []
 
     reference = call_data['ref']
@@ -162,7 +159,6 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
     default_language = lang[1]
 
     page_data[("adminhead","page_head","large_text")] = "Edit TextBlock"
-    page_data[("adminhead","page_head","small_text")] = "Edit TextBlock language and text"
     call_data['extend_nav_buttons'] = []
 
     if 'textblock' in call_data:

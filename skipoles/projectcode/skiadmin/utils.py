@@ -50,7 +50,6 @@ def no_ident_data(call_data, keep=None):
 
 
 
-
 def retrieve_edit_page(call_data, page_data):
     "Common function used by page editors, placed here to be used by multiple pages"
 
@@ -60,8 +59,6 @@ def retrieve_edit_page(call_data, page_data):
 
     # fills in header
     page_data[("adminhead","page_head","large_text")] = info.name
-    if ("adminhead","page_head","small_text") not in page_data:
-        page_data[("adminhead","page_head","small_text")] = info.brief
 
     page_data[('page_edit','p_ident','page_ident')] = (editedprojname,page_number)
     page_data[('page_edit','p_name','page_ident')] = (editedprojname,page_number)

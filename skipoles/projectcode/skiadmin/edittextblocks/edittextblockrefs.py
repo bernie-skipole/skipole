@@ -54,11 +54,6 @@ def retrieve_textblockref(caller_ident, ident_list, submit_list, submit_dict, ca
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "TextBlock"
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the TextBlock."
-
     # header done, now page contents
 
     if part is None:
@@ -180,10 +175,6 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Insert TextBlock"
-    if isinstance(part, str):
-        page_data[("adminhead","page_head","small_text")] = "At location " + bits.part_string
-    else:
-        page_data[("adminhead","page_head","small_text")] = "At location " + bits.part_string + "_0"
 
     # so header text and navigation done, now continue with the page contents
 

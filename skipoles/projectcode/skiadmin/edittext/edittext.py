@@ -46,7 +46,6 @@ def retrieve_edittextpage(caller_ident, ident_list, submit_list, submit_dict, ca
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
-    page_data[("adminhead","page_head","small_text")] = "Edit the text string."
 
     # so header text and navigation done, now continue with the page contents
 
@@ -235,11 +234,6 @@ def retrieve_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the symbol."
-
     # so header text and navigation done, now continue with the page contents
 
     if not isinstance(part, tag.HTMLSymbol):
@@ -300,11 +294,6 @@ def retrieve_edit_comment(caller_ident, ident_list, submit_list, submit_dict, ca
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the comment."
 
     # so header text and navigation done, now continue with the page contents
 

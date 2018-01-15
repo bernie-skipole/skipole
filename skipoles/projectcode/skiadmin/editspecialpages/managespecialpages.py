@@ -46,7 +46,6 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
     specials = editedproj.special_pages
 
     page_data[("adminhead","page_head","large_text")] = "Manage page labels"
-    page_data[("adminhead","page_head","small_text")] = "Set or edit page labels"
 
     system_list = skiboot.sys_list()
     page_data['system:col_label'] = system_list

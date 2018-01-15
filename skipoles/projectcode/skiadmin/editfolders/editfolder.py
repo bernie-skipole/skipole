@@ -104,9 +104,6 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
                                    ["edit_action", ""],
                                    ["no_javascript", "2004"]  ]
 
-    if 'status' not in call_data:
-        page_data[("adminhead","page_head","small_text")] = info.brief
-
     if call_data['folder_number'] == 0:
         page_data[("adminhead","page_head","large_text")] = "Edit Root Folder : %s" % (info.path,)
     else:
