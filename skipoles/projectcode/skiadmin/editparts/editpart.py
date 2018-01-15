@@ -53,11 +53,6 @@ def retrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_d
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Edit the html element."
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "At location %s " % (bits.part_string,)
-
     # header done, now page contents
 
     if part is None:

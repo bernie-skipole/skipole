@@ -135,7 +135,6 @@ def about_export(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
     # fill in header information
     page_data[("adminhead","page_head","large_text")] = "Project: %s" % (proj_ident,)
-    page_data[("adminhead","page_head","small_text")] = editedproj.brief
 
     page_data["l2","link_ident"] = adminproj.url + editedproj.proj_ident + ".tar.gz"
 

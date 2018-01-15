@@ -42,11 +42,6 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
 
     page_data[("adminhead","page_head","large_text")] = "Manage Sections"
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Set or edit sections"
-
     # get current sections
     section_list = editedproj.list_section_names()
     if not section_list:
@@ -93,11 +88,6 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     section = editedproj.section(section_name)
 
     page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (section_name,)
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Set section contents"
 
     # fill in the table
     retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -333,11 +323,6 @@ def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data
 
     page_data[("adminhead","page_head","large_text")] = "New Section"
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Create new section %s" % (section_name,)
-
     page_data["description", "input_text"] = "New section %s" % (section_name,)
 
     # set hidden fields on the two forms with the submitted section name
@@ -472,8 +457,6 @@ def add_to_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
 
     call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
     call_data['location'] = location         ########## also part_tuple should replace location
-
-    page_data[("adminhead","page_head","small_text")] = "Pick an item type"
 
     # navigator boxes
     boxes = [['back_to_section', section_name, True, '']]    # label to 7040

@@ -54,11 +54,6 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Insert an HTML tag"
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Set values."
-
     # header done, now page contents
 
     if part is None:

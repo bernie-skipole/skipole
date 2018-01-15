@@ -56,11 +56,6 @@ def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict,
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Section"
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the section place holder."
-
     # header done, now page contents
 
     if not isinstance(part, tag.SectionPlaceHolder):
@@ -152,10 +147,6 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Insert Section"
-    if isinstance(part, str):
-        page_data[("adminhead","page_head","small_text")] = "At location " + bits.part_string
-    else:
-        page_data[("adminhead","page_head","small_text")] = "At location " + bits.part_string + "_0"
 
     # so header text and navigation done, now continue with the page contents
 

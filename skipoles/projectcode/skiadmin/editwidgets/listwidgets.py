@@ -63,10 +63,6 @@ def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, cal
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Choose module"
-    if isinstance(part, str):
-        page_data[("adminhead","page_head","small_text")] = "For widget insert at location " + bits.part_string
-    else:
-        page_data[("adminhead","page_head","small_text")] = "For widget insert at location " + bits.part_string + "_0"
 
     # so header text and navigation done, now continue with the page contents
 
@@ -115,11 +111,6 @@ def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, ca
 
     # Fill in header
     call_data['extend_nav_buttons'].append(["list_widget_modules", "Modules", True, ''])
-
-    if isinstance(part, str):
-        page_data[("adminhead","page_head","small_text")] = "For widget insert at location " + bits.part_string
-    else:
-        page_data[("adminhead","page_head","small_text")] = "For widget insert at location " + bits.part_string + "_0"
 
     if 'chosen_module' in call_data:
         module_name = call_data['chosen_module']
@@ -181,11 +172,6 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
 
     # Fill in header
     call_data['extend_nav_buttons'].extend([["list_widget_modules", "Modules", True, ''], ["back_widget_list", "Widgets", True, '']])
-
-    if isinstance(part, str):
-        page_data[("adminhead","page_head","small_text")] = "For widget insert at location " + bits.part_string
-    else:
-        page_data[("adminhead","page_head","small_text")] = "For widget insert at location " + bits.part_string + "_0"
 
     if 'module' not in call_data:
         raise FailPage("Module not identified")

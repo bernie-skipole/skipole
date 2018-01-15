@@ -72,10 +72,6 @@ def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, c
     call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
 
     page_data[("adminhead","page_head","large_text")] = "Edit : %s on field %s" % (validator, field.name)
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the validator"
 
     page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
     page_data[('widget_name','para_text')] = "Widget name : %s" % (widget.name,)
@@ -326,7 +322,6 @@ def retrieve_arg(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
     # navigator text
     page_data[("adminhead","page_head","large_text")] = arg_name
-    page_data[("adminhead","page_head","small_text")] = "Edit the validator argument"
 
     page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
     page_data[('widget_name','para_text')] = "Widget name : %s" % (widget.name,)
@@ -509,10 +504,6 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
     call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
 
     page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget.name, field.name)
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Choose validator module"
 
     page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
     page_data[('widget_name','para_text')] = "Widget name : %s" % (widget.name,)
@@ -575,12 +566,6 @@ def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, 
         module_name = call_data['valmodule']
     else:
         raise FailPage("Module not identified")
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Validators in module %s" % (module_name,)
-
 
     if module_name not in _VALIDATORS_TUPLE:
         raise FailPage("Module not identified")

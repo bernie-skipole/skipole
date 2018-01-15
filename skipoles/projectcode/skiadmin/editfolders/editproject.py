@@ -52,7 +52,6 @@ def retrieve_edit_project(caller_ident, ident_list, submit_list, submit_dict, ca
     page_data['subprojurl:input_text'] = url
 
     page_data[("adminhead","page_head","large_text")] = "Sub-project : " + sub_project
-    page_data[("adminhead","page_head","small_text")] = "(Editing here does not alter the sub project - only its location within this site)"
 
 
 def submit_addproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -147,11 +146,6 @@ def retrieve_about_code(caller_ident, ident_list, submit_list, submit_dict, call
 
     page_data[("adminhead","page_head","large_text")] = "Your Code"
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "About your Python code for this project"
-
     page_data[("codelocation","para_text")] = get_projectcode_dir(project=editedproj.proj_ident)
     page_data[('codedir', 'proj_ident')] = editedproj.proj_ident
     page_data[("filelocation","para_text")] = os.path.join(get_projectfiles_dir(project=editedproj.proj_ident), "static")
@@ -164,11 +158,6 @@ def retrieve_about_skilift(caller_ident, ident_list, submit_list, submit_dict, c
 
     page_data[("adminhead","page_head","large_text")] = "skilift"
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "About the skilift package"
-
 
 def retrieve_about_fromjson(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "About fromjson module"
@@ -179,10 +168,6 @@ def retrieve_about_fromjson(caller_ident, ident_list, submit_list, submit_dict, 
 
     call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "About the fromjson module"
 
 def retrieve_about_editfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "About editfolder module"
@@ -192,11 +177,6 @@ def retrieve_about_editfolder(caller_ident, ident_list, submit_list, submit_dict
     page_data[("adminhead","page_head","large_text")] = "editfolder"
 
     call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "About the editfolder module"
 
 
 def retrieve_about_editpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -208,11 +188,6 @@ def retrieve_about_editpage(caller_ident, ident_list, submit_list, submit_dict, 
 
     call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "About the editpage module"
-
 
 def retrieve_about_editsection(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "About editsection module"
@@ -223,11 +198,6 @@ def retrieve_about_editsection(caller_ident, ident_list, submit_list, submit_dic
 
     call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "About the editsection module"
-
 
 def retrieve_about_off_piste(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "About off_piste module"
@@ -237,12 +207,6 @@ def retrieve_about_off_piste(caller_ident, ident_list, submit_list, submit_dict,
     page_data[("adminhead","page_head","large_text")] = "off_piste"
 
     call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "About the off_piste module"
-
 
 
 def get_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

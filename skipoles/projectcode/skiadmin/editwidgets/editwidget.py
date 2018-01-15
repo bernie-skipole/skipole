@@ -81,11 +81,6 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if widget is None:
         raise FailPage(message="Widget not found")
 
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = ""
-
     page_data[('widget_type','para_text')] = "This widget is of type %s.%s." % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
     page_data[('widget_textblock','textblock_ref')] = widget.description_ref()
     page_data[('widget_name','input_text')] = widget.name
@@ -287,11 +282,6 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
 
     if (page is None) and (section is None):
         raise FailPage("Page/section not identified")
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = "Edit the widget field"
 
     # Fill in header
 
@@ -587,11 +577,6 @@ def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name + " container: " + str(container)
-
-    if 'status' in call_data:
-        page_data[("adminhead","page_head","small_text")] = call_data['status']
-    else:
-        page_data[("adminhead","page_head","small_text")] = ''
 
     ## these bits may eventually be replaced by skilift api
 
@@ -904,8 +889,6 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
     call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
     call_data['location'] = location         ########## also part_tuple should replace location
-
-    page_data[("adminhead","page_head","small_text")] = "Pick an item type"
 
     # navigator boxes
     boxes = [['back_to_container', "Container", True, '']]
