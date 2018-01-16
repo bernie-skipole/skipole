@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.0.34",
+"skipole": "0.0.7",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -24,12 +24,14 @@
 "ski_inputtables": 621,
 "ski_inputtext": 613,
 "ski_links": 602,
+"ski_lists": 625,
 "ski_logins": 609,
 "ski_paras": 623,
 "ski_paths": 102,
 "ski_radio": 624,
-"ski_svgmeters": 606,
 "ski_svgbasics": 620,
+"ski_svggraphs": 626,
+"ski_svgmeters": 606,
 "ski_tables": 604,
 "ski_textarea": 605,
 "ski_upload": 608,
@@ -162,6 +164,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#000000",
 "default_error_widget": [
@@ -267,6 +271,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#000000",
 "default_error_widget": [
@@ -436,7 +442,6 @@
 "clear_error": false,
 "error_class": "errorcol",
 "linebreaks": true,
-"project_ident": "",
 "replace_strings": [],
 "show": true,
 "show_error": "",
@@ -482,6 +487,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#000000",
 "default_error_widget": [
@@ -651,7 +658,6 @@
 "clear_error": false,
 "error_class": "errorcol",
 "linebreaks": true,
-"project_ident": "",
 "replace_strings": [],
 "show": true,
 "show_error": "",
@@ -693,6 +699,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#000000",
 "default_error_widget": [
@@ -862,7 +870,6 @@
 "clear_error": false,
 "error_class": "errorcol",
 "linebreaks": true,
-"project_ident": "",
 "replace_strings": [],
 "show": true,
 "show_error": "",
@@ -1046,6 +1053,15 @@
 "mimetype": "application/javascript"
 }
 },
+"lists-0.1.0.js": {
+"ident": 625,
+"brief": "Link to lib/static/widgets/lists-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/lists-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
 "logins-0.1.0.js": {
 "ident": 609,
 "brief": "Link to lib/static/widgets/logins-0.1.0.js",
@@ -1073,20 +1089,29 @@
 "mimetype": "application/javascript"
 }
 },
-"svgmeters-0.1.0.js": {
-"ident": 606,
-"brief": "Link to lib/static/widgets/svgmeters-0.1.0.js",
-"FilePage": {
-"filepath": "lib/static/widgets/svgmeters-0.1.0.js",
-"enable_cache": false,
-"mimetype": "application/javascript"
-}
-},
 "svgbasics-0.1.0.js": {
 "ident": 620,
 "brief": "Link to lib/static/widgets/svgbasics-0.1.0.js",
 "FilePage": {
 "filepath": "lib/static/widgets/svgbasics-0.1.0.js",
+"enable_cache": false,
+"mimetype": "application/javascript"
+}
+},
+"svggraphs-0.1.0.js": {
+"ident": 626,
+"brief": "Link to lib/static/widgets/svggraphs-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/svggraphs-0.1.0.js",
+"enable_cache": true,
+"mimetype": "application/javascript"
+}
+},
+"svgmeters-0.1.0.js": {
+"ident": 606,
+"brief": "Link to lib/static/widgets/svgmeters-0.1.0.js",
+"FilePage": {
+"filepath": "lib/static/widgets/svgmeters-0.1.0.js",
 "enable_cache": false,
 "mimetype": "application/javascript"
 }
@@ -1128,6 +1153,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#FFFFFF",
 "default_error_widget": [
@@ -1278,8 +1305,10 @@
 "widget_style": ""
 },
 "container_0": [
+[
 "Text",
 ""
+]
 ]
 }
 ]

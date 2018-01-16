@@ -32,6 +32,7 @@ SKIPOLE.widgets = {};
 SKIPOLE.validators = {};
 SKIPOLE.sections = [];
 
+
 SKIPOLE.restorepagepos = function() {
     // restore window position from last position stored
     if(typeof(Storage) !== "undefined") {
@@ -302,13 +303,14 @@ SKIPOLE.textbr = function(string) {
         '"': '&quot;',
         "'": '&#39;',
         "/": '&#x2F;',
+        "`": '&#x60;',
+        "=": '&#x3D;',
        "\n": '<br />'
         };
-    return String(string).replace(/[&<>"'\/]|[\n]/g, function (s) {
+    return String(string).replace(/[&<>"'`=\/]|[\n]/g, function (s) {
       return entityMap[s];
     });
   };
-
 
 
 /* base class for widgets */

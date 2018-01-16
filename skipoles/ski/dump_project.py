@@ -166,7 +166,7 @@ def project_to_OD(proj_ident=None):
     else:
         project["subprojects"] = OrderedDict()
 
-    specialpages = OrderedDict()
+    specialpages = {}
     specpages = proj.special_pages
     if specpages:
         for label, target in specpages.items():
