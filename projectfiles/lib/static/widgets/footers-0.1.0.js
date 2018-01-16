@@ -33,7 +33,7 @@ SKIPOLE.footers.SimpleFooter = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     };
 SKIPOLE.footers.SimpleFooter.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.footers.SimpleFooter.prototype.constructor = SKIPOLE.footers.DebugFooter;
+SKIPOLE.footers.SimpleFooter.prototype.constructor = SKIPOLE.footers.SimpleFooter;
 SKIPOLE.footers.SimpleFooter.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;

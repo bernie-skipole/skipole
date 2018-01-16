@@ -46,10 +46,10 @@ ROOTPROJECT = None
 PROJECTFILES = None
 
 _LIB_LABELS = ["skipole_js", "jquery_core",
-               "ski_basic", "ski_paths", "ski_checkbox", "ski_confirm", "ski_debug_tools", "ski_error_messages",
+               "ski_basic", "ski_checkbox", "ski_confirm", "ski_debug_tools", "ski_dropdown", "ski_error_messages",
                "ski_footers", "ski_headers", "ski_info", "ski_inputforms", "ski_inputtables",
-               "ski_inputtext", "ski_links", "ski_logins", "ski_paras", "ski_radio", "ski_svgmeters", "ski_svgbasics",
-               "ski_tables", "ski_textarea", "ski_dropdown", "ski_upload"]
+               "ski_inputtext", "ski_links", "ski_lists", "ski_logins", "ski_paras", "ski_paths", "ski_radio", "ski_svgbasics", "ski_svggraphs", "ski_svgmeters",
+               "ski_tables", "ski_textarea", "ski_upload"]
 
 _SYS_LABELS = ["url_not_found", "validate_error", "server_error", "redirector", "no_javascript", "general_json"]
 
