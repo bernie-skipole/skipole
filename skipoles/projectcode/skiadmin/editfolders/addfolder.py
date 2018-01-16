@@ -24,7 +24,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import os
+import os, re
 
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError
@@ -34,6 +34,8 @@ from .. import utils
 from .... import skilift
 from ....skilift import editfolder, fromjson
 
+# a search for anything none-alphanumeric and not an underscore
+_AN = re.compile('[^\w]')
 
 
 def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -137,9 +139,14 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
     if folder_ident_number<1:
         raise FailPage("The Folder Ident number must be a positive integer greater than zero")
     folder_dict["ident"] = folder_ident_number
-    folder_dict["name"] = call_data['new_folder']
     folder_dict["brief"] = call_data['folder_brief']
     folder_dict["restricted"] = call_data['checkbox']
+
+    new_folder_name = call_data['new_folder']
+    # check name is alphanumric or underscore only
+    if _AN.search(new_folder_name):
+        raise FailPage(message = "Folder names must be alphanumric or underscore only")
+    folder_dict["name"] = new_folder_name
 
 
     if 'folderpath' in call_data and call_data['folderpath']:
