@@ -165,6 +165,15 @@ class Chart1(Widget):
                                             'fill':"green",
                                             'stroke-width':"0"  }))
 
+        stroke_width = self.get_field_value("stroke_width")
+        if not stroke_width:
+            stroke_width = "1"
+        else:
+            stroke_width = str(stroke_width)
+
+        stroke = self.get_field_value("stroke")
+        if not stroke:
+            stroke = "black"
 
         values = self.get_field_value("values")
         if not values:
@@ -177,16 +186,6 @@ class Chart1(Widget):
             return
 
         vals = list(reversed(values))
-
-        stroke_width = self.get_field_value("stroke_width")
-        if not stroke_width:
-            stroke_width = "1"
-        else:
-            stroke_width = str(stroke_width)
-
-        stroke = self.get_field_value("stroke")
-        if not stroke:
-            stroke = "black"
 
         xpoint = 515
         points = ""
@@ -213,7 +212,7 @@ class Chart1(Widget):
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
   <rect /> <!-- the chart rectangle -->
   <!-- lines and text which draw the chart -->
-  <polyline /> <!-- Draws the values -->
+  <polyline /> <!-- Draws the values on the chart -->
 </g>"""
 
 

@@ -62,7 +62,6 @@ _MODULES_TUPLE = tuple(name for (module_loader, name, ispkg) in pkgutil.iter_mod
 _SESSION_DATA = collections.OrderedDict()
 _IDENT_DATA = 0
 
-
 # This dictionary maps responder ident numbers to the submit_data functions
 # this method to eventually be replaced by responders with submit lists
 
@@ -445,7 +444,6 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     # do not include session data if target page is in another project
     if projname != skilift.admin_project():
         return
-
 
     if page_type == "TemplatePage":
         # header information

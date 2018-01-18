@@ -71,12 +71,14 @@ SKIPOLE.svggraphs.Chart1.prototype.setvalues = function (fieldlist, result) {
         points = points + " " + xpoint + ",";
         if (ypoint > 100){
             points = points + "5";
+            }
         else if (ypoint < -100) {
             points = points + "205";
             }
         else {
             points = points + (105-ypoint);
             }
+        }
 
     var line = the_widg.find('polyline');
     if (line == undefined) {
