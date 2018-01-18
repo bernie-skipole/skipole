@@ -40232,19 +40232,38 @@ false
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "svg",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "600",
+"width": "800"
+},
+"parts": [
+[
 "Widget",
 {
-"class": "lists.UList1",
-"name": "test",
-"brief": "test",
+"class": "svggraphs.Chart1",
+"name": "chart",
+"brief": "chart",
 "fields": {
-"contents": [],
-"even_class": "",
-"odd_class": "",
+"minus50legend": "The minus 50 mark",
+"plus50legend": "The 50 mark",
 "show": true,
+"stroke": "black",
+"stroke_width": "1",
+"transform": "",
+"values": [],
 "widget_class": "",
-"widget_style": ""
+"widget_style": "",
+"zerolegend": "The zero line"
 }
+}
+]
+]
 }
 ]
 ]
