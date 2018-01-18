@@ -294,6 +294,10 @@ SKIPOLE.links.ButtonLink2.prototype.eventfunc = function (e) {
         return;
         }
     var fieldvalues = this.fieldvalues;
+    if (!fieldvalues["url"]) {
+        // no json url, return and call html link
+        return;
+        }
     var the_widg = this.widg;
     // set button_wait_text
     var a_link = the_widg.find('a');
@@ -302,10 +306,6 @@ SKIPOLE.links.ButtonLink2.prototype.eventfunc = function (e) {
     var button_wait_text = fieldvalues["button_wait_text"]
     if (button_wait_text) {
         a_link.text(button_wait_text);
-        }
-    if (!fieldvalues["url"]) {
-        // no json url, return and call html link
-        return;
         }
     var senddata = href.substring(href.indexOf('?')+1);
     $.getJSON(fieldvalues["url"], senddata)
