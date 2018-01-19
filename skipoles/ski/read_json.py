@@ -369,6 +369,8 @@ def create_project(proj_ident):
             if isinstance(target, int):
                 # An ident belonging to this project
                 specialpages[label] = skiboot.Ident(proj_ident, target)
+            elif ',' in target:
+                specialpages[label] = target
             elif '_' in target:
                 itemident = skiboot.make_ident(target, proj_ident)
                 if itemident is None:
@@ -381,6 +383,13 @@ def create_project(proj_ident):
         projectdict['specialpages'] = specialpages
     else:
         projectdict['specialpages'] = {}
+
+    # ensure all library modules are present
+    lib_labels = skiboot.lib_list()
+    for lbl in lib_labels:
+        if lbl not in projectdict['specialpages']:
+            projectdict['specialpages'][lbl] = "lib," + lbl
+ 
 
     if 'sections' in project:
         sections = {}
