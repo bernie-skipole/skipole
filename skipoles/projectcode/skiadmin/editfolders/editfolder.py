@@ -502,10 +502,10 @@ def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent)
         # seventh either empty or responder type
 
         if pinfo.item_type == 'TemplatePage':
-            contents.append( ('TemplatePage', 'text-align: center;', False, '') )
+            contents.append( ('Template', 'text-align: center;', False, '') )
             contents.append( ('', '', False, '') )
         elif pinfo.item_type == 'RespondPage':
-            contents.append( ('RespondPage', 'text-align: center;', False, '') )
+            contents.append( ('Responder', 'text-align: center;', False, '') )
             contents.append( (pinfo.responder, 'text-align: center;', False, '') )
         elif pinfo.item_type == 'CSS':
             contents.append( ('CSS', 'text-align: center;', False, '') )
@@ -517,7 +517,7 @@ def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent)
             contents.append( ('SVG', 'text-align: center;', False, '') )
             contents.append( ('', '', False, '') )
         elif pinfo.item_type == 'FilePage':
-            contents.append( ('FilePage', 'text-align: center;', False, '') )
+            contents.append( ('File', 'text-align: center;', False, '') )
             contents.append( ('', '', False, '') )
         else:
             raise ServerError(message="An unknown page type")
