@@ -57,7 +57,7 @@ SKIPOLE.svggraphs.Chart1.prototype.setvalues = function (fieldlist, result) {
 
     // calculate points from these values
 
-    var xpoint = 515;
+    var xpoint = 510;
     var points = "";
 
     values.reverse();
@@ -65,18 +65,18 @@ SKIPOLE.svggraphs.Chart1.prototype.setvalues = function (fieldlist, result) {
     for (pt = 0; pt < number_of_points; pt++) {
         var ypoint = values[pt];
         xpoint = xpoint-10;
-        if (xpoint < 5) {
+        if (xpoint < 0) {
             break;
             }
         points = points + " " + xpoint + ",";
         if (ypoint > 100){
-            points = points + "5";
+            points = str(points);
             }
         else if (ypoint < -100) {
-            points = points + "205";
+            points = points + "200";
             }
         else {
-            points = points + (105-ypoint);
+            points = points + (100-ypoint);
             }
         }
 

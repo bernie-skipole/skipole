@@ -51,7 +51,7 @@ class Chart1(Widget):
 
 
     def __init__(self, name=None, brief='', **field_args):
-        """A g element which holds a chart, held in a 210 high x 510 wide space
+        """A g element which holds a chart, held in a 200 high x 500 wide space
            The vertical scale is +100 to -100
            values: a list of integers, each integer should be between -100 and +100
            with a maximum of fifty integers.
@@ -59,40 +59,40 @@ class Chart1(Widget):
            last point on the right of the chart
         """
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
-        self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"5",
-                                                           "y":"5",
+        self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"0",
+                                                           "y":"0",
                                                            "width":"500",
                                                            "height":"200",
                                                            "fill":"white",
                                                            "stroke":"green",
                                                            "stroke-width":"1"})
         # centre line
-        self[1] = tag.ClosedPart(tag_name='line', attribs={"x1":"5",
-                                                           "y1":"105",
-                                                           "x2":"505",
-                                                           "y2":"105",
+        self[1] = tag.ClosedPart(tag_name='line', attribs={"x1":"0",
+                                                           "y1":"100",
+                                                           "x2":"500",
+                                                           "y2":"100",
                                                            "stroke":"green",
                                                            "stroke-width":"3"})
 
         # 50 lines - horizontal
-        self[2] = tag.ClosedPart(tag_name='line', attribs={"x1":"5",
-                                                           "y1":"55",
-                                                           "x2":"505",
-                                                           "y2":"55",
+        self[2] = tag.ClosedPart(tag_name='line', attribs={"x1":"0",
+                                                           "y1":"50",
+                                                           "x2":"500",
+                                                           "y2":"50",
                                                            "stroke":"green",
                                                            "stroke-width":"1"})
-        self[3] = tag.ClosedPart(tag_name='line', attribs={"x1":"5",
-                                                           "y1":"155",
-                                                           "x2":"505",
-                                                           "y2":"155",
+        self[3] = tag.ClosedPart(tag_name='line', attribs={"x1":"0",
+                                                           "y1":"150",
+                                                           "x2":"500",
+                                                           "y2":"150",
                                                            "stroke":"green",
                                                            "stroke-width":"1"})
         # 50 lines - vertical
-        for n in range(55, 505, 50):
+        for n in range(50, 500, 50):
             self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(n),
-                                                                 "y1":"5",
+                                                                 "y1":"0",
                                                                  "x2":str(n),
-                                                                 "y2":"205",
+                                                                 "y2":"200",
                                                                  "stroke":"green",
                                                                  "stroke-width":"1"}))
 
@@ -104,8 +104,8 @@ class Chart1(Widget):
         if self.get_field_value("plus50legend"):
             charnumbers = len(self.get_field_value("plus50legend"))
             textlength = 5*charnumbers
-            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"8",
-                                                           "y":"45",
+            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"3",
+                                                           "y":"40",
                                                            "width":str(textlength+10),
                                                            "height":"20",
                                                            "fill":"white",
@@ -113,8 +113,8 @@ class Chart1(Widget):
             self.append( tag.Part(tag_name='text',
                                   text=self.get_field_value("plus50legend"),
                                   attribs={
-                                            'x':"10",
-                                            'y':"58",
+                                            'x':"5",
+                                            'y':"53",
                                             'font-size': '10',
                                             'font-family': 'arial',
                                             'lengthAdjust':"spacingAndGlyphs",
@@ -125,8 +125,8 @@ class Chart1(Widget):
         if self.get_field_value("minus50legend"):
             charnumbers = len(self.get_field_value("minus50legend"))
             textlength = 5*charnumbers
-            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"8",
-                                                           "y":"145",
+            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"3",
+                                                           "y":"140",
                                                            "width":str(textlength+10),
                                                            "height":"20",
                                                            "fill":"white",
@@ -134,8 +134,8 @@ class Chart1(Widget):
             self.append( tag.Part(tag_name='text',
                                   text=self.get_field_value("minus50legend"),
                                   attribs={
-                                            'x':"10",
-                                            'y':"158",
+                                            'x':"5",
+                                            'y':"153",
                                             'font-size': '10',
                                             'font-family': 'arial',
                                             'lengthAdjust':"spacingAndGlyphs",
@@ -147,8 +147,8 @@ class Chart1(Widget):
         if self.get_field_value("zerolegend"):
             charnumbers = len(self.get_field_value("zerolegend"))
             textlength = 5*charnumbers
-            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"8",
-                                                           "y":"95",
+            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"3",
+                                                           "y":"90",
                                                            "width":str(textlength+10),
                                                            "height":"20",
                                                            "fill":"white",
@@ -156,8 +156,8 @@ class Chart1(Widget):
             self.append( tag.Part(tag_name='text',
                                   text=self.get_field_value("zerolegend"),
                                   attribs={
-                                            'x':"10",
-                                            'y':"108",
+                                            'x':"5",
+                                            'y':"103",
                                             'font-size': '10',
                                             'font-family': 'arial',
                                             'lengthAdjust':"spacingAndGlyphs",
@@ -178,7 +178,7 @@ class Chart1(Widget):
         values = self.get_field_value("values")
         if not values:
             # still include a polyline tag, for javascript to find
-            self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":"5,105, 505,105",
+            self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":"",
                                                                      "fill":"none",
                                                                      "stroke":stroke,
                                                                      "stroke-width":stroke_width}))
@@ -187,18 +187,18 @@ class Chart1(Widget):
 
         vals = list(reversed(values))
 
-        xpoint = 515
+        xpoint = 510
         points = ""
         for ypoint in vals:
             xpoint = xpoint-10
-            if xpoint < 5:
+            if xpoint < 0:
                 break
             if ypoint > 100:
-                y = "5"
+                y = "0"
             elif ypoint < -100:
-                y = "205"
+                y = "200"
             else:
-                y = str(105-ypoint)
+                y = str(100-ypoint)
             points = points + " " + str(xpoint) + "," + y
 
         self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":points,

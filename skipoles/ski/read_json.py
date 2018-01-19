@@ -471,7 +471,7 @@ def _folder(parent, folder_name, folder_dict, proj_ident, addition_number=0, res
             page_list.extend(_folder(folder, subfolder_name, subfolder, proj_ident, addition_number, restricted))
     if "pages" in folder_dict:
         for page_name, page in folder_dict['pages'].items():
-            pageinstance = _page(folder, page_name, page, proj_ident)
+            pageinstance = _page(folder, page_name, page, proj_ident, addition_number)
             if pageinstance is not None:
                 page_list.append(pageinstance)
     # add folder to page_list

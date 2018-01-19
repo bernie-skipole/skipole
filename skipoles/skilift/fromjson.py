@@ -256,6 +256,8 @@ def create_folder(project, parentnumber, addition_number, folder_name, restricte
         raise ServerError(message = "The parent folder with this ident number has not been found")
     if parentinfo.item_type != "Folder":
         raise ServerError(message = "The parent with this ident number is not a folder")
+    if parentinfo.restricted:
+        restricted = True
     # create the folder
     try:
         ident = read_json.create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data)

@@ -229,16 +229,10 @@ def _make_static_folder(project, folder_dict, fullpath, folderpath):
 def submit_upload_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Copy a folder from uploaded file"
 
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
     # add_to_foldernumber is the folder a new folder is to be added to
-    if 'add_to_foldernumber' in call_data:
-        add_to_folderident = skiboot.Ident.to_ident(call_data['add_to_foldernumber'], editedproj.proj_ident)
-        # add_to_folder is the folder from memory, not a copy
-        add_to_folder =  editedproj.get_item(add_to_folderident)
-        if add_to_folder.page_type != "Folder":
-            raise FailPage(message = "Invalid parent folder")
-    else:
+    if 'add_to_foldernumber' not in call_data:
         raise FailPage(message = "Parent folder missing")
 
     # get submitted data for new folder
@@ -251,7 +245,7 @@ def submit_upload_folder(caller_ident, ident_list, submit_list, submit_dict, cal
     json_string = uploadfile.decode(encoding='utf-8')
     # create the folder
     try:
-        fromjson.create_folder(editedproj.proj_ident, add_to_folderident.num, addident, importname, add_to_folder.restricted, json_string)
+        fromjson.create_folder(editedprojname, call_data['add_to_foldernumber'], addident, importname, False, json_string)
     except ServerError as e:
         raise FailPage(message = e.message, widget='import_folder')
     del call_data['add_to_foldernumber']
