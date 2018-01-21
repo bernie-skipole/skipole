@@ -90,7 +90,7 @@ def save(call_data, page=None, section_name=None, section=None, widget_name=''):
     except ServerError as e:
         if (page is not None) and ('page' in call_data):
             # replace call_data['page'] with new value
-            call_data['page'] = skiboot.from_ident(page.ident, import_sections=False)
+            call_data['page'] = skiboot.from_ident(page.ident)
         if (section is not None) and ('section_part' in call_data):
             # replace call_data['section_part'] with new value
             section = editedproj.section(section_name)

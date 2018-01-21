@@ -60,7 +60,7 @@ def _get_folder(project, foldernumber):
     ident = skiboot.Ident.to_ident((project, foldernumber))
     if ident is None:
         return None, "Invalid project, foldernumber"
-    folder = skiboot.from_ident(ident, project, import_sections=False)
+    folder = skiboot.from_ident(ident, project)
     if folder is None:
         return None, "Invalid Folder"
     if folder.page_type != 'Folder':
@@ -232,11 +232,11 @@ def move_to_folder(project, item_number, new_folder_number):
     if not isinstance(new_folder_number, int):
         raise ServerError(message="new parent folder number is not an integer")
 
-    item = skiboot.from_ident(item_number, proj_ident=project, import_sections=False)
+    item = skiboot.from_ident(item_number, proj_ident=project)
     if not item:
         raise ServerError(message="No valid item to move given")
 
-    folder = skiboot.from_ident(new_folder_number, proj_ident=project, import_sections=False)
+    folder = skiboot.from_ident(new_folder_number, proj_ident=project)
     if not folder:
         raise ServerError(message="No valid target folder given")
 

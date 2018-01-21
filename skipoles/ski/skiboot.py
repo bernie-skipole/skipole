@@ -200,9 +200,8 @@ def root(proj_ident = None):
 # These functions deal with page and folder 'idents'.  They are defined here
 # as they are common functions used everywhere.
 
-def from_ident(ident, proj_ident=None, import_sections=True):
-    """given an Ident, or a string version of ident, or item with ident attribute, return deepcopy of page or folder.
-       If a page with sections, and import_sections is True, the sections will be imported"""
+def from_ident(ident, proj_ident=None):
+    """given an Ident, or a string version of ident, or item with ident attribute, return deepcopy of page or folder."""
     ident = Ident.to_ident(ident, proj_ident)
     if ident is None:
         return
@@ -210,10 +209,7 @@ def from_ident(ident, proj_ident=None, import_sections=True):
     if project is None:
         return
     item = project.get_item(ident)
-    item = copy.deepcopy(item)
-    if import_sections and ((item.page_type == 'TemplatePage') or (item.page_type == 'SVG')):
-        item.import_sections()
-    return item
+    return copy.deepcopy(item)
 
 
 def item_info(ident):
@@ -608,9 +604,9 @@ class Ident(collections.namedtuple('Ident', ['proj','num'])):
                 proj = ROOTPROJECT.proj_ident
             return cls(proj, item)
 
-    def item(self, import_sections=True):
+    def item(self):
         """Calls the from_ident function"""
-        return from_ident(self, proj_ident=self.proj, import_sections=import_sections)
+        return from_ident(self, proj_ident=self.proj)
 
     def name(self):
         """Returns the name of the page or folder with this ident

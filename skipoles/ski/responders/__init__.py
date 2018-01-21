@@ -318,13 +318,9 @@ main purpose is to act as a parent class for all other respond objects.
         error_dict = {}
 
         for field in self.fields:
-            # check every widget to be tested is present in the caller page
-            widget, fieldname = caller_page.widget_from_field(field)
-            if (widget is None) or (fieldname is None):
-                raise ValidateError()
+            # validate each field
             if field not in form_data:
                 validated_form_data[field] = ''
-            # validate each field
             value = validated_form_data[field]
             validated_form_data[field], errors = caller_page.validate(field, value, environ, lang, validated_form_data, call_data, page_data)
             if errors:
