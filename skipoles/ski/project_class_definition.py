@@ -712,8 +712,11 @@ class Project(object):
 
     def call_page_responder(self, page, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata):
         """For the given page, calls the page call_responder, and continues to do this until a none-responder page is returned
-           Handles goto exceptions, note rawformdata is a cgi.FieldStorage object"""
+           Handles goto exceptions, note rawformdata is a cgi.FieldStorage object
+           Returns page, e_list"""
         try:
+            # e_list is a list of errors to be shown
+            e_list = []
             while page.page_type == 'RespondPage':
                 ident = page.ident
                 if page.responder is None:
@@ -724,7 +727,7 @@ class Project(object):
                         # must be a url
                         call_data.clear()
                         page_data.clear()
-                        return self.call_url(page)
+                        return self.call_url(page), []
                 except PageError as ex:
                     # a jump to a page has occurred, with a list of errors
                     page = ex.page
@@ -732,11 +735,11 @@ class Project(object):
                         # must be a url
                         call_data.clear()
                         page_data.clear()
-                        return self.call_url(page)
+                        return self.call_url(page), []
                     if page.ident in ident_list:
                         raise ServerError(message="Invalid Failure page: can cause circulating call")
                     # show the list of errors on the page
-                    page.show_error(ex.e_list)
+                    e_list = ex.e_list
                 except GoTo as ex:
                     if ex.clear_submitted:
                         form_data.clear()
@@ -757,11 +760,11 @@ class Project(object):
                     else:
                         # target is a URL
                         call_data.clear()
-                        return self.call_url(target)
+                        return self.call_url(target), []
         except (ServerError, ValidateError) as e:
             e.ident_list = ident_list
             raise e
-        return page
+        return page, e_list
 
 
     def read_form_data(self, rawformdata, caller_page):
@@ -898,14 +901,20 @@ class Project(object):
 
                 # otherwise form_data is empty (though rawformdata is retained)
 
+            # initially no errors
+            e_list = []
             if internal and (page.page_type == "RespondPage"):
-                page = self.call_page_responder(page, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
+                # call responders until return with a page to be sent
+                page, e_list = self.call_page_responder(page, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
 
             # final none-respond page
             # call the user function end_call
             projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
             # import any sections
             page.import_sections()
+            if e_list:
+                # show the list of errors on the page
+                page.show_error(e_list)
             # now set the widget fields
             if page_data:
                 page.set_values(page_data)
