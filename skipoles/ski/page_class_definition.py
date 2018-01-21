@@ -613,7 +613,15 @@ $(document).ready(function(){
         else:
             fieldname = widg_field.f
         # currently not using page_data, but may do in future
-        return widget.validate(widg_field, value, environ, lang, form_data, call_data, self.ident)
+        newvalue, error_list = widget.validate(widg_field, value, environ, lang, form_data, call_data, self.ident)
+
+        # errors in same section as the errored widget need s value changing
+        if widg_field.s:
+            for error in error_list:
+                if error.section == sectionplaceholder.section_name:
+                    error.section = widg_field.s
+
+        return newvalue, error_list
 
 
 
