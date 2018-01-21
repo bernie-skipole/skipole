@@ -878,6 +878,8 @@ class Project(object):
                     return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
                 # create an ErrorMessage with the path as the message
                 err = ErrorMessage(message=html.escape(path))
+                # import any sections
+                page.import_sections()
                 page.show_error(error_messages=[err])
                 # update head and body parts
                 page.update(environ, call_data, lang)
@@ -902,6 +904,8 @@ class Project(object):
             # final none-respond page
             # call the user function end_call
             projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
+            # import any sections
+            page.import_sections()
             # now set the widget fields
             if page_data:
                 page.set_values(page_data)
@@ -918,6 +922,8 @@ class Project(object):
                 else:
                     page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n</html>"
                 return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+            # import any sections
+            page.import_sections()
             # show message passed by the exception
             page.show_error([e.errormessage])
             # update head and body parts
@@ -934,6 +940,8 @@ class Project(object):
                 else:
                     page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n</html>"
                 return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+            # import any sections
+            page.import_sections()
             # show message passed by the exception
             page.show_error([e.errormessage])
             # update head and body parts

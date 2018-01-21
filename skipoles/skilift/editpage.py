@@ -59,7 +59,7 @@ def _get_page(project, pagenumber):
     ident = skiboot.Ident.to_ident((project, pagenumber))
     if ident is None:
         return None, "Invalid project, pagenumber"
-    page = skiboot.from_ident(ident, project, import_sections=False)
+    page = skiboot.from_ident(ident, project)
     if page is None:
         return None, "Invalid Page"
     if page.page_type == 'Folder':

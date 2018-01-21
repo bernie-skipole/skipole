@@ -181,6 +181,10 @@ class ParentPage(object):
                 self.ident_data = ident_data
             del page_data['ident_data']
 
+    def import_sections(self):
+        "Only used by Template and SVG, everything else just returns"
+        return
+
 
     def get_status(self):
         "Returns (status, headers)"
@@ -577,16 +581,41 @@ $(document).ready(function(){
 
 
     def validate(self, widgfield, value, environ, lang, form_data, call_data, page_data):
-        """Given a field, its value and other parameters, call its widget validate function
+        """Given a widgfield, its value and other parameters, call its widget validate function
            which returns (value, error_list)"""
+        if not widgfield:
+            raise ValidateError(message = "Invalid widget-field, unable to validate")
         widg_field = skiboot.make_widgfield(widgfield)
-        widget, fieldname = self.widget_from_field(widg_field)
+
+        # widg_field is now a WidgField object with s, w, f and i attributes
+        if (not widg_field.w) or (not widg_field.f):
+            raise ValidateError(message = "Field %s not recognised" % (widgfield,))
+
+        if widg_field.s:
+            # self.section_places is a page section name -> SectionPlaceHolder dictionary
+            sectionplaceholder = self.section_places.get(widg_field.s)
+            if not sectionplaceholder:
+                raise ValidateError(message = "Widget %s not found in page %s" % (widg_field.w, self.ident))
+            sectionpart = sectionplaceholder.get_section()
+            widget = sectionpart.widgets.get(widg_field.w)
+        else:
+            # widget is not in a section, should be local to this page
+            widget = self.widgets.get(widg_field.w)
+
         if widget is None:
-            raise ValidateError(message = "Widget %s not found in page %s" % (widgfield.w, self.ident))
-        if fieldname is None:
-            raise ValidateError(message = "Field %s not found in widget %s, page %s" % (widg_field.f, widgfield.w, self.ident))
+            raise ValidateError(message = "Widget %s not found in page %s" % (widg_field.w, self.ident))
+
+        # check is the fieldname in the widget
+        if not widget.is_fieldname_in_widget(widg_field.f):
+            raise ValidateError(message = "Field %s not found in widget %s, page %s" % (widg_field.f, widg_field.w, self.ident))
+        if widg_field.i:
+            fieldname = widg_field.f + '-' + widg_field.i
+        else:
+            fieldname = widg_field.f
         # currently not using page_data, but may do in future
         return widget.validate(widg_field, value, environ, lang, form_data, call_data, self.ident)
+
+
 
     def show_error(self, error_messages=[]):
         """Stores the errors to display on the page in dictionary self.stored_errors.

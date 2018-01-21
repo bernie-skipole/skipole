@@ -223,7 +223,7 @@ def file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if section_name:
         call_data['section'] = call_data['editedproj'].section(section_name)
     else:
-        call_data['page'] = skiboot.from_ident(page.ident, import_sections=False)
+        call_data['page'] = skiboot.from_ident(page.ident)
 
     if parent_widget:
         call_data['widget_name'] = parent_widget

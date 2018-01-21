@@ -794,7 +794,7 @@ def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call
         raise FailPage(message = e.message)
 
     # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -872,7 +872,7 @@ def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict
         raise FailPage(message = e.message)
 
     # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -953,7 +953,7 @@ def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage(message = e.message)
 
     # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -1034,7 +1034,7 @@ def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_di
         raise FailPage(message = e.message)
 
     # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 
@@ -1163,7 +1163,7 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
         raise FailPage(message = e.message)
 
     # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -1379,7 +1379,7 @@ def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage(message = e.message)
 
     # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 

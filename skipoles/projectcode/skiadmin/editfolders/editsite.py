@@ -423,7 +423,7 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
         ident = skiboot.find_ident(edited_item, proj_ident=editedprojname)
     if ident is None:
         raise FailPage(message="Page not found")
-    item = skiboot.from_ident(ident, proj_ident=editedprojname, import_sections=False)
+    item = skiboot.from_ident(ident, proj_ident=editedprojname)
     if item is None:
         raise FailPage(message="Page not found")
     if item.page_type == "TemplatePage":

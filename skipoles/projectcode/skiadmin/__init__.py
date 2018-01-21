@@ -347,7 +347,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     if 'page' in session_data:
         page_ident = session_data['page']
         # check this page exists
-        page = skiboot.from_ident(page_ident, import_sections=False)
+        page = skiboot.from_ident(page_ident)
         if (page is None) or (page.page_type == 'Folder'):
             return "admin_home", call_data, page_data, lang
         if not page in editedproj:

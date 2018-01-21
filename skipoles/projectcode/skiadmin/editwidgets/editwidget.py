@@ -998,7 +998,7 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
         except ServerError as e:
             raise FailPage(message = e.message)
         # page has changed, hopefully, in due course, this line will not be needed
-        call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname, import_sections=False)
+        call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
     call_data['container'] = container
     call_data['widget_name'] = widget_name

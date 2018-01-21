@@ -802,6 +802,17 @@ class SectionPlaceHolder(object):
         if self.section_name in proj.list_section_names():
             return self.section_name
 
+    def get_section(self):
+        if not self.ident_string:
+            return
+        proj_ident = self.ident_string.split('_')[0]
+        proj = skiboot.getproject(proj_ident)
+        if proj is None:
+            return
+        if self.section_name not in proj.list_section_names():
+            return
+        return proj.section(self.section_name)
+
     @property
     def pagepart(self):
         """pagepart is typically head, body or svg.

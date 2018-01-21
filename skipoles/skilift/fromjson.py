@@ -223,7 +223,7 @@ def page_to_OD(project, pagenumber):
     project_loaded(project)
     if not isinstance(pagenumber, int):
         raise ServerError(message="pagenumber is not an integer")
-    page = skiboot.from_ident(pagenumber, project, import_sections=False)
+    page = skiboot.from_ident(pagenumber, project)
     if page is None:
         raise ServerError(message="Page not found")
     if page.page_type == 'SVG':
@@ -272,7 +272,7 @@ def folder_to_OD(project, foldernumber):
     project_loaded(project)
     if not isinstance(foldernumber, int):
         raise ServerError(message="foldernumber is not an integer")
-    folder = skiboot.from_ident(foldernumber, project, import_sections=False)
+    folder = skiboot.from_ident(foldernumber, project)
     if folder is None:
         raise ServerError(message="Folder not found")
     if folder.page_type != 'Folder':
