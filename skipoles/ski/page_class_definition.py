@@ -296,7 +296,8 @@ class TemplatePageAndSVG(ParentPage):
         return widget, fieldname
 
     def widget_from_name(self, section_name, widgetname):
-        "Return the widget given a widgetname, if widget not found in the page, None will be returned"
+        """Return the widget given a widgetname, if widget not found in the page, None will be returned
+           This should only be called after sections have been imported and returns the actual widget in the page"""
         if not section_name:
             # widget is not in a section, should be local to this page
             return self.widgets.get(widgetname)
@@ -304,6 +305,30 @@ class TemplatePageAndSVG(ParentPage):
             return None
         sectionpart = self.sections[section_name]
         return sectionpart.widgets.get(widgetname)
+
+
+    def copy_widget_from_name(self, section_name, widgetname):
+        """Return the widget given a widgetname, if widget not found in the page or section, None will be returned
+           This can be called before or after sections have been imported and returns a copy of the widget"""
+        if not section_name:
+            # widget is not in a section, should be local to this page
+            widget = self.widgets.get(widgetname)
+        elif section_name in self.sections:
+            section = self.sections[section_name]
+            widget = section.widgets.get(widgetname)
+        elif section_name in self.section_places:
+            # self.section_places is a page section name -> SectionPlaceHolder dictionary
+            sectionplaceholder = self.section_places.get(section_name)
+            if not sectionplaceholder:
+                return
+            section = sectionplaceholder.get_section()
+            widget = section.widgets.get(widgetname)
+        else:
+            return
+        if widget is None:
+            return
+        return copy.deepcopy(widget)
+
 
     def append_scriptlink(self, label):
         """Used to append a scriptlink to head, overridden in class Page"""

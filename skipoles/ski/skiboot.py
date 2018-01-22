@@ -605,8 +605,18 @@ class Ident(collections.namedtuple('Ident', ['proj','num'])):
             return cls(proj, item)
 
     def item(self):
-        """Calls the from_ident function"""
-        return from_ident(self, proj_ident=self.proj)
+        """Return page or folder with this ident. 
+           If folder or respond page return the item, any other page, return a deep copy
+           If not found, return None."""
+        project = getproject(self.proj)
+        if project is None:
+            return
+        try:
+            item = project[self]
+        except:
+            return
+        return item
+
 
     def name(self):
         """Returns the name of the page or folder with this ident
