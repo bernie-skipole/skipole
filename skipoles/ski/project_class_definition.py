@@ -218,27 +218,23 @@ class Project(object):
     def __getitem__(self, ident):
         """given an Ident, or a string version of ident, return page or folder. 
               If folder or respond page return the item, any other page, return a deep copy
-              of the item. If a template or SVG page with sections, the sections will be imported"""
+              of the item. If item not found, return None"""
         ident = skiboot.Ident.to_ident(ident, proj_ident=self._proj_ident)
         if ident is None:
-            raise ValidateError(message="Sorry, page ident not valid")
+            return
         if ident.proj != self._proj_ident:
-            raise ValidateError(message="Sorry, only pages within this project are valid")
+            return
         if ident.num == 0:
             return self.root
         if ident not in self.identitems:
-            raise ValidateError(message="Sorry, ident not valid")
+            return
         item = self.identitems[ident]
         if item is None:
-            raise ValidateError(message="Sorry, ident not valid")
+            return
         if item.page_type == 'Folder':
             return item
         if item.page_type == 'RespondPage':
             return item
-        if item.page_type == 'TemplatePage' or item.page_type == 'SVG':
-            page = copy.deepcopy(item)
-            page.import_sections()
-            return page
         return copy.deepcopy(item)
 
     def add_item(self, parent_ident, item, ident=None):
@@ -707,6 +703,10 @@ class Project(object):
             page = pident.item()
             if page is None:
                 raise ServerError(message="Invalid ident returned from start_call")
+            if page.page_type == 'Folder':
+                page = page.default_page
+                if not page:
+                    raise ServerError(message="Invalid ident returned from start_call")
         return True, page, call_data, page_data, lang
 
 
@@ -757,6 +757,8 @@ class Project(object):
                         page = target.item()
                         if not page:
                             raise ServerError(message="GoTo exception page ident %s not recognised" % (target,))
+                        if page.page_type == 'Folder':
+                            raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,))
                     else:
                         # target is a URL
                         call_data.clear()
@@ -790,7 +792,7 @@ class Project(object):
                 raise ValidateError(message="Form data not accepted, (invalid field %s)" % (field,))
             widgfield = skiboot.make_widgfield(field)
             # get fields and values from the rawformdata and store them in form_data
-            widget = caller_page.widget_from_name(widgfield.s, widgfield.w)          
+            widget = caller_page.copy_widget_from_name(widgfield.s, widgfield.w)
             if widget is None:
                 raise ValidateError(message="Form data not accepted, (unexpected field %s)" % (field,))
             if isinstance(rawformdata[field], list):

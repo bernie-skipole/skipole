@@ -1116,7 +1116,6 @@ false,
 "restricted": {
 "ident": 70100,
 "brief": "Holds restricted templates",
-"default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
