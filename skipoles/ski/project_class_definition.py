@@ -846,6 +846,15 @@ class Project(object):
             path = environ['PATH_INFO'].lower()
         else:
             path = ''
+
+        # This is the root project, check if the call is for any sub project
+        for proj, projurl in self._subproject_paths.items():
+            if (path.find(projurl) == 0) or (path + "/" == projurl):
+                # this url is within a sub project
+                subproj = self.subprojects[proj]
+                return subproj.proj_respond(environ, path, lang, received_cookies)
+
+        # the call is for a project in this root project
         return self.proj_respond(environ, path, lang, received_cookies)
 
 
@@ -861,12 +870,6 @@ class Project(object):
         call_data={}
         page_data={}
         call_ident = None
-        if self.rootproject:
-            for proj, projurl in self._subproject_paths.items():
-                if (path.find(projurl) == 0) or (path + "/" == projurl):
-                    # this url is within a project
-                    subproj = self.subprojects[proj]
-                    return subproj.proj_respond(environ, path, lang, received_cookies)
         
         # get the page from its path
         page = self.page_from_path(path)
