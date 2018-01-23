@@ -618,7 +618,9 @@ class Project(object):
 
 
     def parse_ident(self, environ):
-        "Returns rawformdata, and gets caller_page, and call_ident from the submitted ident field"
+        """Returns rawformdata, and gets caller_page, and call_ident from the submitted ident field
+           Note: caller_page could belong to another project, sog get it using ident.item() method
+           which will query the right project"""
         caller_page = None
         call_ident = None
         # get caller page and call_ident
@@ -633,13 +635,16 @@ class Project(object):
             # get the caller page ident, and the call_ident received from the 'ident' field
             c_list = rawformdata['ident'].value.split('_', 2)
             ident_items = len(c_list)
-            if ident_items == 2:
-                caller_page = self[(c_list[0], c_list[1])]
-                call_ident = None
-            elif ident_items == 3:
-                caller_page = self[(c_list[0], c_list[1])]
-                call_ident = c_list[2]
-            else:
+            try:
+                if ident_items == 2:
+                    caller_page = skiboot.Ident(c_list[0], int(c_list[1])).item()
+                    call_ident = None
+                elif ident_items == 3:
+                    caller_page = skiboot.Ident(c_list[0], int(c_list[1])).item()
+                    call_ident = c_list[2]
+            except:
+                caller_page = None
+            if caller_page is None:
                raise ValidateError(message="Form data not accepted, (received ident is not valid)")
             if caller_page.page_type != 'TemplatePage':
                 raise ValidateError(message="Form data not accepted, (caller page ident is not a template page)")
