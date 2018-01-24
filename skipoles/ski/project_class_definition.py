@@ -883,8 +883,9 @@ class Project(object):
         
 
             # dependent on wether the requested page is in this project or a sub project,
-            # call status_headers_data( to find the final page to return to the client
+            # call status_headers_data() to find the final page to return to the client
 
+            # ident_list retains list of idents called during a call to ensure no circulating calls
             ident_list = []
             # initially no errors, e_list is a list of errors to be shown
             e_list = []
@@ -915,8 +916,6 @@ class Project(object):
             status, headers = page.get_status()
             # return page data
             return e.status, headers, page.data()
-
-
 
 
     def status_headers_data(self, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data):
@@ -971,6 +970,12 @@ class Project(object):
                         # target is a URL
                         call_data.clear()
                         return self.redirect_to_url(target, environ, call_data, lang)
+
+                # it is possible that a jump to a page in another project has been made
+                if page.ident.proj != self._proj_ident:
+                    subproj = self.subprojects.get(page.ident.proj)
+                    return subproj.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+                
         except (ServerError, ValidateError) as e:
             e.ident_list = ident_list
             raise e
