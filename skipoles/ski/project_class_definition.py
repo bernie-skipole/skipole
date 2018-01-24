@@ -606,23 +606,12 @@ class Project(object):
                 labels_dict[key] = val.to_tuple()
         return labels_dict
 
-    def call_url(self, url):
-        "Return the redirector page, with fields set to url"
-        if '/' not in url:
-            raise ServerError(message="The given url is invalid, must contain at least one /")
-        page = self.special_page('redirector')
-        if page.page_type != "TemplatePage":
-            raise ServerError(message="Target is a url, but redirector special page is invalid")
-        page.set_values({('redirect_to', 'url'):url})
-        return page
-
-
 
     def redirect_to_url(self, url, environ, call_data, lang):
         "Return status, headers, page.data() of the redirector page, with fields set to url"
         page = self.special_page('redirector')
         if '/' not in url:
-            raise ServerError(message="Invalid target url")
+            raise ServerError(message="Invalid target url, must contain at least one /")
         if page.page_type != "TemplatePage":
             raise ServerError(message="Target is a url, but redirector special page is invalid")
         # return redirector
@@ -630,130 +619,6 @@ class Project(object):
         page.update(environ, call_data, lang, [])
         status, headers = page.get_status()
         return status, headers, page.data()
-
-
-
-    def start_call(self, caller_page, call_ident, page, environ, path, lang, received_cookies):
-        """Calls the user start_call function, returns internal, page, call_data, page_data, lang
-           where 'internal is a boolean flag, True if start_call returns a page ident, False if it is an external url"""
-        if page is None:
-            ident = None
-        else:
-            ident = page.ident  # this is the called page ident
-        # call the project start_call
-        try:
-            if caller_page:
-                caller_page_ident = caller_page.ident
-            else:
-                caller_page_ident = None
-            # start_call could return a different page ident, or None
-            # call_data will be the dictionary of values passed between responders
-            # page_data will be the dictionary of widgfields and values to set in the page
-            pident, call_data, page_data, lang = projectcode.start_call(environ,
-                                                                       path,
-                                                                       self._proj_ident,
-                                                                       ident,
-                                                                       caller_page_ident,
-                                                                       received_cookies,
-                                                                       call_ident,
-                                                                       lang,
-                                                                       self.option,
-                                                                       self.proj_data)
-            if pident is None:
-                # This automatically calls URL NOT FOUND
-                return True, None, call_data, page_data, lang
-        except (ServerError, ValidateError) as e:
-            raise e
-        except Exception:
-            raise ServerError(message="Incorrect start_call action!")
-        # get the page from pident
-        if isinstance(pident, str):
-            # either a label, or url
-            if '/' in pident:
-                page = self.call_url(pident)
-                # external call, no form data
-                return False, page, {}, {}, lang
-            # no '/' in pident so must be a label
-            pident = skiboot.find_ident_or_url(pident, self._proj_ident)
-            if not pident:
-                raise ServerError(message="Returned page ident from start_call not recognised")
-            if isinstance(pident, str):
-                # must be a url
-                page = self.call_url(pident)
-                # external call, no form data
-                return False, page, {}, {}, lang
-            # pident could be an Ident, carry on with next test
-        if not isinstance(pident, skiboot.Ident):
-            raise ServerError(message="Invalid ident returned from start_call")
-        if pident != ident:
-            # a new page is requested
-            page = pident.item()
-            if page is None:
-                raise ServerError(message="Invalid ident returned from start_call")
-            if page.page_type == 'Folder':
-                page = page.default_page
-                if not page:
-                    raise ServerError(message="Invalid ident returned from start_call")
-        return True, page, call_data, page_data, lang
-
-
-    def call_page_responder(self, page, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata):
-        """For the given page, calls the page call_responder, and continues to do this until a none-responder page is returned
-           Handles goto exceptions, note rawformdata is a cgi.FieldStorage object
-           Returns page, e_list"""
-        try:
-            # e_list is a list of errors to be shown
-            e_list = []
-            while page.page_type == 'RespondPage':
-                ident = page.ident
-                if page.responder is None:
-                    raise ServerError(message="Respond page %s does not have any responder set" % page.url)
-                try: 
-                    page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
-                    if isinstance(page, str):
-                        # must be a url
-                        call_data.clear()
-                        page_data.clear()
-                        return self.call_url(page), []
-                except PageError as ex:
-                    # a jump to a page has occurred, with a list of errors
-                    page = ex.page
-                    if isinstance(page, str):
-                        # must be a url
-                        call_data.clear()
-                        page_data.clear()
-                        return self.call_url(page), []
-                    if page.ident in ident_list:
-                        raise ServerError(message="Invalid Failure page: can cause circulating call")
-                    # show the list of errors on the page
-                    e_list = ex.e_list
-                except GoTo as ex:
-                    if ex.clear_submitted:
-                        form_data.clear()
-                    if ex.clear_page_data:
-                        page_data.clear()
-                    target = skiboot.find_ident_or_url(ex.target, ex.proj_ident)
-                    # target is either an Ident, a URL or None
-                    if not target:
-                        raise ServerError(message="GoTo exception target not recognised")
-                    if isinstance(target, skiboot.Ident):
-                        if target == ident:
-                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,))
-                        if target in ident_list:
-                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,))
-                        page = target.item()
-                        if not page:
-                            raise ServerError(message="GoTo exception page ident %s not recognised" % (target,))
-                        if page.page_type == 'Folder':
-                            raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,))
-                    else:
-                        # target is a URL
-                        call_data.clear()
-                        return self.call_url(target), []
-        except (ServerError, ValidateError) as e:
-            e.ident_list = ident_list
-            raise e
-        return page, e_list
 
 
     def read_form_data(self, rawformdata, caller_page):
@@ -1002,25 +867,9 @@ class Project(object):
                 page = page.default_page
                 if not page:
                     raise ServerError(message="Invalid ident returned from start_call")
-            if pident.proj != self._proj_ident:
-                # page returned from start_call is in another project
-                subproj = self.subprojects.get(pident.proj)
-                return subproj.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data)
-            
-        # call status_headers_data to return status, headers and data to the top script
-        return self.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data)
 
-
-
-    def status_headers_data(self, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data):
-        """Gets any form data, and if responders, calls them until it can return status, headers, page.data()"""
-
-        status = '200 OK' # HTTP Status
-        headers = [('content-type', 'text/html')]
-        ident_list = []
-
+        # read any submitted data from rawformdata, and place in form_data
         try:
-
             form_data = {}
             if rawformdata and (caller_page is not None) and (page.page_type == "RespondPage"):
                 form_data = self.read_form_data(rawformdata, caller_page)
@@ -1031,26 +880,22 @@ class Project(object):
                 # and the destination is a RespondPage
 
                 # otherwise form_data is empty (though rawformdata is retained)
+        
 
-            # initially no errors
+            # dependent on wether the requested page is in this project or a sub project,
+            # call status_headers_data( to find the final page to return to the client
+
+            ident_list = []
+            # initially no errors, e_list is a list of errors to be shown
             e_list = []
-            if page.page_type == "RespondPage":
-                # call responders and obtain a page to be sent
-                page, e_list = self.call_page_responder(page, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
 
-            # call the user function end_call
-            projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
-            # import any sections
-            page.import_sections()
-            if e_list:
-                # show the list of errors on the page
-                page.show_error(e_list)
-            # now set the widget fields
-            if page_data:
-                page.set_values(page_data)
-            page.update(environ, call_data, lang, ident_list)
-            status, headers = page.get_status()
-            return status, headers, page.data()
+            if page.ident.proj != self._proj_ident:
+                # page returned from start_call is in another project
+                subproj = self.subprojects.get(page.ident.proj)
+                return subproj.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+                
+            # call status_headers_data to return status, headers and data to the top script
+            return self.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
 
         except ValidateError as e:
             page = self.special_page("validate_error")
@@ -1070,6 +915,88 @@ class Project(object):
             status, headers = page.get_status()
             # return page data
             return e.status, headers, page.data()
+
+
+
+
+    def status_headers_data(self, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data):
+        """calls responders until it can return status, headers, page.data()"""
+
+        try:
+            while page.page_type == 'RespondPage':
+                ident = page.ident
+                if page.responder is None:
+                    raise ServerError(message="Respond page %s does not have any responder set" % page.url)
+                try: 
+                    page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
+                    if isinstance(page, str):
+                        # must be a url
+                        call_data.clear()
+                        page_data.clear()
+                        # get redirector page
+                        return self.redirect_to_url(page, environ, call_data, lang)
+                except PageError as ex:
+                    # a jump to a page has occurred, with a list of errors
+                    page = ex.page
+                    if isinstance(page, str):
+                        # must be a url
+                        call_data.clear()
+                        page_data.clear()
+                        # get redirector page
+                        return self.redirect_to_url(page, environ, call_data, lang)
+                    if page.ident in ident_list:
+                        raise ServerError(message="Invalid Failure page: can cause circulating call")
+                    # show the list of errors on the page
+                    e_list = ex.e_list
+                except GoTo as ex:
+                    if ex.clear_submitted:
+                        form_data.clear()
+                    if ex.clear_page_data:
+                        page_data.clear()
+                    target = skiboot.find_ident_or_url(ex.target, ex.proj_ident)
+                    # target is either an Ident, a URL or None
+                    if not target:
+                        raise ServerError(message="GoTo exception target not recognised")
+                    if isinstance(target, skiboot.Ident):
+                        if target == ident:
+                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,))
+                        if target in ident_list:
+                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,))
+                        page = target.item()
+                        if not page:
+                            raise ServerError(message="GoTo exception page ident %s not recognised" % (target,))
+                        if page.page_type == 'Folder':
+                            raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,))
+                    else:
+                        # target is a URL
+                        call_data.clear()
+                        return self.redirect_to_url(target, environ, call_data, lang)
+        except (ServerError, ValidateError) as e:
+            e.ident_list = ident_list
+            raise e
+
+
+        # the page to be returned to the client is now 'page'
+        # and 'e_list' is a list of errors to be shown on it
+
+        # call the user function end_call
+        try:
+            projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
+        except:
+            raise ServerError(message="Invalid exception in end_call function.")
+
+        # import any sections
+        page.import_sections()
+        if e_list:
+            # show the list of errors on the page
+            page.show_error(e_list)
+        # now set the widget fields
+        if page_data:
+            page.set_values(page_data)
+        page.update(environ, call_data, lang, ident_list)
+        status, headers = page.get_status()
+        return status, headers, page.data()
+
 
 
     def page_from_path(self, path):
