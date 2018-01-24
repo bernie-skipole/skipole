@@ -617,38 +617,20 @@ class Project(object):
         return page
 
 
-    def parse_ident(self, environ):
-        """Returns rawformdata, and gets caller_page, and call_ident from the submitted ident field
-           Note: caller_page could belong to another project, sog get it using ident.item() method
-           which will query the right project"""
-        caller_page = None
-        call_ident = None
-        # get caller page and call_ident
-        rawformdata = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
-        if rawformdata:
-            # form data has been submitted - so get the caller page
-            if 'ident' not in rawformdata:
-                # external page without ident calling with data
-                return rawformdata, None, None
-            if not hasattr(rawformdata['ident'], 'value'):
-                raise ValidateError(message="Form data not accepted, caller page ident not recognised")
-            # get the caller page ident, and the call_ident received from the 'ident' field
-            c_list = rawformdata['ident'].value.split('_', 2)
-            ident_items = len(c_list)
-            try:
-                if ident_items == 2:
-                    caller_page = skiboot.Ident(c_list[0], int(c_list[1])).item()
-                    call_ident = None
-                elif ident_items == 3:
-                    caller_page = skiboot.Ident(c_list[0], int(c_list[1])).item()
-                    call_ident = c_list[2]
-            except:
-                caller_page = None
-            if caller_page is None:
-               raise ValidateError(message="Form data not accepted, (received ident is not valid)")
-            if caller_page.page_type != 'TemplatePage':
-                raise ValidateError(message="Form data not accepted, (caller page ident is not a template page)")
-        return rawformdata, caller_page, call_ident
+
+    def redirect_to_url(self, url, environ, call_data, lang):
+        "Return status, headers, page.data() of the redirector page, with fields set to url"
+        page = self.special_page('redirector')
+        if '/' not in url:
+            raise ServerError(message="Invalid target url")
+        if page.page_type != "TemplatePage":
+            raise ServerError(message="Target is a url, but redirector special page is invalid")
+        # return redirector
+        page.set_values({('redirect_to', 'url'):url})
+        page.update(environ, call_data, lang, [])
+        status, headers = page.get_status()
+        return status, headers, page.data()
+
 
 
     def start_call(self, caller_page, call_ident, page, environ, path, lang, received_cookies):
@@ -822,6 +804,7 @@ class Project(object):
                 form_data[widgfield] = fieldvalue
         return form_data
 
+
     def respond(self, environ):
         "called from the project top script"
         # get cookies
@@ -847,77 +830,214 @@ class Project(object):
         else:
             path = ''
 
-        # This is the root project, check if the call is for any sub project
-        for proj, projurl in self._subproject_paths.items():
-            if (path.find(projurl) == 0) or (path + "/" == projurl):
-                # this url is within a sub project
-                subproj = self.subprojects[proj]
-                return subproj.proj_respond(environ, path, lang, received_cookies)
+        try:
+            # This is the root project, check if the call is for a page in any sub project
+            for proj, projurl in self._subproject_paths.items():
+                if (path.find(projurl) == 0) or (path + "/" == projurl):
+                    # this url is within a sub project
+                    subproj = self.subprojects[proj]
+                    return subproj.proj_respond(environ, path, lang, received_cookies)
 
-        # the call is for a project in this root project
-        return self.proj_respond(environ, path, lang, received_cookies)
+            # the call is for a page in this root project
+            return self.proj_respond(environ, path, lang, received_cookies)
+        except ServerError as e:
+            page = self.special_page("server_error")
+            if (not page) or (page.page_type != "TemplatePage"):
+                # make a temp page
+                if e.message:
+                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
+                else:
+                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n</html>"
+                return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+            # import any sections
+            page.import_sections()
+            # show message passed by the exception
+            page.show_error([e.errormessage])
+            # update head and body parts
+            page.update(environ, {}, lang, e.ident_list)
+            status, headers = page.get_status()
+            # return page data
+            return e.status, headers, page.data()
 
 
     def proj_respond(self, environ, path, lang, received_cookies):
-        """Called with environ and parses the url
+        "Calls start call, and depending on the returned page, calls the project status_headers_data method"
 
-        Checks down through child folders until it gets the
-        right page, then returns status, headers, page.data()
-        """
-        status = '200 OK' # HTTP Status
-        headers = [('content-type', 'text/html')]
-        ident_list = []
-        call_data={}
-        page_data={}
-        call_ident = None
-        
-        # get the page from its path
+        # get the initial called page from the path
         page = self.page_from_path(path)
+        # note; page could be None if not found from a path
 
-        # note page is None if not found
+        caller_page = None
+        call_ident = None
 
         try:
             # get caller page and call_ident from any form data submitted
-            rawformdata, caller_page, call_ident = self.parse_ident(environ)
-            # rawformdata is a FieldStorage object
-            # call self.start_call which in turn calls the user start_call function
-            internal, page, call_data, page_data, lang = self.start_call(caller_page, call_ident, page, environ, path, lang, received_cookies)
+            # rawformdata, caller_page, call_ident = self.parse_ident(environ)
+
+            # Note: caller_page could belong to another project, sog get it using ident.item() method
+            # which will query the right project
+
+            rawformdata = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
+            if rawformdata:
+                # form data has been submitted - so get the caller page
+                if 'ident' not in rawformdata:
+                    # external page without ident calling with data
+                    caller_page = None
+                    call_ident = None
+                elif not hasattr(rawformdata['ident'], 'value'):
+                    raise ValidateError(message="Form data not accepted, caller page ident not recognised")
+                else:
+                    # rawformdata has 'ident' with attribute 'value'
+                    # get the caller page ident, and the call_ident received from the 'ident' field
+                    c_list = rawformdata['ident'].value.split('_', 2)
+                    ident_items = len(c_list)
+                    try:
+                        if ident_items == 2:
+                            caller_page = skiboot.Ident(c_list[0], int(c_list[1])).item()
+                            call_ident = None
+                        elif ident_items == 3:
+                            caller_page = skiboot.Ident(c_list[0], int(c_list[1])).item()
+                            call_ident = c_list[2]
+                    except:
+                        caller_page = None
+                    if caller_page is None:
+                       raise ValidateError(message="Form data not accepted, (received ident is not valid)")
+                    if caller_page.page_type != 'TemplatePage':
+                        raise ValidateError(message="Form data not accepted, (caller page ident is not a template page)")
+        except ValidateError as e:
+            page = self.special_page("validate_error")
+            if (not page) or (page.page_type != "TemplatePage"):
+                # make a temp page
+                if e.message:
+                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
+                else:
+                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n</html>"
+                return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+            # import any sections
+            page.import_sections()
+            # show message passed by the exception
+            page.show_error([e.errormessage])
+            # update head and body parts
+            page.update(environ, {}, lang, e.ident_list)
+            status, headers = page.get_status()
+            # return page data
+            return e.status, headers, page.data()
+
+        # so caller_page could be either given, or could be None
+
+        # now call the project start_call function
+
+        if page is None:
+            ident = None
+        else:
+            ident = page.ident  # this is the called page ident
+
+        # call the project start_call
+        try:
+            if caller_page:
+                caller_page_ident = caller_page.ident
+            else:
+                caller_page_ident = None
+            # start_call could return a different page ident, or None
+            # call_data will be the dictionary of values passed between responders
+            # page_data will be the dictionary of widgfields and values to set in the page
+            pident, call_data, page_data, lang = projectcode.start_call(environ,
+                                                                       path,
+                                                                       self._proj_ident,
+                                                                       ident,
+                                                                       caller_page_ident,
+                                                                       received_cookies,
+                                                                       call_ident,
+                                                                       lang,
+                                                                       self.option,
+                                                                       self.proj_data)
+        except:
+            raise ServerError(message="Invalid exception in start_call function.")
+
  
+        if pident is None:
+            # URL NOT FOUND and start_call does not divert
+            page = self.special_page("url_not_found")
+            if (not page) or (page.page_type != "TemplatePage"):
+                page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
+                return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+            # create an ErrorMessage with the path as the message
+            err = ErrorMessage(message=html.escape(path))
+            # import any sections
+            page.import_sections()
+            page.show_error(error_messages=[err])
+            # update head and body parts
+            page.update(environ, call_data, lang)
+            status, headers = page.get_status()
+            return '404 Not Found', headers, page.data()
+
+        # pident is the ident of the diverted page or a label or url string
+
+        # get the page from pident
+        if isinstance(pident, str):
+            # either a label, or url
+            if '/' in pident:
+                # get redirector page
+                return self.redirect_to_url(pident, environ, call_data, lang)
+            else:
+                # no '/' in pident so must be a label
+                pident = skiboot.find_ident_or_url(pident, self._proj_ident)
+                if not pident:
+                    raise ServerError(message="Returned page ident from start_call not recognised")
+                if isinstance(pident, str):
+                    # must be a url, get redirector page
+                    return self.redirect_to_url(pident, environ, call_data, lang)
+
+        # so pident must be an ident
+        if not isinstance(pident, skiboot.Ident):
+            raise ServerError(message="Invalid ident returned from start_call")
+
+        # ident is the ident originally called, pident is the ident returned from start_call
+        if pident != ident:
+            # a new page is requested
+            page = pident.item()
             if page is None:
-                # URL NOT FOUND and start_call does not divert
-                page = self.special_page("url_not_found")
-                if (not page) or (page.page_type != "TemplatePage"):
-                    page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
-                    return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
-                # create an ErrorMessage with the path as the message
-                err = ErrorMessage(message=html.escape(path))
-                # import any sections
-                page.import_sections()
-                page.show_error(error_messages=[err])
-                # update head and body parts
-                page.update(environ, call_data, lang)
-                status, headers = page.get_status()
-                return '404 Not Found', headers, page.data()
+                raise ServerError(message="Invalid ident returned from start_call")
+            if page.page_type == 'Folder':
+                page = page.default_page
+                if not page:
+                    raise ServerError(message="Invalid ident returned from start_call")
+            if pident.proj != self._proj_ident:
+                # page returned from start_call is in another project
+                subproj = self.subprojects.get(pident.proj)
+                return subproj.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data)
+            
+        # call status_headers_data to return status, headers and data to the top script
+        return self.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data)
+
+
+
+    def status_headers_data(self, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data):
+        """Gets any form data, and if responders, calls them until it can return status, headers, page.data()"""
+
+        status = '200 OK' # HTTP Status
+        headers = [('content-type', 'text/html')]
+        ident_list = []
+
+        try:
 
             form_data = {}
-            if rawformdata and (caller_page is not None) and internal and (page.page_type == "RespondPage"):
+            if rawformdata and (caller_page is not None) and (page.page_type == "RespondPage"):
                 form_data = self.read_form_data(rawformdata, caller_page)
 
             # so form_data only available if
                 # rawformdata has been submitted
                 # and caller_page is known, so widgets can be extracted
-                # and the destination is internal (not a redirection)
                 # and the destination is a RespondPage
 
                 # otherwise form_data is empty (though rawformdata is retained)
 
             # initially no errors
             e_list = []
-            if internal and (page.page_type == "RespondPage"):
-                # call responders until return with a page to be sent
+            if page.page_type == "RespondPage":
+                # call responders and obtain a page to be sent
                 page, e_list = self.call_page_responder(page, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
 
-            # final none-respond page
             # call the user function end_call
             projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
             # import any sections
@@ -950,28 +1070,6 @@ class Project(object):
             status, headers = page.get_status()
             # return page data
             return e.status, headers, page.data()
-        except ServerError as e:
-            page = self.special_page("server_error")
-            if (not page) or (page.page_type != "TemplatePage"):
-                # make a temp page
-                if e.message:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
-                else:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n</html>"
-                return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
-            # import any sections
-            page.import_sections()
-            # show message passed by the exception
-            page.show_error([e.errormessage])
-            # update head and body parts
-            page.update(environ, call_data, lang, e.ident_list)
-            status, headers = page.get_status()
-            # return page data
-            return e.status, headers, page.data()
-
-        # This point should never be reached
-        page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n</html>"
-        return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
 
 
     def page_from_path(self, path):
