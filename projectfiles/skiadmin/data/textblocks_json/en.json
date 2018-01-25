@@ -558,6 +558,7 @@
   "widgets.info.PageName": "A widget containing the name of the given page ident which is set within the text. If no page ident is given, shows name of the current page.",
   "widgets.info.PageName.page_ident": "The ident of a page or folder.",
   "widgets.info.PageName.span_text": "If given, overrides the page name, JSON settable.",
+  "widgets.info.ProjectName": "A span showing the name of the project the page is in.",
   "widgets.info.Redirector": "A widget containing javascript which redirects the page to the given url.\r\nOnce the page is loaded, the redirection occurs, so normally this is the only widget on the page.\r\nA TextBlock is displayed with the link to the url if the client has javascript disabled.",
   "widgets.info.Redirector.text_refnotfound": "If the TextBlock is not found, this text is used instead.",
   "widgets.info.Redirector.text_replaceblock": "If text is set here, it will be used instead of a TextBlock.",
