@@ -250,7 +250,7 @@
 "validator_modules": 46301,
 "validator_move_down": 46211,
 "validator_move_up": 46201,
-"w3_css": 210,
+"w3_css": "lib,w3_css",
 "w3_theme_ski_css": 220,
 "widget_arg_dict_edit": 44014,
 "widget_arg_list_edit": 44012,
