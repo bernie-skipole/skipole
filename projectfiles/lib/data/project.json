@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.0.7",
+"skipole": "0.0.8",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -36,6 +36,7 @@
 "ski_textarea": 605,
 "ski_upload": 608,
 "skipole_js": 10,
+"test1": 1001,
 "url_not_found": 880,
 "validate_error": 810
 },
@@ -903,6 +904,163 @@
 "widget_class": "",
 "widget_style": ""
 }
+}
+]
+]
+}
+]
+}
+}
+},
+"tests": {
+"ident": 1000,
+"brief": "Holds test responders and templates",
+"restricted": true,
+"folders": {},
+"pages": {
+"test1": {
+"ident": 1001,
+"brief": "Responder for test1",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": 1010
+},
+"original_fields": {}
+}
+},
+"test1_template": {
+"ident": 1010,
+"brief": "test1 template page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#FFFFFF",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Test1"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Time :"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Widget",
+{
+"class": "info.ServerTimeStamp",
+"name": "time",
+"brief": "Shows server timestamp",
+"fields": {
+"show": true,
+"timestamp": "",
+"utc": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
 }
 ]
 ]
