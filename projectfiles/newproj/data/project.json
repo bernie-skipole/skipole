@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "0.0.39",
+"skipole": "0.0.8",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -44,7 +44,7 @@
 "skipole_js": "lib,skipole_js",
 "url_not_found": 550,
 "validate_error": 510,
-"w3_css": 1002,
+"w3_css": "lib,w3_css",
 "w3_theme_ski_css": 1008
 },
 "sections": {},
@@ -74,15 +74,6 @@
 "brief": "color theme",
 "FilePage": {
 "filepath": "newproj/static/css/w3-theme-ski.css",
-"enable_cache": true,
-"mimetype": "text/css"
-}
-},
-"w3.css": {
-"ident": 1002,
-"brief": "From www.w3schools.com/w3css/",
-"FilePage": {
-"filepath": "newproj/static/css/w3.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
@@ -593,8 +584,10 @@
 "widget_style": ""
 },
 "container_0": [
+[
 "Text",
 ""
+]
 ]
 }
 ],
@@ -1060,8 +1053,10 @@
 "widget_style": ""
 },
 "container_0": [
+[
 "Text",
 ""
+]
 ]
 }
 ],
@@ -1270,8 +1265,10 @@
 "widget_style": ""
 },
 "container_0": [
+[
 "Text",
 ""
+]
 ]
 }
 ],
