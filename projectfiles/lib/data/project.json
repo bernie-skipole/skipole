@@ -37,8 +37,10 @@
 "ski_upload": 608,
 "skipole_js": 10,
 "test1": 1001,
+"theme1_css": 330,
 "url_not_found": 880,
-"validate_error": 810
+"validate_error": 810,
+"w3_css": 320
 },
 "sections": {},
 "RootFolder": {
@@ -122,6 +124,24 @@
 ]
 ]
 }
+}
+},
+"theme1.css": {
+"ident": 330,
+"brief": "Link to static/css/theme1.css",
+"FilePage": {
+"filepath": "lib/static/css/theme1.css",
+"enable_cache": false,
+"mimetype": "text/css"
+}
+},
+"w3.css": {
+"ident": 320,
+"brief": "Link to static/css/w3.css",
+"FilePage": {
+"filepath": "lib/static/css/w3.css",
+"enable_cache": false,
+"mimetype": "text/css"
 }
 }
 }
