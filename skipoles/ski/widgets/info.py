@@ -195,6 +195,34 @@ class PageDescription(Widget):
 """
 
 
+class ProjectName(Widget):
+    """A span showing the name of the project the page is in"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {}
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        Shows project name
+        """
+        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        self[0] = ""
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the element"        
+        self[0] = page.ident.proj
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return """
+<span>  <!-- with widget id and class widget_class -->
+  <!-- the project name -->
+</span>
+"""
+
+
 class Version(Widget):
     """A span showing the project version of the page it is in"""
 

@@ -108,6 +108,14 @@ SKIPOLE.info.Redirector.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.info.Redirector.prototype.constructor = SKIPOLE.info.Redirector;
 
 
+SKIPOLE.info.ProjectName = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.info.ProjectName.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.info.ProjectName.prototype.constructor = SKIPOLE.info.ProjectName;
+
+
 SKIPOLE.info.Version = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;

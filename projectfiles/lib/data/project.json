@@ -915,6 +915,7 @@
 "tests": {
 "ident": 1000,
 "brief": "Holds test responders and templates",
+"default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
@@ -1061,6 +1062,89 @@
 }
 ]
 ]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph showing project version",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Project"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Widget",
+{
+"class": "info.ProjectName",
+"name": "projname",
+"brief": "Shows the project name",
+"fields": {
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Text",
+"version :"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Widget",
+{
+"class": "info.Version",
+"name": "libversion",
+"brief": "Shows the lib version",
+"fields": {
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowResponders",
+"name": "called_idents",
+"brief": "A div showing idents called to reach this page",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"paradiv_class": "",
+"show": true,
+"show_error": "",
+"table_class": "",
+"toptext": "",
+"widget_class": "",
+"widget_style": ""
+}
 }
 ]
 ]
