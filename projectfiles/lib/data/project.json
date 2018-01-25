@@ -131,7 +131,7 @@
 "brief": "Link to static/css/theme1.css",
 "FilePage": {
 "filepath": "lib/static/css/theme1.css",
-"enable_cache": false,
+"enable_cache": true,
 "mimetype": "text/css"
 }
 },
@@ -140,7 +140,7 @@
 "brief": "Link to static/css/w3.css",
 "FilePage": {
 "filepath": "lib/static/css/w3.css",
-"enable_cache": false,
+"enable_cache": true,
 "mimetype": "text/css"
 }
 }
