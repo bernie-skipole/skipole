@@ -30,7 +30,7 @@ This module defines the Project class
 """
 
 
-import copy, os, cgi, collections, html, pprint, json, shutil, uuid
+import copy, os, cgi, collections, html, pprint, json, shutil, uuid, sys, traceback
 
 from http import cookies
 
@@ -817,8 +817,14 @@ class Project(object):
                                                                        self.option,
                                                                        self.proj_data)
         except:
-            raise ServerError(message="Invalid exception in start_call function.")
-
+            message = "Invalid exception in start_call function."
+            if skiboot.get_debug():
+                message += "\n"
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                for item in str_list:
+                    message += item
+            raise ServerError(message)
  
         if pident is None:
             # URL NOT FOUND and start_call does not divert
@@ -980,7 +986,6 @@ class Project(object):
             e.ident_list = ident_list
             raise e
 
-
         # the page to be returned to the client is now 'page'
         # and 'e_list' is a list of errors to be shown on it
 
@@ -988,7 +993,14 @@ class Project(object):
         try:
             projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
         except:
-            raise ServerError(message="Invalid exception in end_call function.")
+            message = "Invalid exception in end_call function."
+            if skiboot.get_debug():
+                message += "\n"
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                for item in str_list:
+                    message += item
+            raise ServerError(message)
 
         # import any sections
         page.import_sections()
