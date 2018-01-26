@@ -299,6 +299,7 @@ main purpose is to act as a parent class for all other respond objects.
             if caller_page.ident not in allowed_idents:
                 raise ValidateError(message="Caller page ident not in responder allowed_callers list")
 
+
     def _validate_fields(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         "Validates the fields specified in self.fields, returns validated form data, but does not change original form_data"
         # validation tests are stored in caller page
@@ -334,16 +335,14 @@ main purpose is to act as a parent class for all other respond objects.
         # e_list holds errors occurred
         if e_list:
             # on validation errors, call the validate_fail_ident page, get final target template, and show the errors
-            page = self.get_next_page_from_ident(self.validate_fail_ident, proj_ident)
-            if hasattr(page, 'page_type') and page.page_type == 'RespondPage':
-                # must call the pages respond object, with an error_dict and obtain final template page
-                page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata, error_dict)
+            page = self.get_page_from_ident(self.validate_fail_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, error_dict)
             raise PageError(page, e_list)
-        # so all ok, return the validated form data
+        # so all ok, no error, but some values may be substituted, so return the validated form data
         return validated_form_data
 
-    def get_next_page_from_ident(self, ident, proj_ident):
-        """Calls the next responder or template page given by ident (which can be an ident, label or url)."""
+    def get_page_from_ident(self, ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, error_dict=None):
+        """Calls the next responder or template page given by ident (which can be an ident, label or url)
+           - and if a responder, calls its respond object to finally return a final target page."""
         if isinstance(ident, str) and ('/' in ident):
             # this is a URL
             return ident
@@ -364,6 +363,9 @@ main purpose is to act as a parent class for all other respond objects.
             page = page.default_page
             if not page:
                 raise ValidateError()
+        if hasattr(page, 'page_type') and page.page_type == 'RespondPage':
+            # must call the pages respond object
+            page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata, error_dict)
         return page
 
  
@@ -376,15 +378,6 @@ main purpose is to act as a parent class for all other respond objects.
     def get_alternate_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         "Gets the alternate page, if the alternate page has an ident, if it is an external url, get the redirector page with this url"
         return self.get_page_from_ident(self.alternate_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-
-    def get_page_from_ident(self, ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
-        """Calls the next responder or template page given by ident (which can be an ident, label or url)
-           - and if a responder, calls its respond object to finally return a further target page."""
-        page = self.get_next_page_from_ident(ident, proj_ident)
-        if hasattr(page, 'page_type') and page.page_type == 'RespondPage':
-            # must call the pages respond object
-            page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
-        return page
 
     def raise_error_page(self, e_list, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         """Gets the page with fail_ident, sets error_messages and raises a PageError holding the page
