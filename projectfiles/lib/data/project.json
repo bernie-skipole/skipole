@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.0.8",
+"skipole": "0.0.9",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -348,21 +348,6 @@
 }
 ],
 [
-"ClosedWidget",
-{
-"class": "links.CSSLink",
-"name": "cssl2",
-"brief": "Link to css page newpage_css",
-"fields": {
-"css_ident": "newpage_css",
-"media": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Widget",
 {
 "class": "links.ScriptLink",
@@ -564,21 +549,6 @@
 }
 ],
 [
-"ClosedWidget",
-{
-"class": "links.CSSLink",
-"name": "cssl2",
-"brief": "Link to css page newpage_css",
-"fields": {
-"css_ident": "newpage_css",
-"media": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Widget",
 {
 "class": "links.ScriptLink",
@@ -773,21 +743,6 @@
 "Validation Error"
 ]
 ]
-}
-],
-[
-"ClosedWidget",
-{
-"class": "links.CSSLink",
-"name": "cssl2",
-"brief": "Link to css page newpage_css",
-"fields": {
-"css_ident": "newpage_css",
-"media": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
 }
 ],
 [
