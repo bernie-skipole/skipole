@@ -675,7 +675,7 @@ class Project(object):
         # get cookies
         try:
             cookiemorsals = cookies.SimpleCookie(environ["HTTP_COOKIE"])
-        except:
+        except Exception:
             cookiemorsals = None
         if cookiemorsals:
             received_cookies = {item:m.value for item,m in cookiemorsals.items()}
@@ -763,7 +763,7 @@ class Project(object):
                         elif ident_items == 3:
                             caller_page = skiboot.Ident(c_list[0], int(c_list[1])).item()
                             call_ident = c_list[2]
-                    except:
+                    except Exception:
                         caller_page = None
                     if caller_page is None:
                        raise ValidateError(message="Form data not accepted, (received ident is not valid)")
@@ -816,7 +816,7 @@ class Project(object):
                                                                        lang,
                                                                        self.option,
                                                                        self.proj_data)
-        except:
+        except Exception:
             message = "Invalid exception in start_call function."
             if skiboot.get_debug():
                 message += "\n"
@@ -992,7 +992,7 @@ class Project(object):
         # call the user function end_call
         try:
             projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
-        except:
+        except Exception:
             message = "Invalid exception in end_call function."
             if skiboot.get_debug():
                 message += "\n"
