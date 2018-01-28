@@ -40,7 +40,6 @@ class ShowEnviron(Widget):
     """This class is a div, followed by a paragraph of toptext, and then
        a <pre> tag with text content showing the environ dictionary.
        On error a paragraph above the toptext paragraph appears with error_class
-       If debug mode is False then this widget is not shown
     """
 
     error_location = (0,0,0)
@@ -61,9 +60,6 @@ class ShowEnviron(Widget):
         self[2] = tag.Part(tag_name="pre")
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if not skiboot.get_debug():
-            self.show = False
-            return
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -94,7 +90,6 @@ class ShowCallData(Widget):
     """This class is a div, followed by a paragraph of toptext, and then
        a <pre> tag with text content showing the call_data dictionary.
        On error a paragraph above the toptext paragraph appears with error_class
-       If debug mode is False then this widget is not shown
     """
 
     error_location = (0,0,0)
@@ -115,9 +110,6 @@ class ShowCallData(Widget):
         self[2] = tag.Part(tag_name="pre")
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if not skiboot.get_debug():
-            self.show = False
-            return
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -170,9 +162,6 @@ class ShowResponders(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Update the table to show responder data"
-        if not skiboot.get_debug():
-            self.show = False
-            return
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
