@@ -967,6 +967,19 @@
 }
 ],
 [
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
 "Part",
 {
 "tag_name": "script",
@@ -1003,6 +1016,22 @@
 "show": true,
 "hide_if_empty": false,
 "parts": [
+[
+"Widget",
+{
+"class": "error_messages.ErrorPara",
+"name": "top_error",
+"brief": "Shows an error message",
+"fields": {
+"clear_error": false,
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-text-red",
+"widget_style": ""
+}
+}
+],
 [
 "Part",
 {
@@ -1103,6 +1132,40 @@
 }
 ],
 [
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph showing skipole version",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Skipole version :"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Widget",
+{
+"class": "info.SkipoleVersion",
+"name": "skipoleversion",
+"brief": "span showing the skipole version",
+"fields": {
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
 "Widget",
 {
 "class": "debug_tools.ShowResponders",
@@ -1112,11 +1175,29 @@
 "clear_error": false,
 "error_class": "",
 "para_class": "",
-"paradiv_class": "",
+"paradiv_class": "w3-section",
 "show": true,
 "show_error": "",
-"table_class": "",
-"toptext": "",
+"table_class": "w3-table w3-striped w3-border",
+"toptext": "This table shows responders called to fill the template page:",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowCallData",
+"name": "calldata",
+"brief": "widget showing call_data",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"show": true,
+"show_error": "",
+"toptext": "This is the call_data dictionary:",
 "widget_class": "",
 "widget_style": ""
 }
