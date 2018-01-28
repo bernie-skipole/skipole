@@ -276,7 +276,7 @@
 "text_refnotfound": "",
 "text_replaceblock": "If this page does not redirect automatically, follow this link:",
 "textblock_ref": "",
-"url": "http://www.bbc.co.uk",
+"url": "http://www.skipole.ski",
 "widget_class": "",
 "widget_style": ""
 }
@@ -288,7 +288,7 @@
 },
 "server_error": {
 "ident": 820,
-"brief": "The skipole admin server error page",
+"brief": "Server error page",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
@@ -345,6 +345,19 @@
 "Server Error"
 ]
 ]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
@@ -417,6 +430,32 @@
 [
 "Part",
 {
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "500 Internal Server Error",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"500 Internal Server Error"
+]
+]
+}
+],
+[
+"Part",
+{
 "tag_name": "p",
 "show": true,
 "hide_if_empty": false,
@@ -429,58 +468,25 @@
 }
 ],
 [
-"Part",
-{
-"tag_name": "div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"id": "divmessage1"
-},
-"parts": [
-[
 "Widget",
 {
-"class": "paras.TextBlockPara",
+"class": "paras.DivPara",
 "name": "message1",
-"brief": "TextBlockPara",
+"brief": "Diagnostic message",
 "fields": {
 "clear_error": false,
-"error_class": "errorcol",
-"linebreaks": true,
-"replace_strings": [],
+"error_class": "w3-text-red",
+"para_class": "w3-text-red",
+"para_text": "A server error has occurred.",
+"pre_line": true,
 "show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_ref": "",
+"show_error": "A server error has occurred.",
 "widget_class": "",
 "widget_style": ""
-},
-"set_names": {
-"text_replaceblock": "message_text"
 }
 }
 ]
 ]
-}
-],
-[
-"Widget",
-{
-"class": "debug_tools.ShowEnviron",
-"name": "se1",
-"brief": "ShowEnviron",
-"fields": {
-"clear_error": false,
-"error_class": "ski_errorcol",
-"para_class": "",
-"show": true,
-"show_error": "",
-"toptext": "Environmental variables for this call:",
-"widget_class": "",
-"widget_style": ""
-}
 }
 ]
 ]
@@ -489,7 +495,7 @@
 },
 "url_not_found": {
 "ident": 880,
-"brief": "The skipole admin url not found error page",
+"brief": "URL not found error page",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
@@ -546,6 +552,19 @@
 "URL not found"
 ]
 ]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
@@ -686,7 +705,7 @@
 },
 "validate_error": {
 "ident": 810,
-"brief": "The skipole admin validation error page",
+"brief": "Validation error page",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
@@ -743,6 +762,19 @@
 "Validation Error"
 ]
 ]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
@@ -1017,6 +1049,17 @@
 "hide_if_empty": false,
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
 "Widget",
 {
 "class": "error_messages.ErrorPara",
@@ -1201,6 +1244,9 @@
 "widget_class": "",
 "widget_style": ""
 }
+}
+]
+]
 }
 ]
 ]
