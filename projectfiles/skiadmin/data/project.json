@@ -39791,15 +39791,6 @@ false
 },
 "original_fields": {}
 }
-},
-"w3.css": {
-"ident": 210,
-"brief": "From www.w3schools.com/w3css/",
-"FilePage": {
-"filepath": "skiadmin/static/w3.css",
-"enable_cache": true,
-"mimetype": "text/css"
-}
 }
 }
 }
