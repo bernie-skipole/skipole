@@ -649,6 +649,21 @@
 [
 "Part",
 {
+"tag_name": "h3",
+"brief": "404 Not Found",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"404 Not Found"
+]
+]
+}
+],
+[
+"Part",
+{
 "tag_name": "p",
 "brief": "Paragraph introducing the URL",
 "show": true,
