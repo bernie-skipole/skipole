@@ -98,7 +98,7 @@
 "file_new_part": 43070,
 "filepath_page": 9100,
 "folder_brief": 2650,
-"general_json": 21006,
+"general_json": "lib,general_json",
 "get_part_edit": 43101,
 "hide_if_empty": 43040,
 "insert_textblockref": 42501,
@@ -140,7 +140,7 @@
 "newbrief_page": 3040,
 "newparent_for_page": 3030,
 "newtext": 41020,
-"no_javascript": 21004,
+"no_javascript": "lib,no_javascript",
 "operations": 80001,
 "page_backcol": 3300,
 "page_body": 3340,
@@ -148,7 +148,7 @@
 "page_svg": 3420,
 "part_insert": 43501,
 "placeholder_insert": 45501,
-"redirector": 21005,
+"redirector": "lib,redirector",
 "reload_code": 70002,
 "remove_allowed_value": 46051,
 "remove_container_dom": 44420,
@@ -171,7 +171,7 @@
 "save_project": 40,
 "selector_down": 8340,
 "selector_up": 8320,
-"server_error": 21003,
+"server_error": "lib,server_error",
 "setHTMLbackcol": 80003,
 "set_alias": 45030,
 "set_arg_value": 46111,
@@ -244,8 +244,8 @@
 "svg_file_cache": 3410,
 "tar_link": 90,
 "upload_folder": 2480,
-"url_not_found": 21001,
-"validate_error": 21002,
+"url_not_found": "lib,url_not_found",
+"validate_error": "lib,validate_error",
 "validator_edit": 46001,
 "validator_modules": 46301,
 "validator_move_down": 46211,
@@ -408,7 +408,7 @@
 "error_class": "",
 "para_class": "",
 "paradiv_class": "",
-"show": false,
+"show": true,
 "show_error": "",
 "table_class": "w3-table w3-bordered",
 "toptext": "",
@@ -4382,291 +4382,16 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
-"name": "projloaded",
-"brief": "Describes the project_loaded function",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "project_loaded -",
-"button_show_text": "project_loaded +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.project_loaded",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "getroot",
-"brief": "describes the get_root function",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "get_root -",
-"button_show_text": "get_root +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.get_root",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "projfiles",
-"brief": "Describes function get_projectfiles_dir",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "get_projectfiles_dir -",
-"button_show_text": "get_projectfiles_dir +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.projfiles",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "textblocks",
-"brief": "Describes function get_textblock_text",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "get_textblock_text -",
-"button_show_text": "get_textblock_text +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.textblocks",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "accesstextblocks",
-"brief": "Describes function get_accesstextblocks",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "get_accesstextblocks -",
-"button_show_text": "get_accesstextblocks +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.accesstextblocks",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "item_info",
-"brief": "get information about item_info",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "item_info -",
-"button_show_text": "item_info +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.item_info",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "part_info",
-"brief": "get information about part_info",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "part_info -",
-"button_show_text": "part_info +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.part_info",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "labels",
-"brief": "Gets description of labels function",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "labels -",
-"button_show_text": "labels +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.labels",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "projectURLpaths",
-"brief": "Describes the projectURLpaths function",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "projectURLpaths -",
-"button_show_text": "projectURLpaths +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.projectURLpaths",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "ident_exists",
+"name": "folders",
 "brief": "Describes ident_exists function",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "ident_exists -",
-"button_show_text": "ident_exists +",
+"button_hide_text": "folders -",
+"button_show_text": "folders +",
 "clear_error": false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
-"get_field": "aboutcode.skilift.ident_exists",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "page_info",
-"brief": "Describes page_info function",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "page_info -",
-"button_show_text": "page_info +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.page_info",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "pages",
-"brief": "Describes ident_exists function",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "pages -",
-"button_show_text": "pages +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.pages",
+"get_field": "aboutcode.skilift.folders",
 "hide": true,
 "htmlescaped": false,
 "json_ident": 70050,
@@ -4707,16 +4432,291 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
-"name": "folders",
-"brief": "Describes ident_exists function",
+"name": "accesstextblocks",
+"brief": "Describes function get_accesstextblocks",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "folders -",
-"button_show_text": "folders +",
+"button_hide_text": "get_accesstextblocks -",
+"button_show_text": "get_accesstextblocks +",
 "clear_error": false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
-"get_field": "aboutcode.skilift.folders",
+"get_field": "aboutcode.skilift.accesstextblocks",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "projfiles",
+"brief": "Describes function get_projectfiles_dir",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "get_projectfiles_dir -",
+"button_show_text": "get_projectfiles_dir +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.projfiles",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "getroot",
+"brief": "describes the get_root function",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "get_root -",
+"button_show_text": "get_root +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.get_root",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "textblocks",
+"brief": "Describes function get_textblock_text",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "get_textblock_text -",
+"button_show_text": "get_textblock_text +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.textblocks",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "ident_exists",
+"brief": "Describes ident_exists function",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "ident_exists -",
+"button_show_text": "ident_exists +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.ident_exists",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "item_info",
+"brief": "get information about item_info",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "item_info -",
+"button_show_text": "item_info +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.item_info",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "labels",
+"brief": "Gets description of labels function",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "labels -",
+"button_show_text": "labels +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.labels",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "pages",
+"brief": "Describes ident_exists function",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "pages -",
+"button_show_text": "pages +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.pages",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "page_info",
+"brief": "Describes page_info function",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "page_info -",
+"button_show_text": "page_info +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.page_info",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "part_info",
+"brief": "get information about part_info",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "part_info -",
+"button_show_text": "part_info +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.part_info",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "projectURLpaths",
+"brief": "Describes the projectURLpaths function",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "projectURLpaths -",
+"button_show_text": "projectURLpaths +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.projectURLpaths",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "projloaded",
+"brief": "Describes the project_loaded function",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "project_loaded -",
+"button_show_text": "project_loaded +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift.project_loaded",
 "hide": true,
 "htmlescaped": false,
 "json_ident": 70050,
@@ -31413,889 +31413,6 @@ false,
 }
 }
 },
-"special": {
-"ident": 21000,
-"brief": "New Folder",
-"default_page_name": "index",
-"restricted": true,
-"folders": {},
-"pages": {
-"general_json": {
-"ident": 21006,
-"brief": "General purpose JSON file",
-"JSON": {
-"enable_cache": false,
-"content": {}
-}
-},
-"redirector": {
-"ident": 21005,
-"brief": "Page used to redirect to an external url.",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#bbbbbb",
-"default_error_widget": [
-"",
-"top_error"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Redirector"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "info.Redirector",
-"name": "redirect_to",
-"brief": "Redirector",
-"fields": {
-"show": true,
-"text_refnotfound": "",
-"text_replaceblock": "If this page does not redirect automatically, follow this link:",
-"textblock_ref": "",
-"url": "http://www.bbc.co.uk",
-"widget_class": "",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
-]
-}
-]
-},
-"server_error": {
-"ident": 21003,
-"brief": "The skipole admin server error page",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#bbbbbb",
-"default_error_widget": [
-"",
-"message1"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Server Error"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_debug_tools",
-"brief": "Link to ski_debug_tools",
-"fields": {
-"script_ident": "ski_debug_tools",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_footers",
-"brief": "Link to ski_footers",
-"fields": {
-"script_ident": "ski_footers",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Diagnostic message:"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"id": "divmessage1"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "paras.TextBlockPara",
-"name": "message1",
-"brief": "TextBlockPara",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "Invalid server operation",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_ref": "",
-"widget_class": "",
-"widget_style": ""
-},
-"set_names": {
-"text_replaceblock": "message_text"
-}
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "debug_tools.ShowEnviron",
-"name": "se1",
-"brief": "ShowEnviron",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"para_class": "",
-"show": true,
-"show_error": "",
-"toptext": "Environmental variables for this call:",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section admin_footer with alias foot",
-"section_name": "admin_footer",
-"placename": "foot"
-}
-]
-]
-}
-]
-]
-}
-]
-},
-"url_not_found": {
-"ident": 21001,
-"brief": "The skipole admin url not found error page",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#bbbbbb",
-"default_error_widget": [
-"",
-"url"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"URL not found"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"The page:"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"id": "divmessage1"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "paras.TextBlockPara",
-"name": "url",
-"brief": "TextBlockPara",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "unrecognised url",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_ref": "",
-"widget_class": "",
-"widget_style": ""
-},
-"set_names": {
-"text_replaceblock": "message_text"
-}
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Has not been found at this site"
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-},
-"validate_error": {
-"ident": 21002,
-"brief": "The skipole admin validation error page",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#bbbbbb",
-"default_error_widget": [
-"",
-"message1"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Validation Error"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_footers",
-"brief": "Link to ski_footers",
-"fields": {
-"script_ident": "ski_footers",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_debug_tools",
-"brief": "Link to ski_debug_tools",
-"fields": {
-"script_ident": "ski_debug_tools",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Diagnostic message:"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"id": "divmessage1"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "paras.TextBlockPara",
-"name": "message1",
-"brief": "TextBlockPara",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "Invalid data from client",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_ref": "",
-"widget_class": "",
-"widget_style": ""
-},
-"set_names": {
-"text_replaceblock": "message_text"
-}
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "debug_tools.ShowEnviron",
-"name": "se1",
-"brief": "ShowEnviron",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"para_class": "",
-"show": true,
-"show_error": "",
-"toptext": "Environmental variables for this call:",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section admin_footer with alias foot",
-"section_name": "admin_footer",
-"placename": "foot"
-}
-]
-]
-}
-]
-]
-}
-]
-}
-}
-},
 "specialpagemanagement": {
 "ident": 25000,
 "brief": "New Folder",
@@ -32566,7 +31683,8 @@ false,
 "validate_error",
 "server_error",
 "redirector",
-"general_json"
+"general_json",
+"no_javascript"
 ]
 }
 ]

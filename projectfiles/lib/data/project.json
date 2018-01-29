@@ -457,6 +457,7 @@
 "Part",
 {
 "tag_name": "p",
+"brief": "Introduce diagnostic message",
 "show": true,
 "hide_if_empty": false,
 "parts": [
@@ -637,7 +638,19 @@
 [
 "Part",
 {
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
 "tag_name": "p",
+"brief": "Paragraph introducing the URL",
 "show": true,
 "hide_if_empty": false,
 "parts": [
@@ -649,52 +662,38 @@
 }
 ],
 [
-"Part",
-{
-"tag_name": "div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"id": "divmessage1"
-},
-"parts": [
-[
 "Widget",
 {
-"class": "paras.TextBlockPara",
+"class": "paras.DivPara",
 "name": "url",
-"brief": "TextBlockPara",
+"brief": "path of the url not found",
 "fields": {
 "clear_error": false,
-"error_class": "errorcol",
-"linebreaks": true,
-"replace_strings": [],
+"error_class": "",
+"para_class": "",
+"para_text": "UNKNOWN",
+"pre_line": true,
 "show": true,
 "show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_ref": "",
 "widget_class": "",
 "widget_style": ""
-},
-"set_names": {
-"text_replaceblock": "message_text"
 }
-}
-]
-]
 }
 ],
 [
 "Part",
 {
 "tag_name": "p",
+"brief": "Final text",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
 "Has not been found at this site"
+]
+]
+}
 ]
 ]
 }
@@ -847,7 +846,34 @@
 [
 "Part",
 {
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "400 Bad Request",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"400 Bad Request"
+]
+]
+}
+],
+[
+"Part",
+{
 "tag_name": "p",
+"brief": "Introduce diagnostic message",
 "show": true,
 "hide_if_empty": false,
 "parts": [
@@ -859,58 +885,25 @@
 }
 ],
 [
-"Part",
-{
-"tag_name": "div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"id": "divmessage1"
-},
-"parts": [
-[
 "Widget",
 {
-"class": "paras.TextBlockPara",
+"class": "paras.DivPara",
 "name": "message1",
-"brief": "TextBlockPara",
+"brief": "Shows validation diagnostic",
 "fields": {
 "clear_error": false,
-"error_class": "errorcol",
-"linebreaks": true,
-"replace_strings": [],
+"error_class": "w3-text-red",
+"para_class": "w3-text-red",
+"para_text": "A validation error has occurred.",
+"pre_line": true,
 "show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_ref": "",
+"show_error": "A validation error has occurred.",
 "widget_class": "",
 "widget_style": ""
-},
-"set_names": {
-"text_replaceblock": "message_text"
 }
 }
 ]
 ]
-}
-],
-[
-"Widget",
-{
-"class": "debug_tools.ShowEnviron",
-"name": "se1",
-"brief": "ShowEnviron",
-"fields": {
-"clear_error": false,
-"error_class": "ski_errorcol",
-"para_class": "",
-"show": true,
-"show_error": "",
-"toptext": "Environmental variables for this call:",
-"widget_class": "",
-"widget_style": ""
-}
 }
 ]
 ]
@@ -1547,7 +1540,7 @@
 "parts": [
 [
 "Text",
-"New page"
+"No Javascript"
 ]
 ]
 }

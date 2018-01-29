@@ -547,23 +547,12 @@ class Project(object):
     url = property(get_url, set_url)
 
 
-    # two methods deal with special pages, the 'label' refers to the special page
-    # label - not the page name
-    # set_special_page(label, target) : sets a special page label:target, where
-    # target is either a page ident, or a url
-    # special_page(self, label) : returns the special page with the given label
-    # or, if non-local page, returns the url
-
-    # and one attribute - actually a read-only property
-    # self.special_pages : returns the dictionary {label:target,...} of special pages
-    
-
     def set_special_page(self, label, target):
         "Sets a special page"
         if not label:
             raise ValidateError(message="Sorry, a special page label must be given")
         if not target:
-            raise ValidateError(message="Sorry, a page ident or url must be given")
+            raise ValidateError(message="Sorry, a label target must be given")
         if isinstance(target, str) and ( '/' in target ):
                 # item is a url
                 item = target
@@ -583,17 +572,18 @@ class Project(object):
         if label in self.special_pages:
             del self.special_pages[label]
 
-
-    def special_page(self, label):
-        """Returns the special page with the given label, if the target is an ident
-           otherwise returns the URL, if not found, returns None"""
+    def _system_page(self, label):
+        """Returns the system page with the given label, if not found, returns None"""
+        # label must be one of the system pages
+        if label not in skiboot.sys_list():
+            return
         if label not in self.special_pages:
             return
         target = self.special_pages[label]
-        if isinstance(target, str):
-            # its a url
-            return target
-        return skiboot.from_ident(target)
+        ident = skiboot.find_ident(target, proj_ident=self._proj_ident)
+        if ident is None:
+            return
+        return ident.item()
 
 
     def labels(self):
@@ -609,7 +599,7 @@ class Project(object):
 
     def redirect_to_url(self, url, environ, call_data, lang):
         "Return status, headers, page.data() of the redirector page, with fields set to url"
-        page = self.special_page('redirector')
+        page = self._system_page('redirector')
         if '/' not in url:
             raise ServerError(message="Invalid target url, must contain at least one /")
         if page.page_type != "TemplatePage":
@@ -706,7 +696,7 @@ class Project(object):
             # the call is for a page in this root project
             return self.proj_respond(environ, path, lang, received_cookies)
         except ServerError as e:
-            page = self.special_page("server_error")
+            page = self._system_page("server_error")
             if (not page) or (page.page_type != "TemplatePage"):
                 # make a temp page
                 if e.message:
@@ -770,7 +760,7 @@ class Project(object):
                     if caller_page.page_type != 'TemplatePage':
                         raise ValidateError(message="Form data not accepted, (caller page ident is not a template page)")
         except ValidateError as e:
-            page = self.special_page("validate_error")
+            page = self._system_page("validate_error")
             if (not page) or (page.page_type != "TemplatePage"):
                 # make a temp page
                 if e.message:
@@ -828,7 +818,7 @@ class Project(object):
  
         if pident is None:
             # URL NOT FOUND and start_call does not divert
-            page = self.special_page("url_not_found")
+            page = self._system_page("url_not_found")
             if (not page) or (page.page_type != "TemplatePage"):
                 page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
                 return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
@@ -905,7 +895,7 @@ class Project(object):
             return self.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
 
         except ValidateError as e:
-            page = self.special_page("validate_error")
+            page = self._system_page("validate_error")
             if (not page) or (page.page_type != "TemplatePage"):
                 # make a temp page
                 if e.message:
