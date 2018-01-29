@@ -969,7 +969,7 @@ class Project(object):
 
                 # it is possible that a jump to a page in another project has been made
                 if page.ident.proj != self._proj_ident:
-                    subproj = self.subprojects.get(page.ident.proj)
+                    subproj = skiboot.getproject(proj_ident=page.ident.proj)
                     return subproj.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
                 
         except (ServerError, ValidateError) as e:
