@@ -979,7 +979,11 @@ class Widget(tag.Part):
     def _error_build(self, message):
         """Overwritten by child widgets if required, note this is run before the _build method
            and should set any appropriate flags that _build will then use to build the widget"""
-        return
+        if self.error_location is None:
+            # no error location set, so replace entire widget by the message
+            if message:
+                self._error = message
+
 
     def show_error(self, message=''):
         """Shows error message"""
@@ -993,11 +997,7 @@ class Widget(tag.Part):
             self.update_attribs({'data-status':'error'})
         if not message:
             message = self.error_message
-        if self.error_location is None:
-            # no error location set, so replace entire widget by the message
-            if message:
-                self._error = message
-        else:
+        if self.error_location is not None:
             error_part = self.get_location_value(self.error_location)
             if hasattr(error_part, 'show_error'):
                 error_part.show_error(message)
@@ -1631,7 +1631,8 @@ class ClosedWidget(tag.ClosedPart):
 
     def _error_build(self, message):
         "Overwritten by child widgets if required"
-        return
+        if message:
+            self._error = message
  
     def show_error(self, message=''):
         """Shows error message"""
@@ -1645,8 +1646,6 @@ class ClosedWidget(tag.ClosedPart):
             self.update_attribs({'data-status':'error'})
         if not message:
             message = self.error_message
-        if message:
-            self._error = message
         self._error_build(message)
 
     def field_list(self):

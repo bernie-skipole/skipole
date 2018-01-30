@@ -191,7 +191,7 @@
 "backcol": "#000000",
 "default_error_widget": [
 "",
-"top_error"
+"redirect_to"
 ]
 },
 "head": [
@@ -272,8 +272,10 @@
 "name": "redirect_to",
 "brief": "Redirector",
 "fields": {
+"clear_error": false,
 "show": true,
-"text_refnotfound": "",
+"show_error": "http://www.skipole.ski",
+"text_refnotfound": "If this page does not redirect automatically, follow this link:",
 "text_replaceblock": "If this page does not redirect automatically, follow this link:",
 "textblock_ref": "",
 "url": "http://www.skipole.ski",

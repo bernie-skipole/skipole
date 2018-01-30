@@ -597,18 +597,26 @@ class Project(object):
         return labels_dict
 
 
-    def redirect_to_url(self, url, environ, call_data, lang):
+    def _redirect_to_url(self, url, environ, call_data, page_data, lang):
         "Return status, headers, page.data() of the redirector page, with fields set to url"
-        page = self._system_page('redirector')
         if '/' not in url:
             raise ServerError(message="Invalid target url, must contain at least one /")
-        if page.page_type != "TemplatePage":
-            raise ServerError(message="Target is a url, but redirector special page is invalid")
-        # return redirector
-        page.set_values({('redirect_to', 'url'):url})
-        page.update(environ, call_data, lang, [])
+        page = self._system_page('redirector')
+        if (not page) or (page.page_type != "TemplatePage"):
+            page_text = "<!DOCTYPE HTML>\n<html>\n<p>Page Redirect request. Please try: <a href=%s>%s</a></p>\n</html>" % (url, url)
+            return '200 OK', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+        # create an ErrorMessage with the url as the message
+        err = ErrorMessage(message=html.escape(url))
+        # import any sections
+        page.import_sections()
+        page.show_error(error_messages=[err])
+        # update head and body parts
+        if page_data:
+            page.set_values(page_data)
+        page.update(environ, call_data, lang)
         status, headers = page.get_status()
         return status, headers, page.data()
+
 
 
     def read_form_data(self, rawformdata, caller_page):
@@ -839,7 +847,7 @@ class Project(object):
             # either a label, or url
             if '/' in pident:
                 # get redirector page
-                return self.redirect_to_url(pident, environ, call_data, lang)
+                return self._redirect_to_url(pident, environ, call_data, page_data, lang)
             else:
                 # no '/' in pident so must be a label
                 pident = skiboot.find_ident_or_url(pident, self._proj_ident)
@@ -847,7 +855,7 @@ class Project(object):
                     raise ServerError(message="Returned page ident from start_call not recognised")
                 if isinstance(pident, str):
                     # must be a url, get redirector page
-                    return self.redirect_to_url(pident, environ, call_data, lang)
+                    return self._redirect_to_url(pident, environ, call_data, page_data, lang)
 
         # so pident must be an ident
         if not isinstance(pident, skiboot.Ident):
@@ -929,7 +937,7 @@ class Project(object):
                         call_data.clear()
                         page_data.clear()
                         # get redirector page
-                        return self.redirect_to_url(page, environ, call_data, lang)
+                        return self._redirect_to_url(page, environ, call_data, page_data, lang)
                 except PageError as ex:
                     # a jump to a page has occurred, with a list of errors
                     page = ex.page
@@ -938,7 +946,7 @@ class Project(object):
                         call_data.clear()
                         page_data.clear()
                         # get redirector page
-                        return self.redirect_to_url(page, environ, call_data, lang)
+                        return self._redirect_to_url(page, environ, call_data, page_data, lang)
                     if page.ident in ident_list:
                         raise ServerError(message="Invalid Failure page: can cause circulating call")
                     # show the list of errors on the page
@@ -965,7 +973,7 @@ class Project(object):
                     else:
                         # target is a URL
                         call_data.clear()
-                        return self.redirect_to_url(target, environ, call_data, lang)
+                        return self._redirect_to_url(target, environ, call_data, page_data, lang)
 
                 # it is possible that a jump to a page in another project has been made
                 if page.ident.proj != self._proj_ident:

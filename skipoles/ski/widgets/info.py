@@ -285,12 +285,9 @@ class Redirector(Widget):
        this is the only widget on the page
        A textblock is displayed with the link to the url if the client has javascript disabled"""
 
-    # This class does not display any error messages
-    display_errors = False
-
     arg_descriptions = {'url':FieldArg("text", ''),
                         'textblock_ref':FieldArg("textblock_ref", ""),
-                        'text_refnotfound':FieldArg("text", ""),
+                        'text_refnotfound':FieldArg("text", "If this page does not redirect automatically, follow this link:"),
                         'text_replaceblock':FieldArg("text", "If this page does not redirect automatically, follow this link:")
                        }
 
@@ -305,14 +302,22 @@ class Redirector(Widget):
 
         self[0] = tag.Part(tag_name='script', attribs={"type":"text/javascript"})
         self[1] = tag.Part(tag_name='p')
+        self._url = ''
+
+
+    def _error_build(self, message):
+        """Called if an error is raised"""
+        if message:
+            self._url = message
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the widget"
-        url = self.get_field_value("url")
-        if not url:
-            self.show = False
-            return
+        if self.error_status and self._url:
+            url = self._url
+        else:
+            url = self.get_field_value("url")
+
         self[0][0] = "window.location.replace(\"%s\");" % (url,)
 
         # define the textblock
@@ -322,18 +327,21 @@ class Redirector(Widget):
         tblock.proj_ident = page.proj_ident
 
         self[1][0] = tblock
-        self[1][1] = tag.Part(tag_name='a', attribs={"href":url}, text=url)
+        self[1][1] = tag.ClosedPart(tag_name='br')
+        self[1][2] = tag.Part(tag_name='a', attribs={"href":url}, text=url)
 
 
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
+  <!-- url is either the url argument, or is the error message if an error is raised on the widget -->
   <script type="text/javascript">
      <!-- window.location.replace("url"); -->
   </script>
   <p>
     <!-- text_replaceblock or the textblock text here -->
+    <br />
     <a href="url"> 
         <!-- url --> 
     </a>
