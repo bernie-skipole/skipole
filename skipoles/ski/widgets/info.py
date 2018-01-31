@@ -65,7 +65,8 @@ class ServerTimeStamp(Widget):
         else:
             self[0] = time.strftime("%c", time.localtime())
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -103,7 +104,8 @@ class PageIdent(Widget):
             self[0] = page.ident.to_comma_str()
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -145,7 +147,8 @@ class PageName(Widget):
             self[0] = page.name
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -186,7 +189,8 @@ class PageDescription(Widget):
         else:
             self[0] = page.brief
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -214,7 +218,8 @@ class ProjectName(Widget):
         "Build the element"        
         self[0] = page.ident.proj
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -242,7 +247,8 @@ class Version(Widget):
         "Build the element"        
         self[0] = page.project.version
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -270,7 +276,8 @@ class SkipoleVersion(Widget):
         "Build the element"        
         self[0] = skiboot.version()
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -331,7 +338,8 @@ class Redirector(Widget):
         self[1][2] = tag.Part(tag_name='a', attribs={"href":url}, text=url)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->

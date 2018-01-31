@@ -229,7 +229,8 @@ class Pin4(Widget):
         self.add_hiddens(self[0][2], page)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->

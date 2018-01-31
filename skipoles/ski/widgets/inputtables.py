@@ -282,7 +282,8 @@ class InputTable5(Widget):
 """.format(ident=self.get_id())
         return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>   <!-- with widget id and class widget_class -->

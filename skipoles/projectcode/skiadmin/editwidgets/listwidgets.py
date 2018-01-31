@@ -45,26 +45,8 @@ _MODULES_TUPLE = tuple(name for (module_loader, name, ispkg) in pkgutil.iter_mod
 def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is to retrieve data for listing widget modules"
 
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
-
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Choose module"
-
-    # so header text and navigation done, now continue with the page contents
 
     # as this page chooses a module, clear any previous chosen module and widget class
     if 'module' in call_data:
@@ -85,29 +67,14 @@ def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, cal
 
     for name in _MODULES_TUPLE:
         ref = 'widgets.' + name + '.module'
-        contents.append([name, name, '', ref, 'Description not found', ''])
+        notfound = 'Textblock reference %s not found' % ref
+        contents.append([name, name, '', ref, notfound, ''])
 
     page_data[("modules","link_table")] = contents
 
 
 def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is to retrieve data for listing widgets in a module"
-
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
 
     # Fill in header
     call_data['extend_nav_buttons'].append(["list_widget_modules", "Modules", True, ''])
@@ -146,29 +113,15 @@ def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, ca
     contents = []
 
     for name,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
-        contents.append([name, name, '', obj.description_ref(), 'Description not found', ''])
+        ref = obj.description_ref()
+        notfound = 'Textblock reference %s not found' % ref
+        contents.append([name, name, '', ref, notfound, ''])
 
     page_data[("widgets","link_table")] = contents
 
 
 def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is to retrieve data for displaying a new widget"
-
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
 
     # Fill in header
     call_data['extend_nav_buttons'].extend([["list_widget_modules", "Modules", True, ''], ["back_widget_list", "Widgets", True, '']])
@@ -205,21 +158,11 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
     if widget_cls.can_contain():
         page_data[('containerdesc','show')] = True
 
-    if bits.section_name:
-        id_string = bits.section_name + ':name'
-    else:
-        id_string = 'name'
-
-    # create a widget of this class to show as a string
-    widget_instance = widget_cls(name='name')
-    widget_instance.update_attribs({'id':id_string, 'class':'widget_class'})
-    widget_instance.show=True
-
     # set widget class name into call_data
     call_data['widgetclass'] = widget_class_name
 
     # display the widget html
-    page_data[('widget_code','pre_text')] = str(widget_instance)
+    page_data[('widget_code','pre_text')] = widget_cls.description()
 
 
 def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

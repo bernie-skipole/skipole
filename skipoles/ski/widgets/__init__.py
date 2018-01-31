@@ -1300,6 +1300,19 @@ class Widget(tag.Part):
             return self.__class__.__name__
 
 
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """<div>  <!-- with widget id and class widget_class -->
+</div>"""
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return self.description()
+
+
+
 
 class ClosedWidget(tag.ClosedPart):
     """
@@ -1891,4 +1904,16 @@ class ClosedWidget(tag.ClosedPart):
             return self.__class__.__name__ + '(' + self.name + ')'
         else:
             return self.__class__.__name__
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """<path />  <!-- with widget id and class widget_class -->
+"""
+
+
+    def __str__(self):
+        """Returns a text string to illustrate the widget"""
+        return self.description()
+
 

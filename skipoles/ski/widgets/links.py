@@ -88,7 +88,8 @@ class Link(Widget):
         if self.get_field_value("new_window"):
             self.update_attribs({"target":"_blank"})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <a href="#">  <!-- with widget id and class widget_class and href the url -->
@@ -189,7 +190,8 @@ class ImageOrTextLink(Widget):
             self[0] = ''
             self.show = False
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <a href="#">  <!-- with widget id and class widget_class and href the url -->
@@ -242,7 +244,8 @@ class CloseButton(Widget):
         return jscript + self._make_fieldvalues('target_section', 'target_widget')
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <a role="button" href="#"> <!-- with widget id and class widget_class, and the href link will be the url of the link_ident -->
@@ -295,7 +298,8 @@ class OpenButton(Widget):
         return jscript + self._make_fieldvalues('target_section', 'target_widget')
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <a role="button" href="#"> <!-- with widget id and class widget_class, and the href link will be the url of the link_ident -->
@@ -376,7 +380,8 @@ class JSONButtonLink(Widget):
         else:
             return jscript + self._make_fieldvalues('button_wait_text', 'error_class', 'widget_class')
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <a role="button" href="#">
@@ -456,7 +461,8 @@ class ButtonLink1(Widget):
         """Sets field values"""
         return self._make_fieldvalues('error_class', 'widget_class')
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <a role="button" href="#">
@@ -558,7 +564,8 @@ class ButtonLink2(Widget):
             return jscript + self._make_fieldvalues('button_wait_text')
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -644,7 +651,8 @@ class ImageLink1(Widget):
         else:
             self[0].update_attribs({"src": quote(imageurl, safe='/:')})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <a href="#">  <!-- with widget id and class widget_class and href the url -->
@@ -682,7 +690,8 @@ class CSSLink(ClosedWidget):
         if self.get_field_value("media"):
             self.update_attribs({"media": self.get_field_value("media")})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <link rel="stylesheet" type="text/css" />  <!-- with widget id and class widget_class and with href and media set as per fields -->"""
@@ -714,7 +723,8 @@ class FaviconLink(ClosedWidget):
             return    
         self.update_attribs({"href": quote(url, safe='/:')})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <link rel="icon" type="image/png" />  <!-- with widget id and class widget_class and with href given by favicon_ident -->"""
@@ -745,7 +755,8 @@ class ScriptLink(Widget):
             return
         self.update_attribs({"src": quote(url, safe='/:')})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <script>  <!-- with widget id and class widget_class with src given by script_ident -->
@@ -872,7 +883,8 @@ class LinkTextBlockTable1(Widget):
             else: 
                 self[rownumber][1][0] = ''
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -1024,7 +1036,8 @@ class LinkTextBlockTable2(Widget):
             else: 
                 self[rownumber][2][0] = ''
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -1089,7 +1102,8 @@ class ListLinks(Widget):
             self[rownumber][0].set_name('get_field1',  self.get_name('links'))
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <ul>  <!-- with widget id and class widget_class -->
@@ -1220,7 +1234,8 @@ class Table1_Button(Widget):
 """.format(ident = self.get_id())
         return jscript + self._make_fieldvalues( url=self._jsonurl)
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -1357,7 +1372,8 @@ class Table2_Button(Widget):
         return jscript + self._make_fieldvalues( url=self._jsonurl)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -1549,7 +1565,8 @@ class Table3_Buttons2(Widget):
         return jscript + self._make_fieldvalues( url1=self._jsonurl1, url2=self._jsonurl2)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -1773,7 +1790,8 @@ class Table1_Buttons4(Widget):
                 self[rownumber].append(btn_col4)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->

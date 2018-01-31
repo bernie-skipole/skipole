@@ -108,7 +108,8 @@ class ColorTable1(Widget):
                     self[rownumber][col] = tag.Part(tag_name='td', text = celltext)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -199,7 +200,8 @@ class TwoColTable1(Widget):
             self[rownumber][1] = tag.Part(tag_name='td', text = col_list2[index])
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -294,7 +296,8 @@ class ThreeColTable1(Widget):
             self[rownumber][1] = tag.Part(tag_name='td', text = col_list2[index])
             self[rownumber][2] = tag.Part(tag_name='td', text = col_list3[index])
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -377,7 +380,8 @@ class TextBlockTable2(Widget):
             self[rownumber][1] = tag.Part(tag_name='td', text = row[1])
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
@@ -535,7 +539,8 @@ class ButtonTextBlockTable1(Widget):
         self.add_hiddens(self[1], page)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

@@ -171,7 +171,8 @@ class ConfirmBox1(Widget):
             return jscript + self._make_fieldvalues( url2=self._jsonurl2)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -318,7 +319,8 @@ class ConfirmBox2(Widget):
         return jscript
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -444,7 +446,8 @@ class AlertClear1(Widget):
         return jscript + self._make_fieldvalues('inner_class', 'error_class', inner_id=self[0][1].get_id())
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

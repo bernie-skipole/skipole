@@ -112,7 +112,8 @@ class RadioButton1(Widget):
             self[1].append(inputblock)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
@@ -242,7 +243,8 @@ class RadioTable(Widget):
             self[1][rownumber][1] = col1
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -340,7 +342,8 @@ class TwoRadioOptions(Widget):
         self[1][0][1] = self.get_field_value('label2')
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -450,7 +453,8 @@ class BooleanRadio(Widget):
         div2[0].update_attribs({'for':div2[1].get_id()})
         div2[2].update_attribs({'for':div2[1].get_id()})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->

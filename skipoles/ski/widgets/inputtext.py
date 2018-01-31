@@ -113,7 +113,8 @@ class TextInput1(ClosedWidget):
         return self._make_fieldvalues('input_accepted_class', 'input_errored_class')
 
  
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
   <input type='text' />
@@ -190,7 +191,8 @@ class Password1(ClosedWidget):
         return self._make_fieldvalues('input_accepted_class', 'input_errored_class')
 
  
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
   <input type='password' />
@@ -339,7 +341,8 @@ class TextInput2(Widget):
             return self._make_fieldvalues(*fieldlist)
         return ''
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -484,7 +487,8 @@ class Password2(Widget):
         return ''
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -611,7 +615,8 @@ class TextInput3(Widget):
         """Sets input_accepted_class, input_errored_class into fieldvalues"""
         return self._make_fieldvalues('input_accepted_class', 'input_errored_class')
  
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -759,7 +764,8 @@ class TextInput4(Widget):
             return self._make_fieldvalues(*fieldlist)
         return ''
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -966,7 +972,8 @@ class SubmitTextInput1(Widget):
         return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -1233,7 +1240,8 @@ class SubmitTextInput3(Widget):
             return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', url=self._jsonurl)
         return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -1504,7 +1512,8 @@ class TwoInputsSubmit1(Widget):
         return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -1650,7 +1659,8 @@ class SubmitDict1(Widget):
         self.add_hiddens(self[0], page)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

@@ -70,7 +70,8 @@ class ShowEnviron(Widget):
         self[2].text = pprint.pformat(environ)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -120,7 +121,8 @@ class ShowCallData(Widget):
         self[2].text = pprint.pformat(call_data)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -193,7 +195,8 @@ class ShowResponders(Widget):
         self[2].append(last_line)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

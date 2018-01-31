@@ -139,7 +139,8 @@ class SubmitTextArea(Widget):
         self.add_hiddens(self[1], page)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -193,7 +194,8 @@ class TextArea1(Widget):
         if self.get_field_value('cols'):
             self.update_attribs({"cols": self.get_field_value('cols')})
  
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
     <textarea> <!-- with widget id and class widget_class. Rows, cols set to the given rows and columns -->
@@ -279,7 +281,8 @@ class TextArea2(Widget):
             self[3][1] = '*'
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->

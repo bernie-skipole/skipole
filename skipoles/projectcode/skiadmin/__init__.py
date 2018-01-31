@@ -66,7 +66,6 @@ _IDENT_DATA = 0
 # this method to eventually be replaced by responders with submit lists
 
 _CALL_SUBMIT_DATA = {
-                        2460: addpage.submit_copy_page,                 # copies an existing page to create a new one
                         2470: addpage.submit_upload_page,           # copies an uploaded page definition file to create a new one
                         3230: editpage.set_html_lang,                   # sets page html lang tag
                         3260: editpage.downloadpage,                      # downloads json file of given page ident
@@ -151,7 +150,6 @@ _CALL_SUBMIT_DATA = {
                        54027: editwidget.set_field_value,               # sets the widget field value
                        54032: editwidget.set_widget_params,             # sets the widget name
                        54042: editwidget.set_widget_params,             # sets the widget brief
-                       54527: listwidgets.retrieve_new_widget,          # gets data for new widget page
                        54537: listwidgets.create_new_widget,            # creates the new widget
                        54721: editwidget.back_to_parent_container,      # get container
                        55007: editplaceholder.retrieve_editplaceholder, # gets data for editing a placeholder

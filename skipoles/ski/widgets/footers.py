@@ -78,7 +78,8 @@ class SimpleFooter(Widget):
         """stores ident in footer text paragraph"""
         return self._make_fieldvalues(textident = self[1][0].get_id()) # ident of the footer_text paragraph
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """<div> <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
