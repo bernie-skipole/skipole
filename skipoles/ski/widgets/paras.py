@@ -87,7 +87,8 @@ class TagBlock(Widget):
             return self._make_fieldvalues(dropurl=self._dropurl)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class, and with div tag, or any other specified -->
@@ -120,7 +121,8 @@ class DivStyleDiv(Widget):
             self[0].update_attribs({"style":self.get_field_value('style')})
         self[0][0] = self.get_field_value("set_text")
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -179,7 +181,8 @@ class DivHTML(Widget):
         if self._dropurl:
             return self._make_fieldvalues(dropurl=self._dropurl)
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -207,7 +210,8 @@ class PreText(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         self[0] = self.get_field_value("pre_text")
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <pre>  <!-- with widget id and class widget_class -->
@@ -234,7 +238,8 @@ class SpanText(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         self[0] = self.get_field_value("span_text")
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
@@ -266,7 +271,8 @@ class TagText(Widget):
         self.widget_hide(self.get_field_value("hide"))
         self[0] = self.get_field_value("tag_text")
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class and with div tag, or any other specified -->
@@ -294,7 +300,8 @@ class ParaText(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         self[0] = self.get_field_value("para_text")
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <p>  <!-- with widget id and class widget_class -->
@@ -347,7 +354,8 @@ class DivPara(Widget):
         return self._make_fieldvalues('para_class', 'error_class')
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -457,7 +465,8 @@ class JSONTextLink(Widget):
 """.format(ident = self.get_id())
         return jscript + self._make_fieldvalues( 'button_show_text', 'button_hide_text', url=self._jsonurl)
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -561,7 +570,8 @@ class JSONDivLink(Widget):
                                                 url = self._jsonurl
                                                 )
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -620,7 +630,8 @@ class TextBlockPara(Widget):
         """Sets fieldvalues"""
         return self._make_fieldvalues('widget_class','error_class','linebreaks')
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <p>  <!-- with widget id, and class widget_class replaced by error_class on failure -->
@@ -656,7 +667,8 @@ class DecodedTextBlock(Widget):
         # place it at location 0
         self[0] = tblock
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -721,7 +733,8 @@ class ShowPara1(Widget):
         if self.get_field_value('error_class'):
             self[1].update_attribs({"class":self.get_field_value('error_class')})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -779,7 +792,8 @@ class ShowPara2(Widget):
         if self.get_field_value("pre_line"):
             self[1][0].attribs = {"style":"white-space: pre-line;"}
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->

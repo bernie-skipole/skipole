@@ -80,7 +80,8 @@ class UList1(Widget):
         return self._make_fieldvalues(even_class = self._even, odd_class = self._odd)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """<ul>  <!-- with widget id and class widget_class -->
   <li> <!-- with style from odd_class or even_class -->

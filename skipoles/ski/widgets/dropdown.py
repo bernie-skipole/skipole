@@ -102,7 +102,8 @@ class DropDown1(Widget):
         self[1][0].update_attribs({'for':self[1][1].get_id()})
         self[1][2].update_attribs({'for':self[1][1].get_id()})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -258,7 +259,8 @@ class SubmitDropDown1(Widget):
         return jscript
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

@@ -72,7 +72,8 @@ class ErrorDiv(Widget):
             self.update_attribs({"style":"display: block;"})
             self[0].del_one_attrib("style")
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class, normally hidden -->
@@ -107,7 +108,8 @@ class ErrorPara(Widget):
         self.widget_hide(self.get_field_value("hide"))
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <p>  <!-- with widget id and class widget_class, normally hidden,
@@ -212,7 +214,8 @@ class ErrorClear1(Widget):
         return jscript
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -325,7 +328,8 @@ class ErrorClear2(Widget):
         return jscript + self._make_fieldvalues(para_id=self[0][1][0].get_id())
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

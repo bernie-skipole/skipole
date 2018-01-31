@@ -101,7 +101,8 @@ class NavButtons1(Widget):
             listtag[0] = lnk
             self[1].append(listtag)
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -175,7 +176,8 @@ class NavButtons2(Widget):
             lnk.update_attribs({"href": url})
             self.append(lnk)
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
@@ -210,7 +212,8 @@ class HeaderErrorPara(Widget):
         self.widget_hide(self.get_field_value("hide"))
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <p>  <!-- with widget id and class widget_class, normally hidden,
@@ -241,7 +244,8 @@ class HeadText(Widget):
         self.tag_name = self.get_field_value('tag')
         self[0] = self.get_field_value("large_text")
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <h1>  <!-- default h1, tag can be specified and with widget id and class widget_class -->
@@ -286,7 +290,8 @@ class HeaderText1(Widget):
 
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!--  with widget id and class widget_class -->
@@ -336,7 +341,8 @@ class HeaderText2(Widget):
 
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!--  with widget id and class widget_class -->
@@ -386,7 +392,8 @@ class HeaderText3(Widget):
 
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -436,7 +443,8 @@ class HeaderText4(Widget):
 
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -486,7 +494,8 @@ class HeaderText5(Widget):
 
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -536,7 +545,8 @@ class HeaderText6(Widget):
 
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

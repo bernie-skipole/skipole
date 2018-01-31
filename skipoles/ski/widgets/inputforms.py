@@ -54,7 +54,8 @@ class HiddenField(ClosedWidget):
                        "value":value,
                        "type":"hidden"})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <input type="hidden" /> <!-- with widget id and class widget_class -->
@@ -82,7 +83,8 @@ class SubmitButton1(ClosedWidget):
                        "value":button_text,
                        "type":"submit"})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <input type="button_text" /> <!-- with widget id and class widget_class -->
@@ -108,7 +110,8 @@ class SubmitButton2(ClosedWidget):
             button_text = "Submit"
         self.update_attribs({"value":button_text, "type":"submit"})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <input type="button_text" /> <!-- with widget id and class widget_class -->
@@ -192,7 +195,8 @@ class Form1(Widget):
 """.format(ident=self.get_id())
         return jscript
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -341,7 +345,8 @@ class SubmitForm1(Widget):
         return jscript
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->

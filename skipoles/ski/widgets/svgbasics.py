@@ -59,7 +59,8 @@ class SVGContainer(Widget):
         if self.get_field_value("preserveAspectRatio"):
             self.update_attribs({"preserveAspectRatio":self.get_field_value("preserveAspectRatio")})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <svg>  <!-- with widget id and class widget_class, and the given attributes -->
@@ -88,7 +89,8 @@ class Group(Widget):
         if self.get_field_value("transform"):
             self.update_attribs({"transform":self.get_field_value("transform")})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
@@ -141,7 +143,8 @@ class Rect(ClosedWidget):
                 else:
                     self.update_attribs({att:self.get_field_value(att)})   
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <rect /> <!-- creates rectangle with widget id, class widget_class and the given attributes -->"""
@@ -208,7 +211,8 @@ class SimpleText(Widget):
         self[0] = self.get_field_value("text")
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <text> <!-- with widget id, class widget_class and the given attributes -->
@@ -255,7 +259,8 @@ class Circle(ClosedWidget):
                 else:
                     self.update_attribs({att:self.get_field_value(att)})   
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <circle /> <!-- creates circle with widget id, class widget_class and the given attributes -->"""
@@ -298,7 +303,8 @@ class Line(ClosedWidget):
                 else:
                     self.update_attribs({att:self.get_field_value(att)})   
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <line /> <!-- creates line with widget id, class widget_class and the given attributes -->"""
@@ -345,7 +351,8 @@ class Ellipse(ClosedWidget):
                 else:
                     self.update_attribs({att:self.get_field_value(att)})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <ellipse /> <!-- creates ellipse with widget id, class widget_class and the given attributes -->"""
@@ -397,7 +404,8 @@ class Polygon(ClosedWidget):
         self.update_attribs({'points':points_att})   
   
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <polygon /> <!-- creates polygon with widget id, class widget_class and the given points -->"""
@@ -449,7 +457,8 @@ class Polyline(ClosedWidget):
         self.update_attribs({'points':points_att})   
   
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <polyline /> <!-- creates polyline with widget id, class widget_class and the given points -->"""
@@ -491,7 +500,8 @@ class Path(ClosedWidget):
                 else:
                     self.update_attribs({att:self.get_field_value(att)})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <path /> <!-- creates path with widget id, class widget_class and the given attributes -->"""

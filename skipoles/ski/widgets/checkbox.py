@@ -96,7 +96,8 @@ class CheckBox1(Widget):
         self[1][0].update_attribs({'for':self[1][1].get_id()})
         self[1][2].update_attribs({'for':self[1][1].get_id()})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
@@ -168,7 +169,8 @@ class CheckBox2(Widget):
         self[0].update_attribs({'for':self[1].get_id()})
         self[2].update_attribs({'for':self[1].get_id()})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """<span>  <!-- with widget id and class widget_class -->
   <label> <!-- with class set to left_class and content to left_label -->
@@ -270,7 +272,8 @@ class CheckedText(Widget):
 """.format(checkident=self[1][1].get_id(), ident=self.get_id())
         return jscript
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->
@@ -368,7 +371,8 @@ class CheckInputs(Widget):
 """.format(ident=self.get_id())
         return jscript
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """<div>  <!-- with widget id and class widget_class -->
   <div> <!-- normally hidden div, with class error_class -->

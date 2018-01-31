@@ -166,7 +166,8 @@ class SubmitUploadFile1(Widget):
         self.add_hiddens(self[1], page)
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div> <!-- with widget id and class widget_class -->
@@ -249,7 +250,8 @@ class UploadFile1(Widget):
         self[1][0].update_attribs({'for':self[1][1].get_id()})
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->

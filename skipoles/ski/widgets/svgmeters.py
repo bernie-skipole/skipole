@@ -74,7 +74,8 @@ class Arrow1(ClosedWidget):
         if self.get_field_value("stroke_width"):
             self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <polygon /> <!-- arrow shape with widget id, class widget_class and the given attributes -->"""
@@ -122,7 +123,8 @@ class Arrow2(ClosedWidget):
         if self.get_field_value("stroke_width"):
             self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <polygon /> <!-- arrow shape with widget id, class widget_class and the given attributes -->"""
@@ -268,7 +270,8 @@ class Vertical1(Widget):
         return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue))
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
@@ -524,7 +527,8 @@ A %s %s 0 0 1 %s %s
         return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue))
 
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->

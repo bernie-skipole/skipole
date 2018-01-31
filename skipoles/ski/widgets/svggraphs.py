@@ -206,7 +206,8 @@ class Chart1(Widget):
                                                                  "stroke":stroke,
                                                                  "stroke-width":stroke_width}))
 
-    def __str__(self):
+    @classmethod
+    def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
