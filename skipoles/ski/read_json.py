@@ -304,16 +304,13 @@ def create_project(proj_ident):
     # project created with version = a.b.c
     # this skipole version = d.e.f
 
-    #   The first digit introduces backwards incompatability
-    #   The second digit is used to introduce new features while retaining backward compatability
-    #   The third digit is only used for refactoring, nothing is changed to prevent backward and forward compatability
+    #   The first and second digits may introduce new features
+    #   The third digit is only used for refactoring
 
-    # if a != d The project cannot be read
+    # if a > d : The project cannot be read, project created with a later version, which may have introduced new widgets
+    # if (a == d) and ( b > e) : The project cannot be read, project created with a later version, which may have introduced new widgets
 
-    # if a == d:
-    #     if b == e (ie, first two version numbers are equal): No problem regardless of c and f.
-    #     if b < e : This skipole is later than the projects version: No problem, extra features are backwards compatable
-    #     if b > e : Cannot be read, project created with a later version, which may have introduced new widgets
+    # any other combination : the project can be read
 
     
     if 'skipole' not in project:
@@ -326,10 +323,10 @@ def create_project(proj_ident):
     this_skipole_version = skiboot.version()
     this_tuple_skipole_version = tuple(int(v) for v in this_skipole_version.split('.'))
 
-    if proj_tuple_skipole_version[0] != this_tuple_skipole_version[0]:
-        raise excepts.ServerError("Sorry, the project was created with an incompatable version of skipole")
+    if proj_tuple_skipole_version[0] > this_tuple_skipole_version[0]:
+        raise excepts.ServerError("Sorry, the project was created with a later version of skipole")
 
-    if proj_tuple_skipole_version[1] > this_tuple_skipole_version[1]:
+    if (proj_tuple_skipole_version[0] == this_tuple_skipole_version[0]) and (proj_tuple_skipole_version[1] > this_tuple_skipole_version[1]):
         raise excepts.ServerError("Sorry, the project was created with a later version of skipole")
 
 
