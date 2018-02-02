@@ -98,7 +98,7 @@
 "file_new_part": 43070,
 "filepath_page": 9100,
 "folder_brief": 2650,
-"general_json": "lib,general_json",
+"general_json": 20002,
 "get_part_edit": 43101,
 "hide_if_empty": 43040,
 "insert_textblockref": 42501,
@@ -35837,6 +35837,14 @@ false
 "filepath": "lib/static/export.tar",
 "enable_cache": false,
 "mimetype": "application/x-tar"
+}
+},
+"general_json": {
+"ident": 20002,
+"brief": "Empty JSON file for general use",
+"JSON": {
+"enable_cache": false,
+"content": {}
 }
 },
 "index_template": {
