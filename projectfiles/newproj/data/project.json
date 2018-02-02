@@ -3,14 +3,14 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "0.0.9",
+"skipole": "0.1.0",
 "subprojects": {
 "lib": {
 "path": "/lib/"
 }
 },
 "specialpages": {
-"general_json": "lib,general_json",
+"general_json": 2002,
 "home": 1,
 "jquery_core": "lib,jquery_core",
 "no_javascript": "lib,no_javascript",
@@ -87,6 +87,14 @@
 "restricted": true,
 "folders": {},
 "pages": {
+"general_json": {
+"ident": 2002,
+"brief": "Empty JSON file for general use",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
+},
 "index_template": {
 "ident": 2001,
 "brief": "The template for the index page",

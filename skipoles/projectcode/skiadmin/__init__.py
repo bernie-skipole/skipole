@@ -536,7 +536,6 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
         if len(_SESSION_DATA)>50:
             _SESSION_DATA.popitem(last=False)
         page_data['ident_data'] = ident_data
-
     return
 
 
