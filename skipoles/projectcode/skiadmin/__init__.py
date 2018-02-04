@@ -99,7 +99,6 @@ _CALL_SUBMIT_DATA = {
                        22470: addpage.submit_new_json,                  # add a new json page
                        23039: common.submit_new_parent,                 # page given a new parent folder
                        23049: common.submit_page_brief,                 # page given a new brief
-                       23229: editpage.submit_last_scroll,              # sets last scroll flag
                        23259: editpage.submit_default_error_widget,     # sets default error widget
                        23419: editpage.submit_cache,                    # sets cache header
                        23421: editpage.retrieve_page_svg,               # gets data for page svg

@@ -81,7 +81,7 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data[("default_e_widg","input_text")] = page.default_error_widget.to_str_tuple()
 
     # sets last_scroll flag
-    page_data[("lastscrollcheck","checked")] = page.last_scroll
+    page_data[("lastscroll","checked")] = page.last_scroll
 
     # fills in the backcolor checkbox and value
     if page.show_backcol:
@@ -106,10 +106,6 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[('interval', 'input_text')] = '0'
         page_data[('interval_target', 'input_text')] = ''
 
-    r, g, b = css_styles.hex_int(page.backcol)
-    page_data[('red', 'input_text')] = str(r)
-    page_data[('green', 'input_text')] = str(g)
-    page_data[('blue', 'input_text')] = str(b)
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
@@ -471,7 +467,8 @@ def set_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = 'HTML tag background color set to %s' % page.backcol
 
 
-def submit_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+
+def set_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets page last_scroll flag"
 
     editedproj = call_data['editedproj']
@@ -487,18 +484,20 @@ def submit_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_
     else:
         raise FailPage(message = "page missing")
 
+    if (('lastscroll','checkbox') in call_data) and (call_data['lastscroll','checkbox'] == 'checked'):
+        # enable the last_scroll flag
+        page.last_scroll = True
+        text = 'Page will be displayed at the last scroll position'
+    else:
+        # disable the last_scroll flag
+        page.last_scroll = False
+        text = 'Page will not display at previous scroll position'
+
     try:
-        if ('scroll' not in call_data) or (not call_data['scroll']):
-            # disable the last_scroll flag
-            page.last_scroll = False
-            text = 'Page will not display at previous scroll position'
-        else:
-            page.last_scroll = True
-            text = 'Page will be displayed at the last scroll position'
-    except:
-        raise FailPage(message="Error setting last_scroll")
-    # save the page
-    utils.save(call_data, page=page)
+        # save the altered page
+        editedproj.save_page(page)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = text
 
 
