@@ -121,3 +121,69 @@ SKIPOLE.checkbox.CheckInputs.prototype.setvalues = function (fieldlist, result) 
     };
 
 
+SKIPOLE.checkbox.SubmitCheckBox1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.checkbox.SubmitCheckBox1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.checkbox.SubmitCheckBox1.prototype.constructor = SKIPOLE.checkbox.SubmitCheckBox1;
+SKIPOLE.checkbox.SubmitCheckBox1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    this.check_error(fieldlist, result);
+    // checked
+    var checked_value = this.fieldarg_in_result('checked', result, fieldlist);
+    if (checked_value === true) {
+        this.widg.find('input[type="checkbox"]').prop('checked', true);
+        }
+    if (checked_value === false) {
+        this.widg.find('input[type="checkbox"]').prop('checked', false);
+        }
+    // hide
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (this.widg.is(":visible")) {
+                this.widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(this.widg.is(":visible"))) {
+                this.widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+SKIPOLE.checkbox.SubmitCheckBox1.prototype.eventfunc = function (e) {
+    if (e.type == 'submit') {
+        // form submitted
+        if (!SKIPOLE.form_validate(this.widg)) {
+            // prevent the submission if validation failure
+            e.preventDefault();
+            }
+        else {
+            // form validated, so if json url set, call a json page
+            var jsonurl = this.fieldvalues["url"];
+            if (jsonurl) {
+                var self = this;
+                var widgform = this.widg.find('form');
+                var senddata = widgform.serializeArray();
+                $.getJSON(jsonurl, senddata).done(function(result){
+                     if (self.get_error(result)) {
+                        // if error, set any results received from the json call
+                        SKIPOLE.setfields(result);
+                        }
+                   else {
+                        // If no error received, clear any previous error
+                        self.clear_error();
+                        SKIPOLE.setfields(result);
+                        }
+                    });
+                e.preventDefault();
+                }
+            }
+        }
+    };
+
+
