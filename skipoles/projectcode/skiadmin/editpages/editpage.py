@@ -83,6 +83,15 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
     # sets last_scroll flag
     page_data[("lastscrollcheck","checked")] = page.last_scroll
 
+    # fills in the backcolor checkbox and value
+    if page.show_backcol:
+        page_data[("checkenablecolor","checked")] = True
+        page_data[('setbackcolor', 'hide')] = False
+    else:
+        page_data[("checkenablecolor","checked")] = False
+        page_data[('setbackcolor', 'hide')] = True
+    page_data[('setbackcolor', 'input_text')] = page.backcol
+
     # fills in the backcol checkbox
     if page.show_backcol:
         page_data[("backcolcheck","checked")] = True
