@@ -420,8 +420,9 @@ def set_html_lang(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = "Page lang set to %s" % call_data['setlang']
 
 
-def submit_backcol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Sets page background colour"
+def enable_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """Enables background colour in HTML tag"""
+
     editedproj = call_data['editedproj']
 
     if 'page' in call_data:
@@ -435,26 +436,51 @@ def submit_backcol(caller_ident, ident_list, submit_list, submit_dict, call_data
     else:
         raise FailPage(message = "page missing")
 
+    if (("checkenablecolor","checkbox") in call_data) and call_data["checkenablecolor","checkbox"]:
+        page.show_backcol = True
+        result = "Background colour %s set in HTML tag" % page.backcol
+    else:
+        page.show_backcol = False
+        result = "Background colour removed from HTML tag"
+
     try:
-        if ('enabled' not in call_data) or (not call_data['enabled']):
-            # disable the background colour
-            page.show_backcol = False
-            text = 'Page background color not applied'
+        # save the altered page
+        editedproj.save_page(page)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    call_data['status'] = result
+
+
+def set_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """Sets the background colour in the HTML tag"""
+
+    editedproj = call_data['editedproj']
+
+    if 'page' in call_data:
+        if call_data['page'].page_type == 'TemplatePage':
+            # page given from session data
+            page = call_data['page']
         else:
-            page.show_backcol = True
-            r = int(call_data['red'])
-            g = int(call_data['green'])
-            b = int(call_data['blue'])
-            if r<0 or r>255: r=0
-            if g<0 or g>255: g=0
-            if b<0 or b>255: b=0
-            page.backcol = css_styles.int_hex(r, g, b)
-            text = 'Page background color set to %s' % page.backcol
-    except:
-        raise FailPage(message="Invalid background colour", widget="backcol")
-    # save the page
-    utils.save(call_data, page=page, widget_name="backcol")
-    call_data['status'] = text
+            raise FailPage(message = "Invalid page")
+        if not page in editedproj:
+            raise FailPage(message = "Invalid page")
+    else:
+        raise FailPage(message = "page missing")
+
+    if page.show_backcol == False:
+        raise FailPage(message = "Backgound colour in HTML tag has not been enabled")
+
+    if (('setbackcolor','input_text') in call_data) and call_data['setbackcolor','input_text']:
+        page.backcol = call_data['setbackcolor','input_text']
+    else:
+        raise FailPage(message = "Background colour to set is missing")
+
+    try:
+        # save the altered page
+        editedproj.save_page(page)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    call_data['status'] = 'HTML tag background color set to %s' % page.backcol
 
 
 def submit_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

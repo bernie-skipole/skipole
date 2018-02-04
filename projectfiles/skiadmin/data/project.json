@@ -91,6 +91,7 @@
 "edit_textblockref": 42001,
 "edit_user_page": 5300,
 "edit_widget": 44100,
+"enable_backcolour": 3310,
 "field_default": 44029,
 "field_name": 44022,
 "field_value": 44025,
@@ -142,7 +143,6 @@
 "newtext": 41020,
 "no_javascript": "lib,no_javascript",
 "operations": 80001,
-"page_backcol": 3300,
 "page_body": 3340,
 "page_head": 3320,
 "page_svg": 3420,
@@ -175,6 +175,7 @@
 "setHTMLbackcol": 80003,
 "set_alias": 45030,
 "set_arg_value": 46111,
+"set_backcolour": 3300,
 "set_brief": 20,
 "set_colour": 34,
 "set_comment": 41220,
@@ -8928,7 +8929,7 @@ false
 "name": "enablebackcolor",
 "brief": "Form to enable a background color in html tag",
 "fields": {
-"action": "admin_home",
+"action": "enable_backcolour",
 "action_json": "",
 "button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
@@ -8958,7 +8959,7 @@ false
 "name": "checkenablecolor",
 "brief": "Checkbox to enable background color in html tag",
 "fields": {
-"checkbox": "",
+"checkbox": "enable_color",
 "checkbox_class": "w3-check",
 "checked": false,
 "left_class": "ski_left_label",
@@ -8981,7 +8982,7 @@ false
 "name": "setbackcolor",
 "brief": "Form to set a background color in html tag",
 "fields": {
-"action": "admin_home",
+"action": "set_backcolour",
 "action_json": "",
 "button_class": "w3-button w3-theme-d4 w3-margin-left",
 "button_text": "Submit",
@@ -9014,286 +9015,6 @@ false
 "widget_class": "w3-section",
 "widget_style": ""
 }
-}
-],
-[
-"Widget",
-{
-"class": "inputforms.Form1",
-"name": "backcol",
-"brief": "Form to set background colour",
-"fields": {
-"action": "page_backcol",
-"clear_error": false,
-"container_class": "",
-"enctype": "",
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-[
-"Widget",
-{
-"class": "checkbox.CheckInputs",
-"name": "backcolcheck",
-"brief": "Sets HTML tag background colour",
-"fields": {
-"checkbox": "show_backcol",
-"checkbox_class": "w3-check",
-"checked": false,
-"clear_error": false,
-"container_class": "ski_inline",
-"div_class": "",
-"error_class": "w3-panel w3-red",
-"label_class": "ski_left_label",
-"label_text": "Set background colour: ",
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-},
-"container_0": [
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-],
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-],
-[
-"Part",
-{
-"tag_name": "label",
-"brief": "Red label",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"R: "
-],
-[
-"ClosedWidget",
-{
-"class": "inputtext.TextInput1",
-"name": "red",
-"brief": "Sets Red",
-"fields": {
-"disabled": false,
-"input_accepted_class": "ski_input_accepted",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"maxlength": "3",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"size": "3",
-"title": "",
-"type": "text",
-"widget_class": "ski_input",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.IntMinMax",
-"message": "All values should be in the range 0-255",
-"displaywidget": [
-"",
-"backcol",
-"",
-""
-],
-"val_args": {
-"maxval": "255",
-"minval": "0"
-}
-}
-]
-}
-}
-]
-]
-}
-],
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-],
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-],
-[
-"Part",
-{
-"tag_name": "label",
-"brief": "Green label",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"G: "
-],
-[
-"ClosedWidget",
-{
-"class": "inputtext.TextInput1",
-"name": "green",
-"brief": "Sets Green",
-"fields": {
-"disabled": false,
-"input_accepted_class": "ski_input_accepted",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"maxlength": "3",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"size": "3",
-"title": "",
-"type": "text",
-"widget_class": "ski_input",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.IntMinMax",
-"message": "All values should be in the range 0-255",
-"displaywidget": [
-"",
-"backcol",
-"",
-""
-],
-"val_args": {
-"maxval": "255",
-"minval": "0"
-}
-}
-]
-}
-}
-]
-]
-}
-],
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-],
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-],
-[
-"Part",
-{
-"tag_name": "label",
-"brief": "Blue label",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"B: "
-],
-[
-"ClosedWidget",
-{
-"class": "inputtext.TextInput1",
-"name": "blue",
-"brief": "Sets Blue",
-"fields": {
-"disabled": false,
-"input_accepted_class": "ski_input_accepted",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"maxlength": "3",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"size": "3",
-"title": "",
-"type": "text",
-"widget_class": "ski_input",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.IntMinMax",
-"message": "All values should be in the range 0-255",
-"displaywidget": [
-"",
-"backcol",
-"",
-""
-],
-"val_args": {
-"maxval": "255",
-"minval": "0"
-}
-}
-]
-}
-}
-]
-]
-}
-],
-[
-"HTMLSymbol",
-{
-"text": "&nbsp;"
-}
-],
-[
-"ClosedWidget",
-{
-"class": "inputforms.SubmitButton2",
-"name": "submit2",
-"brief": "submit button 2",
-"fields": {
-"button_text": "Submit",
-"show": true,
-"widget_class": "w3-button w3-theme-d4 w3-margin-left",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
-]
 }
 ],
 [
@@ -10691,18 +10412,6 @@ false
 "original_fields": {}
 }
 },
-"submit_new_backcol": {
-"ident": 23309,
-"brief": "sets the new background colour",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 23207,
-"target_ident": 23207
-},
-"original_fields": {}
-}
-},
 "submit_new_brief_for_page": {
 "ident": 23049,
 "brief": "sets the new brief",
@@ -10742,26 +10451,6 @@ false
 "target_ident": 23409
 },
 "original_fields": {}
-}
-},
-"validate_backcol_for_page": {
-"ident": 23303,
-"brief": "Check colour",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 23309,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"backcolcheck:checkbox": "enabled",
-"blue:input_text": "blue",
-"green:input_text": "green",
-"red:input_text": "red"
-}
 }
 },
 "validate_default_error_widget": {
@@ -10911,6 +10600,28 @@ false
 "original_fields": {}
 }
 },
+"enable_html_backcolour": {
+"ident": 3310,
+"brief": "Enables background colour in the page html tag",
+"RespondPage": {
+"class": "StoreData",
+"original_args": {
+"fail_ident": 23207,
+"submit_list": [
+"editpages",
+"editpage",
+"enable_backcolour"
+],
+"submit_option": true,
+"target_ident": 23207,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"checkenablecolor:checkbox": ""
+}
+}
+},
 "new_brief": {
 "ident": 3040,
 "brief": "Check the new page brief fields",
@@ -11058,31 +10769,6 @@ false
 }
 }
 },
-"set_backcol": {
-"ident": 3300,
-"brief": "Check the background colour fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-23209
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 23303,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"backcol:button_text": "",
-"backcolcheck:checkbox": "",
-"blue:input_text": "",
-"green:input_text": "",
-"red:input_text": ""
-}
-}
-},
 "set_default_error_widget": {
 "ident": 3250,
 "brief": "Check the default error widget",
@@ -11101,6 +10787,28 @@ false
 },
 "original_fields": {
 "default_e_widg:input_text": ""
+}
+}
+},
+"set_html_backcolour": {
+"ident": 3300,
+"brief": "Sets the background colour in the page html tag",
+"RespondPage": {
+"class": "StoreData",
+"original_args": {
+"fail_ident": 23207,
+"submit_list": [
+"editpages",
+"editpage",
+"set_backcolour"
+],
+"submit_option": true,
+"target_ident": 23207,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"setbackcolor:input_text": ""
 }
 }
 },
@@ -39326,12 +39034,12 @@ false
 "ident": 85002,
 "brief": "aa",
 "TemplatePage": {
-"show_backcol": true,
+"show_backcol": false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#ffff69",
+"backcol": "#e669ff",
 "default_error_widget": [
 "",
 "top_error"

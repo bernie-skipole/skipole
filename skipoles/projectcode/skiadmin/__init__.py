@@ -101,7 +101,6 @@ _CALL_SUBMIT_DATA = {
                        23049: common.submit_page_brief,                 # page given a new brief
                        23229: editpage.submit_last_scroll,              # sets last scroll flag
                        23259: editpage.submit_default_error_widget,     # sets default error widget
-                       23309: editpage.submit_backcol,                  # sets page background colour
                        23419: editpage.submit_cache,                    # sets cache header
                        23421: editpage.retrieve_page_svg,               # gets data for page svg
                        24003: managetextblocks.submit_new_textblock,    # adds a textblock from manage textblock page
