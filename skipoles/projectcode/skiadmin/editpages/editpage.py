@@ -85,24 +85,12 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # fills in the backcolor checkbox and value
     if page.show_backcol:
-        page_data[("checkenablecolor","checked")] = True
+        page_data[("enablebackcolor","checked")] = True
         page_data[('setbackcolor', 'hide')] = False
     else:
-        page_data[("checkenablecolor","checked")] = False
+        page_data[("enablebackcolor","checked")] = False
         page_data[('setbackcolor', 'hide')] = True
     page_data[('setbackcolor', 'input_text')] = page.backcol
-
-    # fills in the backcol checkbox
-    if page.show_backcol:
-        page_data[("backcolcheck","checked")] = True
-        page_data[('red', 'disabled')] = False
-        page_data[('green', 'disabled')] = False
-        page_data[('blue', 'disabled')] = False
-    else:
-        page_data[("backcolcheck","checked")] = False
-        page_data[('red', 'disabled')] = True
-        page_data[('green', 'disabled')] = True
-        page_data[('blue', 'disabled')] = True
 
     # fills in the JSON refresh checkbox
     if page.interval and page.interval_target:
@@ -436,7 +424,7 @@ def enable_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_d
     else:
         raise FailPage(message = "page missing")
 
-    if (("checkenablecolor","checkbox") in call_data) and call_data["checkenablecolor","checkbox"]:
+    if (("enablebackcolor","checkbox") in call_data) and call_data["enablebackcolor","checkbox"]:
         page.show_backcol = True
         result = "Background colour %s set in HTML tag" % page.backcol
     else:

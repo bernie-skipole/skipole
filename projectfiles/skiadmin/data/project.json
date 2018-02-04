@@ -8925,54 +8925,33 @@ false
 [
 "Widget",
 {
-"class": "inputforms.SubmitForm1",
+"class": "checkbox.SubmitCheckBox1",
 "name": "enablebackcolor",
-"brief": "Form to enable a background color in html tag",
+"brief": "Checkbox form to enable background color in html tag",
 "fields": {
 "action": "enable_backcolour",
 "action_json": "",
-"button_class": "w3-button w3-theme-d4",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
 "button_text": "Submit",
+"checkbox": "enable_color",
+"checkbox_class": "w3-check",
+"checked": false,
 "clear_error": false,
-"container_class": "",
-"div_class": "ski_inline",
-"enctype": "",
 "error_class": "w3-panel w3-red",
 "hidden_field1": "",
 "hidden_field2": "",
 "hidden_field3": "",
 "hidden_field4": "",
-"left_class": "",
-"left_label": "",
-"right_class": "",
-"right_label": "",
+"hide": false,
+"inputandbutton_class": "",
+"inputdiv_class": "",
+"label": "Enable html tag background colour:",
+"label_class": "ski_left_label",
 "show": true,
 "show_error": "",
 "widget_class": "w3-section",
 "widget_style": ""
-},
-"container_0": [
-[
-"Widget",
-{
-"class": "checkbox.CheckBox2",
-"name": "checkenablecolor",
-"brief": "Checkbox to enable background color in html tag",
-"fields": {
-"checkbox": "enable_color",
-"checkbox_class": "w3-check",
-"checked": false,
-"left_class": "ski_left_label",
-"left_label": "Enable html tag background colour:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
-}
-]
-]
 }
 ],
 [
@@ -10618,7 +10597,7 @@ false
 "validate_option": false
 },
 "original_fields": {
-"checkenablecolor:checkbox": ""
+"enablebackcolor:checkbox": ""
 }
 }
 },
