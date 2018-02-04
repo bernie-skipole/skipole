@@ -190,6 +190,7 @@
 "set_language": 10,
 "set_language_json": 11,
 "set_last_scroll": 3220,
+"set_last_scroll_json": 3225,
 "set_linebreaks": 42040,
 "set_placeholder_brief": 45020,
 "set_restricted_action": 2900,
@@ -8857,54 +8858,33 @@ false
 [
 "Widget",
 {
-"class": "inputforms.SubmitForm1",
+"class": "checkbox.SubmitCheckBox1",
 "name": "lastscroll",
-"brief": "Form to contain last scroll checkbox",
+"brief": "Checkbox form to enable last scroll page position",
 "fields": {
 "action": "set_last_scroll",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4",
+"action_json": "set_last_scroll_json",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
 "button_text": "Submit",
+"checkbox": "checked",
+"checkbox_class": "w3-check",
+"checked": false,
 "clear_error": false,
-"container_class": "",
-"div_class": "ski_mid_button",
-"enctype": "",
 "error_class": "w3-panel w3-red",
 "hidden_field1": "",
 "hidden_field2": "",
 "hidden_field3": "",
 "hidden_field4": "",
-"left_class": "",
-"left_label": "",
-"right_class": "",
-"right_label": "",
+"hide": false,
+"inputandbutton_class": "",
+"inputdiv_class": "",
+"label": "Page retains last position:",
+"label_class": "ski_left_label",
 "show": true,
 "show_error": "",
 "widget_class": "w3-section",
 "widget_style": ""
-},
-"container_0": [
-[
-"Widget",
-{
-"class": "checkbox.CheckBox2",
-"name": "lastscrollcheck",
-"brief": "CheckBox",
-"fields": {
-"checkbox": "scroll",
-"checkbox_class": "w3-check",
-"checked": false,
-"left_class": "ski_left_label",
-"left_label": "Page retains last position:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
-}
-]
-]
 }
 ],
 [
@@ -10379,18 +10359,6 @@ false
 "original_fields": {}
 }
 },
-"submit_last_scroll": {
-"ident": 23229,
-"brief": "sets the last scroll flag",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 23207,
-"target_ident": 23207
-},
-"original_fields": {}
-}
-},
 "submit_new_brief_for_page": {
 "ident": 23049,
 "brief": "sets the new brief",
@@ -10446,23 +10414,6 @@ false
 },
 "original_fields": {
 "default_e_widg:input_text": "e_widg"
-}
-}
-},
-"validate_last_scroll": {
-"ident": 23221,
-"brief": "Check last scroll",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 23229,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"lastscrollcheck:checkbox": "scroll"
 }
 }
 },
@@ -10814,23 +10765,45 @@ false
 },
 "set_last_scroll": {
 "ident": 3220,
-"brief": "Check the last scroll flag",
+"brief": "Sets the page last_scroll flag",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "StoreData",
 "original_args": {
-"allowed_callers": [
-23209
+"fail_ident": 23207,
+"submit_list": [
+"editpages",
+"editpage",
+"set_last_scroll"
 ],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 23221,
+"submit_option": true,
+"target_ident": 23207,
 "validate_fail_ident": null,
 "validate_option": false
 },
 "original_fields": {
-"lastscroll:button_text": "",
-"lastscrollcheck:checkbox": ""
+"lastscroll:checkbox": ""
+}
+}
+},
+"set_last_scroll_json": {
+"ident": 3225,
+"brief": "Sets page last scroll using a json call",
+"RespondPage": {
+"class": "StoreData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"editpages",
+"editpage",
+"set_last_scroll"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"lastscroll:checkbox": ""
 }
 }
 },
