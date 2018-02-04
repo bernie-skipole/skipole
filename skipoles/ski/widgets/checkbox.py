@@ -389,3 +389,164 @@ class CheckInputs(Widget):
   </div>
 </div>"""
 
+
+class SubmitCheckBox1(Widget):
+    """Defines a form with a checkbox input field, and four hidden fields"""
+
+    # js_validators is a class attribute, True if javascript validation is enabled
+    js_validators=True
+
+    error_location = (0,0,0)
+
+    arg_descriptions = {'label':FieldArg("text", ''),
+                        'label_class':FieldArg("cssclass", ''),
+                        'action_json':FieldArg("url", ''),
+                        'action':FieldArg("url", ''),
+                        'hidden_field1':FieldArg("text", '', valdt=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'button_text':FieldArg("text",'Submit'),
+                        'button_class':FieldArg("cssclass", ''),
+                        'inputdiv_class':FieldArg("cssclass", ''),
+                        'inputandbutton_class':FieldArg("cssclass", ''),
+                        'error_class':FieldArg("cssclass", ''),
+                        'hide':FieldArg("boolean", False, jsonset=True),
+                        'checkbox':FieldArg("text", '', valdt=True),
+                        'checkbox_class':FieldArg("cssclass", ''),
+                        'checked':FieldArg("boolean", False, jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        label: The text displayed to the left of the text input field
+        label_class: The css class of the label
+        action_json:  if a value set, and client has jscript enabled, this is the page ident, label, url this button links to, expects a json page back
+        action: The page ident, label, url this button links to, overridden if action_json is set.
+        hidden_field1: A hidden field value, leave blank if unused, name used as the get field name
+        hidden_field2: A second hidden field value, leave blank if unused, name used as the get field name
+        hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
+        hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
+        button_text: The text on the button
+        button_class: The class given to the button tag
+        inputdiv_class: the class attribute of the div which contains the label, input text and button
+        inputandbutton_class: the class attribute of the span which contains the input text and button
+        error_class: The class applied to the paragraph containing the error message on error.
+        hide: If True, widget is hidden
+        checkbox: The name of the checkbox, with the value returned
+        checkbox_class: The css class of the checkbox input field
+        checked: True if checkbox ticked, False otherwise
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        # error div at 0
+        self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
+        self[0][0] = tag.Part(tag_name="p")
+        self[0][0][0] = ''
+        # The form
+        self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
+
+        # div containing label, input text and button
+        self[1][0] = tag.Part(tag_name='div')
+        # the label
+        self[1][0][0] = tag.Part(tag_name="label", hide_if_empty=True)
+        # span containing input text and button
+        self[1][0][1] = tag.Part(tag_name='span')
+        # the checkbox input field
+        self[1][0][1][0] = tag.ClosedPart(tag_name="input", attribs = {"type":"checkbox"})
+        # the submit button
+        self[1][0][1][1] = tag.Part(tag_name="button", attribs ={"type":"submit"})
+        self[1][0][1][1][0] = "Submit"
+        self._jsonurl = ''
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the form"
+        # Hides widget if no error and hide is True
+        self.widget_hide(self.get_field_value("hide"))
+        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        if self.get_field_value('error_class'):
+            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.error_status:
+            self[0].del_one_attrib("style")
+        if not self.get_field_value("action"):
+            # setting self._error replaces the entire tag
+            self._error = "Warning: No form action"
+            return
+        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        if not actionurl:
+            # setting self._error replaces the entire tag
+            self._error = "Warning: broken link"
+            return
+        # update the action of the form
+        self[1].update_attribs({"action": actionurl})
+        # the div holding label, checkbox and button
+        if self.get_field_value('inputdiv_class'):
+            self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
+        if self.get_field_value('label_class'):
+            self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label'):
+            self[1][0][0][0] = self.get_field_value('label')
+
+        # the span holding input checkbox and button
+        if self.get_field_value('inputandbutton_class'):
+            self[1][0][1].attribs = {"class": self.get_field_value('inputandbutton_class')}
+
+        # set an id in the input checkbox field for the 'label for' tag
+        self[1][0][1][0].insert_id()
+
+        if self.get_field_value('checked'):
+            self[1][0][1][0].update_attribs({"name":self.get_formname('checkbox'), "value":self.get_field_value('checkbox'), "checked":"checked"})
+        else:
+            self[1][0][1][0].update_attribs({"name":self.get_formname('checkbox'), "value":self.get_field_value('checkbox')})
+        if self.get_field_value('checkbox_class'):
+            self[1][0][1][0].update_attribs({"class": self.get_field_value('checkbox_class')})
+
+        # set the label 'for' attribute
+        self[1][0][0].update_attribs({'for':self[1][0][1][0].get_id()})
+
+        # submit button
+        if self.get_field_value('button_class'):
+            self[1][0][1][1].update_attribs({"class": self.get_field_value('button_class')})
+        if self.get_field_value('button_text'):
+            self[1][0][1][1][0] = self.get_field_value('button_text')
+
+        # add ident and four hidden fields
+        self.add_hiddens(self[1], page)
+
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a submit event handler"""
+        jscript = """  $("#{ident} form").on("submit input", function(e) {{
+    SKIPOLE.widgets["{ident}"].eventfunc(e);
+    }});
+""".format(ident=self.get_id())
+        if self._jsonurl:
+            return jscript + self._make_fieldvalues(url=self._jsonurl)
+        return jscript
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div> <!-- with widget id and class widget_class -->
+  <div>  <!-- div hidden when no error is displayed, with class set to error_class on error -->
+    <p> <!-- error message appears in this paragraph --> </p>
+  </div>
+  <form role="form" method="post"> <!-- action attribute set to action field -->
+    <div> <!-- class attribute set to inputdiv_class -->
+      <label> <!-- with class set to label_class and content to label, for set to input checkbox id -->
+      </label>
+      <span>  <!-- class attribute set to inputandbutton_class -->
+          <input type="checkbox" />  <!-- class set to checkbox_class -->
+          <button type="submit"> <!-- with class set to button_class -->
+            <!-- button_text -->
+          </button>
+      </span>
+    </div>
+    <!-- hidden input fields -->                              
+  </form>
+</div>"""
+
+
