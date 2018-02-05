@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.0.9",
+"skipole": "0.2.0",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -38,6 +38,7 @@
 "skipole_js": 10,
 "test1": 1001,
 "theme1_css": 330,
+"theme2_css": 340,
 "url_not_found": 880,
 "validate_error": 810,
 "w3_css": 320
@@ -129,6 +130,15 @@
 "theme1.css": {
 "ident": 330,
 "brief": "Link to static/css/theme1.css",
+"FilePage": {
+"filepath": "lib/static/css/theme1.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+},
+"theme2.css": {
+"ident": 340,
+"brief": "Link to static/css/theme2.css",
 "FilePage": {
 "filepath": "lib/static/css/theme1.css",
 "enable_cache": true,
