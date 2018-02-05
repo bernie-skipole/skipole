@@ -157,7 +157,7 @@ if not (args.addproj or args.skiadmin or args.remove or args.listprojects or arg
         # Take an existing folder path
         while True:
             path = input('Give the folder path:')
-            path = os.path.abspath(path)
+            path = os.path.abspath(os.path.expanduser(path))
             if not os.path.isdir(path):
                 print("Folder not found.")
                 continue
@@ -169,7 +169,7 @@ if not (args.addproj or args.skiadmin or args.remove or args.listprojects or arg
             path = input('Input a new folder path:')
             if not path:
                 continue
-            path = os.path.abspath(path)
+            path = os.path.abspath(os.path.expanduser(path))
             if os.path.exists(path):
                 print("This folder already exists!")
                 continue
@@ -225,11 +225,11 @@ else:
 
     # project tar file to be imported
     if args.tarimport:
-        sympath = os.path.abspath(args.tarimport[0])
+        sympath = os.path.abspath(os.path.expanduser(args.tarimport[0]))
         if not os.path.exists(sympath):
             os.mkdir(sympath)
             print("New directory created,")
-        tarfilepath = os.path.abspath(args.tarimport[1])
+        tarfilepath = os.path.abspath(os.path.expanduser(args.tarimport[1]))
         skipoles.import_project_to_symlink(sympath, tarfilepath)
         sys.exit(0)
 
@@ -256,7 +256,7 @@ else:
 
     # add a project by creating symlinks to an external project directory
     if args.addproj:
-        sympath = os.path.abspath(args.addproj[0])
+        sympath = os.path.abspath(os.path.expanduser(args.addproj[0]))
         skipoles.make_symlink_to_project(sympath, project)
         sys.exit(0)
 
@@ -272,7 +272,7 @@ else:
             print("Error - This project name - or at least the symlink %s already exists." % (project_path,))
             sys.exit(5)
         # Create a new project in directory and symlink it
-        sympath = os.path.abspath(args.newproj[0])
+        sympath = os.path.abspath(os.path.expanduser(args.newproj[0]))
         if not os.path.exists(sympath):
             os.mkdir(sympath)
             print("New directory created,")
@@ -290,7 +290,7 @@ else:
             print("Error - Project not found. Try 'skipole.py -l' option to list projects.")
             sys.exit(6)
         # Create a copy project in directory and symlink it
-        sympath = os.path.abspath(args.cpproj[0])
+        sympath = os.path.abspath(os.path.expanduser(args.cpproj[0]))
         if not os.path.exists(sympath):
             os.mkdir(sympath)
             print("New directory created,")
