@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
 "version": "0.2.1",
-"skipole": "0.2.0",
+"skipole": "0.2.1",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
