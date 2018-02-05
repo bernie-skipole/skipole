@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "0.1.0",
+"skipole": "0.2.1",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -99,12 +99,12 @@
 "ident": 2001,
 "brief": "The template for the index page",
 "TemplatePage": {
-"show_backcol": true,
+"show_backcol": false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#fbf892",
+"backcol": "#b3b8bc",
 "default_error_widget": [
 "",
 "top_error"
