@@ -39,6 +39,7 @@
 "test1": 1001,
 "theme1_css": 330,
 "theme2_css": 340,
+"theme3_css": 350,
 "url_not_found": 880,
 "validate_error": 810,
 "w3_css": 320
@@ -141,6 +142,15 @@
 "brief": "Link to static/css/theme2.css",
 "FilePage": {
 "filepath": "lib/static/css/theme2.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+},
+"theme3.css": {
+"ident": 350,
+"brief": "Link to static/css/theme3.css",
+"FilePage": {
+"filepath": "lib/static/css/theme3.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
