@@ -140,7 +140,7 @@
 "ident": 340,
 "brief": "Link to static/css/theme2.css",
 "FilePage": {
-"filepath": "lib/static/css/theme1.css",
+"filepath": "lib/static/css/theme2.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
