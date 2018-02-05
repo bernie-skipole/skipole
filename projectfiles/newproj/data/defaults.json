@@ -30,6 +30,13 @@
 "error_class": "w3-panel w3-red",
 "input_class": "ski_input",
 "widget_class": "w3-section"
+},
+"SubmitCheckBox1": {
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"checkbox_class": "w3-check",
+"error_class": "w3-panel w3-red",
+"label_class": "ski_left_label",
+"widget_class": "w3-section"
 }
 },
 "confirm": {
