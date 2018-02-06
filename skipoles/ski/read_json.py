@@ -276,30 +276,21 @@ def _check_idents_for_create_folder(project_numbers, new_numbers, addition_numbe
             new_numbers.append(identnum)
 
 
-def create_project(proj_ident):
-    """Builds the project from the file project.json, returns a dictionary
-          with the following keys
-          url
-         default_language
-         brief
-         version
-         subprojects - dictionary of subprojects {subprojectident:url,...}
-         specialpages - dictionary of label:ident or url
-         sections - dictionary of {name:section,..}
-         itemlist - list of pages and folders 
-        siteroot - the root folder
-"""
 
-    if proj_ident is None:
-        proj_ident = skiboot.project_ident()
+def read_project(proj_ident):
+    "Reads the project.json file and checks version, if ok returns the read project"
+
+    if not proj_ident:
+        raise excepts.ServerError("Sorry, the project has not been recognised")
 
     filepath = skiboot.project_json(proj_ident)
 
-    with open(filepath, 'r') as fp:
-        project = json.load(fp, object_pairs_hook=collections.OrderedDict)
+    try:
+        with open(filepath, 'r') as fp:
+            project = json.load(fp, object_pairs_hook=collections.OrderedDict)
+    except Exception:
+        raise excepts.ServerError("Unable to read file %s" % (filepath,))
 
-    # the dictionary to be returned
-    projectdict = {}
 
     # project created with version = a.b.c
     # this skipole version = d.e.f
@@ -311,7 +302,6 @@ def create_project(proj_ident):
     # if (a == d) and ( b > e) : The project cannot be read, project created with a later version, which may have introduced new widgets
 
     # any other combination : the project can be read
-
     
     if 'skipole' not in project:
         raise excepts.ServerError("Sorry, the project has not been recognised")
@@ -329,6 +319,30 @@ def create_project(proj_ident):
     if (proj_tuple_skipole_version[0] == this_tuple_skipole_version[0]) and (proj_tuple_skipole_version[1] > this_tuple_skipole_version[1]):
         raise excepts.ServerError("Sorry, the project was created with a later version of skipole")
 
+    # version ok, return project
+    return project
+
+
+
+def create_project(proj_ident):
+    """Builds the project from the file project.json, returns a dictionary
+          with the following keys
+          url
+         default_language
+         brief
+         version
+         subprojects - dictionary of subprojects {subprojectident:url,...}
+         specialpages - dictionary of label:ident or url
+         sections - dictionary of {name:section,..}
+         itemlist - list of pages and folders 
+        siteroot - the root folder
+"""
+
+    if proj_ident is None:
+        proj_ident = skiboot.project_ident()
+
+    project = read_project(proj_ident)
+    projectdict = {}
 
     if 'RootFolder' not in project:
         raise excepts.ServerError("Sorry, the project has not been recognised")
