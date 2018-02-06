@@ -26,7 +26,7 @@
 
 import os, tarfile, shutil, sys, tempfile
 
-from .ski import skiboot, project_class_definition
+from .ski import skiboot, project_class_definition, read_json
 
 from .ski.excepts import ServerError
 
@@ -479,5 +479,12 @@ def make_symlink_to_project(symlinkdir, project):
     # create symlinks
     os.symlink(symprojectfiles, project_dir)
     os.symlink(symprojectcode, code_dir)
+    # check project.json can be read, and is of an acceptable version
+    try:
+        read_json.read_project(project)
+    except Exception:
+        os.unlink(project_dir)
+        os.unlink(code_dir)
+        raise
 
 

@@ -230,7 +230,14 @@ else:
             os.mkdir(sympath)
             print("New directory created,")
         tarfilepath = os.path.abspath(os.path.expanduser(args.tarimport[1]))
-        skipoles.import_project_to_symlink(sympath, tarfilepath)
+        try:
+            skipoles.import_project_to_symlink(sympath, tarfilepath)
+        except Exception as e:
+            if hasattr(e, 'message'):
+                print(e.message)
+            else:
+                print("Exception raised in skipoles.import_project_to_symlink")
+            sys.exit(9)
         sys.exit(0)
 
     if not project:
@@ -254,15 +261,23 @@ else:
             print("Command terminated.")
             sys.exit(0)
 
-    # add a project by creating symlinks to an external project directory
-    if args.addproj:
-        sympath = os.path.abspath(os.path.expanduser(args.addproj[0]))
-        skipoles.make_symlink_to_project(sympath, project)
-        sys.exit(0)
-
     # Remove project
     if args.remove:
         skipoles.remove_project(project)
+        sys.exit(0)
+
+    # add a project by creating symlinks to an external project directory
+    if args.addproj:
+        sympath = os.path.abspath(os.path.expanduser(args.addproj[0]))
+        try:
+            skipoles.make_symlink_to_project(sympath, project)
+        except Exception as e:
+            if hasattr(e, 'message'):
+                print(e.message)
+            else:
+                print("Exception raised in skipoles.make_symlink_to_project")
+            sys.exit(9)
+        print("Project %s added, at directory %s." % (project,sympath))
         sys.exit(0)
 
     project_path = os.path.join(projectfiles, project)
@@ -332,7 +347,15 @@ if admin_mode and (project != adminproj):
 options = {project: args.option}
 
 # load the project
-site = skipoles.load_project(project, options)
+try:
+    site = skipoles.load_project(project, options)
+except Exception as e:
+    if hasattr(e, 'message'):
+        print(e.message)
+    else:
+        print("Exception raised in skipoles.load_project")
+    sys.exit(9)
+    
 
 if admin_mode and (project != adminproj):
     # and add the admin project to the site as a sub-project
