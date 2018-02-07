@@ -290,8 +290,8 @@ def copy_proj_to_symlink(symlinkdir, source_id, project):
 
 
 
-def import_project_to_symlink(symlinkdir, tarfilepath):
-    "Import project, then symlink it"
+def import_project(symlinkdir, tarfilepath):
+    "Import project tar file, then symlink it, returns the project name"
     # first, check symlinkdir
     if not os.path.isdir(symlinkdir):
         print("Error - Directory %s not found." % (symlinkdir,))
@@ -299,23 +299,13 @@ def import_project_to_symlink(symlinkdir, tarfilepath):
     if os.listdir(symlinkdir):
         print("Error - Directory %s has contents." % (symlinkdir,))
         sys.exit(8)
-    # Now import project
-    project = import_project(tarfilepath)
-    # Now copy and symlink
-    make_symlink_from_project(symlinkdir, project)
-
-
-
-def import_project(tarfilepath):
-    "imports a project tar file, returns the project name"
+    # check tarfilepath
     if not os.path.isfile(tarfilepath):
         print("Error - File %s not found." % (tarfilepath,))
         sys.exit(8)
-
     if not tarfile.is_tarfile(tarfilepath):
         print("Error - File %s is not a tar file." % (tarfilepath,))
         sys.exit(8)
-
     with tarfile.open(tarfilepath, "r") as tar:
         # first item should be proj_ident/xxxxx, such as proj_ident/myapp.py or proj_ident/__main__.py
         firstitem = tar.getnames()[0]
@@ -329,17 +319,20 @@ def import_project(tarfilepath):
 
     project = proj_file[0]
 
-    # get project location, if project dir exits, return
-    # project_dir being projectfiles/project
+
+    # check project_dir does not already exist
     project_dir = skiboot.projectpath(project)
     if os.path.isdir(project_dir):
         print("Error - Project %s found in the file already exists." % (project,))
         sys.exit(8)
 
     # make project directory and copy tar file to it
-    os.mkdir(project_dir)
-    tarpath = skiboot.tar_path(project)
+    tarpath = os.path.join(symlinkdir, project + ".tar.gz")
     shutil.copyfile(tarfilepath, tarpath)
+
+    # the projectfiles and projectcode directories
+    symprojectfiles = os.path.join(symlinkdir, 'projectfiles')
+    symprojectcode = os.path.join(symlinkdir, 'projectcode')
 
     # and build the project
     try:
@@ -350,82 +343,36 @@ def import_project(tarfilepath):
             # do the extraction to export directory
             with tarfile.open(tarpath, "r") as tar:
                 tar.extractall(path=exportdir, members = _get_files(tar, project))
+ 
+            # copy files from export directory to symprojectfiles/data, symprojectfiles/static and symprojectcode
 
-            # copy files from export directory to the right places
+            os.mkdir(symprojectfiles)
 
-            # delete data directory and copy from export directory
-            destination = skiboot.projectdata(project)
-            if os.path.isdir(destination):
-                if os.path.islink(destination):
-                    real_destination = os.path.realpath(destination)
-                    os.unlink(destination)
-                    shutil.rmtree(real_destination)
-                    shutil.copytree(source, real_destination)
-                    os.symlink(real_destination, destination)
-                else:
-                    shutil.rmtree(destination)
             source = os.path.join(exportdir, project, 'projectfiles', project, 'data')
+            destination = os.path.join(symprojectfiles, 'data')
             shutil.copytree(source, destination)
 
-            # delete static directory and copy from export directory
-            destination = skiboot.projectstatic(project)
-            if os.path.isdir(destination):
-                if os.path.islink(destination):
-                    real_destination = os.path.realpath(destination)
-                    os.unlink(destination)
-                    shutil.rmtree(real_destination)
-                    shutil.copytree(source, real_destination)
-                    os.symlink(real_destination, destination)
-                else:
-                    shutil.rmtree(destination)
             source = os.path.join(exportdir, project, 'projectfiles', project, 'static')
+            destination = os.path.join(symprojectfiles, 'static')
             shutil.copytree(source, destination)
 
-            # delete project code directory and copy from export directory
-            destination = skiboot.projectcode(project)
-            if os.path.isdir(destination):
-                if os.path.islink(destination):
-                    real_destination = os.path.realpath(destination)
-                    os.unlink(destination)
-                    shutil.rmtree(real_destination)
-                    shutil.copytree(source, real_destination)
-                    os.symlink(real_destination, destination)
-                else:
-                    shutil.rmtree(destination)
             source = os.path.join(exportdir, project, 'skipoles', 'projectcode', project)
-            shutil.copytree(source, destination)
+            shutil.copytree(source, symprojectcode)
 
-    except ServerError as e:
-        print(e.message)
-        print("Clearing out project files")
-        # clear out any files
-        cleared = True
-        if os.path.isdir(project_dir):
-            try:
-                if os.path.islink(project_dir):
-                    os.unlink(project_dir)
-                else:
-                    shutil.rmtree(project_dir)
-            except:
-                print("Error while attempting to delete %s" % (project_dir,))
-                cleared = False
-        code_dir = skiboot.projectcode(project)
-        if os.path.isdir(code_dir):
-            try:
-                if os.path.islink(code_dir):
-                    os.unlink(code_dir)
-                else:
-                    shutil.rmtree(code_dir)
-            except:
-                print("Error while attempting to delete %s" % (code_dir,))
-                cleared = False
-        if cleared:
-            print("Import failed")
-        else:
-            print("Import failed but invalid data may remain under projectfiles and projectcode directories")
-        sys.exit(8)
+    except Exception:
+        raise ServerError(message = "Error during import")
 
-    print("Project imported; run 'skipole.py -s %s' to administer the project." % (project,))
+    # create symlinks
+    os.symlink(symprojectfiles, project_dir)
+    code_dir = skiboot.projectcode(project)
+    os.symlink(symprojectcode, code_dir)
+    # check project.json can be read, and is of an acceptable version
+    try:
+        read_json.read_project(project)
+    except Exception:
+        os.unlink(project_dir)
+        os.unlink(code_dir)
+        raise
     return project
 
 
