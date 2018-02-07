@@ -231,13 +231,15 @@ else:
             print("New directory created,")
         tarfilepath = os.path.abspath(os.path.expanduser(args.tarimport[1]))
         try:
-            skipoles.import_project_to_symlink(sympath, tarfilepath)
+            project = skipoles.import_project(sympath, tarfilepath)
         except Exception as e:
             if hasattr(e, 'message'):
                 print(e.message)
             else:
-                print("Exception raised in skipoles.import_project_to_symlink")
+                print("Exception raised in skipoles.import_project")
+            print("Import failed but extracted data may remain under %s" % (sympath,))
             sys.exit(9)
+        print("Project imported; run 'skipole.py -s %s' to administer the project." % (project,))
         sys.exit(0)
 
     if not project:
