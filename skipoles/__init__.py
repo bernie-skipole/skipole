@@ -24,7 +24,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import os, tarfile, shutil, sys, tempfile
+import os, tarfile, shutil, tempfile
 
 from .ski import skiboot, project_class_definition, read_json
 
@@ -187,93 +187,75 @@ def copy_proj(symlinkdir, source_id, project):
     "Creates a new project by copying source_id to project, and by changing filepaths"
     #  check the project name given
     if not project:
-        print("Error - a project name must be given")
-        sys.exit(8)
+        raise ServerError(message = "Error - a project name must be given")
     if not (project.isalnum() and project.islower()):
-        print("Error - the project name must be lower case alphanumeric only")
-        sys.exit(8)
+        raise ServerError(message = "Error - the project name must be lower case alphanumeric only")
     if project.isdigit():
-        print("Error - the project name must have some letters")
-        sys.exit(8)
+        raise ServerError(message = "Error - the project name must have some letters")
     if source_id == project:
-        print("Error - cannot copy to itself")
-        sys.exit(8)
+        raise ServerError(message = "Error - cannot copy to itself")
     if project == 'skiadmin':
-        print("Error - skiadmin is a reserved name")
-        sys.exit(8)
+        raise ServerError(message = "Error - skiadmin is a reserved name")
     if project == skiboot.admin_project():
-        print("Error - Sorry, this is a reserved name")
-        sys.exit(8)
+        raise ServerError(message = "Error - Sorry, this is a reserved name")
 
-    proj_dir =  skiboot.projectpath(proj_ident=project)
-    if os.path.isdir(proj_dir):
-        print("Error - project directory already exists")
-        sys.exit(8)
+    project_dir =  skiboot.projectpath(proj_ident=project)
+    if os.path.isdir(project_dir):
+        raise ServerError(message = "Error - project directory already exists")
+
     source_proj_dir =  skiboot.projectpath(proj_ident=source_id)
     if not os.path.isdir(source_proj_dir):
-        print("Error - project to be copied cannot be found")
-        sys.exit(8)
+        raise ServerError(message = "Error - project to be copied cannot be found")
 
     if not os.path.isdir(symlinkdir):
-        print("Error - Directory %s not found." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s not found." % (symlinkdir,))
     if os.listdir(symlinkdir):
-        print("Error - Directory %s has contents." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s has contents." % (symlinkdir,))
+
+    # the projectfiles and projectcode directories
+    symprojectfiles = os.path.join(symlinkdir, 'projectfiles')
+    symprojectcode = os.path.join(symlinkdir, 'projectcode')
 
     try:
-        # create directory structure
-        os.mkdir(proj_dir)
-        # copy static directory and contents
-        newproject_static = skiboot.projectstatic(project)
-        source_project_static = skiboot.projectstatic(source_id)
-        shutil.copytree(source_project_static, newproject_static)
-        # copy data directory and contents
-        newproject_data = skiboot.projectdata(project)
-        source_project_data = skiboot.projectdata(source_id)
-        shutil.copytree(source_project_data, newproject_data)
 
-        # get project.json and swap out
+        # copy files to symprojectfiles/data, symprojectfiles/static and symprojectcode
+
+        os.mkdir(symprojectfiles)
+
+        source = skiboot.projectstatic(source_id)
+        destination = os.path.join(symprojectfiles, 'static')
+        shutil.copytree(source, destination)
+
+        source = skiboot.projectdata(source_id)
+        destination = os.path.join(symprojectfiles, 'data')
+        shutil.copytree(source, destination)
+
+        projectjson = os.path.join(destination, "project.json")
+
+        # in project.json swap out
         # "filepath": "source_id
         # for
         # "filepath": "project
-        # where it occurs in the project.json file
-        newproject_json = skiboot.project_json(project)
+ 
         current_loc = "\"filepath\": \"%s" % source_id
         new_loc = "\"filepath\": \"%s" % project
-        with open(newproject_json, 'r') as f:
+        with open(projectjson, 'r') as f:
             read_data = f.read()
         new_data = read_data.replace(current_loc, new_loc)
-        with open(newproject_json, 'w') as f:
+        with open(projectjson, 'w') as f:
             f.write(new_data)
 
         # copy code
-        source_project_code = skiboot.projectcode(source_id)
-        newproject_code = skiboot.projectcode(project)
-        shutil.copytree(source_project_code, newproject_code, ignore=shutil.ignore_patterns('*.pyc'))
-    except:
-        print("Error - An unknown error occurred, partial files may have been created and may need cleaning up")
-        sys.exit(8)
+        source = skiboot.projectcode(source_id)
+        shutil.copytree(source, symprojectcode, ignore=shutil.ignore_patterns('*.pyc'))
+    except Exception:
+        raise
+        raise ServerError(message = "Error - An unknown error occurred, partial files may have been created and may need cleaning up")
 
-    ############ Copies project files to symlink directory
-    project_dir = skiboot.projectpath(project)
+    # create symlinks
+    os.symlink(symprojectfiles, project_dir)
     code_dir = skiboot.projectcode(project)
-    if (not os.path.isdir(project_dir)) and (not os.path.isdir(code_dir)):
-        # project directories not found
-        print("Error - This project has not been found")
-        sys.exit(8)
-
-    symprojectfiles = os.path.join(symlinkdir, 'projectfiles')
-    symprojectcode = os.path.join(symlinkdir, 'projectcode')
-    # copy contents of project_dir to symprojectfiles
-    shutil.copytree(project_dir, symprojectfiles)
-    # copy contents of code_dir to symprojectcode
-    shutil.copytree(code_dir, symprojectcode)
-    # remove old directories
-    shutil.rmtree(project_dir)
-    shutil.rmtree(code_dir)
-    # and create symlinks
-    make_symlink_to_project(symlinkdir, project)
+    os.symlink(symprojectcode, code_dir)
 
 
 
@@ -281,16 +263,13 @@ def copy_newproj_to_symlink(symlinkdir, project):
     "Get newproj, then copy and symlink it"
     # first, check symlinkdir
     if not os.path.isdir(symlinkdir):
-        print("Error - Directory %s not found." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s not found." % (symlinkdir,))
     if os.listdir(symlinkdir):
-        print("Error - Directory %s has contents." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s has contents." % (symlinkdir,))
     # get the 'newproj' name
     source_id = skiboot.new_project()
     if source_id == project:
-        print("Error - %s is a reserved name" % (source_id,))
-        sys.exit(8)
+        raise ServerError(message = "Error - %s is a reserved name" % (source_id,))
     # copy project
     copy_proj(symlinkdir, source_id, project)
 
@@ -299,11 +278,9 @@ def copy_proj_to_symlink(symlinkdir, source_id, project):
     "Copy project and symlink it"
     # first, check symlinkdir
     if not os.path.isdir(symlinkdir):
-        print("Error - Directory %s not found." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s not found." % (symlinkdir,))
     if os.listdir(symlinkdir):
-        print("Error - Directory %s has contents." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s has contents." % (symlinkdir,))
     # Now do copy
     copy_proj(symlinkdir, source_id, project)
 
@@ -312,36 +289,29 @@ def import_project(symlinkdir, tarfilepath):
     "Import project tar file, then symlink it, returns the project name"
     # first, check symlinkdir
     if not os.path.isdir(symlinkdir):
-        print("Error - Directory %s not found." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s not found." % (symlinkdir,))
     if os.listdir(symlinkdir):
-        print("Error - Directory %s has contents." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s has contents." % (symlinkdir,))
     # check tarfilepath
     if not os.path.isfile(tarfilepath):
-        print("Error - File %s not found." % (tarfilepath,))
-        sys.exit(8)
+        raise ServerError(message = "Error - File %s not found." % (tarfilepath,))
     if not tarfile.is_tarfile(tarfilepath):
-        print("Error - File %s is not a tar file." % (tarfilepath,))
-        sys.exit(8)
+        raise ServerError(message = "Error - File %s is not a tar file." % (tarfilepath,))
     with tarfile.open(tarfilepath, "r") as tar:
         # first item should be proj_ident/xxxxx, such as proj_ident/myapp.py or proj_ident/__main__.py
         firstitem = tar.getnames()[0]
-
     proj_file = firstitem.split('/')
     if len(proj_file) != 2:
         proj_file = firstitem.split('\\')
     if len(proj_file) != 2:
-        print("Error - Cannot parse contents of file %s" % (tarfilepath,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Cannot parse contents of file %s" % (tarfilepath,))
 
     project = proj_file[0]
 
     # check project_dir does not already exist
     project_dir = skiboot.projectpath(project)
     if os.path.isdir(project_dir):
-        print("Error - Project %s found in the file already exists." % (project,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Project %s found in the file already exists." % (project,))
 
     # make project directory and copy tar file to it
     tarpath = os.path.join(symlinkdir, project + ".tar.gz")
@@ -397,22 +367,18 @@ def import_project(symlinkdir, tarfilepath):
 def make_symlink_to_project(symlinkdir, project):
     "Makes symlinks from symlink directory to project files"
     if not os.path.isdir(symlinkdir):
-        print("Error - Directory %s not found." % (symlinkdir,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s not found." % (symlinkdir,))
     symprojectfiles = os.path.join(symlinkdir, 'projectfiles')
     if not os.path.exists(symprojectfiles):
-        print("Error - Directory %s not found." % (symprojectfiles,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s not found." % (symprojectfiles,))
     symprojectcode = os.path.join(symlinkdir, 'projectcode')
     if not os.path.exists(symprojectcode):
-        print("Error - Directory %s not found." % (symprojectcode,))
-        sys.exit(8)
+        raise ServerError(message = "Error - Directory %s not found." % (symprojectcode,))
     project_dir = skiboot.projectpath(project)
     code_dir = skiboot.projectcode(project)
     if os.path.isdir(project_dir) or os.path.isdir(code_dir):
         # project directories already exist
-        print("Error -Project directories already exist.")
-        sys.exit(8)
+        raise ServerError(message = "Error - Project directories already exist.")
     # create symlinks
     os.symlink(symprojectfiles, project_dir)
     os.symlink(symprojectcode, code_dir)
