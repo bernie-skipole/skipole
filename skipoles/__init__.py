@@ -112,24 +112,20 @@ def remove_project(proj_ident):
     "Removes the project by deleting symlinks"
 
     if proj_ident == adminproj:
-        print("Cannot remove the admin project %s" % (adminproj,))
-        return
+        raise ServerError(message = "Cannot remove the admin project %s" % (adminproj,))
 
     if proj_ident == newproj:
-        print("Cannot remove %s, this is used to generate new projects." % (newproj,))
-        return
+        raise ServerError(message = "Cannot remove %s, this is used to generate new projects." % (newproj,))
 
     if proj_ident == libproj:
-        print("Cannot remove %s, this is used to provide static libraries." % (libproj,))
-        return
+        raise ServerError(message = "Cannot remove %s, this is used to provide static libraries." % (libproj,))
 
     project_dir = skiboot.projectpath(proj_ident)
     code_dir = skiboot.projectcode(proj_ident)
 
     if not ( os.path.isdir(project_dir) or os.path.islink(project_dir) or os.path.isdir(code_dir) or os.path.islink(code_dir)):
         # project directories not found
-        print("This project has not been found")
-        return
+        raise ServerError(message = "This project has not been found")
 
     print("This operation removes project %s" % (proj_ident,))
     print("Are you sure you wish to do this?")
@@ -150,7 +146,7 @@ def remove_project(proj_ident):
                 os.unlink(project_dir)
             else:
                 shutil.rmtree(project_dir)
-        except:
+        except Exception:
             print("Error while attempting to remove %s" % (project_dir,))
         else:
             print("Removed Symlink: %s" % (project_dir,))
@@ -176,11 +172,11 @@ def remove_project(proj_ident):
     if projecfiles_deleted and projectcode_deleted:
         print("Project Removed.")
     elif projecfiles_deleted:
-        print("Project files symlink deleted, however the project code was not!")
+        print("Project files symlink deleted, however the project code symlink was not!")
     elif projectcode_deleted:
-        print("Project code symlink deleted, however the project files was not!")
+        print("Project code symlink deleted, however the project files symlink was not!")
     else:
-        print("Unable to delete symlinks")
+        raise ServerError(message = "Error: Unable to delete symlinks")
 
 
 def copy_proj(symlinkdir, source_id, project):
@@ -249,7 +245,6 @@ def copy_proj(symlinkdir, source_id, project):
         source = skiboot.projectcode(source_id)
         shutil.copytree(source, symprojectcode, ignore=shutil.ignore_patterns('*.pyc'))
     except Exception:
-        raise
         raise ServerError(message = "Error - An unknown error occurred, partial files may have been created and may need cleaning up")
 
     # create symlinks

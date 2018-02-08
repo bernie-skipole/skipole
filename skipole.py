@@ -265,7 +265,14 @@ else:
 
     # Remove project
     if args.remove:
-        skipoles.remove_project(project)
+        try:
+            skipoles.remove_project(project)
+        except Exception as e:
+            if hasattr(e, 'message'):
+                print(e.message)
+            else:
+                print("Exception raised in skipoles.remove_project")
+            sys.exit(9)
         sys.exit(0)
 
     # add a project by creating symlinks to an external project directory
