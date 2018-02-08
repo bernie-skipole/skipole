@@ -37,7 +37,7 @@ _CFG = {
 "new_project"     : "newproj",           # copied to create a new project
 "admin_project"   : "skiadmin",          # The skipole admin project
 "lib_project"     : "lib",               # The skipole static library project
-"version"         : "0.2.2",             # The skipole version
+"version"         : "0.2.3",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
