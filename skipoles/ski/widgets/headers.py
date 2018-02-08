@@ -67,7 +67,6 @@ class NavButtons1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        nav_links_name = self.get_name('nav_links')
         button_class = self.get_field_value('button_class')
         li_class = self.get_field_value('li_class')
 
@@ -88,8 +87,8 @@ class NavButtons1(Widget):
             if not url:
                 continue
             lnk = tag.Part(tag_name="a", text=linktext, attribs={"role":"button"})
-            if self.get_field_value('button_class'):
-                lnk.update_attribs({"class":self.get_field_value('button_class')})
+            if button_class:
+                lnk.update_attribs({"class":button_class})
             # create a url for the href
             get_field = {self.get_formname("nav_links"):link_getdata}
             url = self.make_get_url(page, url, get_field, link_force_ident)
@@ -152,9 +151,8 @@ class NavButtons2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list of links"
-        nav_links_name = self.get_name('nav_links')
         button_class = self.get_field_value('button_class')
-
+        button_style = self.get_field_value('button_style')
 
         # for each link in the nav_links table - create a link and add it
         # as a list item
@@ -166,10 +164,10 @@ class NavButtons2(Widget):
             if not url:
                 continue
             lnk = tag.Part(tag_name="a", text=linktext, attribs={"role":"button"})
-            if self.get_field_value('button_class'):
-                lnk.update_attribs({"class":self.get_field_value('button_class')})
-            if self.get_field_value('button_style'):
-                lnk.update_attribs({"style":self.get_field_value('button_style')})
+            if button_class:
+                lnk.update_attribs({"class":button_class})
+            if button_style:
+                lnk.update_attribs({"style":button_style})
             # create a url for the href
             get_field = {self.get_formname("nav_links"):link_getdata}
             url = self.make_get_url(page, url, get_field, link_force_ident)
@@ -187,6 +185,82 @@ class NavButtons2(Widget):
   <!-- further links -->
 </div>"""
 
+
+
+
+class TabButtons1(Widget):
+    """Defines a div, containing tab buttons which can hide/display portions of the page.
+       Hides and part of the page with a given class, then displays a portion of the
+       page with a given id"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'tabs':FieldArgTable(("text", "text")), # text on button, id to display
+                        'hide_class':FieldArg("cssclass", ''),
+                        'button_class':FieldArg("cssclass", ''),
+                        'button_style':FieldArg("cssstyle", '')
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        tabs: A list of lists, each inner list describing a button
+          0 : The text to appear on the button
+          1 : The id of the portion of the page to make visible
+        button_class: The CSS class of the buttons
+        button_style: The button style
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        # as this widget does not display errors, and is not json settable, hide if empty
+        self.hide_if_empty=True
+        self._display_id_list = []
+        self._hide_class = ''
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the list of buttons"
+
+        self._hide_class = self.get_field_value('hide_class')
+
+        button_class = self.get_field_value('button_class')
+        button_style = self.get_field_value('button_style')
+        # for each button in the tabs table - create a button and add it
+
+        for buttontext, displayid in self.get_field_value('tabs'):
+            if not (buttontext or displayid):
+                continue
+            btn = tag.Part(tag_name="button", text=buttontext)
+            if button_class:
+                btn.update_attribs({"class":button_class})
+            if button_style:
+                btn.update_attribs({"style":button_style})
+            self.append(btn)
+            self._display_id_list.append(displayid)
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        jscript = """  $("#{ident} button").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        if self._hide_class:
+            return jscript + self._make_fieldvalues(display_id_list=self._display_id_list, hide_class=self._hide_class)
+        else:
+            return jscript + self._make_fieldvalues(display_id_list=self._display_id_list)
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id and class widget_class -->
+  <button>  <!-- with class set to button_class -->
+    <!-- The displayed text of the button -->
+  </button>
+  <!-- further buttons -->
+</div>"""
 
 
 
