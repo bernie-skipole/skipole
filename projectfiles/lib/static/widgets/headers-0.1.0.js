@@ -469,13 +469,36 @@ SKIPOLE.headers.NavButtons1.prototype = Object.create(SKIPOLE.BaseWidget.prototy
 SKIPOLE.headers.NavButtons1.prototype.constructor = SKIPOLE.headers.NavButtons1;
 
 
-
 SKIPOLE.headers.NavButtons2 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
     };
 SKIPOLE.headers.NavButtons2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.headers.NavButtons2.prototype.constructor = SKIPOLE.headers.NavButtons2;
+
+
+SKIPOLE.headers.TabButtons1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.headers.TabButtons1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.headers.TabButtons1.prototype.constructor = SKIPOLE.headers.TabButtons1;
+SKIPOLE.headers.TabButtons1.prototype.eventfunc = function (e) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var button = $(e.target);
+    var displayid = fieldvalues["display_id_list"][button.index()];
+    // hide all items with hide_class
+    if (fieldvalues["hide_class"]) {
+        $("." + fieldvalues["hide_class"]).hide();
+        }
+    // display the item with the given id
+    if (displayid) {
+        $("#" + displayid).show();
+        }
+    }
 
 
 
