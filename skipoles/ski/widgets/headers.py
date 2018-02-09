@@ -200,7 +200,9 @@ class TabButtons1(Widget):
                         'tabs':FieldArgTable(("text", "text")), # text on button, id to display
                         'hide_class':FieldArg("cssclass", ''),
                         'button_class':FieldArg("cssclass", ''),
-                        'button_style':FieldArg("cssstyle", '')
+                        'button_style':FieldArg("cssstyle", ''),
+                        'onclick_addclass':FieldArg("cssstyle", ''),
+                        'onclick_removeclass':FieldArg("cssstyle", '')
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -210,18 +212,25 @@ class TabButtons1(Widget):
           1 : The id of the portion of the page to make visible
         button_class: The CSS class of the buttons
         button_style: The button style
+        onclick_addclass: CSS class to add to a button when it is clicked
+        onclick_removeclass: CSS class to remove from a button when it is clicked
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         # as this widget does not display errors, and is not json settable, hide if empty
         self.hide_if_empty=True
         self._display_id_list = []
         self._hide_class = ''
+        self._onclick_addclass = ''
+        self._onclick_removeclass = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list of buttons"
 
+        # get parameters to send to javascript
         self._hide_class = self.get_field_value('hide_class')
+        self._onclick_addclass = self.get_field_value('onclick_addclass')
+        self._onclick_removeclass = self.get_field_value('onclick_removeclass')
 
         button_class = self.get_field_value('button_class')
         button_style = self.get_field_value('button_style')
@@ -245,10 +254,19 @@ class TabButtons1(Widget):
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """.format(ident = self.get_id())
+        other_parameters = {}
+        if self._display_id_list:
+            other_parameters['display_id_list'] = self._display_id_list
         if self._hide_class:
-            return jscript + self._make_fieldvalues(display_id_list=self._display_id_list, hide_class=self._hide_class)
+            other_parameters['hide_class'] = self._hide_class
+        if self._onclick_addclass:
+            other_parameters['onclick_addclass'] = self._onclick_addclass
+        if self._onclick_removeclass:
+            other_parameters['onclick_removeclass'] = self._onclick_removeclass
+        if other_parameters:
+            return jscript + self._make_fieldvalues(**other_parameters)
         else:
-            return jscript + self._make_fieldvalues(display_id_list=self._display_id_list)
+            return jscript
 
 
     @classmethod
