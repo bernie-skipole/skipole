@@ -202,7 +202,8 @@ class TabButtons1(Widget):
                         'button_class':FieldArg("cssclass", ''),
                         'button_style':FieldArg("cssstyle", ''),
                         'onclick_addclass':FieldArg("cssstyle", ''),
-                        'onclick_removeclass':FieldArg("cssstyle", '')
+                        'onclick_removeclass':FieldArg("cssstyle", ''),
+                        'active_button':FieldArg("integer", 0)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -214,6 +215,7 @@ class TabButtons1(Widget):
         button_style: The button style
         onclick_addclass: CSS class to add to a button when it is clicked
         onclick_removeclass: CSS class to remove from a button when it is clicked
+        active_button: the button index (starting at 0) of the button which is currently active
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         # as this widget does not display errors, and is not json settable, hide if empty
@@ -222,6 +224,7 @@ class TabButtons1(Widget):
         self._hide_class = ''
         self._onclick_addclass = ''
         self._onclick_removeclass = ''
+        self._active = 0
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -236,20 +239,35 @@ class TabButtons1(Widget):
         button_style = self.get_field_value('button_style')
         # for each button in the tabs table - create a button and add it
 
-        for buttontext, displayid in self.get_field_value('tabs'):
+        self._active = self.get_field_value('active_button')
+
+        for index, btn in enumerate(self.get_field_value('tabs')):
+            buttontext, displayid = btn
             if not (buttontext or displayid):
                 continue
             btn = tag.Part(tag_name="button", text=buttontext)
-            # give each button button_class and self._onclick_removeclass which will be removed when the button is clicked
-            if button_class and self._onclick_removeclass:
-                if button_class == self._onclick_removeclass:
+            if index == self._active:
+                # this button flagged as chosen
+                if button_class and self._onclick_addclass:
+                    if button_class == self._onclick_addclass:
+                        btn.update_attribs({"class":button_class})
+                    else:
+                        btn.update_attribs({"class":button_class + " " + self._onclick_addclass})
+                elif button_class:
                     btn.update_attribs({"class":button_class})
-                else:
-                    btn.update_attribs({"class":button_class + " " + self._onclick_removeclass})
-            elif button_class:
-                btn.update_attribs({"class":button_class})
-            elif self._onclick_removeclass:
-                btn.update_attribs({"class":self._onclick_removeclass})
+                elif self._onclick_addclass:
+                    btn.update_attribs({"class":self._onclick_addclass})
+            else:
+                # give each button button_class and self._onclick_removeclass which will be removed when the button is clicked
+                if button_class and self._onclick_removeclass:
+                    if button_class == self._onclick_removeclass:
+                        btn.update_attribs({"class":button_class})
+                    else:
+                        btn.update_attribs({"class":button_class + " " + self._onclick_removeclass})
+                elif button_class:
+                    btn.update_attribs({"class":button_class})
+                elif self._onclick_removeclass:
+                    btn.update_attribs({"class":self._onclick_removeclass})
             if button_style:
                 btn.update_attribs({"style":button_style})
             self.append(btn)
@@ -272,9 +290,11 @@ class TabButtons1(Widget):
         if self._onclick_removeclass:
             other_parameters['onclick_removeclass'] = self._onclick_removeclass
         if other_parameters:
-            return jscript + self._make_fieldvalues(**other_parameters)
+            fieldvalues = self._make_fieldvalues(**other_parameters)
         else:
-            return jscript
+            fieldvalues = ""
+        return jscript + fieldvalues + """  SKIPOLE.widgets["{ident}"].setbutton({active});
+""".format(ident = self.get_id(), active=self._active)
 
 
     @classmethod
