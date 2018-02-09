@@ -240,8 +240,16 @@ class TabButtons1(Widget):
             if not (buttontext or displayid):
                 continue
             btn = tag.Part(tag_name="button", text=buttontext)
-            if button_class:
+            # give each button button_class and self._onclick_removeclass which will be removed when the button is clicked
+            if button_class and self._onclick_removeclass:
+                if button_class == self._onclick_removeclass:
+                    btn.update_attribs({"class":button_class})
+                else:
+                    btn.update_attribs({"class":button_class + " " + self._onclick_removeclass})
+            elif button_class:
                 btn.update_attribs({"class":button_class})
+            elif self._onclick_removeclass:
+                btn.update_attribs({"class":self._onclick_removeclass})
             if button_style:
                 btn.update_attribs({"style":button_style})
             self.append(btn)
