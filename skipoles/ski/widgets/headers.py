@@ -190,7 +190,7 @@ class NavButtons2(Widget):
 
 class TabButtons1(Widget):
     """Defines a div, containing tab buttons which can hide/display portions of the page.
-       Hides and part of the page with a given class, then displays a portion of the
+       Hides all elements of the page with a given class, then displays a portion of the
        page with a given id"""
 
     # This class does not display any error messages
