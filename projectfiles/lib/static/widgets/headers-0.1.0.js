@@ -489,6 +489,14 @@ SKIPOLE.headers.TabButtons1.prototype.eventfunc = function (e) {
         }
     var fieldvalues = this.fieldvalues;
     var button = $(e.target);
+    if (fieldvalues["onclick_removeclass"]){
+        // remove this class
+        button.removeClass( fieldvalues["onclick_removeclass"] );
+        }
+    if (fieldvalues["onclick_addclass"]){
+        // add this class
+        button.addClass( fieldvalues["onclick_addclass"] );
+        }
     var displayid = fieldvalues["display_id_list"][button.index()];
     // hide all items with hide_class
     if (fieldvalues["hide_class"]) {
