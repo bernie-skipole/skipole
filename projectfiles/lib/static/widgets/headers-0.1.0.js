@@ -517,6 +517,12 @@ SKIPOLE.headers.TabButtons1.prototype.setbutton = function (button_index) {
         $("#" + displayid).show();
         }
     }
-
+SKIPOLE.headers.TabButtons1.prototype.setvalues = function (fieldlist, result) {
+    // activate a button
+    var active_button = this.fieldarg_in_result('active_button', result, fieldlist);
+    if (active_button != undefined) {
+        this.setbutton(active_button);
+        }
+    }
 
 
