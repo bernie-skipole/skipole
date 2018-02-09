@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.2.0",
+"skipole": "0.2.3",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -1592,6 +1592,50 @@
 "show": true,
 "hide_if_empty": false,
 "parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "Requires Javascript Error",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Requires Javascript Error"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "No javascript",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Error: This site requires Javascript to operate. Either a javascript error has occurred or your browser has javascript disabled."
+]
+]
+}
+]
+]
+}
+],
 [
 "Widget",
 {
