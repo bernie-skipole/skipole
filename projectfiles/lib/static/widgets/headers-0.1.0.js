@@ -484,20 +484,30 @@ SKIPOLE.headers.TabButtons1 = function (widg_id, error_message, fieldmap) {
 SKIPOLE.headers.TabButtons1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.headers.TabButtons1.prototype.constructor = SKIPOLE.headers.TabButtons1;
 SKIPOLE.headers.TabButtons1.prototype.eventfunc = function (e) {
+    var button = $(e.target);
+    this.setbutton(button.index());
+    }
+SKIPOLE.headers.TabButtons1.prototype.setbutton = function (button_index) {
     if (!this.widg_id) {
         return;
         }
     var fieldvalues = this.fieldvalues;
-    var button = $(e.target);
+    var the_widg = this.widg;
+    var allbuttons = the_widg.find('button');
+    var button = allbuttons.eq(button_index);
     if (fieldvalues["onclick_removeclass"]){
-        // remove this class
+        // add the class to all buttons
+        allbuttons.addClass( fieldvalues["onclick_removeclass"] );
+        // remove this class from the pressed button
         button.removeClass( fieldvalues["onclick_removeclass"] );
         }
     if (fieldvalues["onclick_addclass"]){
-        // add this class
+        // remove the class from all buttons
+        allbuttons.removeClass( fieldvalues["onclick_addclass"] );
+        // add this class to the pressed button
         button.addClass( fieldvalues["onclick_addclass"] );
         }
-    var displayid = fieldvalues["display_id_list"][button.index()];
+    var displayid = fieldvalues["display_id_list"][button_index];
     // hide all items with hide_class
     if (fieldvalues["hide_class"]) {
         $("." + fieldvalues["hide_class"]).hide();
