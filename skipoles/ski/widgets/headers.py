@@ -203,7 +203,7 @@ class TabButtons1(Widget):
                         'button_style':FieldArg("cssstyle", ''),
                         'onclick_addclass':FieldArg("cssstyle", ''),
                         'onclick_removeclass':FieldArg("cssstyle", ''),
-                        'active_button':FieldArg("integer", 0)
+                        'active_button':FieldArg("integer", 0, jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
