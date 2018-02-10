@@ -211,6 +211,7 @@ class TabButtons1(Widget):
         tabs: A list of lists, each inner list describing a button
           0 : The text to appear on the button
           1 : The id of the portion of the page to make visible
+        hide_class: CSS class applied to page elements normally hidden.
         button_class: The CSS class of the buttons
         button_style: The button style
         onclick_addclass: CSS class to add to a button when it is clicked
