@@ -161,6 +161,10 @@
 "error_class": "w3-panel w3-red",
 "ul_class": "w3-ul",
 "widget_class": ""
+},
+"TabButtons1": {
+"button_class": "w3-bar-item w3-button",
+"widget_class": "w3-bar"
 }
 },
 "inputforms": {
