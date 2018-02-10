@@ -492,27 +492,40 @@ SKIPOLE.headers.TabButtons1.prototype.setbutton = function (button_index) {
         return;
         }
     var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
-    var allbuttons = the_widg.find('button');
+    var allbuttons = this.widg.find('button');
+    // hide all items with hide_class
+    if (fieldvalues["hide_class"]) {
+        $("." + fieldvalues["hide_class"]).hide();
+        }
+    var number_of_buttons = allbuttons.length;
+    // handle situation where button_index does not match a button
+    if ((button_index < 0) || (button_index >= number_of_buttons)) {
+        if (fieldvalues["onclick_removeclass"]){
+            // add the class to all buttons (to be removed when a button is pressed)
+            allbuttons.addClass( fieldvalues["onclick_removeclass"] );
+            }
+        if (fieldvalues["onclick_addclass"]){
+            // remove the class from all buttons (to be added when a button is pressed)
+            allbuttons.removeClass( fieldvalues["onclick_addclass"] );
+            }
+        return;
+        }
+    // button_index is valid, get the button
     var button = allbuttons.eq(button_index);
     if (fieldvalues["onclick_removeclass"]){
-        // add the class to all buttons
+        // add the class to all buttons (to be removed from the pressed button)
         allbuttons.addClass( fieldvalues["onclick_removeclass"] );
         // remove this class from the pressed button
         button.removeClass( fieldvalues["onclick_removeclass"] );
         }
     if (fieldvalues["onclick_addclass"]){
-        // remove the class from all buttons
+        // remove the class from all buttons (to be added to the pressed button)
         allbuttons.removeClass( fieldvalues["onclick_addclass"] );
         // add this class to the pressed button
         button.addClass( fieldvalues["onclick_addclass"] );
         }
-    var displayid = fieldvalues["display_id_list"][button_index];
-    // hide all items with hide_class
-    if (fieldvalues["hide_class"]) {
-        $("." + fieldvalues["hide_class"]).hide();
-        }
     // display the item with the given id
+    var displayid = fieldvalues["display_id_list"][button_index];
     if (displayid) {
         $("#" + displayid).show();
         }
