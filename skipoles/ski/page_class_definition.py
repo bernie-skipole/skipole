@@ -52,7 +52,10 @@ class ParentPage(object):
         """
         # self._parentfolder_ident is set when a page is added to a folder.
         self._parentfolder_ident = None
-        self.name = name
+        if name:
+            self._name = name.lower()
+        else:
+            self._name = ""
         self.ident = None
         self.status = '200 OK'
         self.headers = [('content-type', 'text/html')]
@@ -62,6 +65,16 @@ class ParentPage(object):
         self.ident_data = ''
         # Set by end_call
         self.session_cookie = ()
+
+    def get_name(self):
+        "The page name"
+        return self._name
+
+    def set_name(self, name):
+        "Ensure name is lower case"
+        self._name = name.lower()
+
+    name = property(get_name, set_name)
 
     @property
     def page_type(self):

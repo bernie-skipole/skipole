@@ -96,7 +96,6 @@ class Folder(object):
         self.pages = {}
         # self.folders is a dictionary of folder.name:folder.ident
         self.folders = {}
-        self._name = name
         self.ident = None
         self._parentfolder_ident = None
         if name:
