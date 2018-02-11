@@ -539,3 +539,12 @@ SKIPOLE.headers.TabButtons1.prototype.setvalues = function (fieldlist, result) {
     }
 
 
+SKIPOLE.headers.DropDownButton1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.headers.DropDownButton1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.headers.DropDownButton1.prototype.constructor = SKIPOLE.headers.DropDownButton1;
+
+
+

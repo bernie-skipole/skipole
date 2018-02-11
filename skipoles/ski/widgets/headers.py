@@ -219,7 +219,6 @@ class TabButtons1(Widget):
         active_button: the button index (starting at 0) of the button which is currently active
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-        # as this widget does not display errors, and is not json settable, hide if empty
         self.hide_if_empty=True
         self._display_id_list = []
         self._hide_class = ''
@@ -309,6 +308,93 @@ class TabButtons1(Widget):
   <!-- further buttons -->
 </div>"""
 
+
+
+class DropDownButton1(Widget):
+    """Defines a div, button and links, typically used for drop down links."""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'nav_links':FieldArgTable(("url", "text", "boolean", "text"), valdt=True),    # target, text in link, force_ident, get data
+                        'button_class':FieldArg("cssclass", ''),
+                        'button_style':FieldArg("cssstyle", ''),
+                        'button_text':FieldArg("text", 'Links'),
+                        'div_class':FieldArg("cssclass", ''),
+                        'link_class':FieldArg("cssclass", '')
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+         nav_links: A list of lists, each inner list describing a link, the name of this field is used in the
+               widgfield for any data returned in the get field
+        For each link, the table row is
+          0 : The url, label or ident of the target page of the link
+          1 : The displayed text of the link
+          2 : If True, ident is appended to link even if there is no get field
+          3 : The get field data to send with the link
+        button_class: The CSS class of the button
+        button_style: The CSS style of the button
+        button_text: The text on the button
+        div_class: CSS class of inner div holding links
+        link_class: CSS class of each link
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self.hide_if_empty=True
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the list of links"
+        button_class = self.get_field_value('button_class')
+        button_style = self.get_field_value('button_style')
+        div_class = self.get_field_value('div_class')
+        link_class = self.get_field_value('link_class')
+
+        self[0] = tag.Part(tag_name="button", text=self.get_field_value('button_text'))
+        if button_class:
+            self[0].update_attribs({"class":button_class})
+        if button_style:
+            self[0].update_attribs({"style":button_style})
+
+        if div_class:
+            self[1] =  tag.Part(tag_name="div", attribs={"class":div_class})
+        else:
+            self[1] =  tag.Part(tag_name="div")
+
+        # for each link in the nav_links table - create a link and add it
+        # as a list item
+        for row in self.get_field_value('nav_links'):
+            linkurl, linktext, link_force_ident, link_getdata = row
+            if not (linkurl or linktext):
+                continue
+            url = skiboot.get_url(linkurl, proj_ident=page.proj_ident)
+            if not url:
+                continue
+            lnk = tag.Part(tag_name="a", text=linktext)
+            if link_class:
+                lnk.update_attribs({"class":link_class})
+            # create a url for the href
+            get_field = {self.get_formname("nav_links"):link_getdata}
+            url = self.make_get_url(page, url, get_field, link_force_ident)
+            lnk.update_attribs({"href": url})
+            self[1].append(lnk)
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id and class widget_class -->
+  <button> <!-- With button_class and button_style -->
+     <!-- Contains button text -->
+  </button>
+  <div>  <!-- With CSS class div_class -->
+    <a href=\"#\">  <!-- with class set to link_class -->
+      <!-- The displayed text of the link -->
+    </a>
+    <!-- further links -->
+  </div>
+</div>"""
 
 
 class HeaderErrorPara(Widget):
