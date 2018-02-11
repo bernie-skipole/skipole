@@ -117,6 +117,12 @@
 }
 },
 "headers": {
+"DropDownButton1": {
+"button_class": "w3-button w3-black",
+"div_class": "w3-dropdown-content w3-bar-block w3-card-4",
+"link_class": "w3-bar-item w3-button",
+"widget_class": "w3-dropdown-hover"
+},
 "HeaderText2": {
 "error_class": "w3-panel w3-red"
 },

@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.2.2",
-"skipole": "0.2.3",
+"version": "0.3.0",
+"skipole": "0.3.0",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -3633,7 +3633,7 @@ false,
 }
 ]
 },
-"generalJSON": {
+"generaljson": {
 "ident": 70150,
 "brief": "JSON file to hold textblock contents",
 "JSON": {
