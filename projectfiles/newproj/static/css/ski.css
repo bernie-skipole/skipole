@@ -120,6 +120,13 @@ white-space: nowrap;}
     text-align : left;
     width : 100%;}
 
+ h1 {font-size:30px;}
+ h2 {font-size:26px;}
+ h3 {font-size:24px;}
+ h4 {font-size:20px;}
+ h5 {font-size:18px;}
+ h6 {font-size:15px;}
+
 }
 
 
@@ -127,6 +134,13 @@ white-space: nowrap;}
 
   .ski_nowrap {
     white-space: normal;}
+
+ h1 {font-size:24px;}
+ h2 {font-size:20px;}
+ h3 {font-size:18px;}
+ h4 {font-size:16px;}
+ h5 {font-size:15px;}
+ h6 {font-size:15px;}
 
 }
 
