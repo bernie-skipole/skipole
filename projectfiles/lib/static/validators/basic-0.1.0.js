@@ -59,6 +59,10 @@ SKIPOLE.basic = {
             }
         return SKIPOLE.inallowedlist(item, allowed_values);
         },
+    /* Aways passes */
+    'NoOperation': function (item, allowed_values, args) {
+        return true;
+        },
     /* ok if item in allowed values, otherwise item must have length greater or equal to minlength */
     'MinLength': function (item, allowed_values, args) {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
