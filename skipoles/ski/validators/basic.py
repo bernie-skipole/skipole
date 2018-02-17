@@ -53,6 +53,16 @@ class AllowedValuesOnly(Validator):
         return '', False
 
 
+class NoOperation(Validator):
+    "Always passes"
+
+    arg_descriptions = {}   # Takes no arguments
+
+    def _check(self, widgfield, item, environ, lang, form_data, call_data, caller_page_ident):
+        """Item always validates"""
+        return item, True
+
+
 class AllowedValuesOrEmpty(Validator):
     "Checks the value is in the allowed values or is empty"
 
