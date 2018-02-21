@@ -217,9 +217,9 @@
 },
 "TextInput4": {
 "input_class": "ski_input",
-"inputdiv_class": "ski_left_marg_30_percent",
+"inputdiv_class": "ski_left_marg_35_percent",
 "label_class": "",
-"labeldiv_class": "ski_left_marg_30_percent"
+"labeldiv_class": "ski_left_marg_35_percent"
 },
 "TwoInputsSubmit1": {
 "button_class": "w3-button w3-theme-d4 w3-margin-left",

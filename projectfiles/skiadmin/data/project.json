@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.3.0",
-"skipole": "0.3.0",
+"version": "0.4.0",
+"skipole": "0.4.0",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -8012,7 +8012,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_left_marg_30_percent"
+"class": "ski_left_marg_35_percent"
 },
 "parts": [
 [
@@ -8362,7 +8362,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_left_marg_30_percent"
+"class": "ski_left_marg_35_percent"
 },
 "parts": [
 [
@@ -14703,7 +14703,7 @@ false
 "radio_values": [],
 "show": true,
 "show_error": "",
-"widget_class": "w3-section ski_left_marg_30_percent",
+"widget_class": "w3-section ski_left_marg_35_percent",
 "widget_style": ""
 },
 "validators": {
@@ -14751,7 +14751,7 @@ false
 "radio_values": [],
 "show": true,
 "show_error": "",
-"widget_class": "w3-section ski_left_marg_30_percent",
+"widget_class": "w3-section ski_left_marg_35_percent",
 "widget_style": ""
 },
 "validators": {
@@ -15959,7 +15959,7 @@ false
 "hidden_field3": "",
 "hidden_field4": "",
 "input_text": "",
-"inputdiv_class": "ski_left_marg_30_percent",
+"inputdiv_class": "ski_left_marg_35_percent",
 "rows": "4",
 "show": true,
 "show_error": "Invalid input",
@@ -19451,7 +19451,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_left_marg_30_percent"
+"class": "ski_left_marg_35_percent"
 },
 "parts": [
 [
