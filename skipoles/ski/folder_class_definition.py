@@ -245,7 +245,7 @@ class Folder(object):
         if path.find(myurl) != 0:
             # path does not start with this folders url
             return
-        remaining_path = path[len(myurl):]
+        remaining_path = path[len(myurl):].strip("/")
         pathlist = remaining_path.split("/")
         name = pathlist[0]
         if name in self.pages:
