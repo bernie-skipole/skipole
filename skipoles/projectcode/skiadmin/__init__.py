@@ -31,9 +31,7 @@ from . import editfolders, editresponders, editpages, editcss, editfiles, editpa
 from .editfolders import editproject, addpage
 from .editpages import common, editpage
 from .editresponders import editrespondpage
-from .editfiles import editfile
 from .edittextblocks import managetextblocks, edittextblockrefs
-from .editspecialpages import managespecialpages
 from .editsections import managesections
 from .editsectionplaces import editplaceholder
 from .edittext import edittext
@@ -108,9 +106,6 @@ _CALL_SUBMIT_DATA = {
                        24051: managetextblocks.submit_delete_textblock, # deletes a textblock
                        24062: managetextblocks.submit_copy_textblock,   # copies a textblock
                        24103: managetextblocks.submit_text,             # inputs new text for a textblock
-                       25109: managespecialpages.submit_special_page,   # edits a special system page
-                       25209: managespecialpages.submit_special_page,   # edits a special jq page
-                       25309: managespecialpages.submit_user_page,      # edits or deletes a special user page
                        26039: editrespondpage.submit_widgfield,         # sets widgfield
                        26079: editrespondpage.submit_fail_ident,        # sets the fail ident
                        26089: editrespondpage.add_allowed_caller,       # adds a new allowed caller
@@ -123,9 +118,6 @@ _CALL_SUBMIT_DATA = {
                        27003: managesections.retrieve_managepage,       # fill sections management page
                        27022: managesections.delete_section,            # deletes a section
                        27047: managesections.retrieve_section_contents, # retrieves data for section contents page
-                       29109: editfile.submit_new_filepath,             # sets new file path on a filepage
-                       29209: editfile.submit_mimetype,                 # sets new mimetype on a filepage
-                       29309: editfile.submit_cache,                    # sets cache header
                        41050: edittext.create_insert,                   # creates and inserts new text
                        41100: edittext.create_insert_symbol,            # creates new html symbol
                        41120: edittext.set_edit_symbol,                 # changes an html symbol

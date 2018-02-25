@@ -25191,6 +25191,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 29007,
+"submit_list": [
+"editfiles",
+"editfile",
+"submit_cache"
+],
 "target_ident": 29007
 },
 "original_fields": {}
@@ -25203,6 +25208,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 29007,
+"submit_list": [
+"editfiles",
+"editfile",
+"submit_new_filepath"
+],
 "target_ident": 29007
 },
 "original_fields": {}
@@ -25215,6 +25225,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 29007,
+"submit_list": [
+"editfiles",
+"editfile",
+"submit_mimetype"
+],
 "target_ident": 29007
 },
 "original_fields": {}
@@ -31825,6 +31840,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 5001,
+"submit_list": [
+"editspecialpages",
+"managespecialpages",
+"submit_special_page"
+],
 "target_ident": 5001
 },
 "original_fields": {}
@@ -31837,6 +31857,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 5001,
+"submit_list": [
+"editspecialpages",
+"managespecialpages",
+"submit_special_page"
+],
 "target_ident": 5001
 },
 "original_fields": {}
@@ -31849,6 +31874,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 5001,
+"submit_list": [
+"editspecialpages",
+"managespecialpages",
+"submit_user_page"
+],
 "target_ident": 5001
 },
 "original_fields": {}
