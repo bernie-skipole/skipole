@@ -30,7 +30,7 @@
 These Widgets inherit from the classes defined here, which themselves inherit
 from tag.Part and tag.ClosedPart"""
 
-import html, copy, collections, re, json
+import html, copy, collections, re, json, datetime
 from string import Template
 
 from .. import tag, skiboot
@@ -58,6 +58,8 @@ _AN = re.compile('[^\w]')
 # widgfield
 # cssclass
 # cssstyle
+# data          - python datetime.data object
+# datetime      - python datetime.datetime object
 
 
 class ParentFieldArg(object):
@@ -155,6 +157,20 @@ class ParentFieldArg(object):
                 if not val:
                     return ''
                 return str(val)
+            elif valtype =='date':
+                if not val:
+                    return datetime.date.today()
+                elif isinstance(val, datetime.date):
+                    return val
+                else:
+                    raise ValidateError("Given value invalid, should be a datetime.date object")
+            elif valtype =='datetime':
+                if not val:
+                    return datetime.datetime.utcnow()
+                elif isinstance(val, datetime.datetime):
+                    return val
+                else:
+                    raise ValidateError("Given value invalid, should be a datetime.datetime object")
             else:
                 raise ValidateError("Field type %s not recognised" % (valtype,))
         except Exception as e:
