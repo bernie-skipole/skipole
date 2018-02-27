@@ -24,7 +24,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import math
+import math, datetime
 
 from decimal import Decimal
 
@@ -216,4 +216,261 @@ class Chart1(Widget):
   <polyline /> <!-- Draws the values on the chart -->
 </g>"""
 
+
+
+
+class Graph48Hr(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'values':FieldArgTable(('text', 'datetime')),
+                        'stroke_width':FieldArg("integer", 1),
+                        'stroke':FieldArg("text", "black"),
+                        'minvalue':FieldArg("text", "0"),
+                        'maxvalue':FieldArg("text", "100"),
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a graph, held in a 1200 high x 1200 wide space
+           values: a list of datetime objects within the last 48 hr
+           These will be plotted on the chart from 48hr ago to now
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"240",
+                                                           "y":"20",
+                                                           "width":"960",
+                                                           "height":"720",
+                                                           "fill":"white",
+                                                           "stroke":"green",
+                                                           "stroke-width":"1"})
+        self._hr = datetime.timedelta(hours=1)
+
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+        stroke_width = self.get_field_value("stroke_width")
+        if not stroke_width:
+            stroke_width = "1"
+        else:
+            stroke_width = str(stroke_width)
+
+        stroke = self.get_field_value("stroke")
+        if not stroke:
+            stroke = "black"
+
+        values = self.get_field_value("values")
+        if not values:
+            return
+
+        # create time axis
+
+        maxt = values[0][1]
+        for valpair in values:
+            val, t = valpair
+            # t is a datetime object
+            if t > maxt:
+                maxt = t
+
+        # maxt is latest time
+        maxt = maxt.replace(minute=0, second=0, microsecond=0) + self._hr
+        mint = maxt - datetime.timedelta(days=2)
+
+        axist = mint
+        for h in range(0,49):
+            x = str(240 + h*20)
+            if (axist.hour == 6) or (axist.hour == 18):
+                if (h>0) and (h<48):
+                    self.append(tag.ClosedPart(tag_name='line', attribs={"x1":x,
+                                                                         "y1":"740",
+                                                                         "x2":x,
+                                                                         "y2":"720",
+                                                                         "stroke":"green",
+                                                                         "stroke-width":"1"}))
+            elif axist.hour == 12:
+                if (h>0) and (h<48):
+                    self.append(tag.ClosedPart(tag_name='line', attribs={"x1":x,
+                                                                         "y1":"740",
+                                                                         "x2":x,
+                                                                         "y2":"715",
+                                                                         "stroke":"green",
+                                                                         "stroke-width":"1"}))
+                self.append(tag.Part(tag_name='text', text="12:00", attribs={
+                                                            'x':str(220 + h*20),
+                                                            'y': "760",
+                                                            'font-size': '15',
+                                                            'font-family': 'arial',
+                                                            'stroke':"green",
+                                                            'stroke-width':"1"  }))
+            elif axist.hour == 0:
+                if (h>0) and (h<48):
+                    self.append(tag.ClosedPart(tag_name='line', attribs={"x1":x,
+                                                                         "y1":"740",
+                                                                         "x2":x,
+                                                                         "y2":"710",
+                                                                         "stroke":"green",
+                                                                         "stroke-width":"2"}))
+                self.append(tag.Part(tag_name='text', text=axist.strftime("%d %b"), attribs={
+                                                            'x':str(220 + h*20),
+                                                            'y': "760",
+                                                            'font-size': '15',
+                                                            'font-family': 'arial',
+                                                            'stroke':"green",
+                                                            'stroke-width':"1"  }))
+                self.append(tag.Part(tag_name='text', text="00:00", attribs={
+                                                            'x':str(220 + h*20),
+                                                            'y': "780",
+                                                            'font-size': '15',
+                                                            'font-family': 'arial',
+                                                            'stroke':"green",
+                                                            'stroke-width':"1"  }))
+
+            elif (h>0) and (h<48):
+                self.append(tag.ClosedPart(tag_name='line', attribs={"x1":x,
+                                                                     "y1":"740",
+                                                                     "x2":x,
+                                                                     "y2":"730",
+                                                                     "stroke":"green",
+                                                                     "stroke-width":"1"}))
+
+            axist = axist + self._hr
+
+        # create Y axis
+        minv = self.get_field_value("minvalue")
+        maxv = self.get_field_value("maxvalue")
+
+        isint = True
+        try: 
+            int_minv = int(minv)
+        except ValueError:
+            isint = False
+        if isint:
+            try: 
+                int_maxv = int(maxv)
+            except ValueError:
+                isint = False
+
+        if isint and (int_maxv > int_minv+4):
+            # create a Y axis of integer values
+            int_maxv = self._integer_axis(int_maxv, int_minv)
+
+        #self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":points,
+        #                                                         "fill":"none",
+        #                                                         "stroke":stroke,
+        #                                                         "stroke-width":stroke_width}))
+
+
+
+    def _integer_axis(self, int_maxv, int_minv):
+        "create a Y axis of integer values, if necessary increase int_maxv, return new int_maxv"
+        # diff is the difference between minimum and maximum, divide it into intervals
+        # the number of intervals should also divide 720 pixels nicely, i.e. 16, 15, 12, 10, 9, 8, 6, 5
+        diff = int_maxv - int_minv
+
+        # order of prefferred interval spacing
+        prefferred = (5, 10, 2, 15, 4, 25, 20)
+
+        tens = math.floor(math.log10(diff))
+
+        if tens>2:
+            prefferred = ( item * 10**(tens-1) for item in prefferred)
+
+        number_of_intervals = 0
+        for i in prefferred:
+            if (diff % i == 0) and (diff//i in (16, 15, 12, 10, 9, 8, 6, 5)):
+                # intervals with spacing of i is given priority
+                number_of_intervals = diff//i
+                break
+
+        if not number_of_intervals:
+            if diff % 16 == 0:
+                # divide axis by sixteen
+                number_of_intervals = 16
+            elif diff % 15 == 0:
+                # divide axis by fifteen
+                number_of_intervals = 15
+            elif diff % 12 == 0:
+                # divide axis by twelve
+                number_of_intervals = 12
+            elif diff % 10 == 0:
+                # divide axis by ten
+                number_of_intervals = 10
+            elif diff % 9 == 0:
+                # divide axis by nine
+                number_of_intervals = 9
+            elif diff % 8 == 0:
+                # divide axis by eight
+                number_of_intervals = 8
+            elif diff % 6 == 0:
+                # divide axis by six
+                number_of_intervals = 6
+            elif diff % 5 == 0:
+                # divide axis by five
+                number_of_intervals = 5
+            else:
+                # None of the above go nicely into diff, so add 1 to int_maxv and try again
+                return self._integer_axis(int_maxv+1, int_minv)
+
+        # put the maximum value at the top of the axis
+        self.append(tag.Part(tag_name='text', text=str(int_maxv), attribs={
+                                                                    'x':str(220),
+                                                                    'y': "25",
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '15',
+                                                                    'font-family': 'arial',
+                                                                    'stroke':"green",
+                                                                    'stroke-width':"1"  }))
+
+        # put the minimum value at the bottom of the axis
+        self.append(tag.Part(tag_name='text', text=str(int_minv), attribs={
+                                                                    'x':str(220),
+                                                                    'y': "745",
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '15',
+                                                                    'font-family': 'arial',
+                                                                    'stroke':"green",
+                                                                    'stroke-width':"1"  }))
+
+        # yval is the axis value at the intervals, so starting from the top
+        yval = int_maxv
+        y_interval = diff//number_of_intervals
+        # pixel_interval is the number of pixels in the interval
+        pixel_interval = 720//number_of_intervals
+        # with range limits so no line at top and bottem - so rectangle not overdrawn
+        for y in range(pixel_interval+20, 740, pixel_interval):
+            yval -= y_interval
+            self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
+                                                                 "y1":str(y),
+                                                                 "x2":"260",
+                                                                 "y2":str(y),
+                                                                 "stroke":"green",
+                                                                 "stroke-width":"1"}))
+            self.append(tag.Part(tag_name='text', text=str(yval), attribs={
+                                                                        'x':str(220),
+                                                                        'y': str(y+5),
+                                                                        'text-anchor':'end',
+                                                                        'font-size': '15',
+                                                                        'font-family': 'arial',
+                                                                        'stroke':"green",
+                                                                        'stroke-width':"1"  }))
+        return int_maxv
+
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <rect /> <!-- the graph rectangle -->
+  <!-- lines and text which draw the graph -->
+  <polyline /> <!-- Draws the values on the graph -->
+</g>"""
 
