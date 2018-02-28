@@ -228,8 +228,10 @@ class Graph48Hr(Widget):
     arg_descriptions = {
                         'transform':FieldArg("text", "", jsonset=True),
                         'values':FieldArgTable(('text', 'datetime')),
-                        'stroke_width':FieldArg("integer", 1),
-                        'stroke':FieldArg("text", "black"),
+                        'fill':FieldArg("text", "white"),
+                        'fill_opacity':FieldArg("text", "1"),
+                        'plotcol':FieldArg("text", "black"),
+                        'axiscol':FieldArg("text", "green"),
                         'minvalue':FieldArg("text", "0"),
                         'maxvalue':FieldArg("text", "100"),
                        }
@@ -241,14 +243,9 @@ class Graph48Hr(Widget):
            These will be plotted on the chart from 48hr ago to now
         """
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
-        self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"240",
-                                                           "y":"20",
-                                                           "width":"960",
-                                                           "height":"720",
-                                                           "fill":"white",
-                                                           "stroke":"green",
-                                                           "stroke-width":"1"})
         self._hr = datetime.timedelta(hours=1)
+        self._axiscol = "green"
+        self._plotcol = "black"
 
 
 
@@ -256,15 +253,30 @@ class Graph48Hr(Widget):
         if self.get_field_value("transform"):
             self.update_attribs({"transform":self.get_field_value("transform")})
 
-        stroke_width = self.get_field_value("stroke_width")
-        if not stroke_width:
-            stroke_width = "1"
-        else:
-            stroke_width = str(stroke_width)
+        fill = self.get_field_value("fill")
+        if not fill:
+            fill = "white"
 
-        stroke = self.get_field_value("stroke")
-        if not stroke:
-            stroke = "black"
+        fill_opacity = self.get_field_value("fill_opacity")
+        if not fill_opacity:
+            fill_opacity = "0"
+
+        self._axiscol = self.get_field_value("axiscol")
+        if not self._axiscol:
+            self._axiscol = "green"
+
+        self._plotcol = self.get_field_value("plotcol")
+        if not self._plotcol:
+            self._plotcol = "black"
+
+        self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"240",
+                                                           "y":"20",
+                                                           "width":"960",
+                                                           "height":"720",
+                                                           "fill":fill,
+                                                           "fill-opacity":fill_opacity,
+                                                           "stroke":self._axiscol,
+                                                           "stroke-width":"1"})
 
         values = self.get_field_value("values")
         if not values:
@@ -292,7 +304,7 @@ class Graph48Hr(Widget):
                                                                          "y1":"740",
                                                                          "x2":x,
                                                                          "y2":"720",
-                                                                         "stroke":"green",
+                                                                         "stroke":self._axiscol,
                                                                          "stroke-width":"1"}))
             elif axist.hour == 12:
                 if (h>0) and (h<48):
@@ -300,14 +312,14 @@ class Graph48Hr(Widget):
                                                                          "y1":"740",
                                                                          "x2":x,
                                                                          "y2":"715",
-                                                                         "stroke":"green",
+                                                                         "stroke":self._axiscol,
                                                                          "stroke-width":"1"}))
                 self.append(tag.Part(tag_name='text', text="12:00", attribs={
                                                             'x':str(220 + h*20),
                                                             'y': "760",
                                                             'font-size': '15',
                                                             'font-family': 'arial',
-                                                            'stroke':"green",
+                                                            'stroke':self._axiscol,
                                                             'stroke-width':"1"  }))
             elif axist.hour == 0:
                 if (h>0) and (h<48):
@@ -315,21 +327,21 @@ class Graph48Hr(Widget):
                                                                          "y1":"740",
                                                                          "x2":x,
                                                                          "y2":"710",
-                                                                         "stroke":"green",
+                                                                         "stroke":self._axiscol,
                                                                          "stroke-width":"2"}))
                 self.append(tag.Part(tag_name='text', text=axist.strftime("%d %b"), attribs={
                                                             'x':str(220 + h*20),
                                                             'y': "760",
                                                             'font-size': '15',
                                                             'font-family': 'arial',
-                                                            'stroke':"green",
+                                                            'stroke':self._axiscol,
                                                             'stroke-width':"1"  }))
                 self.append(tag.Part(tag_name='text', text="00:00", attribs={
                                                             'x':str(220 + h*20),
                                                             'y': "780",
                                                             'font-size': '15',
                                                             'font-family': 'arial',
-                                                            'stroke':"green",
+                                                            'stroke':self._axiscol,
                                                             'stroke-width':"1"  }))
 
             elif (h>0) and (h<48):
@@ -337,7 +349,7 @@ class Graph48Hr(Widget):
                                                                      "y1":"740",
                                                                      "x2":x,
                                                                      "y2":"730",
-                                                                     "stroke":"green",
+                                                                     "stroke":self._axiscol,
                                                                      "stroke-width":"1"}))
 
             axist = axist + self._hr
@@ -359,9 +371,20 @@ class Graph48Hr(Widget):
 
         if isint and (int_maxv > int_minv+4):
             # create a Y axis of integer values
-            int_maxv = self._integer_axis(int_maxv, int_minv)
+            int_maxv, str_minv, str_maxv = self._integer_axis(int_maxv, int_minv)
         else:
-            self._float_axis(float(maxv), float(minv))
+            int_maxv, str_minv, str_maxv = self._float_axis(float(maxv), float(minv))
+
+
+        ymin = Decimal(str_minv)
+        ymax = Decimal(str_maxv)
+
+        # y = m*val + c
+        # m = 720 / (ymax-ymin)
+        # c = -m*ymin
+
+        m = Decimal("720") / (ymax-ymin)
+        c = -ymin*m
 
         # for each point, plot a + on the graph
         for valpair in values:
@@ -369,16 +392,18 @@ class Graph48Hr(Widget):
             if t < mint:
                 # early point outside plottable range
                 continue
+            val = Decimal(val)
+            if val < ymin:
+                # low point outside plottable range
+                continue
+            if val > ymax:
+                # high point outside plottable range
+                continue
             tdelta = t-mint
             seconds = tdelta.total_seconds()
             x = int(960 * seconds / 172800)
-            self._plot_cross(x, 360)
-
-
-        #self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":points,
-        #                                                         "fill":"none",
-        #                                                         "stroke":stroke,
-        #                                                         "stroke-width":stroke_width}))
+            y = int(m*val + c)
+            self._plot_cross(x, y)
 
 
     def _plot_cross(self, x, y):
@@ -388,35 +413,35 @@ class Graph48Hr(Widget):
                                                              "y1":str(735-y),
                                                              "x2":str(240+x),
                                                              "y2":str(745-y),
-                                                             "stroke":"green",
+                                                             "stroke":self._plotcol,
                                                              "stroke-width":"1"}))
         # Horizontal line
         self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(235+x),
                                                              "y1":str(740-y),
                                                              "x2":str(245+x),
                                                              "y2":str(740-y),
-                                                             "stroke":"green",
+                                                             "stroke":self._plotcol,
                                                              "stroke-width":"1"}))
 
     def _float_axis(self, maxv, minv):
-        "create a Y axis of float values"
+        "create a Y axis of float values, return new int_maxv, str_minv, str_maxv"
         if minv == 0.0:
             # convert 0.0045 to 45
             # convert 4500.0 to 45
             tens = math.floor(math.log10(abs(maxv)))-1
             maxy = math.ceil(maxv/10**tens)
-            self._integer_axis(maxy, 0, tens)
+            return self._integer_axis(maxy, 0, tens)
         else:
             diff = maxv - minv
             tens = math.floor(math.log10(abs(diff)))-1
             maxy = math.ceil(maxv/10**tens)
             miny = math.floor(minv/10**tens)
-            self._integer_axis(maxy, miny, tens)
+            return self._integer_axis(maxy, miny, tens)
 
 
 
     def _integer_axis(self, int_maxv, int_minv, tens=0):
-        "create a Y axis of integer values, if necessary increase int_maxv, return new int_maxv"
+        "create a Y axis of integer values, if necessary increase int_maxv, return new int_maxv, str_minv, str_maxv"
         # diff is the difference between minimum and maximum, divide it into intervals
         # the number of intervals should also divide 720 pixels nicely, i.e. 16, 15, 12, 10, 9, 8, 6, 5
         diff = int_maxv - int_minv
@@ -478,35 +503,29 @@ class Graph48Hr(Widget):
             fstring = ''
 
         # put the maximum value at the top of the axis
-        self.append(tag.Part(tag_name='text', text=format(int_maxv*mult, fstring), attribs={
+        str_maxv = format(int_maxv*mult, fstring)
+        self.append(tag.Part(tag_name='text', text=str_maxv, attribs={
                                                                     'x':str(220),
                                                                     'y': "25",
                                                                     'text-anchor':'end',
                                                                     'font-size': '15',
                                                                     'font-family': 'arial',
-                                                                    'stroke':"green",
+                                                                    'stroke':self._axiscol,
                                                                     'stroke-width':"1"  }))
 
         # put the minimum value at the bottom of the axis
         if int_minv:
-            self.append(tag.Part(tag_name='text', text=format(int_minv*mult, fstring), attribs={
-                                                                    'x':str(220),
-                                                                    'y': "745",
-                                                                    'text-anchor':'end',
-                                                                    'font-size': '15',
-                                                                    'font-family': 'arial',
-                                                                    'stroke':"green",
-                                                                    'stroke-width':"1"  }))
-
+            str_minv = format(int_minv*mult, fstring)
         else:
-            self.append(tag.Part(tag_name='text', text="0", attribs={
-                                                                    'x':str(220),
-                                                                    'y': "745",
-                                                                    'text-anchor':'end',
-                                                                    'font-size': '15',
-                                                                    'font-family': 'arial',
-                                                                    'stroke':"green",
-                                                                    'stroke-width':"1"  }))
+            str_minv = "0"
+        self.append(tag.Part(tag_name='text', text=str_minv, attribs={
+                                                                'x':str(220),
+                                                                'y': "745",
+                                                                'text-anchor':'end',
+                                                                'font-size': '15',
+                                                                'font-family': 'arial',
+                                                                'stroke':self._axiscol,
+                                                                'stroke-width':"1"  }))
 
 
         # yval is the axis value at the intervals, so starting from the top
@@ -521,7 +540,7 @@ class Graph48Hr(Widget):
                                                                  "y1":str(y),
                                                                  "x2":"260",
                                                                  "y2":str(y),
-                                                                 "stroke":"green",
+                                                                 "stroke":self._axiscol,
                                                                  "stroke-width":"1"}))
             self.append(tag.Part(tag_name='text', text=format(yval*mult, fstring), attribs={
                                                                         'x':str(220),
@@ -529,9 +548,9 @@ class Graph48Hr(Widget):
                                                                         'text-anchor':'end',
                                                                         'font-size': '15',
                                                                         'font-family': 'arial',
-                                                                        'stroke':"green",
+                                                                        'stroke':self._axiscol,
                                                                         'stroke-width':"1"  }))
-        return int_maxv
+        return int_maxv, str_minv, str_maxv
 
 
 
