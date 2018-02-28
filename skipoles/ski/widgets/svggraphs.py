@@ -363,6 +363,17 @@ class Graph48Hr(Widget):
         else:
             self._float_axis(float(maxv), float(minv))
 
+        # for each point, plot a + on the graph
+        for valpair in values:
+            val, t = valpair
+            if t < mint:
+                # early point outside plottable range
+                continue
+            tdelta = t-mint
+            seconds = tdelta.total_seconds()
+            x = int(960 * seconds / 172800)
+            self._plot_cross(x, 360)
+
 
         #self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":points,
         #                                                         "fill":"none",
@@ -370,6 +381,22 @@ class Graph48Hr(Widget):
         #                                                         "stroke-width":stroke_width}))
 
 
+    def _plot_cross(self, x, y):
+        "plot a + on the graph at x, y"
+        # Vertical line
+        self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(240+x),
+                                                             "y1":str(735-y),
+                                                             "x2":str(240+x),
+                                                             "y2":str(745-y),
+                                                             "stroke":"green",
+                                                             "stroke-width":"1"}))
+        # Horizontal line
+        self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(235+x),
+                                                             "y1":str(740-y),
+                                                             "x2":str(245+x),
+                                                             "y2":str(740-y),
+                                                             "stroke":"green",
+                                                             "stroke-width":"1"}))
 
     def _float_axis(self, maxv, minv):
         "create a Y axis of float values"
