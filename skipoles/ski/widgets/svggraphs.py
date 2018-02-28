@@ -360,6 +360,9 @@ class Graph48Hr(Widget):
         if isint and (int_maxv > int_minv+4):
             # create a Y axis of integer values
             int_maxv = self._integer_axis(int_maxv, int_minv)
+        else:
+            self._float_axis(float(maxv), float(minv))
+
 
         #self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":points,
         #                                                         "fill":"none",
@@ -368,7 +371,24 @@ class Graph48Hr(Widget):
 
 
 
-    def _integer_axis(self, int_maxv, int_minv):
+    def _float_axis(self, maxv, minv):
+        "create a Y axis of float values"
+        if minv == 0.0:
+            # convert 0.0045 to 45
+            # convert 4500.0 to 45
+            tens = math.floor(math.log10(abs(maxv)))-1
+            maxy = math.ceil(maxv/10**tens)
+            self._integer_axis(maxy, 0, tens)
+        else:
+            diff = maxv - minv
+            tens = math.floor(math.log10(abs(diff)))-1
+            maxy = math.ceil(maxv/10**tens)
+            miny = math.floor(minv/10**tens)
+            self._integer_axis(maxy, miny, tens)
+
+
+
+    def _integer_axis(self, int_maxv, int_minv, tens=0):
         "create a Y axis of integer values, if necessary increase int_maxv, return new int_maxv"
         # diff is the difference between minimum and maximum, divide it into intervals
         # the number of intervals should also divide 720 pixels nicely, i.e. 16, 15, 12, 10, 9, 8, 6, 5
@@ -377,10 +397,10 @@ class Graph48Hr(Widget):
         # order of prefferred interval spacing
         prefferred = (5, 10, 2, 15, 4, 25, 20)
 
-        tens = math.floor(math.log10(diff))
+        difftens = math.floor(math.log10(diff))
 
-        if tens>2:
-            prefferred = ( item * 10**(tens-1) for item in prefferred)
+        if difftens>2:
+            prefferred = ( item * 10**(difftens-1) for item in prefferred)
 
         number_of_intervals = 0
         for i in prefferred:
@@ -416,10 +436,22 @@ class Graph48Hr(Widget):
                 number_of_intervals = 5
             else:
                 # None of the above go nicely into diff, so add 1 to int_maxv and try again
-                return self._integer_axis(int_maxv+1, int_minv)
+                return self._integer_axis(int_maxv+1, int_minv, tens)
+
+        if tens:
+            mult = Decimal("1e" + str(tens))
+            if abs(tens)>3:
+                fstring = "0.4g"
+            elif tens<0:
+                fstring = "0." + str(abs(tens)) + "f"
+            else:
+                fstring = "0.2f"
+        else:
+            mult = 1
+            fstring = ''
 
         # put the maximum value at the top of the axis
-        self.append(tag.Part(tag_name='text', text=str(int_maxv), attribs={
+        self.append(tag.Part(tag_name='text', text=format(int_maxv*mult, fstring), attribs={
                                                                     'x':str(220),
                                                                     'y': "25",
                                                                     'text-anchor':'end',
@@ -429,7 +461,8 @@ class Graph48Hr(Widget):
                                                                     'stroke-width':"1"  }))
 
         # put the minimum value at the bottom of the axis
-        self.append(tag.Part(tag_name='text', text=str(int_minv), attribs={
+        if int_minv:
+            self.append(tag.Part(tag_name='text', text=format(int_minv*mult, fstring), attribs={
                                                                     'x':str(220),
                                                                     'y': "745",
                                                                     'text-anchor':'end',
@@ -437,6 +470,17 @@ class Graph48Hr(Widget):
                                                                     'font-family': 'arial',
                                                                     'stroke':"green",
                                                                     'stroke-width':"1"  }))
+
+        else:
+            self.append(tag.Part(tag_name='text', text="0", attribs={
+                                                                    'x':str(220),
+                                                                    'y': "745",
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '15',
+                                                                    'font-family': 'arial',
+                                                                    'stroke':"green",
+                                                                    'stroke-width':"1"  }))
+
 
         # yval is the axis value at the intervals, so starting from the top
         yval = int_maxv
@@ -452,7 +496,7 @@ class Graph48Hr(Widget):
                                                                  "y2":str(y),
                                                                  "stroke":"green",
                                                                  "stroke-width":"1"}))
-            self.append(tag.Part(tag_name='text', text=str(yval), attribs={
+            self.append(tag.Part(tag_name='text', text=format(yval*mult, fstring), attribs={
                                                                         'x':str(220),
                                                                         'y': str(y+5),
                                                                         'text-anchor':'end',
