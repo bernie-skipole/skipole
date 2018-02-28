@@ -315,9 +315,9 @@ class Graph48Hr(Widget):
                                                                          "stroke":self._axiscol,
                                                                          "stroke-width":"1"}))
                 self.append(tag.Part(tag_name='text', text="12:00", attribs={
-                                                            'x':str(220 + h*20),
-                                                            'y': "760",
-                                                            'font-size': '15',
+                                                            'x':str(215 + h*20),
+                                                            'y': "770",
+                                                            'font-size': '20',
                                                             'font-family': 'arial',
                                                             'stroke':self._axiscol,
                                                             'stroke-width':"1"  }))
@@ -330,16 +330,16 @@ class Graph48Hr(Widget):
                                                                          "stroke":self._axiscol,
                                                                          "stroke-width":"2"}))
                 self.append(tag.Part(tag_name='text', text=axist.strftime("%d %b"), attribs={
-                                                            'x':str(220 + h*20),
-                                                            'y': "760",
-                                                            'font-size': '15',
+                                                            'x':str(215 + h*20),
+                                                            'y': "770",
+                                                            'font-size': '20',
                                                             'font-family': 'arial',
                                                             'stroke':self._axiscol,
                                                             'stroke-width':"1"  }))
                 self.append(tag.Part(tag_name='text', text="00:00", attribs={
-                                                            'x':str(220 + h*20),
-                                                            'y': "780",
-                                                            'font-size': '15',
+                                                            'x':str(215 + h*20),
+                                                            'y': "790",
+                                                            'font-size': '20',
                                                             'font-family': 'arial',
                                                             'stroke':self._axiscol,
                                                             'stroke-width':"1"  }))
@@ -508,7 +508,7 @@ class Graph48Hr(Widget):
                                                                     'x':str(220),
                                                                     'y': "25",
                                                                     'text-anchor':'end',
-                                                                    'font-size': '15',
+                                                                    'font-size': '20',
                                                                     'font-family': 'arial',
                                                                     'stroke':self._axiscol,
                                                                     'stroke-width':"1"  }))
@@ -522,7 +522,7 @@ class Graph48Hr(Widget):
                                                                 'x':str(220),
                                                                 'y': "745",
                                                                 'text-anchor':'end',
-                                                                'font-size': '15',
+                                                                'font-size': '20',
                                                                 'font-family': 'arial',
                                                                 'stroke':self._axiscol,
                                                                 'stroke-width':"1"  }))
@@ -546,7 +546,7 @@ class Graph48Hr(Widget):
                                                                         'x':str(220),
                                                                         'y': str(y+5),
                                                                         'text-anchor':'end',
-                                                                        'font-size': '15',
+                                                                        'font-size': '20',
                                                                         'font-family': 'arial',
                                                                         'stroke':self._axiscol,
                                                                         'stroke-width':"1"  }))
@@ -559,8 +559,7 @@ class Graph48Hr(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
-  <rect /> <!-- the graph rectangle -->
+  <rect x="240" y="20" height="720" width="960" /> <!-- the axis rectangle -->
   <!-- lines and text which draw the graph -->
-  <polyline /> <!-- Draws the values on the graph -->
 </g>"""
 
