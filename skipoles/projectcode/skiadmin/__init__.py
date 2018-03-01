@@ -30,7 +30,6 @@ from . import editfolders, editresponders, editpages, editcss, editfiles, editpa
 
 from .editfolders import editproject, addpage
 from .editpages import common, editpage
-from .editresponders import editrespondpage
 from .edittextblocks import managetextblocks, edittextblockrefs
 from .editsections import managesections
 from .editsectionplaces import editplaceholder
@@ -64,18 +63,15 @@ _IDENT_DATA = 0
 # this method to eventually be replaced by responders with submit lists
 
 _CALL_SUBMIT_DATA = {
-                        2470: addpage.submit_upload_page,           # copies an uploaded page definition file to create a new one
+                        2470: addpage.submit_upload_page,               # copies an uploaded page definition file to create a new one
                         3230: editpage.set_html_lang,                   # sets page html lang tag
-                        3260: editpage.downloadpage,                      # downloads json file of given page ident
+                        3260: editpage.downloadpage,                    # downloads json file of given page ident
                         3710: editpage.set_json_cache,                  # sets json page cache setting
-                        3720: editpage.remove_json_widgfield,                # remove widgfield and value from a json page
-                        3730: editpage.add_json_widgfield,                # add widgfield and value to a json page
+                        3720: editpage.remove_json_widgfield,           # remove widgfield and value from a json page
+                        3730: editpage.add_json_widgfield,              # add widgfield and value to a json page
                         4001: managetextblocks.retrieve_link_table,     # fill manage text blocks page link table
                         4005: managetextblocks.retrieve_more,           # fill more text blocks link tables
                         4006: managetextblocks.retrieve_more,           # fill more text blocks link tables
-                        6250: editrespondpage.set_validate_option,      # enables or disables validate option
-                        6260: editrespondpage.set_submit_option,        # enables or disables submit option
-                        6320: editrespondpage.set_single_field,         # sets the field, number = 1 option
                         7010: managesections.submit_new_section,        # creates a new section
                         7011: managesections.file_new_section,          # creates a new section from uploaded file
                         7050: managesections.downloadsection,           # downloads section as json file
@@ -106,15 +102,6 @@ _CALL_SUBMIT_DATA = {
                        24051: managetextblocks.submit_delete_textblock, # deletes a textblock
                        24062: managetextblocks.submit_copy_textblock,   # copies a textblock
                        24103: managetextblocks.submit_text,             # inputs new text for a textblock
-                       26039: editrespondpage.submit_widgfield,         # sets widgfield
-                       26079: editrespondpage.submit_fail_ident,        # sets the fail ident
-                       26089: editrespondpage.add_allowed_caller,       # adds a new allowed caller
-                       26099: editrespondpage.delete_allowed_caller,    # deletes an allowed caller
-                       26109: editrespondpage.remove_field,             # removes responder field
-                       26209: editrespondpage.add_field_value,          # adds a field and value
-                       26219: editrespondpage.add_field,                # adds a field
-                       26409: editrespondpage.delete_submit_list_string,# deletes an indexed string from the submit_list
-                       26419: editrespondpage.add_submit_list_string,   # adds a string to the submit_list
                        27003: managesections.retrieve_managepage,       # fill sections management page
                        27022: managesections.delete_section,            # deletes a section
                        27047: managesections.retrieve_section_contents, # retrieves data for section contents page
