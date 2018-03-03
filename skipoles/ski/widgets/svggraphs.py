@@ -47,6 +47,7 @@ class Chart1(Widget):
                         'plus50legend':FieldArg("text", ""),
                         'minus50legend':FieldArg("text", ""),
                         'zerolegend':FieldArg("text", ""),
+                        'font_family':FieldArg("text", "arial")
                        }
 
 
@@ -101,6 +102,10 @@ class Chart1(Widget):
         if self.get_field_value("transform"):
             self.update_attribs({"transform":self.get_field_value("transform")})
 
+        font_family = self.get_field_value("font_family")
+        if not font_family:
+            font_family = "arial"
+
         if self.get_field_value("plus50legend"):
             charnumbers = len(self.get_field_value("plus50legend"))
             textlength = 5*charnumbers
@@ -116,7 +121,7 @@ class Chart1(Widget):
                                             'x':"5",
                                             'y':"53",
                                             'font-size': '10',
-                                            'font-family': 'arial',
+                                            'font-family': font_family,
                                             'lengthAdjust':"spacingAndGlyphs",
                                             'textLength':str(textlength),
                                             'fill':"green",
@@ -137,7 +142,7 @@ class Chart1(Widget):
                                             'x':"5",
                                             'y':"153",
                                             'font-size': '10',
-                                            'font-family': 'arial',
+                                            'font-family': font_family,
                                             'lengthAdjust':"spacingAndGlyphs",
                                             'textLength':str(textlength),
                                             'fill':"green",
@@ -159,7 +164,7 @@ class Chart1(Widget):
                                             'x':"5",
                                             'y':"103",
                                             'font-size': '10',
-                                            'font-family': 'arial',
+                                            'font-family': font_family,
                                             'lengthAdjust':"spacingAndGlyphs",
                                             'textLength':str(textlength),
                                             'fill':"green",
