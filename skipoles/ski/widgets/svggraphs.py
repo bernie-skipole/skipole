@@ -231,6 +231,7 @@ class Graph48Hr(Widget):
                         'fill':FieldArg("text", "white"),
                         'fill_opacity':FieldArg("text", "1"),
                         'plotcol':FieldArg("text", "black"),
+                        'font_family':FieldArg("text", "arial"),
                         'axiscol':FieldArg("text", "green"),
                         'minvalue':FieldArg("text", "0"),
                         'maxvalue':FieldArg("text", "100"),
@@ -246,7 +247,7 @@ class Graph48Hr(Widget):
         self._hr = datetime.timedelta(hours=1)
         self._axiscol = "green"
         self._plotcol = "black"
-
+        self._font_family = "arial"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -260,6 +261,10 @@ class Graph48Hr(Widget):
         fill_opacity = self.get_field_value("fill_opacity")
         if not fill_opacity:
             fill_opacity = "0"
+
+        self._font_family = self.get_field_value("font_family")
+        if not self._font_family:
+            self._font_family = "arial"
 
         self._axiscol = self.get_field_value("axiscol")
         if not self._axiscol:
@@ -318,9 +323,9 @@ class Graph48Hr(Widget):
                                                             'x':str(215 + h*20),
                                                             'y': "770",
                                                             'font-size': '20',
-                                                            'font-family': 'arial',
-                                                            'stroke':self._axiscol,
-                                                            'stroke-width':"1"  }))
+                                                            'font-family': self._font_family,
+                                                            'fill':self._axiscol,
+                                                            'stroke-width':"0"  }))
             elif axist.hour == 0:
                 if (h>0) and (h<48):
                     self.append(tag.ClosedPart(tag_name='line', attribs={"x1":x,
@@ -333,16 +338,16 @@ class Graph48Hr(Widget):
                                                             'x':str(215 + h*20),
                                                             'y': "770",
                                                             'font-size': '20',
-                                                            'font-family': 'arial',
-                                                            'stroke':self._axiscol,
-                                                            'stroke-width':"1"  }))
+                                                            'font-family': self._font_family,
+                                                            'fill':self._axiscol,
+                                                            'stroke-width':"0"  }))
                 self.append(tag.Part(tag_name='text', text="00:00", attribs={
                                                             'x':str(215 + h*20),
                                                             'y': "790",
                                                             'font-size': '20',
-                                                            'font-family': 'arial',
-                                                            'stroke':self._axiscol,
-                                                            'stroke-width':"1"  }))
+                                                            'font-family': self._font_family,
+                                                            'fill':self._axiscol,
+                                                            'stroke-width':"0"  }))
 
             elif (h>0) and (h<48):
                 self.append(tag.ClosedPart(tag_name='line', attribs={"x1":x,
@@ -509,9 +514,9 @@ class Graph48Hr(Widget):
                                                                     'y': "25",
                                                                     'text-anchor':'end',
                                                                     'font-size': '20',
-                                                                    'font-family': 'arial',
-                                                                    'stroke':self._axiscol,
-                                                                    'stroke-width':"1"  }))
+                                                                    'font-family': self._font_family,
+                                                                    'fill':self._axiscol,
+                                                                    'stroke-width':"0"  }))
 
         # put the minimum value at the bottom of the axis
         if int_minv:
@@ -523,9 +528,9 @@ class Graph48Hr(Widget):
                                                                 'y': "745",
                                                                 'text-anchor':'end',
                                                                 'font-size': '20',
-                                                                'font-family': 'arial',
-                                                                'stroke':self._axiscol,
-                                                                'stroke-width':"1"  }))
+                                                                'font-family': self._font_family,
+                                                                'fill':self._axiscol,
+                                                                'stroke-width':"0"  }))
 
 
         # yval is the axis value at the intervals, so starting from the top
@@ -547,9 +552,9 @@ class Graph48Hr(Widget):
                                                                         'y': str(y+5),
                                                                         'text-anchor':'end',
                                                                         'font-size': '20',
-                                                                        'font-family': 'arial',
-                                                                        'stroke':self._axiscol,
-                                                                        'stroke-width':"1"  }))
+                                                                        'font-family': self._font_family,
+                                                                        'fill':self._axiscol,
+                                                                        'stroke-width':"0"  }))
         return int_maxv, str_minv, str_maxv
 
 
