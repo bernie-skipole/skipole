@@ -145,6 +145,7 @@ class Vertical1(Widget):
                         'smallintervals':FieldArg("text", "10"),
                         'largeintervals':FieldArg("text", "20"),
                         'measurement':FieldArg("text", "50", jsonset=True),
+                        'font_family':FieldArg("text", "arial")
                        }
 
 
@@ -206,6 +207,11 @@ class Vertical1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value("transform"):
             self.update_attribs({"transform":self.get_field_value("transform")})
+
+        font_family = self.get_field_value("font_family")
+        if not font_family:
+            font_family = "arial"
+
         if self.get_field_value("arrow_fill"):
             self[1].update_attribs({"fill":self.get_field_value("arrow_fill")})
         # make the scale
@@ -247,7 +253,7 @@ class Vertical1(Widget):
                                                             'x':'160',
                                                             'y': str(vert-10),
                                                             'font-size': '20',
-                                                            'font-family': 'arial',
+                                                            'font-family': font_family,
                                                             'stroke':"black",
                                                             'stroke-width':"1"  })
 
@@ -298,6 +304,7 @@ class Traditional1(Widget):
                         'largeintervals':FieldArg("text", "20"),
                         'arrow_stroke':FieldArg("text", "grey", jsonset=True),
                         'measurement':FieldArg("text", "50", jsonset=True),
+                        'font_family':FieldArg("text", "arial")
                        }
 
 
@@ -436,6 +443,11 @@ A %s %s 0 0 1 %s %s
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value("transform"):
             self.update_attribs({"transform":self.get_field_value("transform")})
+
+        font_family = self.get_field_value("font_family")
+        if not font_family:
+            font_family = "arial"
+
         if self.get_field_value("arrow_stroke"):
             self[2].update_attribs({"stroke":self.get_field_value("arrow_stroke")})
             self[3].update_attribs({"stroke":self.get_field_value("arrow_stroke")})
@@ -498,7 +510,7 @@ A %s %s 0 0 1 %s %s
                                                             'x':str(x2-10),
                                                             'y': str(y2-5),
                                                             'font-size': '20',
-                                                            'font-family': 'arial',
+                                                            'font-family': font_family,
                                                             'stroke':"black",
                                                             'stroke-width':"1"  })
 
