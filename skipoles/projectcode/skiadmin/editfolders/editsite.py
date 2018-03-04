@@ -896,24 +896,24 @@ def skipole_myapp(editedproj):
     "Create myapp.py file for the tar"
     runfile = """
 
-# this may need to be edited and uncommented so that the skipoles package
-# can be found and imported
+# this may need to be edited and uncommented so that the skipoles package can be found
 
 # import sys
 # sys.path.append('/path/to/skipoles')
 
-# for example if the skipoles package (together with projectfiles and myapp.py)
-# were in the directory /home/myname/myproject
-# then alter the above to:
-# sys.path.append('/home/myname/myproject')
-
 # alternatively, the web server may be able to change to this directory
 # (see the chdir option of uwsgi)
-# or may be able to set a value into pythonpath, so it does not have to be
-# done here
+# or may be able to set a value into pythonpath
 
-
+import os
 import skipoles
+
+# the skipoles framework needs to know the directory where projectfiles are held
+# This sets the location into _CFG['projectfiles'] in skiboot.py
+# The following line assumes projectfiles is in the same directory as this myapp.py file
+
+projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
+skipoles.set_projectfiles(projectfiles)
 
 _site = skipoles.load_project("%s", {})
 
@@ -938,7 +938,7 @@ def skipole_run(editedproj):
     runfile = """#!/usr/bin/env python3
 
 # sys is used for the sys.exit function and to check python version
-import sys, argparse
+import sys, argparse, os
 
 # Check the python version
 if sys.version_info[0] != 3 or sys.version_info[1] < 2:
@@ -949,6 +949,12 @@ if sys.version_info[0] != 3 or sys.version_info[1] < 2:
 
 
 import skipoles
+
+# the skipoles framework needs to know the directory where projectfiles are held
+# This sets the location into _CFG['projectfiles'] in skiboot.py
+
+projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
+skipoles.set_projectfiles(projectfiles)
 
 project = "%s"
 

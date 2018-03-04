@@ -35,11 +35,10 @@ adminproj = skiboot.admin_project()
 newproj = skiboot.new_project()
 libproj = skiboot.lib_project()
 
-# set the path of the projectfiles directory where project data is stored
-projectfiles = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'projectfiles')
 
-# Set the directory where project files can be found"
-skiboot.set_projectfiles(projectfiles)
+def set_projectfiles(projectfiles):
+    "Set the directory where where project data is stored"
+    skiboot.set_projectfiles(projectfiles)
 
 
 def set_debug(mode):

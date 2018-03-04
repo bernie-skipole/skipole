@@ -52,7 +52,8 @@ import skipoles
 adminproj = skipoles.adminproj
 
 # the directory where projectfiles are held
-projectfiles = skipoles.projectfiles
+projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
+skipoles.set_projectfiles(projectfiles)
 
 
 # Set up command line parser
