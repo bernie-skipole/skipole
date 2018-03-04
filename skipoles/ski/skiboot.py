@@ -34,6 +34,7 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
+"projectfiles"    : None,                # The location of the projectfiles directory, set by the set_projectfiles() function
 "new_project"     : "newproj",           # copied to create a new project
 "admin_project"   : "skiadmin",          # The skipole admin project
 "lib_project"     : "lib",               # The skipole static library project
@@ -43,7 +44,6 @@ _CFG = {
 }
 
 ROOTPROJECT = None
-PROJECTFILES = None
 
 _LIB_LABELS = ["skipole_js", "jquery_core",
                "ski_basic", "ski_checkbox", "ski_confirm", "ski_debug_tools", "ski_dropdown", "ski_error_messages",
@@ -66,12 +66,13 @@ def set_site_root(project):
 
 def set_projectfiles(projectfiles):
     "Sets the directory where projectfiles can be found"
-    global PROJECTFILES
-    PROJECTFILES = projectfiles
+    global _CFG
+    _CFG["projectfiles"] = projectfiles
+
 
 def projectfiles():
     "Returns the directory where projectfiles can be found"
-    return PROJECTFILES
+    return _CFG["projectfiles"]
 
 def lib_list():
     "Returns list of library labels"
