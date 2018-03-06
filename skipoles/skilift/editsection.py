@@ -29,10 +29,16 @@
 
 import sys, traceback
 
+from collections import namedtuple
+
 from ..ski import skiboot
 from ..ski.excepts import ServerError
 
 from . import project_loaded
+
+
+PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier'])
+
 
 def _raise_server_error(message=''):
     "Raises a ServerError, and if debug mode on, adds taceback to message"
@@ -47,6 +53,150 @@ def _raise_server_error(message=''):
         for item in str_list:
             message += item
     raise ServerError(message)
+
+
+def list_section_names(project=None):
+    """Returns a list of section names in the project"""
+    if project is None:
+        project = skiboot.project_ident()
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return ()
+    return proj.list_section_names()
+
+
+def placeholder__info(project, pagenumber, location):
+    """location is a tuple or list consisting of three items:
+       a string (such as head or widget name)
+       a container integer, such as 0 for widget container 0, or None if not in container
+       a tuple or list of location integers
+       returns None if placeholder not found, otherwise returns a namedtuple with items
+       project, pagenumber, section_name, alias, brief, multiplier
+    """
+    # raise error if invalid project
+    if project is None:
+        project = skiboot.project_ident()
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return
+
+    location_string, container_number, location_list = location
+
+    ident = None
+    page_part = None
+    widget_name = None
+    part_type = None
+
+    if pagenumber is None:
+        return
+
+    ident = skiboot.find_ident(pagenumber, project)
+    if not ident:
+        return
+    page = skiboot.get_item(ident)
+    if not page:
+        return
+    if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
+        return
+    if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
+        # part not in a widget
+        page_part = location_string
+    else:
+        widget_name = location_string
+        # find page_part containing widget
+        widget = page.widgets[widget_name]
+        if widget is not None:
+           ident_top = widget.ident_string.split("-", 1)
+           # ident_top[0] will be of the form proj_pagenum_head
+           page_part = ident_top[0].split("_")[2]
+
+    part = skiboot.get_part(project, ident, page_part, None, widget_name, container_number, location_list)
+    if part is None:
+        return
+
+    if part.__class__.__name__ != "SectionPlaceHolder":
+        return
+
+    if hasattr(part, 'brief'):
+        brief = part.brief
+    else:
+        brief = None
+
+    if hasattr(part, 'section_name'):
+        section_name = part.section_name
+    else:
+        section_name = None
+
+    if hasattr(part, 'placename'):
+        alias = part.placename
+    else:
+        alias = None
+
+    if hasattr(part, 'multiplier'):
+        multiplier = part.multiplier
+    else:
+        multiplier = None
+
+    return PlaceHolderInfo(project, pagenumber, section_name, alias, brief, multiplier)
+
+
+
+def edit_placeholder(project, pagenumber, location, section_name, alias, brief, multiplier):
+    """Given a placeholder at project, pagenumber, location
+       sets the values section_name, alias, brief, multiplier"""
+    # raise error if invalid project
+    if project is None:
+        project = skiboot.project_ident()
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return
+
+    location_string, container_number, location_list = location
+
+    part = None
+
+    if pagenumber is None:
+        return
+
+    ident = skiboot.find_ident(pagenumber, project)
+    if not ident:
+        return
+    page = skiboot.get_item(ident)
+    if not page:
+        return
+    if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
+        return
+    if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
+        # part not in a widget
+        part = page.get_part(location_string, location_list)
+    else:
+        # the location_string is the widget name
+        widget = page.widgets[location_string]
+        if widget is not None:
+            # widget is the containing widget 
+            if widget.can_contain() and not (container_number is None):
+                part = widget.get_from_container(container_number, location_list)
+
+    if part is None:
+        return
+
+    if part.__class__.__name__ != "SectionPlaceHolder":
+        return
+
+    part.section_name = section_name
+    part.placename = alias
+    part.brief = brief
+    part.multiplier = multiplier
+
+    # save the altered page
+    proj.save_page(page)
+
 
 
 def sectionchange(project, section_name):

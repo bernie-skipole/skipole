@@ -26,7 +26,7 @@
 
 import pkgutil, re, collections, uuid, os, random
 
-from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections
+from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces
 
 from .editfolders import editproject, addpage
 from .editpages import common, editpage
@@ -129,7 +129,6 @@ _CALL_SUBMIT_DATA = {
                        54042: editwidget.set_widget_params,             # sets the widget brief
                        54537: listwidgets.create_new_widget,            # creates the new widget
                        54721: editwidget.back_to_parent_container,      # get container
-                       55007: editplaceholder.retrieve_editplaceholder, # gets data for editing a placeholder
                        55050: editplaceholder.set_placeholder,          # sets the placeholder section name, brief or alias
                        55507: editplaceholder.retrieve_insert,          # gets data for inserting a placeholder
                        55607: editplaceholder.create_insert,            # create a section placeholder
@@ -390,6 +389,8 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
             return editwidgets.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
         elif submit_list[0] == 'editsections':
             return editsections.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        elif submit_list[0] == 'editsectionplaces':
+            return editsectionplaces.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
 
