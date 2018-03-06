@@ -35,7 +35,7 @@ _AN = re.compile('[^\w_]')
 from ....ski import skiboot, tag, widgets
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
-from ....skilift import editsection
+from ....skilift import part_info, editsection
 
 
 def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -87,7 +87,7 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
     pagenumber = call_data['page_number']
     location = call_data['location']
 
-    call_data['part_tuple'] = skilift.part_info(project, pagenumber, None, location)
+    call_data['part_tuple'] = part_info(project, pagenumber, None, location)
 
     # get current sections
     section_list = editsection.list_section_names(project)
