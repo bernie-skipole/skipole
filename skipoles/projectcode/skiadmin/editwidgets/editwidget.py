@@ -835,7 +835,7 @@ def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_
         raise GoTo(target = 51207, clear_submitted=True)
     if (not section_name) and (part_tuple.part_type == "SectionPlaceHolder"):
         # edit the SectionPlaceHolder
-        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        call_data['part_tuple'] = part_tuple
         raise GoTo(target = 55007, clear_submitted=True)
 
     raise FailPage("Item to edit has not been recognised")

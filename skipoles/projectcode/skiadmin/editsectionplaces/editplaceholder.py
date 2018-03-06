@@ -35,97 +35,96 @@ _AN = re.compile('[^\w_]')
 from ....ski import skiboot, tag, widgets
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
+from ....skilift import editsection
 
 
 def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit placeholder page"
 
-    editedproj = call_data['editedproj']
 
-    # get data
-    bits = utils.get_bits(call_data)
+    # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
-    page = bits.page
-    section = None        # placeholder cannot be in a section
-    widget = bits.widget
-    part = bits.part
-
-    if page is None:
-        raise FailPage("Page not identified")
+    part_tuple = call_data['part_tuple']
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Section"
 
     # header done, now page contents
 
-    if not isinstance(part, tag.SectionPlaceHolder):
+    if part_tuple.part_type != "SectionPlaceHolder":
         raise FailPage("Part to be edited is not a Section Place Holder")
 
     # get current sections
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(part_tuple.project)
+
+    # get placholderinfo
+    placeholder = editsection.placeholder__info(part_tuple.project, part_tuple.pagenumber, part_tuple.location)
+
     if not section_list:
         page_data[('editsection','option_list')] = ['-None-']
         page_data[('editsection','selectvalue')] = '-None-'
         page_data[("nosection", "show")] = True
-    elif part.section_name in section_list:
+    elif placeholder.section_name in section_list:
         page_data[('editsection','option_list')] = section_list[:]
-        page_data[('editsection','selectvalue')] = part.section_name
+        page_data[('editsection','selectvalue')] = placeholder.section_name
     else:
         page_data[('editsection','option_list')] = ['-None-'] + section_list
         page_data[('editsection','selectvalue')] = '-None-'
         page_data[("nosection", "show")] = True
 
-    page_data[("brief", "input_text")] = part.brief
-    page_data[("placename", "input_text")] = part.placename
+    page_data[("brief", "input_text")] = placeholder.brief
+    page_data[("placename", "input_text")] = placeholder.alias
+    page_data[("multiplier", "input_text")] = str(placeholder.multiplier)
+
+    # set session data
+    call_data['location'] = part_tuple.location
 
 
 def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the placeholder section name, brief, or placename"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    location = call_data['location']
 
-    # get data
-    bits = utils.get_bits(call_data)
+    call_data['part_tuple'] = skilift.part_info(project, pagenumber, None, location)
 
-    page = bits.page
-    part = bits.part
+    # get current sections
+    section_list = editsection.list_section_names(project)
 
-    if page is None:
-        raise FailPage("Page not identified")
+    # get placholderinfo
+    placeholder = editsection.placeholder__info(project, pagenumber, location)
 
-    if not isinstance(part, tag.SectionPlaceHolder):
-        raise FailPage("Part to be edited is not a Section place holder")
+    section_name = placeholder.section_name
+    alias = placeholder.alias
+    brief = placeholder.brief
+    multiplier = placeholder.multiplier
 
     if 'new_section_name' in call_data:
         if call_data['new_section_name'] == '-None-':
             raise FailPage(message='Section name not set')
-        # get current sections
-        section_list = editedproj.list_section_names()
         if not section_list:
             raise FailPage(message='No sections found')
         if call_data['new_section_name'] not in section_list:
             raise FailPage(message='Section not found')
-        part.section_name = call_data['new_section_name']
+        section_name = call_data['new_section_name']
         message = 'New section name set'
-        widget_name="editsection"
     elif 'placeholder_brief' in call_data:
-        part.brief = call_data["placeholder_brief"]
+        brief = call_data["placeholder_brief"]
         message = 'New description set'
-        widget_name="brief"
     elif 'placename' in call_data:
-        if call_data['placename'] == part.placename:
+        if call_data['placename'] == alias:
             call_data['status'] = 'Alias not changed'
             return
-        if call_data['placename'] in page.section_places:
-            raise FailPage("This alias already exists")
+        #if call_data['placename'] in page.section_places:
+        #    raise FailPage("This alias already exists")
         if _AN.search(call_data['placename']):
             raise FailPage(message="Invalid alias")
-        part.placename = call_data['placename']
+        alias = call_data['placename']
         message = 'New alias set'
-        widget_name='placename'
     else:
         raise FailPage("A new placeholder value to edit has not been found")
-    utils.save(call_data, page=page, widget_name=widget_name)
+    editsection.edit_placeholder(project, pagenumber, location, section_name, alias, brief, multiplier)
     call_data['status'] = message
 
 

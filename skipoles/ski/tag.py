@@ -785,11 +785,18 @@ class Section(Part):
 class SectionPlaceHolder(object):
     "Instance of this is added to a part, and acts as the placeholder for a section"
 
-    def __init__(self, section_name, placename, brief=''):
+    def __init__(self, section_name, placename, multiplier=1, brief=''):
         self.brief = brief
         self.section_name = section_name
         self.placename = placename
         self.ident_string = ''
+        try:
+            mult = int(multiplier)
+        except:
+            mult = 1
+        if mult<1:
+            mult = 1
+        self.multiplier=mult
 
     def section_value(self):
         "Returns section name if section name exists in the project, otherwise None"
