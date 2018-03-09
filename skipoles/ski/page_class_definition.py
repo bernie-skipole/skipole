@@ -427,6 +427,7 @@ class TemplatePageAndSVG(ParentPage):
             else:
                 # if an svg page, a g tag is used instead of a div
                 topdiv = Part(tag_name="g")
+            topdiv.insert_id(id_string=placeholder.placename)
             topdiv[0] = sectionpart
             toppart.set_location_value(placeholder.ident_list, topdiv)
         else:
