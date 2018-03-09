@@ -49,6 +49,7 @@ class ErrorMessage(object):
         return """message: %s
 section: %s
 widget: %s
+code: %s
 """ % (self.message,
        self.section,
        self.widget)
@@ -103,7 +104,7 @@ class ServerError(SkiError):
         self.status = status
         # code 0 is default
         # codes 9000 to 9999 are reserved for system use
-        self.code = 0
+        self.code = code
 
 
 class ValidateError(SkiError):

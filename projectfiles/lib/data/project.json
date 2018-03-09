@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.2.3",
+"skipole": "0.6.0",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -415,18 +415,17 @@
 [
 "Text",
 "Diagnostic message:"
-]
-]
-}
 ],
 [
 "Widget",
 {
-"class": "paras.DivPara",
+"class": "error_messages.ErrorCode",
 "name": "message1",
-"brief": "Diagnostic message",
+"brief": "A widget displaying an error message",
 "fields": {
 "clear_error": false,
+"code": "0",
+"code_class": "w3-text-red",
 "error_class": "w3-text-red",
 "para_class": "w3-text-red",
 "para_text": "A server error has occurred.",
@@ -436,6 +435,9 @@
 "widget_class": "",
 "widget_style": ""
 }
+}
+]
+]
 }
 ]
 ]
