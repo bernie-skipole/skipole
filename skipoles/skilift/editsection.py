@@ -191,6 +191,12 @@ def edit_placeholder(project, pagenumber, pchange, location, section_name, alias
     if part.__class__.__name__ != "SectionPlaceHolder":
         raise ServerError(message="The edited location does not seem to be a section placeholder")
 
+    # is placename unique
+    if alias != part.placename:
+        if alias in page.widgets:
+            raise ServerError(message="Duplicate name in the page - a widget has this assigned")
+        if alias in page.section_places:
+            raise ServerError(message="This name clashes with a section alias already within this page")
     part.section_name = section_name
     part.placename = alias
     part.brief = brief

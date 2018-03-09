@@ -114,20 +114,31 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
         brief = call_data["placeholder_brief"]
         message = 'New description set'
     elif 'placename' in call_data:
-        if call_data['placename'] == alias:
+        placename = call_data['placename']
+        if placename == alias:
             call_data['status'] = 'Alias not changed'
             return
-        #if call_data['placename'] in page.section_places:
-        #    raise FailPage("This alias already exists")
-        if _AN.search(call_data['placename']):
-            raise FailPage(message="Invalid alias")
-        alias = call_data['placename']
+        if not placename:
+            raise FailPage("Invalid alias")
+        lower_placename = placename.lower()
+        if (lower_placename == 'body') or (lower_placename == 'head') or (lower_placename == 'svg')  or (lower_placename == 'show_error'):
+            raise FailPage(message="Unable to set alias, the given value is reserved")
+        if _AN.search(placename):
+            raise FailPage(message="Invalid alias, alphanumeric and underscore only")
+        if placename[0] == '_':
+            raise FailPage(message="Invalid alias, must not start with an underscore")
+        if placename.isdigit():
+            raise FailPage(message="Unable to set alias, the value must include some letters")
+        alias = placename
         message = 'New alias set'
     else:
         raise FailPage("A new placeholder value to edit has not been found")
 
     # call editsection.edit_placeholder from skilift, which returns a new pchange
-    call_data['pchange'] = editsection.edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier)
+    try:
+        call_data['pchange'] = editsection.edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = message
 
 
