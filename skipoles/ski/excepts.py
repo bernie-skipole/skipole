@@ -98,9 +98,12 @@ class FailPage(SkiError):
 
 class ServerError(SkiError):
     """Flag a server problem"""
-    def __init__(self, message = '', section='', widget='', status='500 Internal Server Error'):
+    def __init__(self, message = '', section='', widget='', status='500 Internal Server Error', code=0):
         SkiError.__init__(self, message, section, widget)
         self.status = status
+        # code 0 is default
+        # codes 9000 to 9999 are reserved for system use
+        self.code = 0
 
 
 class ValidateError(SkiError):

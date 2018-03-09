@@ -45,6 +45,8 @@ from ... import skilift
 from ...skilift import fromjson
 
 from ...skilift.editsection import sectionchange
+from ...skilift.editpage import pagechange
+from ...skilift.editfolder import folderchange
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
@@ -129,7 +131,6 @@ _CALL_SUBMIT_DATA = {
                        54042: editwidget.set_widget_params,             # sets the widget brief
                        54537: listwidgets.create_new_widget,            # creates the new widget
                        54721: editwidget.back_to_parent_container,      # get container
-                       55050: editplaceholder.set_placeholder,          # sets the placeholder section name, brief or alias
                        55507: editplaceholder.retrieve_insert,          # gets data for inserting a placeholder
                        55607: editplaceholder.create_insert,            # create a section placeholder
                        56007: editvalidator.retrieve_editvalidator,     # gets data for edit a validator page
@@ -246,18 +247,18 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 
     if identnum == 2003:
         if 'folder' in session_data:
-            # call to go back to edit a folder, ignore anything else in session data
-            folder_ident = session_data['folder']
-            # folder_ident is tuple (project, folder_number)
-            if folder_ident[0] != editedprojname:
+            project, foldernumber = session_data['folder']
+            if project != editedprojname:
+                return "admin_home", call_data, page_data, lang   
+            fchange = folderchange(project, foldernumber)
+            if fchange is None:
+                return "admin_home", call_data, page_data, lang 
+            if 'fchange' not in session_data:
                 return "admin_home", call_data, page_data, lang
-            # check this folder exists
-            folder_info = skilift.item_info(*folder_ident)
-            # folder_info is a named tuple with contents
-            # project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted
-            if (folder_info is None) or (folder_info.item_type != 'Folder'):
+            if fchange != session_data['fchange']:
                 return "admin_home", call_data, page_data, lang
-            call_data['folder_number'] = folder_ident[1]
+            call_data['fchange'] = session_data['fchange']
+            call_data['folder_number'] = foldernumber
             return called_ident, call_data, page_data, lang
         else:
             return "admin_home", call_data, page_data, lang
@@ -304,36 +305,34 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         section_name = session_data['section_name']
         if not section_name:
             return "admin_home", call_data, page_data, lang
-        # check this edited section exists
-        section = editedproj.section(section_name)
-        if section is None:
+        schange = sectionchange(editedprojname, section_name)
+        if schange is None:
             return "admin_home", call_data, page_data, lang
-
-        # if section provided, so must schange
         if 'schange' not in session_data:
             return "admin_home", call_data, page_data, lang
-        if section.change != session_data['schange']:
-            call_data['status'] = "Someone else is editing this site, please try again later."
+        if schange != session_data['schange']:
             return "admin_home", call_data, page_data, lang
+        call_data['schange'] = schange
         call_data['section_name'] = section_name
-        call_data['section'] = section
+        # this bit to be phased out
+        call_data['section'] = editedproj.section(section_name)
 
     if 'page' in session_data:
-        page_ident = session_data['page']
-        # check this page exists
-        page = skiboot.from_ident(page_ident)
-        if (page is None) or (page.page_type == 'Folder'):
+        project, pagenumber = session_data['page']
+        if project != editedprojname:
+            return "admin_home", call_data, page_data, lang        
+        pchange = pagechange(project, pagenumber)
+        if pchange is None:
             return "admin_home", call_data, page_data, lang
-        if not page in editedproj:
-            return "admin_home", call_data, page_data, lang
-        # if page provided, so must pchange
         if 'pchange' not in session_data:
             return "admin_home", call_data, page_data, lang
-        if page.change != session_data['pchange']:
-            call_data['status'] = "Someone else is editing this site, please try again later. page (%s, %s)" % (page.change, session_data['pchange'])
+        if pchange != session_data['pchange']:
             return "admin_home", call_data, page_data, lang
-        call_data['page'] = page
-        call_data['page_number'] = page.ident.num
+        call_data['pchange'] = pchange
+        call_data['page_number'] = pagenumber
+        # this bit to be phased out
+        call_data['page'] = skiboot.from_ident((project, pagenumber))
+
 
     if 'widget_name' in session_data:
         call_data['widget_name'] = session_data['widget_name']
@@ -342,23 +341,18 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         call_data['container'] = session_data['container']
 
     if 'folder' in session_data:
-        folder_ident = session_data['folder']
-        # folder_ident is tuple (project, folder_number)
-        if folder_ident[0] != editedprojname:
-            return "admin_home", call_data, page_data, lang
-        # check this folder exists
-        folder_info = skilift.item_info(*folder_ident)
-        # folder_info is a named tuple with contents
-        # project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted
-        if (folder_info is None) or (folder_info.item_type != 'Folder'):
-            return "admin_home", call_data, page_data, lang
-        # if folder provided, so must fchange
+        project, foldernumber = session_data['folder']
+        if project != editedprojname:
+            return "admin_home", call_data, page_data, lang   
+        fchange = folderchange(project, foldernumber)
+        if fchange is None:
+            return "admin_home", call_data, page_data, lang 
         if 'fchange' not in session_data:
             return "admin_home", call_data, page_data, lang
-        if folder_info.change != session_data['fchange']:
-            call_data['status'] = "Someone else is editing this site, please try again later. folder (%s, %s)" % (folder_info.change, session_data['fchange'])
+        if fchange != session_data['fchange']:
             return "admin_home", call_data, page_data, lang
-        call_data['folder_number'] = folder_ident[1]
+        call_data['fchange'] = session_data['fchange']
+        call_data['folder_number'] = foldernumber
 
     if 'add_to_foldernumber' in session_data:
         call_data['add_to_foldernumber'] = session_data['add_to_foldernumber']
@@ -488,18 +482,16 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     else:
         # send page or folder as a tuple of its ident
         if 'page_number' in call_data:
-            info = skilift.item_info(call_data['editedprojname'], call_data['page_number'])
-            sent_session_data['page'] = (info.project, info.itemnumber)
-            sent_session_data['pchange'] = info.change
+            sent_session_data['page'] = (editedprojname, call_data['page_number'])
+            sent_session_data['pchange'] = pagechange(editedprojname, call_data['page_number'])
         elif 'page' in call_data:
+            # this bit to be phased out
             page_ident = skiboot.make_ident(call_data['page'])
             sent_session_data['page'] = page_ident.to_tuple()
-            info = skilift.item_info(*sent_session_data['page'])
-            sent_session_data['pchange'] = info.change
+            sent_session_data['pchange'] = pagechange(*sent_session_data['page'])
         if 'folder_number' in call_data:
-            info = skilift.item_info(call_data['editedprojname'], call_data['folder_number'])
-            sent_session_data['folder'] = (info.project, info.itemnumber)
-            sent_session_data['fchange'] = info.change
+            sent_session_data['folder'] = (editedprojname, call_data['folder_number'])
+            sent_session_data['fchange'] = folderchange(editedprojname, call_data['folder_number'])
 
     if sent_session_data:
         # store in _SESSION_DATA, and send the key as ident_data

@@ -86,6 +86,7 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     location = call_data['location']
+    pchange = call_data['pchange']
 
     call_data['part_tuple'] = part_info(project, pagenumber, None, location)
 
@@ -124,7 +125,9 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
         message = 'New alias set'
     else:
         raise FailPage("A new placeholder value to edit has not been found")
-    editsection.edit_placeholder(project, pagenumber, location, section_name, alias, brief, multiplier)
+
+    # call editsection.edit_placeholder from skilift, which returns a new pchange
+    call_data['pchange'] = editsection.edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier)
     call_data['status'] = message
 
 

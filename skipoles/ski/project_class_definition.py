@@ -188,7 +188,7 @@ class Project(object):
  
 
     def add_section(self, name, section):
-        "Adds a section to the project"
+        "Adds a section to the project, returns section.change uuid"
         # and save the section
         section.widgets = {}
         section.section_places = {}  # currently unused
@@ -199,6 +199,7 @@ class Project(object):
         # set the section change number
         section.change = uuid.uuid4().hex
         self.sections[name] = section
+        return section.change
 
 
     def delete_section(self, name):
@@ -337,7 +338,8 @@ class Project(object):
 
     def save_page(self, item, new_parent_ident=None):
         """Saves the page - used to save an altered page, not to add a new one
-           If new_parent_ident is not None, indicates the page has moved to a different folder"""
+           If new_parent_ident is not None, indicates the page has moved to a different folder
+           Returns the new page.change uuid"""
         if item.page_type == 'Folder':
             raise ServerError(message="Invalid item, not a page.")
         item_ident = item.ident
@@ -368,7 +370,7 @@ class Project(object):
             # no folder change
             self.identitems[item_ident] = item
             self.clear_cache()
-            return
+            return item.change
         if new_parent_ident is None:
             # so just a name change
             if item.name in old_parent.pages:
@@ -381,7 +383,7 @@ class Project(object):
             old_parent.change = uuid.uuid4().hex
             self.identitems[item_ident] = item
             self.clear_cache()
-            return
+            return item.change
         # change of folder
         if item.name in new_parent.pages:
             raise ServerError(message="Sorry, a page with that name already exists")
@@ -395,11 +397,13 @@ class Project(object):
         item.parentfolder = new_parent
         self.identitems[item_ident] = item
         self.clear_cache()
+        return item.change
 
 
     def save_folder(self, item, new_parent_ident=None):
         """Saves the folder - used to save an altered folder, not to add a new one
-           If new_parent_ident is not None, indicates the folder has moved to a different parent folder"""
+           If new_parent_ident is not None, indicates the folder has moved to a different parent folder
+           Returns the new folder.change uuid"""
         if item.page_type != 'Folder':
             raise ServerError(message="Invalid item, not a folder.")
         item_ident = item.ident
@@ -413,7 +417,7 @@ class Project(object):
             item.change = uuid.uuid4().hex
             self.root = item
             self.clear_cache()
-            return
+            return item.change
         if item_ident not in self.identitems:
             raise ServerError(message="This folder ident does not exist")
         old_parent = self.identitems[item_ident].parentfolder
@@ -432,7 +436,7 @@ class Project(object):
             # no parent folder change
             self.identitems[item_ident] = item
             self.clear_cache()
-            return
+            return item.change
         if new_parent_ident is None:
             # so just a name change
             if item.name in old_parent.pages:
@@ -445,7 +449,7 @@ class Project(object):
             old_parent.change = uuid.uuid4().hex
             self.identitems[item_ident] = item
             self.clear_cache()
-            return
+            return item.change
         # change of folder
         # A folder cannot be moved into a sub folder of itself
 
@@ -467,6 +471,7 @@ class Project(object):
         item.parentfolder = new_parent
         self.identitems[item_ident] = item
         self.clear_cache()
+        return item.change
 
 
 
