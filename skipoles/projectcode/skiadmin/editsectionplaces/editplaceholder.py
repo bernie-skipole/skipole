@@ -44,21 +44,28 @@ def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict,
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
-    part_tuple = call_data['part_tuple']
-
+    if 'part_tuple' in call_data:
+        part_tuple = call_data['part_tuple']
+        project = part_tuple.project
+        pagenumber = part_tuple.pagenumber
+        location = part_tuple.location
+    else:
+        project = call_data['editedprojname']
+        pagenumber = call_data['page_number']
+        location = call_data['location']
+ 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Section"
 
     # header done, now page contents
 
-    if part_tuple.part_type != "SectionPlaceHolder":
-        raise FailPage("Part to be edited is not a Section Place Holder")
+    # get placholderinfo
+    placeholder = editsection.placeholder__info(project, pagenumber, location)
+    if placeholder is None:
+        raise FailPage("Section Place Holder not found")
 
     # get current sections
-    section_list = editsection.list_section_names(part_tuple.project)
-
-    # get placholderinfo
-    placeholder = editsection.placeholder__info(part_tuple.project, part_tuple.pagenumber, part_tuple.location)
+    section_list = editsection.list_section_names(project)
 
     if not section_list:
         page_data[('editsection','option_list')] = ['-None-']
@@ -77,7 +84,7 @@ def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict,
     page_data[("multiplier", "input_text")] = str(placeholder.multiplier)
 
     # set session data
-    call_data['location'] = part_tuple.location
+    call_data['location'] = location
 
 
 def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -113,6 +120,14 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
     elif 'placeholder_brief' in call_data:
         brief = call_data["placeholder_brief"]
         message = 'New description set'
+    elif 'multiplier' in call_data:
+        try:
+            multiplier = int(call_data["multiplier"])
+        except:
+            raise FailPage(message='Invalid multiplier, should be an integer of 1 or above')
+        if multiplier < 1:
+           raise FailPage(message='Invalid multiplier, should be an integer of 1 or above')
+        message = 'New multiplier set'
     elif 'placename' in call_data:
         placename = call_data['placename']
         if placename == alias:

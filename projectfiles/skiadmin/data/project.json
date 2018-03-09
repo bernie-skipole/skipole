@@ -131,6 +131,7 @@
 "move_up_right_in_container_dom": 44450,
 "move_up_right_in_page_dom": 3550,
 "move_up_right_in_section_dom": 7450,
+"multiplier": 45015,
 "new_copypage": 2460,
 "new_section": 7060,
 "new_textblock": 4002,
@@ -12963,7 +12964,7 @@ false
 "name": "multiplier",
 "brief": "Sets the multiplier on the section place holder",
 "fields": {
-"action": "admin_home",
+"action": "multiplier",
 "action_json": "",
 "button_class": "w3-button w3-theme-d4 w3-margin-left",
 "button_text": "Submit",
@@ -12995,6 +12996,18 @@ false
 "type": "text",
 "widget_class": "w3-section",
 "widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.IntMinMax",
+"message": "Invalid multiplier, should be between 1 and 9999",
+"val_args": {
+"maxval": "9999",
+"minval": "1"
+}
+}
+]
 }
 }
 ],
@@ -13605,6 +13618,32 @@ false
 "validate_option": false
 },
 "original_fields": {}
+}
+},
+"multiplier": {
+"ident": 45015,
+"brief": "Sets a placeholder multiplier",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+55009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 55007,
+"submit_list": [
+"editsectionplaces",
+"editplaceholder",
+"set_placeholder"
+],
+"submit_option": true,
+"target_ident": 55007,
+"validate_fail_ident": 55007,
+"validate_option": true
+},
+"original_fields": {
+"multiplier:input_text": "multiplier"
+}
 }
 },
 "placeholder_brief": {
