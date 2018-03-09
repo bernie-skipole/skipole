@@ -172,7 +172,7 @@
 "selector_up": 8320,
 "server_error": "lib,server_error",
 "setHTMLbackcol": 80003,
-"set_alias": 45030,
+"set_alias": 45010,
 "set_arg_value": 46111,
 "set_backcolour": 3300,
 "set_brief": 20,
@@ -191,10 +191,10 @@
 "set_last_scroll": 3220,
 "set_last_scroll_json": 3225,
 "set_linebreaks": 42040,
-"set_placeholder_brief": 45020,
+"set_placeholder_brief": 45005,
 "set_restricted_action": 2900,
 "set_root_path": 50,
-"set_section_name": 45010,
+"set_section_name": 45001,
 "set_submit_option": 6260,
 "set_symbol": 41120,
 "set_tag_brief": 43020,
@@ -13514,35 +13514,6 @@ false
 "original_fields": {}
 }
 },
-"set_placeholder": {
-"ident": 55050,
-"brief": "Sets the edited placeholder value",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": 55007,
-"target_ident": 55007
-},
-"original_fields": {}
-}
-},
-"validate_alias": {
-"ident": 55032,
-"brief": "validate new alias",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 55050,
-"validate_fail_ident": 55007,
-"validate_option": true
-},
-"original_fields": {
-"placename:input_text": "placename"
-}
-}
-},
 "validate_create_insert": {
 "ident": 55601,
 "brief": "validate the part details",
@@ -13561,45 +13532,37 @@ false
 "sectionname:selectvalue": "newsectionname"
 }
 }
-},
-"validate_placeholder_brief": {
-"ident": 55022,
-"brief": "validate new placeholder brief",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 55050,
-"validate_fail_ident": 55007,
-"validate_option": true
-},
-"original_fields": {
-"brief:input_text": "placeholder_brief"
-}
-}
-},
-"validate_section_name": {
-"ident": 55012,
-"brief": "check new section name",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 55050,
-"validate_fail_ident": 55007,
-"validate_option": true
-},
-"original_fields": {
-"editsection:selectvalue": "new_section_name"
-}
-}
 }
 }
 }
 },
 "pages": {
+"alias": {
+"ident": 45010,
+"brief": "Sets an alias for a section in a placeholder",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+55009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 55007,
+"submit_list": [
+"editsectionplaces",
+"editplaceholder",
+"set_placeholder"
+],
+"submit_option": true,
+"target_ident": 55007,
+"validate_fail_ident": 55007,
+"validate_option": true
+},
+"original_fields": {
+"placename:input_text": "placename"
+}
+}
+},
 "create_insert": {
 "ident": 45601,
 "brief": "check values to insert",
@@ -13644,69 +13607,55 @@ false
 "original_fields": {}
 }
 },
-"set_alias": {
-"ident": 45030,
-"brief": "check new alias",
+"placeholder_brief": {
+"ident": 45005,
+"brief": "Sets the placeholder brief description",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStoreKeyed",
 "original_args": {
 "allowed_callers": [
 55009
 ],
 "alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 55032,
-"validate_fail_ident": null,
-"validate_option": false
+"fail_ident": 55007,
+"submit_list": [
+"editsectionplaces",
+"editplaceholder",
+"set_placeholder"
+],
+"submit_option": true,
+"target_ident": 55007,
+"validate_fail_ident": 55007,
+"validate_option": true
 },
 "original_fields": {
-"placename:button_text": "",
-"placename:input_text": ""
+"brief:input_text": "placeholder_brief"
 }
 }
 },
-"set_placeholder_brief": {
-"ident": 45020,
-"brief": "check new placeholder brief",
+"section_name": {
+"ident": 45001,
+"brief": "sets a new section name in a placeholder",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStoreKeyed",
 "original_args": {
 "allowed_callers": [
 55009
 ],
 "alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 55022,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"brief:button_text": "",
-"brief:input_text": ""
-}
-}
-},
-"set_section_name": {
-"ident": 45010,
-"brief": "check new section name",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-55009
+"fail_ident": 55007,
+"submit_list": [
+"editsectionplaces",
+"editplaceholder",
+"set_placeholder"
 ],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 55012,
-"validate_fail_ident": null,
-"validate_option": false
+"submit_option": true,
+"target_ident": 55007,
+"validate_fail_ident": 55007,
+"validate_option": true
 },
 "original_fields": {
-"editsection:button_text": "",
-"editsection:selectvalue": ""
+"editsection:selectvalue": "new_section_name"
 }
 }
 }
@@ -39484,9 +39433,9 @@ false
 [
 "SectionPlaceHolder",
 {
-"brief": "foot",
+"brief": "Sets page foot",
 "section_name": "admin_footer",
-"placename": "foot",
+"placename": "footy",
 "multiplier": 1
 }
 ]

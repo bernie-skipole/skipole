@@ -145,9 +145,9 @@ def placeholder__info(project, pagenumber, location):
 
 
 
-def edit_placeholder(project, pagenumber, location, section_name, alias, brief, multiplier):
+def edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier):
     """Given a placeholder at project, pagenumber, location
-       sets the values section_name, alias, brief, multiplier"""
+       sets the values section_name, alias, brief, multiplier, returns page change uuid """
     # raise error if invalid project
     if project is None:
         project = skiboot.project_ident()
@@ -155,23 +155,25 @@ def edit_placeholder(project, pagenumber, location, section_name, alias, brief, 
     project_loaded(project)
     proj = skiboot.getproject(project)
     if proj is None:
-        return
+        raise ServerError(message="The edited project is invalid")
 
     location_string, container_number, location_list = location
 
     part = None
 
     if pagenumber is None:
-        return
+        raise ServerError(message="The page containing this section seems to be invalid")
 
     ident = skiboot.find_ident(pagenumber, project)
     if not ident:
-        return
+        raise ServerError(message="The page containing this section seems to be invalid")
     page = skiboot.get_item(ident)
     if not page:
-        return
+        raise ServerError(message="The page containing this section seems to be invalid")
     if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
-        return
+        raise ServerError(message="The page type containing this section seems to be invalid")
+    if page.change != pchange:
+        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
     if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
         # part not in a widget
         part = page.get_part(location_string, location_list)
@@ -184,18 +186,18 @@ def edit_placeholder(project, pagenumber, location, section_name, alias, brief, 
                 part = widget.get_from_container(container_number, location_list)
 
     if part is None:
-        return
+        raise ServerError(message="Cannot find the section placeholder")
 
     if part.__class__.__name__ != "SectionPlaceHolder":
-        return
+        raise ServerError(message="The edited location does not seem to be a section placeholder")
 
     part.section_name = section_name
     part.placename = alias
     part.brief = brief
     part.multiplier = multiplier
 
-    # save the altered page
-    proj.save_page(page)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
 
 
 
