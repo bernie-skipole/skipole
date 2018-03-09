@@ -29,6 +29,61 @@
 
 SKIPOLE.error_messages = {};
 
+SKIPOLE.error_messages.ErrorCode = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.error_messages.ErrorCode.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.error_messages.ErrorCode.prototype.constructor = SKIPOLE.error_messages.ErrorCode;
+SKIPOLE.error_messages.ErrorCode.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - para_text */
+   if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    if (this.check_error(fieldlist, result)) {
+        return;
+        }
+    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    if (para_text) {
+        var paragraph = this.widg.find(':first').next();
+        paragraph.text(para_text);
+        }
+    };
+SKIPOLE.error_messages.ErrorCode.prototype.show_error = function (error_message) {
+    /* sets data-status and ensures first child contains error_message and has class error_class  */
+    if (!error_message) {
+        error_message = this.error_message;
+        }
+    if (!error_message) {
+        error_message = "Unknown Error";
+        }
+    var the_widg = this.widg;
+    the_widg.attr("data-status", "error");
+    var paragraph = the_widg.find(':first').next();
+    paragraph.text(error_message);
+    var error_class = this.fieldvalues["error_class"];
+    if (error_class) {
+        paragraph.attr("class", error_class);
+        }
+    };
+SKIPOLE.error_messages.ErrorCode.prototype.clear_error = function() {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    if (the_widg.attr("data-status") == "error") {
+        the_widg.removeAttr( "data-status" );
+        }
+    var paragraph = the_widg.find(':first').next();
+    paragraph.removeAttr( "class" );
+    var para_class = this.fieldvalues["para_class"];
+    if (para_class) {
+        paragraph.attr("class", para_class);
+        }
+    };
+
+
+
 SKIPOLE.error_messages.ErrorDiv = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     };

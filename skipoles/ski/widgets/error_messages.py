@@ -33,6 +33,81 @@ from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
+class ErrorCode(Widget):
+    """A div containing a paragraph, with an error code, and a second paragraph containing text,
+       if an error is raised, then the text is changed
+       for the error_message and the error_class given to the paragraph"""
+
+    error_location = (1,0)
+
+    arg_descriptions = {'para_text':FieldArg("text", "", jsonset=True),
+                        'para_class':FieldArg("cssclass", ""),
+                        'code_class':FieldArg("cssclass", ""),
+                        'error_class':FieldArg("cssclass", ""),
+                        'pre_line':FieldArg("boolean", True),
+                        'code':FieldArg("integer", "0")
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        para_text: The text appearing in the paragraph
+        para_class: The class of the paragraph
+        error_class: The class of the error text - which provides the appearance via CSS
+                     replaces para_class on error.
+        pre_line: If True, sets style="white-space: pre-line;" into the paragraph which preserves
+                  new line breaks
+        code: integer code number
+        """
+        # pass fields to Widget
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self[0] = tag.Part(tag_name='p')
+        self[0][0] = ''
+        self[1] = tag.Part(tag_name='p')
+        # do not insert <br /> - leave that to pre_line
+        self[1].linebreaks=False
+        self[1][0] = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value('code_class'):
+            self[0].update_attribs({"class":self.get_field_value('code_class')})
+        if self.get_field_value("code"):
+            self[0][0] = "Error code : " + str(self.get_field_value("code"))
+        else:
+            self[0][0] = "Error code : 0"
+        if self.get_field_value("pre_line"):
+            self[1].attribs={"style":"white-space: pre-line;"}
+        if self.get_field_value('para_class'):
+            self[1].update_attribs({"class":self.get_field_value('para_class')})
+        # self[1][0] could be set by an error message
+        if not self.error_status:
+            self[1][0] = self.get_field_value("para_text")
+        if self.error_status and self.get_field_value('error_class'):
+            self[1].update_attribs({"class":self.get_field_value('error_class')})
+
+            
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets fieldvalues"""
+        return self._make_fieldvalues('para_class', 'error_class')
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id and class widget_class -->
+    <p> <!-- with class code_class -->
+        Error code : n
+        <!-- with n set to the number given in field 'code' -->
+    </p>
+    <p style = "white-space: pre-line;">
+    <!-- with class para_class, and style set if pre_line is True -->
+    <!-- and class changed to error_class on error -->
+        <!-- set with para_text, replaced by error message on error -->
+    </p>
+</div>"""
+
+
+
 
 class ErrorDiv(Widget):
     """A div containing a div with paragraph containing error text - normally both div's are hidden.

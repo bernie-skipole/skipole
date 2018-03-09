@@ -712,15 +712,30 @@ class Project(object):
             page = self._system_page("server_error")
             if (not page) or (page.page_type != "TemplatePage"):
                 # make a temp page
+                text_start = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>Error code : %s</p>\n" % (e.code,)
                 if e.message:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
+                    page_text = text_start + "<p>%s</p>\n</html>" % (html.escape(e.message),)
                 else:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n</html>"
+                    page_text = text_start + "</html>"
                 return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
             # import any sections
             page.import_sections()
             # show message passed by the exception
             page.show_error([e.errormessage])
+            # if ServerError code, set it into the widget
+            if e.code:
+                if e.section:
+                    page_data = {(e.section, e.widget, 'code'):str(e.code)}
+                elif e.widget:
+                    page_data = {(e.widget, 'code'):str(e.code)}
+                elif page.default_error_widget.s:
+                    page_data = {(page.default_error_widget.s, page.default_error_widget.w, 'code'):str(e.code)}
+                elif page.default_error_widget.w:
+                    page_data = {(page.default_error_widget.w, 'code'):str(e.code)}
+                else:
+                    page_data = None
+                if page_data:
+                    page.set_values(page_data)
             # update head and body parts
             page.update(environ, {}, lang, e.ident_list)
             status, headers = page.get_status()

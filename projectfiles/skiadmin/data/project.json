@@ -39455,6 +39455,27 @@ false
 [
 "Widget",
 {
+"class": "error_messages.ErrorCode",
+"name": "top_error",
+"brief": "Displays an error code",
+"fields": {
+"clear_error": false,
+"code": "0",
+"code_class": "",
+"error_class": "",
+"para_class": "",
+"para_text": "",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
 "class": "paras.TagBlock",
 "name": "test",
 "brief": "test",
