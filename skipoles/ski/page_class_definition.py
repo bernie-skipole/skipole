@@ -351,6 +351,20 @@ class TemplatePageAndSVG(ParentPage):
         "Imports the project sections into the page"
         self.sections = {}
         for placename, placeholder in self.section_places.items():
+            # get top part of placeholder location
+            pagepart = placeholder.pagepart
+            if pagepart == 'head':
+                toppart = self.head
+            elif pagepart == 'body':
+                toppart = self.body
+            elif pagepart == 'svg':
+                toppart = self.svg
+            else:
+                raise ServerError(message = 'Invalid section placeholder in page %s' % (self.ident,))
+            if placeholder.multiplier > 1:
+                for m in range(placeholder.multiplier):
+                    self._import_multiplied_section(m, placeholder, toppart)
+                continue
             section_name = placeholder.section_name
             sectionpart = self.project.section(section_name)
             # sectionpart is a tag.Section
@@ -370,19 +384,8 @@ class TemplatePageAndSVG(ParentPage):
             for widget in sectionpart.widgets.values():
                 # Note - this is called on named widgets only
                 widget.set_placename(section_name, placename)
-            # now the sectionpart has to be set in the placholder location
-            # get top part of placeholder
-            pagepart = placeholder.pagepart
-            if pagepart == 'head':
-                part = self.head
-            elif pagepart == 'body':
-                part = self.body
-            elif pagepart == 'svg':
-                part = self.svg
-            else:
-                raise ServerError(message = 'Invalid section placeholder in page %s' % (self.ident,))
             # insert sectionpart at the point where the placeholder is
-            part.set_location_value(placeholder.ident_list, sectionpart)
+            toppart.set_location_value(placeholder.ident_list, sectionpart)
             # add section scriptlinks
             if self.page_type == 'TemplatePage':
                 if sectionpart.validator_scriptlinks:
@@ -393,6 +396,53 @@ class TemplatePageAndSVG(ParentPage):
                     link_label = "ski_" + widget.__class__.__module__.split(".")[-1]
                     # add a link in the page head to the widget module javascript file
                     self.append_scriptlink(link_label)
+
+
+    def _import_multiplied_section(self, m, placeholder, toppart):
+        "If a placeholder has a multiplier, import its section multiple times inside a div"
+        placename = placeholder.placename + "_" + str(m)
+        section_name = placeholder.section_name
+        sectionpart = self.project.section(section_name)
+        # sectionpart is a tag.Section
+        if isinstance(sectionpart, Section):
+            # gives sectionpart and subparts an ident of page_ident_name_locationnumbers
+            # and sets sectionpart into self.sections
+            sectionpart.widgets = {}
+            sectionpart.section_places = {}
+            sectionpart.set_idents(str(self.ident) + '_' + placename, sectionpart.widgets, sectionpart.section_places, embedded=(section_name,'',None))
+            # If no id placed in the top tag, inserts the section placename
+            if not sectionpart.has_attrib('id'):
+                sectionpart.insert_id(id_string=placename)
+            self.sections[placename] = sectionpart
+        else:
+            return
+        # Set section widgets field displaynames
+        for widget in sectionpart.widgets.values():
+            # Note - this is called on named widgets only
+            widget.set_placename(section_name, placename)
+        # now the sectionpart has to be set within a div which is set at the placeholder location
+        if m == 0:
+            if self.page_type == 'TemplatePage':
+                topdiv = Part(tag_name='div')
+            else:
+                # if an svg page, a g tag is used instead of a div
+                topdiv = Part(tag_name="g")
+            topdiv[0] = sectionpart
+            toppart.set_location_value(placeholder.ident_list, topdiv)
+        else:
+            location = placeholder.ident_list[:]
+            location.append(m)
+            toppart.insert_location_value(location, sectionpart)
+        # add section scriptlinks
+        if self.page_type == 'TemplatePage':
+            if sectionpart.validator_scriptlinks:
+                for link_label in sectionpart.validator_scriptlinks:
+                    self.append_scriptlink(link_label)
+            for widget in sectionpart.widgets.values():
+                # get 'ski_modulename'
+                link_label = "ski_" + widget.__class__.__module__.split(".")[-1]
+                # add a link in the page head to the widget module javascript file
+                self.append_scriptlink(link_label)
 
 
 class TemplatePage(TemplatePageAndSVG):
