@@ -397,7 +397,7 @@ class TemplatePageAndSVG(ParentPage):
                         placeholder.multiplier = multiplier
             if placeholder.multiplier > 1:
                 for m in range(placeholder.multiplier):
-                    self._import_multiplied_section(m, placeholder, toppart)
+                    self._import_multiplied_section(m, placeholder, toppart, page_data)
                 continue
             section_name = placeholder.section_name
             sectionpart = self.project.section(section_name)
@@ -432,7 +432,7 @@ class TemplatePageAndSVG(ParentPage):
                     self.append_scriptlink(link_label)
 
 
-    def _import_multiplied_section(self, m, placeholder, toppart):
+    def _import_multiplied_section(self, m, placeholder, toppart, page_data):
         "If a placeholder has a multiplier, import its section multiple times inside a div"
         placename = placeholder.placename + "_" + str(m)
         section_name = placeholder.section_name
@@ -458,9 +458,22 @@ class TemplatePageAndSVG(ParentPage):
         if m == 0:
             if self.page_type == 'TemplatePage':
                 topdiv = Part(tag_name='div')
+                if page_data:
+                    if (placeholder.placename,'show') in page_data:
+                        topdiv.show = bool(page_data[placeholder.placename,'show'])
+                    if (placeholder.placename,'section_class') in page_data:
+                        topdiv.set_class(page_data[placeholder.placename,'section_class'])
+                    if (placeholder.placename,'hide') in page_data:
+                        topdiv.set_hide()
             else:
                 # if an svg page, a g tag is used instead of a div
                 topdiv = Part(tag_name="g")
+                if page_data:
+                    if (placeholder.placename,'show') in page_data:
+                        topdiv.show = bool(page_data[placeholder.placename,'show'])
+                    if (placeholder.placename,'section_class') in page_data:
+                        topdiv.set_class(page_data[placeholder.placename,'section_class'])
+                    # hide value not relevant for svg
             topdiv.insert_id(id_string=placeholder.placename)
             topdiv[0] = sectionpart
             toppart.set_location_value(placeholder.ident_list, topdiv)
