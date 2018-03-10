@@ -188,37 +188,53 @@ class ParentPart(object):
         else:
             self._attribs['class'] = value
 
-    def set_hide(self):
-        "Sets display:none !important into style"
-        attribs = self._attribs
-        if 'style' not in attribs:
-            self._attribs['style'] = "display:none !important;"
-            return
-        # An existing style is in place
-        style = self._attribs['style']
-        style_list = style.split(';')
-        # ensure no empty items
-        style_list = [item for item in style_list if item]
-        if "display:none !important" in style_list:
-            # "display:none !important" already set
-            return
-        #  remove existing displays
-        if "display:none" in style_list:
-            # "display:none" already set, remove it so it can be replaced
-            style_list.remove("display:none")
-        if "display:block" in style_list:
-            # "display:block" already set, remove it so it can be replaced
-            style_list.remove("display:block")
-        if "display:block !important" in style_list:
-            # "display:block !important" already set, remove it so it can be replaced
-            style_list.remove("display:block !important")
-        # append display:none !important;
-        if not style_list:
-            self._attribs['style'] = "display:none !important;"
-            return
-        style_list.append("display:none !important;")
-        self._attribs['style'] = ";".join(style_list)
-
+    def set_hide(self, value=True):
+        "If True, Sets display:none !important into style, if False removes it"
+        if value:
+            attribs = self._attribs
+            if 'style' not in attribs:
+                self._attribs['style'] = "display:none !important;"
+                return
+            # An existing style is in place
+            style = self._attribs['style']
+            style_list = style.split(';')
+            # ensure no empty items
+            style_list = [item for item in style_list if item]
+            if "display:none !important" in style_list:
+                # "display:none !important" already set
+                return
+            #  remove existing displays
+            if "display:none" in style_list:
+                # "display:none" already set, remove it so it can be replaced
+                style_list.remove("display:none")
+            if "display:block" in style_list:
+                # "display:block" already set, remove it so it can be replaced
+                style_list.remove("display:block")
+            if "display:block !important" in style_list:
+                # "display:block !important" already set, remove it so it can be replaced
+                style_list.remove("display:block !important")
+            # append display:none !important;
+            if not style_list:
+                self._attribs['style'] = "display:none !important;"
+                return
+            style_list.append("display:none !important;")
+            self._attribs['style'] = ";".join(style_list)
+        else:
+            attribs = self._attribs
+            if 'style' not in attribs:
+                return
+            # An existing style is in place
+            style = self._attribs['style']
+            style_list = style.split(';')
+            style_list = [item for item in style_list if item]
+            if "display:none !important" in style_list:
+                style_list.remove("display:none !important")
+            if "display:none" in style_list:
+                style_list.remove("display:none")
+            if style_list:
+                self._attribs['style'] = ";".join(style_list)
+            else:
+                del self._attribs['style']
 
     def set_block(self):
         "Sets display:block !important into style"
