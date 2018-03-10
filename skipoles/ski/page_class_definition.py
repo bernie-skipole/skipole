@@ -277,7 +277,7 @@ class TemplatePageAndSVG(ParentPage):
             self.sections[sectionname].set_class(value)
             return True
         if field == 'hide':
-            self.sections[sectionname].set_hide()
+            self.sections[sectionname].set_hide(value)
             return True
         return False
 
@@ -467,7 +467,7 @@ class TemplatePageAndSVG(ParentPage):
                 if self.page_type == 'TemplatePage':
                     # hide not relevant to svg
                     if (placeholder.placename,'hide') in page_data:
-                        topdiv.set_hide()
+                        topdiv.set_hide(bool(page_data[placeholder.placename,'hide']))
             topdiv.insert_id(id_string=placeholder.placename)
             topdiv[0] = sectionpart
             toppart.set_location_value(placeholder.ident_list, topdiv)
@@ -840,8 +840,13 @@ SKIPOLE.identdata = '%s';
 SKIPOLE.default_error_widget = '%s';
 """  % (self.ident.proj, self.ident.num, self.ident_data_string, self.default_error_widget)
 
-        # set a list of sections
-        page_javascript += "SKIPOLE.sections =  " + str(list(self.sections.keys())) + ";\n"
+        # set a list of section alias names, to include section alias, and multiplied section alias
+        section_alias_list = list(self.sections.keys())
+        for alias in self.section_places.keys():
+            if alias not in section_alias_list:
+                section_alias_list.append(alias)
+
+        page_javascript += "SKIPOLE.sections =  " + str(section_alias_list) + ";\n"
 
         # append javascript to page head
         self.head.append(Part(tag_name="script", text=page_javascript + self._js + "//]]>\n"))
