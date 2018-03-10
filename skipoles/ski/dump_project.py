@@ -556,6 +556,7 @@ def _create_sectionplaceholder(part, proj_ident):
     if part.placename:
         part_dict["placename"] = part.placename
     part_dict["multiplier"] = part.multiplier
+    part_dict["mtag"] = part.mtag
     return ['SectionPlaceHolder', part_dict]
 
 
