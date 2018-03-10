@@ -194,7 +194,7 @@ class ParentPage(object):
                 self.ident_data = ident_data
             del page_data['ident_data']
 
-    def import_sections(self):
+    def import_sections(self, page_data=None):
         "Only used by Template and SVG, everything else just returns"
         return
 
@@ -456,24 +456,18 @@ class TemplatePageAndSVG(ParentPage):
             widget.set_placename(section_name, placename)
         # now the sectionpart has to be set within a div which is set at the placeholder location
         if m == 0:
-            if self.page_type == 'TemplatePage':
-                topdiv = Part(tag_name='div')
-                if page_data:
-                    if (placeholder.placename,'show') in page_data:
-                        topdiv.show = bool(page_data[placeholder.placename,'show'])
-                    if (placeholder.placename,'section_class') in page_data:
-                        topdiv.set_class(page_data[placeholder.placename,'section_class'])
+            topdiv = Part(tag_name=placeholder.mtag)
+            if page_data:
+                if (placeholder.placename,'show') in page_data:
+                    topdiv.show = bool(page_data[placeholder.placename,'show'])
+                if (placeholder.placename,'section_class') in page_data:
+                    topdiv.set_class(page_data[placeholder.placename,'section_class'])
+                if (placeholder.placename,'multiplier_tag') in page_data:
+                    topdiv.tag_name = page_data[placeholder.placename,'multiplier_tag']
+                if self.page_type == 'TemplatePage':
+                    # hide not relevant to svg
                     if (placeholder.placename,'hide') in page_data:
                         topdiv.set_hide()
-            else:
-                # if an svg page, a g tag is used instead of a div
-                topdiv = Part(tag_name="g")
-                if page_data:
-                    if (placeholder.placename,'show') in page_data:
-                        topdiv.show = bool(page_data[placeholder.placename,'show'])
-                    if (placeholder.placename,'section_class') in page_data:
-                        topdiv.set_class(page_data[placeholder.placename,'section_class'])
-                    # hide value not relevant for svg
             topdiv.insert_id(id_string=placeholder.placename)
             topdiv[0] = sectionpart
             toppart.set_location_value(placeholder.ident_list, topdiv)
@@ -496,7 +490,6 @@ class TemplatePageAndSVG(ParentPage):
 class TemplatePage(TemplatePageAndSVG):
     """A template page object
     """
-
 
     def __init__(self, name="",
                        brief = "New Page",
@@ -597,7 +590,7 @@ class TemplatePage(TemplatePageAndSVG):
             if link_label not in self._validator_scriptlinks:
                 self._validator_scriptlinks.append(link_label)
 
-    def import_sections(self):
+    def import_sections(self, page_data=None):
         "Imports javascript modules used by widgets and validators"
         if self._validator_scriptlinks:
             for link_label in self._validator_scriptlinks:
@@ -608,7 +601,7 @@ class TemplatePage(TemplatePageAndSVG):
             # add a link in the page head to the widget module javascript file
             self.append_scriptlink(link_label)
         # import sections using parent method
-        TemplatePageAndSVG.import_sections(self)
+        TemplatePageAndSVG.import_sections(self, page_data)
 
 
     def get_part(self, part_text, location):

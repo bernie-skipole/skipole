@@ -82,6 +82,7 @@ def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict,
     page_data[("brief", "input_text")] = placeholder.brief
     page_data[("placename", "input_text")] = placeholder.alias
     page_data[("multiplier", "input_text")] = str(placeholder.multiplier)
+    page_data[("mtag", "input_text")] = placeholder.mtag
 
     # set session data
     call_data['location'] = location
@@ -107,6 +108,7 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
     alias = placeholder.alias
     brief = placeholder.brief
     multiplier = placeholder.multiplier
+    mtag = placeholder.mtag
 
     if 'new_section_name' in call_data:
         if call_data['new_section_name'] == '-None-':
@@ -146,12 +148,15 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
             raise FailPage(message="Unable to set alias, the value must include some letters")
         alias = placename
         message = 'New alias set'
+    elif 'mtag' in call_data:
+        mtag = call_data["mtag"]
+        message = 'New multiplier container tag set'
     else:
         raise FailPage("A new placeholder value to edit has not been found")
 
     # call editsection.edit_placeholder from skilift, which returns a new pchange
     try:
-        call_data['pchange'] = editsection.edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier)
+        call_data['pchange'] = editsection.edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier, mtag)
     except ServerError as e:
         raise FailPage(e.message)
     call_data['status'] = message

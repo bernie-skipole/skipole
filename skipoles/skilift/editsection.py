@@ -37,7 +37,7 @@ from ..ski.excepts import ServerError
 from . import project_loaded
 
 
-PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier'])
+PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
 
 
 def _raise_server_error(message=''):
@@ -73,7 +73,7 @@ def placeholder__info(project, pagenumber, location):
        a container integer, such as 0 for widget container 0, or None if not in container
        a tuple or list of location integers
        returns None if placeholder not found, otherwise returns a namedtuple with items
-       project, pagenumber, section_name, alias, brief, multiplier
+       project, pagenumber, section_name, alias, brief, multiplier, mtag
     """
     # raise error if invalid project
     if project is None:
@@ -141,13 +141,18 @@ def placeholder__info(project, pagenumber, location):
     else:
         multiplier = None
 
-    return PlaceHolderInfo(project, pagenumber, section_name, alias, brief, multiplier)
+    if hasattr(part, 'mtag'):
+        mtag = part.mtag
+    else:
+        mtag = None
+
+    return PlaceHolderInfo(project, pagenumber, section_name, alias, brief, multiplier, mtag)
 
 
 
-def edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier):
+def edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier, mtag):
     """Given a placeholder at project, pagenumber, location
-       sets the values section_name, alias, brief, multiplier, returns page change uuid """
+       sets the values section_name, alias, brief, multiplier, mtag, returns page change uuid """
     # raise error if invalid project
     if project is None:
         project = skiboot.project_ident()
@@ -201,6 +206,7 @@ def edit_placeholder(project, pagenumber, pchange, location, section_name, alias
     part.placename = alias
     part.brief = brief
     part.multiplier = multiplier
+    part.mtag = mtag
 
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
