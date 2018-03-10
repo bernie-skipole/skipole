@@ -1021,7 +1021,7 @@ class Project(object):
             raise ServerError(message)
 
         # import any sections
-        page.import_sections()
+        page.import_sections(page_data)
         if e_list:
             # show the list of errors on the page
             page.show_error(e_list)

@@ -372,7 +372,7 @@ class TemplatePageAndSVG(ParentPage):
         """Used to append a scriptlink to head, overridden in class Page"""
         pass
 
-    def import_sections(self):
+    def import_sections(self, page_data=None):
         "Imports the project sections into the page"
         self.sections = {}
         for placename, placeholder in self.section_places.items():
@@ -386,6 +386,15 @@ class TemplatePageAndSVG(ParentPage):
                 toppart = self.svg
             else:
                 raise ServerError(message = 'Invalid section placeholder in page %s' % (self.ident,))
+
+            if page_data and (placename,'multiplier') in page_data:
+                try:
+                    multiplier = int(page_data[placename,'multiplier'])
+                except:
+                    pass
+                else:
+                    if multiplier > 0:
+                        placeholder.multiplier = multiplier
             if placeholder.multiplier > 1:
                 for m in range(placeholder.multiplier):
                     self._import_multiplied_section(m, placeholder, toppart)
