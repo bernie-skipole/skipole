@@ -336,11 +336,36 @@ class TemplatePageAndSVG(ParentPage):
                 return
             section = sectionplaceholder.get_section()
             widget = section.widgets.get(widgetname)
+        elif "_" in section_name:
+            result = self.widget_from_multiplier(section_name, widgetname)
+            if result:
+                sectionplaceholder,widget = result
+            else:
+                widget = None
         else:
             return
         if widget is None:
             return
         return copy.deepcopy(widget)
+
+
+    def widget_from_multiplier(self, section_name, widgetname):
+        """Return (sectionplaceholder, widget) if section_name is a multiplied section, such as name_3, return None on failure"""
+        if "_" not in section_name:
+            return
+        sname, snumber = section_name.rsplit('_', 1)
+        try:
+            snumber = int(snumber)
+        except:
+            return
+        # 0 is not allowed, snumber must be greater than zero
+        if snumber<1:
+            return
+        sectionplaceholder = self.section_places.get(sname)
+        if not sectionplaceholder:
+            return
+        section = sectionplaceholder.get_section()
+        return sectionplaceholder, section.widgets.get(widgetname)
 
 
     def append_scriptlink(self, label):
@@ -680,13 +705,19 @@ $(document).ready(function(){
         if (not widg_field.w) or (not widg_field.f):
             raise ValidateError(message = "Field %s not recognised" % (widgfield,))
 
+        # Find the widget in this page, to call its validate function
+        widget = None
+
         if widg_field.s:
             # self.section_places is a page section name -> SectionPlaceHolder dictionary
             sectionplaceholder = self.section_places.get(widg_field.s)
-            if not sectionplaceholder:
-                raise ValidateError(message = "Widget %s not found in page %s" % (widg_field.w, self.ident))
-            sectionpart = sectionplaceholder.get_section()
-            widget = sectionpart.widgets.get(widg_field.w)
+            if sectionplaceholder:
+                sectionpart = sectionplaceholder.get_section()
+                widget = sectionpart.widgets.get(widg_field.w)
+            elif "_" in widg_field.s:
+                result = self.widget_from_multiplier(widg_field.s, widg_field.w)
+                if result:
+                    sectionplaceholder, widget = result                
         else:
             # widget is not in a section, should be local to this page
             widget = self.widgets.get(widg_field.w)
@@ -697,11 +728,8 @@ $(document).ready(function(){
         # check is the fieldname in the widget
         if not widget.is_fieldname_in_widget(widg_field.f):
             raise ValidateError(message = "Field %s not found in widget %s, page %s" % (widg_field.f, widg_field.w, self.ident))
-        if widg_field.i:
-            fieldname = widg_field.f + '-' + widg_field.i
-        else:
-            fieldname = widg_field.f
-        # currently not using page_data, but may do in future
+
+        # validate
         newvalue, error_list = widget.validate(widg_field, value, environ, lang, form_data, call_data, self.ident)
 
         # errors in same section as the errored widget need s value changing
@@ -711,7 +739,6 @@ $(document).ready(function(){
                     error.section = widg_field.s
 
         return newvalue, error_list
-
 
 
     def show_error(self, error_messages=[]):
