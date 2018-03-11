@@ -405,7 +405,7 @@ class _JSON(object):
         # Set by end_call
         self.session_cookie = ()
 
-    def import_sections(self):
+    def import_sections(self, page_data):
         "Only used by Template and SVG, everything else just returns"
         return
 
@@ -498,7 +498,7 @@ class _PlainText(object):
         # Set by end_call
         self.session_cookie = ()
 
-    def import_sections(self):
+    def import_sections(self, page_data):
         "Only used by Template and SVG, everything else just returns"
         return
 
@@ -627,7 +627,7 @@ class _CSS(object):
                 style_text += "{a} : {b};\n".format(a=a, b=b)
         return style_text
 
-    def import_sections(self):
+    def import_sections(self, page_data):
         "Only used by Template and SVG, everything else just returns"
         return
 
@@ -826,7 +826,7 @@ class _Iterator(object):
         # Set by end_call
         self.session_cookie = ()
 
-    def import_sections(self):
+    def import_sections(self, page_data):
         "Only used by Template and SVG, everything else just returns"
         return
 
