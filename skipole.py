@@ -356,9 +356,9 @@ if admin_mode and (project != adminproj):
 
 options = {project: args.option}
 
-# load the project
+# create the wsgi application
 try:
-    site = skipoles.load_project(project, options)
+    application = skipoles.load_project(project, options)
 except Exception as e:
     if hasattr(e, 'message'):
         print(e.message)
@@ -368,31 +368,19 @@ except Exception as e:
     
 
 if admin_mode and (project != adminproj):
-    # and add the admin project to the site as a sub-project
+    # and add the admin project to as a sub-project
     host = "127.0.0.1"
-    site.add_project(adminprojectinstance)
-    print("Administration at %s%s has been included." % (site.url, adminproj))
+    application.add_project(adminprojectinstance)
+    print("Administration at %s%s has been included." % (application.url, adminproj))
 else:
     # remove the admin project
-    site.remove_project(adminproj)
+    application.remove_project(adminproj)
     host = ""
 
-###################################################
-# Run the project in a web server
-###################################################
-
-def application(environ, start_response):
-    "Defines the wsgi application"
-    status, headers, data = site.respond(environ)
-    start_response(status, headers)
-    return data
-
-
-
-print("Serving project %s on port %s... open a browser and go to\nlocalhost:%s%s" % (project, port, port, site.url))
+print("Serving project %s on port %s... open a browser and go to\nlocalhost:%s%s" % (project, port, port, application.url))
 
 if admin_mode and (project != adminproj) :
-    print("or to administer the site, go to\nlocalhost:%s%s%s" % (port, site.url, adminproj))
+    print("or to administer the site, go to\nlocalhost:%s%s%s" % (port, application.url, adminproj))
 
 print("Press ctrl-c to stop.")
 
