@@ -915,14 +915,10 @@ import skipoles
 projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
 skipoles.set_projectfiles(projectfiles)
 
-_site = skipoles.load_project("%s", {})
+# create the wsgi application
+# this can be called with application(environ, start_response)
 
-def application(environ, start_response):
-    "Defines the wsgi application"
-    # uses the '_site' object created previously
-    status, headers, data = _site.respond(environ)
-    start_response(status, headers)
-    return data
+application = skipoles.load_project("%s", {})
 
 """ % (editedproj.proj_ident,)
     return runfile
@@ -1004,24 +1000,13 @@ if args.option:
 else:
     options = {}
 
-site = skipoles.load_project(project, options)
+application = skipoles.load_project(project, options)
 
-if site is None:
+if application is None:
     print("Project not found")
     sys.exit(1)
 
-# This 'site' object can now be used in a wsgi app function
-# by calling its 'respond' method, with the environ as argument.
-# The method returns status, headers and the page data
-
-def application(environ, start_response):
-    "Defines the wsgi application"
-    # uses the 'site' object created previously
-    status, headers, data = site.respond(environ)
-    start_response(status, headers)
-    return data
-
-# serve the site
+# serve the application
 
 print("Serving on port " + str(port) + "...")
 print("Press ctrl-c to stop")

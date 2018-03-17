@@ -46,37 +46,12 @@ def set_debug(mode):
     skiboot.set_debug(mode)
 
 
-def load_project(proj_ident, options={}, rootproject = True):
+def load_project(proj_ident, options={}, rootproject=True, projectfiles=None):
     """Load a rootproject, then loads any sub projects.
        Returns the project.  If project not found, returns None"""
 
-    # get project location
-    project_dir = skiboot.projectpath(proj_ident)
-    if not os.path.isdir(project_dir):
-        return
-
     # create a Project instance
-    project = project_class_definition.Project(proj_ident)
-    # load project from json files
-    project.load_from_json(rootproject)
-
-    # set this project as the main site project
-    if rootproject:
-        skiboot.set_site_root(project)
-
-    if options:
-        if proj_ident in options:
-            project.option = options[proj_ident]
-        if rootproject:
-            # If this is a root project, then set any subproject options
-            for subproj_ident in options:
-                if subproj_ident != proj_ident:
-                    project.set_subproject_option(projectname, options[subproj_ident])
-
-    if rootproject:
-        # Call the start_project function for this project and any sub_projects
-        project.start_project()
-
+    project = project_class_definition.Project(proj_ident, options=options, rootproject=rootproject, projectfiles=projectfiles)
     return project
 
 

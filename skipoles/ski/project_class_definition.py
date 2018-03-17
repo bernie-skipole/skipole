@@ -43,9 +43,26 @@ class Project(object):
     """Represents the project"""
 
 
-    def __init__(self, proj_ident, url="/"):
+    def __init__(self, proj_ident, url="/", options={}, rootproject=False, projectfiles=None):
         """Initiates a Project instance"""
+
+        if projectfiles:
+            skiboot.set_projectfiles(projectfiles)
+
+        # get project location
+        project_dir = skiboot.projectpath(proj_ident)
+        if not os.path.isdir(project_dir):
+            raise ServerError("Project %s not found" % (proj_ident,))
+
         self._proj_ident = str(proj_ident)
+
+        # This parameter is sent to the user start_call function
+        self.options = options
+        self.option = None
+        if options:
+            if self._proj_ident in options:
+                self.option = options[self._proj_ident]
+
 
         self.brief = "Project %s" % proj_ident
         self.version = "0.0.0"
@@ -72,10 +89,7 @@ class Project(object):
 
         # This is set to True if the project is the top root project
         # otherwise it is False - which means this is a subproject
-        self.rootproject = False
-
-        # This parameter is sent to the user start_call function
-        self.option = None
+        self.rootproject = rootproject
 
         # This dictionary is available to the user
         self.proj_data = {}
@@ -88,6 +102,24 @@ class Project(object):
         # maintain a cach dictionary of paths against idents {path:ident}
         self._paths = {}
 
+        # load project from json files
+        self.load_from_json(rootproject)
+
+        # set this project as the main site project
+        if rootproject:
+            skiboot.set_site_root(self)
+
+        if rootproject:
+            # Call the start_project function for this project and any sub_projects
+            self.start_project()
+
+
+
+    def __call__(self, environ, start_response):
+        "Defines this projects callable as the wsgi application"
+        status, headers, data = self.respond(environ)
+        start_response(status, headers)
+        return data
 
 
     def set_default_language(self, language):
@@ -117,8 +149,7 @@ class Project(object):
             # make this an ordered dictionary, ordered by length of path elements
             self._subproject_paths = collections.OrderedDict(sorted(sub_paths.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
             for subproj_ident in self._subproject_paths:
-                subproject = Project(subproj_ident)
-                subproject.load_from_json(rootproject = False)
+                subproject = Project(subproj_ident, options=self.options)
                 # and add it to this site
                 self.subprojects[subproj_ident] = subproject
         else:
@@ -1061,17 +1092,6 @@ class Project(object):
         return self._subproject_paths.copy()
 
 
-    def set_subproject_option(self, proj, option):
-        "Sets the option value of a subproject"
-        if hasattr(proj, 'proj_ident'):
-            proj_id = proj.proj_ident
-        else:
-            proj_id = proj
-        if proj_id in self.subproject_paths:
-            if proj_id in self.subprojects:
-                self.subprojects[proj_id].option = option
-
-
     def list_of_subproject_idents(self):
         "Returns a list of subproject idents"
         return [i for i in self.subproject_paths]
@@ -1116,8 +1136,7 @@ class Project(object):
             proj.rootproject = False
             self.subprojects[proj_id] = proj
         else:
-            subproj = Project(proj_id)
-            subproj.load_from_json(rootproject = False)
+            subproj = Project(proj_id, options=self.options)
             self.subprojects[proj_id] = subproj
         # add the subproject to the self.subproject_dicts
         self.subproject_dicts[proj_id] = {}
