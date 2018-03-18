@@ -53,10 +53,21 @@ adminproj = skipoles.adminproj
 
 # the directory where projectfiles are held
 projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
+if not os.path.isdir(projectfiles):
+    print("Directory %s has not been found" % (projectfiles,))
+    sys.exit(1)
+
+########################################################
+# Sets projectfiles into the skipoles configuration
+# Therefore it does not have to be passed as a parameter
+# to the WSGIApplication class
+######################################################## 
+
 skipoles.set_projectfiles(projectfiles)
 
-
+############################
 # Set up command line parser
+############################
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
 description='Skipole WSGI application generator',
@@ -336,39 +347,47 @@ else:
         admin_mode = False
 
 
-######################################
-# create the site object
-######################################
+##########################################
+# If required, create the skiadmin project
+##########################################
 
-# If necessary, load the admin project
 if admin_mode and (project != adminproj):
-    adminprojectinstance = skipoles.load_project(adminproj, options = {}, rootproject = False)
-    if adminprojectinstance is None:
-        print("Admin project %s not found" % (adminproj,))
+    try:
+        adminprojectinstance = skipoles.load_project(adminproj)
+    except Exception as e:
+        if hasattr(e, 'message'):
+            print(e.message)
+        else:
+            print("Error trying to create admin project %s" % (adminproj,))
         sys.exit(8)
+else:
+    adminprojectinstance = None
+
+
+######################################
+# create the WSGIAppliction object
+######################################
 
 # An 'option' value can be passed to the project, and futher options to subprojects
 # with a dictionary of {project:option,..} where each key is the project or sub project name
 # and each option is any value you care to add, and which will appear as an argument in
 # your start_call function. This allows you to pass a parameter from the command line, or from
-# start up code set here, to your project code if required.
+# start up code to your project code if required.
 # If you do not wish to use this function, then pass an empty dictionary.
 
 options = {project: args.option}
 
-# create the wsgi application
 try:
-    application = skipoles.load_project(project, options)
+    application = skipoles.WSGIApplication(project, options)
 except Exception as e:
     if hasattr(e, 'message'):
         print(e.message)
     else:
-        print("Exception raised in skipoles.load_project")
+        print("Exception raised when trying to create the skipoles.WSGIAppliction instance.")
     sys.exit(9)
-    
 
-if admin_mode and (project != adminproj):
-    # and add the admin project to as a sub-project
+if adminprojectinstance:
+    # add the admin project as a sub-project, set host serving to 127.0.0.1 only
     host = "127.0.0.1"
     application.add_project(adminprojectinstance)
     print("Administration at %s%s has been included." % (application.url, adminproj))
@@ -377,15 +396,17 @@ else:
     application.remove_project(adminproj)
     host = ""
 
+
+##############################################################
+# Serve the site. Use either wsgiref.simple_server or Waitress
+##############################################################
+
 print("Serving project %s on port %s... open a browser and go to\nlocalhost:%s%s" % (project, port, port, application.url))
 
-if admin_mode and (project != adminproj) :
+if adminprojectinstance:
     print("or to administer the site, go to\nlocalhost:%s%s%s" % (port, application.url, adminproj))
 
 print("Press ctrl-c to stop.")
-
-
-# serve the site
 
 if args.waitress:
     if host:
@@ -393,7 +414,7 @@ if args.waitress:
     else:
         serve(application, host='0.0.0.0', port=port)
 else:
-    # using the python wsgi web server
+    # using wsgiref.simple_server
     httpd = make_server(host, port, application)
     httpd.serve_forever()
 

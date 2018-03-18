@@ -861,7 +861,7 @@ def _tar_contents(proj_ident):
 
     skipoles                   - The python package directory holding the code
 
-       __init__.py             - Package initialisation containing function load_project()
+       __init__.py             - Package initialisation containing class WSGIApplication
 
        ski                     - Python package containing the framework page and widget classes
 
@@ -909,16 +909,13 @@ import os
 import skipoles
 
 # the skipoles framework needs to know the directory where projectfiles are held
-# This sets the location into _CFG['projectfiles'] in skiboot.py
 # The following line assumes projectfiles is in the same directory as this myapp.py file
 
 projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
-skipoles.set_projectfiles(projectfiles)
 
 # create the wsgi application
-# this can be called with application(environ, start_response)
 
-application = skipoles.load_project("%s", {})
+application = skipoles.WSGIApplication("%s", {}, projectfiles)
 
 """ % (editedproj.proj_ident,)
     return runfile
@@ -945,12 +942,6 @@ if sys.version_info[0] != 3 or sys.version_info[1] < 2:
 
 
 import skipoles
-
-# the skipoles framework needs to know the directory where projectfiles are held
-# This sets the location into _CFG['projectfiles'] in skiboot.py
-
-projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
-skipoles.set_projectfiles(projectfiles)
 
 project = "%s"
 
@@ -1000,11 +991,14 @@ if args.option:
 else:
     options = {}
 
-application = skipoles.load_project(project, options)
+# the skipoles framework needs to know the directory where projectfiles are held
+# The following line assumes projectfiles is in the same directory as this __main__.py file
+projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
 
-if application is None:
-    print("Project not found")
-    sys.exit(1)
+
+# create the wsgi application
+application = skipoles.WSGIApplication(project, options, projectfiles)
+
 
 # serve the application
 
@@ -1014,7 +1008,7 @@ print("Press ctrl-c to stop")
 if args.waitress:
     serve(application, host='0.0.0.0', port=port)
 else:
-    # using the python wsgi web server
+    # using wsgiref.simple_server
     httpd = make_server("", port, application)
     httpd.serve_forever()
 """ % (proj_ident, proj_brief, proj_version)
