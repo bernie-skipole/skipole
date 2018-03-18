@@ -43,16 +43,18 @@ class Project(object):
     """Represents the project"""
 
 
-    def __init__(self, proj_ident, url="/", options={}, rootproject=False, projectfiles=None):
+    def __init__(self, proj_ident, url="/", options={}, rootproject=False):
         """Initiates a Project instance"""
-
-        if projectfiles:
-            skiboot.set_projectfiles(projectfiles)
 
         # get project location
         project_dir = skiboot.projectpath(proj_ident)
         if not os.path.isdir(project_dir):
             raise ServerError("Project %s not found" % (proj_ident,))
+
+        # ensure projectfiles has been set
+        projectfiles = skiboot.projectfiles()
+        if not projectfiles:
+            raise ServerError("Configuration item projectfiles has not been set")
 
         self._proj_ident = str(proj_ident)
 
@@ -96,7 +98,7 @@ class Project(object):
 
         # Create an instance of the AccessTextBlocks class for this project
         self.textblocks = projectcode.make_AccessTextBlocks(self._proj_ident, 
-                                                            skiboot.projectfiles(),
+                                                            projectfiles,
                                                             skiboot.default_language())
 
         # maintain a cach dictionary of paths against idents {path:ident}
@@ -104,22 +106,6 @@ class Project(object):
 
         # load project from json files
         self.load_from_json(rootproject)
-
-        # set this project as the main site project
-        if rootproject:
-            skiboot.set_site_root(self)
-
-        if rootproject:
-            # Call the start_project function for this project and any sub_projects
-            self.start_project()
-
-
-
-    def __call__(self, environ, start_response):
-        "Defines this projects callable as the wsgi application"
-        status, headers, data = self.respond(environ)
-        start_response(status, headers)
-        return data
 
 
     def set_default_language(self, language):
@@ -174,7 +160,7 @@ class Project(object):
             return
         # root project
         self.proj_data = projectcode.start_project(self._proj_ident, self.url, self.option)
-       # and call start_project for each subproject
+        # and call start_project for each subproject
         for subproj_ident, proj in self.subprojects.items():
             proj.start_project(path=self._subproject_paths[subproj_ident])
 

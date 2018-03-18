@@ -26,7 +26,9 @@
 
 import os, tarfile, shutil, tempfile
 
-from .ski import skiboot, project_class_definition, read_json
+from .ski import skiboot, read_json
+
+from .ski.project_class_definition import Project
 
 from .ski.excepts import ServerError
 
@@ -34,6 +36,27 @@ version = skiboot.version()
 adminproj = skiboot.admin_project()
 newproj = skiboot.new_project()
 libproj = skiboot.lib_project()
+
+
+class WSGIApplication(Project):
+    "This class has a __call__ method which makes it a wsgi application"
+
+    def __init__(self, project, options={}, projectfiles=None):
+        "Creates the top root project"
+        if projectfiles:
+            # sets the location of projectfiles into skiboot
+            skiboot.set_projectfiles(projectfiles)
+        Project.__init__(self, project, options=options, rootproject=True)
+        # set this project as the site root project
+        skiboot.set_site_root(self)
+        # Call the start_project functions for this project and any sub_projects
+        self.start_project()
+
+    def __call__(self, environ, start_response):
+        "Defines this projects callable as the wsgi application"
+        status, headers, data = self.respond(environ)
+        start_response(status, headers)
+        return data
 
 
 def set_projectfiles(projectfiles):
@@ -46,13 +69,14 @@ def set_debug(mode):
     skiboot.set_debug(mode)
 
 
-def load_project(proj_ident, options={}, rootproject=True, projectfiles=None):
-    """Load a rootproject, then loads any sub projects.
-       Returns the project.  If project not found, returns None"""
-
+def load_project(proj_ident, options={}, projectfiles=None):
+    """Returns a Project instance"""
+    if projectfiles:
+        # sets the location of projectfiles into skiboot
+        skiboot.set_projectfiles(projectfiles)
     # create a Project instance
-    project = project_class_definition.Project(proj_ident, options=options, rootproject=rootproject, projectfiles=projectfiles)
-    return project
+    return Project(proj_ident, options=options)
+
 
 
 def _get_files(members, proj_ident):
