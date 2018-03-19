@@ -53,17 +53,24 @@ adminproj = skipoles.adminproj
 
 # the directory where projectfiles are held
 projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projectfiles')
+
+# note; projectfiles could be set here, or could be read from the _CFG dictionary
+# in skiboot.py, by calling skipoles.get_projectfiles(), which will return projectfiles
+# if they have been set into that dictionary by some other method
+# - such as manually editing skiboot.py or adding a config file read functionality there. 
+
 if not os.path.isdir(projectfiles):
     print("Directory %s has not been found" % (projectfiles,))
     sys.exit(1)
 
-########################################################
-# Sets projectfiles into the skipoles configuration
-# Therefore it does not have to be passed as a parameter
-# to the WSGIApplication class
-######################################################## 
+#####################################################################
+# Sets projectfiles into the skiboot.py configuration dictionary _CFG
+# Therefore it does not have to be passed as a parameter to the
+# WSGIApplication class
+##################################################################### 
 
 skipoles.set_projectfiles(projectfiles)
+
 
 ############################
 # Set up command line parser
@@ -124,6 +131,27 @@ group.add_argument('project', nargs='?', default='',
 args = parser.parse_args()
 
 port = args.port
+
+
+
+#########################
+# Remove any broken links
+#########################
+
+for p in os.listdir(projectfiles):
+    project_path = os.path.join(projectfiles, p)
+    if not os.path.isdir(project_path):
+        # If a broken symbolic link, delete it
+        if os.path.islink(project_path):
+            print("Broken link to %s found!" % (p,))
+            try:
+                skipoles.remove_project(p)
+            except Exception as e:
+                if hasattr(e, 'message'):
+                    print(e.message)
+                else:
+                    print("Exception raised when trying to remove broken link %s" % (project_path,))
+        continue
 
 
 if args.waitress:
@@ -222,7 +250,6 @@ else:
         project = args.remove[0]  # project to be removed
     else:
         project = args.project
-
 
     # List projects
     if args.listprojects:

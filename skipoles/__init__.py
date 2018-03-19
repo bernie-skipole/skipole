@@ -64,6 +64,11 @@ def set_projectfiles(projectfiles):
     skiboot.set_projectfiles(projectfiles)
 
 
+def get_projectfiles():
+    "Get the directory where where project data is stored"
+    return skiboot.projectfiles()
+
+
 def set_debug(mode):
     "If mode is True, this sets increased debug error messages to be displayed"
     skiboot.set_debug(mode)
@@ -125,13 +130,13 @@ def remove_project(proj_ident):
         # project directories not found
         raise ServerError(message = "This project has not been found")
 
-    print("This operation removes project %s" % (proj_ident,))
-    print("Are you sure you wish to do this?")
+    print("This operation removes project %s by deleting symlinks." % (proj_ident,))
+    print("Please confirm you wish to do this.")
     responce = input('Type Yes to proceed :')
     if responce == 'Yes':
-        print("Removing project...")
+        print("Removing project symlinks...")
     else:
-        print("Project not removed. Command terminated.")
+        print("Project not removed.")
         return
 
     projecfiles_deleted = False
