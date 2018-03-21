@@ -890,13 +890,6 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
     call_data['location'] = location         ########## also part_tuple should replace location
 
-    # navigator boxes
-    boxes = [['back_to_container', "Container", True, '']]
-    if 'extend_nav_buttons' in call_data:
-        call_data['extend_nav_buttons'].extend(boxes)
-    else:
-        call_data['extend_nav_buttons'] = boxes
-
     # Fill in menu of items, Part items have insert, others have append
 
 
