@@ -35,7 +35,7 @@ _AN = re.compile('[^\w_]')
 from ....ski import skiboot, tag, widgets
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
-from ....skilift import part_info, editsection
+from ....skilift import part_info, editsection, item_info
 
 
 def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -165,26 +165,24 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
 def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the insert a placeholder page"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
-    # get data
-    bits = utils.get_bits(call_data)
+    if 'page_number' not in call_data:
+        raise FailPage("Page to edit not identified")
 
-    page = bits.page
-    section = None          # placeholder cannot be in a section
-    widget = bits.widget
-    part = bits.part
+    pagenumber = call_data['page_number']
+    page_info = item_info(project, pagenumber)
+    if page_info is None:
+        raise FailPage("Page to edit not identified")
 
-    if page is None:
+    if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
         raise FailPage("Page not identified")
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Insert Section"
 
-    # so header text and navigation done, now continue with the page contents
-
     # get current sections
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if not section_list:
         page_data[("nosection", "show")] = True
         page_data[("descript", "show")] = False
