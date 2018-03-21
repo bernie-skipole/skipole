@@ -31,9 +31,6 @@ import re
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w_]')
 
-
-from ....ski import skiboot, tag, widgets
-from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 from ....skilift import part_info, editsection, item_info
 
@@ -196,41 +193,35 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
 def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates the section placeholder"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
-    # get data
-    bits = utils.get_bits(call_data)
+    if 'page_number' not in call_data:
+        raise FailPage("Page to edit not identified")
+    pagenumber = call_data['page_number']
+    page_info = item_info(project, pagenumber)
+    if page_info is None:
+        raise FailPage("Page to edit not identified")
 
-    page = bits.page
-    widget = bits.widget
-    location = bits.location
-    part = bits.part
-
-    if page is None:
+    if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
         raise FailPage("Page not identified")
 
-    if part is None:
-        raise FailPage("Part not identified")
+    part_top, container, location_integers = call_data['location']
 
-    # label used in GoTo jump to return to the point where item is inserted
-    label = None
-
-    if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
-        raise FailPage(message = "Invalid page")
     # page to go back to
-    if bits.part_top == 'head':
+    label = None
+    if part_top == 'head':
         label = "page_head"   # label to 3320
-    elif bits.part_top == 'body':
+    elif part_top == 'body':
         label = "page_body"   # label to 3340
-    elif bits.part_top == 'svg':
+    elif part_top == 'svg':
         label = "page_svg"   # label to 3420
 
-    # could be a widget container
+    if container is not None:
+        label = "back_to_container"   # label to 44704
+
     if label is None:
-        if (widget is not None) and bits.part_top == widget.name: 
-            label = "back_to_container"   # label to 44704
-        else:
-            raise FailPage("Invalid location")
+        raise FailPage("Invalid location")
+
 
     # create the item
 
@@ -239,60 +230,23 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     section_name=call_data['newsectionname']
 
     # get current sections
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if section_name not in section_list:
         raise FailPage(message = "Unknown section name")
 
     if 'newplacename' not in call_data:
         raise FailPage(message = "Missing section alias")
-    placename=call_data['newplacename']
-    if placename in page.section_places:
-        raise FailPage(message = "This section alias already exists")
-    if _AN.search(placename):
+
+    alias=call_data['newplacename']
+
+    if _AN.search(alias):
         raise FailPage(message="Invalid alias")
 
-    newplaceholder = tag.SectionPlaceHolder(section_name=section_name,
-                                            placename=placename,
-                                            brief=call_data['newbrief'])
+    try:
+        call_data['pchange'] = editsection.new_placeholder(project, pagenumber, call_data['pchange'], call_data['location'], section_name, alias, call_data['newbrief'])
+    except ServerError as e:
+        raise FailPage(e.message)
 
-    location_integers = [int(i) for i in location[2]]
-
-    if (location[1] is not None) and (widget.is_container_empty(location[1])):
-        # text is to be set as the first item in a container
-        new_location = (location[0], location[1], (0,))
-        utils.set_part(newplaceholder, 
-                       new_location,
-                       page=page,
-                       section=None,
-                       section_name='',
-                       widget=widget,
-                       failmessage='Part to have placeholder inserted not identified')
-    elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
-        # insert at position 0 inside the part
-        part.insert(0,newplaceholder)
-        new_location = (location[0], location[1], tuple(location_integers + [0]))
-    elif (location[1] is not None) and (len(location_integers) == 1):
-        # part is inside a container with parent being the containing div
-        # so append after the part by inserting at the right place in the container
-        position = location_integers[0] + 1
-        widget.insert_into_container(location[1], position, newplaceholder)
-        new_location = (location[0], location[1], (position,))
-    else:
-        # do an append, rather than an insert
-        # get parent part
-        parent_part = utils.part_from_location(page,
-                                               None,
-                                               '',
-                                               location_string=location[0],
-                                               container=location[1],
-                                               location_integers=location_integers[:-1])
-        # find location digit
-        loc = location_integers[-1] + 1
-        # insert placeholder at loc in parent_part
-        parent_part.insert(loc,newplaceholder)
-        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
-
-    utils.save(call_data, page=page)
     call_data['status'] = "Section placeholder inserted"
     raise GoTo(target = label, clear_submitted=True)
 

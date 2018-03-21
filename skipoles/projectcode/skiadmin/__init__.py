@@ -32,7 +32,6 @@ from .editfolders import editproject, addpage
 from .editpages import common, editpage
 from .edittextblocks import managetextblocks, edittextblockrefs
 from .editsections import managesections
-from .editsectionplaces import editplaceholder
 from .edittext import edittext
 from .editparts import editpart, insertpart
 from .editwidgets import editwidget, listwidgets
@@ -131,7 +130,6 @@ _CALL_SUBMIT_DATA = {
                        54042: editwidget.set_widget_params,             # sets the widget brief
                        54537: listwidgets.create_new_widget,            # creates the new widget
                        54721: editwidget.back_to_parent_container,      # get container
-                       55607: editplaceholder.create_insert,            # create a section placeholder
                        56007: editvalidator.retrieve_editvalidator,     # gets data for edit a validator page
                        56013: editvalidator.set_e_message,              # sets error message for a validator
                        56023: editvalidator.set_e_message_ref,          # sets error message reference for a validator

@@ -31,7 +31,7 @@ import sys, traceback
 
 from collections import namedtuple
 
-from ..ski import skiboot
+from ..ski import skiboot, tag
 from ..ski.excepts import ServerError
 
 from . import project_loaded
@@ -207,6 +207,92 @@ def edit_placeholder(project, pagenumber, pchange, location, section_name, alias
     part.brief = brief
     part.multiplier = multiplier
     part.mtag = mtag
+
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def new_placeholder(project, pagenumber, pchange, location, section_name, alias, brief):
+    """Create a new placeholder at project, pagenumber, location
+       with section_name, alias, brief returns page change uuid """
+    # raise error if invalid project
+    if project is None:
+        project = skiboot.project_ident()
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="The edited project is invalid")
+
+    location_string, container_number, location_list = location
+    # location list may be a tuple, or may be strings
+    location_integers = [ int(i) for i in location_list ]
+
+    if pagenumber is None:
+        raise ServerError(message="The page to add a section seems to be invalid")
+
+    ident = skiboot.find_ident(pagenumber, project)
+    if not ident:
+        raise ServerError(message="The page to add a section seems to be invalid")
+    page = skiboot.get_item(ident)
+    if not page:
+        raise ServerError(message="The page to add a section seems to be invalid")
+    if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
+        raise ServerError(message="The page type seems to be invalid")
+    if page.change != pchange:
+        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
+
+    # is placename unique
+
+    if alias in page.widgets:
+        raise ServerError(message="Duplicate name in the page - a widget has this assigned")
+    if alias in page.section_places:
+        raise ServerError(message="This name clashes with a section alias already within this page")
+
+    # widget is the containing widget 
+    widget = None
+    # part is the item at the given location
+    part = None
+    if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
+        # part not in a widget
+        part = page.get_part(location_string, location_list)
+    else:
+        # the location_string is the widget name
+        widget = page.widgets[location_string]
+        if widget is not None:
+            # widget is the containing widget 
+            if widget.can_contain() and not (container_number is None):
+                part = widget.get_from_container(container_number, location_list)
+
+    # create new placeholder
+    newplaceholder = tag.SectionPlaceHolder(section_name=section_name,
+                                            placename=alias,
+                                            brief=brief)
+
+    if (widget is not None) and widget.is_container_empty(container_number):
+        # newplaceholder is to be set as the first item in a container
+        widget.set_in_container(container_number, (0,), newplaceholder)
+    elif isinstance(part, tag.Part) and (not hasattr(part, "arg_descriptions")): # not Closed Part and not a widget
+        # insert at position 0 inside the part
+        part.insert(0,newplaceholder)
+    elif (widget is not None) and (len(location_list) == 1):
+        # part is inside a container with parent being the containing div
+        # so append after the part by inserting at the right place in the container
+        position = location_integers[0] + 1
+        widget.insert_into_container(container_number, position, newplaceholder)
+    else:
+        # do an append, rather than an insert
+        # get parent part
+        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
+            parent_part = page.get_part(location_string, location_integers[:-1])
+        else:
+            # widget is the containing widget 
+            parent_part = widget.get_from_container(container_number, location_integers[:-1])
+
+        # find location digit
+        loc = location_integers[-1] + 1
+        # insert placeholder at loc in parent_part
+        parent_part.insert(loc,newplaceholder)
 
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
