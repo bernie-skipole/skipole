@@ -131,7 +131,6 @@ _CALL_SUBMIT_DATA = {
                        54042: editwidget.set_widget_params,             # sets the widget brief
                        54537: listwidgets.create_new_widget,            # creates the new widget
                        54721: editwidget.back_to_parent_container,      # get container
-                       55507: editplaceholder.retrieve_insert,          # gets data for inserting a placeholder
                        55607: editplaceholder.create_insert,            # create a section placeholder
                        56007: editvalidator.retrieve_editvalidator,     # gets data for edit a validator page
                        56013: editvalidator.set_e_message,              # sets error message for a validator
