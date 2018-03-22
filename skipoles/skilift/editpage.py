@@ -119,6 +119,37 @@ def page_description(project, pagenumber, pchange, brief):
     return proj.save_page(page)
 
 
+def new_parent(project, pagenumber, pchange, new_parent_number):
+    "Gives a page a new parent folder"
+
+    # get a copy of the page, which is to have a new parent folder set
+    # and can then be saved to the project
+    page, error_message = _get_page(project, pagenumber)
+    if page is None:
+        raise ServerError(message=error_message)
+    if page.change != pchange:
+        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="Project not loaded")
+    if not isinstance(new_parent_number, int):
+        raise ServerError(message="Given new_parent_number is not an integer")
+    ident = skiboot.Ident.to_ident((project, new_parent_number))
+    if ident is None:
+        raise ServerError(message="Invalid project, new_parent_number")
+    folder = skiboot.from_ident(ident, project)
+    if folder is None:
+        raise ServerError(message="Invalid Folder")
+    if folder.page_type != 'Folder':
+        raise ServerError(message="Item is not a page")
+    old_parent = page.parentfolder
+    if old_parent == folder:
+        raise ServerError(message="Parent folder unchanged?")
+    if page.name in folder:
+        raise ServerError(message="The folder already contains an item with this name")
+    return proj.save_page(page, folder.ident)
+
+
 def delete_page(project, pagenumber):
     "delete this page, return None on success, error message on failure"
     page, error_message = _get_page(project, pagenumber)
