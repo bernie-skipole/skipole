@@ -79,7 +79,7 @@ def pagechange(project, pagenumber):
     return info.change
 
 
-def rename_page(project, pagenumber, newname):
+def rename_page(project, pagenumber, pchange, newname):
     "rename this page, return None on success, raises ServerError on failure"
     if not newname:
         return "No new page name given"
@@ -88,13 +88,15 @@ def rename_page(project, pagenumber, newname):
     page, error_message = _get_page(project, pagenumber)
     if page is None:
         raise ServerError(message=error_message)
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
+    if page.change != pchange:
+        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
+    proj = skiboot.getproject(project)
+    if proj is None:
         raise ServerError(message="Project not loaded")
     # Rename the page
     page.name = newname
-    # And save this page copy to the project
-    editedproj.save_page(page)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
 
 
 def page_description(project, pagenumber, pchange, brief):

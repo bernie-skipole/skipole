@@ -1011,6 +1011,11 @@ class Project(object):
                         # target is a URL
                         call_data.clear()
                         return self._redirect_to_url(target, environ, call_data, page_data, lang)
+                    
+                    # A divert to a fail page may lead to a GoTo exception which can therefore
+                    # have an e_list
+                    # show the list of errors on the page
+                    e_list = ex.e_list
 
                 # it is possible that a jump to a page in another project has been made
                 if page.ident.proj != self._proj_ident:

@@ -372,17 +372,24 @@ main purpose is to act as a parent class for all other respond objects.
     def get_target_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         return self.get_page_from_ident(self.target_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
+
     def get_fail_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         return self.get_page_from_ident(self.fail_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+
 
     def get_alternate_page(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         "Gets the alternate page, if the alternate page has an ident, if it is an external url, get the redirector page with this url"
         return self.get_page_from_ident(self.alternate_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
+
     def raise_error_page(self, e_list, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         """Gets the page with fail_ident, sets error_messages and raises a PageError holding the page
            e_list is a list of ErrorMessage instances"""
-        page = self.get_page_from_ident(self.fail_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        try:
+            page = self.get_page_from_ident(self.fail_ident, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        except GoTo as e:
+            e.e_list = e_list
+            raise e  
         raise PageError(page, e_list)
 
 

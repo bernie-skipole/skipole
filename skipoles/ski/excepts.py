@@ -143,4 +143,6 @@ class GoTo(Exception):
         self.target = target
         # this is set by the calling responder
         self.proj_ident=None
+        # this is set if a FailPage call leads to a responder which raises a GoTo
+        self.e_list = []
 

@@ -63,18 +63,9 @@ def retrieve_edit_page(call_data, page_data):
     page_data[('page_edit','p_ident','page_ident')] = (editedprojname,page_number)
     page_data[('page_edit','p_name','page_ident')] = (editedprojname,page_number)
     page_data[('page_edit','p_description','page_ident')] = (editedprojname,page_number)
-
-    if "new_name" in call_data:
-        page_data[('page_edit','p_rename','input_text')] = call_data["new_name"]
-    else:
-        page_data[('page_edit','p_rename','input_text')] = info.name
-
+    page_data[('page_edit','p_rename','input_text')] = info.name
     page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (editedprojname, info.parentfolder_number)
-
-    if 'page_brief' in call_data:
-        page_data[('page_edit','p_brief','input_text')] = call_data['page_brief']
-    else:
-        page_data[('page_edit','p_brief','input_text')] = info.brief
+    page_data[('page_edit','p_brief','input_text')] = info.brief
 
 
 def save(call_data, page=None, section_name=None, section=None, widget_name=''):

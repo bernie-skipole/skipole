@@ -675,8 +675,11 @@ def submit_hex_color(caller_ident, ident_list, submit_list, submit_dict, call_da
     ordered_colours = collections.OrderedDict(sorted(colours.items(), key=lambda t: t[0]))
     fromjson.set_defaults(adminproj.proj_ident, key="colours", value=ordered_colours)
     # change name of 220 to avoid css cache
+    pchange = editpage.pagechange(adminproj.proj_ident, 220)
+    if pchange is None:
+        raise ServerError(message="Admin page 220, label w3-theme-ski has not been found")
     newname = "w3-theme-ski-" + str(random.randint(10000, 99999)) + ".css"
-    editpage.rename_page(adminproj.proj_ident, 220, newname)
+    editpage.rename_page(adminproj.proj_ident, 220, pchange, newname)
 
 
 def set_colour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -795,8 +798,11 @@ def set_colour(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
     # set test colours in defaults.json
     fromjson.set_defaults(adminproj.proj_ident, key="colours", value=colours)
     # change name of 220 to avoid css cache
+    pchange = editpage.pagechange(adminproj.proj_ident, 220)
+    if pchange is None:
+        raise ServerError(message="Admin page 220, label w3-theme-ski has not been found")
     newname = "w3-theme-ski-" + str(random.randint(10000, 99999)) + ".css"
-    editpage.rename_page(adminproj.proj_ident, 220, newname)
+    editpage.rename_page(adminproj.proj_ident, 220, pchange, newname)
 
 
 def ski_theme(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
