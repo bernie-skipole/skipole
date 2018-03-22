@@ -10467,6 +10467,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 23099,
+"submit_list": [
+"editpages",
+"common",
+"submit_page_brief"
+],
 "target_ident": 23099
 },
 "original_fields": {}
