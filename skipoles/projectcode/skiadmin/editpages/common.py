@@ -28,7 +28,7 @@
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
-from ....skilift.editpage import rename_page
+from ....skilift.editpage import rename_page, page_description
 
 from .. import utils
 
@@ -89,20 +89,19 @@ def submit_new_parent(caller_ident, ident_list, submit_list, submit_dict, call_d
 
 def submit_page_brief(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets new page brief"
-    # the page to have a new brief should be given by session data
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    page_ident = str(page.ident)
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'page_brief' in call_data:
         raise FailPage(message="No page brief given", widget="p_brief")
     new_brief = call_data['page_brief']
     if not new_brief:
         raise FailPage(message="No page brief given", widget="p_brief")
-    # Set the page brief
-    page.brief = new_brief
-    utils.save(call_data, page=page)
+    # call skilift.editpage.page_description which returns a new pchange
+    try:
+        call_data['pchange'] = page_description(project, pagenumber, pchange, new_brief)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = 'Page brief set: %s' % (new_brief,)
 
 
