@@ -39,9 +39,11 @@ def submit_rename_page(caller_ident, ident_list, submit_list, submit_dict, call_
     if 'new_name' not in call_data:
         raise FailPage(message="No new page name has been given")
     # Rename the page
-    error_message = rename_page(call_data['editedprojname'], call_data['page_number'], call_data['new_name'])
-    if error_message:
-        raise FailPage(message=error_message)
+    # call skilift.editpage.rename_page which returns a new pchange
+    try:
+        call_data['pchange'] = rename_page(call_data['editedprojname'], call_data['page_number'], call_data['pchange'], call_data['new_name'])
+    except ServerError as e:
+        raise FailPage(e.message)
     page_data['page_edit','p_rename','set_input_accepted'] = True
     call_data['status'] = 'Page renamed'
 
