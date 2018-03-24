@@ -331,9 +331,11 @@ def submit_rename_folder(caller_ident, ident_list, submit_list, submit_dict, cal
     if 'name' not in call_data:
         raise FailPage(message="No new folder name has been given", widget="rename_folder")
     # Rename the folder
-    error_message = editfolder.rename_folder(call_data['editedprojname'], call_data['folder_number'], call_data['name'])
-    if error_message:
-        raise FailPage(message=error_message, widget="rename_folder")
+    # call skilift.editfolder.rename_folder which returns a new fchange
+    try:
+        call_data['fchange'] = editfolder.rename_folder(call_data['editedprojname'], call_data['folder_number'], call_data['fchange'], call_data['name'])
+    except ServerError as e:
+        raise FailPage(e.message, widget="rename_folder")
     call_data['status'] = 'Folder renamed'
 
 

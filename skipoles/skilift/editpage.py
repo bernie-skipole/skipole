@@ -80,9 +80,9 @@ def pagechange(project, pagenumber):
 
 
 def rename_page(project, pagenumber, pchange, newname):
-    "rename this page, return None on success, raises ServerError on failure"
+    "rename this page, return the page change uuid on success, raises ServerError on failure"
     if not newname:
-        return "No new page name given"
+        raise ServerError(message="No new page name given")
     # get a copy of the page, which can have a new name set
     # and can then be saved to the project
     page, error_message = _get_page(project, pagenumber)
