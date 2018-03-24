@@ -34,20 +34,6 @@ from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info
 
-def _raise_server_error(message=''):
-    "Raises a ServerError, and if debug mode on, adds taceback to message"
-    if skiboot.get_debug():
-        # append traceback to message
-        if message:
-            message += "/n"
-        else:
-            message = ''
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-        for item in str_list:
-            message += item
-    raise ServerError(message)
-
 
 def _get_page(project, pagenumber):
     """On success return (deep copy of page, empty string)
