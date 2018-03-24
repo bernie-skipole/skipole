@@ -132,14 +132,19 @@ class GoTo(Exception):
 
        clear_submitted - if True, any submitted data widgets/fields will be cleared,
        clear_page_data - if True, page_data dictionary will be cleared,
+       clear_errors - if a FailPage raises an error and the failpage calls
+                      a submit function with a GoTo, then setting clear_errors True
+                      will remove the error condition from the call, which will therefore
+                      not be displayed on the final template page returned
 
-       Note, 'page_data' will be cleared, 'call_data' will not be changed.
+       Note, 'call_data' will not be changed.
 """
 
-    def __init__(self, target, clear_submitted=False, clear_page_data=False):
+    def __init__(self, target, clear_submitted=False, clear_page_data=False, clear_errors=False):
         Exception.__init__(self, "GoTo jump to page " + str(target))
         self.clear_submitted = clear_submitted
         self.clear_page_data = clear_page_data
+        self.clear_errors = clear_errors
         self.target = target
         # this is set by the calling responder
         self.proj_ident=None

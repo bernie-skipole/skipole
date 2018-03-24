@@ -80,27 +80,26 @@ def folderchange(project, foldernumber):
     return info.change
 
 
-def rename_folder(project, foldernumber, newname):
-    "rename this folder, return None on success, error message on failure"
+def rename_folder(project, foldernumber, fchange, newname):
+    "rename this folder, return folder change uuid on success, raises ServerError on failure"
     if not newname:
-        return "No new folder name given"
+        raise ServerError(message="No new folder name given")
     # get a copy of the folder, which can have a new name set
     # and can then be saved to the project
     folder, error_message = _get_folder(project, foldernumber)
     if folder is None:
-        return error_message
+        raise ServerError(message=error_message)
     if folder.ident.num == 0:
-        return "Cannot rename the root folder"
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        return "Project not loaded"
+        raise ServerError(message="Cannot rename the root folder")
+    if folder.change != fchange:
+        raise ServerError(message="The folder has been changed prior to this submission, someone else may be editing this project")
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="Project not loaded")
     # Rename the folder
     folder.name = newname
     # And save this folder copy to the project
-    try:
-        editedproj.save_folder(folder)
-    except ServerError as e:
-        return e.message
+    return proj.save_folder(folder)
 
 
 

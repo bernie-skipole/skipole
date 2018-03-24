@@ -346,11 +346,12 @@ class Project(object):
 
     def save_item(self, item, new_parent_ident=None):
         """Saves the page or folder - used to save an altered item, not to add a new one
-           If new_parent_ident is not None, indicates the item has moved to a different folder"""
+           If new_parent_ident is not None, indicates the item has moved to a different folder
+           returns the items new change uuid"""
         if item.page_type == 'Folder':
-            self.save_folder(item, new_parent_ident)
+            return self.save_folder(item, new_parent_ident)
         else:
-            self.save_page(item, new_parent_ident)
+            return self.save_page(item, new_parent_ident)
 
 
     def save_page(self, item, new_parent_ident=None):
@@ -993,6 +994,8 @@ class Project(object):
                         form_data.clear()
                     if ex.clear_page_data:
                         page_data.clear()
+                    if ex.clear_errors:
+                        ex.e_list = []
                     target = skiboot.find_ident_or_url(ex.target, ex.proj_ident)
                     # target is either an Ident, a URL or None
                     if not target:
