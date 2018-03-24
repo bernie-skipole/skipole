@@ -383,9 +383,10 @@ def submit_restricted(caller_ident, ident_list, submit_list, submit_dict, call_d
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     # restrict the folder
-    error_message = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], True)
-    if error_message:
-        raise FailPage(message=error_message)
+    try:
+        call_data['fchange'] = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], call_data['fchange'], True)
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -393,9 +394,10 @@ def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     # un-restrict the folder
-    error_message = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], False)
-    if error_message:
-        raise FailPage(message=error_message)
+    try:
+        call_data['fchange'] = editfolder.set_restricted_status(call_data['editedprojname'], call_data['folder_number'], call_data['fchange'], False)
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def downloadfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
