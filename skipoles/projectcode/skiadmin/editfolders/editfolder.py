@@ -321,7 +321,6 @@ def delete_item(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         del call_data['page']
 
     call_data['status'] = 'Page deleted'
-    
 
 
 def submit_rename_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -343,28 +342,39 @@ def submit_folder_brief(caller_ident, ident_list, submit_list, submit_dict, call
     "set this folders brief"
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
+    project = call_data['editedprojname']
+    foldernumber = call_data['folder_number']
+    fchange = call_data['fchange']
     if 'brief' not in call_data:
         raise FailPage(message="No folder description available", widget="st2")
-    # set folder brief
-    error_message = editfolder.set_folder_brief(call_data['editedprojname'], call_data['folder_number'], call_data['brief'])
-    if error_message:
-        raise FailPage(message=error_message, widget="st2")
-    call_data['status'] = 'Folder description set : %s' % (call_data['brief'],)
+    new_brief = call_data['brief']
+    if not new_brief:
+        raise FailPage(message="No folder brief given", widget="st2")
+    # call skilift.editfolder.folder_description which returns a new fchange
+    try:
+        call_data['fchange'] = editfolder.folder_description(project, foldernumber, fchange, new_brief)
+    except ServerError as e:
+        raise FailPage(e.message, widget="st2")
+    call_data['status'] = 'Folder description set : %s' % (new_brief,)
 
 
 def submit_default_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Set this folder's default page"
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
+    project = call_data['editedprojname']
+    foldernumber = call_data['folder_number']
+    fchange = call_data['fchange']
     if 'selectvalue' not in call_data:
         raise FailPage(message="The page to set as default has not been found", widget="sdd1")
     if call_data['selectvalue'] == "-None-":
         default_page_name = ""
     else:
         default_page_name = call_data['selectvalue']
-    error_message = editfolder.set_default_page(call_data['editedprojname'], call_data['folder_number'], default_page_name)
-    if error_message:
-        raise FailPage(message=error_message, widget="sdd1")
+    try:
+        call_data['fchange'] = editfolder.set_default_page(project, foldernumber, fchange, default_page_name)
+    except ServerError as e:
+        raise FailPage(e.message, widget="sdd1")
     call_data['status'] = 'Default page set'
 
 

@@ -124,48 +124,45 @@ def delete_folder(project, foldernumber):
         return e.message
 
 
-def set_folder_brief(project, foldernumber, newbrief):
-    "set new brief on this folder, return None on success, error message on failure"
-    if not newbrief:
-        return "No new folder description given"
+def folder_description(project, foldernumber, fchange, brief):
+    "Set a folder brief description, return folder change uuid on success, raises ServerError on failure"
+    if not brief:
+        return "No new folder name given"
     # get a copy of the folder, which can have a new brief set
     # and can then be saved to the project
     folder, error_message = _get_folder(project, foldernumber)
     if folder is None:
         return error_message
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        return "Project not loaded"
-    # set new folder brief
-    folder.brief = newbrief
-    # And save this folder copy to the project
-    try:
-        editedproj.save_folder(folder)
-    except ServerError as e:
-        return e.message
+    if folder.change != fchange:
+        raise ServerError(message="The folder has been changed prior to this submission, someone else may be editing this project")
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="Project not loaded")
+    # Set the folder brief
+    folder.brief = brief
+    # save the altered folder, and return the folder.change uuid
+    return proj.save_folder(folder)
 
 
-def set_default_page(project, foldernumber, default_page_name):
-    "set new default page on this folder, return None on success, error message on failure"
+def set_default_page(project, foldernumber, fchange, default_page_name):
+    "set new default page on this folder, return folder change uuid on success, raises ServerError on failure"
     # get a copy of the folder
     # which can then be saved to the project
     folder, error_message = _get_folder(project, foldernumber)
     if folder is None:
-        return error_message
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        return "Project not loaded"
+        raise ServerError(message=error_message)
+    if folder.change != fchange:
+        raise ServerError(message="The folder has been changed prior to this submission, someone else may be editing this project")
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="Project not loaded")
     if not default_page_name:
         default_page_name = ''
     elif default_page_name not in folder.pages:
-        return "The page to set as default has not been found in this folder"
+        raise ServerError(message="The page to set as default has not been found in this folder")
     folder.default_page_name = default_page_name
-    # And save this folder copy to the project
-    try:
-        editedproj.save_folder(folder)
-    except ServerError as e:
-        return e.message
-
+    # save the altered folder, and return the folder.change uuid
+    return proj.save_folder(folder)
 
 
 def set_restricted_status(project, foldernumber, restricted):
