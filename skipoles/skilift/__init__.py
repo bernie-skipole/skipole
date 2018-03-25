@@ -130,6 +130,38 @@ def get_accesstextblocks(project=None):
     return proj.textblocks
 
 
+def get_itemnumber(project, item):
+    """Returns itemnumber if item is found in the project, where item is either
+    a project,number tuple
+    a number
+    a label
+    a path
+    If not found returns None"""
+    # return None if invalid project
+    if not project_loaded(project, error_if_not=False):
+        return
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return
+    # check if item is a path
+    if isinstance(item, str) and '/' in item:
+        path = item.strip()
+        path = path.strip("/")
+        if path:
+            path = "/" + path + "/"
+        else:
+            path = "/"
+        ident = proj.root.ident_from_path(path)
+    else:
+        ident = skiboot.find_ident(item, project)
+    if ident is None:
+        return
+    if ident.proj != project:
+        return
+    return ident.num
+
+
+
 def item_info(project, itemnumber):
     """Returns None if page or folder not found, otherwise returns a namedtuple with contents
        project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted

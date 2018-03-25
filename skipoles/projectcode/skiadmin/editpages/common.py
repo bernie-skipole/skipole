@@ -25,10 +25,10 @@
 #   limitations under the License.
 
 
-from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
-from ....skilift.editpage import rename_page, page_description
+from ....skilift import get_itemnumber
+from ....skilift.editpage import rename_page, page_description, new_parent
 
 
 
@@ -51,38 +51,19 @@ def submit_rename_page(caller_ident, ident_list, submit_list, submit_dict, call_
 
 def submit_new_parent(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gives a page a new parent"
-
-    editedproj = call_data['editedproj']
-
-    # the page to have a new parent should be given by session data
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    page_ident = str(page.ident)
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'parent_ident' in call_data:
-        raise FailPage(message="No parent ident given", widget="p_parent")
+        raise FailPage(message="No parent ident given")
     parent_ident = call_data['parent_ident']
-    if not parent_ident:
-        raise FailPage(message="No parent ident given", widget="p_parent")
-    new_parent = skiboot.from_ident(parent_ident)
-    if not new_parent:
-        raise FailPage(message="No valid parent ident given", widget="p_parent")
-    if new_parent.page_type != 'Folder':
-        raise FailPage(message="Item is not a folder", widget="p_parent")
-    if new_parent not in editedproj:
-        raise FailPage(message="Invalid folder", widget="p_parent")
-    old_parent = page.parentfolder
-    if old_parent == new_parent:
-       raise FailPage(message="Parent folder unchanged?", widget="p_parent")
-    if old_parent.proj_ident != new_parent.proj_ident:
-        raise FailPage("Invalid folder project", widget="p_parent")
-    if page.name in new_parent:
-        raise FailPage("The folder already contains an item with this name", widget="p_parent")
+    new_parent_number = get_itemnumber(project, parent_ident)
+    if new_parent_number is None:
+        raise FailPage(message="No valid parent ident given")
     try:
-        editedproj.save_page(page, new_parent.ident)
+        call_data['pchange'] = new_parent(project, pagenumber, pchange, new_parent_number)
     except ServerError as e:
-        raise FailPage(message=e.message, widget="p_parent")
+        raise FailPage(message=e.message)
     call_data['status'] = 'Page moved'
 
 

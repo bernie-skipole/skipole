@@ -852,15 +852,6 @@ false,
 {
 "class": "basic.NotEmpty",
 "message": "A folder ident is required"
-},
-{
-"class": "paths.IdentExists",
-"message": "Unknown folder",
-"val_args": {
-"can_be_empty": false,
-"is_folder": true,
-"is_page": false
-}
 }
 ]
 }
@@ -10484,6 +10475,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 23099,
+"submit_list": [
+"editpages",
+"common",
+"submit_new_parent"
+],
 "target_ident": 23099
 },
 "original_fields": {}
