@@ -280,7 +280,7 @@ def downloadsection(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Populate the page which creates a new section"
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
     if 'section_name' not in call_data:
         raise FailPage(message = "new section name missing")
     section_name = call_data["section_name"]
@@ -295,14 +295,11 @@ def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data
         raise FailPage(message="Invalid section name, must not start with an underscore")
     if section_name.isdigit():
         raise FailPage(message="Unable to create the section, the name must include some letters")
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if section_name in section_list:
-        raise FailPage(message = "Section name already exists", widget="new")
-
+        raise FailPage(message = "Section name already exists")
     page_data[("adminhead","page_head","large_text")] = "New Section"
-
     page_data["description", "input_text"] = "New section %s" % (section_name,)
-
     # set hidden fields on the two forms with the submitted section name
     page_data["newsection", "section_name"] = section_name
     page_data["uploadsection","section_name"] = section_name

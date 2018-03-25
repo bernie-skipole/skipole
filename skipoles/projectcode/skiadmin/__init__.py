@@ -149,7 +149,6 @@ _CALL_SUBMIT_DATA = {
                    }
 
 
-
 def start_project(project, projectfiles, path, option):
     """On a project being loaded, and before the wsgi service is started, this is called once,
        Note: it may be called multiple times if your web server starts multiple processes.
