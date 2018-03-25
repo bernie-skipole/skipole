@@ -29,7 +29,7 @@ import pkgutil, re, collections, uuid, os, random
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces
 
 from .editfolders import editproject, addpage
-from .editpages import common, editpage
+from .editpages import editpage
 from .edittextblocks import managetextblocks, edittextblockrefs
 from .editsections import managesections
 from .edittext import edittext
@@ -92,7 +92,6 @@ _CALL_SUBMIT_DATA = {
                        22455: addpage.submit_new_file,                  # add a new file page
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
                        22470: addpage.submit_new_json,                  # add a new json page
-                       23039: common.submit_new_parent,                 # page given a new parent folder
                        23259: editpage.submit_default_error_widget,     # sets default error widget
                        23419: editpage.submit_cache,                    # sets cache header
                        23421: editpage.retrieve_page_svg,               # gets data for page svg
