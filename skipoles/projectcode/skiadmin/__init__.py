@@ -75,7 +75,6 @@ _CALL_SUBMIT_DATA = {
                         4006: managetextblocks.retrieve_more,           # fill more text blocks link tables
                         7010: managesections.submit_new_section,        # creates a new section
                         7011: managesections.file_new_section,          # creates a new section from uploaded file
-                        7050: managesections.downloadsection,           # downloads section as json file
                         7060: managesections.newsectionpage,            # populates the new section page
                        20101: editproject.submit_addproject,            # adds a project
                        20111: editproject.submit_removeproject,         # remove the project
@@ -101,9 +100,6 @@ _CALL_SUBMIT_DATA = {
                        24051: managetextblocks.submit_delete_textblock, # deletes a textblock
                        24062: managetextblocks.submit_copy_textblock,   # copies a textblock
                        24103: managetextblocks.submit_text,             # inputs new text for a textblock
-                       27003: managesections.retrieve_managepage,       # fill sections management page
-                       27022: managesections.delete_section,            # deletes a section
-                       27047: managesections.retrieve_section_contents, # retrieves data for section contents page
                        41050: edittext.create_insert,                   # creates and inserts new text
                        41100: edittext.create_insert_symbol,            # creates new html symbol
                        41120: edittext.set_edit_symbol,                 # changes an html symbol

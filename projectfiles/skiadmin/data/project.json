@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.7.0",
-"skipole": "0.7.0",
+"version": "0.7.1",
+"skipole": "0.7.1",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -38710,7 +38710,12 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": 1,
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"retrieve_managepage"
+],
 "target_ident": 27009
 },
 "original_fields": {}
@@ -38723,6 +38728,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"retrieve_section_contents"
+],
 "target_ident": 27049
 },
 "original_fields": {}
@@ -39051,6 +39061,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 27003,
+"submit_list": [
+"editsections",
+"managesections",
+"delete_section"
+],
 "target_ident": 27003
 },
 "original_fields": {}
@@ -39219,7 +39234,12 @@ false
 "RespondPage": {
 "class": "SubmitIterator",
 "original_args": {
-"fail_ident": "admin_home"
+"fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"downloadsection"
+]
 },
 "original_fields": {}
 }

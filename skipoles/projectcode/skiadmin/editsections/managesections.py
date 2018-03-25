@@ -38,12 +38,12 @@ _AN = re.compile('[^\w]')
 def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     # this call is for the manage sections page
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
     page_data[("adminhead","page_head","large_text")] = "Manage Sections"
 
     # get current sections
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if not section_list:
         page_data[("tabledescription", "show")] = False
         page_data[("sectiontable", "show")] = False
@@ -71,7 +71,7 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
 def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is for the edit section contents page"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
     if "section_name" in call_data:
         section_name = call_data["section_name"]
@@ -81,39 +81,25 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     if not section_name:
         raise FailPage(message = "Section name missing")
 
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if section_name not in section_list:
         raise FailPage(message = "Section name invalid", widget="table_error")
-
-    section = editedproj.section(section_name)
-
     page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (section_name,)
 
-    # fill in the table
-    retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-
-
-def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "this call fills in the section dom table"
-
-    editedprojname = call_data['editedprojname']
-
-    if "section_name" in call_data:
-        section_name = call_data["section_name"]
-    else:
-        raise FailPage(message = "Section name missing")
-
-    if not section_name:
-        raise FailPage(message = "Section name missing")
+    # fill in the section dom table
 
     # section location is a tuple of section_name, None for no container, () tuple of location integers
     section_location = (section_name, None, ())
     # get section_tuple from project, pagenumber, section_name, section_location
-    section_tuple = part_info(editedprojname, None, section_name, section_location)
+    section_tuple = part_info(project, None, section_name, section_location)
+
+    # section_tuple is None if part not found, otherwise a namedtuple with items
+    #  project, pagenumber, page_part, section_name, name, location, part_type, brief
+
     if section_tuple is None:
         raise FailPage("The section has not been recognised")
 
-    partdict = fromjson.part_to_OD(editedprojname, None, section_name, section_location)
+    partdict = fromjson.part_to_OD(project, None, section_name, section_location)
 
     # widget editdom,domtable is populated with fields
 
@@ -214,10 +200,6 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     if 'widgetclass' in call_data:
         del call_data['widgetclass']
 
-    # set the section into call_data, to be replaced by section_tuple in due course
-    editedproj = call_data['editedproj']
-    call_data['section'] = editedproj.section(section_name)
-
 
 
 def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -262,22 +244,19 @@ def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_
 
 def delete_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Deletes a section"
-
-    editedproj = call_data['editedproj']
-
+    project = call_data['editedprojname']
     if "delete_section" not in call_data:
         raise FailPage(message = "Section name missing from call_data", widget="table_error")
     section_name = call_data["delete_section"]
     if not section_name:
         raise FailPage(message = "Section name missing", widget="table_error")
-
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if section_name not in section_list:
         raise FailPage(message = "Section name does not exists", widget="table_error")
     # deletes the section
     try:
-        editedproj.delete_section(section_name)
-    except (ValidateError, ServerError) as e:
+        editsection.delete_section(project, section_name)
+    except ServerError as e:
         raise FailPage(message = e.message, widget = "table_error")
     call_data['status'] = 'Section %s deleted' % (section_name,)
 
@@ -287,8 +266,8 @@ def downloadsection(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if 'section_name' not in call_data:
         raise FailPage(message = "section missing")
     section_name = call_data["section_name"]
-    project = call_data['editedproj']
-    jsonstring =  fromjson.section_to_json(project.proj_ident, section_name, indent=4)
+    project = call_data['editedprojname']
+    jsonstring =  fromjson.section_to_json(project, section_name, indent=4)
     line_list = []
     n = 0
     for line in jsonstring.splitlines(True):
@@ -300,9 +279,8 @@ def downloadsection(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 
 def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-
+    "Populate the page which creates a new section"
     editedproj = call_data['editedproj']
-
     if 'section_name' not in call_data:
         raise FailPage(message = "new section name missing")
     section_name = call_data["section_name"]

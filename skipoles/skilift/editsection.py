@@ -298,7 +298,6 @@ def new_placeholder(project, pagenumber, pchange, location, section_name, alias,
     return proj.save_page(page)
 
 
-
 def sectionchange(project, section_name):
     "Returns None if section_name is not found, otherwise returns the integer section change number"
     # raise error if invalid project
@@ -445,5 +444,17 @@ def move_location(project, section_name, from_location, to_location):
     # and move this item by calling this function again
     move_location(project, section_name, (section_name, None, from_location_ints), (section_name, None, to_location_ints))
 
+
+def delete_section(project, section_name):
+    "delete this section, return None on success, raises a ServerError on failure"
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="The edited project is invalid")
+    section_list = proj.list_section_names()
+    if section_name not in section_list:
+        raise ServerError(message="Section name does not exists")
+    proj.delete_section(section_name)
 
 
