@@ -89,7 +89,7 @@ def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call
     if 'folder_ident_number' in call_data:
         page_data[('it2','folder_ident_number')] = str(call_data['folder_ident_number'])
     else:
-        page_data[('it2','folder_ident_number')] = str(editedproj.next_ident().num)
+        page_data[('it2','folder_ident_number')] = str(skilift.next_ident_number(editedproj.proj_ident))
 
 
 def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

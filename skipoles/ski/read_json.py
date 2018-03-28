@@ -187,6 +187,20 @@ def create_filepage(proj_ident, parent_ident, page_ident, page_name, brief, json
     parent.add_page(page, page_ident)
 
 
+def create_csspage(proj_ident, parent_ident, page_ident, page_name, brief, json_data):
+    """Builds the css page from the given json string, or ordered dictionary and adds it to project"""
+    if isinstance(json_data, str):
+        page_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
+    else:
+        page_dict = json_data
+    if "CSS" not in page_dict:
+        raise excepts.ServerError("Invalid file")
+    page_args = page_dict["CSS"]
+    page = _create_csspage(page_name, brief, page_args)
+    parent = skiboot.from_ident(parent_ident, proj_ident)
+    parent.add_page(page, page_ident)
+
+
 def create_folder(proj_ident, parent_ident, addition_number, folder_name, restricted, json_data):
     """Builds the folder and contents from the given json string, or ordered dictionary and adds it to project
        Returns the top folder ident"""

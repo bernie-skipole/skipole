@@ -31,7 +31,8 @@ from ....ski import skiboot, responders, tag
 from ....ski.excepts import ValidateError, FailPage, ServerError
 from ....ski.page_class_definition import CSS, FilePage, RespondPage, JSON
 from ....ski.widgets import links
-from ....skilift import fromjson
+from .... import skilift
+from ....skilift import fromjson, editfolder
 
 from .. import utils, css_styles
 
@@ -88,7 +89,7 @@ def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_d
     if 'page_ident_number' in call_data:
         page_data['it3:page_ident_number'] = str(call_data['page_ident_number'])
     else:
-        page_data['it3:page_ident_number'] = str(editedproj.next_ident().num)
+        page_data['it3:page_ident_number'] = str(skilift.next_ident_number(editedproj.proj_ident))
 
 
 def _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -120,6 +121,36 @@ def _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     else:
         new_brief = 'New Page'
     return parent, new_ident, new_name, new_brief
+
+
+########## This function to replace _check_data #################
+def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Returns project, parent foldernumber, new pagenumber, new_name, new_brief"
+    project = call_data['editedprojname']
+    if 'edited_folder' not in call_data:
+        raise FailPage(message = "Folder missing")
+    foldernumber = skilift.get_itemnumber(project, call_data['edited_folder'])
+    # TODO - check this is a folder
+
+    # Get the new ident
+    if 'page_ident_number' not in call_data:
+        raise FailPage(message = "The ident of the new page has not been found", widget='st1')
+    pagenumber = call_data['page_ident_number']
+    
+    # Get the new page name
+    if 'new_page' not in call_data:
+        raise FailPage(message = "The name of the new page has not been found", widget='st1')
+    new_name = call_data['new_page']
+    # TODO - check acceptable name
+    # TODO check name does not exist in folder
+
+    # Get the new page brief
+    if 'page_brief' in call_data:
+        new_brief = call_data['page_brief']
+    else:
+        new_brief = 'New Page'
+
+    return project, foldernumber, pagenumber, new_name, new_brief
 
 
 def _make_head(page, proj_ident, page_ident, title="", css_links=[], js_links=[]):
@@ -235,18 +266,41 @@ def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_da
     page_data[('dimensions','hidden_field4')] = new_ident
 
 
+
+
 def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Create a new css page"
+    """ Creates a new css page by making a dictionary similar to:
+
+    {
+     "name":"page_name",
+     "ident":999,
+     "brief":"brief description of the page",
+     "CSS":{
+         "enable_cache":False,
+         "style":{}
+        }
+    }
+
+    And then calling editfolder.make_new_page(project, parent_number, page_dict)
+
+"""
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    # create a new page and add to the given parent folder
-    page = CSS(name=new_name, brief=new_brief, style={})
-    # add this new css to the parent folder
-    parent.add_page(page, new_ident)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    # create a new page dictionary
+    page_dict = {"name":new_name,
+                 "ident":pagenumber,
+                 "brief":new_brief,
+                 "CSS":{
+                        "enable_cache":False,
+                        "style":{}
+                       }
+                }
+    # create the new page
+    editfolder.make_new_page(project, foldernumber, page_dict)
     #  clear and re-populate call_data for edit page
     utils.no_ident_data(call_data, keep=['folder_number'])
-    # add new page ident to call_data so the page can be edited
-    call_data['page'] = str(page.ident)
+    call_data['folder_number'] = foldernumber
+    call_data['page_number'] = pagenumber
     page_data["adminhead","page_head","small_text"] = 'CSS page %s added' % (new_name,)
 
 

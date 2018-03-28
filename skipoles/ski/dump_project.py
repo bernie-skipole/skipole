@@ -399,7 +399,6 @@ def _create_jsonpage(page_dict, page, ident, proj_ident):
     return page_dict
 
 
-
 def _create_svgpage(page_dict, page, ident, proj_ident):
     "Creates a dictionary for the page"
     page_args = OrderedDict()

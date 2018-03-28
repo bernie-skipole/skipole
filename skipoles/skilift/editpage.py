@@ -314,5 +314,15 @@ def move_location(project, pagenumber, from_location, to_location):
     move_location(project, pagenumber, (loc_top, None, from_location_ints), (loc_top, None, to_location_ints))
 
 
-
+def css_style(project, pagenumber):
+    "Return CSS style of a page, as an ordered Dictionary"
+    page, error_message = _get_page(project, pagenumber)
+    if page is None:
+        raise ServerError(message = error_message)
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        raise ServerError(message = "Project not loaded")
+    if page.page_type != "CSS":
+        raise ServerError(message = "Invalid page type")
+    return page.style
 

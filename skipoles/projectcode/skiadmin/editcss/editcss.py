@@ -29,44 +29,48 @@
 
 import collections
 
-from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError
+
+from .... import skilift
+from ....skilift import editpage
 
 from .. import utils
 
 
 def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit css page"
-    editedproj = call_data['editedproj']
 
-    # 'edit_page' is from a form, not from session data
+    project = call_data['editedprojname']
+    
+    # 'edit_page' is from a form
+    # pagenumber is from session data
 
     if 'edit_page' in call_data:
-        page = skiboot.from_ident(call_data['edit_page'])
+        pagenumber = skilift.get_itemnumber(project, call_data['edit_page'])
         del call_data['edit_page']
     elif 'page_number' in call_data:
-        page = skiboot.from_ident((call_data['editedprojname'], call_data['page_number']))
-    elif 'page' in call_data:
-        page = skiboot.from_ident(call_data['page'])
+        pagenumber = call_data['page_number']
     else:
         raise FailPage(message = "page missing")
 
-    if (not page) or (page not in editedproj):
+    if not pagenumber:
         raise FailPage(message = "Invalid page")
 
-    if page.page_type != "CSS":
-        raise FailPage(message = "Invalid page")
+    try:
+        page_info = skilift.page_info(project, pagenumber)
+        selectors = list(editpage.css_style(project, pagenumber).keys())
+    except ServerError as e:
+        raise FailPage(message = e.message)
 
     # set page into call_data
-    call_data['page'] = page
-    call_data['page_number'] = page.ident.num
+    call_data['page_number'] = page_info.number
 
     # fills in the data for editing page name, brief, parent, etc., 
     utils.retrieve_edit_page(call_data, page_data)
 
     # create the contents for the selectortable
     contents = []
-    selectors = page.selector_list()
+
     if selectors:
         max_selector_index = len(selectors) - 1
         for index,selector in enumerate(selectors):
@@ -85,7 +89,7 @@ def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, ca
     else:
         page_data["selectortable:show"] = False
 
-    page_data['enable_cache:radio_checked'] = page.enable_cache
+    page_data['enable_cache:radio_checked'] = page_info.enable_cache
 
 
 def retrieve_edit_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

@@ -39,7 +39,7 @@ ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', '
 
 PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'name', 'location', 'part_type', 'brief'])
 
-PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder'])
+PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache'])
 
 FolderInfo = namedtuple('FolderInfo', ['name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders'])
 
@@ -98,6 +98,14 @@ def get_projectfiles_dir(project=None):
         return os.path.join(skiboot.projectfiles(), project)
     else:
         return skiboot.projectfiles()
+
+
+def next_ident_number(project):
+    "Returns next ident number in the project by incrementing highest existing number"
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="Project not loaded")
+    return proj.next_ident().num
 
 
 def get_textblock_text(textref, lang, project=None):
@@ -460,7 +468,11 @@ def pages(project, foldernumber):
             responder = page.responder.__class__.__name__
         else:
             responder = ''
-        yield PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder)
+        if hasattr(page, 'enable_cache'):
+            enable_cache = page.enable_cache
+        else:
+            enable_cache = False
+        yield PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache)
 
 
 def page_info(project, pagenumber):
@@ -476,7 +488,11 @@ def page_info(project, pagenumber):
         responder = page.responder.__class__.__name__
     else:
         responder = ''
-    return PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder)
+    if hasattr(page, 'enable_cache'):
+        enable_cache = page.enable_cache
+    else:
+        enable_cache = False
+    return PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache)
 
 
 def folders(project, foldernumber):
