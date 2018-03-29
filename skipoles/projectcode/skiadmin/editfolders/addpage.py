@@ -29,7 +29,7 @@ import os, inspect, re
 
 from ....ski import skiboot, responders, tag
 from ....ski.excepts import ValidateError, FailPage, ServerError
-from ....ski.page_class_definition import CSS, FilePage, RespondPage, JSON
+from ....ski.page_class_definition import FilePage, RespondPage, JSON
 from ....ski.widgets import links
 from .... import skilift
 from ....skilift import fromjson, editfolder
@@ -135,7 +135,12 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
     # Get the new ident
     if 'page_ident_number' not in call_data:
         raise FailPage(message = "The ident of the new page has not been found", widget='st1')
-    pagenumber = call_data['page_ident_number']
+    try:
+        pagenumber = int(call_data['page_ident_number'])
+    except:
+        raise FailPage(message = "The page number is invalid", widget='st1')
+    if pagenumber < 1:
+        raise FailPage(message = "The page number is invalid", widget='st1')
     
     # Get the new page name
     if 'new_page' not in call_data:
@@ -266,8 +271,6 @@ def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_da
     page_data[('dimensions','hidden_field4')] = new_ident
 
 
-
-
 def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """ Creates a new css page by making a dictionary similar to:
 
@@ -296,9 +299,12 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
                        }
                 }
     # create the new page
-    editfolder.make_new_page(project, foldernumber, page_dict)
-    #  clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data, keep=['folder_number'])
+    try:
+        pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    # clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
     page_data["adminhead","page_head","small_text"] = 'CSS page %s added' % (new_name,)

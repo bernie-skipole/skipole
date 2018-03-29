@@ -274,10 +274,15 @@ def make_new_page(project, parent_number, page_dict):
     if ident not given, this function chooses the next free ident number.
     """
     parentinfo = _check_parent_number(project, parent_number)
-    if 'ident' not in page_dict:
+    if 'ident' in page_dict:
+        # check it is an integer
+        if not isinstance(page_dict['ident'], int):
+            raise ServerError(message = "The new page ident number must be an integer")
+    else:
+        # no ident given, get next free number
         editedproj = skiboot.getproject(project)
         page_dict['ident'] = editedproj.max_ident_num+1
-    elif ident_exists(project, page_dict['ident']):
+    if ident_exists(project, page_dict['ident']):
         raise ServerError(message = "An item with this ident number already exists")
     # create the page
     if "SVG" in page_dict:
