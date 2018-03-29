@@ -86,7 +86,6 @@ _CALL_SUBMIT_DATA = {
                        22425: addpage.submit_new_responder,             # add a new responder
                        22430: addpage.retrieve_new_svg,                 # gets data for creating a new svg image page
                        22439: addpage.submit_new_svg,                   # add a new svg
-                       22440: addpage.submit_new_css,                   # add a new css page
                        22450: addpage.retrieve_new_file,                # gets data for creating a new filepage
                        22455: addpage.submit_new_file,                  # add a new file page
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy

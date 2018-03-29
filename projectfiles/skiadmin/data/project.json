@@ -27345,6 +27345,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 22307,
+"submit_list": [
+"editfolders",
+"addpage",
+"submit_new_css"
+],
 "target_ident": 28007
 },
 "original_fields": {}
