@@ -250,25 +250,23 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
 
 def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for a create svg image page"
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
 
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
-    parent_ident = str(parent.ident)
+    parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add SVG image page to : %s" % (parent.url,)
+    page_data[("adminhead","page_head","large_text")] = "Add SVG image page to : %s" % (parent_url,)
 
     # information paragraphs
     page_data[('page_name_text','para_text')] = "New page name : " + new_name
     page_data[('page_brief_text','para_text')] = "Description   : " + new_brief
 
     # information hidden fields
-    page_data[('dimensions','hidden_field1')] = parent_ident
+    page_data[('dimensions','hidden_field1')] = str(foldernumber)
     page_data[('dimensions','hidden_field2')] = new_name
     page_data[('dimensions','hidden_field3')] = new_brief
-    page_data[('dimensions','hidden_field4')] = new_ident
+    page_data[('dimensions','hidden_field4')] = str(pagenumber)
 
 
 def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
