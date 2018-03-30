@@ -58,6 +58,8 @@ def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, ca
 
     try:
         page_info = skilift.page_info(project, pagenumber)
+        if page_info.item_type != 'CSS':
+            raise FailPage(message = "Invalid page")
         selectors = list(editpage.css_style(project, pagenumber).keys())
     except ServerError as e:
         raise FailPage(message = e.message)

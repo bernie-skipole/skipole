@@ -147,8 +147,6 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
         raise FailPage(message = "The name of the new page has not been found", widget='st1')
     new_name = call_data['new_page']
     # TODO - check acceptable name
-    # TODO check name does not exist in folder
-
     # Get the new page brief
     if 'page_brief' in call_data:
         new_brief = call_data['page_brief']
@@ -224,13 +222,24 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
 
 
 def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Create a new svg page"
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
+    """ Creates a new svg page by making a dictionary similar to:
+
+    {
+     "name":"page_name",
+     "ident":999,
+     "brief":"brief description of the page",
+     "SVG":{
+         "enable_cache":False,
+         "width":"100",
+         "height":"100"
+        }
+    }
+
+    And then calling editfolder.make_new_page(project, parent_number, page_dict)
+
+"""
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    # create a new page and add to the given parent folder
-    from ....ski.page_class_definition import SVG
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
     if 'width' in call_data:
         width = call_data['width']
     else:
@@ -239,17 +248,31 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
         height = call_data['height']
     else:
         height = '100'
-    page = SVG(name=new_name, brief=new_brief, width=width, height=height)
-    # add this new svg to the parent folder
-    parent.add_page(page, new_ident)
-    #  clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data, keep=['folder_number'])
-    call_data['page'] = page
+    # create a new page dictionary
+    page_dict = {"name":new_name,
+                 "ident":pagenumber,
+                 "brief":new_brief,
+                 "SVG":{
+                        "enable_cache":False,
+                        "width":width,
+                        "height":height
+                        }
+                }
+
+    # create the new page
+    try:
+        pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    # clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data)
+    call_data['folder_number'] = foldernumber
+    call_data['page_number'] = pagenumber
     page_data["adminhead","page_head","small_text"] = 'SVG %s added' % (new_name,)
 
 
 def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Gets data for a create svg image page"
+    "Retrieve data for creating a new SVG page"
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)

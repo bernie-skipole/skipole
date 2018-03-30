@@ -484,6 +484,8 @@ def page_info(project, pagenumber):
     page = proj.get_item(page_ident)
     if page is None:
         raise ServerError("Page not recognised")
+    if page.page_type == 'Folder':
+        raise ServerError("Item is a Folder, not a page")
     if page.page_type == 'RespondPage':
         responder = page.responder.__class__.__name__
     else:
@@ -518,6 +520,8 @@ def folder_info(project, foldernumber):
     folder = proj.get_item(folder_ident)
     if folder is None:
         raise ServerError("Folder not recognised")
+    if folder.page_type != 'Folder':
+        raise ServerError("Item is not a Folder")
     return FolderInfo(folder.name, folder.ident.num, folder.restricted, folder.brief, bool(folder.pages), bool(folder.folders))
 
 

@@ -167,8 +167,9 @@ def create_svgpage(proj_ident, parent_ident, page_ident, page_name, brief, json_
         raise excepts.ServerError("Invalid file")
     page_args = page_dict["SVG"]
     page = _create_svgpage(page_name, brief, page_args)
-    svg = page_dict["svg"]
-    page.svg = _create_item(svg, proj_ident)
+    if "svg" in page_dict:
+        svg = page_dict["svg"]
+        page.svg = _create_item(svg, proj_ident)
     parent = skiboot.from_ident(parent_ident, proj_ident)
     parent.add_page(page, page_ident)
 
