@@ -30,9 +30,11 @@ import html
 
 from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
+
+from .... import skilift
 from ....skilift import fromjson, part_info, item_info, part_contents, editpage
 
-from .. import utils, css_styles
+from .. import utils
 
 
 def _ident_to_str(ident):
@@ -309,74 +311,56 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
 
 def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the svg edit page"
-    editedproj = call_data['editedproj']
 
-    # 'edit_page' is from a form, not from session data
+    project = call_data['editedprojname']
+    
+    # 'edit_page' is from a form
+    # pagenumber is from session data
 
     if 'edit_page' in call_data:
-        page = skiboot.from_ident(call_data['edit_page'])
+        pagenumber = skilift.get_itemnumber(project, call_data['edit_page'])
         del call_data['edit_page']
     elif 'page_number' in call_data:
-        page = skiboot.from_ident((call_data['editedprojname'], call_data['page_number']))
-    elif 'page' in call_data:
-        page = skiboot.from_ident(call_data['page'])
+        pagenumber = call_data['page_number']
     else:
         raise FailPage(message = "page missing")
-
-    if (not page) or (page not in editedproj):
+    if not pagenumber:
         raise FailPage(message = "Invalid page")
 
-    if page.page_type != 'SVG':
+    try:
+        page_info = skilift.page_info(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    if page_info.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
 
     # set page into call_data
-    call_data['page'] = page
-    call_data['page_number'] = page.ident.num
+    call_data['page_number'] = page_info.number
 
     # fills in the data for editing page name, brief, parent, etc., 
     utils.retrieve_edit_page(call_data, page_data)
-
-    page_data['enable_cache:radio_checked'] = page.enable_cache
-
-    # remove any unwanted fields from session call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'field_arg' in call_data:
-        del call_data['field_arg']
-    if 'validx' in call_data:
-        del call_data['validx']
-    if 'module' in call_data:
-        del call_data['module']
-    if 'widget_name' in call_data:
-        del call_data['widget_name']
-    if 'container' in call_data:
-        del call_data['container']
-    if 'widgetclass' in call_data:
-        del call_data['widgetclass']
+    page_data['enable_cache:radio_checked'] = page_info.enable_cache
 
 
 def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the page svg part"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
     else:
         raise FailPage(message = "Page number missing")
-
     if pagenumber is None:
         raise FailPage(message = "Page number missing")
-
-    page_info = item_info(editedprojname, pagenumber)
-    if page_info is None:
-        raise FailPage("The page has not been recognised")
-
+    try:
+        page_info = skilift.page_info(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message = e.message)
     if page_info.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
-
     page_data[("adminhead","page_head","large_text")] = page_info.name + ' svg'
-
     # fill in the table
     call_data['location_string'] = 'svg'
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
