@@ -266,7 +266,7 @@ def get_item(ident):
 
 def get_url(label_url_ident, proj_ident=None):
     "Returns a url given a page ident, url or label, if not found, return None"
-    if not label_url_ident:
+    if (label_url_ident is not 0) and (not label_url_ident):
         return
     result = find_ident_or_url(label_url_ident, proj_ident)
     if isinstance(result, Ident):
@@ -479,6 +479,9 @@ def find_ident_or_url(item, proj_ident=None):
        or be an ident in string or integer or Ident form
        or label, or tuple of form (project,ident) or (project,label).
        If no existing ident or url found, returns None"""
+
+    if item is 0:
+        return ident_exists_strict(Ident.to_ident(item, proj_ident))
 
     if not item:
         return
