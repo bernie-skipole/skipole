@@ -84,10 +84,6 @@ _CALL_SUBMIT_DATA = {
                        22410: addpage.submit_new_template,              # add a new template page
                        22420: addpage.retrieve_new_responder,           # gets data for creating a new responder
                        22425: addpage.submit_new_responder,             # add a new responder
-                       22430: addpage.retrieve_new_svg,                 # gets data for creating a new svg image page
-                       22439: addpage.submit_new_svg,                   # add a new svg
-                       22450: addpage.retrieve_new_file,                # gets data for creating a new filepage
-                       22455: addpage.submit_new_file,                  # add a new file page
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
                        22470: addpage.submit_new_json,                  # add a new json page
                        23259: editpage.submit_default_error_widget,     # sets default error widget
