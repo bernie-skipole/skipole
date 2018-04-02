@@ -46,23 +46,19 @@ _AND = re.compile('[^\w\.]')
 
 def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
 
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-
+    project = call_data['editedprojname']
     if 'edited_folder' not in call_data:
         raise FailPage(message = "Folder missing")
 
-    parent = skiboot.from_ident(call_data['edited_folder'], proj_ident=editedproj. proj_ident)
-    if parent.page_type != "Folder":
-        raise FailPage(message = "Invalid folder")
-    if not parent in editedproj:
-        raise FailPage(message = "Invalid folder")
+    try:
+        foldernumber = skilift.get_itemnumber(project, call_data['edited_folder'])
+        folder_info = skilift.folder_info(project, foldernumber)
+        folder_url = skilift.page_path(project, foldernumber)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
-    parent_ident = str(parent.ident)
-
-    page_data[("adminhead","page_head","large_text")] = "Add page to : %s" % (parent.url,)
-
-    page_data['st1:parent'] = parent_ident
+    page_data[("adminhead","page_head","large_text")] = "Add page to : %s" % (folder_url,)
+    page_data['st1:parent'] = project + "_" + str(foldernumber)
 
     # rb1: page type checked
     if 'radio_checked' in call_data:
@@ -89,7 +85,7 @@ def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_d
     if 'page_ident_number' in call_data:
         page_data['it3:page_ident_number'] = str(call_data['page_ident_number'])
     else:
-        page_data['it3:page_ident_number'] = str(skilift.next_ident_number(editedproj.proj_ident))
+        page_data['it3:page_ident_number'] = str(skilift.next_ident_number(project))
 
 
 def _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
