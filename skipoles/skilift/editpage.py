@@ -339,3 +339,23 @@ def file_parameters(project, pagenumber):
         raise ServerError(message = "Invalid page type")
     return (page.filepath, page.mimetype)
 
+
+def json_contents(project, pagenumber):
+    "Return contents dictionary of a JSON page, where keys are WidgField objects (convert to strings for the JSON dictionary string keys)"
+    page, error_message = _get_page(project, pagenumber)
+    if page is None:
+        raise ServerError(message = error_message)
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        raise ServerError(message = "Project not loaded")
+    if page.page_type != "JSON":
+        raise ServerError(message = "Invalid page type")
+    contents = {}
+    if page.content:
+        for widgfield,value in page.content.items():
+            wf = skiboot.make_widgfield(widgfield)
+            if not wf:
+                continue
+            contents[wf] = value
+    return contents
+

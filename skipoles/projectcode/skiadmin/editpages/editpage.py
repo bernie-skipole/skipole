@@ -596,49 +596,49 @@ def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
 def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit json page"
-    editedproj = call_data['editedproj']
 
-    # 'edit_page' is from a form, not from session data
+    project = call_data['editedprojname']
+    
+    # 'edit_page' is from a form
+    # pagenumber is from session data
 
     if 'edit_page' in call_data:
-        page = skiboot.from_ident(call_data['edit_page'])
+        pagenumber = skilift.get_itemnumber(project, call_data['edit_page'])
         del call_data['edit_page']
     elif 'page_number' in call_data:
-        page = skiboot.from_ident((call_data['editedprojname'], call_data['page_number']))
-    elif 'page' in call_data:
-        page = skiboot.from_ident(call_data['page'])
+        pagenumber = call_data['page_number']
     else:
         raise FailPage(message = "page missing")
 
-    if (not page) or (page not in editedproj):
+    if not pagenumber:
         raise FailPage(message = "Invalid page")
 
-    if page.page_type != 'JSON':
-        raise FailPage(message = "Invalid page")
+    try:
+        page_info = skilift.page_info(project, pagenumber)
+        if page_info.item_type != 'JSON':
+            raise FailPage(message = "Invalid page")
+    except ServerError as e:
+        raise FailPage(message = e.message)
 
     # set page into call_data
-    call_data['page'] = page
-    call_data['page_number'] = page.ident.num
+    call_data['page_number'] = page_info.number
 
     # fills in the data for editing page name, brief, parent, etc., 
     utils.retrieve_edit_page(call_data, page_data)
 
-    page_data['enable_cache:radio_checked'] = page.enable_cache
+    json_content = editpage.json_contents(project, pagenumber)
 
-    if page.content:
-        # If page has contents, show the table of widgfields, values
+    if json_content:
+        # If json page has contents, show the table of widgfields, values
         contents = []
-        for widgfield,value in page.content.items():
-            wf = skiboot.make_widgfield(widgfield)
-            if not wf:
-                continue
-            wfstrtuple = wf.to_str_tuple()
+        for widgfield,value in json_content.items():
+            wfstrtuple = widgfield.to_str_tuple()
             if value is True:
-                contents.append([wfstrtuple,'True',widgfield])
+                contents.append([wfstrtuple,'True',str(widgfield)])
             elif value is False:
-                contents.append([wfstrtuple,'False',widgfield])
+                contents.append([wfstrtuple,'False',str(widgfield)])
             else:
-                contents.append([wfstrtuple,value,widgfield])
+                contents.append([wfstrtuple,value,str(widgfield)])
         if contents:
             page_data['field_values_list','show'] = True
             page_data['field_values_list','contents'] = contents
@@ -646,6 +646,11 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
             page_data['field_values_list','show'] = False
     else:
         page_data['field_values_list','show'] = False
+
+    page_data['enable_cache:radio_checked'] = page_info.enable_cache
+
+
+
 
 
 def set_json_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
