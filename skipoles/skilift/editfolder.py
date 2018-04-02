@@ -293,6 +293,8 @@ def make_new_page(project, parent_number, page_dict):
         read_json.create_filepage(project, parent_number, page_dict['ident'], page_dict['name'], page_dict['brief'], page_dict)
     elif "CSS" in page_dict:
         read_json.create_csspage(project, parent_number, page_dict['ident'], page_dict['name'], page_dict['brief'], page_dict)
+    elif "JSON" in page_dict:
+        read_json.create_jsonpage(project, parent_number, page_dict['ident'], page_dict['name'], page_dict['brief'], page_dict)
     else:
         raise ServerError("page data not recognized")
     return page_dict['ident']

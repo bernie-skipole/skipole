@@ -85,7 +85,6 @@ _CALL_SUBMIT_DATA = {
                        22420: addpage.retrieve_new_responder,           # gets data for creating a new responder
                        22425: addpage.submit_new_responder,             # add a new responder
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
-                       22470: addpage.submit_new_json,                  # add a new json page
                        23259: editpage.submit_default_error_widget,     # sets default error widget
                        23419: editpage.submit_cache,                    # sets cache header
                        23421: editpage.retrieve_page_svg,               # gets data for page svg

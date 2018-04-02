@@ -315,8 +315,7 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
                  "ident":pagenumber,
                  "brief":new_brief,
                  "CSS":{
-                        "enable_cache":False,
-                        "style":{}
+                        "enable_cache":False
                        }
                 }
     # create the new page
@@ -332,22 +331,39 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
 
 
 def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    """Create a new json page"""
+    """Create a new json page by making a dictionary similar to:
+
+    {
+     "name":"page_name",
+     "ident":999,
+     "brief":"brief description of the page",
+     "JSON":{
+            "enable_cache":False,
+            "content":{}
+        }
+    }
+
+    And then calling editfolder.make_new_page(project, parent_number, page_dict)
+"""
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    # create a new page and add to the given parent folder
-    page = JSON(name=new_name, brief=new_brief)
-    # add this new json page to the parent folder
-    parent.add_page(page, new_ident)
-    #  clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data, keep=['folder_number'])
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    # create a new page dictionary
+    page_dict = {"name":new_name,
+                 "ident":pagenumber,
+                 "brief":new_brief,
+                 "JSON":{
+                        "enable_cache":False
+                       }
+                }
+    # create the new page
+    try:
+        pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    # clear and re-populate call_data
+    utils.no_ident_data(call_data)
+    call_data['folder_number'] = foldernumber
     # Currently, after adding a json page, go back to edit folder
-    # however if in future it is required to go to the page edit
-    # then session data will need to have the page in it, so the following line
-    # will need to be inserted
-    # call_data['page'] = str(page.ident)
-    # and instead of call_data['status'] it should be
-    # page_data["adminhead","page_head","small_text"] = 'JSON page %s added' % (new_name,)
     call_data['status'] = 'JSON page %s added' % (new_name,)
 
 
