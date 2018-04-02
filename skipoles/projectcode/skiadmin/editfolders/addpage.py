@@ -332,7 +332,7 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
 
 
 def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Create a new json page"
+    """Create a new json page"""
     # first get submitted data for the new page
     parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
     # create a new page and add to the given parent folder
@@ -352,32 +352,54 @@ def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 
 def submit_new_file(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Create a new file page"
+    """Create a new file page by making a dictionary similar to:
+
+    {
+     "name":"page_name",
+     "ident":999,
+     "brief":"brief description of the page",
+     "FilePage":{
+         "enable_cache":False,
+         "filepath": "project/static/filename"
+        }
+    }
+
+    And then calling editfolder.make_new_page(project, parent_number, page_dict)
+"""
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
     # get the submitted filepath this page links to
     filepath = call_data['filepath']
-    # should add checks to ensure this is a valid filepath
-    # create a new page and add to the given parent folder
-    page = FilePage(name=new_name, brief=new_brief, filepath=filepath)
-    # add this filepage to the parent folder
-    parent.add_page(page, new_ident)
-    #  clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data, keep=['folder_number'])
+    # create a new page dictionary
+    page_dict = {"name":new_name,
+                 "ident":pagenumber,
+                 "brief":new_brief,
+                 "FilePage":{
+                        "enable_cache":False,
+                        "filepath": filepath
+                       }
+                }
+    # create the new page
+    try:
+        pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    # clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data)
+    call_data['folder_number'] = foldernumber
+    call_data['page_number'] = pagenumber
     call_data['status'] = 'File link page %s added' % (new_name,)
 
 
 def retrieve_new_file(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for a create filepage"
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
 
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
-    parent_ident = str(parent.ident)
+    parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add File Link page to : %s" % (parent.url,)
+    page_data[("adminhead","page_head","large_text")] = "Add File Link page to : %s" % (parent_url,)
 
     # information paragraphs
     page_data['page_name_text:para_text'] = "New page name : " + new_name
@@ -386,15 +408,15 @@ def retrieve_new_file(caller_ident, ident_list, submit_list, submit_dict, call_d
     # information hidden fields
     page_data['setfilepath','pagename'] = new_name
     page_data['setfilepath','pagebrief'] = new_brief
-    page_data['setfilepath','pageident'] = new_ident
+    page_data['setfilepath','pageident'] = str(pagenumber)
 
     # top descriptive text
     page_data['top_text:para_text'] = """The filepath set here should be relative to the projectfiles folder, so for a file
-called myfile in the static directory, the path should be %s""" % (os.path.join(editedproj.proj_ident, 'static', "myfile"),)
+called myfile in the static directory, the path should be %s""" % (os.path.join(project, 'static', "myfile"),)
 
     # the submit filepath text input
-    page_data['setfilepath:input_text'] = os.path.join(editedproj.proj_ident, 'static', new_name)
-    page_data['setfilepath:parent'] = parent_ident
+    page_data['setfilepath:input_text'] = os.path.join(project, 'static', new_name)
+    page_data['setfilepath:parent'] = str(foldernumber)
 
 
 def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

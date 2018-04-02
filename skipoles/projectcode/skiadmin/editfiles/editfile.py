@@ -24,47 +24,52 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-"Functions implementing download file link editing"
+"Functions implementing download file page editing"
 
 
-from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError
+
+from .... import skilift
+from ....skilift import editpage
 
 from .. import utils
 
 
 def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit file page"
-    editedproj = call_data['editedproj']
-
-    # 'edit_page' is from a form, not from session data
+    project = call_data['editedprojname']
+    
+    # 'edit_page' is from a form
+    # pagenumber is from session data
 
     if 'edit_page' in call_data:
-        page = skiboot.from_ident(call_data['edit_page'])
+        pagenumber = skilift.get_itemnumber(project, call_data['edit_page'])
         del call_data['edit_page']
     elif 'page_number' in call_data:
-        page = skiboot.from_ident((call_data['editedprojname'], call_data['page_number']))
-    elif 'page' in call_data:
-        page = skiboot.from_ident(call_data['page'])
+        pagenumber = call_data['page_number']
     else:
         raise FailPage(message = "page missing")
 
-    if (not page) or (page not in editedproj):
+    if not pagenumber:
         raise FailPage(message = "Invalid page")
 
-    if page.page_type != "FilePage":
-        raise FailPage(message = "Invalid page")
+    try:
+        page_info = skilift.page_info(project, pagenumber)
+        if page_info.item_type != 'FilePage':
+            raise FailPage(message = "Invalid page")
+        filepath, mimetype = editpage.file_parameters(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message = e.message)
 
     # set page into call_data
-    call_data['page'] = page
-    call_data['page_number'] = page.ident.num
+    call_data['page_number'] = page_info.number
 
     # fills in the data for editing page name, brief, parent, etc., 
     utils.retrieve_edit_page(call_data, page_data)
 
-    page_data['p_file:input_text'] = page.filepath
-    page_data['p_mime:input_text'] = page.mimetype
-    page_data['enable_cache:radio_checked'] = page.enable_cache
+    page_data['p_file:input_text'] = filepath
+    page_data['p_mime:input_text'] = mimetype
+    page_data['enable_cache:radio_checked'] = page_info.enable_cache
 
 
 def submit_new_filepath(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

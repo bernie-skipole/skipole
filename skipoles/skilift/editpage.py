@@ -326,3 +326,16 @@ def css_style(project, pagenumber):
         raise ServerError(message = "Invalid page type")
     return page.style
 
+
+def file_parameters(project, pagenumber):
+    "Return filepath,mimetype of a page"
+    page, error_message = _get_page(project, pagenumber)
+    if page is None:
+        raise ServerError(message = error_message)
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        raise ServerError(message = "Project not loaded")
+    if page.page_type != "FilePage":
+        raise ServerError(message = "Invalid page type")
+    return (page.filepath, page.mimetype)
+
