@@ -27,8 +27,6 @@
 
 """Functions for editing a section"""
 
-import sys, traceback
-
 from collections import namedtuple
 
 from ..ski import skiboot, tag
@@ -38,21 +36,6 @@ from . import project_loaded
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
-
-
-def _raise_server_error(message=''):
-    "Raises a ServerError, and if debug mode on, adds taceback to message"
-    if skiboot.get_debug():
-        # append traceback to message
-        if message:
-            message += "/n"
-        else:
-            message = ''
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-        for item in str_list:
-            message += item
-    raise ServerError(message)
 
 
 def list_section_names(project=None):
