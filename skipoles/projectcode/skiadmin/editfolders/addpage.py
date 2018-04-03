@@ -27,12 +27,12 @@
 
 import os, inspect, re
 
-from ....ski import skiboot, responders, tag
+from ....ski import skiboot, responders
 from ....ski.excepts import ValidateError, FailPage, ServerError
 from ....ski.page_class_definition import FilePage, RespondPage, JSON
-from ....ski.widgets import links
+
 from .... import skilift
-from ....skilift import fromjson, editfolder
+from ....skilift import fromjson, editfolder, editresponder
 
 from .. import utils, css_styles
 
@@ -527,38 +527,32 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
 def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for a create respondpage"
 
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
-    parent_ident = str(parent.ident)
+    parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add a responder page to : %s" % (parent.url,)
+    page_data[("adminhead","page_head","large_text")] = "Add a responder page to : %s" % (parent_url,)
 
     # information paragraphs
     page_data['page_name_text:para_text'] = "New page name : " + new_name
     page_data['page_brief_text:para_text'] = "Description   : " + new_brief
 
+    # get a list of ResponderInfo named tuples from skilift.editresponder
+    responderlist = editresponder.list_responders()
+
+    # Create a list of 1) the responder class name, being the text to place on a button
+    #                  2) the textblock reference describing the responder
+
     page_data['responderlinks','buttons'] =[]
-
-    #    buttons: col 0 is the visible text to place on the button,
-    #                col 1 is the reference string of a textblock to appear in the column adjacent to the button
-
-
-    for cls in inspect.getmembers(responders, inspect.isclass):
-        if issubclass(cls[1], responders.Respond):
-            if cls[0] == 'Respond': continue
-            page_data['responderlinks','buttons'].append([cls[0],  # the name of the respond object
-                                                         cls[1].description_ref()])       # textblock description ref of the responder
+    for r_info in responderlist:
+        page_data['responderlinks','buttons'].append([r_info.responder, r_info.description_ref])
 
     # the hidden fields
-    page_data['responderlinks:hidden_field1'] = parent_ident
+    page_data['responderlinks:hidden_field1'] = str(foldernumber)
     page_data['responderlinks:hidden_field2'] = new_name
     page_data['responderlinks:hidden_field3'] = new_brief
-    page_data['responderlinks:hidden_field4'] = new_ident
-
+    page_data['responderlinks:hidden_field4'] = str(pagenumber)
 
 
 def submit_copy_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
