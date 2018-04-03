@@ -52,6 +52,8 @@ def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_d
 
     try:
         foldernumber = skilift.get_itemnumber(project, call_data['edited_folder'])
+        if foldernumber is None:
+            raise FailPage(message="Parent folder not recognised")
         folder_info = skilift.folder_info(project, foldernumber)
         folder_url = skilift.page_path(project, foldernumber)
     except ServerError as e:
@@ -126,8 +128,13 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
     if 'edited_folder' not in call_data:
         raise FailPage(message = "Folder missing")
     foldernumber = skilift.get_itemnumber(project, call_data['edited_folder'])
-    # TODO - check this is a folder
-
+    if foldernumber is None:
+        raise FailPage(message="Parent folder not recognised")
+    # skilift.folder_info raises a ServerError if this is not a folder
+    try:
+        folder_info = skilift.folder_info(project, foldernumber)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     # Get the new ident
     if 'page_ident_number' not in call_data:
         raise FailPage(message = "The ident of the new page has not been found", widget='st1')
@@ -142,7 +149,9 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
     if 'new_page' not in call_data:
         raise FailPage(message = "The name of the new page has not been found", widget='st1')
     new_name = call_data['new_page']
-    # TODO - check acceptable name
+    # check name is alphanumric, dot or underscore only
+    if _AND.search(new_name):
+        raise FailPage(message = "Names must be alphanumric, and may contain dot or underscore", widget='st1')
     # Get the new page brief
     if 'page_brief' in call_data:
         new_brief = call_data['page_brief']
@@ -215,6 +224,23 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     utils.no_ident_data(call_data, keep=['folder_number'])
     call_data['page'] = page
     page_data["adminhead","page_head","small_text"] = 'Page %s added' % (new_name,)
+
+
+
+def _create_templatepagedict(name, pagenumber, brief, backcol):
+    "Returns a dictionary for a new template page"
+    page_dict = {"name":name,
+                 "ident":pagenumber,
+                 "brief":brief,
+                 "TemplatePage":{"backcol":backcol}
+                 "head":["Part",_head_dict()],
+                 "body":["Part",_body_dict()]
+                }
+    return page_dict
+
+
+
+
 
 
 def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

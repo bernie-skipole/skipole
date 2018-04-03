@@ -670,39 +670,24 @@ def _create_svgpage(page_name, brief, page_args):
 
 def _create_templatepage(page_name, brief, page_args):
     "Create a template page"
-    show_backcol = page_args["show_backcol"]
-    last_scroll = page_args["last_scroll"]
+    args = {}
+    if 'show_backcol' in page_args:
+        args['show_backcol'] = page_args["show_backcol"]
+    if "last_scroll" in page_args:
+        args["last_scroll"] = page_args["last_scroll"]
     if 'interval' in page_args:
-        interval = page_args["interval"]
-    else:
-        interval = 0
+        args["interval"] = page_args["interval"]
     if 'interval_target' in page_args:
-        interval_target = page_args["interval_target"]
-    else:
-        interval_target = None    
+        args["interval_target"] = page_args["interval_target"]
     if 'lang' in page_args:
-        lang = page_args["lang"]
-    else:
-        lang = None
+        args["lang"] = page_args["lang"]
     if 'backcol' in page_args:
-        backcol = page_args["backcol"]
-    else:
-        backcol="#FFFFFF"
+        args["backcol"] = page_args["backcol"]
     if "default_error_widget" in page_args:
         s = page_args["default_error_widget"][0]
         w = page_args["default_error_widget"][1]
-        default_error_widget = skiboot.WidgField(s=s, w=w, f='', i='')
-    else:
-        default_error_widget = skiboot.WidgField(s='', w='', f='', i='')
-    return page_class_definition.TemplatePage( name=page_name,
-                                               brief = brief,
-                                               show_backcol=show_backcol,
-                                               backcol=backcol,
-                                               last_scroll=last_scroll,
-                                               default_error_widget=default_error_widget,
-                                               lang=lang,
-                                               interval = interval,
-                                               interval_target = interval_target)
+        args["default_error_widget"] = skiboot.WidgField(s=s, w=w, f='', i='')
+    return page_class_definition.TemplatePage(name=page_name, brief = brief, **args)
 
 
 def _create_item(item_list, proj_ident):
