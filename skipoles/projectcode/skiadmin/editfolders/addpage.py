@@ -176,7 +176,7 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
-    page_data["adminhead","page_head","large_text"] = 'Page %s added' % (new_name,)
+    call_data['status'] = 'Page %s added' % (new_name,)
 
 
 def _create_templatepagedict(project, name, pagenumber, brief):
@@ -332,7 +332,7 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
-    page_data["adminhead","page_head","large_text"] = 'SVG %s added' % (new_name,)
+    call_data['status'] = 'SVG %s added' % (new_name,)
 
 
 def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -391,7 +391,7 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
-    page_data["adminhead","page_head","large_text"] = 'CSS page %s added' % (new_name,)
+    call_data['status'] = 'CSS page %s added' % (new_name,)
 
 
 def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -521,7 +521,7 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
     utils.no_ident_data(call_data, keep=['folder_number'])
     # add new page ident to call_data so the page can be edited
     call_data['page'] = str(page.ident)
-    page_data["adminhead","page_head","large_text"] = 'Responder %s - type %s added' % (new_name, responder_class)
+    call_data['status'] = 'Responder %s - type %s added' % (new_name, responder_class)
 
 
 def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
