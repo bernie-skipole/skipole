@@ -161,86 +161,128 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
     return project, foldernumber, pagenumber, new_name, new_brief
 
 
-def _make_head(page, proj_ident, page_ident, title="", css_links=[], js_links=[]):
-    """Used when creating a new template page to make a default header
-       css_links is the list of css page labels to include
-       js_links is the list of javascript page labels to include
-       """
-    head = page.head
-
-    head[0] = tag.ClosedPart(tag_name="meta",
-                                  attribs = {"charset":"utf-8"})
-    head[0].brief = "The charset meta declaration"
-    head[1] = tag.ClosedPart(tag_name="meta",
-                                  attribs = {"name":"viewport",
-                                             "content":"width=device-width, initial-scale=1"})
-    head[1].brief = "The viewport meta declaration"
-    head[2] = tag.Part(tag_name="title")
-    head[2].brief = "The page title element"
-    if title:
-        head[2][0] = title
-    else:
-        head[2][0] = "Page %s" % (page_ident.num)
-    if css_links:
-        for label in css_links:
-            csslink = tag.ClosedPart(tag_name = "link",
-                                                                   attribs={"href": "{" + label + "}",
-                                                                                       "rel":"stylesheet",
-                                                                                       "type":"text/css"},
-                                                                   brief='css link to %s' % (label,))
-            head.append(csslink)
-    if js_links:
-        for label in js_links:
-            scriptlink = tag.Part(tag_name = "script", attribs={"src":"{" + label + "}"}, brief='script link to %s' % (label,))
-            head.append(scriptlink)
-
-
-
 def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Create a new template page"
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    # check name is alphanumric, dot or underscore only
-    if _AND.search(new_name):
-        raise FailPage(message = "Templates page names must be alphanumric, dot or underscore only", widget='st1')
-    # create a new page and add to the given parent folder
-    backcol = fromjson.get_defaults(editedproj.proj_ident, key="backcol")
-    if backcol is None:
-        backcol = "#FFFFFF"
-    from ....ski.page_class_definition import TemplatePage
-    newpage = TemplatePage(name=new_name, brief=new_brief, backcol=backcol)
-    css_links = fromjson.get_defaults(editedproj.proj_ident, key="css_links")
-    js_links = fromjson.get_defaults(editedproj.proj_ident, key="js_links")
-    _make_head(newpage, editedproj.proj_ident, new_ident, title="", css_links=css_links, js_links=js_links)
-    # body class
-    body_class = fromjson.get_defaults(editedproj.proj_ident, key="body_class")
-    if body_class:
-        newpage.body.set_class(body_class)
-    # add this new page to the parent folder
-    page = parent.add_page(newpage, new_ident)
-    #  clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data, keep=['folder_number'])
-    call_data['page'] = page
-    page_data["adminhead","page_head","small_text"] = 'Page %s added' % (new_name,)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    # create page dictionary
+    page_dict = _create_templatepagedict(project, new_name, pagenumber, new_brief)
+    # create the new page
+    try:
+        pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    # clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data)
+    call_data['folder_number'] = foldernumber
+    call_data['page_number'] = pagenumber
+    page_data["adminhead","page_head","large_text"] = 'Page %s added' % (new_name,)
 
 
-
-def _create_templatepagedict(name, pagenumber, brief, backcol):
+def _create_templatepagedict(project, name, pagenumber, brief):
     "Returns a dictionary for a new template page"
+    backcol = fromjson.get_defaults(project, key="backcol")
+    if backcol:
+        page_args = {"backcol":backcol}
+    else:
+        page_args = {}
     page_dict = {"name":name,
                  "ident":pagenumber,
                  "brief":brief,
-                 "TemplatePage":{"backcol":backcol}
-                 "head":["Part",_head_dict()],
-                 "body":["Part",_body_dict()]
+                 "TemplatePage":page_args,
+                 "head":["Part",_head_dict(project, pagenumber)],
+                 "body":["Part",_body_dict(project)]
                 }
     return page_dict
 
 
+def _head_dict(project, pagenumber):
+    "Returns a dictionary defining the new page head"
+    # create the title tag
+    title = ["Part", {
+                      "tag_name":"title",
+                      "brief":"The page title element",
+                      "show":True,
+                      "hide_if_empty":False,
+                      "parts":[ ["Text", "Page " + str(pagenumber)] ]
+                     } ]
+
+    # The head dictionary
+    head = {
+            "tag_name":"head",
+            "brief":"The head section of the page",
+            "show":True,
+            "hide_if_empty":False,
+            "parts":[
+                        ["ClosedPart", {
+                                        "tag_name":"meta",
+                                        "brief":"The charset meta declaration",
+                                        "show":True,
+                                        "attribs":{"charset":"utf-8"}
+                                        } ],
+                        ["ClosedPart", {
+                                        "tag_name":"meta",
+                                        "brief":"The viewport meta declaration",
+                                        "show":True,
+                                        "attribs":{
+                                                    "content":"width=device-width, initial-scale=1",
+                                                    "name":"viewport"
+                                                  }
+                                        } ],
+                        title,
+                    ]
+           }
+
+    # append CSS links to the parts list
+    css_links = fromjson.get_defaults(project, key="css_links")
+    if css_links:
+        for label in css_links:
+            csslink = ["ClosedPart", {
+                                      "tag_name":"link",
+                                      "brief":"css link to " + label,
+                                      "show":True,
+                                      "attribs":{
+                                                  "href":"{" + label + "}",
+                                                  "rel":"stylesheet",
+                                                  "type":"text/css"
+                                                 }
+                                      } ]
+            head["parts"].append(csslink)
+
+    # append Javascript links to the parts list
+    js_links = fromjson.get_defaults(project, key="js_links")
+    if js_links:
+        for label in js_links:
+            jslink = ["Part", {
+                               "tag_name":"script",
+                               "brief":"script link to " + label,
+                               "show":True,
+                               "hide_if_empty":False,
+                               "attribs":{
+                                           "src":"{" + label +"}"
+                                         },
+                               "parts":[]
+                              } ]
+            head["parts"].append(jslink)
+
+    return head
 
 
+def _body_dict(project):
+    "Returns a dictionary defining the new page body"
+    # The body dictionary
+    body = {
+            "tag_name":"body",
+            "brief":"The body section of the page",
+            "show":True,
+            "hide_if_empty":False,
+            "parts":[]
+        }
+    # if a default body class has been set
+    body_class = fromjson.get_defaults(project, key="body_class")
+    if body_class:
+        body["attribs"] = {"class":body_class}
+    return body
 
 
 def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -290,7 +332,7 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
-    page_data["adminhead","page_head","small_text"] = 'SVG %s added' % (new_name,)
+    page_data["adminhead","page_head","large_text"] = 'SVG %s added' % (new_name,)
 
 
 def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -349,7 +391,7 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
-    page_data["adminhead","page_head","small_text"] = 'CSS page %s added' % (new_name,)
+    page_data["adminhead","page_head","large_text"] = 'CSS page %s added' % (new_name,)
 
 
 def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -479,7 +521,7 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
     utils.no_ident_data(call_data, keep=['folder_number'])
     # add new page ident to call_data so the page can be edited
     call_data['page'] = str(page.ident)
-    page_data["adminhead","page_head","small_text"] = 'Responder %s - type %s added' % (new_name, responder_class)
+    page_data["adminhead","page_head","large_text"] = 'Responder %s - type %s added' % (new_name, responder_class)
 
 
 def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
