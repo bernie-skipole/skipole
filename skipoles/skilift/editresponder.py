@@ -32,6 +32,7 @@ import inspect
 from collections import namedtuple
 
 from ..ski import skiboot, responders
+from ..ski.page_class_definition import RespondPage
 from ..ski.excepts import ServerError
 
 from . import project_loaded
@@ -51,6 +52,21 @@ def list_responders():
             responderlist.append(ResponderInfo(name, item.description_ref()))
     return responderlist
 
+
+def make_new_responder(project, foldernumber, pagenumber, name, brief, responder):
+    "Creates a new responder within the folder"
+
+    for name,item in inspect.getmembers(responders, inspect.isclass):
+        if name == responder:
+            # create an instance of the given responder - no data args set as yet
+            responder_object = item()
+            break
+    else:
+        raise ServerError(message="Responder to be created not found")
+    # create a new page and add to the given parent folder
+    page = RespondPage(name=name, brief=brief, responder=responder_object)
+    # add this new responder to the parent folder ####### still to do
+    #parent.add_page(page, pagenumber)
 
 
 
