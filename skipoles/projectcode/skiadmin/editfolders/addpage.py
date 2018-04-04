@@ -500,28 +500,47 @@ called myfile in the static directory, the path should be %s""" % (os.path.join(
 
 
 def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Create a new responder page"
-    editedproj = call_data['editedproj']
+    """Create a new responder page by making a dictionary similar to:
+
+    {
+     "name":"page_name",
+     "ident":999,
+     "brief":"brief description of the page",
+     "RespondPage":{
+         "class":"ResponderClass",
+         "original_args": {},
+         "original_fields": {}
+        }
+    }
+
+    And then calling editfolder.make_new_page(project, parent_number, page_dict)
+"""
+
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
     # responder class name
     responder_class = call_data['responder_class']
-    for cls in inspect.getmembers(responders, inspect.isclass):
-        if cls[0] == responder_class:
-            # create a responder - no data args set as yet
-            responder = cls[1]()
-            break
-    else:
-        raise FailPage("Responder to be created not found")
-    # create a new page and add to the given parent folder
-    page = RespondPage(name=new_name, brief=new_brief, responder=responder)
-    # add this new responder to the parent folder
-    parent.add_page(page, new_ident)
-    #  clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data, keep=['folder_number'])
-    # add new page ident to call_data so the page can be edited
-    call_data['page'] = str(page.ident)
+    # create a new page dictionary
+    page_dict = {"name":new_name,
+                 "ident":pagenumber,
+                 "brief":new_brief,
+                 "RespondPage":{
+                    "class":responder_class,
+                    "original_args": {},
+                    "original_fields": {}
+                    }
+                }
+    # create the new page
+    try:
+        pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    # clear and re-populate call_data for edit page
+    utils.no_ident_data(call_data)
+    call_data['folder_number'] = foldernumber
+    call_data['page_number'] = pagenumber
     call_data['status'] = 'Responder %s - type %s added' % (new_name, responder_class)
+
 
 
 def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

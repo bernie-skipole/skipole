@@ -216,6 +216,20 @@ def create_jsonpage(proj_ident, parent_ident, page_ident, page_name, brief, json
     parent.add_page(page, page_ident)
 
 
+def create_respondpage(proj_ident, parent_ident, page_ident, page_name, brief, json_data):
+    """Builds the respond page from the given json string, or ordered dictionary and adds it to project"""
+    if isinstance(json_data, str):
+        page_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
+    else:
+        page_dict = json_data
+    if "RespondPage" not in page_dict:
+        raise excepts.ServerError("Invalid file")
+    page_args = page_dict["RespondPage"]
+    page = _create_respondpage(page_name, brief, page_args, proj_ident)
+    parent = skiboot.from_ident(parent_ident, proj_ident)
+    parent.add_page(page, page_ident)
+
+
 def create_folder(proj_ident, parent_ident, addition_number, folder_name, restricted, json_data):
     """Builds the folder and contents from the given json string, or ordered dictionary and adds it to project
        Returns the top folder ident"""
@@ -603,7 +617,7 @@ def _create_respondpage(page_name, brief, page_args, proj_ident):
             Responder = cls[1]
             break
     else:
-        raise excepts.ServerError("Responder %s not recognised in project.json" % (responder_name,))
+        raise excepts.ServerError("Responder %s not recognised" % (responder_name,))
     # get the data_args of the responder
     data_args = _to_dict(page_args["original_args"], proj_ident)
     if 'allowed_callers' in data_args:
