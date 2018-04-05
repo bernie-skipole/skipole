@@ -80,10 +80,6 @@ _CALL_SUBMIT_DATA = {
                        20111: editproject.submit_removeproject,         # remove the project
                        20121: editproject.retrieve_edit_project,        # gets field data for edit project page
                        20139: editproject.submit_suburl,                # sets the url of a sub project
-                       22307: addpage.retrieve_add_page,                # gets field data for add page
-                       22410: addpage.submit_new_template,              # add a new template page
-                       22420: addpage.retrieve_new_responder,           # gets data for creating a new responder
-                       22425: addpage.submit_new_responder,             # add a new responder
                        22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
                        23259: editpage.submit_default_error_widget,     # sets default error widget
                        23419: editpage.submit_cache,                    # sets cache header

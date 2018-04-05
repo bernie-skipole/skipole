@@ -27396,6 +27396,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 22307,
+"submit_list": [
+"editfolders",
+"addpage",
+"retrieve_new_responder"
+],
 "target_ident": 22421
 },
 "original_fields": {}
@@ -28976,6 +28981,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 22006,
+"submit_list": [
+"editfolders",
+"addpage",
+"retrieve_add_page"
+],
 "target_ident": 22309
 },
 "original_fields": {}
@@ -29099,6 +29109,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 22307,
+"submit_list": [
+"editfolders",
+"addpage",
+"submit_new_responder"
+],
 "target_ident": 26007
 },
 "original_fields": {}
@@ -29128,6 +29143,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 22307,
+"submit_list": [
+"editfolders",
+"addpage",
+"submit_new_template"
+],
 "target_ident": 23207
 },
 "original_fields": {}
