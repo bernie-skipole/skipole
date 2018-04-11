@@ -46,7 +46,7 @@ class Link(Widget):
                         'get_field1':FieldArg("text", "", valdt=True),
                         'get_field2':FieldArg("text","", valdt=True),
                         'content':FieldArg("text", "", jsonset=True),
-                        'new_window':FieldArg("boolean", False),
+                        'target':FieldArg("text", ""),
                         'force_ident':FieldArg("boolean", False)
                        }
 
@@ -56,7 +56,7 @@ class Link(Widget):
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
         content: The text to be placed within the link, if none given, the page url will be used
-        new_window: if True, the target='_blank' attribute will be set, to open the target in a new window
+        target: if given, the target attribute will be set
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
@@ -85,8 +85,8 @@ class Link(Widget):
         # add get fields and page ident_data to the url (defined in tag.ParentPart)
         url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
         self.update_attribs({"href": url})
-        if self.get_field_value("new_window"):
-            self.update_attribs({"target":"_blank"})
+        if self.get_field_value("target"):
+            self.update_attribs({"target":self.get_field_value("target")})
 
     @classmethod
     def description(cls):
@@ -118,7 +118,7 @@ class ImageOrTextLink(Widget):
                         'get_field2':FieldArg("text", "", valdt=True),
                         'get_field3':FieldArg("text", "", valdt=True),
                         'get_field4':FieldArg("text", "", valdt=True),
-                        'new_window':FieldArg("boolean", False),
+                        'target':FieldArg("text", ""),
                         'force_ident':FieldArg("boolean", False)
                        }
 
@@ -133,7 +133,7 @@ class ImageOrTextLink(Widget):
         get_field2: Optional second 'get' string set in the target url
         get_field3: Optional third 'get' string set in the target url
         get_field4: Optional fourth 'get' string set in the target url
-        new_window: if True, the target='_blank' attribute will be set, to open the target in a new window
+        target: if given, the target attribute will be set
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
@@ -154,8 +154,8 @@ class ImageOrTextLink(Widget):
                               self.get_formname("get_field4"):self.get_field_value("get_field4")}
                 url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
                 self.update_attribs({"href": url})
-                if self.get_field_value("new_window"):
-                    self.update_attribs({"target":"_blank"})
+                if self.get_field_value("target"):
+                    self.update_attribs({"target":self.get_field_value("target")})
             else:
                 self.tag_name="span"
         else:
@@ -406,7 +406,7 @@ class ButtonLink1(Widget):
                         'get_field2':FieldArg("text","", valdt=True),
                         'button_text':FieldArg("text", "", jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
-                        'new_window':FieldArg("boolean", False),
+                        'target':FieldArg("text", ""),
                         'force_ident':FieldArg("boolean", False)
                        }
 
@@ -419,7 +419,7 @@ class ButtonLink1(Widget):
         button_text: The text to be displayed within the button. If none given, the page url will be used.
         widget_class: The class applied to the widget, should describe a button
         error_class: class which replaces widget_class on error
-        new_window: if True, the target='_blank' attribute will be set, to open the target in a new window
+        target: if given, the target attribute will be set
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
@@ -454,8 +454,8 @@ class ButtonLink1(Widget):
                       self.get_formname("get_field2"):self.get_field_value("get_field2")}
         url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
         self.update_attribs({"href": url})
-        if self.get_field_value("new_window"):
-            self.update_attribs({"target":"_blank"})
+        if self.get_field_value("target"):
+            self.update_attribs({"target":self.get_field_value("target")})
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets field values"""
@@ -1060,7 +1060,7 @@ class ListLinks(Widget):
     arg_descriptions = {
                         'li_class':FieldArg("cssclass", ""),
                         'link_class':FieldArg("cssclass", ""),
-                        'new_window':FieldArg("boolean", False),
+                        'target':FieldArg("text", ""),
                         'force_ident':FieldArg("boolean", False),
                         'links':FieldArgTable(['text', 'url', 'text'], valdt=True)
                         }
@@ -1069,7 +1069,7 @@ class ListLinks(Widget):
         """
         li_class: class to set in each li element
         link_class: class to set in each a element
-        new_window: if True, the target='_blank' attribute will be set on each link, to open the target in a new window
+        target: if given, the target attribute will be set on each link
         force_ident: If True then the page ident will be included, even if no get field set
                      If False, the page ident will only be included if a get field is set
         links: col 0 is the text to place in link,
@@ -1085,7 +1085,7 @@ class ListLinks(Widget):
         fieldlist = self.get_field_value('links')
         li_class = self.get_field_value('li_class')
         link_class = self.get_field_value('link_class')
-        new_window = self.get_field_value('new_window')
+        target = self.get_field_value('target')
         force_ident = self.get_field_value('force_ident')
         # create rows
         for rownumber, row in enumerate(fieldlist):
@@ -1097,7 +1097,7 @@ class ListLinks(Widget):
                                        link_ident = row[1],
                                        get_field1 = row[2],
                                        content = row[0],
-                                       new_window = new_window,
+                                       target = target,
                                        force_ident = force_ident   )
             self[rownumber][0].set_name('get_field1',  self.get_name('links'))
 

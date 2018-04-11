@@ -798,7 +798,7 @@ class SubmitTextInput1(Widget):
                         'hidden_field2':FieldArg("text", '', valdt=True),
                         'hidden_field3':FieldArg("text", '', valdt=True),
                         'hidden_field4':FieldArg("text", '', valdt=True),
-                        'new_window':FieldArg("boolean", False),
+                        'target':FieldArg("text",''),
                         'button_text':FieldArg("text",'Submit'),
                         'button_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
@@ -829,7 +829,7 @@ class SubmitTextInput1(Widget):
         hidden_field2: A second hidden field value, leave blank if unused, name used as the get field name
         hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
         hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
-        new_window: if True, the target='_blank' attribute will be set, to open the target in a new window
+        target: if given, the target attribute will be set
         button_text: The text on the button
         button_class: The class given to the button tag
         inputdiv_class: the class attribute of the div which contains the label, input text and button
@@ -873,8 +873,8 @@ class SubmitTextInput1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        if self.get_field_value("new_window"):
-            self[1].update_attribs({"target":"_blank"})
+        if self.get_field_value("target"):
+            self[1].update_attribs({"target":self.get_field_value("target")})
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
         self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
@@ -1021,7 +1021,7 @@ class SubmitTextInput3(Widget):
                         'hidden_field2':FieldArg("text", '', valdt=True),
                         'hidden_field3':FieldArg("text", '', valdt=True),
                         'hidden_field4':FieldArg("text", '', valdt=True),
-                        'new_window':FieldArg("boolean", False),
+                        'target':FieldArg("text",''),
                         'button_text':FieldArg("text",'Submit'),
                         'button_class':FieldArg("cssclass", ''),
                         'buttondiv_class':FieldArg("cssclass", ''),
@@ -1059,7 +1059,7 @@ class SubmitTextInput3(Widget):
         hidden_field2: A second hidden field value, leave blank if unused, name used as the get field name
         hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
         hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
-        new_window: if True, the target='_blank' attribute will be set, to open the target in a new window
+        target: if given, the target attribute will be set
         button_text: The text on the button
         buttondiv_class: the class attribute of the div which contains the button
         button_class: the class attribute of the button
@@ -1116,8 +1116,8 @@ class SubmitTextInput3(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        if self.get_field_value("new_window"):
-            self[2].update_attribs({"target":"_blank"})
+        if self.get_field_value("target"):
+            self[2].update_attribs({"target":self.get_field_value("target")})
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
         self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
