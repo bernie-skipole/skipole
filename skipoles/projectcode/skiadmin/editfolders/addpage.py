@@ -27,9 +27,7 @@
 
 import os, inspect, re
 
-from ....ski import skiboot, responders
 from ....ski.excepts import ValidateError, FailPage, ServerError
-from ....ski.page_class_definition import FilePage, RespondPage, JSON
 
 from .... import skilift
 from ....skilift import fromjson, editfolder, editresponder
@@ -90,38 +88,6 @@ def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_d
         page_data['it3:page_ident_number'] = str(skilift.next_ident_number(project))
 
 
-def _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    editedproj = call_data['editedproj']
-    if 'edited_folder' not in call_data:
-        raise FailPage(message = "Folder missing")
-    parent_ident = skiboot.Ident.to_ident(call_data['edited_folder'], editedproj.proj_ident)
-    # parent folder is the folder from memory, not a copy
-    parent =  editedproj.get_item(parent_ident)
-    if parent.page_type != "Folder":
-        raise FailPage(message = "Invalid folder")
-
-    # Get the new ident
-    if 'page_ident_number' not in call_data:
-        raise FailPage(message = "The ident of the new page has not been found", widget='st1')
-    new_ident = skiboot.make_ident(call_data['page_ident_number'], proj_ident=editedproj.proj_ident)
-    if new_ident is None:
-        raise FailPage(message = "The ident of the new page is invalid", widget='st1')
-    
-    # Get the new page name
-    if 'new_page' not in call_data:
-        raise FailPage(message = "The name of the new page has not been found", widget='st1')
-    new_name = call_data['new_page']
-    if new_name in parent:
-        raise FailPage(message = "The name of the new page already exists in this folder", widget='st1')
-    # Get the new page brief
-    if 'page_brief' in call_data:
-        new_brief = call_data['page_brief']
-    else:
-        new_brief = 'New Page'
-    return parent, new_ident, new_name, new_brief
-
-
-########## This function to replace _check_data #################
 def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Returns project, parent foldernumber, new pagenumber, new_name, new_brief"
     project = call_data['editedprojname']
@@ -135,23 +101,27 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
         folder_info = skilift.folder_info(project, foldernumber)
     except ServerError as e:
         raise FailPage(message=e.message)
-    # Get the new ident
-    if 'page_ident_number' not in call_data:
-        raise FailPage(message = "The ident of the new page has not been found", widget='st1')
+    # Get the new page number
     try:
-        pagenumber = int(call_data['page_ident_number'])
+        # pagenumber could be number or "project,number" or "project_number"
+        page_ident = call_data['page_ident_number']
+        if page_ident.startswith(project):
+            if ',' in page_ident:
+                page_ident = page_ident.split(',')[-1]
+            elif '_' in page_ident:
+                page_ident = page_ident.split('_')[-1]
+        pagenumber = int(page_ident)
     except:
-        raise FailPage(message = "The page number is invalid", widget='st1')
+        raise FailPage(message = "The page number is invalid")
     if pagenumber < 1:
-        raise FailPage(message = "The page number is invalid", widget='st1')
-    
+        raise FailPage(message = "The page number is invalid")
     # Get the new page name
     if 'new_page' not in call_data:
-        raise FailPage(message = "The name of the new page has not been found", widget='st1')
+        raise FailPage(message = "The name of the new page has not been found")
     new_name = call_data['new_page']
     # check name is alphanumric, dot or underscore only
     if _AND.search(new_name):
-        raise FailPage(message = "Names must be alphanumric, and may contain dot or underscore", widget='st1')
+        raise FailPage(message = "Names must be alphanumric, and may contain dot or underscore")
     # Get the new page brief
     if 'page_brief' in call_data:
         new_brief = call_data['page_brief']
@@ -576,42 +546,32 @@ def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, c
 
 def submit_copy_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Copy a page"
-    editedproj = call_data['editedproj']
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    # Get a copy of the page
+    project, foldernumber, new_page_number, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    # Get the page to be copied
     if 'copyident' not in call_data:
         raise FailPage(message = "The ident of the page to be copied has not been found", widget='copyident')
-    orig_page = skiboot.from_ident(call_data['copyident'], proj_ident=editedproj.proj_ident)
-    if orig_page.page_type == "Folder":
-        raise FailPage(message = "Invalid item to be copied", widget='copyident')
-    # check template page name
-    if (orig_page.page_type == "TemplatePage") and _AND.search(new_name):
-        # check name is alphanumric, dot or underscore only
-        raise FailPage(message = "Templates page names must be alphanumric, dot or underscore only", widget='copyident')
-    # create new page
-    new_page = orig_page.copy(name=new_name, brief = new_brief)
-    # add page to parent
-    parent.add_page(new_page, new_ident)
+    pagenumber = call_data['copyident']
+    try:
+        fchange = editfolder.copy_page(project, pagenumber, foldernumber, new_page_number, new_name, new_brief)
+    except ServerError as e:
+        raise FailPage(e.message)
     edited_folder = call_data['edited_folder']
     utils.no_ident_data(call_data)
+    call_data['fchange'] = fchange
     call_data['edited_folder'] = edited_folder
-    call_data['folder_number'] = parent.ident.num
+    call_data['folder_number'] = foldernumber
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
 def retrieve_new_copypage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for a create a page copy"
 
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    parent_url = skilift.page_path(project, foldernumber)
 
-    parent_ident = str(parent.ident)
-
-    page_data[("adminhead","page_head","large_text")] = "Add a page copy to : %s" % (parent.url,)
+    page_data[("adminhead","page_head","large_text")] = "Add a page copy to : %s" % (parent_url,)
 
     # information paragraphs
     page_data['page_name_text:para_text'] = "New page name : " + new_name
@@ -620,14 +580,13 @@ def retrieve_new_copypage(caller_ident, ident_list, submit_list, submit_dict, ca
     # information hidden fields
     page_data['copyident','pagename'] = new_name
     page_data['copyident','pagebrief'] = new_brief
-    page_data['copyident','pageident'] = new_ident
-    page_data['copyident','parent'] = parent_ident
+    page_data['copyident','pageident'] = str(pagenumber)
+    page_data['copyident','parent'] = str(foldernumber)
 
     page_data['upload','pagename'] = new_name
     page_data['upload','pagebrief'] = new_brief
-    page_data['upload','pageident'] = new_ident
-    page_data['upload','parent'] = parent_ident
-
+    page_data['upload','pageident'] = str(pagenumber)
+    page_data['upload','parent'] = str(foldernumber)
 
     # top descriptive text
     page_data['top_text:para_text'] = """To copy a page, either the ident number of an existing page to be copied is required, alternatively - a previously downloaded page definition file can be uploaded."""
@@ -639,26 +598,22 @@ def retrieve_new_copypage(caller_ident, ident_list, submit_list, submit_dict, ca
 
 def submit_upload_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Copy a page from uploaded file"
-    editedproj = call_data['editedproj']
     # first get submitted data for the new page
-    parent, new_ident, new_name, new_brief = _check_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    if _AND.search(new_name):
-        # check name is alphanumric, dot or underscore only
-        raise FailPage(message = "Invalid page name", widget='upload')
-    # get file contents
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    # get uploaded file contents
     if "upload" not in call_data:
         raise FailPage("upload missing from call data")
     file_contents = call_data["upload"]
     json_string = file_contents.decode(encoding='utf-8')
     # create the page
     try:
-        fromjson.create_page(editedproj.proj_ident, parent.ident.num, new_ident.num, new_name, new_brief, json_string)
+        fromjson.create_page(project, foldernumber, pagenumber, new_name, new_brief, json_string)
     except ServerError as e:
         raise FailPage(message = e.message)
     edited_folder = call_data['edited_folder']
     utils.no_ident_data(call_data)
     call_data['edited_folder'] = edited_folder
-    call_data['folder_number'] = parent.ident.num
+    call_data['folder_number'] = foldernumber
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
