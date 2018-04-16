@@ -300,6 +300,22 @@ def make_new_page(project, parent_number, page_dict):
     else:
         raise ServerError("page data not recognized")
     return page_dict['ident']
-    
+
+
+def copy_page(project, pagenumber, foldernumber, new_page_number, new_name, brief):
+    """Copy an existing page given by pagenumber, to a new page number with new name and brief into the folder given by foldernumber
+       return the folder.change uuid"""
+    if not isinstance(new_page_number, int):
+        raise ServerError(message = "The new page ident number must be an integer")
+    orig_page = skiboot.from_ident(pagenumber, project)
+    if orig_page.page_type == "Folder":
+        raise ServerError("Invalid item to be copied")
+    parentinfo = _check_parent_number(project, foldernumber)
+    folder = skiboot.from_ident(parentinfo.itemnumber, project)
+    # create new page
+    new_page = orig_page.copy(name=new_name, brief = brief)
+    # add page to parent folder
+    folder.add_page(new_page, new_page_number)
+    return folder.change
 
 
