@@ -5748,6 +5748,11 @@ false,
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 22460,
+"submit_list": [
+"editfolders",
+"addpage",
+"submit_upload_page"
+],
 "submit_option": true,
 "target_ident": 22006,
 "validate_fail_ident": null,
@@ -27333,6 +27338,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 22307,
+"submit_list": [
+"editfolders",
+"addpage",
+"retrieve_new_copypage"
+],
 "target_ident": 22461
 },
 "original_fields": {}
