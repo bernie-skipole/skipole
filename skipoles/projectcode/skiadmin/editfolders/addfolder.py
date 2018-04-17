@@ -38,34 +38,41 @@ from ....skilift import editfolder, fromjson
 _AN = re.compile('[^\w]')
 
 
-def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
 
-    editedproj = call_data['editedproj']
+def _get_folder_info(project, folder):
+    "Given a folder information string such as number or 'project,number' or 'project_number' return FolderInfo, folder_url"
+    try:
+        foldernumber = skilift.get_itemnumber(project, folder)
+        if foldernumber is None:
+            raise FailPage(message="Parent folder not recognised")
+        folder_info = skilift.folder_info(project, foldernumber)
+        folder_url = skilift.page_path(project, foldernumber)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    return folder_info, folder_url
+
+
+def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fill in the add a folder page"
+
+    project = call_data['editedprojname']
 
     # parent is the folder a new folder is to be added to
     # the value in call_data is the string ident submitted by the ftree add_folder button
     # or by a value in session_data
     if 'parent' in call_data:
-        parent_ident = skiboot.Ident.to_ident(call_data['parent'], editedproj.proj_ident)
-        parent =  editedproj.get_item(parent_ident)
-        if parent.page_type != "Folder":
-            raise FailPage(message = "Invalid parent folder")
-
+        parent_info, parent_url = _get_folder_info(project, call_data['parent'])
     elif 'add_to_foldernumber' in call_data:
-        parent_ident = skiboot.Ident.to_ident(call_data['add_to_foldernumber'], editedproj.proj_ident)
-        parent =  editedproj.get_item(parent_ident)
-        if parent.page_type != "Folder":
-            raise FailPage(message = "Invalid parent folder")
+        parent_info, parent_url = _get_folder_info(project, call_data['add_to_foldernumber'])
     else:
         raise FailPage(message = "Parent folder missing")
-    parent_ident = str(parent.ident)
 
-    page_data[("adminhead","page_head","large_text")] = "Add folder to : %s" % (parent.url,)
+    page_data[("adminhead","page_head","large_text")] = "Add folder to : %s" % (parent_url,)
 
-    page_data[('staticpath','input_text')] = os.path.join(editedproj.proj_ident, 'static')
+    page_data[('staticpath','input_text')] = os.path.join(project, 'static')
 
-    page_data[('newfolderform','parent')] = parent_ident
-    call_data['add_to_foldernumber'] = parent.ident.num
+    page_data[('newfolderform','parent')] = project+","+str(parent_info.number)
+    call_data['add_to_foldernumber'] = parent_info.number
 
     # st1: new folder name
     if 'new_folder' in call_data:
@@ -76,7 +83,7 @@ def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call
         page_data[('cb1','checked')] = True
     else:
         page_data[('cb1','checked')] = False
-    if parent.restricted:
+    if parent_info.restricted:
         page_data[('cb1','show_restricted')] = False
     else:
         page_data[('cb1','show_restricted')] = True
@@ -89,7 +96,7 @@ def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call
     if 'folder_ident_number' in call_data:
         page_data[('it2','folder_ident_number')] = str(call_data['folder_ident_number'])
     else:
-        page_data[('it2','folder_ident_number')] = str(skilift.next_ident_number(editedproj.proj_ident))
+        page_data[('it2','folder_ident_number')] = str(skilift.next_ident_number(project))
 
 
 def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -108,26 +115,17 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
 
 """
 
+    project = call_data['editedprojname']
+
     folder_dict = {}
 
     if 'parent' not in call_data:
         raise FailPage(message = "Parent folder missing")
     # the parent value in call_data is the string ident submitted by the button
-    try:
-        project, parent_number = call_data['parent'].split('_')
-        parent_number = int(parent_number)
-    except:
-        raise FailPage(message = "Invalid parent folder")
-    if project != call_data['editedprojname']:
-        raise FailPage(message = "Invalid parent folder")
+    parentinfo, parent_url = _get_folder_info(project, call_data['parent'])
 
-    parentinfo = skilift.item_info(project, parent_number)
-    if not parentinfo:
-        raise FailPage(message = "Invalid parent folder")
     # parentinfo is a named tuple with members
-    # 'project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'
-    if parentinfo.item_type != "Folder":
-        raise FailPage(message = "Invalid parent folder")
+    # 'name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders'
 
     if ('new_folder' not in call_data) or ('checkbox' not in call_data) or ('folder_brief' not in call_data) or ('folder_ident_number' not in call_data):
         raise FailPage("New folder information missing")
@@ -155,7 +153,7 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
         folderpath = folderpath.rstrip('\\')
         if not folderpath:
             raise FailPage("Sorry, the given static folder is invalid.")
-        fullpath = os.path.join(skiboot.projectfiles(), folderpath)
+        fullpath = os.path.join(skilift.get_projectfiles_dir(), folderpath)
         if not os.path.isdir(fullpath):
             raise FailPage("Sorry, the given static folder location cannot be found.")
         if not call_data['folder_brief']:
@@ -166,7 +164,7 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
 
     try:
         # create the folder
-        editfolder.make_new_folder(project, parent_number, folder_dict)
+        editfolder.make_new_folder(project, parentinfo.number, folder_dict)
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -176,7 +174,7 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
         call_data['status'] = 'Static folder tree added'
         return
 
-    call_data['status'] = 'New folder %s added.' % (parentinfo.path + folder_dict["name"] + '/',)
+    call_data['status'] = 'New folder %s added.' % (parent_url + folder_dict["name"] + '/',)
 
 
 def _make_static_folder(project, folder_dict, fullpath, folderpath):
@@ -229,7 +227,7 @@ def _make_static_folder(project, folder_dict, fullpath, folderpath):
 def submit_upload_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Copy a folder from uploaded file"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
 
     # add_to_foldernumber is the folder a new folder is to be added to
     if 'add_to_foldernumber' not in call_data:
@@ -245,7 +243,8 @@ def submit_upload_folder(caller_ident, ident_list, submit_list, submit_dict, cal
     json_string = uploadfile.decode(encoding='utf-8')
     # create the folder
     try:
-        fromjson.create_folder(editedprojname, call_data['add_to_foldernumber'], addident, importname, False, json_string)
+        # note: restricted is set to False
+        fromjson.create_folder(project, call_data['add_to_foldernumber'], addident, importname, False, json_string)
     except ServerError as e:
         raise FailPage(message = e.message, widget='import_folder')
     del call_data['add_to_foldernumber']
