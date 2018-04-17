@@ -1094,6 +1094,7 @@
   "widgets.links.ImageLink1.get_field2": "Optional second 'get' string set in the target url.",
   "widgets.links.ImageLink1.get_field3": "Optional third 'get' string set in the target url.",
   "widgets.links.ImageLink1.height": "The height attribute of the image.",
+  "widgets.links.ImageLink1.hover_img_ident": "The ident or label of an image page which returns an image displayed when the mouse hovers over the link.",
   "widgets.links.ImageLink1.img_ident": "The ident or label of the image page which returns an image.",
   "widgets.links.ImageLink1.link_ident": "The target page ident or label.",
   "widgets.links.ImageLink1.width": "The width attribute of the image.",
