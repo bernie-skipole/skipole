@@ -28,7 +28,7 @@ import pkgutil, re, collections, uuid, os, random
 
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces
 
-from .editfolders import editproject, addpage
+from .editfolders import editproject
 from .editpages import editpage
 from .edittextblocks import managetextblocks, edittextblockrefs
 from .editsections import managesections
@@ -64,7 +64,6 @@ _IDENT_DATA = 0
 # this method to eventually be replaced by responders with submit lists
 
 _CALL_SUBMIT_DATA = {
-                        2470: addpage.submit_upload_page,               # copies an uploaded page definition file to create a new one
                         3230: editpage.set_html_lang,                   # sets page html lang tag
                         3260: editpage.downloadpage,                    # downloads json file of given page ident
                         3710: editpage.set_json_cache,                  # sets json page cache setting
@@ -80,7 +79,6 @@ _CALL_SUBMIT_DATA = {
                        20111: editproject.submit_removeproject,         # remove the project
                        20121: editproject.retrieve_edit_project,        # gets field data for edit project page
                        20139: editproject.submit_suburl,                # sets the url of a sub project
-                       22460: addpage.retrieve_new_copypage,            # gets data for creating a page copy
                        23259: editpage.submit_default_error_widget,     # sets default error widget
                        23419: editpage.submit_cache,                    # sets cache header
                        23421: editpage.retrieve_page_svg,               # gets data for page svg
