@@ -26,10 +26,7 @@
 
 import os, re
 
-from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError
-
-from .. import utils
 
 from .... import skilift
 from ....skilift import editfolder, fromjson
@@ -40,7 +37,7 @@ _AN = re.compile('[^\w]')
 
 
 def _get_folder_info(project, folder):
-    "Given a folder information string such as number or 'project,number' or 'project_number' return FolderInfo, folder_url"
+    "Given a folder ident string such as number or 'project,number' or 'project_number' return FolderInfo, folder_url"
     try:
         foldernumber = skilift.get_itemnumber(project, folder)
         if foldernumber is None:
@@ -188,8 +185,7 @@ def _make_static_folder(project, folder_dict, fullpath, folderpath):
         ident = folder_dict["ident"]
         ident_number_list = skilift.ident_numbers(project)
         for root, dirs, files in os.walk(fullpath):
-            # given root, find the folder, at first pass, equivalent to parent=folder
-            fpath = root[len(skiboot.projectfiles())+1:]
+            fpath = root[len(skilift.get_projectfiles_dir())+1:]
             parent_ident = ident_dict[fpath]
             if files:
                 # create files
@@ -219,7 +215,7 @@ def _make_static_folder(project, folder_dict, fullpath, folderpath):
                         if ident not in ident_number_list:
                             new_folder_dict["ident"] = ident
                     ident_dict[new_folderpath] = editfolder.make_new_folder(project, parent_ident, new_folder_dict)
-    except ValidateError as e:
+    except ServerError as e:
         raise FailPage(e.message)
 
 
