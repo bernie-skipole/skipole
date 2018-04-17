@@ -593,6 +593,7 @@ class ImageLink1(Widget):
 
     arg_descriptions = {'link_ident':FieldArg("url", ''),
                         'img_ident':FieldArg("url", ''),
+                        'hover_img_ident':FieldArg("url", ''),
                         'width':FieldArg("text","100"),
                         'height':FieldArg("text","100"),
                         'align':FieldArg("text",""),
@@ -616,6 +617,8 @@ class ImageLink1(Widget):
         """
         Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
         self[0] = tag.ClosedPart(tag_name="img")
+        self._hover_img_url = ''
+        self._img_url = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
@@ -645,11 +648,28 @@ class ImageLink1(Widget):
             # if no image ident, place the link page url as content, without the get fields
             self[0] = justurl
             return
-        imageurl = skiboot.get_url(self.get_field_value("img_ident"), proj_ident=page.proj_ident)
-        if not imageurl:
+        img_url = skiboot.get_url(self.get_field_value("img_ident"), proj_ident=page.proj_ident)
+        if not img_url:
             self[0] = justurl
+            return
         else:
-            self[0].update_attribs({"src": quote(imageurl, safe='/:')})
+            self._img_url = quote(img_url, safe='/:')
+            self[0].update_attribs({"src": self._img_url})
+        hover_img_url = skiboot.get_url(self.get_field_value("hover_img_ident"), proj_ident=page.proj_ident)
+        if hover_img_url:
+            self._hover_img_url = quote(hover_img_url, safe='/:')
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a hover event handler"""
+        if (not self._img_url) or (not self._hover_img_url):
+            return ''
+        return """  $("#{ident}").hover(function (e) {{
+    $("img", this).attr('src', '{hover_img_url}');
+      }}, function (e) {{
+    $("img", this).attr('src', '{img_url}');
+      }});
+""".format(ident = self.get_id(), hover_img_url = self._hover_img_url, img_url = self._img_url)
 
     @classmethod
     def description(cls):
