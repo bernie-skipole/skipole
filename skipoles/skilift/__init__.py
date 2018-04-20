@@ -55,13 +55,48 @@ def project_loaded(project, error_if_not=True):
     return False
 
 
+def projectURLpaths():
+    "Returns a dictionary of project name : project path"
+    rootproject = skiboot.getproject()
+    paths = {ident:path for ident,path in rootproject.subproject_paths.items()}
+    paths[rootproject.proj_ident] = rootproject.url
+    return paths
+
+
 def get_root():
     "Returns the root project name"
     return skiboot.project_ident()
 
+
 def admin_project():
     "Returns the ski admin project name"
     return skiboot.admin_project()
+
+
+def add_sub_project(sub_project):
+    "Adds a sub_project to the current root project"
+    root_project = skiboot.getproject()
+    if sub_project == root_project.proj_ident:
+        raise ServerError(message="Cannot add a project to itself")
+    root_project.add_project(sub_project)
+
+
+def remove_sub_project(sub_project):
+    "Removes a sub_project from the current root project"
+    project_loaded(sub_project)
+    root_project = skiboot.getproject()
+    if sub_project == root_project.proj_ident:
+        raise ServerError(message="Cannot remove itself")
+    root_project.remove_project(sub_project)
+
+
+def set_sub_project_path(sub_project, path):
+    "Sets the project path of a sub project"
+    project_loaded(sub_project)
+    root_project = skiboot.getproject()
+    if sub_project == root_project.proj_ident:
+        raise ServerError(message="Cannot set root path")
+    root_project.set_project_url(sub_project, path)
 
 
 def get_debug():
@@ -446,15 +481,6 @@ def labels(project=None):
     if proj is None:
         return {}
     return proj.labels()
-
-
-def projectURLpaths():
-    "Returns a dictionary of project name : project path"
-    rootproject = skiboot.getproject()
-    paths = {ident:path for ident,path in rootproject.subproject_paths.items()}
-    paths[rootproject.proj_ident] = rootproject.url
-    return paths
-
 
 
 def pages(project, foldernumber):
