@@ -594,6 +594,7 @@ class ImageLink1(Widget):
     arg_descriptions = {'link_ident':FieldArg("url", ''),
                         'img_ident':FieldArg("url", ''),
                         'hover_img_ident':FieldArg("url", ''),
+                        'target':FieldArg("text", ""),
                         'width':FieldArg("text","100"),
                         'height':FieldArg("text","100"),
                         'align':FieldArg("text",""),
@@ -608,6 +609,7 @@ class ImageLink1(Widget):
         link_ident: The target page link ident, label or url
         img_ident: The ident of the image page
         hover_img_ident: The ident of an image page shown when hovering over the link
+        target: if given, the target attribute will be set
         width: The width of the image
         height: The height of the image
         get_field1: Optional 'get' string set in the target url
@@ -631,6 +633,8 @@ class ImageLink1(Widget):
             self[0].set_attribs({'height':self.get_field_value('height')})
         if self.get_field_value('align'):
             self[0].update_attribs({'align':self.get_field_value('align')})
+        if self.get_field_value("target"):
+            self.update_attribs({"target":self.get_field_value("target")})
         if not self.get_field_value("link_ident"):
             self._error = "Warning: broken link"
             return
