@@ -27,109 +27,96 @@
 
 import os, shutil
 
-from ....skilift import get_textblock_text, get_projectfiles_dir
-from ....ski import skiboot, folder_class_definition
+from .... import skilift
+from ....ski import skiboot
 from ....ski.excepts import FailPage, ValidateError, ServerError
 
 
 def retrieve_edit_project(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fill in the page to edit the sub project url"
 
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
+    # project is the edited project name
+    project = call_data['editedprojname']
 
     #  get the sub project to be edited
     if 'project' in call_data:
         sub_project = call_data['project']
     else:
-        raise FailPage(message="Project not found", widget = "projmap")
-    if (not sub_project) or (not skiboot.is_project(sub_project)):
-        raise FailPage(message = 'invalid project', widget = "projmap")
-    url = editedproj.subproject_paths[sub_project]
-    page_data['subprojurl:hidden_field1'] = sub_project
-    page_data['subprojurl:bottomtext'] = "Current sub project URL is %s" % (url,)
-    page_data['subprojurl:input_text'] = url
+        raise FailPage(message="Project not found")
+    if not sub_project:
+        raise FailPage(message = 'invalid project')
+    if sub_project == project:
+        raise FailPage(message = 'invalid project')
 
+    projectpaths = skilift.projectURLpaths()
+    if sub_project not in projectpaths:
+        raise FailPage(message = 'invalid project')
+
+    url = projectpaths[sub_project]
+    page_data['subprojurl:hidden_field1'] = sub_project
+    page_data['subprojurl:input_text'] = url
     page_data[("adminhead","page_head","large_text")] = "Sub-project : " + sub_project
 
 
 def submit_addproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "add a project"
 
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-
-    if not editedproj.rootproject:
-        # cannot add a subproject if this is not the rootproject
-        raise FailPage(message='Invalid: Not the root project', widget = "sdd1")
+    # project is the edited project name
+    project = call_data['editedprojname']
 
     if "add_project" not in call_data:
-        raise ValidateError(message='Invalid call')
+        raise FailPage(message='Invalid call')
 
     proj_id = call_data["add_project"]
-    if proj_id == adminproj.proj_ident:
-        raise FailPage(message = "Cannot add skiadmin project",
-                            widget = "sdd1")
-    if proj_id == editedproj.proj_ident:
-        raise FailPage(message = "Cannot add a project to itself",
-                            widget = "sdd1")
+    if proj_id == skilift.admin_project():
+        raise FailPage(message = "Cannot add skiadmin project")
+    if proj_id == project:
+        raise FailPage(message = "Cannot add a project to itself")
     try:
-        editedproj.add_project(proj_id)
+        skilift.add_sub_project(proj_id)
     except (ValidateError, ServerError) as e:
-        raise FailPage(message = e.message,
-                    widget = "sdd1")
+        raise FailPage(message = e.message)
 
 
 def submit_removeproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "remove a project"
 
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-
-    if not editedproj.rootproject:
-        # cannot remove a subproject if this is not the rootproject
-        raise FailPage(message='Invalid: Not the root project', widget = "projmap")
-
     if "remove_project" not in call_data:
-        raise ValidateError(message='Invalid call')
+        raise FailPage(message='Invalid call')
 
     proj_id = call_data["remove_project"]
-    if proj_id == editedproj.proj_ident:
-        # Cannot remove the current project
-        raise FailPage(message = "Cannot remove the current project",
-                    widget = "projmap")
-    if proj_id == adminproj.proj_ident:
+    if proj_id == skilift.admin_project():
         # Cannot remove skiadmin
-        raise FailPage(message = "Cannot remove the current admin project",
-                    widget = "projmap")
-    if proj_id not in editedproj.subprojects:
-        raise FailPage(message = 'Project not found',
-                    widget = "projmap")
+        raise FailPage(message = "Cannot remove the current admin project")
     # remove a project
     try:
-        # remove reference
-        editedproj.remove_project(proj_id)
+        # remove the sub project
+        skilift.remove_sub_project(proj_id)
     except (ValidateError, ServerError) as e:
-        raise FailPage(message = e.message,
-                    widget = "projmap")
+        raise FailPage(message = e.message)
 
 
 def submit_suburl(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "sets the url of a sub project"
 
-    editedproj = call_data['editedproj']
+    # project is the edited project name
+    project = call_data['editedprojname']
 
     if "project_url" not in call_data:
-        raise ValidateError(message='Invalid call')
+        raise FailPage(message='New sub project path has not been given')
     if "project" not in call_data:
-        raise ValidateError(message='Invalid call')
-    #  get the project to be edited
+        raise FailPage(message='The sub project to edit has not been given')
+    #  get the sub project to be edited
     proj_id = call_data['project']
-
-    if proj_id not in editedproj.subprojects:
-        raise FailPage(message = "Invalid project")
-    current_url = editedproj.subproject_paths[proj_id]
+    if (not proj_id) or (proj_id == project):
+        raise FailPage(message = 'invalid project')
+    projectpaths = skilift.projectURLpaths()
+    if proj_id not in projectpaths:
+        raise FailPage(message = 'invalid project')
+    current_url = projectpaths[proj_id]
     if current_url == call_data["project_url"]:
         return {("adminhead","page_head","small_text"):"No change to the current URL?"}
+
     try:
         editedproj.set_project_url(proj_id, call_data["project_url"])
     except (ValidateError, ServerError) as e:
@@ -146,7 +133,7 @@ def retrieve_about_code(caller_ident, ident_list, submit_list, submit_dict, call
 
     page_data[("codelocation","para_text")] = skiboot.projectcode(editedproj.proj_ident)
     page_data[('codedir', 'proj_ident')] = editedproj.proj_ident
-    page_data[("filelocation","para_text")] = os.path.join(get_projectfiles_dir(project=editedproj.proj_ident), "static")
+    page_data[("filelocation","para_text")] = os.path.join(skilift.get_projectfiles_dir(project=editedproj.proj_ident), "static")
 
 
 def retrieve_about_skilift(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -216,7 +203,7 @@ def get_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page
     received_widgfields = submit_dict['received']
     for key, val in received_widgfields.items():
         if isinstance(key, tuple) and (key[-1] == 'get_field'):
-            text = get_textblock_text(val, lang, project=adminproj.proj_ident).replace('\n', '\n<br />')
+            text = skilift.get_textblock_text(val, lang, project=adminproj.proj_ident).replace('\n', '\n<br />')
             if text is None:
                 continue
             if len(key) == 3:
