@@ -38,12 +38,14 @@ _CFG = {
 "new_project"     : "newproj",           # copied to create a new project
 "admin_project"   : "skiadmin",          # The skipole admin project
 "lib_project"     : "lib",               # The skipole static library project
-"version"         : "0.9.0",             # The skipole version
+"version"         : "0.9.1",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
 
 ROOTPROJECT = None
+
+_PROJECT_CODE_DIR = ''
 
 _LIB_LABELS = ["skipole_js", "jquery_core",
                "ski_basic", "ski_checkbox", "ski_confirm", "ski_debug_tools", "ski_dropdown", "ski_error_messages",
@@ -168,8 +170,17 @@ def projectdata(proj_ident=None):
     return os.path.join(projectpath(proj_ident), 'data')
 
 def projectcode(proj_ident=None):
-    from ..projectcode import get_projectcode_dir
-    return get_projectcode_dir(proj_ident)
+    """If proj_ident not given, returns the projectcode directory path
+       If project is given, returns the projectcode/project directory path"""
+    global _PROJECT_CODE_DIR
+    if proj_ident:
+        return os.path.join(_PROJECT_CODE_DIR, proj_ident)
+    return _PROJECT_CODE_DIR
+
+def set_projectcode(project_code_directory):
+    "Sets the directory containing project code, this is called by the projectcode __init__ file when first imported"
+    global _PROJECT_CODE_DIR
+    _PROJECT_CODE_DIR = project_code_directory
 
 def project_json(proj_ident=None):
     "Returns projectfiles/proj_ident/data/project.json"

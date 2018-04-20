@@ -50,6 +50,10 @@ _PROJECTS = {}
 _TEXTBLOCKS = {}
 
 
+# set this projectcode directory into skiboot
+skiboot.set_projectcode(os.path.dirname(os.path.realpath(__file__)))
+
+
 def _import_project_code(proj_ident):
     global _PROJECTS
     try:
@@ -85,15 +89,6 @@ def make_AccessTextBlocks(project, projectfiles, default_language):
     textblocks_module = _TEXTBLOCKS[project]
     return textblocks_module.AccessTextBlocks(project, projectfiles, default_language)
 
-
-# returns the projectcode directory
-def get_projectcode_dir(project=None):
-    """If project not given, returns the projectcode directory path
-       If project is given, returns the projectcode/project directory path"""
-    if project:
-        return os.path.join(os.path.dirname(os.path.realpath(__file__)), project)
-    else:
-        return os.path.dirname(os.path.realpath(__file__))
 
 def code_reload(proj_ident):
     "Re-loads user code"
