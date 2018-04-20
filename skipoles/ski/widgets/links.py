@@ -607,6 +607,7 @@ class ImageLink1(Widget):
         """
         link_ident: The target page link ident, label or url
         img_ident: The ident of the image page
+        hover_img_ident: The ident of an image page shown when hovering over the link
         width: The width of the image
         height: The height of the image
         get_field1: Optional 'get' string set in the target url
@@ -2020,5 +2021,57 @@ class GeneralButtonTable2(Widget):
                                                     even_class = self._even,
                                                     odd_class = self._odd)
         return jscript
+
+
+class ProjectiFrame(Widget):
+    """An iframe displaying a given sub project, with name of
+       the sub project or sectionalias-subproject if the iframe is in a section"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'sub_project':FieldArg("text", ""),
+                        'width':FieldArg("text", "800"),
+                        'height':FieldArg("text", "800")
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        sub_project: The name of the sub project displayed in the iframe
+        width: The width in pixels of the iframe
+        height: the height in pixels of the iframe
+        """
+        Widget.__init__(self, name=name, tag_name="iframe", brief=brief, **field_args)
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the iframe"
+        proj_ident = self.get_field_value("sub_project")
+        if not proj_ident:
+            self._error = "Warning: sub-project for iframe is not given"
+            return
+        if not skiboot.is_sub_project(proj_ident):
+            self._error = "Warning: sub-project %s for iframe has not been found" % proj_ident
+            return
+        project_url = skiboot.getproject(proj_ident).url
+        if self.placename:
+            iframename = self.placename + "-" + proj_ident
+        else:
+            iframename = proj_ident
+        self.update_attribs({"width": self.get_field_value("width"),
+                             "height": self.get_field_value("height"),
+                             "name": iframename,
+                             "src": project_url})
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<iframe src="#">  <!-- with widget id and class widget_class
+    and src the url of the sub-project
+    name of subproject or sectionaliasname-project if in a section
+    and height and width as given -->
+</iframe>"""
 
 

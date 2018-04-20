@@ -847,3 +847,10 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
     };
 
 
+SKIPOLE.links.ProjectiFrame = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.ProjectiFrame.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.ProjectiFrame.prototype.constructor = SKIPOLE.links.ProjectiFrame;
+
