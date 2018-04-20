@@ -38,7 +38,7 @@ _CFG = {
 "new_project"     : "newproj",           # copied to create a new project
 "admin_project"   : "skiadmin",          # The skipole admin project
 "lib_project"     : "lib",               # The skipole static library project
-"version"         : "0.8.1",             # The skipole version
+"version"         : "0.9.0",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
@@ -91,6 +91,14 @@ def is_project(proj_ident):
         return True
     return False
 
+def is_sub_project(proj_ident):
+    "Returns True if this project is not root and is in the site, False otherwise"
+    global ROOTPROJECT
+    if not proj_ident:
+        return False
+    if proj_ident in ROOTPROJECT.subprojects:
+        return True
+    return False
 
 def admin_project():
     "Returns the ski admin project name"
