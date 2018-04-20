@@ -28,6 +28,11 @@ import os, tarfile, shutil, tempfile
 
 from .ski import skiboot, read_json
 
+# need to import projectcode, as importing it runs "skiboot.set_projectcode(os.path.dirname(os.path.realpath(__file__)))"
+# so skiboot then knows the location of the project code directory
+
+from . import projectcode
+
 from .ski.project_class_definition import Project
 
 from .ski.excepts import ServerError

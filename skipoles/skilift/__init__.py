@@ -99,6 +99,10 @@ def get_projectfiles_dir(project=None):
     else:
         return skiboot.projectfiles()
 
+def get_projectcode_dir(project=None):
+    """If project not given, returns the projectcode directory path
+       If project is given, returns the projectcode/project directory path"""
+    return skiboot.projectcode(project)
 
 def next_ident_number(project):
     "Returns next ident number in the project by incrementing highest existing number"

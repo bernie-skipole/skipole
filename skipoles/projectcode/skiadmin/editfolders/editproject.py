@@ -27,8 +27,6 @@
 
 import os, shutil
 
-from ... import get_projectcode_dir
-
 from ....skilift import get_textblock_text, get_projectfiles_dir
 from ....ski import skiboot, folder_class_definition
 from ....ski.excepts import FailPage, ValidateError, ServerError
@@ -146,7 +144,7 @@ def retrieve_about_code(caller_ident, ident_list, submit_list, submit_dict, call
 
     page_data[("adminhead","page_head","large_text")] = "Your Code"
 
-    page_data[("codelocation","para_text")] = get_projectcode_dir(project=editedproj.proj_ident)
+    page_data[("codelocation","para_text")] = skiboot.projectcode(editedproj.proj_ident)
     page_data[('codedir', 'proj_ident')] = editedproj.proj_ident
     page_data[("filelocation","para_text")] = os.path.join(get_projectfiles_dir(project=editedproj.proj_ident), "static")
 
