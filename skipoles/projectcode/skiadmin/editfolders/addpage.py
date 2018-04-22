@@ -34,12 +34,11 @@ from ....skilift import fromjson, editfolder, editresponder
 
 from .. import utils, css_styles
 
-# a search for anything none-alphanumeric and not an underscore
-_AN = re.compile('[^\w]')
-
 # a search for anything none-alphanumeric, not a dot and not an underscore
 _AND = re.compile('[^\w\.]')
 
+# a search for anything none-alphanumeric, not a dot and not a underscore and not an hyphen
+_ANDH = re.compile('[^\w\.\-]')
 
 
 def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -120,8 +119,8 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
         raise FailPage(message = "The name of the new page has not been found")
     new_name = call_data['new_page']
     # check name is alphanumric, dot or underscore only
-    if _AND.search(new_name):
-        raise FailPage(message = "Names must be alphanumric, and may contain dot or underscore")
+    if _ANDH.search(new_name):
+        raise FailPage(message = "Names must be alphanumric, and may contain dot or underscore or hyphen")
     # Get the new page brief
     if 'page_brief' in call_data:
         new_brief = call_data['page_brief']
