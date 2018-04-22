@@ -31,8 +31,10 @@ from ....ski.excepts import ValidateError, FailPage, ServerError
 from .... import skilift
 from ....skilift import editfolder, fromjson
 
-# a search for anything none-alphanumeric and not an underscore
-_AN = re.compile('[^\w]')
+
+
+# a search for anything none-alphanumeric, not a dot and not a underscore and not an hyphen
+_ANDH = re.compile('[^\w\.\-]')
 
 
 
@@ -138,9 +140,9 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
     folder_dict["restricted"] = call_data['checkbox']
 
     new_folder_name = call_data['new_folder']
-    # check name is alphanumric or underscore only
-    if _AN.search(new_folder_name):
-        raise FailPage(message = "Folder names must be alphanumric or underscore only")
+    # check name is alphanumric or underscore or dot or hyphen only
+    if _ANDH.search(new_folder_name):
+        raise FailPage(message = "Folder names must be alphanumric and may also have dots or underscores or hyphens")
     folder_dict["name"] = new_folder_name
 
 
