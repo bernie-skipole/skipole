@@ -25,7 +25,7 @@
 #   limitations under the License.
 
 
-from . import editsite, editfolder, addfolder, operations, addpage
+from . import editsite, editfolder, addfolder, operations, addpage, editproject
 from ....ski.excepts import FailPage
 
 
@@ -65,6 +65,12 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
             submitfunc = getattr(addpage, submit_list[2])
         except:
             raise FailPage("submit_list contains 'editfolders', 'addpage', but the required function is not recognised")
+        return submitfunc(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    elif submit_list[1] == 'editproject':
+        try:
+            submitfunc = getattr(editproject, submit_list[2])
+        except:
+            raise FailPage("submit_list contains 'editfolders', 'editproject', but the required function is not recognised")
         return submitfunc(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
     raise FailPage("submit_list module string %s not recognised" % (submit_list[1],))
