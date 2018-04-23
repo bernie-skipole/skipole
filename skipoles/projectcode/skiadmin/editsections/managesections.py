@@ -68,8 +68,8 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
     utils.no_ident_data(call_data)
 
 
-def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "this call is for the edit section contents page"
+def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "this call fills in the section dom table"
 
     project = call_data['editedprojname']
 
@@ -83,8 +83,7 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
 
     section_list = editsection.list_section_names(project)
     if section_name not in section_list:
-        raise FailPage(message = "Section name invalid", widget="table_error")
-    page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (section_name,)
+        raise FailPage(message = "Section name invalid")
 
     # fill in the section dom table
 
@@ -99,7 +98,10 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     if section_tuple is None:
         raise FailPage("The section has not been recognised")
 
-    partdict = fromjson.part_to_OD(project, None, section_name, section_location)
+    try:
+        partdict = fromjson.part_to_OD(project, None, section_name, section_location)
+    except:
+       raise FailPage(message = "call to fromjson.part_to_OD failed")
 
     # widget editdom,domtable is populated with fields
 
@@ -183,6 +185,15 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
     page_data['editdom', 'domtable', 'droprows']  = droprows
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
+
+
+def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "this call is for the edit section contents page"
+
+    # fill in section dom table
+    retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
+    page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (call_data["section_name"],)
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
