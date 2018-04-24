@@ -205,6 +205,16 @@ class ShowResponders(Widget):
         self[2].append(last_line)
 
 
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a custom event handler to be triggered by an ident_list json update"""
+        jscript = """  $(document).on("identlist:update", function(e, arg) {{
+    SKIPOLE.widgets["{ident}"].eventfunc(e, arg);
+    }});
+""".format(ident=self.get_id())
+        return jscript
+
+
+
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""

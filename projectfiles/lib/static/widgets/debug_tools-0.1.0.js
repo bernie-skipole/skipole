@@ -48,5 +48,18 @@ SKIPOLE.debug_tools.ShowResponders = function (widg_id, error_message, fieldmap)
     };
 SKIPOLE.debug_tools.ShowResponders.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.debug_tools.ShowResponders.prototype.constructor = SKIPOLE.debug_tools.ShowResponders;
+SKIPOLE.debug_tools.ShowResponders.prototype.eventfunc = function (e, arg) {
+    var thistable = this.widg.find('table');
+    // empty the table
+    thistable.empty();
+    // and now start filling it again
+    var rows = arg.length;
+    var htmlcontent = "";
+    for (row = 0; row < rows; row++) {
+        // for each row in the table
+        htmlcontent += "<tr><td>" + arg[row][0] + "</td><td>" + arg[row][1] + "</td><td>" + arg[row][2] + "</td></tr>";
+        }
+    thistable.html(htmlcontent);
+    };
 
 
