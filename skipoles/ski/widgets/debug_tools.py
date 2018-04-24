@@ -149,7 +149,8 @@ class ShowResponders(Widget):
                         'para_class':FieldArg("cssclass",""),
                         'error_class':FieldArg("cssclass", ""),
                         'paradiv_class':FieldArg("cssclass",""),
-                        'table_class':FieldArg("cssclass","")
+                        'table_class':FieldArg("cssclass",""),
+                        'show':FieldArg("boolean", True)  # set here as this value has a special textblock description
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -161,6 +162,15 @@ class ShowResponders(Widget):
         self[1] = tag.Part(tag_name="div")
         self[1][0] = tag.Part(tag_name="p", hide_if_empty=True)
         self[2] = tag.Part(tag_name="table")
+
+    # special widget, not shown if debug is off
+
+    def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
+        """Sets self.show False if debug is False"""
+        if not skiboot.get_debug():
+            self.show = False
+            return
+        Widget.update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded)
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Update the table to show responder data"
