@@ -1406,14 +1406,14 @@ class JSON(ParentPage):
             self.headers.append(self.session_cookie)
         if skiboot.get_debug():
             if not ident_list:
-                self.content['ident_list'] = [[self.ident.to_comma_str(), 'This page', self.brief]]
+                self.content['ident_list'] = [[[self.ident.to_comma_str(), 'This page', self.brief]]]
                 return
             idents = []
             for ident in ident_list:
                 item = skiboot.from_ident(ident)
                 idents.append([ident.to_comma_str(), item.responder.__class__.__name__, item.brief])
             idents.append([self.ident.to_comma_str(), 'This page', self.brief])
-            self.content['ident_list'] = idents
+            self.content['ident_list'] = [idents]
 
 
     def show_error(self, error_messages=None):

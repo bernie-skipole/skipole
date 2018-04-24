@@ -83,7 +83,7 @@ SKIPOLE.setfields = function(result) {
            // set the value of SKIPOLE.identdata
            var oldidentdata = SKIPOLE.identdata;
            var pageidentarray = SKIPOLE.identdata.split('_');
-           // set identdata to projectname_pagenumber_ident_data //
+           // set identdata to projectname_pagenumber_ident_data
            SKIPOLE.identdata = pageidentarray[0] + '_' + pageidentarray[1] + '_' + result["ident_data"];
            // set this in all hidden input 'ident' fields 
            $("input[name='ident']:hidden").attr("value", SKIPOLE.identdata);
@@ -100,6 +100,10 @@ SKIPOLE.setfields = function(result) {
            window.location.href = result["JSONtoHTML"] + "?ident=" + SKIPOLE.identdata;
            return;
            }
+       if ("ident_list" in result) {
+           // displays the identlist in any debug_tools.ShowResponders widget
+           $(document).trigger( "identlist:update", result["ident_list"] );
+           }
        if ("show_error" in result) {
            if (SKIPOLE.default_error_widget) {
                result[SKIPOLE.default_error_widget + ":show_error"] = result["show_error"];
@@ -114,6 +118,10 @@ SKIPOLE.setfields = function(result) {
                continue;
                }
            if (widgfield == "ident_data") {
+               // already dealt with
+               continue;
+               }
+           if (widgfield == "ident_list") {
                // already dealt with
                continue;
                }
