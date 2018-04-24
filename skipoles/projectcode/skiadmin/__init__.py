@@ -28,7 +28,6 @@ import pkgutil, re, collections, uuid, os, random
 
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces
 
-from .editfolders import editproject
 from .editpages import editpage
 from .edittextblocks import managetextblocks, edittextblockrefs
 from .editsections import managesections
@@ -75,10 +74,6 @@ _CALL_SUBMIT_DATA = {
                         7010: managesections.submit_new_section,        # creates a new section
                         7011: managesections.file_new_section,          # creates a new section from uploaded file
                         7060: managesections.newsectionpage,            # populates the new section page
-                       20101: editproject.submit_addproject,            # adds a project
-                       20111: editproject.submit_removeproject,         # remove the project
-                       20121: editproject.retrieve_edit_project,        # gets field data for edit project page
-                       20139: editproject.submit_suburl,                # sets the url of a sub project
                        23259: editpage.submit_default_error_widget,     # sets default error widget
                        23419: editpage.submit_cache,                    # sets cache header
                        23421: editpage.retrieve_page_svg,               # gets data for page svg
@@ -125,15 +120,7 @@ _CALL_SUBMIT_DATA = {
                        56223: editvalidator.remove_validator,           # removes a validator
                        56307: editvalidator.retrieve_validator_modules, # gets data for listing validator modules
                        56317: editvalidator.retrieve_validator_list,    # gets data for listing validators
-                       56353: editvalidator.create_validator,           # creates new validator
-                       70001: editproject.retrieve_about_code,          # retrieve content for about user code
-                       70005: editproject.retrieve_about_skilift,       # retrieve content for about skilift
-                       70010: editproject.retrieve_about_fromjson,      # retrieve content for about fromjson
-                       70015: editproject.retrieve_about_editfolder,    # retrieve content for about editfolder
-                       70020: editproject.retrieve_about_editpage,      # retrieve content for about editpage
-                       70025: editproject.retrieve_about_editsection,   # retrieve content for about editsection
-                       70050: editproject.get_text,                     # gets textblock text
-                       70090: editproject.retrieve_about_off_piste      # retrieve content for about off_piste
+                       56353: editvalidator.create_validator            # creates new validator
                    }
 
 

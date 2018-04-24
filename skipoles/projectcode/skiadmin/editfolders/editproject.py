@@ -25,10 +25,9 @@
 #   limitations under the License.
 
 
-import os, shutil
+import os
 
 from .... import skilift
-from ....ski import skiboot
 from ....ski.excepts import FailPage, ValidateError, ServerError
 
 

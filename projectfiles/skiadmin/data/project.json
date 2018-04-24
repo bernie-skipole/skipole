@@ -4978,6 +4978,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_about_editfolder"
+],
 "target_ident": 70115
 },
 "original_fields": {}
@@ -4990,6 +4995,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_about_editpage"
+],
 "target_ident": 70120
 },
 "original_fields": {}
@@ -5002,6 +5012,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_about_editsection"
+],
 "target_ident": 70125
 },
 "original_fields": {}
@@ -5014,6 +5029,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_about_fromjson"
+],
 "target_ident": 70110
 },
 "original_fields": {}
@@ -5026,6 +5046,11 @@ false,
 "class": "FieldStoreSubmit",
 "original_args": {
 "fail_ident": 70150,
+"submit_list": [
+"editfolders",
+"editproject",
+"get_text"
+],
 "target_ident": 70150
 },
 "original_fields": {
@@ -5040,6 +5065,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_about_code"
+],
 "target_ident": 70101
 },
 "original_fields": {}
@@ -5052,6 +5082,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_about_off_piste"
+],
 "target_ident": 70190
 },
 "original_fields": {}
@@ -5088,6 +5123,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_about_skilift"
+],
 "target_ident": 70105
 },
 "original_fields": {}
@@ -37241,7 +37281,12 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": 1,
+"fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"retrieve_edit_project"
+],
 "target_ident": 20129
 },
 "original_fields": {}
@@ -37254,6 +37299,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"submit_suburl"
+],
 "target_ident": 20121
 },
 "original_fields": {}
@@ -37265,8 +37315,13 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": 1,
-"target_ident": 1
+"fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"submit_addproject"
+],
+"target_ident": "admin_home"
 },
 "original_fields": {}
 }
@@ -37277,8 +37332,13 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": 1,
-"target_ident": 1
+"fail_ident": "admin_home",
+"submit_list": [
+"editfolders",
+"editproject",
+"submit_removeproject"
+],
+"target_ident": "admin_home"
 },
 "original_fields": {}
 }
