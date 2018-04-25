@@ -414,7 +414,7 @@
 "show": true,
 "show_error": "",
 "table_class": "w3-table w3-bordered",
-"toptext": "",
+"toptext": "DEBUG MODE IS ON",
 "widget_class": "",
 "widget_style": ""
 }
