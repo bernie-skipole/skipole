@@ -45,10 +45,16 @@ SKIPOLE.debug_tools.ShowCallData.prototype.constructor = SKIPOLE.debug_tools.Sho
 
 SKIPOLE.debug_tools.ShowResponders = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    if ( SKIPOLE.widget_register.hasOwnProperty("debug_tools.ShowResponders") ) {
+        SKIPOLE.widget_register["debug_tools.ShowResponders"].push(widg_id);
+        }
+    else {
+        SKIPOLE.widget_register["debug_tools.ShowResponders"] = [widg_id];
+        }
     };
 SKIPOLE.debug_tools.ShowResponders.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.debug_tools.ShowResponders.prototype.constructor = SKIPOLE.debug_tools.ShowResponders;
-SKIPOLE.debug_tools.ShowResponders.prototype.eventfunc = function (e, arg) {
+SKIPOLE.debug_tools.ShowResponders.prototype.updatefunc = function (arg) {
     var thistable = this.widg.find('table');
     // empty the table
     thistable.empty();

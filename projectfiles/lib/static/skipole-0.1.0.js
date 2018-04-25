@@ -102,7 +102,14 @@ SKIPOLE.setfields = function(result) {
            }
        if ("ident_list" in result) {
            // displays the identlist in any debug_tools.ShowResponders widget
-           $(document).trigger( "identlist:update", result["ident_list"] );
+           if ( SKIPOLE.widget_register.hasOwnProperty("debug_tools.ShowResponders") ) {
+                var showresponders = SKIPOLE.widget_register["debug_tools.ShowResponders"].length;
+                // for each showresponder, call its updatefunc method
+                for (showresponder = 0; showresponder < showresponders; showresponder++) {
+                    // for each showresponder in the register
+                    SKIPOLE.widgets[SKIPOLE.widget_register["debug_tools.ShowResponders"][showresponder]].updatefunc(result["ident_list"]);
+                    }
+                }
            }
        if ("show_error" in result) {
            if (SKIPOLE.default_error_widget) {

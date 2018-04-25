@@ -145,7 +145,7 @@ class ShowResponders(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'toptext':FieldArg("text", ''),
+    arg_descriptions = {'toptext':FieldArg("text", 'DEBUG MODE IS ON'),
                         'para_class':FieldArg("cssclass",""),
                         'error_class':FieldArg("cssclass", ""),
                         'paradiv_class':FieldArg("cssclass",""),
@@ -203,16 +203,6 @@ class ShowResponders(Widget):
         last_line[1] = tag.Part(tag_name="td", text='This page')
         last_line[2] = tag.Part(tag_name="td", text=page.brief)
         self[2].append(last_line)
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a custom event handler to be triggered by an ident_list json update"""
-        jscript = """  $(document).on("identlist:update", function(e, arg) {{
-    SKIPOLE.widgets["{ident}"].eventfunc(e, arg);
-    }});
-""".format(ident=self.get_id())
-        return jscript
-
 
 
     @classmethod

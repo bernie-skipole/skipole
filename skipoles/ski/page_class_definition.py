@@ -838,6 +838,7 @@ $(document).ready(function(){
 //<![CDATA[
 SKIPOLE.identdata = '%s';
 SKIPOLE.default_error_widget = '%s';
+SKIPOLE.widget_register = {};
 """  % (self.ident.proj, self.ident.num, self.ident_data_string, self.default_error_widget)
 
         # set a list of section alias names, to include section alias, and multiplied section alias
@@ -1406,14 +1407,14 @@ class JSON(ParentPage):
             self.headers.append(self.session_cookie)
         if skiboot.get_debug():
             if not ident_list:
-                self.content['ident_list'] = [[[self.ident.to_comma_str(), 'This page', self.brief]]]
+                self.content['ident_list'] = [[self.ident.to_comma_str(), 'This page', self.brief]]
                 return
             idents = []
             for ident in ident_list:
                 item = skiboot.from_ident(ident)
                 idents.append([ident.to_comma_str(), item.responder.__class__.__name__, item.brief])
             idents.append([self.ident.to_comma_str(), 'This page', self.brief])
-            self.content['ident_list'] = [idents]
+            self.content['ident_list'] = idents
 
 
     def show_error(self, error_messages=None):
