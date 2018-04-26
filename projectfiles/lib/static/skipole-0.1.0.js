@@ -100,11 +100,33 @@ SKIPOLE.setfields = function(result) {
            window.location.href = result["JSONtoHTML"] + "?ident=" + SKIPOLE.identdata;
            return;
            }
+       if ("environ" in result) {
+           // displays the environ in any debug_tools.ShowEnviron widget
+           if ( SKIPOLE.widget_register.hasOwnProperty("debug_tools.ShowEnviron") ) {
+                var showenvirons = SKIPOLE.widget_register["debug_tools.ShowEnviron"].length;
+                // for each ShowEnviron registered, call its updatefunc method
+                for (showenviron = 0; showenviron < showenvirons; showenviron++) {
+                    // for each showenviron in the register
+                    SKIPOLE.widgets[SKIPOLE.widget_register["debug_tools.ShowEnviron"][showenviron]].updatefunc(result["environ"]);
+                    }
+                }
+           }
+       if ("call_data" in result) {
+           // displays the call_data dictionary in any debug_tools.ShowCallData widget
+           if ( SKIPOLE.widget_register.hasOwnProperty("debug_tools.ShowCallData") ) {
+                var showthem = SKIPOLE.widget_register["debug_tools.ShowCallData"].length;
+                // for each ShowCallData registered, call its updatefunc method
+                for (showit = 0; showit < showthem; showit++) {
+                    // for each showenviron in the register
+                    SKIPOLE.widgets[SKIPOLE.widget_register["debug_tools.ShowCallData"][showit]].updatefunc(result["call_data"]);
+                    }
+                }
+           }
        if ("ident_list" in result) {
            // displays the identlist in any debug_tools.ShowResponders widget
            if ( SKIPOLE.widget_register.hasOwnProperty("debug_tools.ShowResponders") ) {
                 var showresponders = SKIPOLE.widget_register["debug_tools.ShowResponders"].length;
-                // for each showresponder, call its updatefunc method
+                // for each ShowResponders registered, call its updatefunc method
                 for (showresponder = 0; showresponder < showresponders; showresponder++) {
                     // for each showresponder in the register
                     SKIPOLE.widgets[SKIPOLE.widget_register["debug_tools.ShowResponders"][showresponder]].updatefunc(result["ident_list"]);
