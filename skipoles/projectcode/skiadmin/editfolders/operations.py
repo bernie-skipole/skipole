@@ -182,7 +182,7 @@ def set_css_class(caller_ident, ident_list, submit_list, submit_dict, call_data,
 def add_default_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Add a label to the default css list"
 
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
     # check label is valid
     if not "new_css_label" in call_data:
@@ -203,22 +203,22 @@ def add_default_css(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if label.isdigit():
         raise FailPage(message = "Invalid label (Danger of confusion with a page ident).")
 
-    css_list = fromjson.get_defaults(editedproj.proj_ident, key='css_links')
+    css_list = fromjson.get_defaults(editedprojname, key='css_links')
     if label in css_list:
         raise FailPage(message = "This label is already in the list")
     css_list.append(label)
     try:
-        fromjson.set_defaults(editedproj.proj_ident, key='css_links', value=css_list)
+        fromjson.set_defaults(editedprojname, key='css_links', value=css_list)
     except e:
         raise FailPage(message = "Unable to save defaults.json")
 
 
 def css_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes css default label"
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
         label = call_data['css_label']
-        d_list = fromjson.get_defaults(editedproj.proj_ident, 'css_links')
+        d_list = fromjson.get_defaults(editedprojname, 'css_links')
         if not label in d_list:
             return
         index = d_list.index(label)
@@ -226,17 +226,17 @@ def css_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
         del d_list[index]
         # save d_list
         try:
-            fromjson.set_defaults(editedproj.proj_ident, key='css_links', value=d_list)
+            fromjson.set_defaults(editedprojname, key='css_links', value=d_list)
         except e:
             raise FailPage(message = "Unable to save defaults.json")
 
 
 def css_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves css default label up"
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
         label = call_data['css_label']
-        d_list = fromjson.get_defaults(editedproj.proj_ident, 'css_links')
+        d_list = fromjson.get_defaults(editedprojname, 'css_links')
         if not label in d_list:
             return
         index = d_list.index(label)
@@ -246,17 +246,17 @@ def css_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_d
         d_list.insert(index-1, d_list.pop(index))
         # save d_list
         try:
-            fromjson.set_defaults(editedproj.proj_ident, key='css_links', value=d_list)
+            fromjson.set_defaults(editedprojname, key='css_links', value=d_list)
         except e:
             raise FailPage(message = "Unable to save defaults.json")
 
 
 def css_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves css default label down"
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
         label = call_data['css_label']
-        d_list = fromjson.get_defaults(editedproj.proj_ident, 'css_links')
+        d_list = fromjson.get_defaults(editedprojname, 'css_links')
         if not label in d_list:
             return
         index = d_list.index(label)
@@ -266,7 +266,7 @@ def css_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page
         d_list.insert(index+1, d_list.pop(index))
         # save d_list
         try:
-            fromjson.set_defaults(editedproj.proj_ident, key='css_links', value=d_list)
+            fromjson.set_defaults(editedprojname, key='css_links', value=d_list)
         except e:
             raise FailPage(message = "Unable to save defaults.json")
 
@@ -274,7 +274,7 @@ def css_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page
 def add_default_js(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Add a label to the default javascript list"
 
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
 
     # check label is valid
     if not "new_js_label" in call_data:
@@ -295,22 +295,22 @@ def add_default_js(caller_ident, ident_list, submit_list, submit_dict, call_data
     if label.isdigit():
         raise FailPage(message = "Invalid label (Danger of confusion with a page ident).")
 
-    js_list = fromjson.get_defaults(editedproj.proj_ident, key='js_links')
+    js_list = fromjson.get_defaults(editedprojname, key='js_links')
     if label in js_list:
         raise FailPage(message = "This label is already in the list")
     js_list. append(label)
     try:
-        fromjson.set_defaults(editedproj.proj_ident, key='js_links', value=js_list)
+        fromjson.set_defaults(editedprojname, key='js_links', value=js_list)
     except e:
         raise FailPage(message = "Unable to save defaults.json")
 
 
 def js_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes js default label"
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
         label = call_data['js_label']
-        d_list = fromjson.get_defaults(editedproj.proj_ident, 'js_links')
+        d_list = fromjson.get_defaults(editedprojname, 'js_links')
         if not label in d_list:
             return
         index = d_list.index(label)
@@ -318,17 +318,17 @@ def js_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
         del d_list[index]
         # save d_list
         try:
-            fromjson.set_defaults(editedproj.proj_ident, key='js_links', value=d_list)
+            fromjson.set_defaults(editedprojname, key='js_links', value=d_list)
         except e:
             raise FailPage(message = "Unable to save defaults.json")
 
 
 def js_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves js default label up"
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
         label = call_data['js_label']
-        d_list = fromjson.get_defaults(editedproj.proj_ident, 'js_links')
+        d_list = fromjson.get_defaults(editedprojname, 'js_links')
         if not label in d_list:
             return
         index = d_list.index(label)
@@ -338,16 +338,16 @@ def js_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_da
         d_list.insert(index-1, d_list.pop(index))
         # save d_list
         try:
-            fromjson.set_defaults(editedproj.proj_ident, key='js_links', value=d_list)
+            fromjson.set_defaults(editedprojname, key='js_links', value=d_list)
         except e:
             raise FailPage(message = "Unable to save defaults.json")
 
 def js_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves js default label down"
-    editedproj = call_data['editedproj']
+    editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
         label = call_data['js_label']
-        d_list = fromjson.get_defaults(editedproj.proj_ident, 'js_links')
+        d_list = fromjson.get_defaults(editedprojname, 'js_links')
         if not label in d_list:
             return
         index = d_list.index(label)
@@ -357,7 +357,7 @@ def js_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
         d_list.insert(index+1, d_list.pop(index))
         # save d_list
         try:
-            fromjson.set_defaults(editedproj.proj_ident, key='js_links', value=d_list)
+            fromjson.set_defaults(editedprojname, key='js_links', value=d_list)
         except e:
             raise FailPage(message = "Unable to save defaults.json")
 
