@@ -1173,7 +1173,6 @@ class FilePage(ParentPage):
         except IOError:
             return ["<!DOCTYPE HTML>\n<html>ERROR:UNABLE TO OPEN FILE\n</html>".encode('ascii', 'xmlcharrefreplace')]
 
-
     def __str__(self):
         return self.filepath
 
@@ -1182,7 +1181,6 @@ class FilePage(ParentPage):
             return "File Page ident %s" % (self.ident,)
         else:
             return "File Page name %s" % (self.name,)
-
 
 
 class CSS(ParentPage):
@@ -1400,12 +1398,15 @@ class JSON(ParentPage):
                 widgfield = str(skiboot.make_widgfield(field))
                 self.content[widgfield] = item
 
-
     def update(self, environ, call_data, lang, ident_list=[]):
         "Adds session_cookie, and also ident_list if debug mode is on"
         if self.session_cookie:
             self.headers.append(self.session_cookie)
         if skiboot.get_debug():
+            # include environ, call_data and ident_list in json file
+            self.content['environ'] = environ
+            if call_data:
+                self.content['call_data'] = call_data
             if not ident_list:
                 self.content['ident_list'] = [[self.ident.to_comma_str(), 'This page', self.brief]]
                 return
@@ -1415,7 +1416,6 @@ class JSON(ParentPage):
                 idents.append([ident.to_comma_str(), item.responder.__class__.__name__, item.brief])
             idents.append([self.ident.to_comma_str(), 'This page', self.brief])
             self.content['ident_list'] = idents
-
 
     def show_error(self, error_messages=None):
         """Sets show error in page data"""
