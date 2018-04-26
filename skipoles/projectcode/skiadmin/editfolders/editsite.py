@@ -41,37 +41,44 @@ from ....projectcode import code_reload
 def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves all field data for admin index page"
     editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
 
-    proj_ident = editedproj.proj_ident
 
-    page_data["projversion", "input_text"] = editedproj.version
-    page_data["brief:input_text"] = editedproj.brief
-    page_data["brief:bottomtext"] = "Current value: " + editedproj.brief
-    page_data["deflang:input_text"] = editedproj.default_language
-    page_data["deflang:bottomtext"] = "Current value: " + editedproj.default_language
+    editedprojname = call_data['editedprojname']
+    adminproj = skilift.admin_project()
 
-    page_data["download","link_ident"] = adminproj.url + editedproj.proj_ident + ".tar.gz"
+    projectinfo = skilift.project_info(editedprojname)
+    admininfo = skilift.project_info(adminproj)
+
+    page_data["projversion", "input_text"] = projectinfo.version
+    page_data["brief:input_text"] = projectinfo.brief
+    page_data["brief:bottomtext"] = "Current value: " + projectinfo.brief
+    page_data["deflang:input_text"] = projectinfo.default_language
+    page_data["deflang:bottomtext"] = "Current value: " + projectinfo.default_language
+
+    page_data["download","link_ident"] = admininfo.path + editedprojname + ".tar.gz"
 
     if "root_path" in call_data:
         # "root_path" is set in call_data, so return it
         page_data["rtpath:input_text"] = call_data["root_path"]
     else:
         # "root_path" not in call_data, so return the current root_path
-        page_data["rtpath:input_text"] = editedproj.url
+        page_data["rtpath:input_text"] = projectinfo.path
 
-    if skiboot.get_debug():
+    if skilift.get_debug():
         page_data["debugstatus", "para_text"] = "Debug mode is ON"
         page_data["debugtoggle", "button_text"] = "Set Debug OFF"
     else:
         page_data["debugstatus", "para_text"] = "Debug mode is OFF"
         page_data["debugtoggle", "button_text"] = "Set Debug ON"
 
+
+    subprojects = projectinfo.subprojects
+
     ctable = []
-    for proj, suburl in editedproj.subproject_paths.items():
+    for proj, suburl in subprojects.items():
         ctable.append([proj, suburl, skiboot.getproject(proj).brief, proj, '', proj, '', True, True])
     # append the final row showing this edited project
-    ctable.append([editedproj.proj_ident, editedproj.url, editedproj.brief, '', '', '', '', False, False])
+    ctable.append([editedprojname, projectinfo.path, projectinfo.brief, '', '', '', '', False, False])
     page_data["projtable:contents"] = ctable
 
     # list directories under projects_dir()
@@ -80,11 +87,9 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
     if not dirs:
         page_data['sdd1:show_add_project'] = False
     else:
-        # get loaded projects
-        loaded_projects = editedproj.subproject_paths
         # get projects which have json files
         for directory in dirs:
-            if directory == editedproj.proj_ident or (directory in loaded_projects):
+            if directory == editedprojname or (directory in subprojects):
                 # do not include the current edited project or already loaded projects
                 continue
             proj_jsonfile = skiboot.project_json(directory)
@@ -99,7 +104,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
         page_data['sdd1:selectvalue'] = page_data['sdd1:option_list'][0]
     else:
         page_data['sdd1:selectvalue'] = ''
-    page_data['l2','content'] = "about %s.tar.gz can be found here." % editedproj.proj_ident
+    page_data['l2','content'] = "about %s.tar.gz can be found here." % editedprojname
 
 
 def _clear_index_input_accepted(page_data):
