@@ -399,26 +399,6 @@
 ]
 ]
 }
-],
-[
-"Widget",
-{
-"class": "debug_tools.ShowResponders",
-"name": "identlist",
-"brief": "table showing idents",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"para_class": "",
-"paradiv_class": "",
-"show": true,
-"show_error": "",
-"table_class": "w3-table w3-bordered",
-"toptext": "DEBUG MODE IS ON",
-"widget_class": "",
-"widget_style": ""
-}
-}
 ]
 ]
 }

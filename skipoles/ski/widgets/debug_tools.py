@@ -44,9 +44,10 @@ class ShowEnviron(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'toptext':FieldArg("text", ''),
+    arg_descriptions = {'toptext':FieldArg("text", 'DEBUG MODE IS ON'),
                         'para_class':FieldArg("cssclass",""),
-                        'error_class':FieldArg("cssclass", "")
+                        'error_class':FieldArg("cssclass", ""),
+                        'show':FieldArg("boolean", True)  # set here as this value has a special textblock description
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -58,6 +59,15 @@ class ShowEnviron(Widget):
         self[0][0][0] = ''
         self[1] = tag.Part(tag_name="p", hide_if_empty=True)
         self[2] = tag.Part(tag_name="pre")
+
+    # special widget, not shown if debug is off
+
+    def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
+        """Sets self.show False if debug is False"""
+        if not skiboot.get_debug():
+            self.show = False
+            return
+        Widget.update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded)
 
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value('error_class'):
@@ -95,9 +105,10 @@ class ShowCallData(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'toptext':FieldArg("text", ''),
+    arg_descriptions = {'toptext':FieldArg("text", 'DEBUG MODE IS ON'),
                         'para_class':FieldArg("cssclass",""),
-                        'error_class':FieldArg("cssclass", "")
+                        'error_class':FieldArg("cssclass", ""),
+                        'show':FieldArg("boolean", True)  # set here as this value has a special textblock description
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -109,6 +120,15 @@ class ShowCallData(Widget):
         self[0][0][0] = ''
         self[1] = tag.Part(tag_name="p", hide_if_empty=True)
         self[2] = tag.Part(tag_name="pre")
+
+    # special widget, not shown if debug is off
+
+    def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
+        """Sets self.show False if debug is False"""
+        if not skiboot.get_debug():
+            self.show = False
+            return
+        Widget.update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded)
 
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value('error_class'):

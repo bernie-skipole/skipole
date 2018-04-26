@@ -30,7 +30,7 @@ This module defines the page objects
 """
 
 
-import os, mimetypes, copy, collections, json, re, uuid
+import os, mimetypes, copy, collections, json, re, uuid, pprint
 from string import Template
 from urllib.parse import quote
 
@@ -1404,9 +1404,9 @@ class JSON(ParentPage):
             self.headers.append(self.session_cookie)
         if skiboot.get_debug():
             # include environ, call_data and ident_list in json file
-            self.content['environ'] = environ
+            self.content['environ'] = pprint.pformat(environ)
             if call_data:
-                self.content['call_data'] = call_data
+                self.content['call_data'] = pprint.pformat(call_data)
             if not ident_list:
                 self.content['ident_list'] = [[self.ident.to_comma_str(), 'This page', self.brief]]
                 return
