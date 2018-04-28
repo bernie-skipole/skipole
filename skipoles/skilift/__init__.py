@@ -35,7 +35,7 @@ from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError
 from ..ski import skiboot
 
 
-ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects'])
+ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_file'])
 
 ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'])
 
@@ -59,7 +59,7 @@ def project_loaded(project, error_if_not=True):
 
 def project_info(project):
     """Returns a namedtuple with contents
-       project, version, brief, path, default_language, subprojects
+       project, version, brief, path, default_language, subprojects, json_file
        where subprojects is an ordered dictionary of projectname:path
     """
     project_loaded(project)
@@ -70,7 +70,8 @@ def project_info(project):
                    proj.brief,
                    proj.url,
                    proj.default_language,
-                   proj.subproject_paths
+                   proj.subproject_paths,
+                   skiboot.project_json(project)
                    )
 
 
