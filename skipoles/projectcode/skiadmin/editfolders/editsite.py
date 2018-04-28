@@ -40,8 +40,6 @@ from ....projectcode import code_reload
 
 def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves all field data for admin index page"
-    editedproj = call_data['editedproj']
-
 
     editedprojname = call_data['editedprojname']
     adminproj = skilift.admin_project()
@@ -76,14 +74,15 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
 
     ctable = []
     for proj, suburl in subprojects.items():
-        ctable.append([proj, suburl, skiboot.getproject(proj).brief, proj, '', proj, '', True, True])
+        projinfo = skilift.project_info(proj)
+        ctable.append([proj, suburl, projinfo.brief, proj, '', proj, '', True, True])
     # append the final row showing this edited project
     ctable.append([editedprojname, projectinfo.path, projectinfo.brief, '', '', '', '', False, False])
     page_data["projtable:contents"] = ctable
 
     # list directories under projects_dir()
     page_data['sdd1:option_list'] = []
-    dirs = os.listdir(skiboot.projectfiles())
+    dirs = os.listdir(skilift.get_projectfiles_dir())
     if not dirs:
         page_data['sdd1:show_add_project'] = False
     else:
@@ -92,7 +91,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
             if directory == editedprojname or (directory in subprojects):
                 # do not include the current edited project or already loaded projects
                 continue
-            proj_jsonfile = skiboot.project_json(directory)
+            proj_jsonfile = fromjson.project_json_file(directory)
             if os.path.isfile(proj_jsonfile):
                 page_data['sdd1:option_list'].append(directory)
         if page_data['sdd1:option_list']:

@@ -49,6 +49,11 @@ def _raise_server_error(message=''):
     raise ServerError(message)
 
 
+def project_json_file(project):
+    "Given a project name, returns the file path of the project.json file"
+    return skiboot.project_json(project)
+
+
 def create_part(project, pagenumber, page_part, section_name, name, location, part_type, brief, json_data):
     """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
        currently at the given part location, or if not an element that can accept contents, inserted after the element."""
@@ -303,7 +308,7 @@ def project_to_json(project, save_to_file=True, indent=0):
 
     if save_to_file:
         # write out the project dictionary to a json file
-        filepath = skiboot.project_json(project)
+        filepath = project_json_file(project)
         with open(filepath, 'w') as fp:
             json.dump(project_dict, fp, indent=indent)
         return
