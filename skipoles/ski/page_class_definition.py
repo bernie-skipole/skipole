@@ -570,6 +570,10 @@ class TemplatePage(TemplatePageAndSVG):
         # to add links to the validator js modules in the page head
         self._validator_scriptlinks = []
 
+
+        # This will be added to the page javascript with the jquery $(document).ready(function() {
+        self._add_jscript = ''
+
     @property
     def validator_scriptlinks(self):
         return self._validator_scriptlinks
@@ -654,10 +658,10 @@ class TemplatePage(TemplatePageAndSVG):
 // Widget functions
 $(document).ready(function(){
 """
-        scriptend = ''
+        scriptend = self._add_jscript
         if self.last_scroll:
             # restore to last store position
-            scriptend = """
+            scriptend += """
   SKIPOLE.restorepagepos();
 """
         # and if a regular refresh is required
@@ -829,6 +833,9 @@ $(document).ready(function(){
         if 'show_error' in page_data:
             page_data[self._default_error_widget.set_field(f='show_error')] = page_data['show_error']
             del page_data['show_error']
+        if 'add_jscript' in page_data:
+            self._add_jscript = page_data['add_jscript']
+            del page_data['add_jscript']
         TemplatePageAndSVG.set_values(self, page_data)
 
     def data(self):
