@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.6.0",
+"skipole": "0.9.2",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -102,11 +102,11 @@
 "restricted": false,
 "folders": {},
 "pages": {
-"jquery-2.1.4.min.js": {
+"jquery-3.3.1.min.js": {
 "ident": 20,
-"brief": "Link to static/jq/jquery-2.1.4.min.js",
+"brief": "Link to static/jq/jquery-3.3.1.min.js",
 "FilePage": {
-"filepath": "lib/static/jq/jquery-2.1.4.min.js",
+"filepath": "lib/static/jq/jquery-3.3.1.min.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
