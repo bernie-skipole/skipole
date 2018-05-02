@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.9.3",
-"skipole": "0.9.3",
+"version": "0.9.4",
+"skipole": "0.9.4",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -7774,6 +7774,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 20407,
+"submit_list": [
+"editpages",
+"editpage",
+"add_json_widgfield"
+],
 "submit_option": true,
 "target_ident": 20407,
 "validate_fail_ident": null,
@@ -7798,6 +7803,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 20407,
+"submit_list": [
+"editpages",
+"editpage",
+"set_json_cache"
+],
 "submit_option": true,
 "target_ident": 20407,
 "validate_fail_ident": null,
@@ -7819,6 +7829,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 20407,
+"submit_list": [
+"editpages",
+"editpage",
+"remove_json_widgfield"
+],
 "submit_option": true,
 "target_ident": 20407,
 "validate_fail_ident": null,
@@ -10203,6 +10218,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 1,
+"submit_list": [
+"editpages",
+"editpage",
+"retrieve_page_svg"
+],
 "target_ident": 23429
 },
 "original_fields": {}
@@ -10459,6 +10479,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 23407,
+"submit_list": [
+"editpages",
+"editpage",
+"submit_cache"
+],
 "target_ident": 23407
 },
 "original_fields": {}
@@ -10471,6 +10496,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 23207,
+"submit_list": [
+"editpages",
+"editpage",
+"submit_default_error_widget"
+],
 "target_ident": 23207
 },
 "original_fields": {}
@@ -10756,7 +10786,12 @@ false
 "RespondPage": {
 "class": "SubmitIterator",
 "original_args": {
-"fail_ident": "admin_home"
+"fail_ident": "admin_home",
+"submit_list": [
+"editpages",
+"editpage",
+"downloadpage"
+]
 },
 "original_fields": {}
 }
@@ -10880,6 +10915,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 23207,
+"submit_list": [
+"editpages",
+"editpage",
+"set_html_lang"
+],
 "submit_option": true,
 "target_ident": 23207,
 "validate_fail_ident": 23207,
@@ -39237,6 +39277,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 27003,
+"submit_list": [
+"editsections",
+"managesections",
+"newsectionpage"
+],
 "submit_option": true,
 "target_ident": 27010,
 "validate_fail_ident": null,
@@ -39300,6 +39345,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"file_new_section"
+],
 "submit_option": true,
 "target_ident": 27003,
 "validate_fail_ident": null,
@@ -39355,6 +39405,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "admin_home",
+"submit_list": [
+"editsections",
+"managesections",
+"submit_new_section"
+],
 "submit_option": true,
 "target_ident": 27003,
 "validate_fail_ident": "admin_home",
@@ -39615,6 +39670,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 1,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"retrieve_link_table"
+],
 "target_ident": 24001
 },
 "original_fields": {}

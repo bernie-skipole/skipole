@@ -26,11 +26,9 @@
 
 import pkgutil, re, collections, uuid, os, random
 
-from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces
+from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks
 
-from .editpages import editpage
 from .edittextblocks import managetextblocks, edittextblockrefs
-from .editsections import managesections
 from .edittext import edittext
 from .editparts import editpart, insertpart
 from .editwidgets import editwidget, listwidgets
@@ -63,20 +61,8 @@ _IDENT_DATA = 0
 # this method to eventually be replaced by responders with submit lists
 
 _CALL_SUBMIT_DATA = {
-                        3230: editpage.set_html_lang,                   # sets page html lang tag
-                        3260: editpage.downloadpage,                    # downloads json file of given page ident
-                        3710: editpage.set_json_cache,                  # sets json page cache setting
-                        3720: editpage.remove_json_widgfield,           # remove widgfield and value from a json page
-                        3730: editpage.add_json_widgfield,              # add widgfield and value to a json page
-                        4001: managetextblocks.retrieve_link_table,     # fill manage text blocks page link table
                         4005: managetextblocks.retrieve_more,           # fill more text blocks link tables
                         4006: managetextblocks.retrieve_more,           # fill more text blocks link tables
-                        7010: managesections.submit_new_section,        # creates a new section
-                        7011: managesections.file_new_section,          # creates a new section from uploaded file
-                        7060: managesections.newsectionpage,            # populates the new section page
-                       23259: editpage.submit_default_error_widget,     # sets default error widget
-                       23419: editpage.submit_cache,                    # sets cache header
-                       23421: editpage.retrieve_page_svg,               # gets data for page svg
                        24003: managetextblocks.submit_new_textblock,    # adds a textblock from manage textblock page
                        24017: managetextblocks.retrieve_textblock,      # fill edit textblock page
                        24042: managetextblocks.submit_delete_language,  # deletes a textblock language
@@ -328,7 +314,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Call the appropriate submit_data function"
 
-    # Trying this new way of routing
+    # routes to appropriate function depending on submit_list
     if submit_list and (len(submit_list) > 2):
         if submit_list[0] == 'editfolders':
             return editfolders.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -350,6 +336,8 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
             return editsections.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
         elif submit_list[0] == 'editsectionplaces':
             return editsectionplaces.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        elif submit_list[0] == 'edittextblocks':
+            return edittextblocks.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
 

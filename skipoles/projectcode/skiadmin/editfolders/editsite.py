@@ -117,13 +117,12 @@ def _clear_index_input_accepted(page_data):
 def retrieve_help(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Uses skilift.get_textblock_text to get text help for the admin pages"
     page_data.clear()
-    adminproj = call_data['adminproj']
+    adminproj = skilift.admin_project()
     caller_ident = call_data['caller_ident']
     if not caller_ident:
         return
     textref = 'page.' + str(caller_ident[1])
-    # text = skilift.get_textblock_text(textref, lang, project=adminproj.proj_ident).replace('\n', '\n<br />')
-    text = skilift.get_textblock_text(textref, lang, project=adminproj.proj_ident)
+    text = skilift.get_textblock_text(textref, lang, project=adminproj)
     if not text:
         text = "No help text for page %s has been found" % caller_ident[1]
     page_data[("adminhead","show_help","para_text")] = "\n" + text
@@ -132,29 +131,28 @@ def retrieve_help(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
 def about_export(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves text for about export page"
-    editedproj = call_data['editedproj']
-    adminproj = call_data['adminproj']
-
-    proj_ident = editedproj.proj_ident
+    editedprojname = call_data['editedprojname']
+    adminproj = skilift.admin_project()
+    admininfo = skilift.project_info(adminproj)
 
     # fill in header information
-    page_data[("adminhead","page_head","large_text")] = "Project: %s" % (proj_ident,)
+    page_data[("adminhead","page_head","large_text")] = "Project: %s" % (editedprojname,)
 
-    page_data["l2","link_ident"] = adminproj.url + editedproj.proj_ident + ".tar.gz"
+    page_data["l2","link_ident"] = admininfo.path + editedprojname + ".tar.gz"
 
     # set the directory structure
-    page_data[('tar_contents','pre_text')] = _tar_contents(proj_ident)
+    page_data[('tar_contents','pre_text')] = _tar_contents(editedprojname)
 
 
 def retrieve_colour_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves all field data for admin colour page"
 
-    adminproj = call_data['adminproj']
+    adminproj = skilift.admin_project()
 
     # get default admin background color from project data
-    adminbackcol = skilift.get_proj_data(adminproj.proj_ident, 'adminbackcol')
+    adminbackcol = skilift.get_proj_data(adminproj, 'adminbackcol')
     # get individual admin colors from project data
-    colours = skilift.get_proj_data(adminproj.proj_ident, 'colours')
+    colours = skilift.get_proj_data(adminproj, 'colours')
 
     page_data["colhextest", "input_text"] = adminbackcol
     admincol = css_styles.hex_int(adminbackcol)
