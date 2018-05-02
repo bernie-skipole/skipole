@@ -36,19 +36,17 @@ from .editvalidators import editvalidator
 
 
 from .. import FailPage, GoTo, ValidateError, ServerError
-from ...ski import skiboot, widgets
+from ...ski import skiboot
 from ... import skilift
 from ...skilift import fromjson
 
 from ...skilift.editsection import sectionchange
 from ...skilift.editpage import pagechange
 from ...skilift.editfolder import folderchange
+from ...skilift.editwidget import widget_modules
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
-
-# List of widget modules
-_MODULES_TUPLE = tuple(name for (module_loader, name, ispkg) in pkgutil.iter_modules(widgets.__path__))
 
 # dictionary of session numbers as keys
 # and values being a dictionary of items to carry over as session data
@@ -243,7 +241,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     if 'module' in session_data:
         # module should be a widget module
         # If ok, set module string into call_data
-        if session_data['module'] in _MODULES_TUPLE:
+        if session_data['module'] in widget_modules():
             call_data['module'] = session_data['module']
         
 
