@@ -33,7 +33,7 @@ import pkgutil
 from ..ski import skiboot, widgets
 from ..ski.excepts import ServerError
 
-from . import project_loaded
+from . import project_loaded, widget_info
 
 
 def widget_modules():
