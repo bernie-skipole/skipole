@@ -36,6 +36,14 @@ your own Python functions to submit and receive widget parameters.
 
 import sys, os, argparse
 
+# Check the python version
+if sys.version_info[0] != 3 or sys.version_info[1] < 2:
+    print("Sorry, your python version is not compatable")
+    print("This program requires python 3.2 or later")
+    print("Program exiting")
+    sys.exit(1)
+
+
 import skipoles
 
 
@@ -72,13 +80,6 @@ def create_application(project, options={}, projectfiles=None):
 
 
 if __name__ == "__main__":
-
-    # Check the python version
-    if sys.version_info[0] != 3 or sys.version_info[1] < 2:
-        print("Sorry, your python version is not compatable")
-        print("This program requires python 3.2 or later")
-        print("Program exiting")
-        sys.exit(1)
 
     if not os.path.isdir(PROJECTFILES):
         print("Directory %s has not been found" % (PROJECTFILES,))
@@ -244,7 +245,8 @@ if __name__ == "__main__":
                 responce = input('Do you wish to copy an existing project? (Yes if you do):')
                 if responce == 'Yes':
                     print("Project List:")
-                    print(*plist, sep="\n")
+                    for p in plist:
+                        print(p)
                     projectcopy = input('Project name to copy:')
                     if projectcopy not in plist:
                         print("This project has not been recognized")
@@ -280,7 +282,8 @@ if __name__ == "__main__":
             plist.sort()
             if plist:
                 print("Project List:")
-                print(*plist, sep="\n")
+                for p in plist:
+                    print(p)
             else:
                 print("No projects available")
             parser.exit()
