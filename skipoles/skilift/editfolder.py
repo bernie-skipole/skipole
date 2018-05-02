@@ -27,8 +27,6 @@
 
 """Functions for editing a folder"""
 
-import sys, traceback
-
 from ..ski import skiboot, read_json
 from ..ski.excepts import ServerError
 

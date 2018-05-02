@@ -27,8 +27,6 @@
 
 """Functions for editing a page"""
 
-import sys, traceback
-
 from ..ski import skiboot
 from ..ski.excepts import ServerError
 

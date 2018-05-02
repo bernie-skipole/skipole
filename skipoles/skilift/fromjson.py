@@ -27,26 +27,12 @@
 
 """Functions that read a json string to create sections, pages and folders"""
 
-import os, sys, traceback, json, collections
+import os, json, collections
 
 from ..ski import skiboot, read_json, dump_project
 from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info, ident_exists
-
-def _raise_server_error(message=''):
-    "Raises a ServerError, and if debug mode on, adds taceback to message"
-    if skiboot.get_debug():
-        # append traceback to message
-        if message:
-            message += "\n"
-        else:
-            message = ''
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-        for item in str_list:
-            message += item
-    raise ServerError(message)
 
 
 def project_json_file(project):
@@ -79,7 +65,7 @@ def create_part(project, pagenumber, page_part, section_name, name, location, pa
         try:
             read_json.create_part_in_widget(project, ident, section_name, parent_widget, container, json_data)
         except:
-            _raise_server_error("Unable to create part")
+            raise ServerError("Unable to create part")
         return
 
     if (part_type == 'Part') or (part_type == 'Section'):
@@ -96,7 +82,7 @@ def create_part(project, pagenumber, page_part, section_name, name, location, pa
     try:
         read_json.create_part(project, ident, section_name, part, loc, json_data)
     except:
-        _raise_server_error("Unable to create part")
+        raise ServerError("Unable to create part")
 
 
 def part_to_OD(project, pagenumber, section_name, location):
@@ -148,7 +134,7 @@ def create_section(project, section_name, json_data):
     try:
         read_json.create_section(project, section_name, json_data)
     except:
-        _raise_server_error("Unable to create section")
+        raise ServerError("Unable to create section")
 
 
 def section_to_OD(project, section_name):
@@ -209,15 +195,12 @@ def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_d
     else:
         page_dict = json_data
     # create the page
-    try:
-        if "SVG" in page_dict:
-            read_json.create_svgpage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
-            return
-        elif "TemplatePage" in page_dict:
-            read_json.create_templatepage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
-            return
-    except ServerError as e:
-        _raise_server_error(e.message)
+    if "SVG" in page_dict:
+        read_json.create_svgpage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
+        return
+    elif "TemplatePage" in page_dict:
+        read_json.create_templatepage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
+        return
     raise ServerError(message = "Invalid JSON file")
 
 
@@ -264,10 +247,7 @@ def create_folder(project, parentnumber, addition_number, folder_name, restricte
     if parentinfo.restricted:
         restricted = True
     # create the folder
-    try:
-        ident = read_json.create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data)
-    except ServerError as e:
-        _raise_server_error(e.message)
+    ident = read_json.create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data)
     return ident.num
 
 
