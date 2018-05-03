@@ -13934,6 +13934,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"edittextblocks",
+"edittextblockrefs",
+"create_insert"
+],
 "target_ident": "admin_home"
 },
 "original_fields": {}
@@ -14573,6 +14578,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"edittextblocks",
+"edittextblockrefs",
+"retrieve_textblockref"
+],
 "target_ident": 52019
 },
 "original_fields": {}
@@ -15110,6 +15120,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"edittextblocks",
+"edittextblockrefs",
+"retrieve_insert"
+],
 "target_ident": 52509
 },
 "original_fields": {}
@@ -15122,6 +15137,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 52017,
+"submit_list": [
+"edittextblocks",
+"edittextblockrefs",
+"set_textblock"
+],
 "target_ident": 52017
 },
 "original_fields": {}
@@ -32541,6 +32561,11 @@ false,
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 4001,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"retrieve_textblock"
+],
 "target_ident": 24019
 },
 "original_fields": {}
@@ -33473,6 +33498,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 24017,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"submit_copy_textblock"
+],
 "target_ident": 4001
 },
 "original_fields": {}
@@ -33485,6 +33515,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 24017,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"submit_delete_language"
+],
 "target_ident": 24017
 },
 "original_fields": {}
@@ -33497,6 +33532,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 24017,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"submit_delete_textblock"
+],
 "target_ident": 4001
 },
 "original_fields": {}
@@ -33509,6 +33549,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 4001,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"submit_new_textblock"
+],
 "target_ident": 24017
 },
 "original_fields": {}
@@ -33521,6 +33566,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 24017,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"submit_text"
+],
 "target_ident": 24017
 },
 "original_fields": {}
@@ -39692,6 +39742,11 @@ false
 ],
 "alternate_ident": 1,
 "fail_ident": 4001,
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"retrieve_more"
+],
 "submit_option": true,
 "target_ident": 24005,
 "validate_fail_ident": 4001,
@@ -39736,6 +39791,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "",
+"submit_list": [
+"edittextblocks",
+"managetextblocks",
+"retrieve_more"
+],
 "submit_option": true,
 "target_ident": 24005,
 "validate_fail_ident": null,
