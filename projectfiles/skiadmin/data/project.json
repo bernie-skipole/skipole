@@ -396,6 +396,26 @@
 "widget_style": ""
 }
 }
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowResponders",
+"name": "showresponders",
+"brief": "Shows responders",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"paradiv_class": "",
+"show": true,
+"show_error": "",
+"table_class": "w3-table w3-bordered",
+"toptext": "DEBUG MODE IS ON",
+"widget_class": "",
+"widget_style": ""
+}
+}
 ]
 ]
 }
@@ -16353,6 +16373,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"retrieve_edit_comment"
+],
 "target_ident": 51209
 },
 "original_fields": {}
@@ -16365,6 +16390,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"retrieve_edit_symbol"
+],
 "target_ident": 51109
 },
 "original_fields": {}
@@ -16377,6 +16407,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"retrieve_edittextpage"
+],
 "target_ident": 51019
 },
 "original_fields": {}
@@ -16389,6 +16424,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"edit_text"
+],
 "target_ident": 51017
 },
 "original_fields": {}
@@ -16503,6 +16543,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"create_insert_comment"
+],
 "submit_option": true,
 "target_ident": 51207,
 "validate_fail_ident": null,
@@ -16524,6 +16569,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"create_insert_symbol"
+],
 "submit_option": true,
 "target_ident": 51107,
 "validate_fail_ident": null,
@@ -16545,6 +16595,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"create_insert"
+],
 "submit_option": true,
 "target_ident": 51017,
 "validate_fail_ident": null,
@@ -16585,6 +16640,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"set_edit_comment"
+],
 "submit_option": true,
 "target_ident": 51207,
 "validate_fail_ident": null,
