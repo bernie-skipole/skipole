@@ -28,7 +28,6 @@ import pkgutil, re, collections, uuid, os, random
 
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks
 
-from .edittextblocks import managetextblocks, edittextblockrefs
 from .edittext import edittext
 from .editparts import editpart, insertpart
 from .editwidgets import editwidget, listwidgets
@@ -59,14 +58,6 @@ _IDENT_DATA = 0
 # this method to eventually be replaced by responders with submit lists
 
 _CALL_SUBMIT_DATA = {
-                        4005: managetextblocks.retrieve_more,           # fill more text blocks link tables
-                        4006: managetextblocks.retrieve_more,           # fill more text blocks link tables
-                       24003: managetextblocks.submit_new_textblock,    # adds a textblock from manage textblock page
-                       24017: managetextblocks.retrieve_textblock,      # fill edit textblock page
-                       24042: managetextblocks.submit_delete_language,  # deletes a textblock language
-                       24051: managetextblocks.submit_delete_textblock, # deletes a textblock
-                       24062: managetextblocks.submit_copy_textblock,   # copies a textblock
-                       24103: managetextblocks.submit_text,             # inputs new text for a textblock
                        41050: edittext.create_insert,                   # creates and inserts new text
                        41100: edittext.create_insert_symbol,            # creates new html symbol
                        41120: edittext.set_edit_symbol,                 # changes an html symbol
@@ -77,10 +68,6 @@ _CALL_SUBMIT_DATA = {
                        51017: edittext.retrieve_edittextpage,           # gets data for edit text page
                        51107: edittext.retrieve_edit_symbol,            # edits an html symbol
                        51207: edittext.retrieve_edit_comment,           # edits an html comment
-                       52017: edittextblockrefs.retrieve_textblockref,  # gets data to edit a textblock ref
-                       52060: edittextblockrefs.set_textblock,          # sets edited textblock value in a page
-                       52507: edittextblockrefs.retrieve_insert,        # gets data for inserting a textblock reference
-                       52607: edittextblockrefs.create_insert,          # inserts a textblock reference
                        53007: editpart.retrieve_editpart,               # gets data for edit a part page
                        53050: editpart.set_tag,                         # sets the part tag_name or brief
                        53507: insertpart.retrieve_insert,               # get data for insert a html tag page
