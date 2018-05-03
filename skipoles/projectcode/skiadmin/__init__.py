@@ -26,9 +26,8 @@
 
 import pkgutil, re, collections, uuid, os, random
 
-from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks
+from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks, edittext
 
-from .edittext import edittext
 from .editparts import editpart, insertpart
 from .editwidgets import editwidget, listwidgets
 from .editvalidators import editvalidator
@@ -58,16 +57,7 @@ _IDENT_DATA = 0
 # this method to eventually be replaced by responders with submit lists
 
 _CALL_SUBMIT_DATA = {
-                       41050: edittext.create_insert,                   # creates and inserts new text
-                       41100: edittext.create_insert_symbol,            # creates new html symbol
-                       41120: edittext.set_edit_symbol,                 # changes an html symbol
-                       41200: edittext.create_insert_comment,           # creates new html comment
-                       41220: edittext.set_edit_comment,                # changes an html comment
                        43050: editpart.remove_tag_attribute,            # removes the part attribute
-                       51022: edittext.edit_text,                       # sets the new text
-                       51017: edittext.retrieve_edittextpage,           # gets data for edit text page
-                       51107: edittext.retrieve_edit_symbol,            # edits an html symbol
-                       51207: edittext.retrieve_edit_comment,           # edits an html comment
                        53007: editpart.retrieve_editpart,               # gets data for edit a part page
                        53050: editpart.set_tag,                         # sets the part tag_name or brief
                        53507: insertpart.retrieve_insert,               # get data for insert a html tag page
@@ -323,6 +313,8 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
             return editsectionplaces.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
         elif submit_list[0] == 'edittextblocks':
             return edittextblocks.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        elif submit_list[0] == 'edittext':
+            return edittext.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
 

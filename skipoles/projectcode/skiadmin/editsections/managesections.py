@@ -444,13 +444,6 @@ def add_to_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
     call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
     call_data['location'] = location         ########## also part_tuple should replace location
 
-    # navigator boxes
-    boxes = [['back_to_section', section_name, True, '']]    # label to 7040
-    if 'extend_nav_buttons' in call_data:
-        call_data['extend_nav_buttons'].extend(boxes)
-    else:
-        call_data['extend_nav_buttons'] = boxes
-
     # Fill in menu of items, Part items have insert, others have append
     # as this is to be input into a section, a further section is not present in this list
 
