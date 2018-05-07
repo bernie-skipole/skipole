@@ -836,6 +836,22 @@ $(document).ready(function(){
         if 'add_jscript' in page_data:
             self._add_jscript = page_data['add_jscript']
             del page_data['add_jscript']
+        if ('localStorage' in page_data) or ('sessionStorage' in page_data):
+            self._add_jscript += """if (typeof(Storage) !== "undefined") {
+"""
+            if 'localStorage' in page_data:
+                for key,val in page_data['localStorage'].items():
+                    self._add_jscript += """  localStorage.setItem("%s", "%s");
+""" % (key,value)
+                del page_data['localStorage']
+            if 'sessionStorage' in page_data:
+                for key,val in page_data['sessionStorage'].items():
+                    self._add_jscript += """  sessionStorage.setItem("%s", "%s");
+""" % (key,value)
+                del page_data['sessionStorage']
+            self._add_jscript += """
+}
+"""
         TemplatePageAndSVG.set_values(self, page_data)
 
     def data(self):
