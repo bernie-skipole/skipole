@@ -50,6 +50,7 @@ class HiddenField(ClosedWidget):
         value = self.get_field_value('hidden_field')
         if not value:
             self.show = False
+            return
         self.update_attribs({"name":self.get_formname('hidden_field'),
                        "value":value,
                        "type":"hidden"})
@@ -60,6 +61,43 @@ class HiddenField(ClosedWidget):
         return """
 <input type="hidden" /> <!-- with widget id and class widget_class -->
   <!-- with value of the "hidden_field" value, and name being the widgfield -->"""
+
+
+class HiddenSessionStorage(ClosedWidget):
+    """An input field of type hidden, for use as an insert into form widgets"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'session_key':FieldArg("text", '', valdt=True)}
+
+    def __init__(self, name=None, brief='', **field_args):
+        "hidden_field: A hidden input field with value from session storage"
+        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        self._key = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Sets the attributes"
+        self._key = self.get_field_value('session_key')
+        if not self._key:
+            self.show = False
+            return
+        self.update_attribs({"name":self.get_formname('session_key'),
+                       "value":"",
+                       "type":"hidden"})
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets key value into the value attribute by calling the widget updatefunc"""
+        return """  $('#{ident}').updatefunc('{key}');
+""".format(ident=self.get_id(), key=self._key)
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<input type="hidden" /> <!-- with widget id and class widget_class -->
+  <!-- with value taken from the session storage with key "session_key", and name being the session_key widgfield -->"""
+
 
 
 class SubmitButton1(ClosedWidget):

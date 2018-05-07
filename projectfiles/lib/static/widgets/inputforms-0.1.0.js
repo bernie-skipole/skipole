@@ -31,15 +31,10 @@ SKIPOLE.inputforms = {};
 
 SKIPOLE.inputforms.HiddenField = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
     };
 SKIPOLE.inputforms.HiddenField.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.inputforms.HiddenField.prototype.constructor = SKIPOLE.inputforms.HiddenField;
-SKIPOLE.inputforms.HiddenField.prototype.show_error = function (error_message) {
-    return;
-    };
-SKIPOLE.inputforms.HiddenField.prototype.clear_error = function () {
-    return;
-    };
 SKIPOLE.inputforms.HiddenField.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
@@ -50,6 +45,46 @@ SKIPOLE.inputforms.HiddenField.prototype.setvalues = function (fieldlist, result
         this.widg.attr("value", value);
         }
     };
+
+
+
+SKIPOLE.inputforms.HiddenSessionStorage = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputforms.HiddenSessionStorage.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputforms.HiddenSessionStorage.prototype.constructor = SKIPOLE.inputforms.HiddenSessionStorage;
+SKIPOLE.inputforms.HiddenSessionStorage.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    if (typeof(Storage) !== "undefined") {
+            // get the key, and its value from storage
+            var thekey = this.fieldarg_in_result('session_key', result, fieldlist);
+            var keyvalue = sessionStorage.getItem(thekey);
+            if (keyvalue !== "undefined") {
+                this.widg.attr("value", keyvalue);
+                }
+        }
+    };
+SKIPOLE.inputforms.HiddenSessionStorage.prototype.updatefunc = function (arg) {
+    if (typeof(Storage) !== "undefined") {
+        var keyvalue = sessionStorage.getItem(arg);
+        if (keyvalue !== "undefined") {
+            this.widg.attr("value", keyvalue);
+            }
+        }
+    };
+
+
+
+
+
+
+
+
+
+
 
 SKIPOLE.inputforms.SubmitButton1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
