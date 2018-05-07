@@ -47,7 +47,6 @@ SKIPOLE.inputforms.HiddenField.prototype.setvalues = function (fieldlist, result
     };
 
 
-
 SKIPOLE.inputforms.HiddenSessionStorage = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
@@ -77,13 +76,33 @@ SKIPOLE.inputforms.HiddenSessionStorage.prototype.updatefunc = function (arg) {
     };
 
 
-
-
-
-
-
-
-
+SKIPOLE.inputforms.HiddenLocalStorage = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputforms.HiddenLocalStorage.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputforms.HiddenLocalStorage.prototype.constructor = SKIPOLE.inputforms.HiddenLocalStorage;
+SKIPOLE.inputforms.HiddenLocalStorage.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    if (typeof(Storage) !== "undefined") {
+            // get the key, and its value from storage
+            var thekey = this.fieldarg_in_result('local_key', result, fieldlist);
+            var keyvalue = localStorage.getItem(thekey);
+            if (keyvalue !== "undefined") {
+                this.widg.attr("value", keyvalue);
+                }
+        }
+    };
+SKIPOLE.inputforms.HiddenLocalStorage.prototype.updatefunc = function (arg) {
+    if (typeof(Storage) !== "undefined") {
+        var keyvalue = localStorage.getItem(arg);
+        if (keyvalue !== "undefined") {
+            this.widg.attr("value", keyvalue);
+            }
+        }
+    };
 
 
 SKIPOLE.inputforms.SubmitButton1 = function (widg_id, error_message, fieldmap) {
@@ -122,7 +141,6 @@ SKIPOLE.inputforms.SubmitButton2.prototype.setvalues = function (fieldlist, resu
     };
 
 
-
 SKIPOLE.inputforms.Form1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     };
@@ -135,7 +153,6 @@ SKIPOLE.inputforms.Form1.prototype.eventfunc = function(e) {
         e.preventDefault();
         }
     };
-
 
 
 SKIPOLE.inputforms.SubmitForm1 = function (widg_id, error_message, fieldmap) {
