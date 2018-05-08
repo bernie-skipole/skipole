@@ -50,6 +50,12 @@ SKIPOLE.inputforms.HiddenField.prototype.setvalues = function (fieldlist, result
 SKIPOLE.inputforms.HiddenSessionStorage = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
+    if ( SKIPOLE.widget_register.hasOwnProperty("inputforms.HiddenSessionStorage") ) {
+        SKIPOLE.widget_register["inputforms.HiddenSessionStorage"].push(widg_id);
+        }
+    else {
+        SKIPOLE.widget_register["inputforms.HiddenSessionStorage"] = [widg_id];
+        }
     };
 SKIPOLE.inputforms.HiddenSessionStorage.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.inputforms.HiddenSessionStorage.prototype.constructor = SKIPOLE.inputforms.HiddenSessionStorage;
@@ -63,12 +69,14 @@ SKIPOLE.inputforms.HiddenSessionStorage.prototype.setvalues = function (fieldlis
             var keyvalue = sessionStorage.getItem(thekey);
             if (keyvalue !== "undefined") {
                 this.widg.attr("value", keyvalue);
+                this.fieldvalues["session_key"] = thekey
                 }
         }
     };
-SKIPOLE.inputforms.HiddenSessionStorage.prototype.updatefunc = function (arg) {
+SKIPOLE.inputforms.HiddenSessionStorage.prototype.updatefunc = function () {
     if (typeof(Storage) !== "undefined") {
-        var keyvalue = sessionStorage.getItem(arg);
+        var thekey = this.fieldvalues["session_key"];
+        var keyvalue = sessionStorage.getItem(thekey);
         if (keyvalue !== "undefined") {
             this.widg.attr("value", keyvalue);
             }
@@ -79,6 +87,12 @@ SKIPOLE.inputforms.HiddenSessionStorage.prototype.updatefunc = function (arg) {
 SKIPOLE.inputforms.HiddenLocalStorage = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
+    if ( SKIPOLE.widget_register.hasOwnProperty("inputforms.HiddenLocalStorage") ) {
+        SKIPOLE.widget_register["inputforms.HiddenLocalStorage"].push(widg_id);
+        }
+    else {
+        SKIPOLE.widget_register["inputforms.HiddenLocalStorage"] = [widg_id];
+        }
     };
 SKIPOLE.inputforms.HiddenLocalStorage.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.inputforms.HiddenLocalStorage.prototype.constructor = SKIPOLE.inputforms.HiddenLocalStorage;
@@ -92,12 +106,14 @@ SKIPOLE.inputforms.HiddenLocalStorage.prototype.setvalues = function (fieldlist,
             var keyvalue = localStorage.getItem(thekey);
             if (keyvalue !== "undefined") {
                 this.widg.attr("value", keyvalue);
+                this.fieldvalues["local_key"] = thekey
                 }
         }
     };
-SKIPOLE.inputforms.HiddenLocalStorage.prototype.updatefunc = function (arg) {
+SKIPOLE.inputforms.HiddenLocalStorage.prototype.updatefunc = function () {
     if (typeof(Storage) !== "undefined") {
-        var keyvalue = localStorage.getItem(arg);
+        var thekey = this.fieldvalues["local_key"];
+        var keyvalue = localStorage.getItem(thekey);
         if (keyvalue !== "undefined") {
             this.widg.attr("value", keyvalue);
             }
