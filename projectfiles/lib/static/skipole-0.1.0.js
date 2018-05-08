@@ -95,6 +95,26 @@ SKIPOLE.setfields = function(result) {
                $(this).attr('href',$(this).attr('href').replace(old_string,new_string));
                }); 
            }
+
+
+       if ("sessionStorage" in result) {
+           // set the session storage data
+            if (typeof(Storage) !== "undefined") {
+                for (var key in result["sessionStorage"]) {
+                   sessionStorage.setItem(key, result["sessionStorage"][key]);
+                   }
+                }
+           }
+
+       if ("localStorage" in result) {
+           // set the local storage data
+            if (typeof(Storage) !== "undefined") {
+                for (var key in result["localStorage"]) {
+                   sessionStorage.setItem(key, result["localStorage"][key]);
+                   }
+                }
+           }
+
        if ("JSONtoHTML" in result) {
            // Calls the URL given by "JSONtoHTML"
            window.location.href = result["JSONtoHTML"] + "?ident=" + SKIPOLE.identdata;
