@@ -1403,6 +1403,12 @@ class JSON(ParentPage):
         """Sets json content"""
         if not page_data:
             return
+        if 'localStorage' in page_data:
+            self.content["localStorage"] = page_data['localStorage']
+            del page_data['localStorage']
+        if 'sessionStorage' in page_data:
+            self.content["sessionStorage"] = page_data['sessionStorage']
+            del page_data['sessionStorage']
         if "JSONtoHTML" in page_data:
             url = skiboot.find_ident_or_url(page_data["JSONtoHTML"], proj_ident=self.proj_ident)
             if url:
