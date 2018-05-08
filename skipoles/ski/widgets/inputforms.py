@@ -88,8 +88,12 @@ class HiddenSessionStorage(ClosedWidget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets key value into the value attribute by calling the widget updatefunc"""
-        return """  SKIPOLE.widgets["{ident}"].updatefunc("{key}");
-""".format(ident=self.get_id(), key=self._key)
+        if not self._key:
+            return
+        jscript =  """
+  SKIPOLE.widgets["{ident}"].updatefunc();
+""".format(ident=self.get_id())
+        return self._make_fieldvalues(session_key=self._key) + jscript
 
     @classmethod
     def description(cls):
@@ -125,8 +129,14 @@ class HiddenLocalStorage(ClosedWidget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets key value into the value attribute by calling the widget updatefunc"""
-        return """  SKIPOLE.widgets["{ident}"].updatefunc("{key}");
-""".format(ident=self.get_id(), key=self._key)
+        if not self._key:
+            return
+        jscript = """
+  SKIPOLE.widgets["{ident}"].updatefunc();
+""".format(ident=self.get_id())
+        return self._make_fieldvalues(local_key=self._key) + jscript
+
+
 
     @classmethod
     def description(cls):

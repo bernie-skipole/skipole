@@ -96,13 +96,21 @@ SKIPOLE.setfields = function(result) {
                }); 
            }
 
-
        if ("sessionStorage" in result) {
            // set the session storage data
             if (typeof(Storage) !== "undefined") {
                 for (var key in result["sessionStorage"]) {
                    sessionStorage.setItem(key, result["sessionStorage"][key]);
                    }
+               // updates the value in any inputforms.HiddenSessionStorage widget
+               if ( SKIPOLE.widget_register.hasOwnProperty("inputforms.HiddenSessionStorage") ) {
+                    var hsswidgets = SKIPOLE.widget_register["inputforms.HiddenSessionStorage"].length;
+                    // for each HiddenSessionStorage registered, call its updatefunc method
+                    for (hsswidget = 0; hsswidget < hsswidgets; hsswidget++) {
+                        // for each hsswidget in the register
+                        SKIPOLE.widgets[SKIPOLE.widget_register["inputforms.HiddenSessionStorage"][hsswidget]].updatefunc();
+                        }
+                    }
                 }
            }
 
@@ -112,6 +120,15 @@ SKIPOLE.setfields = function(result) {
                 for (var key in result["localStorage"]) {
                    sessionStorage.setItem(key, result["localStorage"][key]);
                    }
+               // updates the value in any inputforms.HiddenLocalStorage widget
+               if ( SKIPOLE.widget_register.hasOwnProperty("inputforms.HiddenLocalStorage") ) {
+                    var hlswidgets = SKIPOLE.widget_register["inputforms.HiddenLocalStorage"].length;
+                    // for each HiddenLocalStorage registered, call its updatefunc method
+                    for (hlswidget = 0; hlswidget < hlswidgets; hlswidget++) {
+                        // for each hlswidget in the register
+                        SKIPOLE.widgets[SKIPOLE.widget_register["inputforms.HiddenLocalStorage"][hlswidget]].updatefunc();
+                        }
+                    }
                 }
            }
 
