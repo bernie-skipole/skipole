@@ -11071,6 +11071,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editparts",
+"insertpart",
+"create_insert"
+],
 "target_ident": "admin_home"
 },
 "original_fields": {}
@@ -12308,6 +12313,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editparts",
+"editpart",
+"retrieve_editpart"
+],
 "target_ident": 53009
 },
 "original_fields": {}
@@ -12320,6 +12330,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editparts",
+"insertpart",
+"retrieve_insert"
+],
 "target_ident": 53509
 },
 "original_fields": {}
@@ -12332,6 +12347,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editparts",
+"editpart",
+"set_tag"
+],
 "target_ident": 53007
 },
 "original_fields": {}
@@ -12598,6 +12618,11 @@ false
 ],
 "alternate_ident": "admin_home",
 "fail_ident": 53007,
+"submit_list": [
+"editparts",
+"editpart",
+"remove_tag_attribute"
+],
 "submit_option": true,
 "target_ident": 53007,
 "validate_fail_ident": null,
@@ -17108,6 +17133,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"create_validator"
+],
 "target_ident": 56007
 },
 "original_fields": {}
@@ -18191,6 +18221,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54020,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"move_down"
+],
 "target_ident": 54020
 },
 "original_fields": {}
@@ -18203,6 +18238,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54020,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"move_up"
+],
 "target_ident": 54020
 },
 "original_fields": {}
@@ -18215,6 +18255,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 56007,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"remove_allowed_value"
+],
 "target_ident": 56007
 },
 "original_fields": {}
@@ -18227,6 +18272,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54020,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"remove_validator"
+],
 "target_ident": 54020
 },
 "original_fields": {}
@@ -18239,6 +18289,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"retrieve_arg"
+],
 "target_ident": 56109
 },
 "original_fields": {}
@@ -18251,6 +18306,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"retrieve_editvalidator"
+],
 "target_ident": 56009
 },
 "original_fields": {}
@@ -18263,6 +18323,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54020,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"retrieve_validator_modules"
+],
 "target_ident": 56309
 },
 "original_fields": {}
@@ -18275,6 +18340,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"retrieve_validator_list"
+],
 "target_ident": 56319
 },
 "original_fields": {}
@@ -18287,6 +18357,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 56007,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"set_allowed_value"
+],
 "target_ident": 56007
 },
 "original_fields": {}
@@ -18299,6 +18374,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 56107,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"set_arg_value"
+],
 "target_ident": 56007
 },
 "original_fields": {}
@@ -18311,6 +18391,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 56007,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"set_displaywidget"
+],
 "target_ident": 56007
 },
 "original_fields": {}
@@ -18323,6 +18408,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 56007,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"set_e_message"
+],
 "target_ident": 56007
 },
 "original_fields": {}
@@ -18335,6 +18425,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 56007,
+"submit_list": [
+"editvalidators",
+"editvalidator",
+"set_e_message_ref"
+],
 "target_ident": 56007
 },
 "original_fields": {}
@@ -19628,6 +19723,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"back_to_parent_container"
+],
 "target_ident": 54706
 },
 "original_fields": {}
@@ -19653,6 +19753,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54527,
+"submit_list": [
+"editwidgets",
+"listwidgets",
+"create_new_widget"
+],
 "target_ident": 54007
 },
 "original_fields": {}
@@ -22703,6 +22808,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54020,
+"submit_list": [
+"editwidgets",
+"editwidget",
+"set_field_name"
+],
 "target_ident": 54020
 },
 "original_fields": {}
@@ -22715,6 +22825,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54020,
+"submit_list": [
+"editwidgets",
+"editwidget",
+"set_field_value"
+],
 "target_ident": 54020
 },
 "original_fields": {}
@@ -22727,6 +22842,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54007,
+"submit_list": [
+"editwidgets",
+"editwidget",
+"set_widget_params"
+],
 "target_ident": 54007
 },
 "original_fields": {}
@@ -22739,6 +22859,11 @@ false
 "class": "SubmitData",
 "original_args": {
 "fail_ident": 54007,
+"submit_list": [
+"editwidgets",
+"editwidget",
+"set_widget_params"
+],
 "target_ident": 54007
 },
 "original_fields": {}
@@ -40624,7 +40749,7 @@ false
 }
 }
 },
-"w3-theme-ski-95351.css": {
+"w3-theme-ski-93492.css": {
 "ident": 220,
 "brief": "sets colour in w3-theme-ski.css",
 "RespondPage": {

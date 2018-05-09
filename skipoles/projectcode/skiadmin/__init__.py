@@ -26,18 +26,13 @@
 
 import pkgutil, re, collections, uuid, os, random
 
-from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks, edittext
-
-from .editparts import editpart, insertpart
-from .editwidgets import editwidget, listwidgets
-from .editvalidators import editvalidator
-
+from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks, edittext, editvalidators
 
 from .. import FailPage, GoTo, ValidateError, ServerError
 from ...ski import skiboot
-from ... import skilift
-from ...skilift import fromjson
 
+from ... import skilift
+from ...skilift.fromjson import get_defaults
 from ...skilift.editsection import sectionchange
 from ...skilift.editpage import pagechange
 from ...skilift.editfolder import folderchange
@@ -53,36 +48,6 @@ _AN = re.compile('[^\w]')
 _SESSION_DATA = collections.OrderedDict()
 _IDENT_DATA = 0
 
-# This dictionary maps responder ident numbers to the submit_data functions
-# this method to eventually be replaced by responders with submit lists
-
-_CALL_SUBMIT_DATA = {
-                       43050: editpart.remove_tag_attribute,            # removes the part attribute
-                       53007: editpart.retrieve_editpart,               # gets data for edit a part page
-                       53050: editpart.set_tag,                         # sets the part tag_name or brief
-                       53507: insertpart.retrieve_insert,               # get data for insert a html tag page
-                       53607: insertpart.create_insert,                 # create an html tag
-                       54024: editwidget.set_field_name,                # sets the widget field name
-                       54027: editwidget.set_field_value,               # sets the widget field value
-                       54032: editwidget.set_widget_params,             # sets the widget name
-                       54042: editwidget.set_widget_params,             # sets the widget brief
-                       54537: listwidgets.create_new_widget,            # creates the new widget
-                       54721: editwidget.back_to_parent_container,      # get container
-                       56007: editvalidator.retrieve_editvalidator,     # gets data for edit a validator page
-                       56013: editvalidator.set_e_message,              # sets error message for a validator
-                       56023: editvalidator.set_e_message_ref,          # sets error message reference for a validator
-                       56033: editvalidator.set_displaywidget,          # sets error message reference for a validator
-                       56043: editvalidator.set_allowed_value,          # adds an allowed value to a validator
-                       56053: editvalidator.remove_allowed_value,       # removes an allowed value
-                       56107: editvalidator.retrieve_arg,               # gets data for edit an argument page
-                       56114: editvalidator.set_arg_value,              # sets the arg value
-                       56203: editvalidator.move_up,                    # moves a validator upwards
-                       56213: editvalidator.move_down,                  # moves a validator downwards
-                       56223: editvalidator.remove_validator,           # removes a validator
-                       56307: editvalidator.retrieve_validator_modules, # gets data for listing validator modules
-                       56317: editvalidator.retrieve_validator_list,    # gets data for listing validators
-                       56353: editvalidator.create_validator            # creates new validator
-                   }
 
 
 def start_project(project, projectfiles, path, option):
@@ -95,10 +60,10 @@ def start_project(project, projectfiles, path, option):
     # get pallet of colours from defaults.json and place in proj_data
     # these will be used to populate w3-theme-ski.css and the Colours page
 
-    adminbackcol = fromjson.get_defaults(project, key="backcol")
+    adminbackcol = get_defaults(project, key="backcol")
     if not adminbackcol:
         adminbackcol = "#bfb786"
-    colours = fromjson.get_defaults(project, key="colours")
+    colours = get_defaults(project, key="colours")
     if not colours:
         adminbackcol_rgb = css_styles.hex_int(adminbackcol)
         colours = css_styles.get_colours(*adminbackcol_rgb)
@@ -142,12 +107,12 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         # else the call is to a url not found
         return None, {}, {}, lang
 
-    # get the called_ident page number
-    projname, identnum = called_ident
-
     # If caller_ident is not given there should be no further session data
     if not caller_ident:
         return called_ident, call_data, page_data, lang
+
+    # get the called_ident page number
+    projname, identnum = called_ident
 
     # If the called page does not use session data, do not bother getting any
     if identnum in (
@@ -315,16 +280,10 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
             return edittextblocks.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
         elif submit_list[0] == 'edittext':
             return edittext.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        elif submit_list[0] == 'editvalidators':
+            return editvalidators.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
-
-
-    # the routing method below is being replaced by above method
-    calling_responder = ident_list[-1]
-    identnum = calling_responder[1]
-    if identnum in _CALL_SUBMIT_DATA:
-        return _CALL_SUBMIT_DATA[identnum](caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-
-    raise FailPage("submit_data function not found for responder %s,%s" % calling_responder)
+    raise FailPage("submit_data function not found for responder %s,%s" % ident_list[-1])
 
 
 def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
@@ -348,7 +307,7 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     if page_type == "TemplatePage":
         # header information
         if ("adminhead","page_head","large_text") not in page_data:
-            page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (call_data['editedprojname'], call_data['editedprojversion'])
+            page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (editedprojname, call_data['editedprojversion'])
         # fill in navigation information
         set_navigation(identnum, call_data, page_data)
 
