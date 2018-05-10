@@ -27,7 +27,9 @@
 
 """Functions for editing a widget"""
 
-import pkgutil
+import pkgutil, importlib, inspect
+
+from collections import namedtuple
 
 
 from ..ski import skiboot, widgets
@@ -35,10 +37,30 @@ from ..ski.excepts import ServerError
 
 from . import project_loaded, widget_info
 
+WidgetDescription = namedtuple('Widget', ['classname', 'reference', 'fields', 'containers', 'illustration'])
+
+# 'fields' is a list of lists: [ field arg, field ref]
+# 'containers' is the number of containers in the widget, 0 for none
 
 def widget_modules():
-    "Return a tuple of widget modules"
+    "Return a tuple of widget module names"
     return tuple(name for (module_loader, name, ispkg) in pkgutil.iter_modules(widgets.__path__))
+
+
+def widgets_in_module(module_name):
+    "Returns a list of WidgetDescription's present in the module"
+    module = importlib.import_module("skipoles.ski.widgets." + module_name)
+    widget_list = []
+    for classname,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
+        widget_list.append( WidgetDescription( classname,
+                                               obj.description_ref(),
+                                               obj.arg_references(),
+                                               obj.len_containers(),
+                                               obj.description()
+                                               ) )
+    return widget_list
+
+        
 
 
 

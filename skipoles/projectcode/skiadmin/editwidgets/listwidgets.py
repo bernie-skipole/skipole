@@ -31,15 +31,13 @@ import pkgutil, importlib, inspect, re
 
 from ....ski import skiboot, tag, widgets
 from .... import skilift
-from ....skilift import fromjson
+from ....skilift import fromjson, editsection, editwidget
 
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
-
-_MODULES_TUPLE = tuple(name for (module_loader, name, ispkg) in pkgutil.iter_modules(widgets.__path__))
 
 
 def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -65,7 +63,9 @@ def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, cal
 
     contents = []
 
-    for name in _MODULES_TUPLE:
+    modules_tuple = editwidget.widget_modules()
+
+    for name in modules_tuple:
         ref = 'widgets.' + name + '.module'
         notfound = 'Textblock reference %s not found' % ref
         contents.append([name, name, '', ref, notfound, ''])
@@ -86,8 +86,13 @@ def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, ca
     else:
         raise FailPage("Module not identified")
 
-    if module_name not in _MODULES_TUPLE:
+    modules_tuple = editwidget.widget_modules()
+
+    if module_name not in modules_tuple:
         raise FailPage("Module not identified")
+
+    # set module into call_data
+    call_data['module'] = module_name
 
     page_data[("adminhead","page_head","large_text")] = "Widgets in module %s" % (module_name,)
     page_data[('moduledesc','textblock_ref')] = 'widgets.' + module_name + '.module'
@@ -105,17 +110,13 @@ def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, ca
     # col 4 is text to appear if the reference cannot be found in the database
     # col 5 normally empty string, if set to text it will replace the textblock
 
-    module = importlib.import_module("skipoles.ski.widgets." + module_name)
-
-    # set module into call_data
-    call_data['module'] = module_name
-
+    widget_list = editwidget.widgets_in_module(module_name)
     contents = []
-
-    for name,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
-        ref = obj.description_ref()
+    for widget in widget_list:
+        ref = widget.reference
         notfound = 'Textblock reference %s not found' % ref
-        contents.append([name, name, '', ref, notfound, ''])
+        classname = widget.classname
+        contents.append([classname, classname, '', ref, notfound, ''])
 
     page_data[("widgets","link_table")] = contents
 
@@ -131,7 +132,9 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
 
     module_name = call_data['module']
 
-    if module_name not in _MODULES_TUPLE:
+    modules_tuple = editwidget.widget_modules()
+
+    if module_name not in modules_tuple:
         raise FailPage("Module not identified")
 
     module = importlib.import_module("skipoles.ski.widgets." + module_name)
@@ -168,7 +171,7 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
 def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is to create and insert a new widget, goes on to widget edit"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
     # get data
     bits = utils.get_bits(call_data)
@@ -190,8 +193,9 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage("Module not identified")
 
     module_name = call_data['module']
+    modules_tuple = editwidget.widget_modules()
 
-    if module_name not in _MODULES_TUPLE:
+    if module_name not in modules_tuple:
         raise FailPage("Module not identified")
 
     module = importlib.import_module("skipoles.ski.widgets." + module_name)
@@ -222,7 +226,7 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage(message="Invalid name, must not start with an underscore")
     if new_name.isdigit():
         raise FailPage(message="Unable to create the widget, the name must include some letters")
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if page is not None:
         if new_name in page.widgets:
             raise FailPage("Duplicate widget name in the page")
@@ -244,12 +248,11 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
     widget_instance = widget_cls(name=new_name, brief=new_brief)
     # set widget css class defaults, taken from defaults.json
     widget_fields = widget_instance.fields
-    editedproj_ident = editedproj.proj_ident
     try:
         for fieldarg, field in widget_fields.items():
             if field.cssclass or field.cssstyle:
                 # get default
-                default_value = fromjson.get_widget_default_field_value(editedproj_ident, module_name, widget_class_name, fieldarg)
+                default_value = fromjson.get_widget_default_field_value(project, module_name, widget_class_name, fieldarg)
                 widget_instance.set_field_value(fieldarg, default_value)
     except e:
         raise FailPage("Unable to obtain defaults from defaults.json")
