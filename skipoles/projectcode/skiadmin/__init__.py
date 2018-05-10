@@ -81,13 +81,15 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     # objects, so editedprojname should in future replace editedproj
     editedprojname = skilift.get_root()
 
+    projinfo = skilift.project_info(editedprojname)
+
     # also set this admin project into call_data
     adminproj = skiboot.getproject(project)
 
     call_data = {'editedprojname':editedprojname,
-                 'editedprojurl':editedproj.url,
-                 'editedprojversion':editedproj.version,
-                 'editedprojbrief':editedproj.brief,
+                 'editedprojurl':projinfo.path,
+                 'editedprojversion':projinfo.version,
+                 'editedprojbrief':projinfo.brief,
                  'editedproj':editedproj,
                  'adminproj':adminproj,
                  'extend_nav_buttons':[],
@@ -100,7 +102,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     # to be returned in a file page
 
     if called_ident is None:
-        tarfile = editedproj.proj_ident + ".tar.gz"
+        tarfile = editedprojname + ".tar.gz"
         if path.endswith(tarfile):
             # request is for the edited project tar.gz
             return 90, call_data, page_data, lang
