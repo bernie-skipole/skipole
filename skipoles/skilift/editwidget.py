@@ -35,7 +35,7 @@ from collections import namedtuple
 from ..ski import skiboot, tag, widgets
 from ..ski.excepts import ServerError
 
-from . import project_loaded, widget_info, fromjson
+from . import project_loaded, widget_info, fromjson, insert_item_in_page, insert_item_in_section
 
 WidgetDescription = namedtuple('Widget', ['classname', 'reference', 'fields', 'containers', 'illustration'])
 
@@ -61,7 +61,7 @@ def widgets_in_module(module_name):
     return widget_list
 
 
-def _get_proj_page_section(project, pagenumber=None, section_name=None):
+def _get_proj_page_section(project, pagenumber=None, pchange=None, section_name=None, schange=None):
     "Returns (project_object, page_object, section_object) - one page, section being None" 
 
     project_loaded(project)
@@ -79,6 +79,8 @@ def _get_proj_page_section(project, pagenumber=None, section_name=None):
         section = proj.section(section_name, makecopy=True)
         if section is None:
             raise ServerError(message="Given section_name is invalid")
+        if section.change != schange:
+            raise ServerError(message="The section has been changed prior to this submission, someone else may be editing this project")
     else:
         # get a copy of the page
         if not isinstance(pagenumber, int):
@@ -91,13 +93,73 @@ def _get_proj_page_section(project, pagenumber=None, section_name=None):
             raise ServerError(message="Invalid Page")
         if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
             raise ServerError(message="Item must be a Template or SVG page")
+        if page.change != pchange:
+            raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
     return proj, page, section
 
 
-def create_new_widget(project, module_name, widget_classname, location, name, brief, pagenumber=None, section_name=None):
+def create_new_widget_in_page(project, pagenumber, pchange, location, module_name, widget_classname, name, brief):
+    "Creates a new widget in the given page, returns the new pchange"
+    modules_tuple = widget_modules()
+    if module_name not in modules_tuple:
+        raise FailPage("Module not identified")
+    module = importlib.import_module("skipoles.ski.widgets." + module_name)
+
+    widget_dict = {name:cls for (name,cls) in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__))}
+
+    if widget_classname not in widget_dict:
+        raise ServerError(message="Widget not identified")
+
+    widget_cls = widget_dict[widget_classname]
+    widget_instance = widget_cls(name=name, brief=brief)
+    # set widget css class defaults, taken from defaults.json
+    widget_fields = widget_instance.fields
+    try:
+        for fieldarg, field in widget_fields.items():
+            if field.cssclass or field.cssstyle:
+                # get default
+                default_value = fromjson.get_widget_default_field_value(project, module_name, widget_classname, fieldarg)
+                widget_instance.set_field_value(fieldarg, default_value)
+    except e:
+        raise ServerError("Unable to obtain defaults from defaults.json")
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    return insert_item_in_page(project, pagenumber, pchange, location, widget_instance)
+
+
+def create_new_widget_in_section(project, section_name, schange, location, module_name, widget_classname, name, brief):
+    "Creates a new widget in the given section, returns the new schange"
+    modules_tuple = widget_modules()
+    if module_name not in modules_tuple:
+        raise FailPage("Module not identified")
+    module = importlib.import_module("skipoles.ski.widgets." + module_name)
+
+    widget_dict = {name:cls for (name,cls) in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__))}
+
+    if widget_classname not in widget_dict:
+        raise ServerError(message="Widget not identified")
+
+    widget_cls = widget_dict[widget_classname]
+    widget_instance = widget_cls(name=name, brief=brief)
+    # set widget css class defaults, taken from defaults.json
+    widget_fields = widget_instance.fields
+    try:
+        for fieldarg, field in widget_fields.items():
+            if field.cssclass or field.cssstyle:
+                # get default
+                default_value = fromjson.get_widget_default_field_value(project, module_name, widget_classname, fieldarg)
+                widget_instance.set_field_value(fieldarg, default_value)
+    except e:
+        raise ServerError("Unable to obtain defaults from defaults.json")
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    return insert_item_in_section(project, section_name, schange, location, widget_instance)
+
+
+
+
+def create_new_widget(project, module_name, widget_classname, location, name, brief, pagenumber=None, pchange=None, section_name=None, schange=None):
     "Creates a new widget in the given page or section (one must be None), at location with name and brief description"
 
-    proj, page, section = _get_proj_page_section(project, pagenumber, section_name)
+    proj, page, section = _get_proj_page_section(project, pagenumber, pchange, section_name, schange)
     location_string, container, location_integers = location
 
     # location string is either a widget name, or body, head, or svg

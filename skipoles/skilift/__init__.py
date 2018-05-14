@@ -32,7 +32,7 @@ from collections import namedtuple
 
 from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError
 
-from ..ski import skiboot
+from ..ski import skiboot, tag
 
 
 ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_file'])
@@ -55,6 +55,43 @@ def project_loaded(project, error_if_not=True):
     if error_if_not:
         raise ServerError(message="The project has not been loaded")
     return False
+
+
+def _get_proj_page(project, pagenumber, pchange):
+    "Returns (project_object, page_object)" 
+
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+
+    # get a copy of the page
+    if not isinstance(pagenumber, int):
+        raise ServerError(message="Given pagenumber is not an integer")
+    ident = skiboot.Ident.to_ident((project, pagenumber))
+    if ident is None:
+        raise ServerError(message="Invalid project, pagenumber")
+    page = skiboot.from_ident(ident, project)
+    if page is None:
+        raise ServerError(message="Invalid Page")
+    if page.change != pchange:
+        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
+    return proj, page
+
+
+def _get_proj_section(project, section_name, schange):
+    "Returns (project_object, section_object)" 
+
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+
+    # get a copy of the section
+    if not isinstance(section_name, str):
+        raise ServerError(message="Given section_name is invalid")
+    section = proj.section(section_name, makecopy=True)
+    if section is None:
+        raise ServerError(message="Given section_name is invalid")
+    if section.change != schange:
+        raise ServerError(message="The section has been changed prior to this submission, someone else may be editing this project")
+    return proj, section
 
 
 def project_info(project):
@@ -612,6 +649,139 @@ def page_path(project, item):
     # raise error if invalid project
     project_loaded(project)
     return skiboot.get_url(item, project)
+
+
+def insert_item_in_page(project, pagenumber, pchange, location, item):
+    "Insert the item in the page at location, return the new pchange value"
+    proj, page = _get_proj_page(project, pagenumber, pchange)
+    if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
+        raise ServerError(message="The page must be a Template or SVG page")
+    if hasattr(item, 'name'):
+        name = item.name
+        if name in page.widgets:
+            raise ServerError(message="The name clashes with a widget name already in the page")
+        if name in page.section_places:
+            raise ServerError(message="This name clashes with a section alias within this page")
+
+    location_string, container, location_integers = location
+    location_integers = [int(i) for i in location[2]]
+    # location string is either a widget name, or body, head, or svg
+    # if a widget_name, container must be given
+    # get the part at the current location
+    if container is None:
+        # not in a widget
+        parent_widget = None
+        part = page.get_part(location_string, location_integers)
+    else:
+        # so item is in a widget, location_string is the widget name
+        parent_widget = page.widgets[location_string]
+        part = parent_widget.get_from_container(container, location_integers)
+
+
+    # If this item is to be placed inside a parent widget container
+    if (parent_widget is not None) and (parent_widget.is_container_empty(container)):
+        # item is to be set as the first item in a widget container
+        parent_widget.set_in_container(container, (0,), item)
+    elif isinstance(part, tag.Part) and (not hasattr(part, "arg_descriptions")): # not Closed Part and not a widget
+        # insert at position 0 inside the part
+        part.insert(0,item)
+    elif (parent_widget is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so append after the part by inserting at the right place in the container
+        position = location_integers[0] + 1
+        parent_widget.insert_into_container(container, position, item)
+
+    else:
+        # do an append, rather than an insert
+        # get parent part
+        loc_integers = location_integers[:-1]
+        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
+            parent_part = page.get_part(location_string, loc_integers)
+        else:
+            # parent_widget is the containing widget 
+            parent_part = parent_widget.get_from_container(container, loc_integers)
+
+        # find location digit
+        loc = location_integers[-1] + 1
+        # insert item at loc in parent_part
+        parent_part.insert(loc,item)
+
+    # save the altered page and return the change uuid
+    return proj.save_page(page)
+
+
+def insert_item_in_section(project, section_name, schange, location, item):
+    "Insert the item in the section at location, return the new schange value"
+    proj, section = _get_proj_section(project, section_name, schange)
+    if hasattr(item, 'name'):
+        name = item.name
+        if name in section.widgets:
+            raise ServerError(message="The name clashes with a widget name already in the section")
+        if name == section.name:
+            raise ServerError(message="Cannot use the same name as the containing section")
+
+    location_string, container, location_integers = location
+    location_integers = [int(i) for i in location[2]]
+    # location string is either a widget name, or the section name
+    # if a widget_name, container must be given
+    # get the part at the current location
+    if container is None:
+        # not in a widget
+        parent_widget = None
+        if location_string != section_name:
+            raise ServerError(message="Invalid location, section name not equal to location string")
+        if location_integers:
+            part = section.get_location_value(location_integers)
+        else:
+            part = section
+    else:
+        # so item is in a widget, location_string is the widget name
+        parent_widget = section.widgets[location_string]
+        part = parent_widget.get_from_container(container, location_integers)
+
+
+    # If this item is to be placed inside a parent widget container
+    if (parent_widget is not None) and (parent_widget.is_container_empty(container)):
+        # item is to be set as the first item in a widget container
+        parent_widget.set_in_container(container, (0,), item)
+    elif isinstance(part, tag.Part) and (not hasattr(part, "arg_descriptions")): # not Closed Part and not a widget
+        # insert at position 0 inside the part
+        part.insert(0,item)
+    elif (parent_widget is not None) and (len(location_integers) == 1):
+        # part is inside a container with parent being the containing div
+        # so append after the part by inserting at the right place in the container
+        position = location_integers[0] + 1
+        parent_widget.insert_into_container(container, position, item)
+
+    else:
+        # do an append, rather than an insert
+        # get parent part
+        loc_integers = location_integers[:-1]
+        if parent_widget is None:
+            # part not in a widget
+            if location_string == section_name:
+                if loc_integers:
+                    parent_part = section.get_location_value(loc_integers)
+                else:
+                    parent_part = section
+        else:
+            parent_part = parent_widget.get_from_container(container, loc_integers)
+
+        # find location digit
+        loc = location_integers[-1] + 1
+        # insert item at loc in parent_part
+        parent_part.insert(loc,item)
+
+    # save the altered section, and return the change uuid
+    return proj.add_section(section_name, section)
+
+
+
+
+
+
+            
+
 
 
 
