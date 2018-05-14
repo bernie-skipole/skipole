@@ -131,13 +131,9 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
         raise FailPage("Module not identified")
 
     module_name = call_data['module']
-
     modules_tuple = editwidget.widget_modules()
-
     if module_name not in modules_tuple:
         raise FailPage("Module not identified")
-
-    module = importlib.import_module("skipoles.ski.widgets." + module_name)
 
     if 'chosen_widget' in call_data:
         widget_class_name = call_data['chosen_widget']
@@ -146,26 +142,29 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
     else:
         raise FailPage("Widget not identified")
 
-    widget_dict = {name:cls for (name,cls) in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__))}
 
+    widget_list = editwidget.widgets_in_module(module_name)
+    widget_dict = {widgetdescription.classname : widgetdescription for widgetdescription in widget_list}
+    
     if widget_class_name not in widget_dict:
         raise FailPage("Widget not identified")
 
-    widget_cls = widget_dict[widget_class_name]
+    widg = widget_dict[widget_class_name]
+    # widg is a WidgetDescription named tuple
 
     page_data[("adminhead","page_head","large_text")] = "Create widget of type %s" % (widget_class_name,)
-    page_data[('widgetdesc','textblock_ref')] = widget_cls.description_ref()
+    page_data[('widgetdesc','textblock_ref')] = widg.reference
 
-    page_data[('fieldtable','contents')] = widget_cls.arg_references()
+    page_data[('fieldtable','contents')] = widg.fields
 
-    if widget_cls.can_contain():
+    if widg.containers:
         page_data[('containerdesc','show')] = True
 
     # set widget class name into call_data
     call_data['widgetclass'] = widget_class_name
 
     # display the widget html
-    page_data[('widget_code','pre_text')] = widget_cls.description()
+    page_data[('widget_code','pre_text')] = widg.illustration
 
 
 def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -243,7 +242,33 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage("Widget description missing")
     new_brief = call_data['new_widget_brief']
 
+    ####################################
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    else:
+        section_name = None
 
+    if (pagenumber is None) and (section_name is None):
+        raise FailPage("Either a page or section must be specified")
+
+    editwidget.create_new_widget(project,
+                                 module_name,
+                                 call_data['widgetclass'],
+                                 location,
+                                 new_name,
+                                 new_brief,
+                                 pagenumber,
+                                 section_name)
+
+    call_data['widget_name'] = new_name
+    call_data['status'] = "Widget created"
+    return
+
+    ##########################
 
     widget_instance = widget_cls(name=new_name, brief=new_brief)
     # set widget css class defaults, taken from defaults.json

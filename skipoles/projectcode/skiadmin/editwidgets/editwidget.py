@@ -62,8 +62,6 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name
 
-    ## these bits may eventually be replaced by skilift api
-
     editedprojname = call_data['editedprojname']
     editedproj = skiboot.getproject(editedprojname)
     section = None
