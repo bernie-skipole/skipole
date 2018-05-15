@@ -29,8 +29,7 @@
 
 import re
 
-from .... import skilift
-from ....skilift import fromjson, editsection, editwidget
+from ....skilift import editwidget
 
 from ....ski.excepts import ServerError, FailPage, ValidateError, GoTo
 
@@ -197,16 +196,15 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
     new_brief = call_data['new_widget_brief']
 
     if 'page_number' in call_data:
-        pagenumber = call_data['page_number']
         try:
-            call_data['pchange'] =  editwidget.create_new_widget(project,
-                                                                    call_data['module'],
-                                                                    call_data['widgetclass'],
-                                                                    call_data['location'],
-                                                                    new_name,
-                                                                    new_brief,
-                                                                    pagenumber=pagenumber,
-                                                                    pchange = call_data['pchange'])
+            call_data['pchange'] =  editwidget.create_new_widget_in_page(project,
+                                                                         call_data['page_number'],
+                                                                         call_data['pchange'],
+                                                                         call_data['location'],
+                                                                         call_data['module'],
+                                                                         call_data['widgetclass'],
+                                                                         new_name,
+                                                                         new_brief)
         except ServerError as e:
             raise FailPage(e.message)
         call_data['widget_name'] = new_name
@@ -214,16 +212,15 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
         return
 
     if 'section_name' in call_data:
-        section_name = call_data['section_name']
         try:
-            call_data['schange'] =  editwidget.create_new_widget(project,
-                                                                 call_data['module'],
-                                                                 call_data['widgetclass'],
-                                                                 call_data['location'],
-                                                                 new_name,
-                                                                 new_brief,
-                                                                 section_name=section_name,
-                                                                 schange = call_data['schange'])
+            call_data['schange'] =  editwidget.create_new_widget_in_section(project,
+                                                                            call_data['section_name'],
+                                                                            call_data['schange'],
+                                                                            call_data['location'],
+                                                                            call_data['module'],
+                                                                            call_data['widgetclass'],
+                                                                            new_name,
+                                                                            new_brief)
         except ServerError as e:
             raise FailPage(e.message)
         call_data['widget_name'] = new_name

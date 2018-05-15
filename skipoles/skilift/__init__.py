@@ -57,8 +57,9 @@ def project_loaded(project, error_if_not=True):
     return False
 
 
-def _get_proj_page(project, pagenumber, pchange):
-    "Returns (project_object, page_object)" 
+def get_proj_page(project, pagenumber, pchange=None):
+    """Returns (project_object, page_object), being class objects used internally by the skipole framework
+       The page object returned is a deepcopy of the page in the project""" 
 
     project_loaded(project)
     proj = skiboot.getproject(project)
@@ -72,13 +73,15 @@ def _get_proj_page(project, pagenumber, pchange):
     page = skiboot.from_ident(ident, project)
     if page is None:
         raise ServerError(message="Invalid Page")
-    if page.change != pchange:
+    # if pchange is given, test it is equal to page.change
+    if (pchange is not None) and (page.change != pchange):
         raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
     return proj, page
 
 
-def _get_proj_section(project, section_name, schange):
-    "Returns (project_object, section_object)" 
+def get_proj_section(project, section_name, schange=None):
+    """Returns (project_object, section_object), being class objects used internally by the skipole framework
+       The section object returned is a deepcopy of the section in the project""" 
 
     project_loaded(project)
     proj = skiboot.getproject(project)
@@ -89,7 +92,8 @@ def _get_proj_section(project, section_name, schange):
     section = proj.section(section_name, makecopy=True)
     if section is None:
         raise ServerError(message="Given section_name is invalid")
-    if section.change != schange:
+    # if schange is given, test it is equal to section.change
+    if (schange is not None) and (section.change != schange):
         raise ServerError(message="The section has been changed prior to this submission, someone else may be editing this project")
     return proj, section
 
@@ -653,7 +657,7 @@ def page_path(project, item):
 
 def insert_item_in_page(project, pagenumber, pchange, location, item):
     "Insert the item in the page at location, return the new pchange value"
-    proj, page = _get_proj_page(project, pagenumber, pchange)
+    proj, page = get_proj_page(project, pagenumber, pchange)
     if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
         raise ServerError(message="The page must be a Template or SVG page")
     if hasattr(item, 'name'):
@@ -712,7 +716,7 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
 
 def insert_item_in_section(project, section_name, schange, location, item):
     "Insert the item in the section at location, return the new schange value"
-    proj, section = _get_proj_section(project, section_name, schange)
+    proj, section = get_proj_section(project, section_name, schange)
     if hasattr(item, 'name'):
         name = item.name
         if name in section.widgets:
@@ -774,14 +778,6 @@ def insert_item_in_section(project, section_name, schange, location, item):
 
     # save the altered section, and return the change uuid
     return proj.add_section(section_name, section)
-
-
-
-
-
-
-            
-
 
 
 
