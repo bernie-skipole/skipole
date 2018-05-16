@@ -12723,7 +12723,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": "admin_home",
+"fail_ident": 55507,
 "submit_list": [
 "editsectionplaces",
 "editplaceholder",
@@ -13745,7 +13745,7 @@ false
 },
 "retrieve_insert": {
 "ident": 55507,
-"brief": "Gets data for insert html tag page",
+"brief": "Gets data for insert a section placeholder page",
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
