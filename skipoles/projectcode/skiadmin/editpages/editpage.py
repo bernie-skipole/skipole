@@ -1287,21 +1287,6 @@ def add_to_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
     call_data['location'] = location         ########## also part_tuple should replace location
 
-    # navigator boxes
-    if location_string == 'head':
-        boxes = [['page_head', "Head", True, '']]    # label to 3320
-    elif location_string == 'body':
-        boxes = [['page_body', "Body", True, '']]    # label to 3340
-    elif location_string == 'svg':
-        boxes = [['page_svg', "SVG", True, '']]    # label to 3420
-    else:
-        raise FailPage("Item to add to has not been recognised")
-
-    if 'extend_nav_buttons' in call_data:
-        call_data['extend_nav_buttons'].extend(boxes)
-    else:
-        call_data['extend_nav_buttons'] = boxes
-
     # Fill in menu of items, Part items have insert, others have append
     # as this is to be input into a section, a further section is not present in this list
 
