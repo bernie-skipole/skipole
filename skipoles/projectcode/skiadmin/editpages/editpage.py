@@ -1370,7 +1370,7 @@ def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     # remove the item
     try:
-        editpage.del_location(editedprojname, pagenumber, location)
+        call_data['pchange'] = editpage.del_location(editedprojname, pagenumber, call_data['pchange'], location)
     except ServerError as e:
         raise FailPage(message = e.message)
 

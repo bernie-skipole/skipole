@@ -32,7 +32,7 @@ from collections import namedtuple
 from ..ski import skiboot, tag
 from ..ski.excepts import ServerError
 
-from . import project_loaded, insert_item_in_page
+from . import project_loaded, insert_item_in_page, del_location_in_section
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
@@ -50,7 +50,7 @@ def list_section_names(project=None):
     return proj.list_section_names()
 
 
-def placeholder__info(project, pagenumber, location):
+def placeholder_info(project, pagenumber, location):
     """location is a tuple or list consisting of three items:
        a string (such as head or widget name)
        a container integer, such as 0 for widget container 0, or None if not in container
@@ -220,51 +220,9 @@ def sectionchange(project, section_name):
     return section.change
 
 
-def del_location(project, section_name, location):
-    "Deletes the item at the given location"
-    # raise error if invalid project
-    project_loaded(project)
-    proj = skiboot.getproject(project)
-    if not section_name:
-         raise ServerError(message="Given section_name is invalid")
-    section = proj.section(section_name, makecopy=True)
-    if section is None:
-        raise ServerError(message="Given Section not found")
-
-    location_string, container, location_integers = location
-
-    if container is None:
-        if location_string != section_name:
-            raise ServerError(message="Unable to delete item")
-        # remove the item
-        try:
-            section.del_location_value(location_integers)
-        except:
-            raise ServerError(message="Unable to delete item")
-        # And save this section copy to the project
-        proj.add_section(section_name, section)
-        return
-
-    # so item is in a widget, location_string is the widget name
-    widget = section.widgets[location_string]
-    ident_string = widget.ident_string
-
-    # ident_string is sectionname-x-y
-
-    splitstring = ident_string.split("-")
-    widg_ints = [ int(i) for i in splitstring[1:] ]
-
-    widg_container_ints = list(widget.get_container_loc(container))
-
-    item_location_ints = widg_ints + widg_container_ints + list(location_integers)
-
-    # remove the item
-    try:
-        section.del_location_value(item_location_ints)
-    except:
-        raise ServerError(message="Unable to delete item")
-    # And save this section copy to the project
-    proj.add_section(section_name, section)
+def del_location(project, section_name, schange, location):
+    "Deletes the item at the given location in the section, returns new schange"
+    return del_location_in_section(project, section_name, schange, location)
 
 
 def move_location(project, section_name, from_location, to_location):
