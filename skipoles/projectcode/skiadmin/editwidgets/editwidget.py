@@ -979,13 +979,13 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     if pagenumber is None:
         # remove the item from a section
         try:
-            editsection.del_location(editedprojname, section_name, location)
+            call_data['schange'] = editsection.del_location(editedprojname, section_name, call_data['schange'], location)
         except ServerError as e:
             raise FailPage(message = e.message)
     else:
         # remove the item from a page
         try:
-            editpage.del_location(editedprojname, pagenumber, location)
+            call_data['pchange'] = editpage.del_location(editedprojname, pagenumber, call_data['pchange'], location)
         except ServerError as e:
             raise FailPage(message = e.message)
         # page has changed, hopefully, in due course, this line will not be needed

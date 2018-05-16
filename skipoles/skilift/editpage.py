@@ -30,25 +30,7 @@
 from ..ski import skiboot
 from ..ski.excepts import ServerError
 
-from . import project_loaded, item_info
-
-
-def _get_page(project, pagenumber):
-    """On success return (deep copy of page, empty string)
-       on failure return (None, failure string)"""
-    if not project_loaded(project, error_if_not=False):
-        return None, "Given project is not loaded"
-    if not isinstance(pagenumber, int):
-        return None, "Given pagenumber is not an integer"
-    ident = skiboot.Ident.to_ident((project, pagenumber))
-    if ident is None:
-        return None, "Invalid project, pagenumber"
-    page = skiboot.from_ident(ident, project)
-    if page is None:
-        return None, "Invalid Page"
-    if page.page_type == 'Folder':
-        return None, "Item is not a page"
-    return page, ""
+from . import project_loaded, item_info, get_proj_page, del_location_in_page
 
 
 def pagechange(project, pagenumber):
@@ -69,14 +51,7 @@ def rename_page(project, pagenumber, pchange, newname):
         raise ServerError(message="No new page name given")
     # get a copy of the page, which can have a new name set
     # and can then be saved to the project
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message=error_message)
-    if page.change != pchange:
-        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
-    proj = skiboot.getproject(project)
-    if proj is None:
-        raise ServerError(message="Project not loaded")
+    proj, page = get_proj_page(project, pagenumber, pchange)
     # Rename the page
     page.name = newname
     # save the altered page, and return the page.change uuid
@@ -89,14 +64,7 @@ def page_description(project, pagenumber, pchange, brief):
         return "No new page name given"
     # get a copy of the page, which can have a new brief set
     # and can then be saved to the project
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message=error_message)
-    if page.change != pchange:
-        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
-    proj = skiboot.getproject(project)
-    if proj is None:
-        raise ServerError(message="Project not loaded")
+    proj, page = get_proj_page(project, pagenumber, pchange)
     # Set the page brief
     page.brief = brief
     # save the altered page, and return the page.change uuid
@@ -108,14 +76,7 @@ def new_parent(project, pagenumber, pchange, new_parent_number):
 
     # get a copy of the page, which is to have a new parent folder set
     # and can then be saved to the project
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message=error_message)
-    if page.change != pchange:
-        raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
-    proj = skiboot.getproject(project)
-    if proj is None:
-        raise ServerError(message="Project not loaded")
+    proj, page = get_proj_page(project, pagenumber, pchange)
     if not isinstance(new_parent_number, int):
         raise ServerError(message="Given new_parent_number is not an integer")
     ident = skiboot.Ident.to_ident((project, new_parent_number))
@@ -136,97 +97,23 @@ def new_parent(project, pagenumber, pchange, new_parent_number):
 
 def delete_page(project, pagenumber):
     "delete this page, return None on success, error message on failure"
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        return error_message
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        return "Project not loaded"
-    # Delete the page
     try:
+        proj, page = get_proj_page(project, pagenumber)
         # delete the page from the project
-        editedproj.delete_item(page.ident)
+        proj.delete_item(page.ident)
     except ServerError as e:
         return e.message
 
 
 
-def del_location(project, pagenumber, location):
-    "Deletes the item at the given location in the page"
-    # raise error if invalid project
-    project_loaded(project)
-    proj = skiboot.getproject(project)
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message=error_message)
-    if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
-        raise ServerError(message = "Invalid page")
-
-    location_string, container, location_integers = location
-
-    # location string is either a widget name, or body, head, or svg
-    # if a widget_name, container must be given
-
-    if container is None:
-        # not in a widget
-        if location_string == 'body':
-            top = page.body
-        elif location_string == 'head':
-            top = page.head
-        elif location_string == 'svg':
-            top = page.svg
-        else:
-            raise ServerError(message="Given location is invalid")
-        # remove the item
-        try:
-            top.del_location_value(location_integers)
-        except:
-            raise ServerError(message="Unable to delete item")
-        # And save this page copy to the project
-        proj.save_page(page)
-        return
-
-    # so item is in a widget, location_string is the widget name
-    widget = page.widgets[location_string]
-    ident_string = widget.ident_string
-
-    # ident_string is of the form; project_pageidentnumber_body-x-y
-
-    splitstring = ident_string.split("_")
-    splitloc = splitstring[2].split("-")
-    loc_top = splitloc[0]
-    widg_ints = [ int(i) for i in splitloc[1:] ]
-
-    widg_container_ints = list(widget.get_container_loc(container))
-
-    item_location_ints = widg_ints + widg_container_ints + list(location_integers)
-
-    if loc_top == 'body':
-        top = page.body
-    elif loc_top == 'head':
-        top = page.head
-    elif loc_top == 'svg':
-        top = page.svg
-    else:
-        raise ServerError(message="Given location is invalid")
-    # remove the item
-    try:
-        top.del_location_value(item_location_ints)
-    except:
-        raise ServerError(message="Unable to delete item")
-        # And save this page copy to the project
-    proj.save_page(page)
-
+def del_location(project, pagenumber, pchange, location):
+    "Deletes the item at the given location in the page, returns new pchange"
+    return del_location_in_page(project, pagenumber, pchange, location)
 
 
 def move_location(project, pagenumber, from_location, to_location):
     """Move an item in the given page from one spot to another, defined by its location"""
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message=error_message)
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        raise ServerError(message="Project not loaded")
+    proj, page = get_proj_page(project, pagenumber)
     if to_location == from_location:
         # no movement
         return
@@ -289,7 +176,7 @@ def move_location(project, pagenumber, from_location, to_location):
             except:
                 raise ServerError(message="Unable to move item")
         # And save this page copy to the project
-        editedproj.save_page(page)
+        proj.save_page(page)
         return
 
     # so item is in a widget, location_string is the widget name
@@ -314,12 +201,7 @@ def move_location(project, pagenumber, from_location, to_location):
 
 def css_style(project, pagenumber):
     "Return CSS style of a page, as an ordered Dictionary"
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message = error_message)
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        raise ServerError(message = "Project not loaded")
+    proj, page = get_proj_page(project, pagenumber)
     if page.page_type != "CSS":
         raise ServerError(message = "Invalid page type")
     return page.style
@@ -327,12 +209,7 @@ def css_style(project, pagenumber):
 
 def file_parameters(project, pagenumber):
     "Return filepath,mimetype of a page"
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message = error_message)
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        raise ServerError(message = "Project not loaded")
+    proj, page = get_proj_page(project, pagenumber)
     if page.page_type != "FilePage":
         raise ServerError(message = "Invalid page type")
     return (page.filepath, page.mimetype)
@@ -340,12 +217,7 @@ def file_parameters(project, pagenumber):
 
 def json_contents(project, pagenumber):
     "Return contents dictionary of a JSON page, where keys are WidgField objects (convert to strings for the JSON dictionary string keys)"
-    page, error_message = _get_page(project, pagenumber)
-    if page is None:
-        raise ServerError(message = error_message)
-    editedproj = skiboot.getproject(project)
-    if editedproj is None:
-        raise ServerError(message = "Project not loaded")
+    proj, page = get_proj_page(project, pagenumber)
     if page.page_type != "JSON":
         raise ServerError(message = "Invalid page type")
     contents = {}

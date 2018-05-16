@@ -57,7 +57,7 @@ def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict,
     # header done, now page contents
 
     # get placholderinfo
-    placeholder = editsection.placeholder__info(project, pagenumber, location)
+    placeholder = editsection.placeholder_info(project, pagenumber, location)
     if placeholder is None:
         raise FailPage("Section Place Holder not found")
 
@@ -99,7 +99,7 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
     section_list = editsection.list_section_names(project)
 
     # get placholderinfo
-    placeholder = editsection.placeholder__info(project, pagenumber, location)
+    placeholder = editsection.placeholder_info(project, pagenumber, location)
 
     section_name = placeholder.section_name
     alias = placeholder.alias
