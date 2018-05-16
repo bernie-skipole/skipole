@@ -32,7 +32,7 @@ from collections import namedtuple
 from ..ski import skiboot, tag
 from ..ski.excepts import ServerError
 
-from . import project_loaded
+from . import project_loaded, insert_item_in_page
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
@@ -193,6 +193,18 @@ def edit_placeholder(project, pagenumber, pchange, location, section_name, alias
 
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
+
+
+
+def new_new_placeholder(project, pagenumber, pchange, location, section_name, alias, brief):
+    """Create a new placeholder at project, pagenumber, location
+       with section_name, alias, brief returns page change uuid """
+    # create new placeholder
+    newplaceholder = tag.SectionPlaceHolder(section_name=section_name,
+                                            placename=alias,
+                                            brief=brief)
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    return insert_item_in_page(project, pagenumber, pchange, location, newplaceholder)
 
 
 def new_placeholder(project, pagenumber, pchange, location, section_name, alias, brief):

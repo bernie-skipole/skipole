@@ -666,6 +666,12 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
             raise ServerError(message="The name clashes with a widget name already in the page")
         if name in page.section_places:
             raise ServerError(message="This name clashes with a section alias within this page")
+    if hasattr(item, 'placename'):
+        name = item.placename
+        if name in page.widgets:
+            raise ServerError(message="The alias clashes with a widget name already in the page")
+        if name in page.section_places:
+            raise ServerError(message="This alias clashes with another section alias within this page")
 
     location_string, container, location_integers = location
     location_integers = [int(i) for i in location[2]]
