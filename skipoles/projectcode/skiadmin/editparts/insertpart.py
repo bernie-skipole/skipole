@@ -36,28 +36,18 @@ from ....skilift import fromjson
 
 
 def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Fills in the insert an html tag page"
-
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Insert an HTML tag"
-
-    # header done, now page contents
-
-    if part is None:
-        raise FailPage("Part not identified")
+    "Fills in the insert an html element page header"
+    project = call_data['editedprojname']
+    if 'page_number' in call_data:
+        pageinfo = skilift.item_info(project, call_data['page_number'])
+        if (pageinfo.item_type != "TemplatePage") and (pageinfo.item_type != "SVG"):
+            raise FailPage("Invalid page")
+        # Fill in header
+        page_data[("adminhead","page_head","large_text")] = "Insert an HTML element into %s,%s" % (project, call_data['page_number'])
+    elif 'section_name' in call_data:
+        page_data[("adminhead","page_head","large_text")] = "Insert an HTML element into section " + call_data['section_name']
+    else:
+        raise FailPage("Insertion page/section for html element is missing")
 
 
 def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
