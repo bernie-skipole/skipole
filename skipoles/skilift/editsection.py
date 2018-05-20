@@ -32,7 +32,7 @@ from collections import namedtuple
 from ..ski import skiboot, tag
 from ..ski.excepts import ServerError
 
-from . import project_loaded, insert_item_in_page, del_location_in_section
+from . import project_loaded, insert_item_in_page, del_location_in_section, insert_item_in_section
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
@@ -324,4 +324,13 @@ def delete_section(project, section_name):
         raise ServerError(message="Section name does not exists")
     proj.delete_section(section_name)
 
+
+def create_html_element_in_section(project, section_name, schange, location, name, brief, opentag = True):
+    "Creates a new html element in the given section, returns the new schange"
+    if opentag:
+        newpart = tag.Part(tag_name=name, brief=brief)
+    else:
+        newpart = tag.ClosedPart(tag_name=name, brief=brief)
+    # call skilift.insert_item_in_section to insert the item, save the section and return schange
+    return insert_item_in_section(project, section_name, schange, location, newpart)
 

@@ -662,7 +662,7 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
     proj, page = get_proj_page(project, pagenumber, pchange)
     if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
         raise ServerError(message="The page must be a Template or SVG page")
-    if hasattr(item, 'name'):
+    if hasattr(item, 'name') and item.name:
         name = item.name
         if name in page.widgets:
             raise ServerError(message="The name clashes with a widget name already in the page")
@@ -725,7 +725,7 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
 def insert_item_in_section(project, section_name, schange, location, item):
     "Insert the item in the section at location, return the new schange value"
     proj, section = get_proj_section(project, section_name, schange)
-    if hasattr(item, 'name'):
+    if hasattr(item, 'name') and item.name:
         name = item.name
         if name in section.widgets:
             raise ServerError(message="The name clashes with a widget name already in the section")

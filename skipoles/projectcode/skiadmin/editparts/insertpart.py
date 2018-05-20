@@ -32,7 +32,7 @@ from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 from .... import skilift
-from ....skilift import fromjson
+from ....skilift import item_info, fromjson, editpage, editsection
 
 
 def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -51,103 +51,75 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 
 def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Creates the html tag"
+    "Creates the html element"
+    project = call_data['editedprojname']
+    part_top, container, location_integers = call_data['location']
 
-    editedproj = call_data['editedproj']
+    if call_data['newopenclosed'] == 'open':
+        opentag = True
+    else:
+        opentag = False
 
-    # get data
-    bits = utils.get_bits(call_data)
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+        page_info = item_info(project, pagenumber)
+        if page_info is None:
+            raise FailPage("Page to edit not identified")
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    location = bits.location
-    part = bits.part
+        if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
+            raise FailPage("Page not identified")
 
-    # location is a tuple consisting of the leading string (such as head or section name or widget name)
-    # container integer, such as 0 for container 0, or None if no container
-    # and tuple of location integers
-
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
-
-    # label used in GoTo jump to return to the point where item is inserted
-    label = None
-
-    if page is not None:
-        if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
-            raise FailPage(message = "Invalid page")
         # page to go back to
-        if bits.part_top == 'head':
-            label = "page_head"   # label to 3320
-        elif bits.part_top == 'body':
-            label = "page_body"   # label to 3340
-        elif bits.part_top == 'svg':
-            label = "page_svg"   # label to 3420
+        target = None
+        if part_top == 'head':
+            target = "page_head"
+        elif part_top == 'body':
+            target = "page_body"
+        elif part_top == 'svg':
+            target = "page_svg"
 
-    if section is not None:
-        if bits.part_top == bits.section_name:
-            label = "back_to_section"   # label to 7040
+        if container is not None:
+            target = "back_to_container"
 
-    # could be a widget container
-    if label is None:
-        if (widget is not None) and bits.part_top == widget.name: 
-            label = "back_to_container"  # label to 54709
-        else:
+        if target is None:
             raise FailPage("Invalid location")
 
-    location_integers = [int(i) for i in location[2]]
+        try:
+            call_data['pchange'] = editpage.create_html_element_in_page(project,
+                                                                        pagenumber,
+                                                                        call_data['pchange'],
+                                                                        call_data['location'],
+                                                                        call_data['newpartname'],
+                                                                        call_data['newbrief'],
+                                                                        opentag)
+        except ServerError as e:
+            raise FailPage(e.message)
+        call_data['status'] = 'New tag inserted'
+        raise GoTo(target = target, clear_submitted=True)
 
-    # create the item
-    if call_data['newopenclosed'] == 'open':
-        newpart = tag.Part(tag_name=call_data['newpartname'], brief=call_data['newbrief'])
-    else:
-        newpart = tag.ClosedPart(tag_name=call_data['newpartname'], brief=call_data['newbrief'])
 
-    if (location[1] is not None) and (widget.is_container_empty(location[1])):
-        # newpart is to be set as the first item in a container
-        new_location = (location[0], location[1], (0,))
-        utils.set_part(newpart, 
-                       new_location,
-                       page=page,
-                       section=section,
-                       section_name=bits.section_name,
-                       widget=widget,
-                       failmessage='Part to have element inserted not identified')
-    elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
-        # insert at position 0 inside the part
-        part.insert(0,newpart)
-        new_location = (location[0], location[1], tuple(location_integers + [0]))
-    elif (location[1] is not None) and (len(location_integers) == 1):
-        # part is inside a container with parent being the containing div
-        # so append newpart after the part by inserting at the right place in the container
-        position = location_integers[0] + 1
-        widget.insert_into_container(location[1], position, newpart)
-        new_location = (location[0], location[1], (position,))
-    else:
-        # do an append, rather than an insert
-        # get parent part
-        parent_part = utils.part_from_location(page,
-                                               section,
-                                               bits.section_name,
-                                               location_string=location[0],
-                                               container=location[1],
-                                               location_integers=location_integers[:-1])
-        # find location digit
-        loc = location_integers[-1] + 1
-        # insert newpart at loc in parent_part
-        parent_part.insert(loc,newpart)
-        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+        if container is not None:
+            target = "back_to_container"
+        else:
+            target = "back_to_section"
 
-    call_data['status'] = 'New tag inserted'
-    raise GoTo(target = label, clear_submitted=True)
+        try:
+            call_data['schange'] = editsection.create_html_element_in_section(project,
+                                                                              section_name,
+                                                                              call_data['schange'],
+                                                                              call_data['location'],
+                                                                              call_data['newpartname'],
+                                                                              call_data['newbrief'],
+                                                                              opentag)
+        except ServerError as e:
+            raise FailPage(e.message)
+        call_data['status'] = 'New tag inserted'
+        raise GoTo(target = target, clear_submitted=True)
 
+    raise FailPage("Either a page or section must be specified")
 
 
 def file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

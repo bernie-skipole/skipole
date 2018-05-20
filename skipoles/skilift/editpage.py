@@ -27,10 +27,10 @@
 
 """Functions for editing a page"""
 
-from ..ski import skiboot
+from ..ski import skiboot, tag
 from ..ski.excepts import ServerError
 
-from . import project_loaded, item_info, get_proj_page, del_location_in_page
+from . import project_loaded, item_info, get_proj_page, del_location_in_page, insert_item_in_page
 
 
 def pagechange(project, pagenumber):
@@ -228,4 +228,17 @@ def json_contents(project, pagenumber):
                 continue
             contents[wf] = value
     return contents
+
+
+
+def create_html_element_in_page(project, pagenumber, pchange, location, name, brief, opentag = True):
+    "Creates a new html element in the given page, returns the new pchange"
+    if opentag:
+        newpart = tag.Part(tag_name=name, brief=brief)
+    else:
+        newpart = tag.ClosedPart(tag_name=name, brief=brief)
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    return insert_item_in_page(project, pagenumber, pchange, location, newpart)
+
+
 
