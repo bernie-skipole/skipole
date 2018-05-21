@@ -60,45 +60,6 @@ def make_part_for_section(section, json_data):
     return newpart
 
 
-
-
-def create_part(proj_ident, ident, section_name, part, loc, json_data):
-    """Builds the part from the given json string, or ordered dictionary and adds it to page or section"""
-    if isinstance(json_data, str):
-        part_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
-    else:
-        part_dict = json_data
-    newpart =  _create_part(part_dict, proj_ident)
-    # save the page or section
-    project = skiboot.getproject(proj_ident)
-    if ident:
-        page = project.get_item(ident)
-        if page is not None:
-            # ensure widgets and placeholders in newpart have unique names
-            name_list = list(page.widgets.keys()) + list(page.section_places.keys())
-            newpart.set_unique_names(name_list)
-            # insert newpart into given part
-            part.insert(loc,newpart)
-            # save the altered page
-            project.save_page(page)
-            return
-    if section_name:
-        # save the altered section
-        section = project.section(section_name, makecopy=False)
-        if section is not None:
-            # ensure widgets and placeholders in newpart have unique names
-            name_list = list(section.widgets.keys()) + list(section.section_places.keys())
-            newpart.set_unique_names(name_list)
-            # as this is going into a section, remove any placeholders
-            _remove_sectionplaceholders(newpart)
-            # insert newpart into given part
-            part.insert(loc,newpart)
-            project.add_section(section_name, section)
-            return
-    # only get here if unsuccessfull
-    raise excepts.ServerError("Unable to create part")
-
-
 def _remove_sectionplaceholders(part):
     "Given a part - swap out any tag.SectionPlaceHolder for a text string"
     if isinstance(part, tag.Part) or isinstance(part, tag.Section):
@@ -111,50 +72,6 @@ def _remove_sectionplaceholders(part):
                 _remove_sectionplaceholders(item)
         for index in index_list:
             parts[index] = "Section Place Holder Removed"
-
-
-def create_part_in_widget(proj_ident, ident, section_name, widget_name, container_number, json_data):
-    """Builds the part from the given json string, or ordered dictionary and sets it to container"""
-    if isinstance(json_data, str):
-        part_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
-    else:
-        part_dict = json_data
-    newpart =  _create_part(part_dict, proj_ident)
-    project = skiboot.getproject(proj_ident)
-    if ident:
-        page = project.get_item(ident)
-        if page is not None:
-            # ensure widgets and placeholders in newpart have unique names
-            name_list = list(page.widgets.keys()) + list(page.section_places.keys())
-            newpart.set_unique_names(name_list)
-            # as this is going into a container, remove any placeholders
-            _remove_sectionplaceholders(newpart)
-            widget = page.widgets.get(widget_name)
-            if widget is None:
-                raise excepts.ServerError("Unable to find widget %s in page %s" % (widget_name, page.ident.num))
-            # insert newpart into given widget
-            widget.append_to_container(container_number, newpart)
-            # save the altered page
-            project.save_page(page)
-            return
-    if section_name:
-        # save the altered section
-        section = project.section(section_name, makecopy=False)
-        if section is not None:
-            # ensure widgets and placeholders in newpart have unique names
-            name_list = list(section.widgets.keys()) + list(section.section_places.keys())
-            newpart.set_unique_names(name_list)
-            # as this is going into a section, remove any placeholders
-            _remove_sectionplaceholders(newpart)
-            widget = section.widgets.get(widget_name)
-            if widget is None:
-                raise excepts.ServerError("Unable to find widget %s in section %s" % (widget_name, section_name))
-            # insert newpart into given widget
-            widget.append_to_container(container_number, newpart)
-            project.add_section(section_name, section)
-            return
-    # only get here if unsuccessfull
-    raise excepts.ServerError("Unable to create part")
 
 
 def create_section(proj_ident, section_name, json_data):

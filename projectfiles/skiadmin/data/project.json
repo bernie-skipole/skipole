@@ -3164,31 +3164,6 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
-"name": "about_create_part",
-"brief": "Describes function create_part",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "create_part -",
-"button_show_text": "create_part +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.skilift.fromjson.create_part",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
 "name": "about_part_to_OD",
 "brief": "Describes function part_to_OD",
 "fields": {

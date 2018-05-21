@@ -40,51 +40,6 @@ def project_json_file(project):
     return skiboot.project_json(project)
 
 
-def create_part(project, pagenumber, page_part, section_name, name, location, part_type, brief, json_data):
-    """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
-       currently at the given part location, or if not an element that can accept contents, inserted after the element."""
-    # raise error if invalid project
-    project_loaded(project)
-    if section_name:
-        ident = None
-    else:
-        ident = skiboot.make_ident(pagenumber, proj_ident=project)
-
-    # is item contained in a widget
-    container = location[1]
-    if container is not None:
-        parent_widget = location[0]
-    else:
-        parent_widget = None
-
-    location_integers = location[2]
-
-    if parent_widget and (len(location_integers) == 1):
-        # Specifies a container part
-        # insert json data into widget at the container
-        try:
-            read_json.create_part_in_widget(project, ident, section_name, parent_widget, container, json_data)
-        except:
-            raise ServerError("Unable to create part")
-        return
-
-    if (part_type == 'Part') or (part_type == 'Section'):
-        # insert in the part at the given location
-        part = skiboot.get_part(project, ident, page_part, section_name, parent_widget, container, location_integers)
-        # insert at position 0
-        loc = 0
-    else:
-        # append after the part given, by inserting in the parent
-        parent_location_integers = location_integers[:-1]
-        part = skiboot.get_part(project, ident, page_part, section_name, parent_widget, container, parent_location_integers)
-        # append after part
-        loc = location_integers[-1] + 1
-    try:
-        read_json.create_part(project, ident, section_name, part, loc, json_data)
-    except:
-        raise ServerError("Unable to create part")
-
-
 def part_to_OD(project, pagenumber, section_name, location):
     """Builds an Ordered Dictionary from the part, ServerError if not found"""
     # raise error if invalid project
