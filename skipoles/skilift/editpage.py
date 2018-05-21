@@ -243,7 +243,8 @@ def create_html_element_in_page(project, pagenumber, pchange, location, name, br
 
 def create_part_in_page(project, pagenumber, pchange, location, json_data):
     """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
-       currently at the given part location, or if not an element that can accept contents, inserted after the element."""
+       currently at the given part location, or if not an element that can accept contents, inserted after the element.
+       Returns new pchange value"""
     proj, page = get_proj_page(project, pagenumber, pchange)
     if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
         raise ServerError(message = "Invalid page type")

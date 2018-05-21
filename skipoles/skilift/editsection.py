@@ -338,7 +338,8 @@ def create_html_element_in_section(project, section_name, schange, location, nam
 
 def create_part_in_section(project, section_name, schange, location, json_data):
     """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
-       currently at the given part location, or if not an element that can accept contents, inserted after the element."""
+       currently at the given part location, or if not an element that can accept contents, inserted after the element.
+       Returns new schange value"""
     proj, section = get_proj_section(project, section_name, schange)
     try:
         newpart = read_json.make_part_for_section(section, json_data)
