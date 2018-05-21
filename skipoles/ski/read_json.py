@@ -31,6 +31,37 @@ import os, json, importlib, inspect, collections, uuid
 from . import skiboot, excepts, folder_class_definition, page_class_definition, tag
 
 
+
+def make_part_for_page(page, json_data):
+    "Returns object created from json data, the page argument is used to give any items unique names. The object is not inserted, and page remains unchanged"
+    if isinstance(json_data, str):
+        part_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
+    else:
+        part_dict = json_data
+    newpart =  _create_part(part_dict, page.proj_ident)
+    # ensure widgets and placeholders in newpart have unique names
+    name_list = list(page.widgets.keys()) + list(page.section_places.keys())
+    newpart.set_unique_names(name_list)
+    return newpart
+
+
+def make_part_for_section(section, json_data):
+    "Returns object created from json data, the section argument is used to give any items unique names. The object is not inserted, and section remains unchanged"
+    if isinstance(json_data, str):
+        part_dict = json.loads(json_data, object_pairs_hook=collections.OrderedDict)
+    else:
+        part_dict = json_data
+    newpart =  _create_part(part_dict, section.proj_ident)
+    # ensure widgets and placeholders in newpart have unique names
+    name_list = list(section.widgets.keys()) + list(section.section_places.keys())
+    newpart.set_unique_names(name_list)
+    # as this is going into a section, remove any placeholders
+    _remove_sectionplaceholders(newpart)
+    return newpart
+
+
+
+
 def create_part(proj_ident, ident, section_name, part, loc, json_data):
     """Builds the part from the given json string, or ordered dictionary and adds it to page or section"""
     if isinstance(json_data, str):
