@@ -28,7 +28,7 @@
 
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
-from ....skilift import item_info, part_info, fromjson, editpage, editsection
+from ....skilift import item_info, editpage, editsection
 
 
 def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -172,68 +172,5 @@ def file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
     call_data['status'] = 'New block created'
     raise GoTo(target = target, clear_submitted=True)
-
-
-
-def old_file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Create new part from uploaded file"
-
-    project = call_data['editedprojname']
-    pagenumber = None
-    section_name = None
-
-    try:
-        part_top, container, location_integers = call_data['location']
-
-        if 'page_number' in call_data:
-            pagenumber = call_data['page_number']
-            page_info = item_info(project, pagenumber)
-            if page_info is None:
-                raise FailPage("Page to edit not identified")
-
-            if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
-                raise FailPage("Page not identified")
-
-            # page to go back to
-            target = None
-            if part_top == 'head':
-                target = "page_head"
-            elif part_top == 'body':
-                target = "page_body"
-            elif part_top == 'svg':
-                target = "page_svg"
-
-            if container is not None:
-                target = "back_to_container"
-
-            if target is None:
-                raise FailPage("Invalid location")
-
-        elif 'section_name' in call_data:
-            section_name = call_data['section_name']
-
-            if container is not None:
-                target = "back_to_container"
-            else:
-                target = "back_to_section"
-
-        else:
-            raise FailPage("Either a page or section must be specified")
-
-        partinfo = part_info(project, pagenumber, section_name, call_data['location'])
-        if not partinfo:
-            raise FailPage("Part to locate block not identified")
-
-        # get file contents
-        file_contents = call_data["uploadpart", "action"]
-        json_string = file_contents.decode(encoding='utf-8')
-        # create the part
-        fromjson.create_part(*partinfo, json_data=json_string)
-    except ServerError as e:
-        raise FailPage(message = e.message)
-
-    call_data['status'] = 'New block created'
-    raise GoTo(target = target, clear_submitted=True)
-
 
 
