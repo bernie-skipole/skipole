@@ -27,7 +27,7 @@
 
 """Functions for editing a page"""
 
-from ..ski import skiboot, tag
+from ..ski import skiboot, tag, read_json
 from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info, get_proj_page, del_location_in_page, insert_item_in_page
@@ -230,13 +230,27 @@ def json_contents(project, pagenumber):
     return contents
 
 
-
 def create_html_element_in_page(project, pagenumber, pchange, location, name, brief, opentag = True):
     "Creates a new html element in the given page, returns the new pchange"
     if opentag:
         newpart = tag.Part(tag_name=name, brief=brief)
     else:
         newpart = tag.ClosedPart(tag_name=name, brief=brief)
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    return insert_item_in_page(project, pagenumber, pchange, location, newpart)
+
+
+
+def create_part_in_page(project, pagenumber, pchange, location, json_data):
+    """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
+       currently at the given part location, or if not an element that can accept contents, inserted after the element."""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
+        raise ServerError(message = "Invalid page type")
+    try:
+        newpart = read_json.make_part_for_page(page, json_data)
+    except:
+        raise ServerError("Unable to create part")
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
     return insert_item_in_page(project, pagenumber, pchange, location, newpart)
 

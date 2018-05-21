@@ -29,10 +29,10 @@
 
 from collections import namedtuple
 
-from ..ski import skiboot, tag
+from ..ski import skiboot, tag, read_json
 from ..ski.excepts import ServerError
 
-from . import project_loaded, insert_item_in_page, del_location_in_section, insert_item_in_section
+from . import project_loaded, get_proj_section, insert_item_in_page, del_location_in_section, insert_item_in_section
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
@@ -333,4 +333,18 @@ def create_html_element_in_section(project, section_name, schange, location, nam
         newpart = tag.ClosedPart(tag_name=name, brief=brief)
     # call skilift.insert_item_in_section to insert the item, save the section and return schange
     return insert_item_in_section(project, section_name, schange, location, newpart)
+
+
+
+def create_part_in_section(project, section_name, schange, location, json_data):
+    """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
+       currently at the given part location, or if not an element that can accept contents, inserted after the element."""
+    proj, section = get_proj_section(project, section_name, schange)
+    try:
+        newpart = read_json.make_part_for_section(section, json_data)
+    except:
+        raise ServerError("Unable to create part")
+    # call skilift.insert_item_in_section to insert the item, save the section and return schange
+    return insert_item_in_section(project, section_name, schange, location, newpart)
+
 
