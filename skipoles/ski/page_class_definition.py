@@ -229,6 +229,38 @@ class TemplatePageAndSVG(ParentPage):
         # this is filled in when the sections are imported
         self.sections = {}
 
+
+    def location_item(self, location):
+        "Returns the part or widget at location"
+        location_string, container_number, location_list = location
+        if not location_string:
+            return
+        if self.page_type == 'TemplatePage':
+            if (location_string == 'head') or (location_string == 'body'):
+                return self.get_part(location_string, location_list)
+        if self.page_type == 'SVG':
+            if location_string == 'svg':
+                return self.get_part(location_string, location_list)
+        # location string must be a widget name
+        # so part is within a widget container within the page
+        if location_string not in self.widgets:
+            return
+        widget = self.widgets.get(location_string]
+        if widget is None:
+            return
+        if container_number is None:
+            return widget
+        if widget.can_contain():
+            return widget.get_from_container(container_number, location_list)
+        # part not found
+        return
+
+
+    def get_part(self, part_text, location_list):
+        "This is overridden in the TemplatePage and SVG page classes"
+        return
+
+
     def set_values(self, page_data):
         """Sets the widget fields to the given values.
            page_data is either a dictionary of
@@ -608,18 +640,18 @@ class TemplatePage(TemplatePageAndSVG):
         TemplatePageAndSVG.import_sections(self, page_data)
 
 
-    def get_part(self, part_text, location):
+    def get_part(self, part_text, location_list):
         """Returns a part from the page, where part_text is 'head', 'body' or 'svg'
-           and the location is a tuple of location integers under the part_text, returns None on failure"""
+           and the location_list is a tuple of location integers under the part_text, returns None on failure"""
         try:
             if part_text == 'head':
-                if not location:
+                if not location_list:
                     return self.head
-                return self.head.get_location_value(location)
+                return self.head.get_location_value(location_list)
             elif part_text == 'body':
-                if not location:
+                if not location_list:
                     return self.body
-                return self.body.get_location_value(location)
+                return self.body.get_location_value(location_list)
             else:
                 return
         except Exception:
@@ -980,14 +1012,14 @@ class SVG(TemplatePageAndSVG):
 
     enable_cache = property(get_enable_cache, set_enable_cache)
 
-    def get_part(self, part_text, location):
+    def get_part(self, part_text, location_list):
         """Returns a part from the page, where part_text is 'svg'
-           and the location is the location under the part_text, returns None on failure"""
+           and the location_list is the location under the part_text, returns None on failure"""
         try:
             if part_text == 'svg':
-                if not location:
+                if not location_list:
                     return self.svg
-                return self.svg.get_location_value(location)
+                return self.svg.get_location_value(location_list)
             else:
                 return
         except Exception:

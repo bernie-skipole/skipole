@@ -204,11 +204,10 @@ def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, cal
 def downloadpart(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets part, and returns a json dictionary, this will be sent as an octet file to be downloaded"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
 
-    if 'page' in call_data:
-        page = call_data['page']
-        pagenumber = page.ident.num
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
     else:
         pagenumber = None
 
@@ -217,12 +216,12 @@ def downloadpart(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     else:
         section_name = None   
 
-    part_info = skilift.part_info(editedprojname, pagenumber, section_name, call_data['location'])
+    part_info = skilift.part_info(project, pagenumber, section_name, call_data['location'])
 
     if not part_info:
         raise FailPage("Part not identified")
 
-    jsonstring =  fromjson.part_to_json(editedprojname, pagenumber, section_name, call_data['location'], indent=4)
+    jsonstring =  fromjson.part_to_json(project, pagenumber, section_name, call_data['location'], indent=4)
     line_list = []
     n = 0
     for line in jsonstring.splitlines(True):
