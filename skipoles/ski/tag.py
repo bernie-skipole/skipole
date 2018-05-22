@@ -797,6 +797,29 @@ class Section(Part):
                 e.ident_list = ident_list
             raise
 
+    def location_item(self, location):
+        "Returns the part or widget at location"
+        location_string, container_number, location_list = location
+        if not location_string:
+            return
+        if container_number is None:
+            # Not in a widget
+            if location_list:
+                return self.get_location_value(location_list)
+            else:
+                return self
+        else:
+            # location string must be a widget name
+            if location_string not in self.widgets:
+                return
+            widget = self.widgets.get(location_string)
+            if widget is None:
+                return
+            if widget.can_contain():
+                return widget.get_from_container(container_number, location_list)
+        # part not found
+        return
+
 
 class SectionPlaceHolder(object):
     "Instance of this is added to a part, and acts as the placeholder for a section"
