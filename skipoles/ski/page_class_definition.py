@@ -609,24 +609,6 @@ class TemplatePage(TemplatePageAndSVG):
         TemplatePageAndSVG.import_sections(self, page_data)
 
 
-    # this method is depracated - to be removed when possible
-    def get_part(self, part_text, location_list):
-        """Returns a part from the page, where part_text is 'head', 'body' or 'svg'
-           and the location_list is a tuple of location integers under the part_text, returns None on failure"""
-        try:
-            if part_text == 'head':
-                if not location_list:
-                    return self.head
-                return self.head.get_location_value(location_list)
-            elif part_text == 'body':
-                if not location_list:
-                    return self.body
-                return self.body.get_location_value(location_list)
-            else:
-                return
-        except Exception:
-            return
-
 
     def location_item(self, location):
         "Returns the part or widget at location"
@@ -653,7 +635,11 @@ class TemplatePage(TemplatePageAndSVG):
         if widget is None:
             return
         if widget.can_contain():
-            return widget.get_from_container(container_number, location_list)
+            if not location_list:
+                # return the container
+                return widget.container_part(container_number)
+            else:
+                return widget.get_from_container(container_number, location_list)
         # part not found
         return
 
@@ -1033,23 +1019,15 @@ class SVG(TemplatePageAndSVG):
         if widget is None:
             return
         if widget.can_contain():
-            return widget.get_from_container(container_number, location_list)
+            if not location_list:
+                # return the container
+                return widget.container_part(container_number)
+            else:
+                return widget.get_from_container(container_number, location_list)
         # part not found
         return
 
-    # this method is depracated - to be removed when possible
-    def get_part(self, part_text, location_list):
-        """Returns a part from the page, where part_text is 'svg'
-           and the location_list is the location under the part_text, returns None on failure"""
-        try:
-            if part_text == 'svg':
-                if not location_list:
-                    return self.svg
-                return self.svg.get_location_value(location_list)
-            else:
-                return
-        except Exception:
-            return
+
 
     def get_width(self):
         return self.svg.get_attrib_value("width")

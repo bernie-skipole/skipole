@@ -32,7 +32,7 @@ from collections import namedtuple
 from ..ski import skiboot, tag, read_json
 from ..ski.excepts import ServerError
 
-from . import project_loaded, get_proj_section, insert_item_in_page, del_location_in_section, insert_item_in_section
+from . import project_loaded, get_proj_section, get_proj_page, insert_item_in_page, del_location_in_section, insert_item_in_section
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
@@ -58,46 +58,8 @@ def placeholder_info(project, pagenumber, location):
        returns None if placeholder not found, otherwise returns a namedtuple with items
        project, pagenumber, section_name, alias, brief, multiplier, mtag
     """
-    # raise error if invalid project
-    if project is None:
-        project = skiboot.project_ident()
-    # raise error if invalid project
-    project_loaded(project)
-    proj = skiboot.getproject(project)
-    if proj is None:
-        return
-
-    location_string, container_number, location_list = location
-
-    ident = None
-    page_part = None
-    widget_name = None
-    part_type = None
-
-    if pagenumber is None:
-        return
-
-    ident = skiboot.find_ident(pagenumber, project)
-    if not ident:
-        return
-    page = skiboot.get_item(ident)
-    if not page:
-        return
-    if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
-        return
-    if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
-        # part not in a widget
-        page_part = location_string
-    else:
-        widget_name = location_string
-        # find page_part containing widget
-        widget = page.widgets[widget_name]
-        if widget is not None:
-           ident_top = widget.ident_string.split("-", 1)
-           # ident_top[0] will be of the form proj_pagenum_head
-           page_part = ident_top[0].split("_")[2]
-
-    part = skiboot.get_part(project, ident, page_part, None, widget_name, container_number, location_list)
+    proj, page = get_proj_page(project, pagenumber)
+    part = page.location_item(location)
     if part is None:
         return
 
@@ -130,7 +92,6 @@ def placeholder_info(project, pagenumber, location):
         mtag = None
 
     return PlaceHolderInfo(project, pagenumber, section_name, alias, brief, multiplier, mtag)
-
 
 
 def edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier, mtag):

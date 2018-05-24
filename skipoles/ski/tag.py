@@ -813,7 +813,11 @@ class Section(Part):
             if widget is None:
                 return
             if widget.can_contain():
-                return widget.get_from_container(container_number, location_list)
+                if not location_list:
+                    # return the container
+                    return widget.container_part(container_number)
+                else:
+                    return widget.get_from_container(container_number, location_list)
         # part not found
         return
 

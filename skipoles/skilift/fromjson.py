@@ -32,7 +32,7 @@ import os, json, collections
 from ..ski import skiboot, read_json, dump_project
 from ..ski.excepts import ServerError
 
-from . import project_loaded, item_info, ident_exists
+from . import project_loaded, item_info, ident_exists, get_proj_section, get_proj_page
 
 
 def project_json_file(project):
@@ -42,35 +42,20 @@ def project_json_file(project):
 
 def part_to_OD(project, pagenumber, section_name, location):
     """Builds an Ordered Dictionary from the part, ServerError if not found"""
-    # raise error if invalid project
-    project_loaded(project)
-
-    page_part = None
-
-    # is item contained in a widget
-    container = location[1]
-    if container is not None:
-        parent_widget = location[0]
-    else:
-        parent_widget = None
-        if (location[0] == 'head') or (location[0] == 'body') or (location[0] == 'svg'):
-            # part not in a widget
-            page_part = location[0]
-
-    location_integers = location[2]
-
     # part is either in a page or a section
-    if pagenumber is None:
-        if not section_name:
-            raise ServerError("Page and section both missing")
-        part = skiboot.get_part(project, None, None, section_name, parent_widget, container, location_integers)
-    else:
-        if section_name:
+    if (pagenumber is None) and (section_name is None):
+        raise ServerError("Page and section both missing")
+
+    if section_name:
+        if pagenumber is not None:
             raise ServerError("Part cannot be in both a page and a section")
-        ident = skiboot.make_ident(pagenumber, project)
-        if ident is None:
-            raise ServerError("Part not recognised")
-        part = skiboot.get_part(project, ident, page_part, None, parent_widget, container, location_integers)
+        # item is in a section
+        proj, section = get_proj_section(project, section_name)
+        part = section.location_item(location)
+    else:
+        # item is in a page
+        proj, page = get_proj_page(project, pagenumber)
+        part = page.location_item(location)
     if part is None:
         raise ServerError("Part not recognised")
     return dump_project.part_to_OD(project, part)
@@ -111,20 +96,19 @@ def section_to_json(project, section_name, indent=0):
 
 def container_to_OD(project, pagenumber, section_name, widget_name, container):
     """Builds an Ordered Dictionary from the widget container, ServerError if not found"""
-    # raise error if invalid project
-    project_loaded(project)
-    # widget is either in a page or a section
-    if pagenumber is None:
-        if not section_name:
-            raise ServerError("Page and section both missing")
-        widget = skiboot.get_part(project, None, None, section_name, widget_name, None, ())
-    else:
-        if section_name:
+    # part is either in a page or a section
+    if (pagenumber is None) and (section_name is None):
+        raise ServerError("Page and section both missing")
+    if section_name:
+        if pagenumber is not None:
             raise ServerError("Widget cannot be in both a page and a section")
-        ident = skiboot.make_ident(pagenumber, project)
-        if ident is None:
-            raise ServerError("Widget not recognised")
-        widget = skiboot.get_part(project, ident, "", None, widget_name, None, ())
+        # widget is in a section
+        proj, section = get_proj_section(project, section_name)
+        widget = section.widgets[widget_name]
+    else:
+        # widget is in a page
+        proj, page = get_proj_page(project, pagenumber)
+        widget = page.widgets[widget_name]
     if widget is None:
         raise ServerError("widget not recognised")
     return dump_project.container_to_OD(project, container, widget)
@@ -159,7 +143,6 @@ def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_d
     raise ServerError(message = "Invalid JSON file")
 
 
-
 def page_to_OD(project, pagenumber):
     """Returns an Ordered Dictionary from the given page, ServerError if not found"""
     # raise error if invalid project
@@ -182,7 +165,6 @@ def page_to_json(project, pagenumber, indent=0):
     """Builds a json string from the given page, ServerError if not found"""
     page_dict = page_to_OD(project, pagenumber)
     return json.dumps(page_dict, indent=indent, separators=(',', ':'))
-
 
 
 def create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data):
