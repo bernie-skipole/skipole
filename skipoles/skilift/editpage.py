@@ -27,10 +27,14 @@
 
 """Functions for editing a page"""
 
-from ..ski import skiboot, tag, read_json
+from collections import namedtuple, OrderedDict
+
+from ..ski import skiboot, tag, read_json, dump_project
 from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info, get_proj_page, del_location_in_page, insert_item_in_page
+
+PageElement = namedtuple('PageElement', ['project', 'pagenumber', 'pchange', 'location', 'page_part', 'part_type', 'tag_name', 'brief', 'show', 'hide_if_empty', 'attribs'])
 
 
 def pagechange(project, pagenumber):
@@ -254,6 +258,63 @@ def create_part_in_page(project, pagenumber, pchange, location, json_data):
         raise ServerError("Unable to create part")
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
     return insert_item_in_page(project, pagenumber, pchange, location, newpart)
+
+
+def page_element(project, pagenumber, pchange, location):
+    """Return a element tuple for the html element at the given location"""
+
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    part = page.location_item(location)
+    page_part = location[0]
+    if location[1] is not None:
+        # item is in a container in a widget, so location[0] will be the parent widget name
+        widget = page.widgets[location[0]]
+        if widget is not None:
+           ident_top = widget.ident_string.split("-", 1)
+           # ident_top[0] will be of the form proj_pagenum_head
+           page_part = ident_top[0].split("_")[2]
+
+    if part is None:
+        raise ServerError("The item at the location has not been found")
+
+    if hasattr(part, '__class__'):
+        part_type = part.__class__.__name__
+    else:
+        part_type = None
+
+    if (part_type != "Part") and (part_type != "ClosedPart"):
+        raise ServerError("The item at the location must be an html element")
+
+    if hasattr(part, 'tag_name'):
+        tag_name = part.tag_name
+    else:
+        tag_name = None
+
+    if hasattr(part, 'brief'):
+        brief = part.brief
+    else:
+        brief = None
+
+    if hasattr(part, 'show'):
+        show = part.show
+    else:
+        show = None
+
+    if hasattr(part, 'hide_if_empty'):
+        hide_if_empty = part.hide_if_empty
+    else:
+        hide_if_empty = None
+
+    if hasattr(part, 'attribs'):
+        attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
+    else:
+        attribs = None
+
+    return PageElement(project, pagenumber, pchange, location, page_part, part_type, tag_name, brief, show, hide_if_empty, attribs)
+ 
+
+
+
 
 
 

@@ -75,6 +75,7 @@ class ParentPart(object):
 
         self.tag_name = tag_name
         self._attribs = {}
+        self.hide_if_empty = False
 
         # set when set_idents is called on the containing page
         self.ident_string = ''
