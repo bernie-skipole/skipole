@@ -151,7 +151,7 @@ def move_location(project, pagenumber, from_location, to_location):
             #    insert it into new location
             try:
                 # get top part such as head, body, svg
-                top_part = page.get_part(location_string, ())
+                top_part = page.location_item((location_string, None, ()))
                 # get the part at from_location_integers
                 part = top_part.get_location_value(from_location_integers)
                 # delete part from top part location
@@ -166,7 +166,7 @@ def move_location(project, pagenumber, from_location, to_location):
             #    delete it from original location
             try:
                 # get top part such as head, body, svg
-                top_part = page.get_part(location_string, ())
+                top_part = page.location_item((location_string, None, ()))
                 # get the part at from_location_integers
                 part = top_part.get_location_value(from_location_integers)
                 # and insert it in the new location

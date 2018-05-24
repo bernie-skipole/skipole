@@ -134,29 +134,10 @@ def part_from_location(page=None, section=None, section_name=None, location_stri
     "Returns the part given the location information, if not found, return None"
     if (page is None) and (section is None):
         return
-
     if page is not None:
-        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
-            return page.get_part(location_string, location_integers)
-        elif location_string in page.widgets:
-            widget = page.widgets[location_string]
-            if widget is not None:
-                # widget is the containing widget 
-                if widget.can_contain() and not (container is None):
-                    return widget.get_from_container(container, location_integers)
-
+        return page.location_item((location_string, container, location_integers))
     if section is not None:
-        if location_string == section_name:
-            if location_integers:
-                return section.get_location_value(location_integers)
-            else:
-                return section
-        elif location_string in section.widgets:
-            widget = section.widgets[location_string]
-            if widget is not None:
-                # widget is the containing widget 
-                if widget.can_contain() and not (container is None):
-                    return widget.get_from_container(container, location_integers)
+        return section.location_item((location_string, container, location_integers))
 
 
 def set_part(newpart, location, page=None, section=None, section_name='', widget=None, failmessage=''):
