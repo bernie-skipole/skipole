@@ -314,55 +314,38 @@ def part_info(project, pagenumber, section_name, location):
        returns None if part not found, otherwise returns a namedtuple with items
        project, pagenumber, page_part, section_name, name, location, part_type, brief
     """
-    # raise error if invalid project
-    project_loaded(project)
 
-    location_string, container_number, location_list = location
+    # part is either in a page or a section
+    if (pagenumber is None) and (section_name is None):
+        raise ServerError("Page and section both missing")
 
-    ident = None
     page_part = None
-    widget_name = None
-    part_type = None
-    insert = False
 
-    # get page or section - an error if both are present
-    if pagenumber is not None:
-        if section_name:
-            # page and section should not both be given
-            return
-        ident = skiboot.find_ident(pagenumber, project)
-        if not ident:
-            return
-        page = skiboot.get_item(ident)
-        if not page:
-            return
-        if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
-            return
-        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
-            # part not in a widget
-            page_part = location_string
-        else:
-            widget_name = location_string
-            # find page_part containing widget
-            widget = page.widgets[widget_name]
+    if section_name:
+        if pagenumber is not None:
+            raise ServerError("Part cannot be in both a page and a section")
+        # item is in a section
+        proj, section = get_proj_section(project, section_name)
+        part = section.location_item(location)
+    else:
+        # item is in a page
+        proj, page = get_proj_page(project, pagenumber)
+        part = page.location_item(location)
+        if location[1] is not None:
+            # item is in a container in a widget, so location[0] will be the parent widget name
+            widget = page.widgets[location[0]]
             if widget is not None:
                ident_top = widget.ident_string.split("-", 1)
                # ident_top[0] will be of the form proj_pagenum_head
                page_part = ident_top[0].split("_")[2]
-    elif section_name:
-        # location_string is either a section_name or a widget
-        if location_string != section_name:
-            widget_name = location_string
-    else:
-        # return None
-        return
 
-    part = skiboot.get_part(project, ident, page_part, section_name, widget_name, container_number, location_list)
     if part is None:
         return
 
     if hasattr(part, '__class__'):
         part_type = part.__class__.__name__
+    else:
+        part_type = None
 
     if hasattr(part, 'name'):
         name = part.name
@@ -379,60 +362,30 @@ def part_info(project, pagenumber, section_name, location):
 
 def part_contents(project, pagenumber, section_name, location):
     "If the given part is a Part or Section, returns a list of PartInfo tuples, one for each content"
-    # raise error if invalid project
-    project_loaded(project)
-    proj = skiboot.getproject(project)
+    # part is either in a page or a section
+    if (pagenumber is None) and (section_name is None):
+        raise ServerError("Page and section both missing")
 
-    location_string, container_number, location_list = location
-
-    location_list = list(location_list)
-
-    ident = None
     page_part = None
-    widget_name = None
-    widget = None
-    part_type = None
-    insert = False
 
-    # get page or section - an error if both are present
-    if pagenumber is not None:
-        if section_name:
-            # page and section should not both be given
-            return
-        ident = skiboot.find_ident(pagenumber, project)
-        if not ident:
-            return
-        page = skiboot.get_item(ident)
-        if not page:
-            return
-        if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
-            return
-        if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
-            # part not in a widget
-            page_part = location_string
-        else:
-            widget_name = location_string
-            # find page_part containing widget
-            widget = page.widgets[widget_name]
+    if section_name:
+        if pagenumber is not None:
+            raise ServerError("Part cannot be in both a page and a section")
+        # item is in a section
+        proj, section = get_proj_section(project, section_name)
+        part = section.location_item(location)
+    else:
+        # item is in a page
+        proj, page = get_proj_page(project, pagenumber)
+        part = page.location_item(location)
+        if location[1] is not None:
+            # item is in a container in a widget, so location[0] will be the parent widget name
+            widget = page.widgets[location[0]]
             if widget is not None:
                ident_top = widget.ident_string.split("-", 1)
                # ident_top[0] will be of the form proj_pagenum_head
                page_part = ident_top[0].split("_")[2]
-    elif section_name:
-        # location_string is either a section_name or a widget
-        if location_string != section_name:
-            widget_name = location_string
-            section = proj.section(section_name, makecopy=True)
-            widget = section.widgets[widget_name]
-    else:
-        # return None
-        return
 
-    if (widget is not None) and (not location_list):
-        # The part is the widget container
-        part = widget.container_part(container_number)
-    else:
-        part = skiboot.get_part(project, ident, page_part, section_name, widget_name, container_number, location_list)
     if part is None:
         return
     if hasattr(part, '__class__'):
@@ -446,6 +399,8 @@ def part_contents(project, pagenumber, section_name, location):
     for subpart in part:
         if hasattr(subpart, '__class__'):
             subpart_type = subpart.__class__.__name__
+        else:
+            subpart_type = None
 
         if hasattr(subpart, 'name'):
             name = subpart.name
