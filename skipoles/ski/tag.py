@@ -505,85 +505,82 @@ class Part(ParentPart):
     def clear(self):
         self.parts = []
 
-    def set_location_payload(self, location):
-        "Sets the location payload at the location within this part"
-        self.set_location_value(location, location.payload)
 
-    def set_location_value(self, location, value):
-        "Set a value in the part at this location, location being either an integer, a tuple/list of indexes"
-        if isinstance(location, str):
+    def set_location_value(self, location_list, value):
+        "Set a value in the part at this position, location_list being either an integer, a tuple/list of indexes"
+        if isinstance(location_list, str):
             try:
-                location = int(location)
+                location_list = int(location_list)
             except:
                 raise TypeError('Invalid location')
-        if isinstance(location, int):
-            self[location] = value
+        if isinstance(location_list, int):
+            self[location_list] = value
             return
-        if not location:
+        if not location_list:
             raise TypeError('Invalid location')
-        if len(location) == 1:
-            self[location[0]] = value
+        if len(location_list) == 1:
+            self[location_list[0]] = value
             return
         part = self
-        for i in location[:-1]:
+        for i in location_list[:-1]:
             part = part[i]
-        part[location[-1]]= value
+        part[location_list[-1]]= value
 
-    def insert_location_value(self, location, value):
-        "Inserts a value in the part at this location, location being either an integer, a tuple/list of indexes"
-        if isinstance(location, str):
+    def insert_location_value(self, location_list, value):
+        "Inserts a value in the part at this position, location_list being either an integer, a tuple/list of indexes"
+        if isinstance(location_list, str):
             try:
-                location = int(location)
+                location_list = int(location_list)
             except:
                 raise TypeError('Invalid location')
-        if isinstance(location, int):
-            self.insert(location, value)
+        if isinstance(location_list, int):
+            self.insert(location_list, value)
             return
-        if not location:
+        if not location_list:
             raise TypeError('Invalid location')
-        if len(location) == 1:
-            self.insert(location[0], value)
+        if len(location_list) == 1:
+            self.insert(location_list[0], value)
             return
         part = self
-        for i in location[:-1]:
+        for i in location_list[:-1]:
             part = part[i]
-        part.insert(location[-1], value)
+        part.insert(location_list[-1], value)
 
-    def get_location_value(self, location):
-        "Get a value in the part at this location, location being either an integer, a tuple/list of indexes"
-        if isinstance(location, str):
+    def get_location_value(self, location_list):
+        "Get a value in the part at this position, location_list being either an integer, a tuple/list of indexes"
+        if isinstance(location_list, str):
             try:
-                location = int(location)
+                location_list = int(location_list)
             except:
                 raise TypeError('Invalid location')
-        if isinstance(location, int):
-            return self.parts[location]
-        if not location:
+        if isinstance(location_list, int):
+            return self.parts[location_list]
+        if not location_list:
             raise TypeError('Empty location')
         part = self
-        for i in location:
+        for i in location_list:
             part = part.parts[i]
         return part
 
-    def del_location_value(self, location):
-        "Deletes the value at this location, location being either an integer, a tuple/list of indexes"
-        if isinstance(location, str):
+    def del_location_value(self, location_list):
+        "Deletes the value at this position, location_list being either an integer, a tuple/list of indexes"
+        if isinstance(location_list, str):
             try:
-                location = int(location)
+                location_list = int(location_list)
             except:
                 raise TypeError('Invalid location')
-        if isinstance(location, int):
-            del self[location]
+        if isinstance(location_list, int):
+            del self[location_list]
             return
-        if not location:
+        if not location_list:
             raise TypeError('Invalid location')
-        if len(location) == 1:
-            del self[location[0]]
+        if len(location_list) == 1:
+            del self[location_list[0]]
             return
         part = self
-        for i in location[:-1]:
+        for i in location_list[:-1]:
             part = part.parts[i]
-        del part[location[-1]]
+        del part[location_list[-1]]
 
     def __len__(self):
         return len(self.parts)

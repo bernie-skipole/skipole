@@ -683,7 +683,7 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
     if container is None:
         # not in a widget
         parent_widget = None
-        part = page.get_part(location_string, location_integers)
+        part = page.location_item((location_string, None, location_integers))
     else:
         # so item is in a widget, location_string is the widget name
         parent_widget = page.widgets[location_string]
@@ -708,7 +708,7 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
         # get parent part
         loc_integers = location_integers[:-1]
         if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
-            parent_part = page.get_part(location_string, loc_integers)
+            parent_part = page.location_item((location_string, None, loc_integers))
         else:
             # parent_widget is the containing widget 
             parent_part = parent_widget.get_from_container(container, loc_integers)

@@ -229,13 +229,6 @@ class TemplatePageAndSVG(ParentPage):
         # this is filled in when the sections are imported
         self.sections = {}
 
-    def location_item(self, location):
-        "This is overridden in the TemplatePage and SVG page classes"
-        return
-
-    def get_part(self, part_text, location_list):
-        "This is overridden in the TemplatePage and SVG page classes"
-        return
 
     def set_values(self, page_data):
         """Sets the widget fields to the given values.
@@ -616,6 +609,7 @@ class TemplatePage(TemplatePageAndSVG):
         TemplatePageAndSVG.import_sections(self, page_data)
 
 
+    # this method is depracated - to be removed when possible
     def get_part(self, part_text, location_list):
         """Returns a part from the page, where part_text is 'head', 'body' or 'svg'
            and the location_list is a tuple of location integers under the part_text, returns None on failure"""
@@ -641,8 +635,14 @@ class TemplatePage(TemplatePageAndSVG):
             return
         if container_number is None:
             # Not in a widget
-            if (location_string == 'head') or (location_string == 'body'):
-                return self.get_part(location_string, location_list)
+            if location_string == 'body':
+                if not location_list:
+                    return self.body
+                return self.body.get_location_value(location_list)
+            elif location_string == 'head':
+                if not location_list:
+                    return self.head
+                return self.head.get_location_value(location_list)
             # not found
             return
         # location string must be a widget name
@@ -1020,7 +1020,9 @@ class SVG(TemplatePageAndSVG):
         if container_number is None:
             # Not in a widget
             if location_string == 'svg':
-                return self.get_part(location_string, location_list)
+                if not location_list:
+                    return self.svg
+                return self.svg.get_location_value(location_list)
             # not found
             return
         # location string must be a widget name
@@ -1035,7 +1037,7 @@ class SVG(TemplatePageAndSVG):
         # part not found
         return
 
-
+    # this method is depracated - to be removed when possible
     def get_part(self, part_text, location_list):
         """Returns a part from the page, where part_text is 'svg'
            and the location_list is the location under the part_text, returns None on failure"""

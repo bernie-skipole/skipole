@@ -162,17 +162,7 @@ def edit_placeholder(project, pagenumber, pchange, location, section_name, alias
         raise ServerError(message="The page type containing this section seems to be invalid")
     if page.change != pchange:
         raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
-    if (location_string == 'head') or (location_string == 'body') or (location_string == 'svg'):
-        # part not in a widget
-        part = page.get_part(location_string, location_list)
-    else:
-        # the location_string is the widget name
-        widget = page.widgets[location_string]
-        if widget is not None:
-            # widget is the containing widget 
-            if widget.can_contain() and not (container_number is None):
-                part = widget.get_from_container(container_number, location_list)
-
+    part = page.location_item(location)
     if part is None:
         raise ServerError(message="Cannot find the section placeholder")
 
