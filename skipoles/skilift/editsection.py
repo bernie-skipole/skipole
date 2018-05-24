@@ -27,7 +27,7 @@
 
 """Functions for editing a section"""
 
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 from ..ski import skiboot, tag, read_json
 from ..ski.excepts import ServerError
@@ -36,6 +36,8 @@ from . import project_loaded, get_proj_section, get_proj_page, insert_item_in_pa
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
+
+SectionElement = namedtuple('SectionElement', ['project', 'section_name', 'schange', 'location', 'part_type', 'tag_name', 'brief', 'show', 'hide_if_empty', 'attribs'])
 
 
 def list_section_names(project=None):
@@ -286,7 +288,6 @@ def create_html_element_in_section(project, section_name, schange, location, nam
     return insert_item_in_section(project, section_name, schange, location, newpart)
 
 
-
 def create_part_in_section(project, section_name, schange, location, json_data):
     """Builds the part from the given json string or ordered dictionary, and adds it to project either inserted into the html element
        currently at the given part location, or if not an element that can accept contents, inserted after the element.
@@ -298,5 +299,51 @@ def create_part_in_section(project, section_name, schange, location, json_data):
         raise ServerError("Unable to create part")
     # call skilift.insert_item_in_section to insert the item, save the section and return schange
     return insert_item_in_section(project, section_name, schange, location, newpart)
+
+
+def section_element(project, section_name, schange, location):
+    """Return a element tuple for the html element at the given location"""
+
+    proj, section = get_proj_section(project, section_name, schange)
+    part = section.location_item(location)
+
+    if part is None:
+        raise ServerError("The item at the location has not been found")
+
+    if hasattr(part, '__class__'):
+        part_type = part.__class__.__name__
+    else:
+        part_type = None
+
+    if (part_type != "Part") and (part_type != "ClosedPart"):
+        raise ServerError("The item at the location must be an html element")
+
+    if hasattr(part, 'tag_name'):
+        tag_name = part.tag_name
+    else:
+        tag_name = None
+
+    if hasattr(part, 'brief'):
+        brief = part.brief
+    else:
+        brief = None
+
+    if hasattr(part, 'show'):
+        show = part.show
+    else:
+        show = None
+
+    if hasattr(part, 'hide_if_empty'):
+        hide_if_empty = part.hide_if_empty
+    else:
+        hide_if_empty = None
+
+    if hasattr(part, 'attribs'):
+        attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
+    else:
+        attribs = None
+
+    return SectionElement(project, section_name, schange, location, part_type, tag_name, brief, show, hide_if_empty, attribs)
+ 
 
 
