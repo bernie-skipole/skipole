@@ -331,6 +331,7 @@ def part_info(project, pagenumber, section_name, location):
         # item is in a page
         proj, page = get_proj_page(project, pagenumber)
         part = page.location_item(location)
+        page_part = location[0]
         if location[1] is not None:
             # item is in a container in a widget, so location[0] will be the parent widget name
             widget = page.widgets[location[0]]

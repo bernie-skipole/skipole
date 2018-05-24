@@ -43,6 +43,19 @@ def part_to_OD(proj_ident, part):
     return part_dict
 
 
+def closedpart_to_OD(proj_ident, part):
+    """Returns an OrderedDictionary of the part"""
+    proj = skiboot.getproject(proj_ident)
+    # Creates a list of ['ClosedPart', dictionary]
+    parttext, part_dict = _create_closedpart(part, proj_ident)
+    # set version and skipole as the first two items in the dictionary
+    part_dict["skipole"] = skiboot.version()
+    part_dict.move_to_end('skipole', last=False)
+    part_dict["version"] = proj.version
+    part_dict.move_to_end('version', last=False)
+    return part_dict
+
+
 def container_to_OD(proj_ident, container, widget):
     """Returns an OrderedDictionary of the container"""
     proj = skiboot.getproject(proj_ident)
