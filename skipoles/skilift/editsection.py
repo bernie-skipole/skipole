@@ -325,6 +325,20 @@ def section_element(project, section_name, schange, location):
     attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
 
     return SectionElement(project, section_name, schange, location, part_type, tag_name, brief, show, hide_if_empty, attribs)
+
+
+def edit_section_element(project, section_name, schange, location, tag_name, brief, hide_if_empty, attribs):
+    """Given an element at project, section_name, location
+       sets the element values, returns section change uuid """
+    proj, section = get_proj_section(project, section_name, schange)
+    part = section.location_item(location)
+    part.tag_name = tag_name
+    part.brief = brief
+    part.attribs = OrderedDict(sorted(attribs.items(), key=lambda t: t[0]))
+    if part.__class__.__name__ == "Part":
+        part.hide_if_empty = hide_if_empty
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
  
 
 
