@@ -413,6 +413,8 @@ def part_contents(project, pagenumber, section_name, location):
         else:
             brief = None
 
+        location_list = list(location[2])
+
         sublocation = (location[0], location[1], location_list+[index])
 
         sub_tuple = PartInfo(project, pagenumber, page_part, section_name, name, sublocation, subpart_type, brief)

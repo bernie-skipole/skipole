@@ -313,35 +313,16 @@ def section_element(project, section_name, schange, location):
     if hasattr(part, '__class__'):
         part_type = part.__class__.__name__
     else:
-        part_type = None
+        raise ServerError("The item at the location must be an html element")
 
     if (part_type != "Part") and (part_type != "ClosedPart"):
         raise ServerError("The item at the location must be an html element")
 
-    if hasattr(part, 'tag_name'):
-        tag_name = part.tag_name
-    else:
-        tag_name = None
-
-    if hasattr(part, 'brief'):
-        brief = part.brief
-    else:
-        brief = None
-
-    if hasattr(part, 'show'):
-        show = part.show
-    else:
-        show = None
-
-    if hasattr(part, 'hide_if_empty'):
-        hide_if_empty = part.hide_if_empty
-    else:
-        hide_if_empty = None
-
-    if hasattr(part, 'attribs'):
-        attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
-    else:
-        attribs = None
+    tag_name = part.tag_name
+    brief = part.brief
+    show = part.show
+    hide_if_empty = part.hide_if_empty
+    attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
 
     return SectionElement(project, section_name, schange, location, part_type, tag_name, brief, show, hide_if_empty, attribs)
  

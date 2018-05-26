@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.9.2",
+"skipole": "0.9.6",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -389,6 +389,26 @@
 "class": "w3-container"
 },
 "parts": [
+[
+"Widget",
+{
+"class": "debug_tools.ShowResponders",
+"name": "showresponders",
+"brief": "Shows responders",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"paradiv_class": "",
+"show": true,
+"show_error": "",
+"table_class": "",
+"toptext": "DEBUG MODE IS ON",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
 [
 "Part",
 {
