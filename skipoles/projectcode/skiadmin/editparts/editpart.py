@@ -220,6 +220,44 @@ def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
 def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes the given tag attribute"
 
+    pagenumber = None
+    section_name = None
+
+    project = call_data['editedprojname']
+    location = call_data['location']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+        pchange = call_data['pchange']
+    else:
+        section_name = call_data['section_name']
+        schange = call_data['schange']
+
+    if (pagenumber is None) and (section_name is None):
+        raise ValidateError("Page/section not identified")
+
+    try:
+        if pagenumber:
+            part = editpage.page_element(project, pagenumber, pchange, location)
+        else:
+            part = editsection.section_element(project, section_name, schange, location)
+
+        if part is None:
+            raise FailPage("Part not identified")
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    if ('attribs_list','contents') not in call_data:
+        raise FailPage("A Tag attribute to remove has not been found")
+
+    if pagenumber:
+        call_data['pchange'] = editpage.del_attrib(project, pagenumber, pchange, location, call_data['attribs_list','contents'])
+    else:
+        call_data['schange'] = editsection.del_attrib(project, section_name, schange, location, call_data['attribs_list','contents'])
+
+
+def oldremove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Removes the given tag attribute"
+
     editedproj = call_data['editedproj']
 
     # get data
