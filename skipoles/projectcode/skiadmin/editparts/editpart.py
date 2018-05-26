@@ -145,8 +145,77 @@ def retrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_d
         page_data['aboutdownload', 'show'] = False
 
 
-
 def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Sets the part tag name, or brief, adds an attribute"
+
+    pagenumber = None
+    section_name = None
+
+    project = call_data['editedprojname']
+    location = call_data['location']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+        pchange = call_data['pchange']
+    else:
+        section_name = call_data['section_name']
+        schange = call_data['schange']
+
+    if (pagenumber is None) and (section_name is None):
+        raise ValidateError("Page/section not identified")
+
+    try:
+        if pagenumber:
+            part = editpage.page_element(project, pagenumber, pchange, location)
+        else:
+            part = editsection.section_element(project, section_name, schange, location)
+
+        if part is None:
+            raise FailPage("Part not identified")
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    message = "A new value to edit has not been found"
+
+
+    if 'tag_name' in call_data:
+        tag_name = call_data["tag_name"]
+        message = 'New tag set'
+    else:
+        tag_name = part.tag_name
+
+    if 'tag_brief' in call_data:
+        brief = call_data["tag_brief"]
+        message = 'New description set'
+    else:
+        brief = part.brief
+
+    attribs = part.attribs
+
+    if 'attrib' in call_data:
+        if 'val' not in call_data:
+            raise FailPage("The attribute value has not been found")
+        attribs.update({call_data["attrib"]:call_data["val"]})
+        message = 'Attribute updated'
+
+    if 'hide_if_empty' in call_data:
+        hide = call_data['hide_if_empty']
+        if hide == 'hide':
+            hide_if_empty = True
+            message = 'Element will be hidden if no content within it.'
+        else:
+            hide_if_empty = False
+            message = 'Element will be shown even if no content within it.'
+    else:
+        hide_if_empty = part.hide_if_empty
+
+    if pagenumber:
+        call_data['pchange'] = editpage.edit_page_element(project, pagenumber, pchange, location, tag_name, brief, hide_if_empty, attribs)
+
+    call_data['status'] = message
+
+
+
+def oldset_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the part tag name, or brief, adds an attribute"
 
     editedproj = call_data['editedproj']
