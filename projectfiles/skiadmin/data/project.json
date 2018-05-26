@@ -12321,7 +12321,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
-"fail_ident": "admin_home",
+"fail_ident": 53007,
 "submit_list": [
 "editparts",
 "editpart",
@@ -40167,7 +40167,7 @@ false
 "Part",
 {
 "tag_name": "div",
-"brief": "New Tag",
+"brief": "New Tag yoa",
 "show": true,
 "hide_if_empty": false,
 "parts": []
