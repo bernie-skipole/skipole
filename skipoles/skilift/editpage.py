@@ -34,7 +34,7 @@ from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info, get_proj_page, del_location_in_page, insert_item_in_page
 
-PageElement = namedtuple('PageElement', ['project', 'pagenumber', 'pchange', 'location', 'page_part', 'part_type', 'tag_name', 'brief', 'show', 'hide_if_empty', 'attribs'])
+PageElement = namedtuple('PageElement', ['project', 'pagenumber', 'pchange', 'location', 'page_part', 'part_type', 'tag_name', 'brief', 'hide_if_empty', 'attribs'])
 
 
 def pagechange(project, pagenumber):
@@ -287,11 +287,24 @@ def page_element(project, pagenumber, pchange, location):
 
     tag_name = part.tag_name
     brief = part.brief
-    show = part.show
     hide_if_empty = part.hide_if_empty
     attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
 
-    return PageElement(project, pagenumber, pchange, location, page_part, part_type, tag_name, brief, show, hide_if_empty, attribs)
+    return PageElement(project, pagenumber, pchange, location, page_part, part_type, tag_name, brief, hide_if_empty, attribs)
+
+
+def edit_page_element(project, pagenumber, pchange, location, tag_name, brief, hide_if_empty, attribs):
+    """Given an element at project, pagenumber, location
+       sets the element values, returns page change uuid """
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    part = page.location_item(location)
+    part.tag_name = tag_name
+    part.brief = brief
+    part.attribs = OrderedDict(sorted(attribs.items(), key=lambda t: t[0]))
+    if part.__class__.__name__ == "Part":
+        part.hide_if_empty = hide_if_empty
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
  
 
 
