@@ -339,6 +339,15 @@ def edit_section_element(project, section_name, schange, location, tag_name, bri
         part.hide_if_empty = hide_if_empty
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
+
+def del_attrib(project, section_name, schange, location, attribute):
+    """Given an element at project, section_name, location
+       deletes the given attribute, returns sceetion change uuid """
+    proj, section = get_proj_section(project, section_name, schange)
+    part = section.location_item(location)
+    part.del_one_attrib(attribute)
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
  
 
 

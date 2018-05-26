@@ -307,5 +307,15 @@ def edit_page_element(project, pagenumber, pchange, location, tag_name, brief, h
     return proj.save_page(page)
 
 
+def del_attrib(project, pagenumber, pchange, location, attribute):
+    """Given an element at project, pagenumber, location
+       deletes the given attribute, returns page change uuid """
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    part = page.location_item(location)
+    part.del_one_attrib(attribute)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 
 
