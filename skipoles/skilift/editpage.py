@@ -305,9 +305,6 @@ def edit_page_element(project, pagenumber, pchange, location, tag_name, brief, h
         part.hide_if_empty = hide_if_empty
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
- 
-
-
 
 
 

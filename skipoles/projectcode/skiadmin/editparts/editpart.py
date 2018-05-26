@@ -210,62 +210,11 @@ def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
 
     if pagenumber:
         call_data['pchange'] = editpage.edit_page_element(project, pagenumber, pchange, location, tag_name, brief, hide_if_empty, attribs)
+    else:
+        call_data['schange'] = editsection.edit_section_element(project, section_name, schange, location, tag_name, brief, hide_if_empty, attribs)
 
     call_data['status'] = message
 
-
-
-def oldset_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Sets the part tag name, or brief, adds an attribute"
-
-    editedproj = call_data['editedproj']
-    widget=None
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-    message = ''
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
-
-    if 'tag_name' in call_data:
-        part.tag_name = call_data["tag_name"]
-        message = 'New tag set'
-        widget_name="tag_input"
-    elif 'tag_brief' in call_data:
-        part.brief = call_data["tag_brief"]
-        message = 'New description set'
-        widget_name="tag_brief"
-    elif 'attrib' in call_data:
-        if 'val' not in call_data:
-            raise FailPage("The attribute value has not been found")
-        part.update_attribs({call_data["attrib"]:call_data["val"]})
-        widget_name='add_attrib_error'
-    elif 'hide_if_empty' in call_data:
-        if not isinstance(part, tag.Part):
-            raise FailPage("Invalid action on part")
-        hide = call_data['hide_if_empty']
-        if hide == 'hide':
-            part.hide_if_empty = True
-            message = 'Element will be hidden if no content within it.'
-        else:
-            part.hide_if_empty = False
-            message = 'Element will be shown even if no content within it.'
-        widget_name='hide_if_empty_error'
-    else:
-        raise FailPage("A new Tag value to edit has not been found")
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section, widget_name=widget_name)
-    if message:
-        call_data['status'] = message
 
 
 def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
