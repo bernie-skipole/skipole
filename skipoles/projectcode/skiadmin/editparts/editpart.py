@@ -29,12 +29,122 @@
 
 from ....ski import skiboot, tag, widgets
 from .... import skilift
-from ....skilift import fromjson
+from ....skilift import fromjson, editpage, editsection
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 
 def retrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fills in the edit a part page"
+
+    # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
+
+    pagenumber = None
+    section_name = None
+
+    if 'part_tuple' in call_data:
+        part_tuple = call_data['part_tuple']
+        project = part_tuple.project
+        location = part_tuple.location
+        pagenumber = part_tuple.pagenumber
+        section_name = part_tuple.section_name
+    else:
+        project = call_data['editedprojname']
+        location = call_data['location']
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+        else:
+            section_name = call_data['section_name']
+
+    if (pagenumber is None) and (section_name is None):
+        raise FailPage("Page/section not identified")
+
+    part = None
+
+    try:
+        if pagenumber:
+            call_data['page_number'] = pagenumber
+            pchange = call_data['pchange']
+            part = editpage.page_element(project, pagenumber, pchange, location)
+        else:
+            call_data['section_name'] = section_name
+            schange = call_data['schange']
+            part = editsection.section_element(project, section_name, schange, location)
+
+        if part is None:
+            raise FailPage("Part not identified")
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    # Fill in header
+    page_data[("adminhead","page_head","large_text")] = "Edit the html element."
+
+    # header done, now page contents
+
+    if part.part_type == "Part":
+        ending = ">"
+    else:
+        ending = " />"
+
+    atts_list = []
+    vals_list = []
+    if part.attribs:
+        for att in part.attribs:
+            atts_list.append(att)
+        # sort atts_list
+        atts_list.sort()
+        attstring = ""
+        for att in atts_list:
+            vals_list.append(part.attribs[att])
+            attstring += " %s = \"%s\"" % (att, part.attribs[att])
+        page_data[('tag_para','para_text')] = "Element tag : <%s%s%s" % (part.tag_name, attstring, ending)
+    else:
+        page_data[('tag_para','para_text')] = "Element tag : <%s%s" % (part.tag_name, ending)
+
+    # list table of attributes, widget tables.Table2_1
+    # contents = list of lists, each inner has five elements
+    # col 0 is the text to place in the first column,
+    # col 1 is the text to place in the second column,
+    # col 2, 3, 4 are the three get field contents of the link
+    if len(atts_list):
+        page_data[('attribs_list_para','show')] = True
+        page_data[('attribs_list','show')] = True
+        contents = []
+        for index, att in enumerate(atts_list):
+            row = [ att, vals_list[index], att]
+            contents.append(row)
+        page_data['attribs_list', 'contents'] = contents
+    else:
+        page_data[('attribs_list_para','show')] = False
+        page_data[('attribs_list','show')] = False
+
+    # input form to change the tag name
+    page_data[('tag_input','input_text')] = part.tag_name
+
+    # input form to change the tag brief
+    page_data[('tag_brief','input_text')] = part.brief
+
+    # input form to change hide if no contents
+
+    # Note tag.Part covers both Part and Section, which
+    # is required here, so a Section element can be
+    # downloaded as if it was a Part
+
+    if part.part_type == "Part":
+        if part.hide_if_empty:
+            page_data[('hidecheck','checked')] = True
+        else:
+            page_data[('hidecheck','checked')] = False
+    else:
+        page_data[('set_to_hide','show')] = False
+        page_data[('para_to_hide','show')] = False
+        page_data[('para_to_hide2','show')] = False
+        page_data['partdownload', 'show'] = False
+        page_data['aboutdownload', 'show'] = False
+
+
+
+def oldretrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit a part page"
 
     editedproj = call_data['editedproj']

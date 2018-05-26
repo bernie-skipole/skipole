@@ -193,7 +193,6 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     if ('section_name' in session_data) and ('page' in session_data):
         return "admin_home", call_data, page_data, lang
 
-
     if 'section_name' in session_data:
         section_name = session_data['section_name']
         if not section_name:
@@ -364,12 +363,9 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
 
 
     # either a section is being edited, or a folder/page - not both
-    section_name = call_data.get('section_name', '')
-    if section_name:
-        schange = sectionchange(editedprojname, section_name)
-        if schange is not None:
-            sent_session_data['section_name'] = section_name
-            sent_session_data['schange'] = schange
+    if 'section_name' in call_data:
+        sent_session_data['section_name'] = call_data['section_name']
+        sent_session_data['schange'] = sectionchange(editedprojname, call_data['section_name'])
     else:
         # send page or folder as a tuple of its ident
         if 'page_number' in call_data:

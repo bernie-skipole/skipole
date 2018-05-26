@@ -40154,7 +40154,29 @@ false
 "attribs": {
 "class": "w3-theme"
 },
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
 "parts": []
+}
+]
+]
+}
+]
+]
 }
 ]
 },
