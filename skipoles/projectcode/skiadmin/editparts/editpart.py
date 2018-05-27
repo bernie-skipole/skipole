@@ -27,10 +27,8 @@
 "Functions implementing part editing"
 
 
-from ....ski import skiboot, tag, widgets
 from .... import skilift
 from ....skilift import fromjson, editpage, editsection
-from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 
@@ -126,12 +124,6 @@ def retrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_d
     # input form to change the tag brief
     page_data[('tag_brief','input_text')] = part.brief
 
-    # input form to change hide if no contents
-
-    # Note tag.Part covers both Part and Section, which
-    # is required here, so a Section element can be
-    # downloaded as if it was a Part
-
     if part.part_type == "Part":
         if part.hide_if_empty:
             page_data[('hidecheck','checked')] = True
@@ -171,50 +163,49 @@ def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
 
         if part is None:
             raise FailPage("Part not identified")
+
+        message = "A new value to edit has not been found"
+
+        if 'tag_name' in call_data:
+            tag_name = call_data["tag_name"]
+            message = 'New tag set'
+        else:
+            tag_name = part.tag_name
+
+        if 'tag_brief' in call_data:
+            brief = call_data["tag_brief"]
+            message = 'New description set'
+        else:
+            brief = part.brief
+
+        attribs = part.attribs
+
+        if 'attrib' in call_data:
+            if 'val' not in call_data:
+                raise FailPage("The attribute value has not been found")
+            attribs.update({call_data["attrib"]:call_data["val"]})
+            message = 'Attribute updated'
+
+        if 'hide_if_empty' in call_data:
+            hide = call_data['hide_if_empty']
+            if hide == 'hide':
+                hide_if_empty = True
+                message = 'Element will be hidden if no content within it.'
+            else:
+                hide_if_empty = False
+                message = 'Element will be shown even if no content within it.'
+        else:
+            hide_if_empty = part.hide_if_empty
+
+        if pagenumber:
+            call_data['pchange'] = editpage.edit_page_element(project, pagenumber, pchange, location, tag_name, brief, hide_if_empty, attribs)
+        else:
+            call_data['schange'] = editsection.edit_section_element(project, section_name, schange, location, tag_name, brief, hide_if_empty, attribs)
+
     except ServerError as e:
         raise FailPage(e.message)
 
-    message = "A new value to edit has not been found"
-
-
-    if 'tag_name' in call_data:
-        tag_name = call_data["tag_name"]
-        message = 'New tag set'
-    else:
-        tag_name = part.tag_name
-
-    if 'tag_brief' in call_data:
-        brief = call_data["tag_brief"]
-        message = 'New description set'
-    else:
-        brief = part.brief
-
-    attribs = part.attribs
-
-    if 'attrib' in call_data:
-        if 'val' not in call_data:
-            raise FailPage("The attribute value has not been found")
-        attribs.update({call_data["attrib"]:call_data["val"]})
-        message = 'Attribute updated'
-
-    if 'hide_if_empty' in call_data:
-        hide = call_data['hide_if_empty']
-        if hide == 'hide':
-            hide_if_empty = True
-            message = 'Element will be hidden if no content within it.'
-        else:
-            hide_if_empty = False
-            message = 'Element will be shown even if no content within it.'
-    else:
-        hide_if_empty = part.hide_if_empty
-
-    if pagenumber:
-        call_data['pchange'] = editpage.edit_page_element(project, pagenumber, pchange, location, tag_name, brief, hide_if_empty, attribs)
-    else:
-        call_data['schange'] = editsection.edit_section_element(project, section_name, schange, location, tag_name, brief, hide_if_empty, attribs)
-
     call_data['status'] = message
-
 
 
 def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -243,42 +234,17 @@ def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, cal
 
         if part is None:
             raise FailPage("Part not identified")
+
+        if ('attribs_list','contents') not in call_data:
+            raise FailPage("A Tag attribute to remove has not been found")
+
+        if pagenumber:
+            call_data['pchange'] = editpage.del_attrib(project, pagenumber, pchange, location, call_data['attribs_list','contents'])
+        else:
+            call_data['schange'] = editsection.del_attrib(project, section_name, schange, location, call_data['attribs_list','contents'])
+
     except ServerError as e:
         raise FailPage(e.message)
-
-    if ('attribs_list','contents') not in call_data:
-        raise FailPage("A Tag attribute to remove has not been found")
-
-    if pagenumber:
-        call_data['pchange'] = editpage.del_attrib(project, pagenumber, pchange, location, call_data['attribs_list','contents'])
-    else:
-        call_data['schange'] = editsection.del_attrib(project, section_name, schange, location, call_data['attribs_list','contents'])
-
-
-def oldremove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Removes the given tag attribute"
-
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
-
-    if ('attribs_list','contents') not in call_data:
-        raise FailPage("A Tag attribute to remove has not been found")
-    part.del_one_attrib(call_data['attribs_list','contents'])
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section, widget_name='list_attribs_error')
 
 
 def downloadpart(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
