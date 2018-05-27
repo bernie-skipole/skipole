@@ -547,6 +547,9 @@ def filter_from_tar(editedproj):
         if len(paths) < 3:
             # must be export/skipoles
             return tarinfo
+        if paths[2] == 'test':
+            # miss out export/skipoles/test/
+            return None
         if paths[2] == 'projectcode':
             if len(paths) < 4:
                 # must be export/skipoles/projectcode
