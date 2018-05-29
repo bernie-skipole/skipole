@@ -157,7 +157,8 @@ def new_placeholder(project, pagenumber, pchange, location, section_name, alias,
                                             placename=alias,
                                             brief=brief)
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
-    return insert_item_in_page(project, pagenumber, pchange, location, newplaceholder)
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, newplaceholder)
+    return new_pchange
 
 
 def sectionchange(project, section_name):
@@ -285,7 +286,8 @@ def create_html_element_in_section(project, section_name, schange, location, nam
     else:
         newpart = tag.ClosedPart(tag_name=name, brief=brief)
     # call skilift.insert_item_in_section to insert the item, save the section and return schange
-    return insert_item_in_section(project, section_name, schange, location, newpart)
+    new_schange, new_location = insert_item_in_section(project, section_name, schange, location, newpart)
+    return new_schange
 
 
 def create_part_in_section(project, section_name, schange, location, json_data):
@@ -298,7 +300,8 @@ def create_part_in_section(project, section_name, schange, location, json_data):
     except:
         raise ServerError("Unable to create part")
     # call skilift.insert_item_in_section to insert the item, save the section and return schange
-    return insert_item_in_section(project, section_name, schange, location, newpart)
+    new_schange, new_location = insert_item_in_section(project, section_name, schange, location, newpart)
+    return new_schange
 
 
 def section_element(project, section_name, schange, location):

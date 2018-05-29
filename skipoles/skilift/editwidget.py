@@ -90,15 +90,16 @@ def create_new_widget_in_page(project, pagenumber, pchange, location, module_nam
     "Creates a new widget in the given page, returns the new pchange"
     widget_instance = _create_new_widget(project, module_name, widget_classname, name, brief)
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
-    return insert_item_in_page(project, pagenumber, pchange, location, widget_instance)
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, widget_instance)
+    return new_pchange
 
 
 def create_new_widget_in_section(project, section_name, schange, location, module_name, widget_classname, name, brief):
     "Creates a new widget in the given section, returns the new schange"
     widget_instance = _create_new_widget(project, module_name, widget_classname, name, brief)
     # call skilift.insert_item_in_section to insert the item, save the section and return schange
-    return insert_item_in_section(project, section_name, schange, location, widget_instance)
-
+    new_schange, new_location = insert_item_in_section(project, section_name, schange, location, widget_instance)
+    return new_schange
 
 
 

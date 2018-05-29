@@ -622,7 +622,7 @@ def page_path(project, item):
 
 
 def insert_item_in_page(project, pagenumber, pchange, location, item):
-    "Insert the item in the page at location, return the new pchange value"
+    "Insert the item in the page at location, return the new pchange value and new location"
     proj, page = get_proj_page(project, pagenumber, pchange)
     if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
         raise ServerError(message="The page must be a Template or SVG page")
@@ -657,16 +657,18 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
     # If this item is to be placed inside a parent widget container
     if (parent_widget is not None) and (parent_widget.is_container_empty(container)):
         # item is to be set as the first item in a widget container
+        new_location = (location_string, container, (0,))
         parent_widget.set_in_container(container, (0,), item)
     elif isinstance(part, tag.Part) and (not hasattr(part, "arg_descriptions")): # not Closed Part and not a widget
         # insert at position 0 inside the part
+        new_location = (location_string, container, tuple(location_integers + [0]))
         part.insert(0,item)
     elif (parent_widget is not None) and (len(location_integers) == 1):
         # part is inside a container with parent being the containing div
         # so append after the part by inserting at the right place in the container
         position = location_integers[0] + 1
+        new_location = (location_string, container, (position,))
         parent_widget.insert_into_container(container, position, item)
-
     else:
         # do an append, rather than an insert
         # get parent part
@@ -679,15 +681,16 @@ def insert_item_in_page(project, pagenumber, pchange, location, item):
 
         # find location digit
         loc = location_integers[-1] + 1
+        new_location = (location_string, container, tuple(location_integers[:-1] + [loc]))
         # insert item at loc in parent_part
         parent_part.insert(loc,item)
 
-    # save the altered page and return the change uuid
-    return proj.save_page(page)
+    # save the altered page and return the change uuid, and new location
+    return proj.save_page(page), new_location
 
 
 def insert_item_in_section(project, section_name, schange, location, item):
-    "Insert the item in the section at location, return the new schange value"
+    "Insert the item in the section at location, return the new schange value and new location"
     proj, section = get_proj_section(project, section_name, schange)
     if hasattr(item, 'name') and item.name:
         name = item.name
@@ -719,14 +722,17 @@ def insert_item_in_section(project, section_name, schange, location, item):
     # If this item is to be placed inside a parent widget container
     if (parent_widget is not None) and (parent_widget.is_container_empty(container)):
         # item is to be set as the first item in a widget container
+        new_location = (location_string, container, (0,))
         parent_widget.set_in_container(container, (0,), item)
     elif isinstance(part, tag.Part) and (not hasattr(part, "arg_descriptions")): # not Closed Part and not a widget
         # insert at position 0 inside the part
+        new_location = (location_string, container, tuple(location_integers + [0]))
         part.insert(0,item)
     elif (parent_widget is not None) and (len(location_integers) == 1):
         # part is inside a container with parent being the containing div
         # so append after the part by inserting at the right place in the container
         position = location_integers[0] + 1
+        new_location = (location_string, container, (position,))
         parent_widget.insert_into_container(container, position, item)
 
     else:
@@ -745,11 +751,12 @@ def insert_item_in_section(project, section_name, schange, location, item):
 
         # find location digit
         loc = location_integers[-1] + 1
+        new_location = (location_string, container, tuple(location_integers[:-1] + [loc]))
         # insert item at loc in parent_part
         parent_part.insert(loc,item)
 
-    # save the altered section, and return the change uuid
-    return proj.add_section(section_name, section)
+    # save the altered section, and return the change uuid, and new location
+    return proj.add_section(section_name, section), new_location
 
 
 
