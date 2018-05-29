@@ -818,7 +818,7 @@ def del_location_in_page(project, pagenumber, pchange, location):
         top.del_location_value(item_location_ints)
     except:
         raise ServerError(message="Unable to delete item")
-        # And save this page copy to the project
+    # And save this page copy to the project
     return proj.save_page(page)
 
 
@@ -860,5 +860,58 @@ def del_location_in_section(project, section_name, schange, location):
         raise ServerError(message="Unable to delete item")
     # And save this section copy to the project
     return proj.add_section(section_name, section)
+
+
+
+def set_item_in_page(project, pagenumber, pchange, location, item):
+    "Sets an item in the location"
+
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
+        raise ServerError(message = "Invalid page")
+
+    location_string, container, location_list = location
+
+    # set item in a page
+    if (location_string == 'head'):
+        page.head.set_location_value(location_list, item)
+    elif (location_string == 'body'):
+        page.body.set_location_value(location_list, item)
+    elif (location_string == 'svg'):
+        page.svg.set_location_value(location_list, item)
+    elif container is not None: 
+        # location is in widget container
+        if location_string not in page.widgets:
+            raise ServerError("Location of item not found")
+        widget = page.widgets[location_string]
+        widget.set_in_container(container, location_list, item)
+    else:
+        raise ServerError("Location of item not found")
+    # And save this page copy to the project
+    return proj.save_page(page)
+
+
+def set_item_in_section(project, section_name, schange, location, item):
+    "Sets an item in the location"
+
+    proj, section = get_proj_section(project, section_name, schange)
+
+    location_string, container, location_list = location
+
+    # set item in a section
+    if location_string == section_name:
+        # part is not embedded in a widget
+        section.set_location_value(location_list, item)
+    elif container is not None: 
+        # location is in widget container
+        if location_string not in section.widgets:
+            raise ServerError("Location of item not found")
+        widget = section.widgets[location_string]
+        widget.set_in_container(container, location_list, item)
+    else:
+        raise ServerError("Location of item not found")
+    # And save this section copy to the project
+    return proj.add_section(section_name, section)
+
 
 

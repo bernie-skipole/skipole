@@ -40164,22 +40164,17 @@ false
 "hide_if_empty": false,
 "parts": [
 [
+"Text",
+"this newer text"
+],
+[
 "Part",
 {
 "tag_name": "div",
 "brief": "New Tag yoa",
 "show": true,
 "hide_if_empty": false,
-"parts": [
-[
-"Text",
-"text is set"
-],
-[
-"Text",
-"Set text here"
-]
-]
+"parts": []
 }
 ]
 ]
