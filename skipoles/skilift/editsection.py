@@ -351,6 +351,14 @@ def del_attrib(project, section_name, schange, location, attribute):
     part.del_one_attrib(attribute)
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
+
+def get_text(project, section_name, schange, location):
+    """Return a text string from the page at the given location"""
+    proj, section = get_proj_section(project, section_name, schange)
+    text = section.location_item(location)
+    if not isinstance(text, str):
+        raise ServerError("Item at this location is not identified as a text string")
+    return text
  
 
 

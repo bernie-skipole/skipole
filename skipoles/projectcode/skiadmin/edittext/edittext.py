@@ -26,66 +26,80 @@
 
 
 from .... import skilift
+from ....skilift import editpage, editsection
 from ....ski import skiboot, tag, widgets
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
+
+
 def retrieve_edittextpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit text page"
 
-    editedproj = call_data['editedproj']
+    # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
-    # get data
-    bits = utils.get_bits(call_data)
+    pagenumber = None
+    section_name = None
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
+    if 'part_tuple' in call_data:
+        part_tuple = call_data['part_tuple']
+        project = part_tuple.project
+        location = part_tuple.location
+        pagenumber = part_tuple.pagenumber
+        section_name = part_tuple.section_name
+    else:
+        project = call_data['editedprojname']
+        location = call_data['location']
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+        else:
+            section_name = call_data['section_name']
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
+    if (pagenumber is None) and (section_name is None):
+        raise ValidateError("Page/section not identified")
 
-    # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
+    call_data['location'] = location
 
-    # so header text and navigation done, now continue with the page contents
+    try:
 
-    if not isinstance(part, str):
-        raise FailPage("Part not identified as a text string")
+        if pagenumber:
+            call_data['page_number'] = pagenumber
+            text = editpage.get_text(project, pagenumber, call_data['pchange'], location)
+            page_data[("adminhead","page_head","large_text")] = "Edit Text in page : %s" % (pagenumber,)
+        elif section_name:
+            call_data['section_name'] = section_name
+            text = editsection.get_text(project, section_name, call_data['schange'], location)
+            page_data[("adminhead","page_head","large_text")] = "Edit Text in section : %s" % (section_name,)
+        else:
+            raise FailPage("Either a page or section must be specified")
+
+    except ServerError as e:
+        raise FailPage(e.message)
 
     # Set the text in the text area
-    page_data[("text_input","input_text")] = part
+    page_data[("text_input","input_text")] = text
+
 
 
 def edit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Submits new text"
 
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    location = bits.location
-    part = bits.part
-
-    if 'text' not in call_data:
-        raise FailPage(message = "Invalid text")
+    project = call_data['editedprojname']
+    location = call_data['location']
 
     text = call_data['text']
 
-    utils.set_part(text, 
-                   location,
-                   page=page,
-                   section=section,
-                   section_name=bits.section_name,
-                   widget=widget,
-                   failmessage='Part to have text inserted not identified')
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    try:
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+            call_data['pchange'] = skilift.set_item_in_page(project, pagenumber, call_data['pchange'], location, text)
+        elif 'section_name' in call_data:
+            section_name = call_data['section_name']
+            call_data['schange'] = skilift.set_item_in_section(project, section_name, call_data['schange'], location, text)
+        else:
+            raise ValidateError("Page/section not identified")
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Text changed"
 
 

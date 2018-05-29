@@ -318,5 +318,15 @@ def del_attrib(project, pagenumber, pchange, location, attribute):
     return proj.save_page(page)
 
 
+def get_text(project, pagenumber, pchange, location):
+    """Return a text string from the page at the given location"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    text = page.location_item(location)
+    if not isinstance(text, str):
+        raise ServerError("Item at this location is not identified as a text string")
+    return text
+
+
+
 
 
