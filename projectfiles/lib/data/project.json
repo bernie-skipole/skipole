@@ -390,26 +390,6 @@
 },
 "parts": [
 [
-"Widget",
-{
-"class": "debug_tools.ShowResponders",
-"name": "showresponders",
-"brief": "Shows responders",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"para_class": "",
-"paradiv_class": "",
-"show": true,
-"show_error": "",
-"table_class": "",
-"toptext": "DEBUG MODE IS ON",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "h3",
@@ -435,6 +415,9 @@
 [
 "Text",
 "Diagnostic message:"
+]
+]
+}
 ],
 [
 "Widget",
@@ -456,8 +439,25 @@
 "widget_style": ""
 }
 }
-]
-]
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowResponders",
+"name": "showresponders",
+"brief": "Shows responders",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"paradiv_class": "",
+"show": true,
+"show_error": "",
+"table_class": "",
+"toptext": "DEBUG MODE IS ON",
+"widget_class": "",
+"widget_style": ""
+}
 }
 ]
 ]
