@@ -241,8 +241,8 @@ def create_html_element_in_page(project, pagenumber, pchange, location, name, br
     else:
         newpart = tag.ClosedPart(tag_name=name, brief=brief)
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
-    return insert_item_in_page(project, pagenumber, pchange, location, newpart)
-
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, newpart)
+    return new_pchange
 
 
 def create_part_in_page(project, pagenumber, pchange, location, json_data):
@@ -257,7 +257,8 @@ def create_part_in_page(project, pagenumber, pchange, location, json_data):
     except:
         raise ServerError("Unable to create part")
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
-    return insert_item_in_page(project, pagenumber, pchange, location, newpart)
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, newpart)
+    return new_pchange
 
 
 def page_element(project, pagenumber, pchange, location):
