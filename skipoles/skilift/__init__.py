@@ -57,8 +57,14 @@ def project_loaded(project, error_if_not=True):
     return False
 
 
+def get_proj(project):
+    """Returns the project instance, being the object used internally by the skipole framework"""
+    project_loaded(project)
+    return skiboot.getproject(project)
+
+
 def get_proj_page(project, pagenumber, pchange=None):
-    """Returns (project_object, page_object), being class objects used internally by the skipole framework
+    """Returns (project_object, page_object), being objects used internally by the skipole framework
        The page object returned is a deepcopy of the page in the project""" 
 
     project_loaded(project)
@@ -82,7 +88,7 @@ def get_proj_page(project, pagenumber, pchange=None):
 
 
 def get_proj_section(project, section_name, schange=None):
-    """Returns (project_object, section_object), being class objects used internally by the skipole framework
+    """Returns (project_object, section_object), being objects used internally by the skipole framework
        The section object returned is a deepcopy of the section in the project""" 
 
     project_loaded(project)
