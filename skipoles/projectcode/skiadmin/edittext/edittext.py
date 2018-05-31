@@ -135,94 +135,77 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
 def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates new html symbol"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
-    # get data
-    bits = utils.get_bits(call_data)
+    try:
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    location = bits.location
-    part = bits.part
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+            page_info = skilift.item_info(project, pagenumber)
+            if page_info is None:
+                raise FailPage("Page to edit not identified")
+            if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
+                raise FailPage("Page not identified")
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
+            call_data['pchange'], new_location = editpage.create_html_symbol_in_page(project, pagenumber, call_data['pchange'], call_data['location'])
 
-    # get part to have symbol inserted
-    if part is None:
-        raise FailPage("Part not identified")
+        elif 'section_name' in call_data:
+            section_name = call_data['section_name']
+            call_data['schange'], new_location = editsection.create_html_symbol_in_section(project, section_name, call_data['schange'], call_data['location'])
 
-    sym = tag.HTMLSymbol(text="&nbsp;")
+        else:
+            raise FailPage("Either a page or section must be specified")
 
-    location_integers = [int(i) for i in location[2]]
-
-    if (location[1] is not None) and (widget.is_container_empty(location[1])):
-        # text is to be set as the first item in a container
-        new_location = (location[0], location[1], (0,))
-        utils.set_part(sym, 
-                       new_location,
-                       page=page,
-                       section=section,
-                       section_name=bits.section_name,
-                       widget=widget,
-                       failmessage='Part to have symbol inserted not identified')
-    elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
-        # insert at position 0 inside the part
-        part.insert(0,sym)
-        new_location = (location[0], location[1], tuple(location_integers + [0]))
-    elif (location[1] is not None) and (len(location_integers) == 1):
-        # part is inside a container with parent being the containing div
-        # so append after the part by inserting at the right place in the container
-        position = location_integers[0] + 1
-        widget.insert_into_container(location[1], position, sym)
-        new_location = (location[0], location[1], (position,))
-    else:
-        # do an append, rather than an insert
-        # get parent part
-        parent_part = utils.part_from_location(page,
-                                               section,
-                                               bits.section_name,
-                                               location_string=location[0],
-                                               container=location[1],
-                                               location_integers=location_integers[:-1])
-        # find location digit
-        loc = location_integers[-1] + 1
-        # insert symbol at loc in parent_part
-        parent_part.insert(loc,sym)
-        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-    # goes to edit symbol, with location set to the new location
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['location'] = new_location
 
 
 def retrieve_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit html symbol page"
 
-    editedproj = call_data['editedproj']
+    # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
-    # get data
-    bits = utils.get_bits(call_data)
+    pagenumber = None
+    section_name = None
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
+    if 'part_tuple' in call_data:
+        part_tuple = call_data['part_tuple']
+        project = part_tuple.project
+        location = part_tuple.location
+        pagenumber = part_tuple.pagenumber
+        section_name = part_tuple.section_name
+    else:
+        project = call_data['editedprojname']
+        location = call_data['location']
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+        else:
+            section_name = call_data['section_name']
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
+    if (pagenumber is None) and (section_name is None):
+        raise ValidateError("Page/section not identified")
 
-    # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Edit : " + bits.part_string
+    call_data['location'] = location
 
-    # so header text and navigation done, now continue with the page contents
+    try:
 
-    if not isinstance(part, tag.HTMLSymbol):
-        raise FailPage("Part not identified as an HTML Symbol")
+        if pagenumber:
+            call_data['page_number'] = pagenumber
+            sym = editpage.get_symbol(project, pagenumber, call_data['pchange'], location)
+            page_data[("adminhead","page_head","large_text")] = "Edit Symbol in page : %s" % (pagenumber,)
+        elif section_name:
+            call_data['section_name'] = section_name
+            sym = editsection.get_symbol(project, section_name, call_data['schange'], location)
+            page_data[("adminhead","page_head","large_text")] = "Edit Symbol in section : %s" % (section_name,)
+        else:
+            raise FailPage("Either a page or section must be specified")
 
-    # Set the text in the input field
-    page_data[("symbol_input","input_text")] = part.text
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    # Set the symbol in the text area
+    page_data["symbol_input","input_text"] = sym
 
 
 def set_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
