@@ -374,7 +374,20 @@ def get_symbol(project, section_name, schange, location):
     sym = section.location_item(location)
     if not isinstance(sym, tag.HTMLSymbol):
         raise ServerError("Item at this location is not identified as a HTML Symbol")
-    return sym
+    return sym.text
+
+
+def edit_section_symbol(project, section_name, schange, location, text):
+    """Given a symbol at project, section_name, location
+       sets the symbol, returns section change uuid """
+    proj, section = get_proj_section(project, section_name, schange)
+    sym = section.location_item(location)
+    if not isinstance(sym, tag.HTMLSymbol):
+        raise ServerError("Item at this location is not identified as a HTML Symbol")
+    sym.text = text
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
  
 
 

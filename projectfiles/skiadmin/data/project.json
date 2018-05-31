@@ -16665,8 +16665,13 @@ false
 51109
 ],
 "alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
+"fail_ident": "admin_home",
+"submit_list": [
+"edittext",
+"edittext",
+"set_edit_symbol"
+],
+"submit_option": true,
 "target_ident": 51107,
 "validate_fail_ident": null,
 "validate_option": false

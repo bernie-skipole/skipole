@@ -341,7 +341,19 @@ def get_symbol(project, pagenumber, pchange, location):
     sym = page.location_item(location)
     if not isinstance(sym, tag.HTMLSymbol):
         raise ServerError("Item at this location is not identified as a HTML Symbol")
-    return sym
+    return sym.text
+
+
+def edit_page_symbol(project, pagenumber, pchange, location, text):
+    """Given a symbol at project, pagenumber, location
+       sets the symbol, returns page change uuid """
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    sym = page.location_item(location)
+    if not isinstance(sym, tag.HTMLSymbol):
+        raise ServerError("Item at this location is not identified as a HTML Symbol")
+    sym.text = text
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
 
 
 

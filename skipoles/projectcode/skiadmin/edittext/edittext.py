@@ -211,33 +211,25 @@ def retrieve_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
 def set_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Submits new symbol after editing"
 
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    location = bits.location
-    part = bits.part
+    project = call_data['editedprojname']
+    location = call_data['location']
 
     if 'symbol' not in call_data:
         raise FailPage(message = "Invalid symbol")
 
     symbol = call_data['symbol']
 
-    sym = tag.HTMLSymbol(text=symbol)
-
-    utils.set_part(sym, 
-                   location,
-                   page=page,
-                   section=section,
-                   section_name=bits.section_name,
-                   widget=widget,
-                   failmessage='Location to have symbol set not identified')
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    try:
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+            call_data['pchange'] = editpage.edit_page_symbol(project, pagenumber, call_data['pchange'], location, symbol)
+        elif 'section_name' in call_data:
+            section_name = call_data['section_name']
+            call_data['schange'] = editsection.edit_section_symbol(project, section_name, call_data['schange'], location, symbol)
+        else:
+            raise ValidateError("Page/section not identified")
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Symbol changed"
 
 
