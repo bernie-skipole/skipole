@@ -234,6 +234,14 @@ def json_contents(project, pagenumber):
     return contents
 
 
+def create_html_symbol_in_page(project, pagenumber, pchange, location, text="&nbsp;"):
+    "Creates a new html symbol in the given page, returns the new pchange and symbol location"
+    sym = tag.HTMLSymbol(text)
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, sym)
+    return new_pchange, new_location
+
+
 def create_html_element_in_page(project, pagenumber, pchange, location, name, brief, opentag = True):
     "Creates a new html element in the given page, returns the new pchange"
     if opentag:
@@ -325,6 +333,15 @@ def get_text(project, pagenumber, pchange, location):
     if not isinstance(text, str):
         raise ServerError("Item at this location is not identified as a text string")
     return text
+
+
+def get_symbol(project, pagenumber, pchange, location):
+    """Return a symbol from the page at the given location"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    sym = page.location_item(location)
+    if not isinstance(sym, tag.HTMLSymbol):
+        raise ServerError("Item at this location is not identified as a HTML Symbol")
+    return sym
 
 
 

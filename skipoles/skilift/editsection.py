@@ -279,6 +279,14 @@ def delete_section(project, section_name):
     proj.delete_section(section_name)
 
 
+def create_html_symbol_in_section(project, section_name, schange, location, text="&nbsp;"):
+    "Creates a new html symbol in the given section, returns the new schange and symbol location"
+    sym = tag.HTMLSymbol(text)
+    # call skilift.insert_item_in_section to insert the item, save the section and return schange
+    new_schange, new_location = insert_item_in_section(project, section_name, schange, location, sym)
+    return new_schange, new_location
+
+
 def create_html_element_in_section(project, section_name, schange, location, name, brief, opentag = True):
     "Creates a new html element in the given section, returns the new schange"
     if opentag:
@@ -359,6 +367,14 @@ def get_text(project, section_name, schange, location):
     if not isinstance(text, str):
         raise ServerError("Item at this location is not identified as a text string")
     return text
+
+def get_symbol(project, section_name, schange, location):
+    """Return a symbol from the section at the given location"""
+    proj, section = get_proj_section(project, section_name, schange)
+    sym = section.location_item(location)
+    if not isinstance(sym, tag.HTMLSymbol):
+        raise ServerError("Item at this location is not identified as a HTML Symbol")
+    return sym
  
 
 
