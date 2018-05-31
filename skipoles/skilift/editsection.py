@@ -279,6 +279,14 @@ def delete_section(project, section_name):
     proj.delete_section(section_name)
 
 
+def create_html_comment_in_section(project, section_name, schange, location, text="comment here"):
+    "Creates a new html comment in the given section, returns the new schange and comment location"
+    com = tag.Comment(text)
+    # call skilift.insert_item_in_section to insert the item, save the section and return schange
+    new_schange, new_location = insert_item_in_section(project, section_name, schange, location, com)
+    return new_schange, new_location
+
+
 def create_html_symbol_in_section(project, section_name, schange, location, text="&nbsp;"):
     "Creates a new html symbol in the given section, returns the new schange and symbol location"
     sym = tag.HTMLSymbol(text)
@@ -388,6 +396,27 @@ def edit_section_symbol(project, section_name, schange, location, text):
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
 
+
+
+def get_comment(project, section_name, schange, location):
+    """Return a comment from the section at the given location"""
+    proj, section = get_proj_section(project, section_name, schange)
+    com = section.location_item(location)
+    if not isinstance(com, tag.Comment):
+        raise ServerError("Item at this location is not identified as a HTML comment")
+    return com.text
+
+
+def edit_section_comment(project, section_name, schange, location, text):
+    """Given a comment at project, section_name, location
+       sets the comment, returns section change uuid """
+    proj, section = get_proj_section(project, section_name, schange)
+    com = section.location_item(location)
+    if not isinstance(com, tag.Comment):
+        raise ServerError("Item at this location is not identified as a HTML comment")
+    com.text = text
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
  
 
 

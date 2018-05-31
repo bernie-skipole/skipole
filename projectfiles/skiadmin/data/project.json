@@ -40179,7 +40179,14 @@ false
 "brief": "New Tag yoa",
 "show": true,
 "hide_if_empty": false,
-"parts": []
+"parts": [
+[
+"Comment",
+{
+"text": "goodby"
+}
+]
+]
 }
 ]
 ]

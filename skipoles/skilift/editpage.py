@@ -234,6 +234,14 @@ def json_contents(project, pagenumber):
     return contents
 
 
+def create_html_comment_in_page(project, pagenumber, pchange, location, text="comment here"):
+    "Creates a new html comment in the given page, returns the new pchange and comment location"
+    com = tag.Comment(text)
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, com)
+    return new_pchange, new_location
+
+
 def create_html_symbol_in_page(project, pagenumber, pchange, location, text="&nbsp;"):
     "Creates a new html symbol in the given page, returns the new pchange and symbol location"
     sym = tag.HTMLSymbol(text)
@@ -356,6 +364,25 @@ def edit_page_symbol(project, pagenumber, pchange, location, text):
     return proj.save_page(page)
 
 
+def get_comment(project, pagenumber, pchange, location):
+    """Return a comment from the page at the given location"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    com = page.location_item(location)
+    if not isinstance(com, tag.Comment):
+        raise ServerError("Item at this location is not identified as a HTML comment")
+    return com.text
+
+
+def edit_page_comment(project, pagenumber, pchange, location, text):
+    """Given a comment at project, pagenumber, location
+       sets the comment, returns page change uuid """
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    com = page.location_item(location)
+    if not isinstance(com, tag.Comment):
+        raise ServerError("Item at this location is not identified as a HTML comment")
+    com.text = text
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
 
 
 

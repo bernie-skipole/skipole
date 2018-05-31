@@ -1006,13 +1006,21 @@ class HTMLSymbol(object):
 class Comment(object):
 
     def __init__(self, text=''):
-        self.text=text.replace("--", "  ")
+        self._text=text.replace("--", "  ")
+
+    def get_text(self):
+        return self._text
+
+    def set_text(self, text):
+        self._text=text.replace("--", "  ")
+
+    text = property(get_text, set_text, doc="Text of the comment, not including <!-- and --> parts")
 
     def __bool__(self):
         "True if text has been set"
-        return bool(self.text)
+        return bool(self._text)
 
     def __str__(self):
         "Returns the text"
-        return  "\n<!--" + self.text + "-->\n"
+        return  "\n<!--" + self._text + "-->\n"
 
