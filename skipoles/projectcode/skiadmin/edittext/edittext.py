@@ -27,8 +27,6 @@
 
 from .... import skilift
 from ....skilift import editpage, editsection
-from ....ski import skiboot, tag, widgets
-from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 
