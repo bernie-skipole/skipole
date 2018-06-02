@@ -39,6 +39,8 @@ PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'secti
 
 SectionElement = namedtuple('SectionElement', ['project', 'section_name', 'schange', 'location', 'part_type', 'tag_name', 'brief', 'show', 'hide_if_empty', 'attribs'])
 
+SectionTextBlock = namedtuple('SectionTextBlock', ['project', 'section_name', 'schange', 'location', 'textref', 'failmessage', 'escape', 'linebreaks', 'decode'])
+
 
 def list_section_names(project=None):
     """Returns a list of section names in the project"""
@@ -321,7 +323,7 @@ def create_part_in_section(project, section_name, schange, location, json_data):
 
 
 def section_element(project, section_name, schange, location):
-    """Return a element tuple for the html element at the given location"""
+    """Return a SectionElement tuple for the html element at the given location"""
 
     proj, section = get_proj_section(project, section_name, schange)
     part = section.location_item(location)
@@ -359,6 +361,7 @@ def edit_section_element(project, section_name, schange, location, tag_name, bri
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
 
+
 def del_attrib(project, section_name, schange, location, attribute):
     """Given an element at project, section_name, location
        deletes the given attribute, returns sceetion change uuid """
@@ -368,6 +371,7 @@ def del_attrib(project, section_name, schange, location, attribute):
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
 
+
 def get_text(project, section_name, schange, location):
     """Return a text string from the page at the given location"""
     proj, section = get_proj_section(project, section_name, schange)
@@ -375,6 +379,7 @@ def get_text(project, section_name, schange, location):
     if not isinstance(text, str):
         raise ServerError("Item at this location is not identified as a text string")
     return text
+
 
 def get_symbol(project, section_name, schange, location):
     """Return a symbol from the section at the given location"""
@@ -395,7 +400,6 @@ def edit_section_symbol(project, section_name, schange, location, text):
     sym.text = text
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
-
 
 
 def get_comment(project, section_name, schange, location):
@@ -419,4 +423,35 @@ def edit_section_comment(project, section_name, schange, location, text):
     return proj.add_section(section_name, section)
  
 
+def section_textblock(project, section_name, schange, location):
+    """Return a SectionTextBlock tuple for the textblock at the given location"""
+    proj, section = get_proj_section(project, section_name, schange)
+    tblock = section.location_item(location)
+    if not isinstance(tblock, tag.TextBlock):
+        raise ServerError("Item at this location is not identified as a TextBlock")
+    return SectionTextBlock(project, section_name, schange, location, tblock.textref, tblock.failmessage, tblock.escape, tblock.linebreaks, tblock.decode)
+
+
+def create_textblock_in_section(project, section_name, schange, location, textref, failmessage, escape, linebreaks, decode=False):
+    "Creates a new textblock in the given section, returns the new schange and location"
+    tblock = tag.TextBlock(textref=textref, failmessage=failmessage, escape=escape, linebreaks=linebreaks, decode=decode)
+    # call skilift.insert_item_in_section to insert the item, save the section and return schange
+    new_schange, new_location = insert_item_in_section(project, section_name, schange, location, tblock)
+    return new_schange, new_location
+
+
+def edit_section_textblock(project, section_name, schange, location, textref, failmessage, escape, linebreaks, decode):
+    """Given an textblock at project, section_name, location
+       sets the textblock values, returns section change uuid """
+    proj, section = get_proj_section(project, section_name, schange)
+    tblock = section.location_item(location)
+    if not isinstance(tblock, tag.TextBlock):
+        raise ServerError("Item at this location is not identified as a TextBlock")
+    tblock.textref = textref
+    tblock.failmessage = failmessage
+    tblock.escape = escape
+    tblock.linebreaks = linebreaks
+    tblock.decode = decode
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
 
