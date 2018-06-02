@@ -1236,7 +1236,7 @@ def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data,
         raise GoTo(target = 51017, clear_submitted=True)
     if part_tuple.part_type == "TextBlock":
         # edit the TextBlock
-        call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
+        call_data['part_tuple'] = part_tuple
         raise GoTo(target = 52017, clear_submitted=True)
     if part_tuple.part_type == "Comment":
         # edit the Comment

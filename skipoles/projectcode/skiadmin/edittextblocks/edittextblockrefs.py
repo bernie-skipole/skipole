@@ -30,58 +30,81 @@ import re
 # a search for anything none-alphanumeric and not an underscore or a dot
 _TB = re.compile('[^\w\.]')
 
-from ....ski import tag, skiboot, widgets
-from .. import utils
+
+from ....skilift import item_info, editpage, editsection
+
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 
 def retrieve_textblockref(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit textblockref page"
 
-    editedproj = call_data['editedproj']
+    # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
-    # get data
-    bits = utils.get_bits(call_data)
+    pagenumber = None
+    section_name = None
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
+    if 'part_tuple' in call_data:
+        part_tuple = call_data['part_tuple']
+        project = part_tuple.project
+        location = part_tuple.location
+        pagenumber = part_tuple.pagenumber
+        section_name = part_tuple.section_name
+    else:
+        project = call_data['editedprojname']
+        location = call_data['location']
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+        else:
+            section_name = call_data['section_name']
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
+    if (pagenumber is None) and (section_name is None):
+        raise ValidateError("Page/section not identified")
+
+    call_data['location'] = location
+
+    tblock = None
+
+    try:
+        if pagenumber:
+            call_data['page_number'] = pagenumber
+            pchange = call_data['pchange']
+            tblock = editpage.page_textblock(project, pagenumber, pchange, location)
+        else:
+            call_data['section_name'] = section_name
+            schange = call_data['schange']
+            tblock = editsection.section_textblock(project, section_name, schange, location)
+
+        if tblock is None:
+            raise FailPage("TextBlock not identified")
+    except ServerError as e:
+        raise FailPage(e.message)
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "TextBlock"
+    page_data[("adminhead","page_head","large_text")] = "Edit the TextBlock."
 
     # header done, now page contents
 
-    if part is None:
-        raise FailPage("Part not identified")
-
-    if not isinstance(part, tag.TextBlock):
-        raise FailPage("Part to be edited is not a TextBlock")
-
-    page_data[("textblock_ref","input_text")]=part.textref
-    page_data[("textblock_failed","input_text")]=part.failmessage
+    page_data[("textblock_ref","input_text")]=tblock.textref
+    page_data[("textblock_failed","input_text")]=tblock.failmessage
 
     page_data[("linebreaks","radio_values")]=['ON', 'OFF']
     page_data[("linebreaks","radio_text")]=['On', 'Off']
-    if part.linebreaks and not part.decode:
+    if tblock.linebreaks and not tblock.decode:
         page_data[("linebreaks","radio_checked")] = 'ON'
     else:
         page_data[("linebreaks","radio_checked")] = 'OFF'
 
     page_data[("setescape","radio_values")]=['ON', 'OFF']
     page_data[("setescape","radio_text")]=['On', 'Off']
-    if part.escape and not part.decode:
+    if tblock.escape and not tblock.decode:
         page_data[("setescape","radio_checked")] = 'ON'
     else:
         page_data[("setescape","radio_checked")] = 'OFF'
 
     page_data[("setdecode","radio_values")]=['ON', 'OFF']
     page_data[("setdecode","radio_text")]=['On', 'Off']
-    if part.decode:
+    if tblock.decode:
         page_data[("setdecode","radio_checked")] = 'ON'
     else:
         page_data[("setdecode","radio_checked")] = 'OFF'
@@ -91,92 +114,101 @@ def retrieve_textblockref(caller_ident, ident_list, submit_list, submit_dict, ca
 def set_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the textblock reference, fail message, linebreaks or escape"
 
-    editedproj = call_data['editedproj']
+    pagenumber = None
+    section_name = None
 
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
-
-    if not isinstance(part, tag.TextBlock):
-        raise FailPage("Part to be edited is not a TextBlock")
-
-    if 'textblock_ref' in call_data:
-        if _TB.search(call_data["textblock_ref"]):
-            raise FailPage(message="Invalid reference")
-        part.textref = call_data["textblock_ref"]
-        message = 'New reference string set'
-        widget_name="textblock_ref"
-    elif 'textblock_failed' in call_data:
-        part.failmessage = call_data["textblock_failed"]
-        message = 'New fail message set'
-        widget_name="textblock_failed"
-    elif 'linebreaks' in call_data:
-        if call_data['linebreaks'] == 'ON':
-            part.linebreaks = True
-            if part.decode:
-                message = "Decode is on; linbreaks setting is overridden"
-            else:
-                message = 'Linebreaks set on'
-        else:
-            part.linebreaks = False
-            message = 'Linebreaks set off'
-        widget_name='linebreaks'
-    elif 'setescape' in call_data:
-        if call_data['setescape'] == 'ON':
-            part.escape = True
-            if part.decode:
-                message = "Decode is on; escape setting is overridden"
-            else:
-                message = 'HTML escape set on'
-        else:
-            part.escape = False
-            message = 'HTML escape set off'
-        widget_name='setescape'
-    elif 'setdecode' in call_data:
-        if call_data['setdecode'] == 'ON':
-            part.decode = True
-            message = 'Text Decode set on'
-        else:
-            part.decode = False
-            message = 'Text Decode off'
-        widget_name='setdecode'
+    project = call_data['editedprojname']
+    location = call_data['location']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+        pchange = call_data['pchange']
     else:
-        raise FailPage("A TextBlock value to edit has not been found")
+        section_name = call_data['section_name']
+        schange = call_data['schange']
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section, widget_name=widget_name)
+    if (pagenumber is None) and (section_name is None):
+        raise ValidateError("Page/section not identified")
+
+    try:
+        if pagenumber:
+            tblock = editpage.page_textblock(project, pagenumber, pchange, location)
+        else:
+            tblock = editsection.section_textblock(project, section_name, schange, location)
+
+        message = "A new value to edit has not been found"
+
+        if 'textblock_ref' in call_data:
+            if _TB.search(call_data["textblock_ref"]):
+                raise FailPage(message="Invalid reference")
+            textref = call_data["textblock_ref"]
+            message = 'New reference string set'
+        else:
+            textref = tblock.textref
+
+        if 'textblock_failed' in call_data:
+            failmessage = call_data["textblock_failed"]
+            message = 'New fail message set'
+        else:
+            failmessage = tblock.failmessage
+
+        if 'setdecode' in call_data:
+            if call_data['setdecode'] == 'ON':
+                decode = True
+                message = 'Text Decode set on'
+            else:
+                decode = False
+                message = 'Text Decode off'
+        else:
+            decode = tblock.decode
+
+        if 'linebreaks' in call_data:
+            if call_data['linebreaks'] == 'ON':
+                linebreaks = True
+                if decode:
+                    message = "Decode is on; linbreaks setting is overridden"
+                else:
+                    message = 'Linebreaks set on'
+            else:
+                linebreaks = False
+                message = 'Linebreaks set off'
+        else:
+            linebreaks = tblock.linebreaks
+
+
+        if 'setescape' in call_data:
+            if call_data['setescape'] == 'ON':
+                escape = True
+                if decode:
+                    message = "Decode is on; escape setting is overridden"
+                else:
+                    message = 'HTML escape set on'
+            else:
+                escape = False
+                message = 'HTML escape set off'
+        else:
+            escape = tblock.escape
+
+        if pagenumber:
+            call_data['pchange'] = editpage.edit_page_textblock(project, pagenumber, pchange, location, textref, failmessage, escape, linebreaks, decode)
+        else:
+            call_data['schange'] = editsection.edit_section_textblock(project, section_name, schange, location, textref, failmessage, escape, linebreaks, decode)
+
+    except ServerError as e:
+        raise FailPage(e.message)
+
     call_data['status'] = message
 
 
 def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the insert a textblock ref page"
 
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Insert TextBlock"
-
-    # so header text and navigation done, now continue with the page contents
+    if 'page_number' in call_data:
+        page_data[("adminhead","page_head","large_text")] = "Insert TextBlock in page %s" % (call_data['page_number'],)
+    elif 'section_name' in call_data:
+        page_data[("adminhead","page_head","large_text")] = "Insert TextBlock in section %s" % (call_data['section_name'],)
+    else:
+        raise FailPage("Page/section not identified")
 
     page_data[("linebreaks","radio_values")]=['ON', 'OFF']
     page_data[("linebreaks","radio_text")]=['On', 'Off']
@@ -194,115 +226,106 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
 def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates the textblock ref"
 
-    editedproj = call_data['editedproj']
-
-    # get data
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    location = bits.location
-    part = bits.part
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if part is None:
-        raise FailPage("Part not identified")
-
-    # label used in GoTo jump to return to the point where item is inserted
-    label = None
-
-    if page is not None:
-        if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
-            raise FailPage(message = "Invalid page")
-        # page to go back to
-        if bits.part_top == 'head':
-            label = "page_head"   # label to 3320
-        elif bits.part_top == 'body':
-            label = "page_body"   # label to 3340
-        elif bits.part_top == 'svg':
-            label = "page_svg"   # label to 3420
-
-    if section is not None:
-        if bits.part_top == bits.section_name:
-            label = "back_to_section"   # label to 7040
-
-    # could be a widget container
-    if label is None:
-        if (widget is not None) and bits.part_top == widget.name: 
-            label = "back_to_container"   # label to 44704
-        else:
-            raise FailPage("Invalid location")
+    project = call_data['editedprojname']
 
     # create the textblock
     if 'textblock_ref' not in call_data:
         raise FailPage(message="Invalid reference")
     if _TB.search(call_data["textblock_ref"]):
         raise FailPage(message="Invalid reference")
-
-    textblock = tag.TextBlock(textref=call_data["textblock_ref"])
+    textref = call_data['textblock_ref']
 
     if 'textblock_failed' in call_data:
-        textblock.failmessage = call_data["textblock_failed"]
+        failmessage = call_data["textblock_failed"]
+    else:
+        failmessage = "TextBlock not found"
 
     if 'linebreaks' in call_data:
         if call_data['linebreaks'] == 'ON':
-            textblock.linebreaks = True
+            linebreaks = True
         else:
-            textblock.linebreaks = False
+            linebreaks = False
+    else:
+        linebreaks = True
 
     if 'setescape' in call_data:
         if call_data['setescape'] == 'ON':
-            textblock.escape = True
+            escape = True
         else:
-            textblock.escape = False
-
-    if 'decode' in call_data:
-        if call_data['decode'] == 'ON':
-            textblock.decode = True
-        else:
-            textblock.decode = False
-
-    location_integers = [int(i) for i in location[2]]
-
-    if (location[1] is not None) and (widget.is_container_empty(location[1])):
-        # textblock is to be set as the first item in a container
-        new_location = (location[0], location[1], (0,))
-        utils.set_part(textblock, 
-                       new_location,
-                       page=page,
-                       section=section,
-                       section_name=bits.section_name,
-                       widget=widget,
-                       failmessage='Part to have textblock inserted not identified')
-    elif isinstance(part, tag.Part) and (not isinstance(part, widgets.Widget)):
-        # insert at position 0 inside the part
-        part.insert(0,textblock)
-        new_location = (location[0], location[1], tuple(location_integers + [0]))
-    elif (location[1] is not None) and (len(location_integers) == 1):
-        # part is inside a container with parent being the containing div
-        # so append after the part by inserting at the right place in the container
-        position = location_integers[0] + 1
-        widget.insert_into_container(location[1], position, textblock)
-        new_location = (location[0], location[1], (position,))
+            escape = False
     else:
-        # do an append, rather than an insert
-        # get parent part
-        parent_part = utils.part_from_location(page,
-                                               section,
-                                               bits.section_name,
-                                               location_string=location[0],
-                                               container=location[1],
-                                               location_integers=location_integers[:-1])
-        # find location digit
-        loc = location_integers[-1] + 1
-        # insert textblock at loc in parent_part
-        parent_part.insert(loc,textblock)
-        new_location = (location[0], location[1], tuple(location_integers[:-1] + [loc]))
+        escape = True
 
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section, widget_name='')
-    call_data['status'] = "TextBlock inserted"
-    raise GoTo(target = label, clear_submitted=True)
+    ##### decode option not currently used when creating a new textblock
+    #if 'decode' in call_data:
+    #    if call_data['decode'] == 'ON':
+    #        decode = True
+    #    else:
+    #        decode = False
+    #else:
+    #    decode = False
+
+    try:
+        part_top, container, location_integers = call_data['location']
+
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+            page_info = item_info(project, pagenumber)
+            if page_info is None:
+                raise FailPage("Page to edit not identified")
+
+            if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
+                raise FailPage("Page not identified")
+
+            # page to go back to
+            target = None
+            if part_top == 'head':
+                target = "page_head"
+            elif part_top == 'body':
+                target = "page_body"
+            elif part_top == 'svg':
+                target = "page_svg"
+
+            if container is not None:
+                target = "back_to_container"
+
+            if target is None:
+                raise FailPage("Invalid location")
+
+            call_data['pchange'], new_location = editpage.create_textblock_in_page(project,
+                                                                                     pagenumber,
+                                                                                     call_data['pchange'],
+                                                                                     call_data['location'],
+                                                                                     textref,
+                                                                                     failmessage,
+                                                                                     escape,
+                                                                                     linebreaks)
+
+        elif 'section_name' in call_data:
+            section_name = call_data['section_name']
+
+            if container is not None:
+                target = "back_to_container"
+            else:
+                target = "back_to_section"
+
+            call_data['schange'], new_location = editsection.create_textblock_in_section(project,
+                                                                                          section_name,
+                                                                                          call_data['schange'],
+                                                                                          call_data['location'],
+                                                                                          textref,
+                                                                                          failmessage,
+                                                                                          escape,
+                                                                                          linebreaks)
+
+        else:
+            raise FailPage("Either a page or section must be specified")
+
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    call_data['location'] = new_location
+    call_data['status'] = 'New TextBlock inserted'
+    raise GoTo(target = target, clear_submitted=True)
+

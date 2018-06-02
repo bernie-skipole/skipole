@@ -36,6 +36,8 @@ from . import project_loaded, item_info, get_proj_page, del_location_in_page, in
 
 PageElement = namedtuple('PageElement', ['project', 'pagenumber', 'pchange', 'location', 'page_part', 'part_type', 'tag_name', 'brief', 'hide_if_empty', 'attribs'])
 
+PageTextBlock = namedtuple('PageTextBlock', ['project', 'pagenumber', 'pchange', 'location', 'textref', 'failmessage', 'escape', 'linebreaks', 'decode'])
+
 
 def pagechange(project, pagenumber):
     "Returns None if pagenumber is not found (or is a folder), otherwise returns the page change uuid"
@@ -278,7 +280,7 @@ def create_part_in_page(project, pagenumber, pchange, location, json_data):
 
 
 def page_element(project, pagenumber, pchange, location):
-    """Return a element tuple for the html element at the given location"""
+    """Return a PageElement tuple for the html element at the given location"""
 
     proj, page = get_proj_page(project, pagenumber, pchange)
     part = page.location_item(location)
@@ -385,4 +387,35 @@ def edit_page_comment(project, pagenumber, pchange, location, text):
     return proj.save_page(page)
 
 
+def page_textblock(project, pagenumber, pchange, location):
+    """Return a PageTextBlock tuple for the textblock at the given location"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    tblock = page.location_item(location)
+    if not isinstance(tblock, tag.TextBlock):
+        raise ServerError("Item at this location is not identified as a TextBlock")
+    return PageTextBlock(project, pagenumber, pchange, location, tblock.textref, tblock.failmessage, tblock.escape, tblock.linebreaks, tblock.decode)
+
+
+def create_textblock_in_page(project, pagenumber, pchange, location, textref, failmessage, escape, linebreaks, decode=False):
+    "Creates a new textblock in the given page, returns the new pchange and location"
+    tblock = tag.TextBlock(textref=textref, failmessage=failmessage, escape=escape, linebreaks=linebreaks, decode=decode)
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, tblock)
+    return new_pchange, new_location
+
+
+def edit_page_textblock(project, pagenumber, pchange, location, textref, failmessage, escape, linebreaks, decode):
+    """Given an textblock at project, pagenumber, location
+       sets the textblock values, returns page change uuid """
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    tblock = page.location_item(location)
+    if not isinstance(tblock, tag.TextBlock):
+        raise ServerError("Item at this location is not identified as a TextBlock")
+    tblock.textref = textref
+    tblock.failmessage = failmessage
+    tblock.escape = escape
+    tblock.linebreaks = linebreaks
+    tblock.decode = decode
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
 
