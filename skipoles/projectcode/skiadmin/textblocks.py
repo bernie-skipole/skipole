@@ -45,9 +45,9 @@ class AccessTextBlocks(object):
     def __init__(self, project, projectfiles, default_language):
         """The project imports this module and creates an instance of this class, and uses it to read the
            text of TextBlocks.
-           As default, TextBlocks are stored in JSON files beneath the directory
+           As default, the text is stored in JSON files beneath the directory
            projectfiles/project/data/textblocks_json
-           However if you wish to store them elsewhere, such as in a database somewhere, you can
+           However if you wish to store the text elsewhere, such as in a database somewhere, you can
            re-write this class.
 
            Doing so may make your project less portable, and editing textblocks with skiadmin
@@ -61,14 +61,14 @@ class AccessTextBlocks(object):
         # the self.default_language attribute is expected to exist
         self.default_language = default_language
         # as is a set of available languages
-        self.languages = set()
+        self._languages = set()
  
-        # this implementation holds all textblocks in memory in this dictionary of textblocks with keys
+        # this implementation holds text in memory in this dictionary with keys
         # of the tuple (reference,language) and values being the text
         self._textblocks = {}
         # dictionary of textrefs with keys of reference and values being a list of languages for that textref
         self._textrefs = {}
-        # read the json files from this directory and populate the above two dictionaries and self.languages
+        # read the json files from this directory and populate the above two dictionaries and self._languages
         self._textblocks_json_directory = os.path.join(projectfiles, project, "data", "textblocks_json")
         # for each language file in the directory, add it to the dictionary
         dir_contents = os.listdir(self._textblocks_json_directory)
@@ -80,7 +80,7 @@ class AccessTextBlocks(object):
                 continue
             # filenames refer to languages, such as en.json, de.json
             language = filename[:-5].lower()
-            self.languages.update([language])
+            self._languages.update([language])
             with open(filepath, 'r') as fp:
                 textblocks_dict = json.load(fp)
                 for textref, text in textblocks_dict.items():
@@ -94,6 +94,11 @@ class AccessTextBlocks(object):
         for langlist in self._textrefs.values():
             langlist.sort()
 
+
+    @property
+    def languages(self):
+        "Property which is a set of available languages"
+        return self._languages
 
     def get_textrefs(self):
         "Returns a list of the textrefs"
@@ -112,7 +117,6 @@ class AccessTextBlocks(object):
         if (textref,language) in self._textblocks:
             return self._textblocks[(textref,language)]
 
-
     def get_decoded_text(self, textref, lang):
         """If the text of a Textblock is encoded in any special way, decode it here.
            this example decodes references ending with .rst as restructured text to html,
@@ -127,7 +131,6 @@ class AccessTextBlocks(object):
             return parts['html_body']
         else:
             return text
-
 
     def get_text(self, textref, lang):
         """Gets the text from the textblock, trying nearest language, returns None if not found
@@ -170,7 +173,7 @@ class AccessTextBlocks(object):
             self.del_text(textref, language)
             return
         self._textblocks[textref, language] = text
-        self.languages.update([language])
+        self._languages.update([language])
         if textref in self._textrefs:
             langlist = self._textrefs[textref]
             if language not in langlist:
@@ -211,7 +214,7 @@ class AccessTextBlocks(object):
             if language in langlist:
                 break
         else:
-            self.languages.discard(language)
+            self._languages.discard(language)
 
     def del_textblock(self, textref):
         "Deletes the textblock, all languages"
@@ -234,7 +237,7 @@ class AccessTextBlocks(object):
             # remove existing json files
             shutil.rmtree(self._textblocks_json_directory)
         os.mkdir(self._textblocks_json_directory)
-        for language in self.languages:
+        for language in self._languages:
             filepath = os.path.join(self._textblocks_json_directory, language + '.json')
             lang = (language, self.default_language)
             json_dict = {}
