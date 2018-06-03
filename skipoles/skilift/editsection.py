@@ -27,12 +27,18 @@
 
 """Functions for editing a section"""
 
+import re
+
 from collections import namedtuple, OrderedDict
 
 from ..ski import skiboot, tag, read_json
 from ..ski.excepts import ServerError
 
 from . import project_loaded, get_proj_section, get_proj_page, insert_item_in_page, del_location_in_section, insert_item_in_section
+
+
+# a search for anything none-alphanumeric and not an underscore
+_AN = re.compile('[^\w]')
 
 
 PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
@@ -266,6 +272,31 @@ def move_location(project, section_name, from_location, to_location):
 
     # and move this item by calling this function again
     move_location(project, section_name, (section_name, None, from_location_ints), (section_name, None, to_location_ints))
+
+
+def create_new_section(project, section_name, tag_name, brief):
+    "Create a new section, return new section change on success, raises a ServerError on failure"
+    # raise error if invalid project
+    if not section_name:
+        raise ServerError(message = "Section name missing")
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError(message="The edited project is invalid")
+    section_list = proj.list_section_names()
+    if section_name in section_list:
+        raise ServerError(message = "Section name already exists")
+    section_lower_name = section_name.lower()
+    if (section_lower_name == 'body') or (section_lower_name == 'head') or (section_lower_name == 'svg'):
+        raise ServerError(message="Unable to create the section, the name given is reserved")
+    if _AN.search(section_name):
+        raise ServerError(message="Invalid section name, alphanumeric and underscore only")
+    if section_name[0] == '_':
+        raise ServerError(message="Invalid section name, must not start with an underscore")
+    if section_name.isdigit():
+        raise ServerError(message="Unable to create the section, the name must include some letters")
+    # creates and adds the section
+    return proj.add_section(section_name, tag.Section(tag_name=tag_name, brief=brief))
 
 
 def delete_section(project, section_name):
