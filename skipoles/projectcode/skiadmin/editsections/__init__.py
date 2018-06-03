@@ -46,3 +46,4 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
 
 
     raise FailPage("submit_list module string %s not recognised" % (submit_list[1],))
+

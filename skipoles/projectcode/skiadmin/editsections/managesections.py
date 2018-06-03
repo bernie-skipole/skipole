@@ -215,40 +215,23 @@ def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict
 
 def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Create new section"
-
-    editedproj = call_data['editedproj']
-
+    project = call_data['editedprojname']
     # get new section name
-
     if ("newsection", "section_name") not in call_data:
         raise FailPage(message = "Section name missing from call_data")
     section_name = call_data["newsection", "section_name"]
-    if not section_name:
-        raise FailPage(message = "Section name missing")
-    section_lower_name = section_name.lower()
-    if (section_lower_name == 'body') or (section_lower_name == 'head') or (section_lower_name == 'svg'):
-        raise FailPage(message="Unable to create the section, the name given is reserved")
-    if _AN.search(section_name):
-        raise FailPage(message="Invalid section name, alphanumeric and underscore only")
-    if section_name[0] == '_':
-        raise FailPage(message="Invalid section name, must not start with an underscore")
-    if section_name.isdigit():
-        raise FailPage(message="Unable to create the section, the name must include some letters")
-    section_list = editedproj.list_section_names()
-    if section_name in section_list:
-        raise FailPage(message = "Section name already exists", widget="new")
-
-    tag_name = call_data['new_tag', 'input_text']
-    tag_brief = call_data['description', 'input_text']
-
-    # adds a section consisting of a div
-    section_part = tag.Section(tag_name=tag_name, brief=tag_brief)
+    if ('new_tag', 'input_text') in call_data:
+        tag_name = call_data['new_tag', 'input_text']
+    else:
+        tag_name = 'div'
+    if ('description', 'input_text') in call_data:
+        brief = call_data['description', 'input_text']
+    else:
+        brief = "New Section"
     try:
-        editedproj.add_section(section_name, section_part)
+        editsection.create_new_section(project, section_name, tag_name, brief)
     except (ValidateError, ServerError) as e:
         raise FailPage(message = e.message)
-
-    # new section created
     utils.no_ident_data(call_data)
     call_data['status'] = 'Section %s created' % (section_name,)
 
@@ -292,9 +275,9 @@ def downloadsection(caller_ident, ident_list, submit_list, submit_dict, call_dat
 def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Populate the page which creates a new section"
     project = call_data['editedprojname']
-    if 'section_name' not in call_data:
+    if 'new_section_name' not in call_data:
         raise FailPage(message = "new section name missing")
-    section_name = call_data["section_name"]
+    section_name = call_data["new_section_name"]
     if not section_name:
         raise FailPage(message = "Section name missing")
     section_lower_name = section_name.lower()

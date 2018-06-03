@@ -1094,6 +1094,16 @@ false,
 ]
 ]
 }
+],
+"zoom": [
+"Section",
+{
+"tag_name": "div",
+"brief": "hi New section zoom",
+"show": true,
+"hide_if_empty": false,
+"parts": []
+}
 ]
 },
 "RootFolder": {
@@ -39503,7 +39513,7 @@ false
 "validate_option": false
 },
 "original_fields": {
-"newsection:input_text": "section_name"
+"newsection:input_text": "new_section_name"
 }
 }
 },

@@ -187,7 +187,6 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         # If ok, set module string into call_data
         if session_data['module'] in widget_modules():
             call_data['module'] = session_data['module']
-        
 
     # either a section is being edited, or a folder/page - not both
     if ('section_name' in session_data) and ('page' in session_data):
@@ -284,7 +283,7 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         elif submit_list[0] == 'editvalidators':
             return editvalidators.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
-    raise FailPage("submit_data function not found for responder %s,%s" % ident_list[-1])
+    raise ServerError("submit_data function not found for responder %s,%s" % ident_list[-1])
 
 
 def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
