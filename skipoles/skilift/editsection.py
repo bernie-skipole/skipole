@@ -368,7 +368,15 @@ def section_element(project, section_name, schange, location):
         raise ServerError("The item at the location must be an html element")
 
     if (part_type != "Part") and (part_type != "ClosedPart"):
-        raise ServerError("The item at the location must be an html element")
+        # part_type is normally a Part or ClosedPart, but may also be a Section
+        if (part_type == "Section"):
+            # however, in the special case where it is a section, there must be no location digits
+            # a section cannot contain another section
+            if location[2]:
+                raise ServerError("The item at the location cannot be a Section!")
+        else:
+            # Not a section either
+            raise ServerError("The item at the location must be an html element")
 
     tag_name = part.tag_name
     brief = part.brief

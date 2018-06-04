@@ -1094,16 +1094,6 @@ false,
 ]
 ]
 }
-],
-"zoom": [
-"Section",
-{
-"tag_name": "div",
-"brief": "hi New section zoom",
-"show": true,
-"hide_if_empty": false,
-"parts": []
-}
 ]
 },
 "RootFolder": {
