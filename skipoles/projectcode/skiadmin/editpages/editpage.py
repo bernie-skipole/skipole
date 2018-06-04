@@ -1204,7 +1204,7 @@ def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if len(location_list) == 1:
         # no location integers, so location_list[0] is the location_string
         # edit the top location_string html part
-        call_data['part'] = part
+        call_data['part_tuple'] = part_info(editedprojname, pagenumber, None, [location_list[0], None, ()])
         raise GoTo(target = 53007, clear_submitted=True)
 
     location_string = location_list[0]
