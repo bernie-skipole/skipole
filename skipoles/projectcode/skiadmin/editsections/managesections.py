@@ -346,6 +346,7 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     part = call_data['editdom', 'domtable', 'contents']
 
     # so part is section name with location string of integers
+    # though string of integers may be missing if this is the section part itself
 
     # create location which is a tuple or list consisting of three items:
     # a string of section name
@@ -354,9 +355,9 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     location_list = part.split('-')
     # first item should be a string, rest integers
     if len(location_list) == 1:
-        # no location integers, so location_list[0] is the section name
+        # no location integers, so location_list[0] is the section name, location_integers is ()
         # edit the top section html part
-        call_data['part'] = part
+        call_data['part_tuple'] = part_info(editedprojname, None, location_list[0], [location_list[0], None, ()])
         raise GoTo(target = 53007, clear_submitted=True)
 
     section_name = location_list[0]
