@@ -40173,6 +40173,41 @@ false
 "this newer text"
 ],
 [
+"Widget",
+{
+"class": "inputforms.Form1",
+"name": "xx",
+"brief": "xx",
+"fields": {
+"action": "",
+"clear_error": false,
+"container_class": "",
+"enctype": "",
+"error_class": "",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": []
+}
+]
+]
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
