@@ -35,9 +35,10 @@ from collections import namedtuple
 from ..ski import widgets, dump_project
 from ..ski.excepts import ServerError
 
-from . import widget_info, fromjson, insert_item_in_page, insert_item_in_section
+from . import widget_info, fromjson, insert_item_in_page, insert_item_in_section, get_proj_page, get_proj_section
 
-WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'reference', 'fields', 'containers', 'illustration'])
+WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'reference', 'fields', 'containers', 'illustration',
+                                                     'fields_single', 'fields_list', 'fields_table', 'fields_dictionary'])
 
 
 # 'fields' is a list of lists: [ field arg, field ref]
@@ -55,10 +56,15 @@ def widgets_in_module(module_name):
     for classname,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
         widget_list.append( WidgetDescription( module_name,
                                                classname,
+                                               obj.brief,
                                                obj.description_ref(),
                                                obj.arg_references(),
                                                obj.len_containers(),
-                                               obj.description()
+                                               obj.description(),
+                                               obj.field_arguments_single(),
+                                               obj.field_arguments_list(),
+                                               obj.field_arguments_table(),
+                                               obj.field_arguments_dictionary()
                                                ) )
     return widget_list
 
@@ -128,10 +134,15 @@ def page_widget_description(project, pagenumber, pchange, name):
         raise ServerError("Item at this location is not identified as a Widget")
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
+                              widget.brief,
                               widget.description_ref(),
                               widget.arg_references(),
                               widget.len_containers(),
-                              widget.description()
+                              widget.description(),
+                              widget.field_arguments_single(),
+                              widget.field_arguments_list(),
+                              widget.field_arguments_table(),
+                              widget.field_arguments_dictionary()
                                )
 
 
@@ -143,10 +154,15 @@ def section_widget_description(project, section_name, schange, name):
         raise ServerError("Item at this location is not identified as a Widget")
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
+                              widget.brief,
                               widget.description_ref(),
                               widget.arg_references(),
                               widget.len_containers(),
-                              widget.description()
+                              widget.description(),
+                              widget.field_arguments_single(),
+                              widget.field_arguments_list(),
+                              widget.field_arguments_table(),
+                              widget.field_arguments_dictionary()
                                )
 
 

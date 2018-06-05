@@ -796,6 +796,73 @@ class Widget(tag.Part):
         arg_dict.sort(key=lambda row: row[0])
         return args, arg_list, arg_table, arg_dict
 
+
+    @classmethod
+    def field_arguments_single(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset, cssclass, cssstyle]
+        sorted by field argument"""
+        args = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArg):
+                args.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset, item.cssclass, item.cssstyle] )
+        if 'show' not in cls.arg_descriptions:
+            args.append( ['show', 'widgets.show', 'boolean', False, False, False, False] )
+        if 'widget_class' not in cls.arg_descriptions:
+            args.append( ['widget_class', 'widgets.widget_class', 'cssclass', False, True, True, False] )
+        if 'widget_style' not in cls.arg_descriptions:
+            args.append( ['widget_style', 'widgets.widget_style', 'cssstyle', False, True, False, True] )
+        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
+            args.append( ['show_error', 'widgets.show_error', 'text', False, True, False, False] )
+        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
+            args.append( ['clear_error', 'widgets.clear_error', 'boolean', False, True, False, False] )
+        args.sort(key=lambda row: row[0])
+        return args
+
+
+    @classmethod
+    def field_arguments_list(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset].
+        sorted by field argument"""
+        arg_list = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArgList):
+                arg_list.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset] )
+        if arg_list:
+            arg_list.sort(key=lambda row: row[0])
+        return arg_list
+
+
+    @classmethod
+    def field_arguments_table(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset].
+        sorted by field argument.
+        field type is a list of column types"""
+        arg_table = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArgTable):
+                arg_table.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset] )
+        if arg_table:
+            arg_table.sort(key=lambda row: row[0])
+        return arg_table
+
+
+    @classmethod
+    def field_arguments_dictionary(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset].
+        sorted by field argument"""
+        arg_dict = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArgDict):
+                arg_dict.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset] )
+        if arg_dict:
+            arg_dict.sort(key=lambda row: row[0])
+        return arg_dict
+
+
     @classmethod
     def arg_references(cls):
         """Returns a list of lists: [ field arg, field ref]"""
@@ -1482,6 +1549,73 @@ class ClosedWidget(tag.ClosedPart):
         arg_table.sort(key=lambda row: row[0])
         arg_dict.sort(key=lambda row: row[0])
         return args, arg_list, arg_table, arg_dict
+
+
+    @classmethod
+    def field_arguments_single(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset, cssclass, cssstyle]
+        sorted by field argument"""
+        args = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArg):
+                args.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset, item.cssclass, item.cssstyle] )
+        if 'show' not in cls.arg_descriptions:
+            args.append( ['show', 'widgets.show', 'boolean', False, False, False, False] )
+        if 'widget_class' not in cls.arg_descriptions:
+            args.append( ['widget_class', 'widgets.widget_class', 'cssclass', False, True, True, False] )
+        if 'widget_style' not in cls.arg_descriptions:
+            args.append( ['widget_style', 'widgets.widget_style', 'cssstyle', False, True, False, True] )
+        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
+            args.append( ['show_error', 'widgets.show_error', 'text', False, True, False, False] )
+        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
+            args.append( ['clear_error', 'widgets.clear_error', 'boolean', False, True, False, False] )
+        args.sort(key=lambda row: row[0])
+        return args
+
+
+    @classmethod
+    def field_arguments_list(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset].
+        sorted by field argument"""
+        arg_list = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArgList):
+                arg_list.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset] )
+        if arg_list:
+            arg_list.sort(key=lambda row: row[0])
+        return arg_list
+
+
+    @classmethod
+    def field_arguments_table(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset].
+        sorted by field argument.
+        field type is a list of column types"""
+        arg_table = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArgTable):
+                arg_table.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset] )
+        if arg_table:
+            arg_table.sort(key=lambda row: row[0])
+        return arg_table
+
+
+    @classmethod
+    def field_arguments_dictionary(cls):
+        """Returns a list of lists.
+        The inner list consists of: [ field arg, field ref, field type, valdt, jsonset].
+        sorted by field argument"""
+        arg_dict = []
+        for arg, item in cls.arg_descriptions.items():
+            if isinstance(item, FieldArgDict):
+                arg_dict.append( [arg, cls.description_ref(dataarg=arg), item.field_type, item.valdt, item.jsonset] )
+        if arg_dict:
+            arg_dict.sort(key=lambda row: row[0])
+        return arg_dict
+
 
     @classmethod
     def arg_references(cls):
