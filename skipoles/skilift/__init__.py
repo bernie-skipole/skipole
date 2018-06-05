@@ -696,9 +696,6 @@ def insert_item_in_section(project, section_name, schange, location, item):
         name = item.name
         if name in section.widgets:
             raise ServerError(message="The name clashes with a widget name already in the section")
-        if name == section.name:
-            raise ServerError(message="Cannot use the same name as the containing section")
-
     location_string, container, location_integers = location
     location_integers = [int(i) for i in location[2]]
     # location string is either a widget name, or the section name

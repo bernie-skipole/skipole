@@ -70,7 +70,7 @@ class ParentPart(object):
     "The parent of Part and Closedpart objects"
 
     def __init__(self, tag_name, attribs, show, brief):
-        # self.name is only set if a part is also a section or a widget
+        # self.name is only set if a part is also a widget
         self.name=None
 
         self.tag_name = tag_name
