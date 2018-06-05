@@ -197,7 +197,7 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
 
     if 'page_number' in call_data:
         try:
-            call_data['pchange'] =  editwidget.create_new_widget_in_page(project,
+            call_data['pchange'], new_location =  editwidget.create_new_widget_in_page(project,
                                                                          call_data['page_number'],
                                                                          call_data['pchange'],
                                                                          call_data['location'],
@@ -213,7 +213,7 @@ def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_d
 
     if 'section_name' in call_data:
         try:
-            call_data['schange'] =  editwidget.create_new_widget_in_section(project,
+            call_data['schange'], new_location =  editwidget.create_new_widget_in_section(project,
                                                                             call_data['section_name'],
                                                                             call_data['schange'],
                                                                             call_data['location'],
