@@ -40176,8 +40176,8 @@ false
 "Widget",
 {
 "class": "inputforms.Form1",
-"name": "xx",
-"brief": "xx",
+"name": "xarg",
+"brief": "xx description",
 "fields": {
 "action": "",
 "clear_error": false,

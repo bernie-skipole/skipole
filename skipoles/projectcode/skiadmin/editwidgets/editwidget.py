@@ -77,7 +77,6 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     project = call_data['editedprojname']
 
-
     section_name = None
     pagenumber = None
     if 'section_name' in call_data:
@@ -234,60 +233,51 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
 def set_widget_params(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets widget name and brief"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
-    bits = utils.get_bits(call_data)
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if page:
-        call_data['page_number'] = page.ident.num
-    if bits.section_name:
-        call_data['section_name'] = bits.section_name
-
-
-    if widget is None:
-        raise FailPage("Widget not identified")
+    new_name = None
+    brief = None
 
     if 'new_widget_name' in call_data:
         new_name = call_data['new_widget_name']
-        if not new_name:
-            raise FailPage("Invalid name")
-        new_lower_name = new_name.lower()
-        if (new_lower_name == 'body') or (new_lower_name == 'head') or (new_lower_name == 'svg')  or (new_lower_name == 'show_error'):
-            raise FailPage(message="Unable to rename the widget, the name given is reserved")
-        if _AN.search(new_name):
-            raise FailPage(message="Invalid name, alphanumeric and underscore only")
-        if new_name[0] == '_':
-            raise FailPage(message="Invalid name, must not start with an underscore")
-        if new_name.isdigit():
-            raise FailPage(message="Unable to rename the widget, the name must include some letters")
-        if page is not None:
-            if new_name in page.widgets:
-                raise FailPage("Duplicate widget name in the page")
-            if new_name in page.section_places:
-                raise FailPage("This name clashes with a section alias within this page")
-        else:
-            if new_name in section.widgets:
-                raise FailPage("Duplicate widget name in the section")
-            if new_name == bits.section_name:
-                raise FailPage("Cannot use the same name as the containing section")
-
-        widget.name = new_name
-        utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-        call_data['status'] = "Widget name changed"
     elif 'widget_brief' in call_data:
-        widget.brief = call_data['widget_brief']
-        utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-        call_data['status'] = "Widget description changed"
+        brief = call_data['widget_brief']
     else:
-        raise FailPage("Invalid entry")
-    call_data['widget_name'] = widget.name
+        raise FailPage(message="No new name or brief given")
+    
+    try:
+        if section_name:
+            if new_name:
+                call_data['schange'] = editwidget.rename_section_widget(project, section_name, call_data['schange'], widget_name, new_name)
+                call_data['status'] = "Widget name changed"
+                call_data['widget_name'] = new_name
+            else:
+                call_data['schange'] = editwidget.new_brief_in_section_widget(project, section_name, call_data['schange'], widget_name, brief)
+                call_data['status'] = "Widget brief changed"
+        else:
+            if new_name:
+                call_data['pchange'] = editwidget.rename_page_widget(project, pagenumber, call_data['pchange'], widget_name, new_name)
+                call_data['status'] = "Widget name changed"
+                call_data['widget_name'] = new_name
+            else:
+                call_data['pchange'] = editwidget.new_brief_in_page_widget(project, pagenumber, call_data['pchange'], widget_name, brief)
+                call_data['status'] = "Widget brief changed"
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

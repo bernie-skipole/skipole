@@ -27,7 +27,7 @@
 
 """Functions for editing a widget"""
 
-import pkgutil, importlib, inspect
+import pkgutil, importlib, inspect, re
 
 from collections import namedtuple
 
@@ -36,6 +36,10 @@ from ..ski import widgets, dump_project
 from ..ski.excepts import ServerError
 
 from . import widget_info, fromjson, insert_item_in_page, insert_item_in_section, get_proj_page, get_proj_section
+
+
+# a search for anything none-alphanumeric and not an underscore
+_AN = re.compile('[^\w]')
 
 WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'reference', 'fields', 'containers', 'illustration',
                                                      'fields_single', 'fields_list', 'fields_table', 'fields_dictionary'])
@@ -71,6 +75,17 @@ def widgets_in_module(module_name):
 
 def _create_new_widget(project, module_name, widget_classname, name, brief):
     "Creates a new widget"
+    if not name:
+        raise ServerError("Invalid name")
+    lower_name = name.lower()
+    if (lower_name == 'body') or (lower_name == 'head') or (lower_name == 'svg')  or (lower_name == 'show_error'):
+        raise ServerError(message="Unable to create the widget, the name given is reserved")
+    if _AN.search(name):
+        raise ServerError(message="Invalid name, alphanumeric and underscore only")
+    if name[0] == '_':
+        raise ServerError(message="Invalid name, must not start with an underscore")
+    if name.isdigit():
+        raise ServerError(message="Unable to create the widget, the name must include some letters")
     modules_tuple = widget_modules()
     if module_name not in modules_tuple:
         raise FailPage("Module not identified")
@@ -113,7 +128,7 @@ def page_widget(project, pagenumber, pchange, name):
     proj, page = get_proj_page(project, pagenumber, pchange)
     widget = page.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Item at this location is not identified as a Widget")
+        raise ServerError("Widget not found")
     return dump_project.widget_to_OD(project, widget)
 
 
@@ -122,7 +137,7 @@ def section_widget(project, section_name, schange, name):
     proj, section = get_proj_section(project, section_name, schange)
     widget = section.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Item at this location is not identified as a Widget")
+        raise ServerError("Widget not found")
     return dump_project.widget_to_OD(project, widget)
 
 
@@ -131,7 +146,7 @@ def page_widget_description(project, pagenumber, pchange, name):
     proj, page = get_proj_page(project, pagenumber, pchange)
     widget = page.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Item at this location is not identified as a Widget")
+        raise ServerError("Widget not found")
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
                               widget.brief,
@@ -151,7 +166,7 @@ def section_widget_description(project, section_name, schange, name):
     proj, section = get_proj_section(project, section_name, schange)
     widget = section.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Item at this location is not identified as a Widget")
+        raise ServerError("Widget not found")
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
                               widget.brief,
@@ -165,6 +180,85 @@ def section_widget_description(project, section_name, schange, name):
                               widget.field_arguments_dictionary()
                                )
 
+
+def rename_page_widget(project, pagenumber, pchange, name, new_name):
+    """Given a widget at project, pagenumber, with name 
+       sets a new name, returns page change uuid """
+    if not new_name:
+        raise ServerError("Invalid name")
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if name == new_name:
+        raise ServerError("Name unchanged")
+    new_lower_name = new_name.lower()
+    if (new_lower_name == 'body') or (new_lower_name == 'head') or (new_lower_name == 'svg')  or (new_lower_name == 'show_error'):
+        raise ServerError(message="Unable to create the widget, the name given is reserved")
+    if _AN.search(new_name):
+        raise ServerError(message="Invalid name, alphanumeric and underscore only")
+    if new_name[0] == '_':
+        raise ServerError(message="Invalid name, must not start with an underscore")
+    if new_name.isdigit():
+        raise ServerError(message="Unable to create the widget, the name must include some letters")
+    if new_name in page.widgets:
+        raise ServerError("Duplicate widget name in the page")
+    if new_name in page.section_places:
+        raise ServerError("This name clashes with a section alias within this page")
+    widget.name = new_name
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def new_brief_in_page_widget(project, pagenumber, pchange, name, brief):
+    """Given a widget at project, pagenumber, with name 
+       sets a new brief, returns page change uuid """
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    widget.brief = brief
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def rename_section_widget(project, section_name, schange, name, new_name):
+    """Given a widget at project, pagenumber, with name 
+       sets a new name, returns page change uuid """
+    if not new_name:
+        raise ServerError("Invalid name")
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if name == new_name:
+        raise ServerError("Name unchanged")
+    new_lower_name = new_name.lower()
+    if (new_lower_name == 'body') or (new_lower_name == 'head') or (new_lower_name == 'svg')  or (new_lower_name == 'show_error'):
+        raise ServerError(message="Unable to create the widget, the name given is reserved")
+    if _AN.search(new_name):
+        raise ServerError(message="Invalid name, alphanumeric and underscore only")
+    if new_name[0] == '_':
+        raise ServerError(message="Invalid name, must not start with an underscore")
+    if new_name.isdigit():
+        raise ServerError(message="Unable to create the widget, the name must include some letters")
+    if new_name in section.widgets:
+        raise ServerError("Duplicate widget name in the section")
+    widget.name = new_name
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def new_brief_in_section_widget(project, section_name, schange, name, brief):
+    """Given a widget at project, section_name, with name 
+       sets a new brief, returns section change uuid """
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    widget.brief = brief
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
 
 
 
