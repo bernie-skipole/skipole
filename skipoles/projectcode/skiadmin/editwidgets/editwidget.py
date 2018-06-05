@@ -139,6 +139,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
             field_value = widget["fields"][arg[0]]
             if field_value is None:
                 field_value = ''
+            elif isinstance(field_value, list):
+                if field_value:
+                    field_value = ','.join(str(val) for val in field_value)
+                else:
+                    field_value = ''
             else:
                 field_value = str(field_value)
             if len(field_value) > 20:
