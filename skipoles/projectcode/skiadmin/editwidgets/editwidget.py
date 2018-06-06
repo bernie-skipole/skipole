@@ -48,6 +48,20 @@ def _field_name(widget, field_argument):
         return name_dict[field_argument]
     return field_argument
 
+def _field_value(widget, field_argument):
+    "Returns value,string value"
+    value = widget["fields"][field_argument]
+    if value is None:
+        field_value = ''
+    elif isinstance(value, list):
+        if value:
+            field_value = ','.join(str(val) for val in value)
+        else:
+            field_value = ''
+    else:
+        field_value = str(value)
+    return value, field_value
+
 
 def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit a widget page"
@@ -135,16 +149,7 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
                 name = "* " + name
                 args_valdt = True
             # field value
-            field_value = widget["fields"][arg[0]]
-            if field_value is None:
-                field_value = ''
-            elif isinstance(field_value, list):
-                if field_value:
-                    field_value = ','.join(str(val) for val in field_value)
-                else:
-                    field_value = ''
-            else:
-                field_value = str(field_value)
+            value,field_value = _field_value(widget, arg[0])
             if len(field_value) > 20:
                 field_value = field_value[:18]
                 field_value += '...'
@@ -283,6 +288,164 @@ def set_widget_params(caller_ident, ident_list, submit_list, submit_dict, call_d
 def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit a widget field page"
 
+    project = call_data['editedprojname']
+
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
+
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
+
+    # Fill in header
+
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
+
+    try:
+        if section_name:
+            widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
+            widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
+        else:
+            widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
+            widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
+    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
+
+
+    # create dictionaries of {field_arg : field_datalist }
+    fields_single = { arg[0]:arg for arg in widgetdescription.fields_single } # [ field arg, field ref, field type, valdt, jsonset, cssclass, cssstyle]
+    fields_list = { arg[0]:arg for arg in widgetdescription.fields_list }  # [ field arg, field ref, field type, valdt, jsonset]
+    fields_table = { arg[0]:arg for arg in widgetdescription.fields_table } # [ field arg, field ref, field type, valdt, jsonset]
+    fields_dictionary = { arg[0]:arg for arg in widgetdescription.fields_dictionary } # [ field arg, field ref, field type, valdt, jsonset]
+
+    if field_arg in fields_single:
+        field_datalist = fields_single[field_arg]
+    elif field_arg in fields_list:
+        field_datalist = fields_list[field_arg]
+    elif field_arg in fields_table:
+        field_datalist = fields_table[field_arg]
+    elif field_arg in fields_dictionary:
+        field_datalist = fields_dictionary[field_arg]
+    else:
+        raise FailPage("Field not identified")
+
+    if field_datalist[4]:
+        page_data[('json_enabled','para_text')] = "JSON Enabled : Yes"
+    else:
+        page_data[('json_enabled','para_text')] = "JSON Enabled : No"
+
+    if field_arg in fields_single:
+        if field_datalist[5] or field_datalist[6]:
+            default_value = skilift.fromjson.get_widget_default_field_value(project, widgetdescription.modulename, widgetdescription.classname, field_arg)
+            if default_value:
+                page_data[('field_default','para_text')] = "Default value : " + default_value
+                page_data[('field_default','show')] = True
+
+    field_name = _field_name(widget, field_arg)
+    page_data[("adminhead","page_head","large_text")] = "(\'%s\',\'%s\')" % (widget_name, field_name)
+    page_data[('show_field_name','para_text')] = "Field name : %s" % (field_name,)
+
+    value, field_value = _field_value(widget, field_arg)
+
+    # show the textblock description with .full, or if it doesnt exist, without the .full
+    full_textref = field_datalist[1] + '.full'   # the field reference string
+    adminaccesstextblocks = skilift.get_accesstextblocks(skilift.admin_project())
+
+    if adminaccesstextblocks.textref_exists(full_textref):
+        page_data[('widget_field_textblock','textblock_ref')] = full_textref
+    else:
+        page_data[('widget_field_textblock','textblock_ref')] = field_datalist[1]
+    page_data[('field_name','input_text')] = field_name
+
+    replace_strings = [widget_name+'\",\"'+field_name]
+
+    if field_arg in fields_single:
+        if field_datalist[2] == 'boolean':
+            page_data[("field_submit",'show')] = True
+            page_data[("boolean_field_value", "radio_checked")] = value
+        else:
+            page_data[("field_value",'show')] = True
+            page_data[("field_value",'input_text')] = field_value
+        if field_datalist[5] or field_datalist[6]:
+            # add button to set given css class or style to defaults.json
+            page_data[("css_default_desc",'show')] = True
+            page_data[("set_field_default",'show')] = True
+        else:
+            page_data[("css_default_desc",'show')] = False
+            page_data[("set_field_default",'show')] = False
+
+        page_data[("show_field_value",'show')] = True
+        page_data[("show_field_value",'para_text')] = "Field value : %s" % (field_value,)
+        page_data[("widget_args_desc",'show')] = True
+        page_data[("widget_args_desc",'replace_strings')] = replace_strings
+    elif field_arg in fields_list:
+        page_data[("widget_arg_list_desc",'show')] = True
+        page_data[("widget_arg_list_desc",'replace_strings')] = replace_strings
+        page_data[("css_default_desc",'show')] = False
+        page_data[("set_field_default",'show')] = False
+    elif field_arg in fields_table:
+        page_data[("widget_arg_table_desc",'show')] = True
+        page_data[("widget_arg_table_desc",'replace_strings')] = replace_strings
+        page_data[("css_default_desc",'show')] = False
+        page_data[("set_field_default",'show')] = False
+    elif field_arg in fields_dictionary:
+        page_data[("widget_arg_dict_desc",'show')] = True
+        page_data[("widget_arg_dict_desc",'replace_strings')] = replace_strings
+        page_data[("css_default_desc",'show')] = False
+        page_data[("set_field_default",'show')] = False
+
+    # Show validators
+    if field_datalist[3]:
+        page_data[("validators_desc",'show')] = True
+        page_data[("validators_desc2",'show')] = True
+        page_data[("add_validator",'show')] = True
+        # create the contents for the validator_table
+        contents = []
+        if ("validators" in widget) and (field_arg in widget["validators"]):
+            val_list = widget["validators"][field_arg]
+            page_data["validator_table:show"] = True
+            max_validator_index = len(val_list) - 1
+            for index,validator in enumerate(val_list):
+                if index:
+                    up = True
+                else:
+                    # first item (index zero) has no up button
+                    up = False
+                if index < max_validator_index:
+                    down = True
+                else:
+                    # last item has no down button
+                    down = False
+                table_pos =  str(index)
+                contents.append([validator['class'], table_pos, table_pos, table_pos, table_pos, True, up, down, True])
+            page_data["validator_table:contents"] = contents
+
+
+    # set field_arg into session call_data
+    call_data['field_arg'] = field_arg
+
+    if 'validx' in call_data:
+        del call_data['validx']
+
+
+
+def oldretrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fills in the edit a widget field page"
+
     editedproj = call_data['editedproj']
 
     bits = utils.get_bits(call_data)
@@ -296,8 +459,8 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # Fill in header
 
-    if 'field' in call_data:
-        field_arg = call_data['field']
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
         if not field_arg:
             raise FailPage("Field not identified")
     elif bits.field_arg is not None:
