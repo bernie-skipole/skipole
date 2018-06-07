@@ -42,10 +42,13 @@ from . import widget_info, fromjson, insert_item_in_page, insert_item_in_section
 _AN = re.compile('[^\w]')
 
 WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'reference', 'fields', 'containers', 'illustration',
-                                                     'fields_single', 'fields_list', 'fields_table', 'fields_dictionary'])
+                                                     'fields_single', 'fields_list', 'fields_table', 'fields_dictionary', 'parent_widget', 'parent_container'])
 
 
 FieldDescription = namedtuple('FieldDescription', ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle'])
+
+
+ContainerInfo = namedtuple('ContainerInfo', ['container', 'container_ref', 'empty'])
 
 
 # 'fields' is a list of lists: [ field arg, field ref]
@@ -67,7 +70,7 @@ def widgets_in_module(module_name):
         fields_dictionary = [ FieldDescription(*fld, False, False) for fld in obj.field_arguments_dictionary() ]
         widget_list.append( WidgetDescription( module_name,
                                                classname,
-                                               obj.brief,
+                                               None,
                                                obj.description_ref(),
                                                obj.arg_references(),
                                                obj.len_containers(),
@@ -75,7 +78,9 @@ def widgets_in_module(module_name):
                                                fields_single,
                                                fields_list,
                                                fields_table,
-                                               fields_dictionary
+                                               fields_dictionary,
+                                               '',
+                                               None
                                                ) )
     return widget_list
 
@@ -158,6 +163,7 @@ def page_widget_description(project, pagenumber, pchange, name):
     fields_list = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_list() ]
     fields_table = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_table() ]
     fields_dictionary = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_dictionary() ]
+    widgetsection_name, parent_widget_name, parent_container = widget.embedded
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
                               widget.brief,
@@ -168,7 +174,9 @@ def page_widget_description(project, pagenumber, pchange, name):
                               fields_single,
                               fields_list,
                               fields_table,
-                              fields_dictionary
+                              fields_dictionary,
+                              parent_widget_name,
+                              parent_container
                                )
 
 
@@ -182,6 +190,7 @@ def section_widget_description(project, section_name, schange, name):
     fields_list = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_list() ]
     fields_table = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_table() ]
     fields_dictionary = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_dictionary() ]
+    widgetsection_name, parent_widget_name, parent_container = widget.embedded
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
                               widget.brief,
@@ -192,7 +201,9 @@ def section_widget_description(project, section_name, schange, name):
                               fields_single,
                               fields_list,
                               fields_table,
-                              fields_dictionary
+                              fields_dictionary,
+                              parent_widget_name,
+                              parent_container
                                )
 
 
@@ -362,8 +373,22 @@ def set_widget_field_value_in_section(project, section_name, schange, widget_nam
     return proj.add_section(section_name, section)
 
 
+def container_in_page(project, pagenumber, pchange, widget_name, container):
+    "Returns a ContainerInfo named tuple"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    return ContainerInfo(container, widget.get_container_ref(container), widget.is_container_empty(container))
 
-        
+
+def container_in_section(project, section_name, schange, widget_name, container):
+    "Returns a ContainerInfo named tuple"
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    return ContainerInfo(container, widget.get_container_ref(container), widget.is_container_empty(container))
 
 
 
