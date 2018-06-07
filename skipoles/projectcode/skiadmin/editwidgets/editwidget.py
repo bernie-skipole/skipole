@@ -489,49 +489,40 @@ def set_field_name(caller_ident, ident_list, submit_list, submit_dict, call_data
 def set_field_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a widget field value"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
-    bits = utils.get_bits(call_data)
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field_arg = bits.field_arg
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if widget is None:
-        raise FailPage("Widget not identified")
-
-    if field_arg is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
 
-    # is this field of class args?
-    field_info = widget.field_arg_info(field_arg)
-    # (field name, field description ref, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
-
-    if not field_info:
-        raise FailPage("Field not identified")
-
-    if field_info[4] != 'args':
-        raise FailPage("Cannot set a value on this field")
-
-    if 'field_value' not in call_data:
-        raise FailPage("Field value not found")
-
-    field_value = call_data['field_value']
-
-    if (field_info[5] == "ident" or field_info[5] == "url") and field_value.isdigit():
-        # The user is inputting a digit as a page ident
-        field_value = editedproj.proj_ident + '_' + field_value
+    if 'field_value' in call_data:
+        field_value = call_data['field_value']
+    else:
+        raise FailPage("New field value not identified")
 
     try:
-        widget.set_field_value(field_arg, field_value)
-    except ValidateError as e:
-        raise FailPage(message=e.message)
+        if section_name:
+            call_data['schange'] = editwidget.set_widget_field_value_in_section(project, section_name, call_data['schange'], widget_name, field_arg, field_value)
+        else:
+            call_data['pchange'] = editwidget.set_widget_field_value_in_page(project, pagenumber, call_data['pchange'], widget_name, field_arg, field_value)
+    except ServerError as e:
+        raise FailPage(e.message)
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
     call_data['status'] = "Field value changed"
 
 
