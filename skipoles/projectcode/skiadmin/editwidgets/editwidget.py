@@ -117,10 +117,14 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page_data[('widget_brief','input_text')] = widgetdescription.brief
 
 
-    args = widgetdescription.fields_single                 # lists of [ field arg, field ref, field type, valdt, jsonset, cssclass, cssstyle]
-    arg_list = widgetdescription.fields_list               # [ field arg, field ref, field type, valdt, jsonset]
-    arg_table = widgetdescription.fields_table             # [ field arg, field ref, field type, valdt, jsonset]
-    arg_dict = widgetdescription.fields_dictionary         # [ field arg, field ref, field type, valdt, jsonset]
+    # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
+    # with items ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
+
+
+    args = widgetdescription.fields_single
+    arg_list = widgetdescription.fields_list
+    arg_table = widgetdescription.fields_table 
+    arg_dict = widgetdescription.fields_dictionary
 
     if arg_list or arg_table or arg_dict:
         page_data[('args_multi','show')] = True
@@ -144,16 +148,16 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     args_content = []
     if args:
         for arg in args:
-            name = _field_name(widget, arg[0])
-            if arg[3]:   
+            name = _field_name(widget, arg.field_arg)
+            if arg.valdt:   
                 name = "* " + name
                 args_valdt = True
             # field value
-            value,field_value = _field_value(widget, arg[0])
+            value,field_value = _field_value(widget, arg.field_arg)
             if len(field_value) > 20:
                 field_value = field_value[:18]
                 field_value += '...'
-            arg_row = [ name, arg[0], '',field_value, arg[1], 'No description for %s' % (arg[1],), '']
+            arg_row = [ name, arg.field_arg, '',field_value, arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
             args_content.append(arg_row)
         page_data[('args','link_table')] = args_content
     else:
@@ -175,11 +179,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     arg_list_content = []
     if arg_list:
         for arg in arg_list:
-            name = _field_name(widget, arg[0])
-            if arg[3]:
+            name = _field_name(widget, arg.field_arg)
+            if arg.valdt:
                 name = "* " + name
                 args_valdt = True
-            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
+            arg_row = [ name, arg.field_arg, '', arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
             arg_list_content.append(arg_row)
         page_data[('arg_list','link_table')] = arg_list_content
     else:
@@ -189,11 +193,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     arg_table_content = []
     if arg_table:
         for arg in arg_table:
-            name = _field_name(widget, arg[0])
-            if arg[3]:
+            name = _field_name(widget, arg.field_arg)
+            if arg.valdt:
                 name = "* " + name
                 args_valdt = True
-            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
+            arg_row = [ name, arg.field_arg, '', arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
             arg_table_content.append(arg_row)
         page_data[('arg_table','link_table')] = arg_table_content
     else:
@@ -203,11 +207,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     arg_dict_content = []
     if arg_dict:
         for arg in arg_dict:
-            name = _field_name(widget, arg[0])
-            if arg[3]:
+            name = _field_name(widget, arg.field_arg)
+            if arg.valdt:
                 name = "* " + name
                 args_valdt = True
-            arg_row = [ name, arg[0], '', arg[1], 'No description for %s' % (arg[1],), '']
+            arg_row = [ name, arg.field_arg, '', arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
             arg_dict_content.append(arg_row)
         page_data[('arg_dict','link_table')] = arg_dict_content
     else:
@@ -325,12 +329,15 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
     page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
 
+    # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
+    # with items ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
 
-    # create dictionaries of {field_arg : field_datalist }
-    fields_single = { arg[0]:arg for arg in widgetdescription.fields_single } # [ field arg, field ref, field type, valdt, jsonset, cssclass, cssstyle]
-    fields_list = { arg[0]:arg for arg in widgetdescription.fields_list }  # [ field arg, field ref, field type, valdt, jsonset]
-    fields_table = { arg[0]:arg for arg in widgetdescription.fields_table } # [ field arg, field ref, field type, valdt, jsonset]
-    fields_dictionary = { arg[0]:arg for arg in widgetdescription.fields_dictionary } # [ field arg, field ref, field type, valdt, jsonset]
+
+    # create dictionaries of {field_arg : namedtuples }
+    fields_single = { arg.field_arg:arg for arg in widgetdescription.fields_single }
+    fields_list = { arg.field_arg:arg for arg in widgetdescription.fields_list }
+    fields_table = { arg.field_arg:arg for arg in widgetdescription.fields_table }
+    fields_dictionary = { arg.field_arg:arg for arg in widgetdescription.fields_dictionary }
 
     if field_arg in fields_single:
         field_datalist = fields_single[field_arg]
@@ -343,13 +350,13 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
     else:
         raise FailPage("Field not identified")
 
-    if field_datalist[4]:
+    if field_datalist.jsonset:
         page_data[('json_enabled','para_text')] = "JSON Enabled : Yes"
     else:
         page_data[('json_enabled','para_text')] = "JSON Enabled : No"
 
     if field_arg in fields_single:
-        if field_datalist[5] or field_datalist[6]:
+        if field_datalist.cssclass or field_datalist.cssstyle:
             default_value = skilift.fromjson.get_widget_default_field_value(project, widgetdescription.modulename, widgetdescription.classname, field_arg)
             if default_value:
                 page_data[('field_default','para_text')] = "Default value : " + default_value
@@ -362,25 +369,25 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
     value, field_value = _field_value(widget, field_arg)
 
     # show the textblock description with .full, or if it doesnt exist, without the .full
-    full_textref = field_datalist[1] + '.full'   # the field reference string
+    full_textref = field_datalist.field_ref + '.full'   # the field reference string
     adminaccesstextblocks = skilift.get_accesstextblocks(skilift.admin_project())
 
     if adminaccesstextblocks.textref_exists(full_textref):
         page_data[('widget_field_textblock','textblock_ref')] = full_textref
     else:
-        page_data[('widget_field_textblock','textblock_ref')] = field_datalist[1]
+        page_data[('widget_field_textblock','textblock_ref')] = field_datalist.field_ref
     page_data[('field_name','input_text')] = field_name
 
     replace_strings = [widget_name+'\",\"'+field_name]
 
     if field_arg in fields_single:
-        if field_datalist[2] == 'boolean':
+        if field_datalist.field_type == 'boolean':
             page_data[("field_submit",'show')] = True
             page_data[("boolean_field_value", "radio_checked")] = value
         else:
             page_data[("field_value",'show')] = True
             page_data[("field_value",'input_text')] = field_value
-        if field_datalist[5] or field_datalist[6]:
+        if field_datalist.cssclass or field_datalist.cssstyle:
             # add button to set given css class or style to defaults.json
             page_data[("css_default_desc",'show')] = True
             page_data[("set_field_default",'show')] = True
