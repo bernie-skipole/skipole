@@ -48,6 +48,7 @@ def _field_name(widget, field_argument):
         return name_dict[field_argument]
     return field_argument
 
+
 def _field_value(widget, field_argument):
     "Returns value,string value"
     value = widget["fields"][field_argument]
@@ -116,10 +117,8 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page_data[('widget_name','input_text')] = widget_name
     page_data[('widget_brief','input_text')] = widgetdescription.brief
 
-
     # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
     # with items ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
-
 
     args = widgetdescription.fields_single
     arg_list = widgetdescription.fields_list
@@ -485,7 +484,6 @@ def set_field_name(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = "Field name changed"
 
 
-
 def set_field_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a widget field value"
 
@@ -615,32 +613,37 @@ def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_
     call_data['widget_name'] = widget_name
     call_data['container'] = container
 
+    project = call_data['editedprojname']
+
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
+
+    try:
+        if section_name:
+            widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
+            widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
+            containerinfo = editwidget.container_in_section(project, section_name, call_data['schange'], widget_name, container)
+        else:
+            widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
+            widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
+            containerinfo = editwidget.container_in_page(project, pagenumber, call_data['pchange'], widget_name, container)
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    # containerinfo is a namedtuple ('container', 'container_ref', 'empty')
+
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name + " container: " + str(container)
 
-    ## these bits may eventually be replaced by skilift api
-
-    editedprojname = call_data['editedprojname']
-    editedproj = skiboot.getproject(editedprojname)
-    section = None
-    page = None
-    if 'section_name' in call_data:
-        section = editedproj.section(call_data['section_name'])
-    elif 'page_number' in call_data:
-        page = editedproj.get_item(call_data['page_number'])  # actual page, not a copy
-    else:
-        raise FailPage(message="No section or page given")
-    if section:
-        widget = section.widgets.get(widget_name)
-    else:
-        widget = page.widgets.get(widget_name)
-    if widget is None:
-        raise FailPage(message="Widget not found")
-
     # so header text and navigation done, now continue with the page contents
-    page_data[('container_description','textblock_ref')] = widget.get_container_ref(container)
-
-    if widget.is_container_empty(container):
+    page_data[('container_description','textblock_ref')] = containerinfo.container_ref
+    if containerinfo.empty:
         # empty container
         page_data[('further_description','para_text')] = "The container is empty. Please choose an item to insert."
         # do not show the container table
@@ -654,11 +657,11 @@ def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_
                 ["Insert an html element", "part_insert", ""],
                 ["Insert a Widget", "list_widget_modules", ""]
                 ]
-        if section is None:
+        if not section_name:
             # going into a page, so a sectionplaceholder can be added
             page_data[("insertlist","links")].append(["Insert a Section", "placeholder_insert", ""])
         # set location, where item is to be inserted
-        call_data['location'] = (widget.name, container, (0,))
+        call_data['location'] = (widget_name, container, (0,))
         return
 
     # part has content, do not show insertlist or upload button
@@ -668,16 +671,14 @@ def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data['uploadpart', 'show'] = False
 
     # fill in the table
-    call_data['location_string'] = widget.name
+    call_data['location_string'] = widget_name
     retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-
-
 
 
 def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call fills in the container dom table"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
 
     pagenumber = None
     section_name = None
@@ -704,7 +705,7 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
     container = call_data["container"]
 
     try:
-        contdict = fromjson.container_to_OD(editedprojname, pagenumber, section_name, location_string, container)
+        contdict = fromjson.container_to_OD(project, pagenumber, section_name, location_string, container)
         partdict = {'parts': contdict['container']}
     except:
        raise FailPage(message = "call to fromjson.container_to_OD failed")
@@ -787,20 +788,34 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
 def back_to_parent_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets call_data['widget_name'] to parent_widget and call_data['container'] to parent_container"
 
-    bits = utils.get_bits(call_data)
+    project = call_data['editedprojname']
 
-    if (bits.parent_widget is None) or (bits.parent_container is None):
-        raise FailPage(message="Invalid container")
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
+
+    try:
+        if section_name:
+            widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
+        else:
+            widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
+    except ServerError as e:
+        raise FailPage(e.message)
 
     utils.no_ident_data(call_data)
 
-    if bits.page is not None:
-        call_data['page'] = bits.page
-    if bits.section_name is not None:
-        call_data['section_name'] = bits.section_name
+    if section_name:
+        call_data['section_name'] = section_name
+    else:
+        call_data['page_number'] = pagenumber
 
-    call_data['widget_name'] = bits.parent_widget.name
-    call_data['container'] = bits.parent_container
+    call_data['widget_name'] = widgetdescription.parent_widget
+    call_data['container'] = widgetdescription.parent_container
 
 
 

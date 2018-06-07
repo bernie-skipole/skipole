@@ -40161,6 +40161,24 @@ false
 },
 "parts": [
 [
+"Widget",
+{
+"class": "debug_tools.ShowCallData",
+"name": "hello",
+"brief": "world",
+"fields": {
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"para_class": "w3-section",
+"show": true,
+"show_error": "",
+"toptext": "DEBUG MODE IS ON",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -40202,6 +40220,32 @@ false
 "show": true,
 "hide_if_empty": false,
 "parts": []
+}
+],
+[
+"Comment",
+{
+"text": "comment here"
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowResponders",
+"name": "zinc",
+"brief": "zanc",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"paradiv_class": "",
+"show": true,
+"show_error": "",
+"table_class": "w3-table w3-bordered",
+"toptext": "DEBUG MODE IS ON",
+"widget_class": "",
+"widget_style": ""
+}
 }
 ]
 ],
