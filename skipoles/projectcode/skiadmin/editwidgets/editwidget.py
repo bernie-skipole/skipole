@@ -308,8 +308,6 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
     else:
         raise FailPage(message="Widget not identified")
 
-    # Fill in header
-
     if 'field_arg' in call_data:
         field_arg = call_data['field_arg']
     else:
@@ -331,7 +329,6 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
     # with items ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
-
 
     # create dictionaries of {field_arg : namedtuples }
     fields_single = { arg.field_arg:arg for arg in widgetdescription.fields_single }
@@ -441,7 +438,6 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
                 contents.append([validator['class'], table_pos, table_pos, table_pos, table_pos, True, up, down, True])
             page_data["validator_table:contents"] = contents
 
-
     # set field_arg into session call_data
     call_data['field_arg'] = field_arg
 
@@ -452,39 +448,40 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
 def set_field_name(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a widget field name"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
-    bits = utils.get_bits(call_data)
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field_arg = bits.field_arg
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if widget is None:
-        raise FailPage("Widget not identified")
-
-    if field_arg is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
 
-    if 'field_name' not in call_data:
-        raise FailPage("Invalid name")
+    if 'field_name' in call_data:
+        field_name = call_data['field_name']
+    else:
+        raise FailPage("New field name not identified")
 
-    new_name = call_data['field_name']
-    if not new_name:
-        raise FailPage("Invalid name")
-    if new_name.startswith('_'):
-        raise FailPage(message="Invalid name - cannot start with an underscore.")
-    if (new_name == "show_error") and (field_arg != "show_error"):
-        raise FailPage(message="Invalid name - show_error is a reserved name.")
     try:
-        widget.set_name(field_arg, new_name)
-    except ValidateError as e:
-        raise FailPage(message=e.message)
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+        if section_name:
+            call_data['schange'] = editwidget.set_widget_field_name_in_section(project, section_name, call_data['schange'], widget_name, field_arg, field_name)
+        else:
+            call_data['pchange'] = editwidget.set_widget_field_name_in_page(project, pagenumber, call_data['pchange'], widget_name, field_arg, field_name)
+    except ServerError as e:
+        raise FailPage(e.message)
+
     call_data['status'] = "Field name changed"
 
 

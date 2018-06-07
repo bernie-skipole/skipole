@@ -276,6 +276,46 @@ def new_brief_in_section_widget(project, section_name, schange, name, brief):
     return proj.add_section(section_name, section)
 
 
+def set_widget_field_name_in_page(project, pagenumber, pchange, widget_name, field_arg, name):
+    "Given a widget field, sets its name"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if not name:
+        raise ServerError("Invalid name")
+    if name.startswith('_'):
+        raise ServerError(message="Invalid name - cannot start with an underscore.")
+    if (name == "show_error") and (field_arg != "show_error"):
+        raise ServerError(message="Invalid name - show_error is a reserved name.")
+    try:
+        widget.set_name(field_arg, name)
+    except ValidateError as e:
+        raise ServerError(message=e.message)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def set_widget_field_name_in_section(project, section_name, schange, widget_name, field_arg, name):
+    "Given a widget field, sets its name"
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if not name:
+        raise ServerError("Invalid name")
+    if name.startswith('_'):
+        raise ServerError(message="Invalid name - cannot start with an underscore.")
+    if (name == "show_error") and (field_arg != "show_error"):
+        raise ServerError(message="Invalid name - show_error is a reserved name.")
+    try:
+        widget.set_name(field_arg, name)
+    except ValidateError as e:
+        raise ServerError(message=e.message)
+    # save the altered page, and return the page.change uuid
+    return proj.add_section(section_name, section)
+
+
 
         
 
