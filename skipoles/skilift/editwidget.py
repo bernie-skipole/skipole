@@ -299,7 +299,7 @@ def set_widget_field_name_in_page(project, pagenumber, pchange, widget_name, fie
 def set_widget_field_name_in_section(project, section_name, schange, widget_name, field_arg, name):
     "Given a widget field, sets its name"
     proj, section = get_proj_section(project, section_name, schange)
-    widget = section.widgets.get(name)
+    widget = section.widgets.get(widget_name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
         raise ServerError("Widget not found")
     if not name:
@@ -313,6 +313,52 @@ def set_widget_field_name_in_section(project, section_name, schange, widget_name
     except ValidateError as e:
         raise ServerError(message=e.message)
     # save the altered page, and return the page.change uuid
+    return proj.add_section(section_name, section)
+
+
+def set_widget_field_value_in_page(project, pagenumber, pchange, widget_name, field_arg, value):
+    "Given a widget field, sets its value"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    # only single values can be set, not lists tables or dictionaries
+    single_field_args = { arg[0]: arg for arg in widget.field_arguments_single() }
+    if field_arg not in single_field_args:
+        raise ServerError("Cannot set a value on this field")
+    field_info = single_field_args[field_arg]
+    str_value = str(value)
+    if (field_info[2] == "ident" or field_info[2] == "url") and str_value.isdigit():
+        # The user is inputting a digit as a page ident
+        str_value = project + '_' + str_value
+    try:
+        widget.set_field_value(field_arg, str_value)
+    except ValidateError as e:
+        raise ServerError(message=e.message)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def set_widget_field_value_in_section(project, section_name, schange, widget_name, field_arg, value):
+    "Given a widget field, sets its value"
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    # only single values can be set, not lists tables or dictionaries
+    single_field_args = { arg[0]: arg for arg in widget.field_arguments_single() }
+    if field_arg not in single_field_args:
+        raise ServerError("Cannot set a value on this field")
+    field_info = single_field_args[field_arg]
+    str_value = str(value)
+    if (field_info[2] == "ident" or field_info[2] == "url") and str_value.isdigit():
+        # The user is inputting a digit as a page ident
+        str_value = project + '_' + str_value
+    try:
+        widget.set_field_value(field_arg, str_value)
+    except ValidateError as e:
+        raise ServerError(message=e.message)
+    # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
 
 
