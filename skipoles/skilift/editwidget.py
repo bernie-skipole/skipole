@@ -45,6 +45,9 @@ WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 
                                                      'fields_single', 'fields_list', 'fields_table', 'fields_dictionary'])
 
 
+FieldDescription = namedtuple('FieldDescription', ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle'])
+
+
 # 'fields' is a list of lists: [ field arg, field ref]
 # 'containers' is the number of containers in the widget, 0 for none
 
@@ -58,6 +61,10 @@ def widgets_in_module(module_name):
     module = importlib.import_module("skipoles.ski.widgets." + module_name)
     widget_list = []
     for classname,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
+        fields_single = [ FieldDescription(*fld) for fld in obj.field_arguments_single() ]
+        fields_list = [ FieldDescription(*fld, False, False) for fld in obj.field_arguments_list() ]
+        fields_table = [ FieldDescription(*fld, False, False) for fld in obj.field_arguments_table() ]
+        fields_dictionary = [ FieldDescription(*fld, False, False) for fld in obj.field_arguments_dictionary() ]
         widget_list.append( WidgetDescription( module_name,
                                                classname,
                                                obj.brief,
@@ -65,10 +72,10 @@ def widgets_in_module(module_name):
                                                obj.arg_references(),
                                                obj.len_containers(),
                                                obj.description(),
-                                               obj.field_arguments_single(),
-                                               obj.field_arguments_list(),
-                                               obj.field_arguments_table(),
-                                               obj.field_arguments_dictionary()
+                                               fields_single,
+                                               fields_list,
+                                               fields_table,
+                                               fields_dictionary
                                                ) )
     return widget_list
 
@@ -147,6 +154,10 @@ def page_widget_description(project, pagenumber, pchange, name):
     widget = page.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
         raise ServerError("Widget not found")
+    fields_single = [ FieldDescription(*fld) for fld in widget.field_arguments_single() ]
+    fields_list = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_list() ]
+    fields_table = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_table() ]
+    fields_dictionary = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_dictionary() ]
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
                               widget.brief,
@@ -154,10 +165,10 @@ def page_widget_description(project, pagenumber, pchange, name):
                               widget.arg_references(),
                               widget.len_containers(),
                               widget.description(),
-                              widget.field_arguments_single(),
-                              widget.field_arguments_list(),
-                              widget.field_arguments_table(),
-                              widget.field_arguments_dictionary()
+                              fields_single,
+                              fields_list,
+                              fields_table,
+                              fields_dictionary
                                )
 
 
@@ -167,6 +178,10 @@ def section_widget_description(project, section_name, schange, name):
     widget = section.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
         raise ServerError("Widget not found")
+    fields_single = [ FieldDescription(*fld) for fld in widget.field_arguments_single() ]
+    fields_list = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_list() ]
+    fields_table = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_table() ]
+    fields_dictionary = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_dictionary() ]
     return WidgetDescription( widget.__class__.__module__.split('.')[-1],
                               widget.__class__.__name__,
                               widget.brief,
@@ -174,10 +189,10 @@ def section_widget_description(project, section_name, schange, name):
                               widget.arg_references(),
                               widget.len_containers(),
                               widget.description(),
-                              widget.field_arguments_single(),
-                              widget.field_arguments_list(),
-                              widget.field_arguments_table(),
-                              widget.field_arguments_dictionary()
+                              fields_single,
+                              fields_list,
+                              fields_table,
+                              fields_dictionary
                                )
 
 
