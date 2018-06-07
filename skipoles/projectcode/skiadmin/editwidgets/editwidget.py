@@ -529,44 +529,54 @@ def set_field_value(caller_ident, ident_list, submit_list, submit_dict, call_dat
 def set_field_default(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a widget field default value"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
-    bits = utils.get_bits(call_data)
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field_arg = bits.field_arg
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if widget is None:
-        raise FailPage("Widget not identified")
-
-    if field_arg is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
 
-    # is this field of class args?
-    field_info = widget.field_arg_info(field_arg)
-    # (field name, field description ref, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
+    try:
+        if section_name:
+            widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
+            widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
+        else:
+            widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
+            widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
+    except ServerError as e:
+        raise FailPage(e.message)
 
-    if not field_info:
-        raise FailPage("Field not identified")
-
-    if field_info[4] != 'args':
+    fields_single = { arg.field_arg:arg for arg in widgetdescription.fields_single }
+    if field_arg not in fields_single:
         raise FailPage("Cannot set a default value on this field")
+    field_info = fields_single[field_arg]
 
-    if field_info[8] or field_info[9]:
+    value, str_value = _field_value(widget, field_arg)
+
+    if field_info.cssclass or field_info.cssstyle:
         # set the default value
-        result = skilift.fromjson.save_widget_default_field_value(editedproj.proj_ident,
-                                    widget.__module__.split(".")[-1],
-                                    widget.__class__.__name__,
-                                    field_arg,
-                                    field_info[3])
+        result = fromjson.save_widget_default_field_value(project,
+                                                          widgetdescription.modulename,
+                                                          widgetdescription.classname,
+                                                          field_arg,
+                                                          str_value)
         if result:
-            if field_info[3]:
-                call_data['status'] = "Field default value set to %s" % (field_info[3],)
+            if str_value:
+                call_data['status'] = "Field default value set to %s" % (str_value,)
             else:
                 call_data['status'] = "Field default value removed"
             return

@@ -175,6 +175,7 @@
 },
 "inputforms": {
 "Form1": {
+"error_class": "",
 "widget_class": "w3-section"
 },
 "SubmitButton1": {
