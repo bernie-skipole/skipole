@@ -822,7 +822,7 @@ def back_to_parent_container(caller_ident, ident_list, submit_list, submit_dict,
 def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to edit an item in a container"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
     pagenumber = None
     section_name = None
 
@@ -856,7 +856,7 @@ def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_
         raise FailPage("Item to edit has not been recognised")
 
 
-    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, [widget_name, container, location_integers])
+    part_tuple = skilift.part_info(project, pagenumber, section_name, [widget_name, container, location_integers])
     if part_tuple is None:
         raise FailPage("Item to edit has not been recognised")
 
@@ -900,7 +900,7 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     """Called by domtable to either insert or append an item in a container
        sets page_data to populate the insert or append page and then go to appropriate template page"""
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
     pagenumber = None
     section_name = None
 
@@ -936,14 +936,12 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     # location is a tuple of widget_name, container, tuple of location integers
     location = (widget_name, container, location_integers)
 
-    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, location)
+    part_tuple = skilift.part_info(project, pagenumber, section_name, location)
     if part_tuple is None:
         raise FailPage("Item to append to has not been recognised")
 
-    # goto either the install or append page
-
-    call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
-    call_data['location'] = location         ########## also part_tuple should replace location
+    # goto either the install or append page, to add an item at this location
+    call_data['location'] = location
 
     # Fill in menu of items, Part items have insert, others have append
 
@@ -983,7 +981,7 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to remove an item in a container"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
     pagenumber = None
     section_name = None
 
@@ -1019,7 +1017,7 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     # location is a tuple of widget_name, container, tuple of location integers
     location = (widget_name, container, location_integers)
 
-    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, location)
+    part_tuple = skilift.part_info(project, pagenumber, section_name, location)
     if part_tuple is None:
         raise FailPage("Item to remove has not been recognised")
 
@@ -1036,17 +1034,15 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     if pagenumber is None:
         # remove the item from a section
         try:
-            call_data['schange'] = editsection.del_location(editedprojname, section_name, call_data['schange'], location)
+            call_data['schange'] = editsection.del_location(project, section_name, call_data['schange'], location)
         except ServerError as e:
             raise FailPage(message = e.message)
     else:
         # remove the item from a page
         try:
-            call_data['pchange'] = editpage.del_location(editedprojname, pagenumber, call_data['pchange'], location)
+            call_data['pchange'] = editpage.del_location(project, pagenumber, call_data['pchange'], location)
         except ServerError as e:
             raise FailPage(message = e.message)
-        # page has changed, hopefully, in due course, this line will not be needed
-        call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
     call_data['container'] = container
     call_data['widget_name'] = widget_name
@@ -1054,7 +1050,7 @@ def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
 def _item_to_move(call_data):
     "Gets the item to be moved"
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
     pagenumber = None
     section_name = None
 
@@ -1092,7 +1088,7 @@ def _item_to_move(call_data):
     call_data['container'] = container
     call_data['widget_name'] = widget_name
 
-    part_tuple = skilift.part_info(editedprojname, pagenumber, section_name, location)
+    part_tuple = skilift.part_info(project, pagenumber, section_name, location)
     if part_tuple is None:
         raise FailPage("Item to move has not been recognised")
     return part_tuple

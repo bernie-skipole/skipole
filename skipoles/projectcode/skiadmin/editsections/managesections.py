@@ -423,10 +423,9 @@ def add_to_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
     part_tuple = part_info(editedprojname, None, section_name, location)
     if part_tuple is None:
         raise FailPage("Item to append to has not been recognised")
-    # goto either the install or append page
 
-    call_data['part'] = part                 ################ note, in future pass part_tuple rather than part
-    call_data['location'] = location         ########## also part_tuple should replace location
+    # goto either the install or append page, to add an item at this location
+    call_data['location'] = location
 
     # Fill in menu of items, Part items have insert, others have append
     # as this is to be input into a section, a further section is not present in this list
