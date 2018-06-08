@@ -187,20 +187,15 @@ def del_location(project, section_name, schange, location):
     return del_location_in_section(project, section_name, schange, location)
 
 
-def move_location(project, section_name, from_location, to_location):
-    """Move an item in the given section from one spot to another, defined by its location"""
+def move_location(project, section_name, schange, from_location, to_location):
+    """Move an item in the given section from one spot to another, defined by its location
+       Returns new section change uuid"""
     # raise error if invalid project
-    project_loaded(project)
-    proj = skiboot.getproject(project)
-    if not section_name:
-         raise ServerError(message="Given section_name is invalid")
-    section = proj.section(section_name, makecopy=True)
-    if section is None:
-        raise ServerError(message="Given Section not found")
+    proj, section = get_proj_section(project, section_name, schange)
 
     if to_location == from_location:
         # no movement
-        return
+        return schange
 
     from_location_string, from_container, from_location_integers = from_location
     to_location_string, to_container, to_location_integers = to_location
@@ -253,8 +248,7 @@ def move_location(project, section_name, from_location, to_location):
             except:
                 raise ServerError(message="Unable to move item")
         # And save this section copy to the project
-        proj.add_section(section_name, section)
-        return
+        return proj.add_section(section_name, section)
 
     # part is within a widget, so get its location relative to the section
     widget = section.widgets[from_location_string]
@@ -271,7 +265,7 @@ def move_location(project, section_name, from_location, to_location):
     to_location_ints = widg_ints + widg_container_ints + list(to_location_integers)
 
     # and move this item by calling this function again
-    move_location(project, section_name, (section_name, None, from_location_ints), (section_name, None, to_location_ints))
+    return move_location(project, section_name, schange, (section_name, None, from_location_ints), (section_name, None, to_location_ints))
 
 
 def create_new_section(project, section_name, tag_name, brief):

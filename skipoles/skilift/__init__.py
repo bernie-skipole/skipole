@@ -41,9 +41,9 @@ ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', '
 
 PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'name', 'location', 'part_type', 'brief'])
 
-PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache'])
+PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change'])
 
-FolderInfo = namedtuple('FolderInfo', ['name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders'])
+FolderInfo = namedtuple('FolderInfo', ['name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders', 'change'])
 
 WidgetInfo = namedtuple('WidgetInfo', ['project', 'pagenumber', 'section_name', 'name', 'location', 'containers', 'display_errors', 'brief'])
 
@@ -529,7 +529,7 @@ def pages(project, foldernumber):
             enable_cache = page.enable_cache
         else:
             enable_cache = False
-        yield PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache)
+        yield PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache, page.change)
 
 
 def page_info(project, pagenumber):
@@ -551,7 +551,7 @@ def page_info(project, pagenumber):
         enable_cache = page.enable_cache
     else:
         enable_cache = False
-    return PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache)
+    return PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache, page.change)
 
 
 def folders(project, foldernumber):
@@ -565,7 +565,7 @@ def folders(project, foldernumber):
         raise ServerError("Folder not recognised")
     for subfolder_ident in folder.folder_idents():
         subfolder = proj.get_item(subfolder_ident)
-        yield FolderInfo(subfolder.name, subfolder.ident.num, subfolder.restricted, subfolder.brief, bool(subfolder.pages), bool(subfolder.folders))
+        yield FolderInfo(subfolder.name, subfolder.ident.num, subfolder.restricted, subfolder.brief, bool(subfolder.pages), bool(subfolder.folders), subfolder.change)
 
 
 def folder_info(project, foldernumber):
@@ -579,7 +579,7 @@ def folder_info(project, foldernumber):
         raise ServerError("Folder not recognised")
     if folder.page_type != 'Folder':
         raise ServerError("Item is not a Folder")
-    return FolderInfo(folder.name, folder.ident.num, folder.restricted, folder.brief, bool(folder.pages), bool(folder.folders))
+    return FolderInfo(folder.name, folder.ident.num, folder.restricted, folder.brief, bool(folder.pages), bool(folder.folders), folder.change)
 
 
 def folder_page_names(project, foldernumber):

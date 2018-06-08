@@ -135,23 +135,15 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         session_data = {}
 
     if identnum == 7030:
-        call_data['section_name'] = session_data.get('section_name', '')
+        if 'section_name' in session_data:
+            call_data['section_name'] = session_data['section_name']
+            call_data['schange'] = session_data['schange']
         return called_ident, call_data, page_data, lang
 
     if identnum == 2003:
-        if 'folder' in session_data:
-            project, foldernumber = session_data['folder']
-            if project != editedprojname:
-                return "admin_home", call_data, page_data, lang   
-            fchange = folderchange(project, foldernumber)
-            if fchange is None:
-                return "admin_home", call_data, page_data, lang 
-            if 'fchange' not in session_data:
-                return "admin_home", call_data, page_data, lang
-            if fchange != session_data['fchange']:
-                return "admin_home", call_data, page_data, lang
+        if 'folder_number' in session_data:
+            call_data['folder_number'] = session_data['folder_number']
             call_data['fchange'] = session_data['fchange']
-            call_data['folder_number'] = foldernumber
             return called_ident, call_data, page_data, lang
         else:
             return "admin_home", call_data, page_data, lang
@@ -189,40 +181,15 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
             call_data['module'] = session_data['module']
 
     # either a section is being edited, or a folder/page - not both
-    if ('section_name' in session_data) and ('page' in session_data):
+    if ('section_name' in session_data) and ('page_number' in session_data):
         return "admin_home", call_data, page_data, lang
 
     if 'section_name' in session_data:
-        section_name = session_data['section_name']
-        if not section_name:
-            return "admin_home", call_data, page_data, lang
-        schange = sectionchange(editedprojname, section_name)
-        if schange is None:
-            return "admin_home", call_data, page_data, lang
-        if 'schange' not in session_data:
-            return "admin_home", call_data, page_data, lang
-        if schange != session_data['schange']:
-            return "admin_home", call_data, page_data, lang
+        call_data['section_name'] = session_data['section_name']
         call_data['schange'] = schange
-        call_data['section_name'] = section_name
-        # this bit to be phased out
-        call_data['section'] = editedproj.section(section_name)
-
-    if 'page' in session_data:
-        project, pagenumber = session_data['page']
-        if project != editedprojname:
-            return "admin_home", call_data, page_data, lang        
-        pchange = pagechange(project, pagenumber)
-        if pchange is None:
-            return "admin_home", call_data, page_data, lang
-        if 'pchange' not in session_data:
-            return "admin_home", call_data, page_data, lang
-        if pchange != session_data['pchange']:
-            return "admin_home", call_data, page_data, lang
-        call_data['pchange'] = pchange
-        call_data['page_number'] = pagenumber
-        # this bit to be phased out
-        call_data['page'] = skiboot.from_ident((project, pagenumber))
+    elif 'page_number' in session_data:
+        call_data['page_number'] = session_data['page_number']
+        call_data['pchange'] = session_data['pchange']
 
 
     if 'widget_name' in session_data:
@@ -231,19 +198,9 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     if 'container' in session_data:
         call_data['container'] = session_data['container']
 
-    if 'folder' in session_data:
-        project, foldernumber = session_data['folder']
-        if project != editedprojname:
-            return "admin_home", call_data, page_data, lang   
-        fchange = folderchange(project, foldernumber)
-        if fchange is None:
-            return "admin_home", call_data, page_data, lang 
-        if 'fchange' not in session_data:
-            return "admin_home", call_data, page_data, lang
-        if fchange != session_data['fchange']:
-            return "admin_home", call_data, page_data, lang
+    if 'folder_number' in session_data:
+        call_data['folder_number'] = session_data['folder_number']
         call_data['fchange'] = session_data['fchange']
-        call_data['folder_number'] = foldernumber
 
     if 'add_to_foldernumber' in session_data:
         call_data['add_to_foldernumber'] = session_data['add_to_foldernumber']
@@ -362,22 +319,18 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
 
 
     # either a section is being edited, or a folder/page - not both
-    if 'section_name' in call_data:
+    if ('section_name' in call_data) and ('schange' in call_data):
         sent_session_data['section_name'] = call_data['section_name']
-        sent_session_data['schange'] = sectionchange(editedprojname, call_data['section_name'])
+        sent_session_data['schange'] = call_data['schange']
     else:
         # send page or folder as a tuple of its ident
-        if 'page_number' in call_data:
-            sent_session_data['page'] = (editedprojname, call_data['page_number'])
-            sent_session_data['pchange'] = pagechange(editedprojname, call_data['page_number'])
-        elif 'page' in call_data:
-            # this bit to be phased out
-            page_ident = skiboot.make_ident(call_data['page'])
-            sent_session_data['page'] = page_ident.to_tuple()
-            sent_session_data['pchange'] = pagechange(*sent_session_data['page'])
-        if 'folder_number' in call_data:
-            sent_session_data['folder'] = (editedprojname, call_data['folder_number'])
-            sent_session_data['fchange'] = folderchange(editedprojname, call_data['folder_number'])
+        if ('page_number' in call_data) and ('pchange' in call_data):
+            sent_session_data['page_number'] = call_data['page_number']
+            sent_session_data['pchange'] = call_data['pchange']
+
+        if ('folder_number' in call_data) and ('fchange' in call_data):
+            sent_session_data['folder_number'] = call_data['folder_number']
+            sent_session_data['fchange'] = call_data['fchange']
 
     if sent_session_data:
         # store in _SESSION_DATA, and send the key as ident_data
