@@ -70,7 +70,7 @@ def widgets_in_module(module_name):
         fields_dictionary = [ FieldDescription(*fld, False, False) for fld in obj.field_arguments_dictionary() ]
         widget_list.append( WidgetDescription( module_name,
                                                classname,
-                                               None,
+                                               '',
                                                obj.description_ref(),
                                                obj.arg_references(),
                                                obj.len_containers(),
