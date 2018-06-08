@@ -1087,8 +1087,11 @@ def _item_to_move(call_data):
     location = (widget_name, container, location_integers)
     call_data['container'] = container
     call_data['widget_name'] = widget_name
+    try:
+        part_tuple = skilift.part_info(project, pagenumber, section_name, location)
+    except ServerError as e:
+        raise FailPage(message = e.message)
 
-    part_tuple = skilift.part_info(project, pagenumber, section_name, location)
     if part_tuple is None:
         raise FailPage("Item to move has not been recognised")
     return part_tuple
@@ -1097,40 +1100,41 @@ def _item_to_move(call_data):
 def move_up_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to move an item in a container up"
 
-    part_tuple = _item_to_move(call_data)
-    location = part_tuple.location
-    location_integers = location[2]
-
-    if (len(location_integers) == 1) and (location_integers[0] == 0):
-        # at top, cannot be moved
-        raise FailPage("Cannot be moved up")
-
-    if location_integers[-1] == 0:
-        # move up to next level
-        new_location_integers = location_integers[:-1]
-    else:
-        # swap parts on same level
-        new_location_integers = list(location_integers[:-1])
-        new_location_integers.append(location_integers[-1] - 1)
-
-    # after a move, location is wrong, so remove from call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'part' in call_data:
-        del call_data['part']
-    if 'part_top' in call_data:
-        del call_data['part_top']
-    if 'part_loc' in call_data:
-        del call_data['part_loc']
-
-    # move the item
     try:
-        if part_tuple.section_name:
-            # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
-            editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
+        part_tuple = _item_to_move(call_data)
+        location = part_tuple.location
+        location_integers = location[2]
+
+        if (len(location_integers) == 1) and (location_integers[0] == 0):
+            # at top, cannot be moved
+            raise FailPage("Cannot be moved up")
+
+        if location_integers[-1] == 0:
+            # move up to next level
+            new_location_integers = location_integers[:-1]
         else:
-            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
-            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
+            # swap parts on same level
+            new_location_integers = list(location_integers[:-1])
+            new_location_integers.append(location_integers[-1] - 1)
+
+        # after a move, location is wrong, so remove from call_data
+        if 'location' in call_data:
+            del call_data['location']
+        if 'part' in call_data:
+            del call_data['part']
+        if 'part_top' in call_data:
+            del call_data['part_top']
+        if 'part_loc' in call_data:
+            del call_data['part_loc']
+
+        # move the item
+
+        if part_tuple.section_name:
+            # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
+        else:
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1138,46 +1142,47 @@ def move_up_in_container_dom(caller_ident, ident_list, submit_list, submit_dict,
 def move_up_right_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to move an item in a container up and to the right"
 
-    part_tuple = _item_to_move(call_data)
-    location = part_tuple.location
-    location_integers = location[2]
-
-    if location_integers[-1] == 0:
-        # at top of a part, cannot be moved
-        raise FailPage("Cannot be moved up")
-    new_parent_integers = list(location_integers[:-1])
-    new_parent_integers.append(location_integers[-1] - 1)
-    new_parent_location = (location[0], location[1], new_parent_integers)
-
-    new_parent_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
-
-    if new_parent_tuple is None:
-        raise FailPage("Cannot be moved up")
-    if new_parent_tuple.part_type != "Part":
-        raise FailPage("Cannot be moved up")
-
-    items_in_new_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location))
-
-    new_location_integers =  tuple(new_parent_integers + [items_in_new_parent])
-
-    # after a move, location is wrong, so remove from call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'part' in call_data:
-        del call_data['part']
-    if 'part_top' in call_data:
-        del call_data['part_top']
-    if 'part_loc' in call_data:
-        del call_data['part_loc']
-
-    # move the item
     try:
+        part_tuple = _item_to_move(call_data)
+        location = part_tuple.location
+        location_integers = location[2]
+
+        if location_integers[-1] == 0:
+            # at top of a part, cannot be moved
+            raise FailPage("Cannot be moved up")
+        new_parent_integers = list(location_integers[:-1])
+        new_parent_integers.append(location_integers[-1] - 1)
+        new_parent_location = (location[0], location[1], new_parent_integers)
+
+        new_parent_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
+
+        if new_parent_tuple is None:
+            raise FailPage("Cannot be moved up")
+        if new_parent_tuple.part_type != "Part":
+            raise FailPage("Cannot be moved up")
+
+        items_in_new_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location))
+
+        new_location_integers =  tuple(new_parent_integers + [items_in_new_parent])
+
+        # after a move, location is wrong, so remove from call_data
+        if 'location' in call_data:
+            del call_data['location']
+        if 'part' in call_data:
+            del call_data['part']
+        if 'part_top' in call_data:
+            del call_data['part_top']
+        if 'part_loc' in call_data:
+            del call_data['part_loc']
+
+        # move the item
+
         if part_tuple.section_name:
-            # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
-            editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
+            # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
         else:
-            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
-            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1185,50 +1190,50 @@ def move_up_right_in_container_dom(caller_ident, ident_list, submit_list, submit
 def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to move an item in a container down"
 
-    part_tuple = _item_to_move(call_data)
-    location = part_tuple.location
-    location_integers = location[2]
-
-
-    if len(location_integers) == 1:
-        # Just at immediate level below top
-        parent_location = (location[0], location[1], ())
-        items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
-        if location_integers[0] == (items_in_parent-1):
-            # At end, cannot be moved
-            raise FailPage("Cannot be moved down")
-        new_location_integers = (location_integers[0]+2,)
-    else:
-        parent_integers = tuple(location_integers[:-1])
-        parent_location = (location[0], location[1], parent_integers)
-        items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
-        if location_integers[-1] == (items_in_parent-1):
-            # At end of a part, so move up a level
-            new_location_integers = list(parent_integers[:-1])
-            new_location_integers.append(parent_integers[-1] + 1)
-        else:
-            # just insert into current level
-            new_location_integers = list(parent_integers)
-            new_location_integers.append(location_integers[-1] + 2)
-
-    # after a move, location is wrong, so remove from call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'part' in call_data:
-        del call_data['part']
-    if 'part_top' in call_data:
-        del call_data['part_top']
-    if 'part_loc' in call_data:
-        del call_data['part_loc']
-
-    # move the item
     try:
-        if part_tuple.section_name:
-            # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
-            editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
+        part_tuple = _item_to_move(call_data)
+        location = part_tuple.location
+        location_integers = location[2]
+
+        if len(location_integers) == 1:
+            # Just at immediate level below top
+            parent_location = (location[0], location[1], ())
+            items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
+            if location_integers[0] == (items_in_parent-1):
+                # At end, cannot be moved
+                raise FailPage("Cannot be moved down")
+            new_location_integers = (location_integers[0]+2,)
         else:
-            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
-            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
+            parent_integers = tuple(location_integers[:-1])
+            parent_location = (location[0], location[1], parent_integers)
+            items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
+            if location_integers[-1] == (items_in_parent-1):
+                # At end of a part, so move up a level
+                new_location_integers = list(parent_integers[:-1])
+                new_location_integers.append(parent_integers[-1] + 1)
+            else:
+                # just insert into current level
+                new_location_integers = list(parent_integers)
+                new_location_integers.append(location_integers[-1] + 2)
+
+        # after a move, location is wrong, so remove from call_data
+        if 'location' in call_data:
+            del call_data['location']
+        if 'part' in call_data:
+            del call_data['part']
+        if 'part_top' in call_data:
+            del call_data['part_top']
+        if 'part_loc' in call_data:
+            del call_data['part_loc']
+
+        # move the item
+
+        if part_tuple.section_name:
+            # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
+        else:
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1236,49 +1241,50 @@ def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dic
 def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Called by domtable to move an item in a container down and to the right"
 
-    part_tuple = _item_to_move(call_data)
-    location = part_tuple.location
-    location_integers = location[2]
-
-    if len(location_integers) == 1:
-        parent_location = (location[0], location[1], ())
-    else:
-        parent_integers = list(location_integers[:-1])
-        parent_location = (location[0], location[1], parent_integers)
-    items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
-    if location_integers[-1] == (items_in_parent-1):
-        # At end of a block, cannot be moved
-        raise FailPage("Cannot be moved down")
-    new_parent_integers = list(location_integers[:-1])
-    new_parent_integers.append(location_integers[-1] + 1)
-    new_parent_location = (location[0], location[1], new_parent_integers)
-    new_parent_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
-
-    if new_parent_tuple is None:
-        raise FailPage("Cannot be moved down")
-    if not (new_parent_tuple.part_type == 'Part' or new_parent_tuple.part_type == 'Section'):
-        raise FailPage("Cannot be moved down")
-
-    new_location_integers = tuple(new_parent_integers+[0])
-
-    # after a move, location is wrong, so remove from call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'part' in call_data:
-        del call_data['part']
-    if 'part_top' in call_data:
-        del call_data['part_top']
-    if 'part_loc' in call_data:
-        del call_data['part_loc']
-
-    # move the item
     try:
-        if part_tuple.section_name:
-            # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
-            editsection.move_location(part_tuple.project, part_tuple.section_name, location, (location[0], location[1], new_location_integers))
+        part_tuple = _item_to_move(call_data)
+        location = part_tuple.location
+        location_integers = location[2]
+
+        if len(location_integers) == 1:
+            parent_location = (location[0], location[1], ())
         else:
-            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
-            editpage.move_location(part_tuple.project, part_tuple.pagenumber, location, (location[0], location[1], new_location_integers))
+            parent_integers = list(location_integers[:-1])
+            parent_location = (location[0], location[1], parent_integers)
+        items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
+        if location_integers[-1] == (items_in_parent-1):
+            # At end of a block, cannot be moved
+            raise FailPage("Cannot be moved down")
+        new_parent_integers = list(location_integers[:-1])
+        new_parent_integers.append(location_integers[-1] + 1)
+        new_parent_location = (location[0], location[1], new_parent_integers)
+        new_parent_tuple = skilift.part_info(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, new_parent_location)
+
+        if new_parent_tuple is None:
+            raise FailPage("Cannot be moved down")
+        if not (new_parent_tuple.part_type == 'Part' or new_parent_tuple.part_type == 'Section'):
+            raise FailPage("Cannot be moved down")
+
+        new_location_integers = tuple(new_parent_integers+[0])
+
+        # after a move, location is wrong, so remove from call_data
+        if 'location' in call_data:
+            del call_data['location']
+        if 'part' in call_data:
+            del call_data['part']
+        if 'part_top' in call_data:
+            del call_data['part_top']
+        if 'part_loc' in call_data:
+            del call_data['part_loc']
+
+        # move the item
+
+        if part_tuple.section_name:
+            # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
+        else:
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
@@ -1388,11 +1394,11 @@ def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, ca
     # move the item
     try:
         if section_name:
-            # move the part in a section, using skilift.editsection.move_location(project, section_name, from_location, to_location)
-            editsection.move_location(editedprojname, section_name, location_to_move, (widget_name, container, new_location_integers))
+            # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
+            call_data['schange'] = editsection.move_location(editedprojname, section_name, call_data['schange'], location_to_move, (widget_name, container, new_location_integers))
         else:
-            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, from_location, to_location)
-            editpage.move_location(editedprojname, pagenumber, location_to_move, (widget_name, container, new_location_integers))
+            # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
+            call_data['pchange']= editpage.move_location(editedprojname, pagenumber, call_data['pchange'], location_to_move, (widget_name, container, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 

@@ -417,38 +417,37 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
     # clear call data
     utils.no_ident_data(call_data)
 
-    if '/' in edited_item:
-        # a url has been given
-        ident = skiboot.ident_from_path(edited_item, proj_ident=editedprojname)
-    else:
-        # an ident or label has been given
-        ident = skiboot.find_ident(edited_item, proj_ident=editedprojname)
-    if ident is None:
-        raise FailPage(message="Page not found")
-    item = skiboot.from_ident(ident, proj_ident=editedprojname)
+    itemnumber = skilift.get_itemnumber(editedprojname, edited_item)
+    if itemnumber is None:
+        raise FailPage(message="Item not found")
+
+    item = skilift.item_info(editedprojname, itemnumber)
     if item is None:
-        raise FailPage(message="Page not found")
-    if item.page_type == "TemplatePage":
-        call_data['edit_page'] = item.ident
-        raise GoTo(target=23207, clear_submitted=True)
-    elif item.page_type == "RespondPage":
-        call_data['edit_page'] = item.ident
-        raise GoTo(target=26007, clear_submitted=True)
-    elif item.page_type == "FilePage":
-        call_data['edit_page'] = item.ident
-        raise GoTo(target=29007, clear_submitted=True)
-    elif item.page_type == "CSS":
-        call_data['edit_page'] = item.ident
-        raise GoTo(target=28007, clear_submitted=True)
-    elif item.page_type == "JSON":
-        call_data['edit_page'] = item.ident
-        raise GoTo(target=20407, clear_submitted=True)
-    elif item.page_type == "SVG":
-        call_data['edit_page'] = item.ident
-        raise GoTo(target=23407, clear_submitted=True)
-    elif item.page_type == "Folder":
-        call_data['edit_folder'] = str(item.ident) ####### moving away from ident objects
+        raise FailPage(message="Item not found")
+
+    if item.item_type == "Folder":
+        call_data['folder_number'] = itemnumber
+        call_data['fchange'] = item.change
         raise GoTo(target=22008, clear_submitted=True)
+
+    call_data['page_number'] = itemnumber
+    call_data['pchange'] = item.change
+
+    if item.item_type == "TemplatePage":
+        raise GoTo(target=23207, clear_submitted=True)
+    elif item.item_type == "RespondPage":
+        raise GoTo(target=26007, clear_submitted=True)
+    elif item.item_type == "FilePage":
+        raise GoTo(target=29007, clear_submitted=True)
+    elif item.item_type == "CSS":
+        raise GoTo(target=28007, clear_submitted=True)
+    elif item.item_type == "JSON":
+        raise GoTo(target=20407, clear_submitted=True)
+    elif item.item_type == "SVG":
+        raise GoTo(target=23407, clear_submitted=True)
+
+    del call_data['page_number']
+    del call_data['pchange']
     raise FailPage(message="Item not found")
     
 

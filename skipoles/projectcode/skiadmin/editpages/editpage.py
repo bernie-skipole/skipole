@@ -53,13 +53,8 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # 'edit_page' is from a form, not from session data
 
-    if 'edit_page' in call_data:
-        page = skiboot.from_ident(call_data['edit_page'])
-        del call_data['edit_page']
-    elif 'page_number' in call_data:
+    if 'page_number' in call_data:
         page = skiboot.from_ident((call_data['editedprojname'], call_data['page_number']))
-    elif 'page' in call_data:
-        page = skiboot.from_ident(call_data['page'])
     else:
         raise FailPage(message = "page missing")
 
@@ -69,9 +64,6 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
     if page.page_type != 'TemplatePage':
         raise FailPage(message = "Invalid page")
 
-    # set page into call_data
-    call_data['page'] = page
-    call_data['page_number'] = page.ident.num
 
     # fills in the data for editing page name, brief, parent, etc., 
     utils.retrieve_edit_page(call_data, page_data)
@@ -800,12 +792,9 @@ def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call
 
     # move the item
     try:
-        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
+        call_data['pchange'] = editpage.move_location(editedprojname, pagenumber, call_data['pchange'], location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
-
-    # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -878,12 +867,9 @@ def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict
 
     # move the item
     try:
-        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
+        call_data['pchange'] = editpage.move_location(editedprojname, pagenumber, call_data['pchange'], location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
-
-    # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -959,12 +945,9 @@ def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, ca
 
     # move the item
     try:
-        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
+        call_data['pchange'] = editpage.move_location(editedprojname, pagenumber, call_data['pchange'], location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
-
-    # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -1040,12 +1023,9 @@ def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_di
 
     # move the item
     try:
-        editpage.move_location(editedprojname, pagenumber, location, (location_string, None, new_location_integers))
+        call_data['pchange'] = editpage.move_location(editedprojname, pagenumber, call_data['pchange'], location, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
-
-    # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 
@@ -1169,12 +1149,10 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
 
     # move the item
     try:
-        editpage.move_location(editedprojname, pagenumber, location_to_move, (location_string, None, new_location_integers))
+        call_data['pchange'] = editpage.move_location(editedprojname, pagenumber, call_data['pchange'], location_to_move, (location_string, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
 
-    # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
 
 
 def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -1373,8 +1351,7 @@ def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
     except ServerError as e:
         raise FailPage(message = e.message)
 
-    # page has changed, hopefully, in due course, this line will not be needed
-    call_data['page'] = skiboot.from_ident(pagenumber, proj_ident=editedprojname)
+
 
 
 

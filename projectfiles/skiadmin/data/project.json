@@ -40219,15 +40219,7 @@ false
 "brief": "New Tag",
 "show": true,
 "hide_if_empty": false,
-"parts": []
-}
-],
-[
-"Comment",
-{
-"text": "comment here"
-}
-],
+"parts": [
 [
 "Widget",
 {
@@ -40246,6 +40238,15 @@ false
 "widget_class": "",
 "widget_style": ""
 }
+}
+],
+[
+"Comment",
+{
+"text": "comment here"
+}
+]
+]
 }
 ]
 ],

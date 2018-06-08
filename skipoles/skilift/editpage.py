@@ -117,12 +117,13 @@ def del_location(project, pagenumber, pchange, location):
     return del_location_in_page(project, pagenumber, pchange, location)
 
 
-def move_location(project, pagenumber, from_location, to_location):
-    """Move an item in the given page from one spot to another, defined by its location"""
-    proj, page = get_proj_page(project, pagenumber)
+def move_location(project, pagenumber, pchange, from_location, to_location):
+    """Move an item in the given page from one spot to another, defined by its location
+       Returns new page change uuid"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
     if to_location == from_location:
         # no movement
-        return
+        return pchange
 
     from_location_string, from_container, from_location_integers = from_location
     to_location_string, to_container, to_location_integers = to_location
@@ -182,8 +183,7 @@ def move_location(project, pagenumber, from_location, to_location):
             except:
                 raise ServerError(message="Unable to move item")
         # And save this page copy to the project
-        proj.save_page(page)
-        return
+        return proj.save_page(page)
 
     # so item is in a widget, location_string is the widget name
     widget = page.widgets[location_string]
@@ -202,7 +202,7 @@ def move_location(project, pagenumber, from_location, to_location):
     to_location_ints = widg_ints + widg_container_ints + list(to_location_integers)
 
     # and move this item by calling this function again
-    move_location(project, pagenumber, (loc_top, None, from_location_ints), (loc_top, None, to_location_ints))
+    return move_location(project, pagenumber, pchange, (loc_top, None, from_location_ints), (loc_top, None, to_location_ints))
 
 
 def css_style(project, pagenumber):

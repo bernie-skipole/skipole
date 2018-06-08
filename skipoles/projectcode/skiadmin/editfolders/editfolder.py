@@ -236,11 +236,12 @@ def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_
     elif action.startswith('edit_page_'):
         # must find type of page to edit
         try:
-            # pinfo is tuple 'name', 'number', 'restricted', 'brief', 'item_type', 'responder'
+            # pinfo is tuple 'name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change'
             pinfo = skilift.page_info(project, itemnumber)
         except:
             raise FailPage(message = "Requested page not recognised")
         call_data['page_number'] = pinfo.number
+        call_data['pchange'] = pinfo.change
         if pinfo.item_type == 'CSS':
             raise GoTo(28007, clear_submitted=True, clear_page_data=True)         # css edit page
         elif pinfo.item_type == 'JSON':
