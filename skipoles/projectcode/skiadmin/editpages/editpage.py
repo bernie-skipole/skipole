@@ -49,24 +49,29 @@ def _ident_to_str(ident):
 def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves data for the edit page"
 
-    editedproj = call_data['editedproj']
-
-    # 'edit_page' is from a form, not from session data
-
     if 'page_number' in call_data:
-        page = skiboot.from_ident((call_data['editedprojname'], call_data['page_number']))
+        pagenumber = call_data['page_number']
+        str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
 
-    if (not page) or (page not in editedproj):
-        raise FailPage(message = "Invalid page")
+    project = call_data['editedprojname']
+    pageinfo = skilift.page_info(project, pagenumber)
 
-    if page.page_type != 'TemplatePage':
+    if pageinfo.item_type != 'TemplatePage':
         raise FailPage(message = "Invalid page")
-
 
     # fills in the data for editing page name, brief, parent, etc., 
-    utils.retrieve_edit_page(call_data, page_data)
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name
+    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+
+    # get a copy of the page object
+    proj, page = skilift.get_proj_page(project, pagenumber, call_data['pchange'])
 
     # page language
     page_data[("setlang","input_text")] = page.lang
@@ -99,7 +104,6 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[('interval_target', 'disabled')] = True
         page_data[('interval', 'input_text')] = '0'
         page_data[('interval_target', 'input_text')] = ''
-
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:

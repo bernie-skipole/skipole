@@ -41,7 +41,7 @@ ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', '
 
 PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'name', 'location', 'part_type', 'brief'])
 
-PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change'])
+PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change', 'parentfolder_number'])
 
 FolderInfo = namedtuple('FolderInfo', ['name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders', 'change'])
 
@@ -529,7 +529,11 @@ def pages(project, foldernumber):
             enable_cache = page.enable_cache
         else:
             enable_cache = False
-        yield PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache, page.change)
+        if page.parentfolder_ident:
+            parentfolder_number = page.parentfolder_ident.num
+        else:
+            parentfolder_number = None
+        yield PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache, page.change, parentfolder_number)
 
 
 def page_info(project, pagenumber):
@@ -551,7 +555,11 @@ def page_info(project, pagenumber):
         enable_cache = page.enable_cache
     else:
         enable_cache = False
-    return PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache, page.change)
+    if page.parentfolder_ident:
+        parentfolder_number = page.parentfolder_ident.num
+    else:
+        parentfolder_number = None
+    return PageInfo(page.name, page.ident.num, page.restricted, page.brief, page.page_type, responder, enable_cache, page.change, parentfolder_number)
 
 
 def folders(project, foldernumber):
