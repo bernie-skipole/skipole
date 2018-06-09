@@ -251,10 +251,6 @@ def item_info(ident):
         name = ''
     else:
         name = item.name
-    if item.parentfolder_ident is None:
-        parentfolder_ident = None
-    else:
-        parentfolder_ident = item.parentfolder_ident
     special_pages = project.special_pages
     label_list = []
     for label, value in special_pages.items():
@@ -269,7 +265,7 @@ def item_info(ident):
                 item.url,
                 label_list,
                 item.change,
-                parentfolder_ident,
+                item.parentfolder_ident,
                 item.restricted
                )
 
