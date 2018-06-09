@@ -45,32 +45,30 @@ def _ident_to_str(ident):
 
 def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit respond page"
-    editedproj = call_data['editedproj']
 
-    # 'edit_page' is from a form, not from session data
-
-    if 'edit_page' in call_data:
-        page = skiboot.from_ident(call_data['edit_page'])
-        del call_data['edit_page']
-    elif 'page_number' in call_data:
-        page = skiboot.from_ident((call_data['editedprojname'], call_data['page_number']))
-    elif 'page' in call_data:
-        page = skiboot.from_ident(call_data['page'])
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+        str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
 
-    if (not page) or (page not in editedproj):
-        raise FailPage(message = "Invalid page")
+    project = call_data['editedprojname']
+    pageinfo = skilift.page_info(project, pagenumber)
 
-    if page.page_type != 'RespondPage':
+    if pageinfo.item_type != 'RespondPage':
         raise FailPage(message = "Invalid page")
-
-    # set page into call_data
-    call_data['page'] = page
-    call_data['page_number'] = page.ident.num
 
     # fills in the data for editing page name, brief, parent, etc., 
-    utils.retrieve_edit_page(call_data, page_data)
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name
+    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+
+    # get a copy of the page object
+    proj, page = skilift.get_proj_page(project, pagenumber, call_data['pchange'])
 
     page_data['respondertype:para_text'] = "This page is a responder of type: %s." % (page.responder.__class__.__name__,)
     page_data['responderdescription:textblock_ref'] = page.responder.description_ref()

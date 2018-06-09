@@ -50,24 +50,6 @@ def no_ident_data(call_data, keep=None):
 
 
 
-def retrieve_edit_page(call_data, page_data):
-    "Common function used by page editors, placed here to be used by multiple pages"
-
-    page_number = call_data['page_number']
-    editedprojname = call_data['editedprojname']
-    info = skilift.item_info(editedprojname, page_number)
-
-    # fills in header
-    page_data[("adminhead","page_head","large_text")] = info.name
-
-    page_data[('page_edit','p_ident','page_ident')] = (editedprojname,page_number)
-    page_data[('page_edit','p_name','page_ident')] = (editedprojname,page_number)
-    page_data[('page_edit','p_description','page_ident')] = (editedprojname,page_number)
-    page_data[('page_edit','p_rename','input_text')] = info.name
-    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (editedprojname, info.parentfolder_number)
-    page_data[('page_edit','p_brief','input_text')] = info.brief
-
-
 def save(call_data, page=None, section_name=None, section=None, widget_name=''):
     "Saves given items, widget_name is the widget to display an error"
     editedproj = call_data['editedproj']
@@ -139,36 +121,6 @@ def part_from_location(page=None, section=None, section_name=None, location_stri
     if section is not None:
         return section.location_item((location_string, container, location_integers))
 
-
-def set_part(newpart, location, page=None, section=None, section_name='', widget=None, failmessage=''):
-    "Sets a part in a location"
-    part_top, container, location_tuple = location
-    if (page is None) and (section is None):
-        raise FailPage(failmessage)
-    if page is None:
-        # set part in a section
-        if part_top == section_name:
-            # part is not embedded in a widget
-            section.set_location_value(location_tuple, newpart)
-        elif (widget is not None) and part_top == widget.name: 
-            # location is in a widget, within a container
-            widget.set_in_container(container, location_tuple, newpart)
-        else:
-            raise FailPage(failmessage)
-    else:
-        # set part in a page
-        if (part_top == 'head'):
-            page.head.set_location_value(location_tuple, newpart)
-        elif (part_top == 'body'):
-            page.body.set_location_value(location_tuple, newpart)
-        elif (part_top == 'svg'):
-            page.svg.set_location_value(location_tuple, newpart)
-        elif (widget is not None) and part_top == widget.name: 
-            # location is in a container
-            widget.set_in_container(container, location_tuple, newpart)
-        else:
-            raise FailPage(failmessage)
- 
 
 def get_bits(call_data):
     """Returns a named tuple of (page, section, section_name, widget, location,

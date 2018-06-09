@@ -39,14 +39,9 @@ def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, c
     "Retrieves widget data for the edit file page"
     project = call_data['editedprojname']
     
-    # 'edit_page' is from a form
-    # pagenumber is from session data
-
-    if 'edit_page' in call_data:
-        pagenumber = skilift.get_itemnumber(project, call_data['edit_page'])
-        del call_data['edit_page']
-    elif 'page_number' in call_data:
+    if 'page_number' in call_data:
         pagenumber = call_data['page_number']
+        str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
 
@@ -54,22 +49,24 @@ def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, c
         raise FailPage(message = "Invalid page")
 
     try:
-        page_info = skilift.page_info(project, pagenumber)
-        if page_info.item_type != 'FilePage':
+        pageinfo = skilift.page_info(project, pagenumber)
+        if pageinfo.item_type != 'FilePage':
             raise FailPage(message = "Invalid page")
         filepath, mimetype = editpage.file_parameters(project, pagenumber)
     except ServerError as e:
         raise FailPage(message = e.message)
 
-    # set page into call_data
-    call_data['page_number'] = page_info.number
-
-    # fills in the data for editing page name, brief, parent, etc., 
-    utils.retrieve_edit_page(call_data, page_data)
-
+   # fills in the data for editing page name, brief, parent, etc., 
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name
+    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
     page_data['p_file:input_text'] = filepath
     page_data['p_mime:input_text'] = mimetype
-    page_data['enable_cache:radio_checked'] = page_info.enable_cache
+    page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
 def submit_new_filepath(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

@@ -308,34 +308,30 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
 def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the svg edit page"
 
-    project = call_data['editedprojname']
-    
-    # 'edit_page' is from a form
-    # pagenumber is from session data
-
-    if 'edit_page' in call_data:
-        pagenumber = skilift.get_itemnumber(project, call_data['edit_page'])
-        del call_data['edit_page']
-    elif 'page_number' in call_data:
+    if 'page_number' in call_data:
         pagenumber = call_data['page_number']
+        str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
-    if not pagenumber:
+
+    project = call_data['editedprojname']
+    pageinfo = skilift.page_info(project, pagenumber)
+
+    if pageinfo.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
-
-    try:
-        page_info = skilift.page_info(project, pagenumber)
-    except ServerError as e:
-        raise FailPage(message = e.message)
-
-    if page_info.item_type != 'SVG':
-        raise FailPage(message = "Invalid page")
-
-    # set page into call_data
-    call_data['page_number'] = page_info.number
 
     # fills in the data for editing page name, brief, parent, etc., 
-    utils.retrieve_edit_page(call_data, page_data)
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name
+    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+
+    # get a copy of the page object
+    proj, page = skilift.get_proj_page(project, pagenumber, call_data['pchange'])
+
     page_data['enable_cache:radio_checked'] = page_info.enable_cache
 
 
@@ -364,6 +360,7 @@ def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_d
 
 def set_html_lang(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets page background colour in the html tag"
+
     editedproj = call_data['editedproj']
 
     if 'page' in call_data:
@@ -595,14 +592,9 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
 
     project = call_data['editedprojname']
     
-    # 'edit_page' is from a form
-    # pagenumber is from session data
-
-    if 'edit_page' in call_data:
-        pagenumber = skilift.get_itemnumber(project, call_data['edit_page'])
-        del call_data['edit_page']
-    elif 'page_number' in call_data:
+    if 'page_number' in call_data:
         pagenumber = call_data['page_number']
+        str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
 
@@ -610,17 +602,20 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
         raise FailPage(message = "Invalid page")
 
     try:
-        page_info = skilift.page_info(project, pagenumber)
-        if page_info.item_type != 'JSON':
+        pageinfo = skilift.page_info(project, pagenumber)
+        if pageinfo.item_type != 'JSON':
             raise FailPage(message = "Invalid page")
     except ServerError as e:
         raise FailPage(message = e.message)
 
-    # set page into call_data
-    call_data['page_number'] = page_info.number
-
-    # fills in the data for editing page name, brief, parent, etc., 
-    utils.retrieve_edit_page(call_data, page_data)
+   # fills in the data for editing page name, brief, parent, etc., 
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name
+    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
 
     json_content = editpage.json_contents(project, pagenumber)
 
@@ -643,9 +638,7 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
     else:
         page_data['field_values_list','show'] = False
 
-    page_data['enable_cache:radio_checked'] = page_info.enable_cache
-
-
+    page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
 
