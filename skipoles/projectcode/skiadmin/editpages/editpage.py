@@ -32,7 +32,7 @@ from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
 from .... import skilift
-from ....skilift import fromjson, part_info, part_contents, editpage
+from ....skilift import fromjson, part_contents, editpage
 
 from .. import utils
 
@@ -185,7 +185,7 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
     # page location is a tuple of either 'body' 'head' or 'svg', None for no container, () tuple of location integers
     page_location = (location_string, None, ())
     # get page_tuple from project, pagenumber, section_name, page_location
-    page_tuple = part_info(project, pagenumber, None, page_location)
+    page_tuple = skilift.part_info(project, pagenumber, None, page_location)
     if page_tuple is None:
         raise FailPage("The page element has not been recognised")
 
@@ -777,7 +777,7 @@ def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call
     # location is a tuple of location_string, None for no container, tuple of location integers
     location = (location_string, None, location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
     if part_tuple is None:
         raise FailPage("Item to move has not been recognised")
 
@@ -846,7 +846,7 @@ def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict
     # location is a tuple of location_string, None for no container, tuple of location integers
     location = (location_string, None, location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
     if part_tuple is None:
         raise FailPage("Item to move has not been recognised")
 
@@ -857,7 +857,7 @@ def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict
     new_parent_integers.append(location_integers[-1] - 1)
     new_parent_location = (location_string, None, new_parent_integers)
 
-    new_parent_tuple = part_info(editedprojname, pagenumber, None, new_parent_location)
+    new_parent_tuple = skilift.part_info(editedprojname, pagenumber, None, new_parent_location)
 
     if new_parent_tuple is None:
         raise FailPage("Cannot be moved up")
@@ -921,7 +921,7 @@ def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, ca
     # location is a tuple of location_string, None for no container, tuple of location integers
     location = (location_string, None, location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
     if part_tuple is None:
         raise FailPage("Item to move has not been recognised")
 
@@ -999,7 +999,7 @@ def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_di
     # location is a tuple of location_string, None for no container, tuple of location integers
     location = (location_string, None, location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
     if part_tuple is None:
         raise FailPage("Item to move has not been recognised")
 
@@ -1015,7 +1015,7 @@ def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_di
     new_parent_integers = list(location_integers[:-1])
     new_parent_integers.append(location_integers[-1] + 1)
     new_parent_location = (location_string, None, new_parent_integers)
-    new_parent_tuple = part_info(editedprojname, pagenumber, None, new_parent_location)
+    new_parent_tuple = skilift.part_info(editedprojname, pagenumber, None, new_parent_location)
 
     if new_parent_tuple is None:
         raise FailPage("Cannot be moved down")
@@ -1106,7 +1106,7 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     # location is a tuple of location_string, None for no container, tuple of location integers
     location_to_move = (location_string, None, location_to_move_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    part_to_move_tuple = part_info(editedprojname, pagenumber, None, location_to_move)
+    part_to_move_tuple = skilift.part_info(editedprojname, pagenumber, None, location_to_move)
     if part_to_move_tuple is None:
         raise FailPage("Item to move has not been recognised")
 
@@ -1134,7 +1134,7 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     # location is a tuple of location_string, None for no container, tuple of location integers
     target_location = (location_string, None, target_location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    target_part_tuple = part_info(editedprojname, pagenumber, None, target_location)
+    target_part_tuple = skilift.part_info(editedprojname, pagenumber, None, target_location)
     if target_part_tuple is None:
         raise FailPage("Target has not been recognised")
 
@@ -1197,13 +1197,13 @@ def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if len(location_list) == 1:
         # no location integers, so location_list[0] is the location_string
         # edit the top location_string html part
-        call_data['part_tuple'] = part_info(editedprojname, pagenumber, None, [location_list[0], None, ()])
+        call_data['part_tuple'] = skilift.part_info(editedprojname, pagenumber, None, [location_list[0], None, ()])
         raise GoTo(target = 53007, clear_submitted=True)
 
     location_string = location_list[0]
 
     location_integers = [ int(i) for i in location_list[1:]]
-    part_tuple = part_info(editedprojname, pagenumber, None, [location_string, None, location_integers])
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, [location_string, None, location_integers])
     if part_tuple is None:
         raise FailPage("Item to edit has not been recognised")
 
@@ -1272,7 +1272,7 @@ def add_to_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
     # location is a tuple of location_string, None for no container, tuple of location integers
     location = (location_string, None, location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
     if part_tuple is None:
         raise FailPage("Item to append to has not been recognised")
 
@@ -1345,7 +1345,7 @@ def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
     # location is a tuple of location_string, None for no container, tuple of location integers
     location = (location_string, None, location_integers)
     # get part_tuple from project, pagenumber, section_name, location
-    part_tuple = part_info(editedprojname, pagenumber, None, location)
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
     if part_tuple is None:
         raise FailPage("Item to remove has not been recognised")
 
