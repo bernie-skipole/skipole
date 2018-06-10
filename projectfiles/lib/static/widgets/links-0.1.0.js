@@ -151,16 +151,36 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
     var buttontext = the_widg.text();
     var button_wait_text = fieldvalues["button_wait_text"]
     the_widg.text(button_wait_text);
-    $.getJSON(fieldvalues["url"], senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            })
-        .always(function() {
-            if (the_widg.text() == button_wait_text) {
-                the_widg.text(buttontext);
-                }
-            });
     e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["url"],
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  if (the_widg.text() == button_wait_text) {
+                      the_widg.text(buttontext);
+                      }
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          alert(errorThrown);
+                           }
+              });
     };
 
 
@@ -619,11 +639,33 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
     if (!fieldvalues["json_url"][col]) {
         return;
         }
-    $.getJSON(fieldvalues["json_url"][col], senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            });
     e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["json_url"][col],
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          alert(errorThrown);
+                           }
+              });
     };
 
 SKIPOLE.links.GeneralButtonTable2.prototype.dragstartfunc = function (e, data) {

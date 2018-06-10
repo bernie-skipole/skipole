@@ -32,7 +32,7 @@ from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
 from .... import skilift
-from ....skilift import fromjson, part_info, item_info, part_contents, editpage
+from ....skilift import fromjson, part_info, part_contents, editpage
 
 from .. import utils
 
@@ -126,7 +126,7 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
 def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the page head"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -136,14 +136,15 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
     if pagenumber is None:
         raise FailPage(message = "Page number missing")
 
-    page_info = item_info(editedprojname, pagenumber)
-    if page_info is None:
-        raise FailPage("The page has not been recognised")
+    try:
+        pageinfo = skilift.page_info(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
-    if page_info.item_type != 'TemplatePage':
+    if pageinfo.item_type != 'TemplatePage':
         raise FailPage(message = "Invalid page")
 
-    page_data[("adminhead","page_head","large_text")] = page_info.name + ' head'
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' head'
 
     # fill in the table
     call_data['location_string'] = 'head'
@@ -153,7 +154,7 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
 def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call fills in the page dom table"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -168,11 +169,11 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
     # page location is a tuple of either 'body' 'head' or 'svg', None for no container, () tuple of location integers
     page_location = (location_string, None, ())
     # get page_tuple from project, pagenumber, section_name, page_location
-    page_tuple = part_info(editedprojname, pagenumber, None, page_location)
+    page_tuple = part_info(project, pagenumber, None, page_location)
     if page_tuple is None:
         raise FailPage("The page element has not been recognised")
 
-    partdict = fromjson.part_to_OD(editedprojname, pagenumber, None, page_location)
+    partdict = fromjson.part_to_OD(project, pagenumber, None, page_location)
 
     # widget editdom,domtable is populated with fields
 
@@ -247,7 +248,7 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
     droprows = [ [ True, location_string ]]
 
     # send project and page number with dragrow info to avoid items being dragged across web screens showing different pages
-    proj_page = editedprojname+"_"+str(pagenumber)+"_"
+    proj_page = project+"_"+str(pagenumber)+"_"
 
     # for each row (minus 1 as the first row is done)
     for row in range(0, rows-1):
@@ -281,7 +282,7 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
 def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the page body"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -291,14 +292,15 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
     if pagenumber is None:
         raise FailPage(message = "Page number missing")
 
-    page_info = item_info(editedprojname, pagenumber)
-    if page_info is None:
-        raise FailPage("The page has not been recognised")
+    try:
+        pageinfo = skilift.page_info(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
-    if page_info.item_type != 'TemplatePage':
+    if pageinfo.item_type != 'TemplatePage':
         raise FailPage(message = "Invalid page")
 
-    page_data[("adminhead","page_head","large_text")] = page_info.name + ' body'
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' body'
 
     # fill in the table
     call_data['location_string'] = 'body'
