@@ -40022,7 +40022,7 @@ false
 "pages": {
 "aa": {
 "ident": 85002,
-"brief": "aa",
+"brief": "aa description",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
@@ -40262,14 +40262,13 @@ false
 "brief": "New Tag yoa",
 "show": true,
 "hide_if_empty": false,
-"parts": [
+"parts": []
+}
+],
 [
 "Comment",
 {
 "text": "goodby"
-}
-]
-]
 }
 ]
 ]

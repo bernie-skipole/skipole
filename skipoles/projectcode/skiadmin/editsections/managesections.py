@@ -361,6 +361,8 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
         raise GoTo(target = 53007, clear_submitted=True)
 
     section_name = location_list[0]
+    call_data['section_name'] = section_name
+    call_data['schange'] = editsection.sectionchange(editedprojname, section_name)
 
     location_integers = [ int(i) for i in location_list[1:]]
     part_tuple = part_info(editedprojname, None, section_name, [section_name, None, location_integers])

@@ -170,7 +170,7 @@ def new_placeholder(project, pagenumber, pchange, location, section_name, alias,
 
 
 def sectionchange(project, section_name):
-    "Returns None if section_name is not found, otherwise returns the integer section change number"
+    "Returns the section change"
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(section_name, str):

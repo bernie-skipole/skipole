@@ -186,7 +186,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 
     if 'section_name' in session_data:
         call_data['section_name'] = session_data['section_name']
-        call_data['schange'] = schange
+        call_data['schange'] = session_data['schange']
     elif 'page_number' in session_data:
         call_data['page_number'] = session_data['page_number']
         call_data['pchange'] = session_data['pchange']

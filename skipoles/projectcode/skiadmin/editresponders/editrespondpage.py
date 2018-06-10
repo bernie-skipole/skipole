@@ -28,6 +28,8 @@
 
 import collections
 
+
+from .... import skilift
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
