@@ -55,49 +55,65 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
     else:
         raise FailPage(message = "page missing")
 
-    project = call_data['editedprojname']
-    pageinfo = skilift.page_info(project, pagenumber)
+    try:
+        project = call_data['editedprojname']
+        pageinfo = skilift.page_info(project, pagenumber)
 
-    if pageinfo.item_type != 'TemplatePage':
-        raise FailPage(message = "Invalid page")
+        if pageinfo.item_type != 'TemplatePage':
+            raise FailPage(message = "Invalid page")
 
-    # fills in the data for editing page name, brief, parent, etc., 
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name
-    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+        # fills in the data for editing page name, brief, parent, etc., 
+        page_data[("adminhead","page_head","large_text")] = pageinfo.name
+        page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+        page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+        page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
 
-    # get a copy of the page object
-    proj, page = skilift.get_proj_page(project, pagenumber, call_data['pchange'])
+        pageOD = fromjson.page_to_OD(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+
+    if "TemplatePage" in pageOD:
+        pagedict = pageOD["TemplatePage"]
+    else:
+        raise FailPage(message="This page not recognised as a Template page.")
 
     # page language
-    page_data[("setlang","input_text")] = page.lang
+    page_data[("setlang","input_text")] = pagedict["lang"]
 
     # default error widget
-    page_data[("default_e_widg","input_text")] = page.default_error_widget.to_str_tuple()
+    dew = pagedict["default_error_widget"]
+    if dew[0]:
+        page_data[("default_e_widg","input_text")] = dew[0] + ',' + dew[1]
+    elif dew[1]:
+        page_data[("default_e_widg","input_text")] = dew[1]
 
     # sets last_scroll flag
-    page_data[("lastscroll","checked")] = page.last_scroll
+    page_data[("lastscroll","checked")] = pagedict["last_scroll"]
 
     # fills in the backcolor checkbox and value
-    if page.show_backcol:
+    if pagedict["show_backcol"]:
         page_data[("enablebackcolor","checked")] = True
         page_data[('setbackcolor', 'hide')] = False
     else:
         page_data[("enablebackcolor","checked")] = False
         page_data[('setbackcolor', 'hide')] = True
-    page_data[('setbackcolor', 'input_text')] = page.backcol
+    page_data[('setbackcolor', 'input_text')] = pagedict["backcol"]
+
 
     # fills in the JSON refresh checkbox
-    if page.interval and page.interval_target:
+    if pagedict["interval"] and pagedict["interval_target"]:
+        if pagedict["interval_target"] is None:
+            interval_target = ''
+        else:
+            interval_target = str(pagedict["interval_target"])
         page_data[("refreshcheck","checked")] = True
         page_data[('interval', 'disabled')] = False
         page_data[('interval_target', 'disabled')] = False
-        page_data[('interval', 'input_text')] = str(page.interval)
-        page_data[('interval_target', 'input_text')] = _ident_to_str(page.interval_target)
+        page_data[('interval', 'input_text')] = str(pagedict["interval"])
+        page_data[('interval_target', 'input_text')] = interval_target
     else:
         page_data[("refreshcheck","checked")] = False
         page_data[('interval', 'disabled')] = True
