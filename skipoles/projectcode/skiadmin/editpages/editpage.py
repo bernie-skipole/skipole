@@ -420,33 +420,26 @@ def enable_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_d
 def set_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Sets the background colour in the HTML tag"""
 
-    editedproj = call_data['editedproj']
-
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
-    else:
-        raise FailPage(message = "page missing")
-
-    if page.show_backcol == False:
-        raise FailPage(message = "Backgound colour in HTML tag has not been enabled")
-
-    if (('setbackcolor','input_text') in call_data) and call_data['setbackcolor','input_text']:
-        page.backcol = call_data['setbackcolor','input_text']
-    else:
-        raise FailPage(message = "Background colour to set is missing")
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
 
     try:
-        # save the altered page
-        editedproj.save_page(page)
+        show_backcol, backcol = editpage.get_page_backcol(project, pagenumber, pchange)
+
+        if show_backcol == False:
+            raise FailPage(message = "Backgound colour in HTML tag has not been enabled")
+
+        if (('setbackcolor','input_text') in call_data) and call_data['setbackcolor','input_text']:
+            backcol = call_data['setbackcolor','input_text']
+        else:
+            raise FailPage(message = "Background colour to set is missing")
+
+        call_data['pchange'] = editpage.page_backcol(project, pagenumber, pchange, show_backcol, backcol)
+
     except ServerError as e:
         raise FailPage(message=e.message)
-    call_data['status'] = 'HTML tag background color set to %s' % page.backcol
+    call_data['status'] = 'HTML tag background color set to %s' % backcol
 
 
 
