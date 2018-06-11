@@ -446,31 +446,18 @@ def set_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data
 def set_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets page last_scroll flag"
 
-    editedproj = call_data['editedproj']
-
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
-    else:
-        raise FailPage(message = "page missing")
-
-    if (('lastscroll','checkbox') in call_data) and (call_data['lastscroll','checkbox'] == 'checked'):
-        # enable the last_scroll flag
-        page.last_scroll = True
-        text = 'Page will be displayed at the last scroll position'
-    else:
-        # disable the last_scroll flag
-        page.last_scroll = False
-        text = 'Page will not display at previous scroll position'
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     try:
-        # save the altered page
-        editedproj.save_page(page)
+        if (('lastscroll','checkbox') in call_data) and (call_data['lastscroll','checkbox'] == 'checked'):
+            # enable the last_scroll flag
+            call_data['pchange'] = editpage.page_last_scroll(project, pagenumber, pchange, True)
+            text = 'Page will be displayed at the last scroll position'
+        else:
+            # disable the last_scroll flag
+            call_data['pchange'] = editpage.page_last_scroll(project, pagenumber, pchange, False)
+            text = 'Page will not display at previous scroll position'
     except ServerError as e:
         raise FailPage(message=e.message)
     call_data['status'] = text
@@ -479,18 +466,9 @@ def set_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_dat
 def submit_refresh(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets JSON refresh facility"
 
-    editedproj = call_data['editedproj']
-
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
-    else:
-        raise FailPage(message = "page missing")
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
 
     interval = 0
     interval_target = None
@@ -510,53 +488,34 @@ def submit_refresh(caller_ident, ident_list, submit_list, submit_dict, call_data
             interval = 0
         else:
             interval = int(call_data['interval', 'input_text'])
-            interval_target = skiboot.make_ident_or_label(call_data['interval_target', 'input_text'], proj_ident=editedproj.proj_ident)
+            interval_target = call_data['interval_target', 'input_text']
     except:
         raise FailPage(message="Error setting JSON refresh")
-    # set page attributes
-    if (interval == 0) or (not interval_target):
-        text = 'JSON refresh facility disabled'
-        page.interval = 0
-        page.interval_target = None
-    else:
-        text = 'JSON refresh facility enabled'
-        page.interval = interval
-        # if interval target is an ident of this project, only store an integer
-        if isinstance(interval_target, skiboot.Ident):
-            if interval_target.proj == editedproj.proj_ident:
-                page.interval_target = interval_target.num
-            else:
-                # ident is another project, put the full ident
-                page.interval_target = interval_target.to_comma_str()
-        else:
-            page.interval_target = interval_target
 
-    # save the page
-    utils.save(call_data, page=page)
+    try:
+        # set page attributes
+        if (interval == 0) or (not interval_target):
+            text = 'JSON refresh facility disabled'
+            call_data['pchange'] = editpage.page_interval(project, pagenumber, pchange, 0, None)
+        else:
+            text = 'JSON refresh facility enabled'
+            call_data['pchange'] = editpage.page_interval(project, pagenumber, pchange, interval, interval_target)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = text
 
 
 def submit_default_error_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets page default_error_widget"
-
-    editedproj = call_data['editedproj']
-
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
-    else:
-        raise FailPage(message = "page missing")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if ('e_widg' not in call_data) or (not call_data['e_widg']):
         raise FailPage(message="Error setting default error widget")
-    page.default_error_widget = call_data['e_widg']
-    # save the page
-    utils.save(call_data, page=page)
+    try:
+        call_data['pchange'] = editpage.page_default_error_widget(project, pagenumber, pchange, call_data['e_widg'])
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = "default error widget set"
 
 
@@ -703,16 +662,25 @@ def add_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_
     call_data['status'] = "Widgfield added"
 
 
-
 def downloadpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets template or SVG page, and returns a json dictionary, this will be sent as an octet file to be downloaded"
-    if 'page' not in call_data:
+
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if (page.page_type != 'TemplatePage') and (page.page_type != 'SVG'):
-        raise FailPage("Invalid page type")
-    project = call_data['editedproj']
-    jsonstring =  fromjson.page_to_json(project.proj_ident, page.ident.num, indent=4)
+
+    try:
+        project = call_data['editedprojname']
+        pageinfo = skilift.page_info(project, pagenumber)
+
+        if (pageinfo.item_type != 'TemplatePage') and (pageinfo.item_type != 'SVG'):
+            raise FailPage(message = "Invalid page")
+
+        jsonstring = fromjson.page_to_json(project, pagenumber, indent=4)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+
     line_list = []
     n = 0
     for line in jsonstring.splitlines(True):
