@@ -110,6 +110,69 @@ def page_backcol(project, pagenumber, pchange, show_backcol, backcol):
     return proj.save_page(page)
 
 
+def page_last_scroll(project, pagenumber, pchange, last_scroll):
+    "Sets last_scroll flag in the page"
+    # get a copy of the page, which can be edited
+    # and then saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    # Set the page last_scroll
+    page.last_scroll = last_scroll
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def get_page_interval(project, pagenumber, pchange):
+    """Returns tuple, first element is the refresh interval, or 0 if target does not exist
+                      second element being the interval target, or None if not set"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    if page.interval != 0:
+        if page.interval_target is None:
+            return 0, None
+        interval_target = page.interval_target
+        # if interval target is an ident of this project, only return an integer
+        if isinstance(interval_target, skiboot.Ident):
+            if interval_target.proj == project:
+                interval_target = str(interval_target.num)
+            else:
+                # ident is another project, put the full ident
+                interval_target = interval_target.to_comma_str()
+        return page.interval, interval_target
+    else:
+        return 0, None
+
+
+def page_interval(project, pagenumber, pchange, interval, interval_target):
+    """Sets the refresh interval and target"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    interval_target = skiboot.make_ident_or_label(interval_target, project)
+    # set page attributes
+    if (interval == 0) or (not interval_target):
+        page.interval = 0
+        page.interval_target = None
+    else:
+        page.interval = interval
+        page.interval_target = interval_target
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def page_default_error_widget(project, pagenumber, pchange, default_error_widget):
+    "Sets default_error_widget in the page"
+    # get a copy of the page, which can be edited
+    # and then saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    page.default_error_widget = default_error_widget
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
 
 def new_parent(project, pagenumber, pchange, new_parent_number):
     "Gives a page a new parent folder"
