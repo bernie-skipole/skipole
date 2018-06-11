@@ -295,6 +295,8 @@ def delete_item(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     if not info:
         raise FailPage(message = "Item to remove not recognised")
 
+    parentfolder_number = info.parentfolder_number
+
     if itemnumber == 0:
         raise FailPage(message = "Cannot delete the root folder")
 
@@ -304,6 +306,9 @@ def delete_item(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         if error:
             raise FailPage(message = "Unable to delete the folder")
         call_data['status'] = 'Folder deleted'
+        # place parentfolder into call_data
+        call_data["folder_number"] = parentfolder_number
+        call_data["fchange"] = editfolder.folderchange(project, parentfolder_number)
         return
 
     # If not a Folder, must be a page
@@ -320,7 +325,9 @@ def delete_item(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         del call_data['page_number']
     if 'page' in call_data:
         del call_data['page']
-
+    # place parentfolder into call_data
+    call_data["folder_number"] = parentfolder_number
+    call_data["fchange"] = editfolder.folderchange(project, parentfolder_number)
     call_data['status'] = 'Page deleted'
 
 

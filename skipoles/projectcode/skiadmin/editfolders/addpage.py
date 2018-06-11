@@ -30,7 +30,7 @@ import os, inspect, re
 from ....ski.excepts import ValidateError, FailPage, ServerError
 
 from .... import skilift
-from ....skilift import fromjson, editfolder, editresponder
+from ....skilift import fromjson, editfolder, editresponder, editpage
 
 from .. import utils, css_styles
 
@@ -145,6 +145,7 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
+    call_data['pchange'] = editpage.pagechange(project, pagenumber)
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
@@ -301,6 +302,7 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['page_number'] = pagenumber
+    call_data['pchange'] = editpage.pagechange(project, pagenumber)
     call_data['status'] = 'SVG %s added' % (new_name,)
 
 

@@ -521,23 +521,22 @@ def submit_default_error_widget(caller_ident, ident_list, submit_list, submit_di
 
 def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets cache true or false"
-    # the page to have a new mimetype should be given by session data
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'SVG':
-        raise ValidateError("Invalid page type")
-    if not 'cache' in call_data:
-        raise FailPage(message="No cache instruction given", widget="cache_submit")
-    # Set the page cache
-    if call_data['cache'] == 'True':
-        page.enable_cache = True
-        message = "Cache Enabled"
-    else:
-        page.enable_cache = False
-        message = "Cache Disabled"
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='cache_submit')
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    if 'cache' not in call_data:
+        raise FailPage(message="No cache instruction given")
+    try:
+        # Set the page cache
+        if call_data['cache'] == 'True':
+            enable_cache = True
+            message = "Cache Enabled"
+        else:
+            enable_cache = False
+            message = "Cache Disabled"
+        call_data['pchange'] = editpage.page_enable_cache(project, pagenumber, pchange, enable_cache)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = message
 
 
