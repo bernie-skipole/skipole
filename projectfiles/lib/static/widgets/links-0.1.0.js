@@ -172,7 +172,7 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
                       }
               })
           .fail(function( jqXHR, textStatus, errorThrown ) {
-                      if (jqXHR.status == 400 || jqXHR.status == 500)  {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
                           document.open();
                           document.write(jqXHR.responseText);
                           document.close();
@@ -657,7 +657,7 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
                       }
               })
           .fail(function( jqXHR, textStatus, errorThrown ) {
-                      if (jqXHR.status == 400 || jqXHR.status == 500)  {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
                           document.open();
                           document.write(jqXHR.responseText);
                           document.close();

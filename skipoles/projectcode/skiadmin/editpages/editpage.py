@@ -185,11 +185,11 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
     # page location is a tuple of either 'body' 'head' or 'svg', None for no container, () tuple of location integers
     page_location = (location_string, None, ())
     # get page_tuple from project, pagenumber, section_name, page_location
-    page_tuple = skilift.part_info(project, pagenumber, None, page_location)
-    if page_tuple is None:
-        raise FailPage("The page element has not been recognised")
-
-    partdict = fromjson.part_to_OD(project, pagenumber, None, page_location)
+    try:
+        page_tuple = skilift.part_info(project, pagenumber, None, page_location)
+        partdict = fromjson.part_to_OD(project, pagenumber, None, page_location)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
     # widget editdom,domtable is populated with fields
 
@@ -333,7 +333,11 @@ def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage(message = "page missing")
 
     project = call_data['editedprojname']
-    pageinfo = skilift.page_info(project, pagenumber)
+
+    try:
+        pageinfo = skilift.page_info(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
     if pageinfo.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
@@ -346,11 +350,7 @@ def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, ca
     page_data[('page_edit','p_rename','input_text')] = pageinfo.name
     page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
     page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
-
-    # get a copy of the page object
-    proj, page = skilift.get_proj_page(project, pagenumber, call_data['pchange'])
-
-    page_data['enable_cache:radio_checked'] = page_info.enable_cache
+    page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
 def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -365,66 +365,53 @@ def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_d
     if pagenumber is None:
         raise FailPage(message = "Page number missing")
     try:
-        page_info = skilift.page_info(project, pagenumber)
+        pageinfo = skilift.page_info(project, pagenumber)
     except ServerError as e:
         raise FailPage(message = e.message)
-    if page_info.item_type != 'SVG':
+    if pageinfo.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
-    page_data[("adminhead","page_head","large_text")] = page_info.name + ' svg'
+    page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' svg'
     # fill in the table
     call_data['location_string'] = 'svg'
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
 def set_html_lang(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Sets page background colour in the html tag"
-
-    editedproj = call_data['editedproj']
-
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
+    "Sets language in the page html tag"
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    if not 'setlang' in call_data:
+        raise FailPage(message="No language given", widget="setlang")
+    new_lang = call_data['setlang']
+    # call skilift.editpage.page_language which returns a new pchange
+    try:
+        call_data['pchange'] = editpage.page_language(project, pagenumber, pchange, new_lang)
+    except ServerError as e:
+        raise FailPage(e.message)
+    if not new_lang:
+        call_data['status'] = "No language set"
     else:
-        raise FailPage(message = "page missing")
-    if 'setlang' not in call_data:
-        raise FailPage(message = "Invalid language")
-    page.lang = call_data['setlang']
-    # save the page
-    utils.save(call_data, page=page, widget_name="setlang")
-    call_data['status'] = "Page lang set to %s" % call_data['setlang']
+        call_data['status'] = "Page language set to %s" % new_lang
 
 
 def enable_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Enables background colour in HTML tag"""
-
-    editedproj = call_data['editedproj']
-
-    if 'page' in call_data:
-        if call_data['page'].page_type == 'TemplatePage':
-            # page given from session data
-            page = call_data['page']
-        else:
-            raise FailPage(message = "Invalid page")
-        if not page in editedproj:
-            raise FailPage(message = "Invalid page")
-    else:
-        raise FailPage(message = "page missing")
-
-    if (("enablebackcolor","checkbox") in call_data) and call_data["enablebackcolor","checkbox"]:
-        page.show_backcol = True
-        result = "Background colour %s set in HTML tag" % page.backcol
-    else:
-        page.show_backcol = False
-        result = "Background colour removed from HTML tag"
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
 
     try:
-        # save the altered page
-        editedproj.save_page(page)
+        show_backcol, backcol = editpage.get_page_backcol(project, pagenumber, pchange)
+
+        if (("enablebackcolor","checkbox") in call_data) and call_data["enablebackcolor","checkbox"]:
+            show_backcol = True
+            result = "Background colour %s set in HTML tag" % backcol
+        else:
+            show_backcol = False
+            result = "Background colour removed from HTML tag"
+
+        call_data['pchange'] = editpage.page_backcol(project, pagenumber, pchange, show_backcol, backcol)
     except ServerError as e:
         raise FailPage(message=e.message)
     call_data['status'] = result

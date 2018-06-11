@@ -77,6 +77,40 @@ def page_description(project, pagenumber, pchange, brief):
     return proj.save_page(page)
 
 
+def page_language(project, pagenumber, pchange, language):
+    "Sets language in the page html tag"
+    # get a copy of the page, which can have a new language set
+    # and can then be saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    # Set the page language
+    page.lang = language
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def get_page_backcol(project, pagenumber, pchange):
+    """Returns tuple, first element True if the background colour is set in the html tag
+                      second element being the background colour string"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    return page.show_backcol, page.backcol
+
+
+def page_backcol(project, pagenumber, pchange, show_backcol, backcol):
+    """Sets the backcolour and enables/disables it in the html tag"""
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    page.show_backcol = show_backcol
+    page.backcol = backcol
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+
 def new_parent(project, pagenumber, pchange, new_parent_number):
     "Gives a page a new parent folder"
 
