@@ -317,7 +317,7 @@ def part_info(project, pagenumber, section_name, location):
        a string (such as head or section name or widget name)
        a container integer, such as 0 for widget container 0, or None if not in container
        a tuple or list of location integers
-       returns None if part not found, otherwise returns a namedtuple with items
+       raise ServerError if part not found, otherwise returns a namedtuple with items
        project, pagenumber, page_part, section_name, name, location, part_type, brief
     """
 
@@ -347,7 +347,7 @@ def part_info(project, pagenumber, section_name, location):
                page_part = ident_top[0].split("_")[2]
 
     if part is None:
-        return
+        raise ServerError("Part not found")
 
     if hasattr(part, '__class__'):
         part_type = part.__class__.__name__
