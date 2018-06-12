@@ -29,23 +29,19 @@
 
 import re
 
-from collections import namedtuple, OrderedDict
+from collections import OrderedDict
 
 from ..ski import skiboot, tag, read_json
 from ..ski.excepts import ServerError
 
 from . import project_loaded, get_proj_section, get_proj_page, insert_item_in_page, del_location_in_section, insert_item_in_section
 
+from .info_tuple import PlaceHolderInfo, SectionElement, SectionTextBlock
+
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
-
-PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
-
-SectionElement = namedtuple('SectionElement', ['project', 'section_name', 'schange', 'location', 'part_type', 'tag_name', 'brief', 'show', 'hide_if_empty', 'attribs'])
-
-SectionTextBlock = namedtuple('SectionTextBlock', ['project', 'section_name', 'schange', 'location', 'textref', 'failmessage', 'escape', 'linebreaks', 'decode'])
 
 
 def list_section_names(project=None):

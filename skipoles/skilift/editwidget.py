@@ -29,30 +29,18 @@
 
 import pkgutil, importlib, inspect, re
 
-from collections import namedtuple
-
-
 from ..ski import widgets, dump_project
 from ..ski.excepts import ServerError
 
 from . import widget_info, fromjson, insert_item_in_page, insert_item_in_section, get_proj_page, get_proj_section
 
 
+from .info_tuple import WidgetDescription, FieldDescription, ContainerInfo
+
+
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
-WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'reference', 'fields', 'containers', 'illustration',
-                                                     'fields_single', 'fields_list', 'fields_table', 'fields_dictionary', 'parent_widget', 'parent_container'])
-
-
-FieldDescription = namedtuple('FieldDescription', ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle'])
-
-
-ContainerInfo = namedtuple('ContainerInfo', ['container', 'container_ref', 'empty'])
-
-
-# 'fields' is a list of lists: [ field arg, field ref]
-# 'containers' is the number of containers in the widget, 0 for none
 
 def widget_modules():
     "Return a tuple of widget module names"

@@ -40270,6 +40270,24 @@ false
 {
 "text": "goodby"
 }
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowEnviron",
+"name": "environ",
+"brief": "shows environ",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"show": true,
+"show_error": "",
+"toptext": "DEBUG MODE IS ON",
+"widget_class": "",
+"widget_style": ""
+}
+}
 ]
 ]
 }

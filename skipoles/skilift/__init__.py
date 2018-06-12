@@ -28,24 +28,12 @@
 """Functions that access the ski framework"""
 
 import os
-from collections import namedtuple
 
 from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError
 
 from ..ski import skiboot, tag
 
-
-ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_file'])
-
-ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'])
-
-PartInfo = namedtuple('PartInfo', ['project', 'pagenumber', 'page_part', 'section_name', 'name', 'location', 'part_type', 'brief'])
-
-PageInfo = namedtuple('PageInfo', ['name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change', 'parentfolder_number'])
-
-FolderInfo = namedtuple('FolderInfo', ['name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders', 'change'])
-
-WidgetInfo = namedtuple('WidgetInfo', ['project', 'pagenumber', 'section_name', 'name', 'location', 'containers', 'display_errors', 'brief'])
+from .info_tuple import ProjectInfo, ItemInfo, PartInfo, PageInfo, FolderInfo, WidgetInfo
 
 
 def project_loaded(project, error_if_not=True):
