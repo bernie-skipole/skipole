@@ -27,18 +27,14 @@
 
 """Functions for editing a page"""
 
-from collections import namedtuple, OrderedDict
+from collections import OrderedDict
 
 from ..ski import skiboot, tag, read_json, dump_project
 from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info, get_proj_page, del_location_in_page, insert_item_in_page
 
-PageElement = namedtuple('PageElement', ['project', 'pagenumber', 'pchange', 'location', 'page_part', 'part_type', 'tag_name', 'brief', 'hide_if_empty', 'attribs'])
-
-PageTextBlock = namedtuple('PageTextBlock', ['project', 'pagenumber', 'pchange', 'location', 'textref', 'failmessage', 'escape', 'linebreaks', 'decode'])
-
-WidgFieldInfo = namedtuple('WidgFieldInfo', ['tuple_widgfield', 'str_widgfield', 'str_comma_widgfield'])
+from .info_tuple import PageElement, PageTextBlock, WidgFieldInfo
 
 
 def pagechange(project, pagenumber):
