@@ -178,8 +178,11 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
                           document.close();
                           }
                       else {
+                          if (the_widg.text() == button_wait_text) {
+                              the_widg.text(buttontext);
+                              }
                           alert(errorThrown);
-                           }
+                          }
               });
     };
 
@@ -328,16 +331,39 @@ SKIPOLE.links.ButtonLink2.prototype.eventfunc = function (e) {
         a_link.text(button_wait_text);
         }
     var senddata = href.substring(href.indexOf('?')+1);
-    $.getJSON(fieldvalues["url"], senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            })
-        .always(function() {
-            if (a_link.text() == button_wait_text) {
-                a_link.text(buttontext);
-                }
-            });
     e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["url"],
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  if (a_link.text() == button_wait_text) {
+                       a_link.text(buttontext);
+                       }
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          if (a_link.text() == button_wait_text) {
+                              a_link.text(buttontext);
+                              }
+                          alert(errorThrown);
+                           }
+              });
     };
 
 
@@ -509,13 +535,34 @@ SKIPOLE.links.Table1_Button.prototype.eventfunc = function (e) {
         }
     var href = $(e.target).attr('href');
     var senddata = href.substring(href.indexOf('?')+1);
-    $.getJSON(fieldvalues["url"], senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            });
     e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["url"],
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          alert(errorThrown);
+                           }
+              });
     };
-
 
 
 SKIPOLE.links.Table2_Button = function (widg_id, error_message, fieldmap) {
@@ -554,11 +601,33 @@ SKIPOLE.links.Table2_Button.prototype.eventfunc = function (e) {
         }
     var href = $(e.target).attr('href');
     var senddata = href.substring(href.indexOf('?')+1);
-    $.getJSON(fieldvalues["url"], senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            });
     e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["url"],
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          alert(errorThrown);
+                           }
+              });
     };
 
 
@@ -585,22 +654,67 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
         if (!fieldvalues["url1"]) {
             return;
             }
-        $.getJSON(fieldvalues["url1"], senddata)
-            .done(function(result){
-                SKIPOLE.setfields(result);
-                });
+        // respond to json or html
+        e.preventDefault();
+        $.ajax({
+              url: fieldvalues["url1"],
+              data: senddata
+                  })
+              .done(function(result, textStatus, jqXHR) {
+                 if (jqXHR.responseJSON) {
+                      // JSON response
+                      SKIPOLE.setfields(result);
+                      } else {
+                          // html response
+                          document.open();
+                          document.write(result);
+                          document.close();
+                          }
+                  })
+              .fail(function( jqXHR, textStatus, errorThrown ) {
+                          if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                              document.open();
+                              document.write(jqXHR.responseText);
+                              document.close();
+                              }
+                          else {
+                              alert(errorThrown);
+                               }
+                  });
         } else if (myCol === 4) {
             if (!fieldvalues["url2"]) {
                 return;
                 }
-            $.getJSON(fieldvalues["url2"], senddata)
-                .done(function(result){
-                SKIPOLE.setfields(result);
-                });
+            // respond to json or html
+            e.preventDefault();
+            $.ajax({
+                  url: fieldvalues["url2"],
+                  data: senddata
+                      })
+                  .done(function(result, textStatus, jqXHR) {
+                     if (jqXHR.responseJSON) {
+                          // JSON response
+                          SKIPOLE.setfields(result);
+                          } else {
+                              // html response
+                              document.open();
+                              document.write(result);
+                              document.close();
+                              }
+                      })
+                  .fail(function( jqXHR, textStatus, errorThrown ) {
+                              if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                                  document.open();
+                                  document.write(jqXHR.responseText);
+                                  document.close();
+                                  }
+                              else {
+                                  alert(errorThrown);
+                                   }
+                      });
         } else {
             return;
         }
-    e.preventDefault();
     };
 
 
