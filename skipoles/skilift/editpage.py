@@ -343,6 +343,33 @@ def json_contents(project, pagenumber):
     return contents
 
 
+def remove_json_widgfield(project, pagenumber, pchange, str_widgfield):
+    "Remove the given widgfield from the JSON page"
+    # get a copy of the page, which can be edited
+    # and then saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "JSON":
+        raise ServerError(message = "Invalid page type")
+    if str_widgfield in page.content:
+        page.del_widgfield(str_widgfield)
+    else:
+        raise ServerError(message="Widgfield not recognised")
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def add_json_widgfield(project, pagenumber, pchange, str_widgfield, value):
+    "Add the given widgfield and value to a JSON page"
+    # get a copy of the page, which can be edited
+    # and then saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "JSON":
+        raise ServerError(message = "Invalid page type")
+    page.add_widgfield(str_widgfield, value)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 def create_html_comment_in_page(project, pagenumber, pchange, location, text="comment here"):
     "Creates a new html comment in the given page, returns the new pchange and comment location"
     com = tag.Comment(text)

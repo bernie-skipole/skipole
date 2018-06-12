@@ -28,22 +28,12 @@
 
 import html
 
-from ....ski import skiboot, tag, widgets
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
 from .... import skilift
 from ....skilift import fromjson, part_contents, editpage
 
 from .. import utils
-
-
-def _ident_to_str(ident):
-    "Returns string ident or label"
-    if isinstance(ident, skiboot.Ident):
-        return ident.to_comma_str()
-    if ident is None:
-        return ''
-    return str(ident)
 
 
 def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -621,33 +611,28 @@ def set_json_cache(caller_ident, ident_list, submit_list, submit_dict, call_data
 
 def remove_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes widgfield from JSON page"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'JSON':
-        raise FailPage("Invalid page type")
-    if not ('field_values_list','contents') in call_data:
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    if ('field_values_list','contents') not in call_data:
         raise FailPage(message="No widgfield given")
-    widgfield = call_data['field_values_list','contents']
-    if widgfield in page.content:
-        page.del_widgfield(widgfield)
-        # save the altered page in the database
-        utils.save(call_data, page=page)
-        call_data['status'] = "Widgfield removed"
-    else:
-        raise FailPage(message="Widgfield not recognised")
+    try:
+        str_widgfield = call_data['field_values_list','contents']
+        call_data['pchange'] = editpage.remove_json_widgfield(project, pagenumber, pchange, str_widgfield)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    call_data['status'] = "Widgfield removed"
+
 
 
 def add_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Adds a widgfield to JSON page"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'JSON':
-        raise FailPage("Invalid page type")
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not ('jsonwidgfield', 'input_text') in call_data:
         raise FailPage(message="No widgfield given")
-    widgfield = call_data[ 'jsonwidgfield', 'input_text']
+    str_widgfield = call_data[ 'jsonwidgfield', 'input_text']
     if call_data['jsontrue', 'button_text'] == 'True':
         value = True
     elif call_data['jsonfalse', 'button_text'] == 'False':
@@ -656,9 +641,10 @@ def add_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_
         value = call_data['jsontext', 'input_text']
     else:
         value = ''
-    page.add_widgfield(widgfield, value)
-    # save the altered page in the database
-    utils.save(call_data, page=page)
+    try:
+        call_data['pchange'] = editpage.add_json_widgfield(project, pagenumber, pchange, str_widgfield, value)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = "Widgfield added"
 
 
