@@ -578,14 +578,15 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
     if json_content:
         # If json page has contents, show the table of widgfields, values
         contents = []
-        for widgfield,value in json_content.items():
-            wfstrtuple = widgfield.to_str_tuple()
+        for widgfieldinfo,value in json_content.items():
+            wfcomma = widgfieldinfo.str_comma_widgfield
+            wfstr = widgfieldinfo.str_widgfield
             if value is True:
-                contents.append([wfstrtuple,'True',str(widgfield)])
+                contents.append([wfcomma,'True',wfstr])
             elif value is False:
-                contents.append([wfstrtuple,'False',str(widgfield)])
+                contents.append([wfcomma,'False',wfstr])
             else:
-                contents.append([wfstrtuple,value,str(widgfield)])
+                contents.append([wfcomma,value,wfstr])
         if contents:
             page_data['field_values_list','show'] = True
             page_data['field_values_list','contents'] = contents
@@ -597,25 +598,24 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
-
 def set_json_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets cache true or false"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'JSON':
-        raise FailPage("Invalid page type")
-    if not ('enable_cache', 'radio_checked') in call_data:
-        raise FailPage(message="No cache instruction given", widget="cache_submit")
-    # Set the page cache
-    if call_data[('enable_cache', 'radio_checked')] == 'True':
-        page.enable_cache = True
-        message = "Cache Enabled"
-    else:
-        page.enable_cache = False
-        message = "Cache Disabled"
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='cache_submit')
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    if ('enable_cache', 'radio_checked') not in call_data:
+        raise FailPage(message="No cache instruction given")
+    try:
+        # Set the page cache
+        if call_data['enable_cache', 'radio_checked'] == 'True':
+            enable_cache = True
+            message = "Cache Enabled"
+        else:
+            enable_cache = False
+            message = "Cache Disabled"
+        call_data['pchange'] = editpage.page_enable_cache(project, pagenumber, pchange, enable_cache)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = message
 
 
@@ -636,6 +636,7 @@ def remove_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, ca
         call_data['status'] = "Widgfield removed"
     else:
         raise FailPage(message="Widgfield not recognised")
+
 
 def add_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Adds a widgfield to JSON page"
