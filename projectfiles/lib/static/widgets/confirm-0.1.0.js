@@ -121,22 +121,65 @@ SKIPOLE.confirm.ConfirmBox1.prototype.eventfunc = function (e) {
         if (!fieldvalues["url1"]) {
             return;
             }
-        $.getJSON(fieldvalues["url1"], senddata)
-            .done(function(result){
-                SKIPOLE.setfields(result);
-                });
+        e.preventDefault();
+        // respond to json or html
+        $.ajax({
+              url: fieldvalues["url1"],
+              data: senddata
+                  })
+              .done(function(result, textStatus, jqXHR) {
+                 if (jqXHR.responseJSON) {
+                      // JSON response
+                      SKIPOLE.setfields(result);
+                      } else {
+                          // html response
+                          document.open();
+                          document.write(result);
+                          document.close();
+                          }
+                  })
+              .fail(function( jqXHR, textStatus, errorThrown ) {
+                          if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                              document.open();
+                              document.write(jqXHR.responseText);
+                              document.close();
+                              }
+                          else {
+                              alert(errorThrown);
+                               }
+                  });
         } else if (button_num === 1) {
             if (!fieldvalues["url2"]) {
                 return;
                 }
-            $.getJSON(fieldvalues["url2"], senddata)
-                .done(function(result){
-                SKIPOLE.setfields(result);
-                });
-        } else {
-            return;
+            e.preventDefault();
+            // respond to json or html
+            $.ajax({
+                  url: fieldvalues["url2"],
+                  data: senddata
+                      })
+                  .done(function(result, textStatus, jqXHR) {
+                     if (jqXHR.responseJSON) {
+                          // JSON response
+                          SKIPOLE.setfields(result);
+                          } else {
+                              // html response
+                              document.open();
+                              document.write(result);
+                              document.close();
+                              }
+                      })
+                  .fail(function( jqXHR, textStatus, errorThrown ) {
+                              if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                                  document.open();
+                                  document.write(jqXHR.responseText);
+                                  document.close();
+                                  }
+                              else {
+                                  alert(errorThrown);
+                                   }
+                      });
         }
-    e.preventDefault();
     };
 
 
