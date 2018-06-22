@@ -169,18 +169,41 @@ SKIPOLE.checkbox.SubmitCheckBox1.prototype.eventfunc = function (e) {
                 var self = this;
                 var widgform = this.widg.find('form');
                 var senddata = widgform.serializeArray();
-                $.getJSON(jsonurl, senddata).done(function(result){
-                     if (self.get_error(result)) {
-                        // if error, set any results received from the json call
-                        SKIPOLE.setfields(result);
-                        }
-                   else {
-                        // If no error received, clear any previous error
-                        self.clear_error();
-                        SKIPOLE.setfields(result);
-                        }
-                    });
                 e.preventDefault();
+                // respond to json or html
+                $.ajax({
+                      url: jsonurl,
+                      data: senddata
+                          })
+                      .done(function(result, textStatus, jqXHR) {
+                         if (jqXHR.responseJSON) {
+                              // JSON response
+                              if (self.get_error(result)) {
+                                  // if error, set any results received from the json call
+                                  SKIPOLE.setfields(result);
+                                  }
+                              else {
+                                  // If no error received, clear any previous error
+                                  self.clear_error();
+                                  SKIPOLE.setfields(result);
+                                  }
+                               } else {
+                                  // html response
+                                  document.open();
+                                  document.write(result);
+                                  document.close();
+                                  }
+                          })
+                      .fail(function( jqXHR, textStatus, errorThrown ) {
+                                  if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                                      document.open();
+                                      document.write(jqXHR.responseText);
+                                      document.close();
+                                      }
+                                  else {
+                                      alert(errorThrown);
+                                      }
+                          });
                 }
             }
         }
