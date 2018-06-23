@@ -808,13 +808,34 @@ SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
         senddata = senddata + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
         }
     $("body").css('cursor','wait');
-    $.getJSON(url, senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            })
-        .always(function(){
-            $("body").css('cursor','auto');
-            });
+    // respond to json or html
+    $.ajax({
+          url: url,
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  $("body").css('cursor','auto');
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          $("body").css('cursor','auto');
+                          alert(errorThrown);
+                           }
+              });
     };
 SKIPOLE.links.GeneralButtonTable2.prototype.allowdropfunc = function (e) {
      e.preventDefault();
