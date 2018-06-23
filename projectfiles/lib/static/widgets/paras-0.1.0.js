@@ -57,13 +57,34 @@ SKIPOLE.paras.TagBlock.prototype.dropfunc = function (e, data) {
         senddata = senddata + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
         }
     $("body").css('cursor','wait');
-    $.getJSON(url, senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            })
-        .always(function(){
-            $("body").css('cursor','auto');
-            });
+    // respond to json or html
+    $.ajax({
+          url: url,
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  $("body").css('cursor','auto');
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          $("body").css('cursor','auto');
+                          alert(errorThrown);
+                           }
+              });
     };
 SKIPOLE.paras.TagBlock.prototype.allowdropfunc = function (e) {
      e.preventDefault();
@@ -151,13 +172,34 @@ SKIPOLE.paras.DivHTML.prototype.dropfunc = function (e, data) {
         senddata = senddata + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
         }
     $("body").css('cursor','wait');
-    $.getJSON(url, senddata)
-        .done(function(result){
-            SKIPOLE.setfields(result);
-            })
-        .always(function(){
-            $("body").css('cursor','auto');
-            });
+    // respond to json or html
+    $.ajax({
+          url: url,
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  $("body").css('cursor','auto');
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          $("body").css('cursor','auto');
+                          alert(errorThrown);
+                           }
+              });
     };
 SKIPOLE.paras.DivHTML.prototype.allowdropfunc = function (e) {
      e.preventDefault();
@@ -490,6 +532,7 @@ SKIPOLE.paras.JSONTextLink.prototype.eventfunc = function (e) {
         button_show_text = "Show";
         }
     var textbox = the_widg.children().filter(":last");
+    e.preventDefault();
     if (textbox.is(":visible")) {
         textbox.fadeOut('slow');
         $(e.target).text(button_show_text);
@@ -497,12 +540,34 @@ SKIPOLE.paras.JSONTextLink.prototype.eventfunc = function (e) {
     else {
         var href = $(e.target).attr('href');
         var senddata = href.substring(href.indexOf('?')+1);
-        $.getJSON(fieldvalues["url"], senddata)
-            .done(function(result){
-                SKIPOLE.setfields(result);
-                });
+        // respond to json or html
+        $.ajax({
+              url: fieldvalues["url"],
+              data: senddata
+                  })
+              .done(function(result, textStatus, jqXHR) {
+                 if (jqXHR.responseJSON) {
+                      // JSON response
+                      SKIPOLE.setfields(result);
+                      } else {
+                          // html response
+                          document.open();
+                          document.write(result);
+                          document.close();
+                          }
+                  })
+              .fail(function( jqXHR, textStatus, errorThrown ) {
+                          if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                              document.open();
+                              document.write(jqXHR.responseText);
+                              document.close();
+                              }
+                          else {
+                              alert(errorThrown);
+                              }
+                  });
         }
-    e.preventDefault();
+
     };
 
 
@@ -630,6 +695,7 @@ SKIPOLE.paras.JSONDivLink.prototype.eventfunc = function (e) {
     if (!button_show_text) {
         button_show_text = "Show";
         }
+    e.preventDefault();
     if ($("#" + fieldvalues["divident"]).is(":visible")) {
         $("#" + fieldvalues["divident"]).fadeOut('slow');
         $("#" + fieldvalues["buttonident"]).text(button_show_text);
@@ -639,12 +705,33 @@ SKIPOLE.paras.JSONDivLink.prototype.eventfunc = function (e) {
         if (fieldvalues["get_field"]) {
             senddata[this.formname("get_field")] = fieldvalues["get_field"];
             }
-        $.getJSON(fieldvalues["url"], senddata)
-            .done(function(result){
-                SKIPOLE.setfields(result);
-                });
+        // respond to json or html
+        $.ajax({
+              url: fieldvalues["url"],
+              data: senddata
+                  })
+              .done(function(result, textStatus, jqXHR) {
+                 if (jqXHR.responseJSON) {
+                      // JSON response
+                      SKIPOLE.setfields(result);
+                      } else {
+                          // html response
+                          document.open();
+                          document.write(result);
+                          document.close();
+                          }
+                  })
+              .fail(function( jqXHR, textStatus, errorThrown ) {
+                          if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                              document.open();
+                              document.write(jqXHR.responseText);
+                              document.close();
+                              }
+                          else {
+                              alert(errorThrown);
+                              }
+                  });
         }
-    e.preventDefault();
     };
 
 
