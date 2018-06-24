@@ -553,3 +553,17 @@ def edit_page_textblock(project, pagenumber, pchange, location, textref, failmes
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
 
+
+
+def page_filepath(project, pagenumber, pchange, filepath):
+    "Sets filepath in the FilePage"
+    # get a copy of the page, which can have a new filepath set
+    # and can then be saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "FilePage":
+        raise ServerError(message = "Invalid page type")
+    # Set the page filepath
+    page.filepath = filepath
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
