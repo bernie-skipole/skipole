@@ -96,7 +96,7 @@ def get_proj_section(project, section_name, schange=None):
 
 def project_info(project):
     """Returns a namedtuple with contents
-       project, version, brief, path, default_language, subprojects, json_file
+       project, version, brief, path, default_language, subprojects, json_file, tar_path
        where subprojects is an ordered dictionary of projectname:path
     """
     project_loaded(project)
@@ -108,7 +108,8 @@ def project_info(project):
                    proj.url,
                    proj.default_language,
                    proj.subproject_paths,
-                   skiboot.project_json(project)
+                   skiboot.project_json(project),
+                   skiboot.tar_path(project)
                    )
 
 

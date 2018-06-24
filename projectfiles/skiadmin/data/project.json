@@ -40187,6 +40187,12 @@ false
 "hide_if_empty": false,
 "parts": [
 [
+"Comment",
+{
+"text": "goodby"
+}
+],
+[
 "Text",
 "this newer text"
 ],
@@ -40263,12 +40269,6 @@ false
 "show": true,
 "hide_if_empty": false,
 "parts": []
-}
-],
-[
-"Comment",
-{
-"text": "goodby"
 }
 ],
 [

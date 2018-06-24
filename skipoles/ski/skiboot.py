@@ -125,8 +125,7 @@ def set_debug(mode):
 
 def tar_path(proj_ident):
     "Returns the path to the tar file"
-    export_tar = proj_ident + ".tar.gz"
-    return os.path.join(projectpath(proj_ident), export_tar)
+    return os.path.join(projectpath(proj_ident), proj_ident + ".tar.gz")
 
 def admin_ident():
     "Returns the ident of the root folder of the admin project"

@@ -71,22 +71,19 @@ def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, c
 
 def submit_new_filepath(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets new page filepath"
-    # the page to have a new filepath should be given by session data
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "FilePage":
-        raise ValidateError("Invalid page type")
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'filepath' in call_data:
-        raise FailPage(message="No filepath given", widget="p_file")
+        raise FailPage(message="No filepath given")
     new_filepath = call_data['filepath']
     if not new_filepath:
-        raise FailPage(message="No filepath given", widget="p_file")
-    # Set the page filepath
-    page.filepath = new_filepath
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name="p_file")
-    call_data['status'] = 'Page filepath set: %s' % (page.filepath,)
+        raise FailPage(message="No filepath given")
+    try:
+        call_data['pchange'] = editpage.page_filepath(project, pagenumber, pchange, new_filepath)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    call_data['status'] = 'Page filepath set: %s' % (new_filepath,)
 
 
 def submit_mimetype(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

@@ -452,11 +452,11 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
     
 
 def retrieve_download(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Set page_data['filepath'] to the path to edited project tar.gz file"
-    editedproj = call_data['editedproj']
-    # filepath is path beneath static
-    filepath = os.path.join(editedproj.proj_ident, editedproj.proj_ident + '.tar.gz')
-    if os.path.isfile(skiboot.tar_path(editedproj.proj_ident)):
+    "Set page_data['filepath'] to the url of the edited project tar.gz file"
+    project = call_data["editedprojname"]
+    projinfo = skilift.project_info(project)
+    filepath = os.path.join(project, project + '.tar.gz')
+    if os.path.isfile(projinfo.tar_path):
         page_data["filepath"] = filepath
     else:
         raise FailPage(message="File %s not yet created" % (filepath,))
