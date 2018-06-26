@@ -75,6 +75,12 @@ def page_description(project, pagenumber, pchange, brief):
     return proj.save_page(page)
 
 
+def page_string(project, pagenumber):
+    "Returns a string of the page, may be usefull for diagnostics"
+    proj, page = get_proj_page(project, pagenumber)
+    return str(page)
+
+
 def page_language(project, pagenumber, pchange, language):
     "Sets language in the page html tag"
     # get a copy of the page, which can have a new language set

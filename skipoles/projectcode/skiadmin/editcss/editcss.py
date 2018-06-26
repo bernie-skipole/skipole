@@ -135,14 +135,27 @@ def retrieve_edit_selector(caller_ident, ident_list, submit_list, submit_dict, c
 
 def retrieve_print_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the print css page"
-    # the page to be printed should be given by session data
-    if 'page' not in call_data:
+
+    project = call_data['editedprojname']
+    
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
-    page_data['page_details:para_text'] = "/**************************\n\nIdent:%s\nPath:%s\n%s" % (page.ident.to_comma_str(), page.url, page.brief)
-    page_data['page_contents:para_text'] = str(page)
+
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+
+    try:
+        pageinfo = skilift.item_info(project, pagenumber)
+        if pageinfo.item_type != 'CSS':
+            raise FailPage(message = "Invalid page")
+        page_string = editpage.page_string(project, pagenumber)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    page_data['page_details:para_text'] = "/**************************\n\nIdent:%s,%s\nPath:%s\n%s" % (project, pagenumber, pageinfo.path, pageinfo.brief)
+    page_data['page_contents:para_text'] = page_string
 
 
 def submit_new_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
