@@ -183,7 +183,7 @@ def page_enable_cache(project, pagenumber, pchange, enable_cache):
     # get a copy of the page, which can be edited
     # and then saved to the project
     proj, page = get_proj_page(project, pagenumber, pchange)
-    if (page.page_type != "SVG") and (page.page_type != "JSON") and (page.page_type != "FilePage"):
+    if (page.page_type != "SVG") and (page.page_type != "JSON") and (page.page_type != "FilePage") and (page.page_type != "CSS"):
         raise ServerError(message = "Invalid page type")
     page.enable_cache = enable_cache
     # save the altered page, and return the page.change uuid
