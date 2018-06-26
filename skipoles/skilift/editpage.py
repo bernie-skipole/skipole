@@ -320,6 +320,14 @@ def css_style(project, pagenumber):
     return page.style
 
 
+def css_selector_properties(project, pagenumber, selector):
+    "Return selctor properties of a CSS style of a page, as a string"
+    proj, page = get_proj_page(project, pagenumber)
+    if page.page_type != "CSS":
+        raise ServerError(message = "Invalid page type")
+    return page.selector_properties(selector)
+
+
 def file_parameters(project, pagenumber):
     "Return filepath,mimetype of a page"
     proj, page = get_proj_page(project, pagenumber)
