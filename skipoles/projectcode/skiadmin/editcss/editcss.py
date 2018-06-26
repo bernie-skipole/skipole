@@ -34,8 +34,6 @@ from ....ski.excepts import ValidateError, FailPage, ServerError
 from .... import skilift
 from ....skilift import editpage
 
-from .. import utils
-
 
 def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit css page"
@@ -201,22 +199,21 @@ def submit_delete_selector(caller_ident, ident_list, submit_list, submit_dict, c
 
 def submit_selector_properties(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the selector properties"
-    # the page to have a selector edited should be given by session data
-    if 'page' not in call_data:
+    project = call_data['editedprojname']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
-
-    if not 'edit_selector' in call_data:
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+    pchange = call_data['pchange']
+    if 'edit_selector' not in call_data:
         raise FailPage(message="No selector to edit given")
     edit_selector = call_data['edit_selector']
-    if not 'properties' in call_data:
+    if 'properties' not in call_data:
         raise FailPage(message="No properties to set given")
     property_string = call_data['properties']
-
     property_list = property_string.split(';')
-
     properties = []
     for item in property_list:
         if not item:
@@ -225,99 +222,103 @@ def submit_selector_properties(caller_ident, ident_list, submit_list, submit_dic
             continue
         pair = item.split(':')
         if len(pair) != 2:
-            raise FailPage(message="Invalid properties", widget='properties')
+            raise FailPage(message="Invalid properties")
         a = pair[0].strip()
         b = pair[1].strip()
-        #if (not a) or (not b):
-        #   raise FailPage(message="Invalid properties", widget='properties')
         properties.append([a,b])
     if not properties:
-        raise FailPage(message="Invalid properties", widget='properties')
-    style = page.style
-    style[edit_selector] = properties
-    page.style = style
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='properties')
+        raise FailPage(message="Invalid properties")
+    try:
+        style = editpage.css_style(project, pagenumber)
+        style[edit_selector] = properties
+        call_data['pchange'] = editpage.set_css_style(project, pagenumber, pchange, style)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = 'Properties set'
-
         
 
 def move_selector_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves selector upwards"
-    # the page to have a selector moved should be given by session data
-    if 'page' not in call_data:
+    project = call_data['editedprojname']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
-    if not 'up_selector' in call_data:
-        raise FailPage(message="No selector to move up given", widget="selectortable")
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+    pchange = call_data['pchange']
+    if 'up_selector' not in call_data:
+        raise FailPage(message="No selector to move up given")
     up_selector = call_data['up_selector']
     if not up_selector:
-        raise FailPage(message="No selector given", widget="selectortable")
-    style = page.style
-    if up_selector not in style:
-        raise FailPage(message="Selector to move up is not present", widget="selectortable")
-    # Move the selector up
-    selector_list = page.selector_list()
-    idx = selector_list.index(up_selector)
-    if not idx:
-        # idx cannot be zero
-        raise FailPage(message="Selector already at top", widget="selectortable")
-    selector_list[idx-1], selector_list[idx] = selector_list[idx], selector_list[idx-1]
-    new_style = collections.OrderedDict([(selector,style[selector]) for selector in selector_list])
-    page.style = new_style
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='selectortable')
-    call_data['status'] = 'Selector moved'
+        raise FailPage(message="No selector given")
+    try:
+        style = editpage.css_style(project, pagenumber)
+        if up_selector not in style:
+            raise FailPage(message="Selector to move up is not present")
+        selector_list = list(style.keys())
+        # Move the selector up
+        idx = selector_list.index(up_selector)
+        if not idx:
+            # idx cannot be zero
+            raise FailPage(message="Selector already at top")
+        selector_list[idx-1], selector_list[idx] = selector_list[idx], selector_list[idx-1]
+        new_style = collections.OrderedDict([(selector,style[selector]) for selector in selector_list])
+        call_data['pchange'] = editpage.set_css_style(project, pagenumber, pchange, new_style)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
 
 def move_selector_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves selector downwardswards"
-    # the page to have a selector moved should be given by session data
-    if 'page' not in call_data:
+    project = call_data['editedprojname']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
-    if not 'down_selector' in call_data:
-        raise FailPage(message="No selector to move down given", widget="selectortable")
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+    pchange = call_data['pchange']
+    if 'down_selector' not in call_data:
+        raise FailPage(message="No selector to move down given")
     down_selector = call_data['down_selector']
     if not down_selector:
-        raise FailPage(message="No selector given", widget="selectortable")
-    style = page.style
-    if down_selector not in style:
-        raise FailPage(message="Selector to move down is not present", widget="selectortable")
-    # Move the selector down
-    selector_list = page.selector_list()
-    idx = selector_list.index(down_selector)
-    if idx == len(selector_list) -1:
-        # idx cannot be last element
-        raise FailPage(message="Selector already at end", widget="selectortable")
-    selector_list[idx+1], selector_list[idx] = selector_list[idx], selector_list[idx+1]
-    new_style = collections.OrderedDict([(selector,style[selector]) for selector in selector_list])
-    page.style = new_style
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='selectortable')
-    call_data['status'] = 'Selector moved'
+        raise FailPage(message="No selector given")
+    try:
+        style = editpage.css_style(project, pagenumber)
+        if down_selector not in style:
+            raise FailPage(message="Selector to move down is not present")
+        # Move the selector down
+        selector_list = list(style.keys())
+        idx = selector_list.index(down_selector)
+        if idx == len(selector_list) -1:
+            # idx cannot be last element
+            raise FailPage(message="Selector already at end")
+        selector_list[idx+1], selector_list[idx] = selector_list[idx], selector_list[idx+1]
+        new_style = collections.OrderedDict([(selector,style[selector]) for selector in selector_list])
+        call_data['pchange'] = editpage.set_css_style(project, pagenumber, pchange, new_style)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
 
 def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets cache true or false"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
-    if not 'cache' in call_data:
-        raise FailPage(message="No cache instruction given", widget="cache_submit")
-    # Set the page cache
-    if call_data['cache'] == 'True':
-        page.enable_cache = True
-        message = "Cache Enabled"
-    else:
-        page.enable_cache = False
-        message = "Cache Disabled"
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='cache_submit')
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    if 'cache' not in call_data:
+        raise FailPage(message="No cache instruction given")
+    try:
+        # Set the page cache
+        if call_data['cache'] == 'True':
+            enable_cache = True
+            message = "Cache Enabled"
+        else:
+            enable_cache = False
+            message = "Cache Disabled"
+        call_data['pchange'] = editpage.page_enable_cache(project, pagenumber, pchange, enable_cache)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = message
+
+
