@@ -177,7 +177,7 @@ def page_enable_cache(project, pagenumber, pchange, enable_cache):
     # get a copy of the page, which can be edited
     # and then saved to the project
     proj, page = get_proj_page(project, pagenumber, pchange)
-    if (page.page_type != "SVG") and (page.page_type != "JSON"):
+    if (page.page_type != "SVG") and (page.page_type != "JSON") and (page.page_type != "FilePage"):
         raise ServerError(message = "Invalid page type")
     page.enable_cache = enable_cache
     # save the altered page, and return the page.change uuid
@@ -554,7 +554,6 @@ def edit_page_textblock(project, pagenumber, pchange, location, textref, failmes
     return proj.save_page(page)
 
 
-
 def page_filepath(project, pagenumber, pchange, filepath):
     "Sets filepath in the FilePage"
     # get a copy of the page, which can have a new filepath set
@@ -564,6 +563,19 @@ def page_filepath(project, pagenumber, pchange, filepath):
         raise ServerError(message = "Invalid page type")
     # Set the page filepath
     page.filepath = filepath
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def page_mimetype(project, pagenumber, pchange, mimetype):
+    "Sets mimetype in the FilePage"
+    # get a copy of the page, which can have a new mimetype set
+    # and can then be saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "FilePage":
+        raise ServerError(message = "Invalid page type")
+    # Set the page mimetype
+    page.mimetype = mimetype
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
 
