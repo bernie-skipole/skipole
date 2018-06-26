@@ -1,6 +1,6 @@
 ####### SKIPOLE WEB FRAMEWORK #######
 #
-# editfile.py  - download file editing functions
+# editfile.py  - FilePage editing
 #
 # This file is part of the Skipole web framework
 #
@@ -24,15 +24,13 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-"Functions implementing download file page editing"
+"Functions implementing FilePage editing"
 
 
 from ....ski.excepts import ValidateError, FailPage, ServerError
 
 from .... import skilift
 from ....skilift import editpage
-
-from .. import utils
 
 
 def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -72,7 +70,12 @@ def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, c
 def submit_new_filepath(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets new page filepath"
     project = call_data['editedprojname']
-    pagenumber = call_data['page_number']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message = "page missing")
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
     pchange = call_data['pchange']
     if not 'filepath' in call_data:
         raise FailPage(message="No filepath given")
@@ -88,38 +91,43 @@ def submit_new_filepath(caller_ident, ident_list, submit_list, submit_dict, call
 
 def submit_mimetype(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets mimetype"
-    # the page to have a new mimetype should be given by session data
-    if 'page' not in call_data:
+    project = call_data['editedprojname']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "FilePage":
-        raise ValidateError("Invalid page type")
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+    pchange = call_data['pchange']
     if not 'mime_type' in call_data:
-        raise FailPage(message="No mimetype given", widget="p_mime")
+        raise FailPage(message="No mimetype given")
     # Set the page mimetype
-    page.mimetype = call_data['mime_type']
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name="p_mime")
+    try:
+        call_data['pchange'] = editpage.page_mimetype(project, pagenumber, pchange, call_data['mime_type'])
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = 'Mimetype set'
 
 
 def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets cache true or false"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "FilePage":
-        raise ValidateError("Invalid page type")
-    if not 'cache' in call_data:
-        raise FailPage(message="No cache instruction given", widget="cache_submit")
-    # Set the page cache
-    if call_data['cache'] == 'True':
-        page.enable_cache = True
-        message = "Cache Enabled"
-    else:
-        page.enable_cache = False
-        message = "Cache Disabled"
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name="cache_submit")
+    # this function is duplicated in editpage, may be better to remove this file and transfer conetents to editpage
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    if 'cache' not in call_data:
+        raise FailPage(message="No cache instruction given")
+    try:
+        # Set the page cache
+        if call_data['cache'] == 'True':
+            enable_cache = True
+            message = "Cache Enabled"
+        else:
+            enable_cache = False
+            message = "Cache Disabled"
+        call_data['pchange'] = editpage.page_enable_cache(project, pagenumber, pchange, enable_cache)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     call_data['status'] = message
+
 
