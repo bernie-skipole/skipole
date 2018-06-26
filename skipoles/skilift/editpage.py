@@ -326,6 +326,19 @@ def css_style(project, pagenumber):
     return page.style
 
 
+def set_css_style(project, pagenumber, pchange, style):
+    "Sets style in the CSS Page"
+    # get a copy of the page, which can have a new style set
+    # and can then be saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "CSS":
+        raise ServerError(message = "Invalid page type")
+    # Set the page style
+    page.style = style
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 def css_selector_properties(project, pagenumber, selector):
     "Return selctor properties of a CSS style of a page, as a string"
     proj, page = get_proj_page(project, pagenumber)

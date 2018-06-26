@@ -39,18 +39,14 @@ from .. import utils
 
 def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit css page"
-
     project = call_data['editedprojname']
-    
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
         str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
-
     if not pagenumber:
         raise FailPage(message = "Invalid page")
-
     try:
         pageinfo = skilift.page_info(project, pagenumber)
         if pageinfo.item_type != 'CSS':
@@ -93,18 +89,14 @@ def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, ca
 
 def retrieve_edit_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit selector page"
-
     project = call_data['editedprojname']
-    
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
         str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
-
     if not pagenumber:
         raise FailPage(message = "Invalid page")
-
     if 'edit_selector' not in call_data:
         raise FailPage(message="No selector given")
 
@@ -135,17 +127,13 @@ def retrieve_edit_selector(caller_ident, ident_list, submit_list, submit_dict, c
 
 def retrieve_print_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the print css page"
-
     project = call_data['editedprojname']
-    
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
     else:
         raise FailPage(message = "page missing")
-
     if not pagenumber:
         raise FailPage(message = "Invalid page")
-
     try:
         pageinfo = skilift.item_info(project, pagenumber)
         if pageinfo.item_type != 'CSS':
@@ -153,32 +141,34 @@ def retrieve_print_csspage(caller_ident, ident_list, submit_list, submit_dict, c
         page_string = editpage.page_string(project, pagenumber)
     except ServerError as e:
         raise FailPage(message = e.message)
-
     page_data['page_details:para_text'] = "/**************************\n\nIdent:%s,%s\nPath:%s\n%s" % (project, pagenumber, pageinfo.path, pageinfo.brief)
     page_data['page_contents:para_text'] = page_string
 
 
 def submit_new_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets new selector"
-    # the page to have a selector added should be given by session data
-    if 'page' not in call_data:
+    project = call_data['editedprojname']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+    pchange = call_data['pchange']
     if not 'new_selector' in call_data:
-        raise FailPage(message="No new selector given", widget="add")
+        raise FailPage(message="No new selector given")
     new_selector = call_data['new_selector']
     if not new_selector:
-        raise FailPage(message="No selector given", widget="add")
-    style = page.style
-    if new_selector in style:
-        raise FailPage(message="Selector already exists", widget="add")
-    # Set the selector
-    style[new_selector] = []
-    page.style = style
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='add')
+        raise FailPage(message="No selector given")
+    try:
+        style = editpage.css_style(project, pagenumber)
+        if new_selector in style:
+            raise FailPage(message="Selector already exists")
+        # Set the selector
+        style[new_selector] = []
+        call_data['pchange'] = editpage.set_css_style(project, pagenumber, pchange, style)
+    except ServerError as e:
+        raise FailPage(message=e.message)
     page_data["adminhead","page_head","small_text"] = 'Page selector set'
 
 
