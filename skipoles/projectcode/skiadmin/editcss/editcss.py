@@ -94,32 +94,40 @@ def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, ca
 def retrieve_edit_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit selector page"
 
-    editedproj = call_data['editedproj']
-
-    call_data['extend_nav_buttons'] = [['back_to_css_page', 'CSS Page', True, '']]    # label to 8003
-
-    # the page to have a selector edited should be given by session data
-    if 'page' not in call_data:
+    project = call_data['editedprojname']
+    
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+        str_pagenumber = str(pagenumber)
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
 
-    if not 'edit_selector' in call_data:
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+
+    if 'edit_selector' not in call_data:
         raise FailPage(message="No selector given")
 
-    edit_selector = call_data['edit_selector']
-    property_string = page.selector_properties(edit_selector)
+    try:
+        pageinfo = skilift.page_info(project, pagenumber)
+        if pageinfo.item_type != 'CSS':
+            raise FailPage(message = "Invalid page")
+        edit_selector = call_data['edit_selector']
+        property_string = editpage.css_selector_properties(project, pagenumber, edit_selector)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    call_data['extend_nav_buttons'] = [['back_to_css_page', 'CSS Page', True, '']]    # label to 8003
 
     if 'status' in call_data:
         status_text = call_data['status']
     else:
         status_text = 'Edit selector : %s' % (edit_selector,)
 
-    page_data.update({("adminhead","page_head","large_text"):"Edit CSS page : %s" % (page.url,),
+    page_data.update({("adminhead","page_head","large_text"):"Edit CSS page : %s" % (pageinfo.name,),
                       ("adminhead","page_head","small_text"):status_text,
                       ('selectorname','para_text'):"Selector : %s" % (edit_selector,),
-                      ('p_ident','page_ident'):page.ident,
+                      ('p_ident','page_ident'):(project,str_pagenumber),
                       ('properties','hidden_field1'):edit_selector,
                       ('properties','input_text'):property_string })
 
