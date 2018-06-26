@@ -169,31 +169,34 @@ def submit_new_selector(caller_ident, ident_list, submit_list, submit_dict, call
         call_data['pchange'] = editpage.set_css_style(project, pagenumber, pchange, style)
     except ServerError as e:
         raise FailPage(message=e.message)
-    page_data["adminhead","page_head","small_text"] = 'Page selector set'
+    call_data['status'] = 'Selector \"%s\" added.' % (new_selector,)
 
 
 def submit_delete_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Deletes selector"
-    # the page to have a selector deleted should be given by session data
-    if 'page' not in call_data:
+    project = call_data['editedprojname']
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
         raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != "CSS":
-        raise ValidateError("Invalid page type")
-    if not 'remove_selector' in call_data:
-        raise FailPage(message="No selector to delete given", widget="selectortable")
+    if not pagenumber:
+        raise FailPage(message = "Invalid page")
+    pchange = call_data['pchange']
+    if 'remove_selector' not in call_data:
+        raise FailPage(message="No selector to delete given")
     remove_selector = call_data['remove_selector']
     if not remove_selector:
-        raise FailPage(message="No selector given", widget="selectortable")
-    style = page.style
-    if remove_selector not in style:
-        raise FailPage(message="Selector to remove is not present", widget="selectortable")
-    # Remove the selector
-    del style[remove_selector]
-    page.style = style
-    # save the altered page in the database
-    utils.save(call_data, page=page, widget_name='selectortable')
-    page_data["adminhead","page_head","small_text"] = 'Selector deleted'
+        raise FailPage(message="No selector given")
+    try:
+        style = editpage.css_style(project, pagenumber)
+        if remove_selector not in style:
+            raise FailPage(message="Selector to remove is not present")
+        # Remove the selector
+        del style[remove_selector]
+        call_data['pchange'] = editpage.set_css_style(project, pagenumber, pchange, style)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    call_data['status'] = 'Selector deleted'
 
 
 def submit_selector_properties(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -266,7 +269,7 @@ def move_selector_up(caller_ident, ident_list, submit_list, submit_dict, call_da
     page.style = new_style
     # save the altered page in the database
     utils.save(call_data, page=page, widget_name='selectortable')
-    page_data["adminhead","page_head","small_text"] = 'Selector moved'
+    call_data['status'] = 'Selector moved'
 
 
 def move_selector_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -296,7 +299,7 @@ def move_selector_down(caller_ident, ident_list, submit_list, submit_dict, call_
     page.style = new_style
     # save the altered page in the database
     utils.save(call_data, page=page, widget_name='selectortable')
-    page_data["adminhead","page_head","small_text"] = 'Selector moved'
+    call_data['status'] = 'Selector moved'
 
 
 def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
