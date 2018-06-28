@@ -49,13 +49,14 @@ ResponderInfo = namedtuple('ResponderInfo', ['responder',
                                              'allowed_callers_required',
                                              'allowed_callers',
                                              'validate_option_available',
+                                             'validate_option',
                                              'validate_fail_ident',
                                              'submit_option_available',
                                              'submit_option',
                                              'submit_required',
                                              'submit_list',
                                              'fail_ident',
-                                             'field_options,',
+                                             'field_options',
                                              'field_values_list',
                                              'field_list',
                                              'single_field_value',
@@ -112,6 +113,11 @@ def responder_info(project, pagenumber, pchange):
     else:
         allowed_callers = []
 
+    if responder.validate_option_available:
+        validate_option = responder.validate_option
+    else:
+        validate_option = False
+
     if responder.validate_option_available and responder.validate_fail_ident:
         validate_fail_ident = responder.validate_fail_ident
     else:
@@ -120,13 +126,13 @@ def responder_info(project, pagenumber, pchange):
     # submit option
 
     if responder.submit_option_available:
-        submit_option = responder.submit_option:
+        submit_option = responder.submit_option
     else:
         submit_option = False
 
     if responder.submit_required or submit_option:
         if responder.submit_list:
-            submit_list = responder.submit_list
+            submit_list = responder.submit_list[:]
         else:
             submit_list = []
         if responder.fail_ident:
@@ -153,10 +159,14 @@ def responder_info(project, pagenumber, pchange):
             for field, value in field_vals.items():
                 if isinstance(field, skiboot.WidgField):
                     f = field.to_tuple()
+                elif isinstance(field, skiboot.Ident):
+                    f = str(field)
                 else:
                     f = field
                 if isinstance(value, skiboot.WidgField):
                     v = value.to_tuple()
+                elif isinstance(value, skiboot.Ident):
+                    v = str(value)
                 else:
                     v = value
                 field_values_list.append([f,v])
@@ -167,6 +177,8 @@ def responder_info(project, pagenumber, pchange):
             for field in field_vals:
                 if isinstance(field, skiboot.WidgField):
                     f = field.to_tuple()
+                elif isinstance(field, skiboot.Ident):
+                    f = str(field)
                 else:
                     f = field
                 field_list.append(f)
@@ -195,6 +207,7 @@ def responder_info(project, pagenumber, pchange):
                          responder.allowed_callers_required,
                          allowed_callers,
                          responder.validate_option_available,
+                         validate_option,
                          _label_or_ident(validate_fail_ident),
                          responder.submit_option_available,
                          submit_option,

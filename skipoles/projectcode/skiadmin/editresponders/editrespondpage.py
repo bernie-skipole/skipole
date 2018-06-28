@@ -30,6 +30,9 @@ import collections
 
 
 from .... import skilift
+from ....skilift import editresponder
+
+
 from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
@@ -38,11 +41,34 @@ from .. import utils
 
 def _ident_to_str(ident):
     "Returns string ident or label"
-    if isinstance(ident, skiboot.Ident):
-        return ident.to_comma_str()
     if ident is None:
         return ''
-    return str(ident)
+    if isinstance(ident, str):
+        return ident
+    # ident must be a list or tuple of (project,number)
+    if len(ident) != 2:
+        raise FailPage("Invalid ident")
+    return ident[0] + "," + str(ident[1])
+
+
+def _field_to_string(wfield):
+    "Returns two forms of a widgfield, or if a string, then just the string twice"
+    if isinstance(wfield, str):
+        return wfield, wfield
+    # a widgfield has four elements, reduce it to the non empty elements
+    shortwfield = [ w for w in wfield if w ]
+    wf1 = ",".join(shortwfield)
+    if len(shortwfield) == 2:
+        wf2 = shortwfield[0] + ":" + shortwfield[1]
+    else:
+        wf2 = shortwfield[0] + "-" + shortwfield[1] + ":" + shortwfield[2]
+    return wf1, wf2
+
+
+def _t_ref(r_info, item):
+    "Returns a TextBlock ref for the given item"
+    return ".".join(["responders",r_info.module_name, r_info.responder, item])
+
 
 
 def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -69,38 +95,41 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
     page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
     page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
 
-    # get a copy of the page object
-    proj, page = skilift.get_proj_page(project, pagenumber, call_data['pchange'])
+    # get a ResponderInfo named tuple with information about the responder
+    try:
+        r_info = editresponder.responder_info(project, pagenumber, call_data['pchange'])
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
-    page_data['respondertype:para_text'] = "This page is a responder of type: %s." % (page.responder.__class__.__name__,)
-    page_data['responderdescription:textblock_ref'] = page.responder.description_ref()
+    page_data['respondertype:para_text'] = "This page is a responder of type: %s." % (r_info.responder,)
+    page_data['responderdescription:textblock_ref'] = ".".join(["responders",r_info.module_name, r_info.responder])
 
-    if page.responder.widgfield_required:
-        if page.responder.widgfield:
-            page_data['widgfield:input_text'] = page.responder.widgfield.to_str_tuple()
+    if r_info.widgfield_required:
+        if r_info.widgfield:
+            page_data['widgfield:input_text'] = r_info.widgfield
     else:
         page_data['widgfield:show'] = False
 
-    if page.responder.alternate_ident_required:
-        page_data['alternate','input_text'] = _ident_to_str(page.responder.alternate_ident)
-        page_data['alternate_ident_description','textblock_ref'] = page.responder.description_ref('alternate_ident')
+    if r_info.alternate_ident_required:
+        page_data['alternate','input_text'] = _ident_to_str(r_info.alternate_ident)
+        page_data['alternate_ident_description','textblock_ref'] = _t_ref(r_info, 'alternate_ident')
     else:
         page_data['alternate','show'] = False
         page_data['alternate_ident_description','show'] = False
 
-    if page.responder.target_ident_required:
-        page_data['target:input_text'] = _ident_to_str(page.responder.target_ident)
-        page_data['target_ident_description','textblock_ref'] = page.responder.description_ref('target_ident')
+    if r_info.target_ident_required:
+        page_data['target:input_text'] = _ident_to_str(r_info.target_ident)
+        page_data['target_ident_description','textblock_ref'] = _t_ref(r_info, 'target_ident')
     else:
         page_data['target:show'] = False
         page_data['target_ident_description','show'] = False
 
-    if page.responder.allowed_callers_required:
-        page_data['allowed_callers_description:textblock_ref'] = page.responder.description_ref('allowed_callers')
-        if page.responder.allowed_callers:
+    if r_info.allowed_callers_required:
+        page_data['allowed_callers_description:textblock_ref'] = _t_ref(r_info, 'allowed_callers')
+        if r_info.allowed_callers:
             contents = []
-            for ident in page.responder.allowed_callers:
-                ident_row = [_ident_to_str(ident), str(ident)]
+            for ident in r_info.allowed_callers:
+                ident_row = [_ident_to_str(ident), _ident_to_str(ident).replace(",","_")]
                 contents.append(ident_row)
             page_data['allowed_callers_list:contents'] = contents
         else:
@@ -112,12 +141,12 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
         page_data['add_allowed_caller:show'] = False
 
     # validate option
-    if page.responder.validate_option_available:
-        page_data[('val_option_desc', 'textblock_ref')] =  page.responder.description_ref('validate_option')
-        if page.responder.validate_option:
+    if r_info.validate_option_available:
+        page_data[('val_option_desc', 'textblock_ref')] =  _t_ref(r_info, 'validate_option')
+        if r_info.validate_option:
             page_data['set_val_option','button_text'] = "Disable Validation"
             page_data['val_status','para_text'] = "Validate received field values : Enabled"
-            page_data['validate_fail', 'input_text'] = _ident_to_str(page.responder.validate_fail_ident)
+            page_data['validate_fail', 'input_text'] = _ident_to_str(r_info.validate_fail_ident)
             page_data['validate_fail', 'hide'] = False
         else:
             page_data['set_val_option','button_text'] = "Enable Validation"
@@ -132,9 +161,9 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
     
     # submit option
 
-    if page.responder.submit_option_available:
-        page_data['submit_option_desc','textblock_ref'] = page.responder.description_ref('submit_option')
-        if page.responder.submit_option:
+    if r_info.submit_option_available:
+        page_data['submit_option_desc','textblock_ref'] = _t_ref(r_info, 'submit_option')
+        if r_info.submit_option:
             page_data['set_submit_option','button_text'] = 'Disable submit_data'
             page_data['submit_status','para_text'] = "Call submit_data : Enabled"
         else:
@@ -145,18 +174,18 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
         page_data['set_submit_option','show'] = False
         page_data['submit_status','show'] = False
 
-    if page.responder.submit_required or page.responder.submit_option:
-        page_data['submit_list_description:textblock_ref'] = page.responder.description_ref('submit_list')
-        if page.responder.submit_list:
+    if r_info.submit_required or r_info.submit_option:
+        page_data['submit_list_description:textblock_ref'] = _t_ref(r_info, 'submit_list')
+        if r_info.submit_list:
             contents = []
-            for index, s in enumerate(page.responder.submit_list):
+            for index, s in enumerate(r_info.submit_list):
                 s_row = [s, str(index)]
                 contents.append(s_row)
             page_data['submit_list','contents'] = contents
         else:
             page_data['submit_list','show'] = False
         page_data['submit_string','input_text'] = ''
-        page_data['fail_page_ident:input_text'] = _ident_to_str(page.responder.fail_ident)
+        page_data['fail_page_ident:input_text'] = _ident_to_str(r_info.fail_ident)
     else:
         page_data['submit_list_description','show'] = False
         page_data['submit_list','show'] = False
@@ -164,17 +193,17 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
         page_data['fail_page_ident','show'] = False
 
     # final paragraph
-    page_data['final_paragraph:textblock_ref'] = page.responder.description_ref('final_paragraph')
+    page_data['final_paragraph:textblock_ref'] = _t_ref(r_info, 'final_paragraph')
 
     # field options
-    f_options = page.responder.field_options
+    f_options = r_info.field_options
     if not f_options['fields']:
         # no fields so no further data to input
         return page_data
 
     # show the fields description
     page_data['fields_description:show'] = True
-    page_data['fields_description:textblock_ref'] = page.responder.fields_description_ref()
+    page_data['fields_description:textblock_ref'] = _t_ref(r_info, 'fields')
 
 
     if f_options['field_values'] and ( not f_options['single_field'] ):
@@ -183,21 +212,13 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
         page_data['add_field_value_para:show'] = True
         # populate field_values_list
         contents = []
-        field_vals = page.responder.fields
-        for field, value in field_vals.items():
-            if isinstance(field, skiboot.WidgField):
-                f1 = field.to_str_tuple()
-                f2 = str(field)
-            else:
-                f1 = field
-                f2 = field
-            if isinstance(value, skiboot.WidgField):
-                v = value.to_str_tuple()
-            else:
-                v = value
-            if not v:
-                v = "' '"
-            row = [f1, v, f2]
+        field_vals = r_info.field_values_list
+        for field, value in field_vals:
+            f1,f2 = _field_to_string(field)
+            v1,v2 = _field_to_string(value)
+            if not v1:
+                v1 = "' '"
+            row = [f1, v1, f2]
             contents.append(row)
         if contents:
             contents.sort()
@@ -225,14 +246,9 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
         page_data['add_field','show'] = True
         # populate field_list
         contents = []
-        field_vals = page.responder.fields
+        field_vals = r_info.field_list
         for field in field_vals:
-            if isinstance(field, skiboot.WidgField):
-                f1 = field.to_str_tuple()
-                f2 = str(field)
-            else:
-                f1 = field
-                f2 = field
+            f1,f2 = _field_to_string(field)
             row = [f1, f2]
             contents.append(row)
         if contents:
@@ -254,10 +270,10 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
     if not f_options['field_values']:
         # a single value is a submit text input field
         page_data[('single_field','show')] = True
-        if not page.responder.responder_fields.keys():
+        if not r_info.single_field:
             page_data[('single_field','input_text')] = ''
         else:
-            page_data[('single_field','input_text')] = list(page.responder.responder_fields.keys())[0]
+            page_data[('single_field','input_text')] = r_info.single_field
         return
 
 
