@@ -528,7 +528,7 @@ def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['page_name_text:para_text'] = "New page name : " + new_name
     page_data['page_brief_text:para_text'] = "Description   : " + new_brief
 
-    # get a list of lists, each inner being [responder name, responder description ref] from skilift.editresponder
+    # get a list of lists, each inner being [responder name, module name] from skilift.editresponder
     responderlist = editresponder.list_responders()
 
     # Create a list of 1) the responder class name, being the text to place on a button
@@ -536,7 +536,8 @@ def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, c
 
     page_data['responderlinks','buttons'] =[]
     for responder in responderlist:
-        page_data['responderlinks','buttons'].append(responder)
+        rbutton = [responder[0],   "responders." + responder[1] + "." + responder[0]]
+        page_data['responderlinks','buttons'].append(rbutton)
 
     # the hidden fields
     page_data['responderlinks:hidden_field1'] = str(foldernumber)

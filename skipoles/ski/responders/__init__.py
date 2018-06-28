@@ -121,6 +121,10 @@ main purpose is to act as a parent class for all other respond objects.
         return ident
 
     @classmethod
+    def module_name(cls):
+        return cls.__module__.split('.')[-1]
+
+    @classmethod
     def description_ref(cls, dataarg=None):
         "Returns the TextBlock reference of the class, or of the data argument if dataarg is given"
         module_name = cls.__module__.split('.')[-1]
