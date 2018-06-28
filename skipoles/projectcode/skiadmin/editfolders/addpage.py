@@ -504,12 +504,16 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
     # create the new page
     try:
         pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+        fchange = editfolder.folderchange(project, foldernumber)
+        pchange = editpage.pagechange(project, pagenumber)
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
+    call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
+    call_data['pchange'] = pchange
     call_data['status'] = 'Responder %s - type %s added' % (new_name, responder_class)
 
 

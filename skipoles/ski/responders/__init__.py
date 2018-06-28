@@ -124,40 +124,6 @@ main purpose is to act as a parent class for all other respond objects.
     def module_name(cls):
         return cls.__module__.split('.')[-1]
 
-    @classmethod
-    def description_ref(cls, dataarg=None):
-        "Returns the TextBlock reference of the class, or of the data argument if dataarg is given"
-        module_name = cls.__module__.split('.')[-1]
-        description = "responders." + module_name + "." + cls.__name__
-        if not dataarg:
-            return description
-        if dataarg == 'widgfield':
-            return description + '.widgfield' if cls.widgfield_required else ''
-        if dataarg == 'alternate_ident':
-            return description + '.alternate_ident' if cls.alternate_ident_required else ''
-        if dataarg == 'target_ident':
-            return description + '.target_ident' if cls.target_ident_required else ''
-        if dataarg == 'fail_ident':
-            return description + '.fail_ident' if (cls.submit_required or cls.submit_option_available) else ''
-        if dataarg == 'allowed_callers':
-            return description + '.allowed_callers' if cls.allowed_callers_required else ''
-        if dataarg == 'validate_option':
-            return description + '.validate_option' if cls.validate_option_available else ''
-        if dataarg == 'validate_fail_ident':
-            return description + '.validate_fail_ident' if cls.validate_option_available else ''
-        if dataarg == 'submit_option':
-            return description + '.submit_option' if cls.submit_option_available else ''
-        if dataarg == 'submit_list':
-            return description + '.submit_list' if (cls.submit_required or cls.submit_option_available) else ''
-        if dataarg == 'final_paragraph':
-            return description + '.final_paragraph' 
-        return ''
-
-    @classmethod
-    def fields_description_ref(cls):
-        "Returns the TextBlock reference of a description of field parameters"
-        module_name = cls.__module__.split('.')[-1]
-        return "responders." + module_name + "." + cls.__name__ + ".fields"
 
     def set_fields(self, fields):
         """Argument fields is a dictionary of fields and values passed to this

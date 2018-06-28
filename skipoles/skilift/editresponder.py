@@ -37,31 +37,7 @@ from ..ski.excepts import ServerError
 
 from . import project_loaded, item_info, get_proj_page, del_location_in_page, insert_item_in_page
 
-
-ResponderInfo = namedtuple('ResponderInfo', ['responder',
-                                             'module_name',
-                                             'widgfield_required',
-                                             'widgfield',
-                                             'alternate_ident_required',
-                                             'alternate_ident',
-                                             'target_ident_required',
-                                             'target_ident',
-                                             'allowed_callers_required',
-                                             'allowed_callers',
-                                             'validate_option_available',
-                                             'validate_option',
-                                             'validate_fail_ident',
-                                             'submit_option_available',
-                                             'submit_option',
-                                             'submit_required',
-                                             'submit_list',
-                                             'fail_ident',
-                                             'field_options',
-                                             'field_values_list',
-                                             'field_list',
-                                             'single_field_value',
-                                             'single_field'
-                                            ])
+from .info_tuple import ResponderInfo
 
 
 
@@ -220,5 +196,19 @@ def responder_info(project, pagenumber, pchange):
                          single_field_value,
                          single_field
                        )
+
+
+def add_widgfield(project, pagenumber, pchange, widgfield):
+    "adds a widgfield, returns new pchange"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.widgfield_required:
+        raise ServerError(message="Invalid submission, this responder does not have a widgfield")
+    responder.widgfield = skiboot.make_widgfield(widgfield)._replace(i='')
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
 
 
