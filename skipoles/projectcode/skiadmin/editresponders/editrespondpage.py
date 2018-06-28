@@ -281,7 +281,6 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
     #????????????????????????????????????????????????????????
 
 
-
 def submit_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets widgfield"
     project = call_data['editedprojname']
@@ -293,7 +292,7 @@ def submit_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_da
         raise FailPage(message="No widgfield given", widget="widgfield_error")
     # Set the page widgfield
     try:
-        call_data['pchange'] = editresponder.add_widgfield(project, pagenumber, pchange, call_data['widget'])
+        call_data['pchange'] = editresponder.set_widgfield(project, pagenumber, pchange, call_data['widget'])
     except ServerError as e:
         raise FailPage(e.message)
     call_data['status'] = 'WidgField set'
@@ -301,24 +300,16 @@ def submit_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_da
 
 def submit_alternate_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the alternate page"
-    editedproj = call_data['editedproj']
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'alternate_ident' in call_data:
         raise FailPage(message="No alternate page label given", widget="alternate")
     # Set the page alternate_ident
-    responder = page.responder
-    if not responder.alternate_ident_required:
-        raise FailPage(message="Invalid submission, this responder does not have a alternate page")
-    a_i = skiboot.make_ident_or_label_or_url(call_data['alternate_ident'], proj_ident=editedproj.proj_ident)
-    if a_i is None:
-        raise FailPage(message="Invalid alternate ident", widget="alternate")
-    responder.alternate_ident = a_i
-    utils.save(call_data, page=page, widget_name='alternate')
+    try:
+        call_data['pchange'] = editresponder.set_alternate_ident(project, pagenumber, pchange, call_data['alternate_ident'])
+    except ServerError as e:
+        raise FailPage(e.message)
     page_data['alternate','set_input_accepted'] = True
     call_data['status'] = 'Page set'
 

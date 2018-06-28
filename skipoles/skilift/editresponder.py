@@ -198,8 +198,8 @@ def responder_info(project, pagenumber, pchange):
                        )
 
 
-def add_widgfield(project, pagenumber, pchange, widgfield):
-    "adds a widgfield, returns new pchange"
+def set_widgfield(project, pagenumber, pchange, widgfield):
+    "sets responder widgfield, returns new pchange"
     proj, page = get_proj_page(project, pagenumber, pchange)
     if page.page_type != "RespondPage":
         raise ServerError(message = "Invalid page type")
@@ -207,6 +207,22 @@ def add_widgfield(project, pagenumber, pchange, widgfield):
     if not responder.widgfield_required:
         raise ServerError(message="Invalid submission, this responder does not have a widgfield")
     responder.widgfield = skiboot.make_widgfield(widgfield)._replace(i='')
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def set_alternate_ident(project, pagenumber, pchange, ident):
+    "Sets the alternate page"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.alternate_ident_required:
+        raise ServerError(message="Invalid submission, this responder does not have an alternate page")
+    a_i = skiboot.make_ident_or_label_or_url(ident, proj_ident=project)
+    if a_i is None:
+        raise ServerError(message="Invalid alternate ident")
+    responder.alternate_ident = a_i
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
 
