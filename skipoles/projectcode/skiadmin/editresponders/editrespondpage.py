@@ -67,8 +67,7 @@ def _field_to_string(wfield):
 
 def _t_ref(r_info, item):
     "Returns a TextBlock ref for the given item"
-    return ".".join(["responders",r_info.module_name, r_info.responder, item])
-
+    return ".".join(["responders", r_info.module_name, r_info.responder, item])
 
 
 def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -285,22 +284,18 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
 
 def submit_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets widgfield"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'widget' in call_data:
         raise FailPage(message="No widgfield given", widget="widgfield_error")
     if not call_data['widget']:
         raise FailPage(message="No widgfield given", widget="widgfield_error")
     # Set the page widgfield
-    responder = page.responder
-    if not responder.widgfield_required:
-        raise FailPage(message="Invalid submission, this responder does not have a widgfield")
-    responder.widgfield = skiboot.make_widgfield(call_data['widget'])._replace(i='')
-    utils.save(call_data, page=page, widget_name='widgfield_error')
+    try:
+        call_data['pchange'] = editresponder.add_widgfield(project, pagenumber, pchange, call_data['widget'])
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = 'WidgField set'
 
 
