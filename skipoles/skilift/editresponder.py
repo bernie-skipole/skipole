@@ -227,4 +227,136 @@ def set_alternate_ident(project, pagenumber, pchange, ident):
     return proj.save_page(page)
 
 
+def set_target_ident(project, pagenumber, pchange, ident):
+    "Sets the target page"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.target_ident_required:
+        raise ServerError(message="Invalid submission, this responder does not have a target ident")
+    t_i = skiboot.make_ident_or_label_or_url(ident, proj_ident=project)
+    if t_i is None:
+        raise ServerError(message="Invalid target ident")
+    responder.target_ident = t_i
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def set_validate_fail_ident(project, pagenumber, pchange, ident):
+    "Sets the fail page for validate error"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.validate_option_available:
+        raise ServerError(message="Invalid submission, this responder does not have a validate option")
+    v_f_i = skiboot.make_ident_or_label_or_url(ident, proj_ident=project)
+    if v_f_i is None:
+        raise ServerError(message="Invalid validate fail ident")
+    responder.validate_fail_ident = v_f_i
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def set_fail_ident(project, pagenumber, pchange, ident):
+    "Sets the fail page"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not (responder.submit_required or responder.submit_option_available):
+        raise ServerError(message="Invalid submission, this responder does not have a fail ident")
+    f_i = skiboot.make_ident_or_label_or_url(ident, proj_ident=project)
+    if f_i is None:
+        raise ServerError(message="Invalid fail ident")
+    responder.fail_ident = f_i
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def add_allowed_caller(project, pagenumber, pchange, ident):
+    "Add an allowed caller"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.allowed_callers_required:
+        raise ServerError(message="Invalid submission, this responder does not have allowed callers")
+    a_c = skiboot.make_ident_or_label(ident, proj_ident=project)
+    if a_c is None:
+        raise ServerError(message="Invalid allowed caller")
+    # check not already in list
+    allowed_callers = [str(idt) for idt in responder.allowed_callers ]
+    s_a_c = str(a_c)
+    if s_a_c in allowed_callers:
+        raise ServerError(message='This allowed caller already exists')
+    responder.allowed_callers.append(a_c)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def delete_allowed_caller(project, pagenumber, pchange, ident):
+    "Deletes an allowed caller"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.allowed_callers_required:
+        raise ServerError(message="Invalid submission, this responder does not have allowed callers")
+    d_a_c = skiboot.make_ident_or_label(ident, proj_ident=project)
+    if d_a_c is None:
+        raise ServerError(message="Invalid caller to delete")
+    allowed_callers = [str(idt) for idt in responder.allowed_callers ]
+    s_d_a_c = str(d_a_c)
+    try:
+        idx = allowed_callers.index(s_d_a_c)
+    except ValueError:
+        raise ServerError('This allowed caller does not exist')
+    del responder.allowed_callers[idx]
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def remove_field(project, pagenumber, pchange, field):
+    "Deletes a field"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    # field options
+    f_options = responder.field_options
+    if not f_options['fields']:
+        raise ServerError(message="Invalid submission, this responder does not have fields")
+    if f_options['widgfields']:
+        # ensure the field to remove is a widgfield
+        field = skiboot.make_widgfield(field)
+    if field in responder.fields:
+        del responder.fields[field]
+    else:
+        raise ServerError(message="Field not found")
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def add_field_value(project, pagenumber, pchange, field, value):
+    "Adds a field and value"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    # field options
+    f_options = responder.field_options
+    if not f_options['fields']:
+        raise ServerError(message="Invalid submission, this responder does not have fields")
+    if not f_options['field_values']:
+        raise ServerError(message="Invalid submission, this responder does not have values")
+    if (not value) and (not f_options['empty_values_allowed']):
+        raise ServerError(message="Invalid submission, empty field values are not allowed")
+    responder.set_field(field, value)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+
 

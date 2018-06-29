@@ -317,160 +317,98 @@ def submit_alternate_ident(caller_ident, ident_list, submit_list, submit_dict, c
 
 def submit_target_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the target ident"
-    editedproj = call_data['editedproj']
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'target_ident' in call_data:
         raise FailPage(message="No target ident given", widget="target")
     # Set the page target_ident
-    responder = page.responder
-    if not responder.target_ident_required:
-        raise FailPage(message="Invalid submission, this responder does not have a target ident")
-    t_i = skiboot.make_ident_or_label_or_url(call_data['target_ident'], proj_ident=editedproj.proj_ident)
-    if t_i is None:
-        raise FailPage(message="Invalid target ident", widget="target")
-    responder.target_ident = t_i
-    utils.save(call_data, page=page, widget_name='target')
+    try:
+        call_data['pchange'] = editresponder.set_target_ident(project, pagenumber, pchange, call_data['target_ident'])
+    except ServerError as e:
+        raise FailPage(e.message)
     page_data['target','set_input_accepted'] = True
     call_data['status'] = 'Target Ident set'
 
 
 def submit_validate_fail_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the validate fail ident"
-    editedproj = call_data['editedproj']
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'validate_fail_ident' in call_data:
         raise FailPage(message="No validate fail ident given", widget="validate_fail")
     # Set the page validate_fail_ident
-    responder = page.responder
-    if not responder.validate_option_available:
-        raise FailPage(message="Invalid submission, this responder does not have a validate option")
-    v_f_i = skiboot.make_ident_or_label_or_url(call_data['validate_fail_ident'], proj_ident=editedproj.proj_ident)
-    if v_f_i is None:
-        raise FailPage(message="Invalid validate fail ident", widget="validate_fail")
-    responder.validate_fail_ident = v_f_i
-    utils.save(call_data, page=page, widget_name='validate_fail')
+    try:
+        call_data['pchange'] = editresponder.set_validate_fail_ident(project, pagenumber, pchange, call_data['validate_fail_ident'])
+    except ServerError as e:
+        raise FailPage(e.message)
     page_data['validate_fail','set_input_accepted'] = True
     call_data['status'] = 'Validate Fail Ident set'
 
 
 def submit_fail_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets the fail ident"
-    editedproj = call_data['editedproj']
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'fail_ident' in call_data:
         raise FailPage(message="No fail ident given", widget="fail_ident_error")
     # Set the page fail_ident
-    responder = page.responder
-    if not (responder.submit_required or responder.submit_option_available):
-        raise FailPage(message="Invalid submission, this responder does not have a fail ident")
-    f_i = skiboot.make_ident_or_label_or_url(call_data['fail_ident'], proj_ident=editedproj.proj_ident)
-    if f_i is None:
-        raise FailPage(message="Invalid fail ident", widget="fail_ident_error")
-    responder.fail_ident = f_i
-    utils.save(call_data, page=page, widget_name='fail_ident_error')
+    try:
+        call_data['pchange'] = editresponder.set_fail_ident(project, pagenumber, pchange, call_data['fail_ident'])
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = 'Fail Ident set'
 
 
 def add_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Adds a new allowed caller"
-    editedproj = call_data['editedproj']
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'allowed_caller' in call_data:
         raise FailPage(message="No allowed caller given", widget="allowed_callers_error")
     # Set the page allowed caller
-    responder = page.responder
-    if not responder.allowed_callers_required:
-        raise FailPage(message="Invalid submission, this responder does not have allowed callers")
-    a_c = skiboot.make_ident_or_label(call_data['allowed_caller'], proj_ident=editedproj.proj_ident)
-    if a_c is None:
-        raise FailPage(message="Invalid allowed caller", widget="allowed_callers_error")
-    # check not already in list
-    allowed_callers = [str(ident) for ident in responder.allowed_callers ]
-    s_a_c = str(a_c)
-    if s_a_c in allowed_callers:
-        return {("adminhead","page_head","small_text"):'This allowed caller already exists'}
-    responder.allowed_callers.append(a_c)
-    utils.save(call_data, page=page, widget_name='allowed_callers_error')
+    try:
+        call_data['pchange'] = editresponder.add_allowed_caller(project, pagenumber, pchange, call_data['allowed_caller'])
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def delete_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Deletes an allowed caller"
-    editedproj = call_data['editedproj']
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'delete_allowed_caller' in call_data:
         raise FailPage(message="No allowed caller given", widget="allowed_callers_error")
     # Delete the page allowed caller
-    responder = page.responder
-    if not responder.allowed_callers_required:
-        raise FailPage(message="Invalid submission, this responder does not have allowed callers")
-    allowed_callers = [str(ident) for ident in responder.allowed_callers ]
     try:
-        idx = allowed_callers.index(call_data['delete_allowed_caller'])
-    except ValueError:
-        return {("adminhead","page_head","small_text"):'This allowed caller does not exist'}
-    del responder.allowed_callers[idx]
-    utils.save(call_data, page=page, widget_name='allowed_callers_error')
+        call_data['pchange'] = editresponder.delete_allowed_caller(project, pagenumber, pchange, call_data['delete_allowed_caller'])
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def remove_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Deletes a field"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'remove_field' in call_data:
         raise FailPage(message="No field to remove given", widget="fields_error")
     # Delete the page field
-    responder = page.responder
-    # field options
-    f_options = responder.field_options
-    if not f_options['fields']:
-        raise FailPage(message="Invalid submission, this responder does not have fields")
-    remove_field = call_data['remove_field']
-    if f_options['widgfields']:
-        # ensure the field to remove is a widgfield
-        remove_field = skiboot.make_widgfield(remove_field)
-    if remove_field in responder.fields:
-        del responder.fields[remove_field]
-    else:
-        raise FailPage(message="Field not found", widget="fields_error")
-    utils.save(call_data, page=page, widget_name='fields_error')
+    try:
+        call_data['pchange'] = editresponder.remove_field(project, pagenumber, pchange, call_data['remove_field'])
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def add_field_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Adds a field and value"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
 
     if not 'field' in call_data:
         raise FailPage(message="No field given", widget="fields_error")
@@ -478,20 +416,29 @@ def add_field_value(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage(message="No field given", widget="fields_error")
     if not 'value' in call_data:
         raise FailPage(message="No value given", widget="fields_error")
-    responder = page.responder
-    # field options
-    f_options = responder.field_options
-    if not f_options['fields']:
-        raise FailPage(message="Invalid submission, this responder does not have fields", widget="fields_error")
-    if not f_options['field_values']:
-        raise FailPage(message="Invalid submission, this responder does not have values", widget="fields_error")
-    if (not call_data['value']) and (not f_options['empty_values_allowed']):
-        page_data['add_field_value', 'input_text1'] = call_data['field']
-        page_data['add_field_value', 'set_input_accepted1'] = True
-        page_data['add_field_value', 'set_input_errored2'] = True
-        raise FailPage(message="Invalid submission, empty field values are not allowed", widget="fields_error")
-    responder.set_field(call_data['field'], call_data['value'])
-    utils.save(call_data, page=page, widget_name='fields_error')
+
+    # if value is empty ensure empty values allowed
+    if not call_data['value']:
+        # get a ResponderInfo named tuple with information about the responder
+        try:
+            r_info = editresponder.responder_info(project, pagenumber, pchange)
+        except ServerError as e:
+            raise FailPage(message=e.message)
+        # field options
+        f_options = r_info.field_options
+        if not f_options['fields']:
+            raise FailPage(message="Invalid submission, this responder does not have fields", widget="fields_error")
+        if not f_options['empty_values_allowed']:
+            page_data['add_field_value', 'input_text1'] = call_data['field']
+            page_data['add_field_value', 'set_input_accepted1'] = True
+            page_data['add_field_value', 'set_input_errored2'] = True
+            raise FailPage(message="Invalid submission, empty field values are not allowed", widget="fields_error")
+    # Add the field and value
+    try:
+        call_data['pchange'] = editresponder.add_field_value(project, pagenumber, pchange, call_data['field'], call_data['value'])
+    except ServerError as e:
+        raise FailPage(e.message)
+
 
 
 def add_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
