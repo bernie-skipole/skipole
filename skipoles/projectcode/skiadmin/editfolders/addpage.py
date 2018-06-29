@@ -139,13 +139,16 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     # create the new page
     try:
         pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+        fchange = editfolder.folderchange(project, foldernumber)
+        pchange = editpage.pagechange(project, pagenumber)
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
+    call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
-    call_data['pchange'] = editpage.pagechange(project, pagenumber)
+    call_data['pchange'] = pchange
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
@@ -296,13 +299,16 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     # create the new page
     try:
         pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+        fchange = editfolder.folderchange(project, foldernumber)
+        pchange = editpage.pagechange(project, pagenumber)
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
+    call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
-    call_data['pchange'] = editpage.pagechange(project, pagenumber)
+    call_data['pchange'] = pchange
     call_data['status'] = 'SVG %s added' % (new_name,)
 
 
@@ -356,12 +362,16 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     # create the new page
     try:
         pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+        fchange = editfolder.folderchange(project, foldernumber)
+        pchange = editpage.pagechange(project, pagenumber)
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
+    call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
+    call_data['pchange'] = pchange
     call_data['status'] = 'CSS page %s added' % (new_name,)
 
 
@@ -393,11 +403,13 @@ def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_dat
     # create the new page
     try:
         pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+        fchange = editfolder.folderchange(project, foldernumber)
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
+    call_data['fchange'] = fchange
     # Currently, after adding a json page, go back to edit folder
     call_data['status'] = 'JSON page %s added' % (new_name,)
 
@@ -433,12 +445,16 @@ def submit_new_file(caller_ident, ident_list, submit_list, submit_dict, call_dat
     # create the new page
     try:
         pagenumber = editfolder.make_new_page(project, foldernumber, page_dict)
+        fchange = editfolder.folderchange(project, foldernumber)
+        pchange = editpage.pagechange(project, pagenumber)
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
     utils.no_ident_data(call_data)
     call_data['folder_number'] = foldernumber
+    call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
+    call_data['pchange'] = pchange
     call_data['status'] = 'File link page %s added' % (new_name,)
 
 
@@ -614,12 +630,14 @@ def submit_upload_page(caller_ident, ident_list, submit_list, submit_dict, call_
     # create the page
     try:
         fromjson.create_page(project, foldernumber, pagenumber, new_name, new_brief, json_string)
+        fchange = editfolder.folderchange(project, foldernumber)
     except ServerError as e:
         raise FailPage(message = e.message)
     edited_folder = call_data['edited_folder']
     utils.no_ident_data(call_data)
     call_data['edited_folder'] = edited_folder
     call_data['folder_number'] = foldernumber
+    call_data['fchange'] = fchange
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
