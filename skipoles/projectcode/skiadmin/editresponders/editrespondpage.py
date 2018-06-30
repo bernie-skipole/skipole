@@ -440,53 +440,37 @@ def add_field_value(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage(e.message)
 
 
-
 def add_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Adds a field"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'field' in call_data:
         raise FailPage(message="No field given", widget="fields_error")
     if not call_data['field']:
         raise FailPage(message="No field given", widget="fields_error")
-    responder = page.responder
-    # field options
-    f_options = responder.field_options
-    if not f_options['fields']:
-        raise FailPage(message="Invalid submission, this responder does not have fields", widget="fields_error")
-    if f_options['field_values']:
-        raise FailPage(message="Invalid submission, this responder requires field values", widget="fields_error")
-    responder.set_field(call_data['field'], '')
-    utils.save(call_data, page=page, widget_name='fields_error')
-
+    # Add the field
+    try:
+        call_data['pchange'] = editresponder.add_field(project, pagenumber, pchange, call_data['field'])
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def set_single_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Sets a field dictionary"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    "Sets the field in a responder, which require s single field only"
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not ('single_field', 'input_text') in call_data:
         raise FailPage(message="No field given", widget="fields_error")
     field = call_data[('single_field', 'input_text')]
     if not field:
         raise FailPage(message="No field given", widget="fields_error")
-    responder = page.responder
-    # field options
-    f_options = responder.field_options
-    if not f_options['fields']:
-        raise FailPage(message="Invalid submission, this responder does not have fields", widget="fields_error")
-    if f_options['field_values']:
-        raise FailPage(message="Invalid submission, this responder requires field values", widget="fields_error")
-    responder.set_fields({ field:'' })
-    utils.save(call_data, page=page, widget_name='fields_error')
+    # Add the field
+    try:
+        call_data['pchange'] = editresponder.set_single_field(project, pagenumber, pchange, field)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = 'Fields set'
 
 
