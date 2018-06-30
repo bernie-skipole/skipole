@@ -477,42 +477,35 @@ def set_single_field(caller_ident, ident_list, submit_list, submit_dict, call_da
 
 def delete_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "deletes an indexed string from the submit_list"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'delete_submit_list_string_index' in call_data:
-        raise FailPage(message="No string index given", widget="submit_list_error")
-    # Delete the string
-    responder = page.responder
-    if not (responder.submit_required or responder.submit_option):
-        raise FailPage(message="Invalid submission, this responder does not have a submit_list")
+        raise FailPage(message="No submit_list string given", widget="submit_list_error")
     try:
+        # get the submit list
+        submit_list = editresponder.get_submit_list(project, pagenumber, pchange)
         idx = int(call_data['delete_submit_list_string_index'])
-        del responder.submit_list[idx]
-    except:
-        raise FailPage(message="Failed to delete the string", widget="submit_list_error")
-    utils.save(call_data, page=page, widget_name='submit_list_error')
+        del submit_list[idx]
+        call_data['pchange'] = editresponder.set_submit_list(project, pagenumber, pchange, submit_list)
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def add_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Adds a new submit_list string"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
     if not 'submit_list_string' in call_data:
         raise FailPage(message="No submit_list string given", widget="submit_list_error")
-    # Set the page submit_list_string
-    responder = page.responder
-    if not (responder.submit_required or responder.submit_option):
-        raise FailPage(message="Invalid submission, this responder does not have a submit list")
-    responder.submit_list.append(call_data['submit_list_string'])
-    utils.save(call_data, page=page, widget_name='submit_list_error')
+    try:
+        # get the submit list
+        submit_list = editresponder.get_submit_list(project, pagenumber, pchange)
+        submit_list.append(call_data['submit_list_string'])
+        call_data['pchange'] = editresponder.set_submit_list(project, pagenumber, pchange, submit_list)
+    except ServerError as e:
+        raise FailPage(e.message)
 
 
 def set_validate_option(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
