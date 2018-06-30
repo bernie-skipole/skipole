@@ -198,6 +198,33 @@ def responder_info(project, pagenumber, pchange):
                        )
 
 
+def get_submit_list(project, pagenumber, pchange):
+    "Returns a copy of the submit list"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if responder.submit_required or responder.submit_option:
+        if responder.submit_list:
+            return responder.submit_list[:]
+        else:
+            return []
+    raise ServerError(message = "Invalid responder - no submit list available")
+
+
+def set_submit_list(project, pagenumber, pchange, submit_list):
+    "Sets the submit list"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if (not responder.submit_required) and (not responder.submit_option):
+        raise ServerError(message = "Invalid responder - no submit list available")
+    responder.submit_list = submit_list[:]
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 def set_widgfield(project, pagenumber, pchange, widgfield):
     "sets responder widgfield, returns new pchange"
     proj, page = get_proj_page(project, pagenumber, pchange)
@@ -354,6 +381,42 @@ def add_field_value(project, pagenumber, pchange, field, value):
     if (not value) and (not f_options['empty_values_allowed']):
         raise ServerError(message="Invalid submission, empty field values are not allowed")
     responder.set_field(field, value)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def add_field(project, pagenumber, pchange, field):
+    "Adds a field, without a value, options['field_values'] must be False"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    # field options
+    f_options = responder.field_options
+    if not f_options['fields']:
+        raise ServerError(message="Invalid submission, this responder does not have fields")
+    if f_options['field_values']:
+        raise ServerError(message="Invalid submission, this responder requires fields with values")
+    responder.set_field(field, '')
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def set_single_field(project, pagenumber, pchange, field):
+    "Sets a single field, without a value, options['field_values'] must be False and options['single_field'] must be True"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    # field options
+    f_options = responder.field_options
+    if not f_options['fields']:
+        raise ServerError(message="Invalid submission, this responder does not have fields")
+    if f_options['field_values']:
+        raise ServerError(message="Invalid submission, this responder requires fields with values")
+    if not f_options['single_field']:
+        raise ServerError(message="Invalid submission, this function can only be used with single_field responders")
+    responder.set_fields({ field:'' })
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
 
