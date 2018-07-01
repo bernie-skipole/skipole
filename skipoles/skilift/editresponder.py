@@ -29,13 +29,11 @@
 
 import inspect
 
-from collections import namedtuple
-
 from ..ski import skiboot, responders
 from ..ski.page_class_definition import RespondPage
 from ..ski.excepts import ServerError
 
-from . import project_loaded, item_info, get_proj_page, del_location_in_page, insert_item_in_page
+from . import get_proj_page
 
 from .info_tuple import ResponderInfo
 
