@@ -510,47 +510,32 @@ def add_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, c
 
 def set_validate_option(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Enable or disable the validate option"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-    
-    if not page.responder.validate_option_available:
-        return
-        
-    if page.responder.validate_option:
-        page.responder.validate_option = False
-        page_data['set_val_option','button_text'] = "Enable Validation"
-        page_data['val_status','para_text'] = "Validate received field values : Disabled"
-        page_data['validate_fail', 'hide'] = True
-    else:
-        page.responder.validate_option = True
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    try:
+        call_data['pchange'], validate_option = editresponder.toggle_validate_option(project, pagenumber, pchange)
+    except ServerError as e:
+        raise FailPage(e.message)        
+    if validate_option:
         page_data['set_val_option','button_text'] = "Disable Validation"
         page_data['val_status','para_text'] = "Validate received field values : Enabled"
         page_data['validate_fail', 'hide'] = False
-        
-    utils.save(call_data, page=page)
+    else:
+        page_data['set_val_option','button_text'] = "Enable Validation"
+        page_data['val_status','para_text'] = "Validate received field values : Disabled"
+        page_data['validate_fail', 'hide'] = True
     call_data['status'] = 'Validator changed'
 
 
 def set_submit_option(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Enable or disable the submit option"
-    if 'page' not in call_data:
-        raise FailPage(message = "page missing")
-    page = call_data['page']
-    if page.page_type != 'RespondPage':
-        raise ValidateError("Invalid page type")
-        
-    if not page.responder.submit_option_available:
-        return
-        
-    if page.responder.submit_option:
-        page.responder.submit_option = False
-        page.responder.submit_list = []
-    else:
-        page.responder.submit_option = True
-        
-    utils.save(call_data, page=page, widget_name='alternate')
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+    try:
+        call_data['pchange'], submit_option = editresponder.toggle_submit_option(project, pagenumber, pchange)
+    except ServerError as e:
+        raise FailPage(e.message)  
     call_data['status'] = 'Submit option changed'
 

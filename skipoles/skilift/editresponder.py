@@ -421,5 +421,41 @@ def set_single_field(project, pagenumber, pchange, field):
     return proj.save_page(page)
 
 
+def toggle_validate_option(project, pagenumber, pchange):
+    "Toggles the validate option, returns (pchange, validate_option)"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.validate_option_available:
+        raise ServerError(message="Invalid submission, this responder does not accept the validate option")
+        
+    if responder.validate_option:
+        responder.validate_option = False
+    else:
+        responder.validate_option = True
+    # save the altered page, and return the page.change uuid and validate option
+    return proj.save_page(page), responder.validate_option
+
+
+def toggle_submit_option(project, pagenumber, pchange):
+    "Toggles the submit option, returns (pchange, submit_option)"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "RespondPage":
+        raise ServerError(message = "Invalid page type")
+    responder = page.responder
+    if not responder.submit_option_available:
+        raise ServerError(message="Invalid submission, this responder does not accept the submit option")
+        
+    if responder.submit_option:
+        responder.submit_option = False
+        responder.submit_list = []
+    else:
+        responder.submit_option = True
+    # save the altered page, and return the page.change uuid and submit option
+    return proj.save_page(page), responder.submit_option
+
+
+
 
 
