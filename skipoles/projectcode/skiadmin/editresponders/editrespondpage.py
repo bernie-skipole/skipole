@@ -32,11 +32,7 @@ import collections
 from .... import skilift
 from ....skilift import editresponder
 
-
-from ....ski import skiboot
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
-
-from .. import utils
 
 
 def _ident_to_str(ident):
