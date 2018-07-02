@@ -565,57 +565,6 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
 
 
 
-def old_retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Creates a list of validator modules"
-
-    editedproj = call_data['editedproj']
-
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field_arg = bits.field_arg
-    field = bits.field
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if widget is None:
-        raise FailPage("Widget not identified")
-
-    if field_arg is None:
-        raise FailPage("Field not identified")
-
-    call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
-
-    page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget.name, field.name)
-
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget.name,)
-    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field.name,)
-
-
-    # table of validator modules
-
-    # col 0 is the visible text to place in the link,
-    # col 1 is the get field of the link
-    # col 2 is the get field of the link
-    # col 3 is the reference string of a textblock to appear in the column adjacent to the link
-    # col 4 is text to appear if the reference cannot be found in the database
-    # col 5 normally empty string, if set to text it will replace the textblock
-
-    contents = []
-
-    for name in _VALIDATORS_TUPLE:
-        ref = 'validators.' + name + '.module'
-        contents.append([name, name, '', ref, 'Description not found', ''])
-
-    page_data[("modulestable","link_table")] = contents
-
-
-
 
 def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates a list of validators"
