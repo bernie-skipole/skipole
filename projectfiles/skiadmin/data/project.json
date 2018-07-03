@@ -40207,6 +40207,9 @@ false
 "val_args": {
 "minlength": "1"
 }
+},
+{
+"class": "basic.AlphaNumDotUnder"
 }
 ]
 }
