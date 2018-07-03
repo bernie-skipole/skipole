@@ -45,7 +45,16 @@ _AN = re.compile('[^\w]')
 
 def validator_modules():
     "Returns a tuple of validator modules"
+    print(validators.__path__)
     return tuple(name for (module_loader, name, ispkg) in pkgutil.iter_modules(validators.__path__))
+
+
+def validators_in_module(module_name):
+    "Returns a tuple of validators in a module"
+    module = importlib.import_module("skipoles.ski.validators." + module_name)
+    return tuple(name for name,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)))
+
+
 
 def get_section_field_validator_list(project, section_name, schange, widget_name, field_arg):
     "Retuens list of validators attached to this widget field"
