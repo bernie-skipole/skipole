@@ -30,16 +30,10 @@ import pkgutil, re, importlib, inspect
 
 from ....ski import skiboot, tag, widgets, validators
 from .. import utils
-from ....ski.excepts import FailPage, ValidateError, GoTo
+from ....ski.excepts import ServerError, FailPage, ValidateError, GoTo
 
 from .... import skilift
 from ....skilift import editwidget, editvalidator
-
-
-# a search for anything none-alphanumeric and not an underscore
-_AN = re.compile('[^\w]')
-
-_VALIDATORS_TUPLE = tuple(name for (module_loader, name, ispkg) in pkgutil.iter_modules(validators.__path__))
 
 
 def _field_name(widget, field_argument):
@@ -53,6 +47,99 @@ def _field_name(widget, field_argument):
 
 
 def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fills in the edit a validator page"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
+
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
+
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
+
+    if section_name:
+        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
+    else:
+        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
+
+    # get validator
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Unknown validator to edit")
+
+    # get validator and widget info
+    try:
+        if section_name:
+            widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
+            widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
+            vinfo = editvalidator.section_field_validator_info(project, section_name, call_data['schange'], widget_name, field_arg, validx)
+        else:
+            widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
+            widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
+            vinfo = editvalidator.page_field_validator_info(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx)
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    field_name = _field_name(widget, field_arg)
+
+    call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
+
+    page_data[("adminhead","page_head","large_text")] = "Edit : %s on field %s" % (vinfo.validator, field_name)
+
+    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
+    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
+    page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
+    page_data[('validator_type','para_text')] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
+
+    page_data[('validator_textblock','textblock_ref')] = ".".join(("validators",vinfo.module_name,vinfo.validator))
+
+    page_data[('e_message','input_text')] = vinfo.message
+    page_data[('e_message_ref','input_text')] = vinfo.message_ref
+
+    page_data[('displaywidget','input_text')] = vinfo.displaywidget
+
+    # list of allowed values
+    contents = []
+    allowed_vals = vinfo.allowed_values
+    for idx, val in enumerate(allowed_vals):
+        row = [val, str(idx)]
+        contents.append(row)
+    if contents:
+        page_data[('allowed_values','contents')] = contents
+        page_data[('allowed_values','show')] = True
+    else:
+        page_data[('allowed_values','show')] = False
+
+    # Validator arguments
+    arg_contents = []
+    val_args = vinfo.val_args
+    for name, value in val_args.items():
+        row = [name, str(value), name]
+        arg_contents.append(row)
+    if arg_contents:
+        arg_contents.sort(key=lambda x: x[0])
+        page_data[('validator_args','contents')] = arg_contents
+        page_data[('validator_args','show')] = True
+        page_data[('description5','show')] = True
+    else:
+        page_data[('validator_args','show')] = False
+        page_data[('description5','show')] = False
+
+
+def oldretrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit a validator page"
 
     editedproj = call_data['editedproj']
@@ -126,6 +213,8 @@ def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, c
     else:
         page_data[('validator_args','show')] = False
         page_data[('description5','show')] = False
+
+
 
 
 def set_e_message(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -631,23 +720,25 @@ def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, 
 def create_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates a validator and adds it to the field"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    bits = utils.get_bits(call_data)
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field = bits.field
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if field is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
-    if not field.valdt:
-        raise FailPage("Field does not take validators")
-
     if 'validator' not in call_data:
         raise FailPage("Validator not given")
     validator_name = call_data['validator']
@@ -659,23 +750,18 @@ def create_validator(caller_ident, ident_list, submit_list, submit_dict, call_da
 
     module_name = call_data['valmodule']
 
-    if module_name not in _VALIDATORS_TUPLE:
-        raise FailPage("Validator module not recognised")
-
-    module = importlib.import_module("skipoles.ski.validators." + module_name)
-
-    validator_dict = {name:cls for (name,cls) in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__))}
-
-    if validator_name not in validator_dict:
-        raise FailPage("Validator not identified")
-
-    validator_cls = validator_dict[validator_name]
-    validator_instance = validator_cls()
-    field.add_validator(validator_instance)
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-
-    call_data['validx'] = str(len(field.val_list)-1)
+    try:
+        if section_name:
+            call_data['schange'] =  editvalidator.create_section_field_validator(project, section_name, call_data['schange'], widget_name, field_arg, module_name, validator_name)
+            # get new list of validators attached to the field
+            val_list = editvalidator.get_section_field_validator_list(project, section_name, call_data['schange'], widget_name, field_arg)
+        else:
+            call_data['pchange'] =  editvalidator.create_page_field_validator(project, pagenumber, call_data['pchange'], widget_name, field_arg, module_name, validator_name)
+            val_list = editvalidator.get_page_field_validator_list(project, pagenumber, call_data['pchange'], widget_name, field_arg)
+    except ServerError as e:
+        raise FailPage(e.message)
+ 
+    call_data['validx'] = str(len(val_list)-1)
     del call_data['validator']
     del call_data['valmodule']
 

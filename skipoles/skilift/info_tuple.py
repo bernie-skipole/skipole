@@ -93,5 +93,15 @@ ResponderInfo = namedtuple('ResponderInfo', ['responder',
                                             ])
 
 
+ValidatorInfo = namedtuple('ValidatorInfo', ['validator',
+                                             'module_name',
+                                             'message',
+                                             'message_ref',
+                                             'displaywidget',
+                                             'allowed_values',
+                                             'val_args'
+                                            ])
+
+
 
 
