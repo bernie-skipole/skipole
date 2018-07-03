@@ -186,59 +186,95 @@ def set_e_message(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
 def set_e_message_ref(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a validator error message reference"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
 
     if 'e_message_ref' not in call_data:
         raise FailPage("Error message reference not given")
 
     if call_data['e_message_ref']:
-        validator.message_ref = call_data['e_message_ref']
+        e_message_ref = call_data['e_message_ref']
     else:
-        validator.message_ref = ''
+        e_message_ref = ''
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    # get validator index
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Invalid validator")
+
+    # set message reference
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.set_section_field_validator_error_message_reference(project, section_name, call_data['schange'], widget_name, field_arg, validx, e_message_ref)
+        else:
+            call_data['pchange'] = editvalidator.set_page_field_validator_error_message_reference(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, e_message_ref)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Validator error message reference changed"
 
 
 def set_displaywidget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a validator displaywidget"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
 
     if 'displaywidget' not in call_data:
         raise FailPage("Display widget not given")
 
     if call_data['displaywidget']:
-        validator.displaywidget = call_data['displaywidget']
+        displaywidget = call_data['displaywidget']
     else:
-        validator.displaywidget = ''
+        displaywidget = ''
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    # get validator index
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Invalid validator")
+
+    # set displaywidge
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.set_section_field_validator_displaywidget(project, section_name, call_data['schange'], widget_name, field_arg, validx, displaywidget)
+        else:
+            call_data['pchange'] = editvalidator.set_page_field_validator_displaywidget(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, displaywidget)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Validator display widget changed"
 
 

@@ -249,6 +249,38 @@ def set_page_field_validator_error_message(project, pagenumber, pchange, widget_
     return proj.save_page(page)
 
 
+def set_section_field_validator_error_message_reference(project, section_name, schange, widget_name, field_arg, validx, e_message_ref):
+    "Set the error message reference on the validator at index validx within the validator list attached to the field, return the new section change"
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
+    val_list[validx].message_ref = e_message_ref
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def set_page_field_validator_error_message_reference(project, pagenumber, pchange, widget_name, field_arg, validx, e_message_ref):
+    "Set the error message reference on the validator at index validx within the validator list attached to the field, return the new page change"
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
+    val_list[validx].message_ref = e_message_ref
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def set_section_field_validator_displaywidget(project, section_name, schange, widget_name, field_arg, validx, displaywidget):
+    "Set the error message reference on the validator at index validx within the validator list attached to the field, return the new section change"
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
+    val_list[validx].displaywidget = displaywidget
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def set_page_field_validator_displaywidget(project, pagenumber, pchange, widget_name, field_arg, validx, displaywidget):
+    "Set the displaywidget on the validator at index validx within the validator list attached to the field, return the new page change"
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
+    val_list[validx].displaywidget = displaywidget
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 
 
 
