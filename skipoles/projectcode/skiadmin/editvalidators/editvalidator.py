@@ -139,84 +139,6 @@ def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, c
         page_data[('description5','show')] = False
 
 
-def oldretrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Fills in the edit a validator page"
-
-    editedproj = call_data['editedproj']
-
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field_arg = bits.field_arg
-    field = bits.field
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if section is not None:
-        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (bits.section_name,)]
-    else:
-        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
-
-    if widget is None:
-        raise FailPage("Widget not identified")
-
-    if field_arg is None:
-        raise FailPage("Field not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
-
-    call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
-
-    page_data[("adminhead","page_head","large_text")] = "Edit : %s on field %s" % (validator, field.name)
-
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget.name,)
-    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field.name,)
-    page_data[('validator_type','para_text')] = "Validator type : %s" % (validator,)
-
-    page_data[('validator_textblock','textblock_ref')] = validator.description_ref()
-
-    page_data[('e_message','input_text')] = validator.message
-    page_data[('e_message_ref','input_text')] = validator.message_ref
-
-    page_data[('displaywidget','input_text')] = validator.displaywidget.to_str_tuple()
-
-    # list of allowed values
-    contents = []
-    allowed_vals = validator.allowed_values
-    for idx, val in enumerate(allowed_vals):
-        row = [val, str(idx)]
-        contents.append(row)
-    if contents:
-        page_data[('allowed_values','contents')] = contents
-        page_data[('allowed_values','show')] = True
-    else:
-        page_data[('allowed_values','show')] = False
-
-    # Validator arguments
-    arg_contents = []
-    val_args = validator.val_args
-    for name, value in val_args.items():
-        row = [name, str(value), name]
-        arg_contents.append(row)
-    if arg_contents:
-        arg_contents.sort(key=lambda x: x[0])
-        page_data[('validator_args','contents')] = arg_contents
-        page_data[('validator_args','show')] = True
-        page_data[('description5','show')] = True
-    else:
-        page_data[('validator_args','show')] = False
-        page_data[('description5','show')] = False
-
-
-
-
 def set_e_message(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a validator error message"
 
@@ -548,9 +470,7 @@ def move_down(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
 
 def remove_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes a validator"
-
     project = call_data['editedprojname']
-
     section_name = None
     pagenumber = None
     if 'section_name' in call_data:
@@ -570,18 +490,22 @@ def remove_validator(caller_ident, ident_list, submit_list, submit_dict, call_da
     else:
         raise FailPage("Field not identified")
 
-    validx = int(call_data['validx'])
-    del call_data['validx']
-
-    val_list = field.val_list
-
-    # removing the validator
-    if (validx >= 0) and (validx < len(val_list)):
-        del val_list[validx]
-    else:
+    # get validator
+    try:
+        validx = int(call_data['validx'])
+    except:
         raise FailPage("Invalid value to remove")
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    # remove validator
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.remove_section_field_validator(project, section_name, call_data['schange'], widget_name, field_arg, validx)
+        else:
+            call_data['pchange'] = editvalidator.remove_page_field_validator(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx)
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    del call_data['validx']
     call_data['status'] = "Validator removed"
 
 

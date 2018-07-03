@@ -182,6 +182,46 @@ def create_page_field_validator(project, pagenumber, pchange, widget_name, field
     return proj.save_page(page)
 
 
+def remove_page_field_validator(project, pagenumber, pchange, widget_name, field_arg, validx):
+    "Removes a validator, validx is the index number of the validator within the validator list attached to the field, return the new page change"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    val_list = field.val_list
+    # get validator
+    if val_list and (validx >= 0) and (validx < len(val_list)):
+        del val_list[validx]
+    else:
+        raise ServerError("Unknown validator")
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def remove_section_field_validator(project, section_name, schange, widget_name, field_arg, validx):
+    "Removes a validator, validx is the index number of the validator within the validator list attached to the field, return the new section change"
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    val_list = field.val_list
+    # get validator
+    if val_list and (validx >= 0) and (validx < len(val_list)):
+        del val_list[validx]
+    else:
+        raise ServerError("Unknown validator")
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
 
 
 
