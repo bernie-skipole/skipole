@@ -500,7 +500,6 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
     "Creates a list of validator modules"
 
     project = call_data['editedprojname']
-
     section_name = None
     pagenumber = None
     if 'section_name' in call_data:
@@ -534,8 +533,6 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
 
     field_name = _field_name(widget, field_arg)
 
-    call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
-
     page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget_name, field_name)
 
     page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
@@ -543,6 +540,7 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
     page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
     page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
 
+    call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
 
     # table of validator modules
 
@@ -553,61 +551,68 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
     # col 4 is text to appear if the reference cannot be found in the database
     # col 5 normally empty string, if set to text it will replace the textblock
 
-    contents = []
-
     validator_modules = editvalidator.validator_modules()
 
-    for name in validator_modules:
-        ref = 'validators.' + name + '.module'
-        contents.append([name, name, '', ref, 'Description not found', ''])
-
-    page_data[("modulestable","link_table")] = contents
-
-
+    page_data[("modulestable","link_table")] = [ [name, name, '', ".".join(('validators', name, 'module')), 'Description not found', ''] for name in validator_modules ]
 
 
 def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates a list of validators"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    bits = utils.get_bits(call_data)
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field_arg = bits.field_arg
-    field = bits.field
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if widget is None:
-        raise FailPage("Widget not identified")
-
-    if field_arg is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
 
-    call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["validator_modules", "Modules", True, '']])
+    # get a WidgetDescription named tuple, and a widget dictionary
 
-    page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget.name, field.name)
+    try:
+        if section_name:
+            widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
+            widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
+        else:
+            widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
+            widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
+    except ServerError as e:
+        raise FailPage(e.message)
 
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget.name,)
+    field_name = _field_name(widget, field_arg)
+
+    page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget_name, field_name)
+
+    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
     page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field.name,)
+    page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
 
+    call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["validator_modules", "Modules", True, '']])
 
     if 'valmodule' in call_data:
         module_name = call_data['valmodule']
     else:
         raise FailPage("Module not identified")
 
-    if module_name not in _VALIDATORS_TUPLE:
+    validator_modules = editvalidator.validator_modules()
+
+    if module_name not in validator_modules:
         raise FailPage("Module not identified")
 
     page_data[('moduledesc','textblock_ref')] = 'validators.' + module_name + '.module'
-
 
     # table of validators
 
@@ -618,17 +623,9 @@ def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, 
     # col 4 is text to appear if the reference cannot be found in the database
     # col 5 normally empty string, if set to text it will replace the textblock
 
-    module = importlib.import_module("skipoles.ski.validators." + module_name)
-
-    # set module into table
-    # call_data['module'] = module_name
-
-    contents = []
-
-    for name,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
-        contents.append([name, name, module_name, obj.description_ref(), 'Description not found', ''])
-
-    page_data[("validators","link_table")] = contents
+    # tuple of validators in the module
+    validators = editvalidator.validators_in_module(module_name)
+    page_data[("validators","link_table")] = [ [name, name, module_name, ".".join(("validators",module_name,name)), 'Description not found', ''] for name in validators ]
 
 
 def create_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
