@@ -262,6 +262,51 @@ def swap_section_field_validators(project, section_name, schange, widget_name, f
         val_list[validx1], val_list[validx2] = val_list[validx2], val_list[validx1]
     except:
         raise ServerError("Invalid operation")
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def _get_section_val_list(project, section_name, schange, widget_name, field_arg):
+    "Returns proj, section, val_list"
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    return proj, section, field.val_list
+
+
+def _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg):
+    "Returns proj, page, val_list"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    return proj, page, field.val_list
+
+
+
+def set_section_field_validator_error_message(project, section_name, schange, widget_name, field_arg, validx, e_message):
+    "Set the error message on the validator at index validx within the validator list attached to the field, return the new section change"
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
+    val_list[validx].message = e_message
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def set_page_field_validator_error_message(project, pagenumber, pchange, widget_name, field_arg, validx, e_message):
+    "Set the error message on the validator at index validx within the validator list attached to the field, return the new page change"
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
+    val_list[validx].message = e_message
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
 
