@@ -40203,7 +40203,10 @@ false
 "validators": {
 "input_text": [
 {
-"class": "basic.AlphaNumDotUnder"
+"class": "basic.MinLength",
+"val_args": {
+"minlength": "1"
+}
 }
 ]
 }
