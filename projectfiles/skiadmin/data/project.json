@@ -40199,6 +40199,13 @@ false
 "type": "text",
 "widget_class": "w3-section",
 "widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.AlphaNumDotUnder"
+}
+]
 }
 }
 ]

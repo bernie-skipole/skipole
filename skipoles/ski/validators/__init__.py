@@ -45,6 +45,9 @@ class Validator(object):
     def args_exist(cls):
         return bool(cls.arg_descriptions)
 
+    @classmethod
+    def module_name(cls):
+        return cls.__module__.split('.')[-1]
 
     @classmethod
     def description_ref(cls, arg_name=None):
