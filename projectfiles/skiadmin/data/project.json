@@ -40204,12 +40204,14 @@ false
 "input_text": [
 {
 "class": "basic.MinLength",
+"message": "Way too long",
 "val_args": {
 "minlength": "1"
 }
 },
 {
-"class": "basic.AlphaNumDotUnder"
+"class": "basic.AlphaNumDotUnder",
+"message": "zoo to doo"
 }
 ]
 }

@@ -26,8 +26,6 @@
 
 "Functions implementing validator editing"
 
-import pkgutil, re, importlib, inspect
-
 from ....ski import skiboot, tag, widgets, validators
 from .. import utils
 from ....ski.excepts import ServerError, FailPage, ValidateError, GoTo
@@ -141,30 +139,48 @@ def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, c
 
 def set_e_message(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a validator error message"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
 
     if 'e_message' not in call_data:
         raise FailPage("Error message not given")
 
     if call_data['e_message']:
-        validator.message = call_data['e_message']
+        e_message = call_data['e_message']
     else:
-        validator.message = ''
+        e_message = ''
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    # get validator index
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Invalid validator")
+
+    # set message
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.set_section_field_validator_error_message(project, section_name, call_data['schange'], widget_name, field_arg, validx, e_message)
+        else:
+            call_data['pchange'] = editvalidator.set_page_field_validator_error_message(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, e_message)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Validator error message changed"
 
 
@@ -395,7 +411,6 @@ def set_arg_value(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = "Validator argument changed"
 
 
-
 def move_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves a validator up in a field validator list"
     project = call_data['editedprojname']
@@ -438,7 +453,6 @@ def move_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
     del call_data['validx']
 
 
-
 def move_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves a validator down in a field validator list"
     project = call_data['editedprojname']
@@ -476,6 +490,7 @@ def move_down(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     except ServerError as e:
         raise FailPage(e.message)
     del call_data['validx']
+
 
 def remove_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes a validator"
