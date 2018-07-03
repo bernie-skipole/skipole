@@ -38,6 +38,33 @@ from . import get_proj_page, get_proj_section
 from .info_tuple import ValidatorInfo
 
 
+def _get_section_val_list(project, section_name, schange, widget_name, field_arg):
+    "Returns proj, section, val_list"
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    return proj, section, field.val_list
+
+
+def _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg):
+    "Returns proj, page, val_list"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    return proj, page, field.val_list
+
 
 def validator_modules():
     "Returns a tuple of validator modules"
@@ -52,34 +79,19 @@ def validators_in_module(module_name):
 
 def get_section_field_validator_list(project, section_name, schange, widget_name, field_arg):
     "Returns list of validators attached to this widget field, each item in the list being a tuple of validator class name, module name)"
-    proj, section = get_proj_section(project, section_name, schange)
-    widget = section.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    return tuple( (v.__class__.__name__, v.module_name()) for v in widget.field_arg_val_list(field_arg) )
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
+    return tuple( (v.__class__.__name__, v.module_name()) for v in val_list )
 
 
 def get_page_field_validator_list(project, pagenumber, pchange, widget_name, field_arg):
     "Returns list of validators attached to this widget field, each item in the list being a tuple of validator class name, module name)"
-    proj, page = get_proj_page(project, pagenumber, pchange)
-    widget = page.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    return tuple( (v.__class__.__name__, v.module_name()) for v in widget.field_arg_val_list(field_arg) )
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
+    return tuple( (v.__class__.__name__, v.module_name()) for v in val_list )
 
 
 def page_field_validator_info(project, pagenumber, pchange, widget_name, field_arg, validx):
     "Returns a named tuple of info about a validator, validx is the index number of the validator within the validator list attached to the field"
-    proj, page = get_proj_page(project, pagenumber, pchange)
-    widget = page.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    val_list = field.val_list
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
     # get validator
     if val_list and (validx >= 0) and (validx < len(val_list)):
         validator = val_list[validx]
@@ -97,16 +109,7 @@ def page_field_validator_info(project, pagenumber, pchange, widget_name, field_a
 
 def section_field_validator_info(project, section_name, schange, widget_name, field_arg, validx):
     "Returns a named tuple of info about a validator, validx is the index number of the validator within the validator list attached to the field"
-    proj, section = get_proj_section(project, section_name, schange)
-    widget = section.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    val_list = field.val_list
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
     # get validator
     if val_list and (validx >= 0) and (validx < len(val_list)):
         validator = val_list[validx]
@@ -184,16 +187,7 @@ def create_page_field_validator(project, pagenumber, pchange, widget_name, field
 
 def remove_page_field_validator(project, pagenumber, pchange, widget_name, field_arg, validx):
     "Removes a validator, validx is the index number of the validator within the validator list attached to the field, return the new page change"
-    proj, page = get_proj_page(project, pagenumber, pchange)
-    widget = page.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    val_list = field.val_list
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
     # get validator
     if val_list and (validx >= 0) and (validx < len(val_list)):
         del val_list[validx]
@@ -205,16 +199,7 @@ def remove_page_field_validator(project, pagenumber, pchange, widget_name, field
 
 def remove_section_field_validator(project, section_name, schange, widget_name, field_arg, validx):
     "Removes a validator, validx is the index number of the validator within the validator list attached to the field, return the new section change"
-    proj, section = get_proj_section(project, section_name, schange)
-    widget = section.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    val_list = field.val_list
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
     # get validator
     if val_list and (validx >= 0) and (validx < len(val_list)):
         del val_list[validx]
@@ -226,16 +211,7 @@ def remove_section_field_validator(project, section_name, schange, widget_name, 
 
 def swap_page_field_validators(project, pagenumber, pchange, widget_name, field_arg, validx1, validx2):
     "swaps validators at index positions validx1, validx2, which are positions within the validator list attached to the field, return the new page change"
-    proj, page = get_proj_page(project, pagenumber, pchange)
-    widget = page.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    val_list = field.val_list
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
     # swap validators
     try:
         val_list[validx1], val_list[validx2] = val_list[validx2], val_list[validx1]
@@ -247,16 +223,7 @@ def swap_page_field_validators(project, pagenumber, pchange, widget_name, field_
 
 def swap_section_field_validators(project, section_name, schange, widget_name, field_arg, validx1, validx2):
     "swaps validators at index positions validx1, validx2, which are positions within the validator list attached to the field, return the new section change"
-    proj, section = get_proj_section(project, section_name, schange)
-    widget = section.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    val_list = field.val_list
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
     # swap validators
     try:
         val_list[validx1], val_list[validx2] = val_list[validx2], val_list[validx1]
@@ -264,35 +231,6 @@ def swap_section_field_validators(project, section_name, schange, widget_name, f
         raise ServerError("Invalid operation")
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
-
-
-def _get_section_val_list(project, section_name, schange, widget_name, field_arg):
-    "Returns proj, section, val_list"
-    proj, section = get_proj_section(project, section_name, schange)
-    widget = section.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    return proj, section, field.val_list
-
-
-def _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg):
-    "Returns proj, page, val_list"
-    proj, page = get_proj_page(project, pagenumber, pchange)
-    widget = page.widgets.get(widget_name)
-    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
-        raise ServerError("Widget not found")
-    if field_arg not in widget.fields:
-        raise ServerError("Field not found")
-    field = widget.fields[field_arg]
-    if not field.valdt:
-        raise ServerError("Field does not take validators")
-    return proj, page, field.val_list
-
 
 
 def set_section_field_validator_error_message(project, section_name, schange, widget_name, field_arg, validx, e_message):
