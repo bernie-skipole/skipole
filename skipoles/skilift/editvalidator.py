@@ -224,6 +224,48 @@ def remove_section_field_validator(project, section_name, schange, widget_name, 
     return proj.add_section(section_name, section)
 
 
+def swap_page_field_validators(project, pagenumber, pchange, widget_name, field_arg, validx1, validx2):
+    "swaps validators at index positions validx1, validx2, which are positions within the validator list attached to the field, return the new page change"
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    widget = page.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    val_list = field.val_list
+    # swap validators
+    try:
+        val_list[validx1], val_list[validx2] = val_list[validx2], val_list[validx1]
+    except:
+        raise ServerError("Invalid operation")
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def swap_section_field_validators(project, section_name, schange, widget_name, field_arg, validx1, validx2):
+    "swaps validators at index positions validx1, validx2, which are positions within the validator list attached to the field, return the new section change"
+    proj, section = get_proj_section(project, section_name, schange)
+    widget = section.widgets.get(widget_name)
+    if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
+        raise ServerError("Widget not found")
+    if field_arg not in widget.fields:
+        raise ServerError("Field not found")
+    field = widget.fields[field_arg]
+    if not field.valdt:
+        raise ServerError("Field does not take validators")
+    val_list = field.val_list
+    # swap validators
+    try:
+        val_list[validx1], val_list[validx2] = val_list[validx2], val_list[validx1]
+    except:
+        raise ServerError("Invalid operation")
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 
 
 

@@ -398,75 +398,84 @@ def set_arg_value(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
 def move_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves a validator up in a field validator list"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    field = bits.field
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if field is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
 
-    if validator is None:
-        raise FailPage("Validator not identified")
+    # get validator
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Invalid value to move")
 
-    validx = int(call_data['validx'])
+    if validx == 0:
+        raise FailPage("Invalid value to move")
+
+    # move validator
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.swap_section_field_validators(project, section_name, call_data['schange'], widget_name, field_arg, validx, validx-1)
+        else:
+            call_data['pchange'] = editvalidator.swap_page_field_validators(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, validx-1)
+    except ServerError as e:
+        raise FailPage(e.message)
     del call_data['validx']
 
-    val_list = field.val_list
-
-    # Moving up
-    if (validx >= 1) and (validx < len(val_list)):
-        val_list.insert(validx-1, val_list.pop(validx))
-    else:
-        raise FailPage("Invalid value to move up")
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-    call_data['status'] = "Validator moved"
 
 
 def move_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Moves a validator down in a field validator list"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    field = bits.field
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if field is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
 
-    if validator is None:
-        raise FailPage("Validator not identified")
+    # get validator
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Invalid value to move")
 
-    validx = int(call_data['validx'])
+    # move validator
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.swap_section_field_validators(project, section_name, call_data['schange'], widget_name, field_arg, validx, validx+1)
+        else:
+            call_data['pchange'] = editvalidator.swap_page_field_validators(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, validx+1)
+    except ServerError as e:
+        raise FailPage(e.message)
     del call_data['validx']
-
-    val_list = field.val_list
-
-    # Moving down
-    if (validx >= 0) and (validx < len(val_list)-1):
-        val_list.insert(validx+1, val_list.pop(validx))
-    else:
-        raise FailPage("Invalid value to move down")
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
-    call_data['status'] = "Validator moved"
-
 
 def remove_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes a validator"
