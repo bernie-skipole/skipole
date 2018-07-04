@@ -280,59 +280,78 @@ def set_displaywidget(caller_ident, ident_list, submit_list, submit_dict, call_d
 
 def set_allowed_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Adds a validator allowed value"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
 
-    page = bits.page
-    section = bits.section
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
+    # get validator index
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Invalid validator")
 
     if 'add_allowed' not in call_data:
         raise FailPage("Allowed value to be added not given")
 
     if call_data['add_allowed']:
-        if call_data['add_allowed'] in validator.allowed_values:
-            call_data['status'] = "Allowed value already exists"
-            return
-        # perhaps further checking needed here since allowed value strings appear in javascript
-        lowval = call_data['add_allowed'].lower()
-        if lowval == "</script>":
-            raise FailPage("Invalid allowed value : strings of this form may confuse javascript")
-        if "\"" in lowval:
-            raise FailPage("Invalid allowed value : strings of this form may confuse javascript")
-        validator.allowed_values.append(call_data['add_allowed'])
+        allowed_value = call_data['add_allowed']
     else:
-        call_data['status'] = "No value specified"
-        return
+        raise FailPage("A none-empty string is required")
 
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    # add allowed_value
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.add_section_field_validator_allowed_value(project, section_name, call_data['schange'], widget_name, field_arg, validx, allowed_value)
+        else:
+            call_data['pchange'] = editvalidator.add_page_field_validator_allowed_value(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, allowed_value)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Validator allowed values changed"
 
 
 def remove_allowed_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Removes a validator allowed value"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
 
-    page = bits.page
-    section = bits.section
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
+    # get validator index
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Invalid validator")
 
     if 'remove_allowed' not in call_data:
         raise FailPage("Allowed value to be removed not given")
@@ -342,16 +361,14 @@ def remove_allowed_value(caller_ident, ident_list, submit_list, submit_dict, cal
     except:
         raise FailPage("Invalid allowed value")
 
-    value_list = validator.allowed_values
-    if not validator.allowed_values:
-        raise FailPage("Allowed value list is empty")
-
-    if (idx >= 0) and (idx < len(validator.allowed_values)):
-        del validator.allowed_values[idx]
-    else:
-        raise FailPage("Invalid value to remove")
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+    # remove allowed_value
+    try:
+        if section_name:
+            call_data['schange'] = editvalidator.remove_section_field_validator_allowed_value(project, section_name, call_data['schange'], widget_name, field_arg, validx, idx)
+        else:
+            call_data['pchange'] = editvalidator.remove_page_field_validator_allowed_value(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, idx)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Validator allowed values changed"
 
 
@@ -571,7 +588,6 @@ def remove_validator(caller_ident, ident_list, submit_list, submit_dict, call_da
 
 def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates a list of validator modules"
-
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -631,7 +647,6 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
 
 def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates a list of validators"
-
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -703,7 +718,6 @@ def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, 
 
 def create_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Creates a validator and adds it to the field"
-
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None

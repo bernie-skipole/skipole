@@ -281,6 +281,70 @@ def set_page_field_validator_displaywidget(project, pagenumber, pchange, widget_
     return proj.save_page(page)
 
 
+def add_section_field_validator_allowed_value(project, section_name, schange, widget_name, field_arg, validx, allowed_value):
+    "Add allowed value on the validator at index validx within the validator list attached to the field, return the new section change"
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
+    validator = val_list[validx]
+    if not allowed_value:
+        raise ServerError("A none empty string is required")
+    if allowed_value in validator.allowed_values:
+        raise ServerError("Allowed value already exists")
+    lowval = allowed_value.lower()
+    if lowval == "</script>":
+        raise ServerError("Invalid allowed value : strings of this form may confuse javascript")
+    if "\"" in lowval:
+        raise ServerError("Invalid allowed value : strings of this form may confuse javascript")
+    validator.allowed_values.append(allowed_value)
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def add_page_field_validator_allowed_value(project, pagenumber, pchange, widget_name, field_arg, validx, allowed_value):
+    "Add allowed value on the validator at index validx within the validator list attached to the field, return the new page change"
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
+    validator = val_list[validx]
+    if not allowed_value:
+        raise ServerError("A none empty string is required")
+    if allowed_value in validator.allowed_values:
+        raise ServerError("Allowed value already exists")
+    lowval = allowed_value.lower()
+    if lowval == "</script>":
+        raise ServerError("Invalid allowed value : strings of this form may confuse javascript")
+    if "\"" in lowval:
+        raise ServerError("Invalid allowed value : strings of this form may confuse javascript")
+    validator.allowed_values.append(allowed_value)
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
+def remove_section_field_validator_allowed_value(project, section_name, schange, widget_name, field_arg, validx, allowed_value_index):
+    "Remove allowed value (given its index) on the validator at index validx within the validator list attached to the field, return the new section change"
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
+    value_list = val_list[validx].allowed_values
+    if not value_list:
+        raise ServerError("Allowed value list is empty")
+    if (allowed_value_index >= 0) and (allowed_value_index < len(value_list)):
+        del value_list[allowed_value_index]
+    else:
+        raise ServerError("Invalid value to remove")
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def remove_page_field_validator_allowed_value(project, pagenumber, pchange, widget_name, field_arg, validx, allowed_value_index):
+    "Remove allowed value (given its index) on the validator at index validx within the validator list attached to the field, return the new page change"
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
+    value_list = val_list[validx].allowed_values
+    if not value_list:
+        raise ServerError("Allowed value list is empty")
+    if (allowed_value_index >= 0) and (allowed_value_index < len(value_list)):
+        del value_list[allowed_value_index]
+    else:
+        raise ServerError("Invalid value to remove")
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 
 
 
