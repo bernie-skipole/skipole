@@ -374,58 +374,70 @@ def remove_allowed_value(caller_ident, ident_list, submit_list, submit_dict, cal
 
 def retrieve_arg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit a validator argument page"
-
-    editedproj = call_data['editedproj']
-
-    bits = utils.get_bits(call_data)
-
-    page = bits.page
-    section = bits.section
-    widget = bits.widget
-    field_arg = bits.field_arg
-    field = bits.field
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if section is not None:
-        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (bits.section_name,)]
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
     else:
-        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
+        raise FailPage(message="No section or page given")
 
-    if widget is None:
-        raise FailPage("Widget not identified")
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    if field_arg is None:
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
         raise FailPage("Field not identified")
 
-    if field is None:
-        raise FailPage("Field not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
-
-    call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["back_to_validator", "Back to validator", True, '']])
+    # get validator
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Unknown validator to edit")
 
     if 'arg_name' not in call_data:
         raise FailPage("Validator argument not identified")
-    if call_data['arg_name'] not in validator.val_args:
-        raise FailPage("Validator argument not identified")
     arg_name = call_data['arg_name']
+
+    # get validator and widget info
+    try:
+        if section_name:
+            widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
+            widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
+            vinfo = editvalidator.section_field_validator_info(project, section_name, call_data['schange'], widget_name, field_arg, validx)
+            page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
+        else:
+            widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
+            widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
+            vinfo = editvalidator.page_field_validator_info(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx)
+            page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    if arg_name not in vinfo.val_args:
+        raise FailPage("Validator argument not identified")
+
+    field_name = _field_name(widget, field_arg)
+
+    call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["back_to_validator", "Back to validator", True, '']])
 
     # navigator text
     page_data[("adminhead","page_head","large_text")] = arg_name
 
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widget.__class__.__module__.split('.')[-1], widget.__class__.__name__)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget.name,)
+    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
     page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field.name,)
-    page_data[('validator_type','para_text')] = "Validator type : %s" % (validator,)
+    page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
+    page_data[('validator_type','para_text')] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
 
-    page_data[('validator_arg_textblock','textblock_ref')] = validator.description_ref(arg_name)
+    page_data[('validator_arg_textblock','textblock_ref')] = ".".join(("validators",vinfo.module_name,vinfo.validator,arg_name))
 
-    page_data[('arg_val','input_text')] = validator[arg_name]
+    page_data[('arg_val','input_text')] = vinfo.val_args[arg_name]
     page_data[('arg_val','hidden_field1')] = arg_name
 
 
