@@ -26,8 +26,6 @@
 
 "Functions implementing validator editing"
 
-from ....ski import skiboot, tag, widgets, validators
-from .. import utils
 from ....ski.excepts import ServerError, FailPage, ValidateError, GoTo
 
 from .... import skilift
@@ -443,36 +441,47 @@ def retrieve_arg(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
 def set_arg_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets a validator argument value"
+    project = call_data['editedprojname']
+    section_name = None
+    pagenumber = None
+    if 'section_name' in call_data:
+        section_name = call_data['section_name']
+    elif 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message="No section or page given")
 
-    editedproj = call_data['editedproj']
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message="Widget not identified")
 
-    bits = utils.get_bits(call_data)
+    if 'field_arg' in call_data:
+        field_arg = call_data['field_arg']
+    else:
+        raise FailPage("Field not identified")
 
-    page = bits.page
-    section = bits.section
-    validator = bits.validator
-
-    if (page is None) and (section is None):
-        raise FailPage("Page/section not identified")
-
-    if validator is None:
-        raise FailPage("Validator not identified")
+    # get validator
+    try:
+        validx = int(call_data['validx'])
+    except:
+        raise FailPage("Unknown validator to edit")
 
     if 'arg_name' not in call_data:
         raise FailPage("argument name not given")
     if 'arg_value' not in call_data:
         raise FailPage("argument value not given")
 
-    if call_data['arg_name'] not in validator.val_args:
-        raise FailPage("Validator argument not identified")
     arg_name = call_data['arg_name']
+    arg_value = call_data['arg_value']
 
     try:
-        validator[arg_name] = call_data['arg_value']
-    except ValidateError as e:
-        raise FailPage(message = e.message, message_ref = e.message_ref)
-
-    utils.save(call_data, page=page, section_name=bits.section_name, section=section)
+        if section_name:
+            call_data['schange'] = editvalidator.set_section_field_validator_argument(project, section_name, call_data['schange'], widget_name, field_arg, validx, arg_name, arg_value)
+        else:
+            call_data['pchange'] = editvalidator.set_page_field_validator_argument(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx, arg_name, arg_value)
+    except ServerError as e:
+        raise FailPage(e.message)
     call_data['status'] = "Validator argument changed"
 
 

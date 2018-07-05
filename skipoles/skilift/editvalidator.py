@@ -345,6 +345,30 @@ def remove_page_field_validator_allowed_value(project, pagenumber, pchange, widg
     return proj.save_page(page)
 
 
+def set_section_field_validator_argument(project, section_name, schange, widget_name, field_arg, validx, arg_name, arg_value):
+    "Set an argument value on the validator at index validx within the validator list attached to the field, return the new section change"
+    proj, section, val_list = _get_section_val_list(project, section_name, schange, widget_name, field_arg)
+    validator = val_list[validx]
+    try:
+        validator[arg_name] = arg_value
+    except Exception:
+        raise ServerError("Invalid argument")
+    # save the altered section, and return the section.change uuid
+    return proj.add_section(section_name, section)
+
+
+def set_page_field_validator_argument(project, pagenumber, pchange, widget_name, field_arg, validx, arg_name, arg_value):
+    "Set an argument value (given its index) on the validator at index validx within the validator list attached to the field, return the new page change"
+    proj, page, val_list = _get_page_val_list(project, pagenumber, pchange, widget_name, field_arg)
+    validator = val_list[validx]
+    try:
+        validator[arg_name] = arg_value
+    except Exception:
+        raise ServerError("Invalid argument")
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 
 
 
