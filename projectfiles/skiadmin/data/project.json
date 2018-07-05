@@ -40206,8 +40206,8 @@ false
 "class": "basic.IntMinMax",
 "message": "zzz",
 "val_args": {
-"maxval": "255",
-"minval": "0"
+"maxval": "20",
+"minval": "10"
 }
 },
 {
