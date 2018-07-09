@@ -38,7 +38,14 @@ from .info_tuple import PageElement, PageTextBlock, WidgFieldInfo
 
 
 def pagechange(project, pagenumber):
-    "Returns None if pagenumber is not found (or is a folder), otherwise returns the page change uuid"
+    """Returns the page change uuid
+
+       Given a project name, and the integer ident number of a page within the project,
+       it returns a 'change' uuid associated  with the page. A new random uuid is generated
+       every time a page is changed, and is therefore a measure that a given page both exists,
+       and has not changed since the last time it was accessed.
+       The project must be currently loaded as either the root project or a sub-project.
+       Returns None if no page with this pagenumber is found."""
     # raise error if invalid project
     project_loaded(project)
     info = item_info(project, pagenumber)
@@ -50,7 +57,12 @@ def pagechange(project, pagenumber):
 
 
 def rename_page(project, pagenumber, pchange, newname):
-    "rename this page, return the page change uuid on success, raises ServerError on failure"
+    """Rename the given page.
+
+       Given a project name, the integer ident number of a page within the project,
+       the page change uuid and a new page name, it changes the page name and returns
+       a new uuid on success, or raises a ServerError on failure.
+       The project must be currently loaded as either the root project or a sub-project."""
     if not newname:
         raise ServerError(message="No new page name given")
     # get a copy of the page, which can have a new name set

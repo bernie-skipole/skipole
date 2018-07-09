@@ -55,9 +55,11 @@ def _get_project_template_pages(project):
 
 def set_widget_field_value(project, widget_name, widget_field_name, new_value, new_brief=None):
     """For each template page, with a given widget name and field name, set the field value, and widget brief.
-       The field can only be a single value field - as can be edited on the admin pages, not dictionary, table
-       or list fields which are dynamically set.
-       If no brief is given, or an empty string is given, then the brief is not changed"""
+
+       For every template page in the project, if it contains a widget with the given widget name and field name,
+       then set the field value, and widget brief.
+       The field can only be a single value field, not dictionary, table or list fields.
+       If no brief is given, or an empty string is given, then the brief is not changed."""
     field_value = str(new_value)
     proj = _get_proj(project)
     for page in _get_project_template_pages(project):
@@ -80,9 +82,12 @@ def set_widget_field_value(project, widget_name, widget_field_name, new_value, n
 
 
 def insert_div_in_body(project, css_class, brief):
-    """Inserts a div with the given css class attribute as the containing div in each template page body
+    """Inserts a div with the given css class as the containing div in each template page body
+
+       For every template page in the project, inserts a div with the given css class attribute
+       as the containing div in each page body (thus encapsulating all other body contents),
        unless a div with this class already exists at this point.
-       Sets the body div brief with the brief given here"""
+       Sets the containing div brief description with the brief given here."""
     proj = _get_proj(project)
     for page in _get_project_template_pages(project):
         body = page.body
@@ -92,7 +97,6 @@ def insert_div_in_body(project, css_class, brief):
                 # container div already exists
                 if body[0].brief != brief:
                     body[0].brief = brief
-                    itemlist.append(page)
                 continue
         # so insert a div
         contents = copy.deepcopy(body.parts)
@@ -103,7 +107,11 @@ def insert_div_in_body(project, css_class, brief):
 
 
 def set_backcol_in_pages(project, backcol):
-    "Sets a background colour in the <html> tags of template pages"
+    """Sets a background colour in the <html> tags of template pages.
+
+       For every template page in the project, which has the option to set a background colour enabled,
+       this function sets the background colour in the top <html> tag.
+       The backcol argument should be a colour string, such as #FF0000."""
     proj = _get_proj(project)
     for page in _get_project_template_pages(project):
         page.backcol = backcol
@@ -111,7 +119,7 @@ def set_backcol_in_pages(project, backcol):
 
 
 def set_bodyclass_in_pages(project, bodyclass):
-    "Sets the CSS class into the <body> tags of template pages"
+    """For every template page in the project, sets the CSS class into the <body> tag."""
     proj = _get_proj(project)
     for page in _get_project_template_pages(project):
         page.body.set_class(bodyclass)
@@ -119,7 +127,11 @@ def set_bodyclass_in_pages(project, bodyclass):
 
 
 def append_scriptlink_in_pages(project, label):
-    "Appends a script link to the head of each page"
+    """Appends a script link to the head of each page
+
+       For every template page in the project, appends a script link
+       to the head section pointing to the page with the given label.
+       Generally used to set a link to a javascript file in all your pages."""
     proj = _get_proj(project)
     if "/" in label:
         scriptlink = tag.Part(tag_name = "script", attribs={"src":label}, brief='script link to %s' % (label,))
@@ -131,8 +143,11 @@ def append_scriptlink_in_pages(project, label):
 
 
 def set_widget_css_to_default(project):
-    """For each template page, set all widget css class fields to their default values, if a default has been set
-          Note: does not change widgets in sections or svg pages"""
+    """For each template page, set all widget css class fields to their default values.
+
+       For each template page in the project, set all widget CSS class fields to their
+       default values, if a default has been set.
+       Note: This does not change widgets in sections or svg pages."""
     proj = _get_proj(project)
     defaults = {}
     defaultsfile = skiboot.project_defaults(proj_ident=project)

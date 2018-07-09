@@ -166,7 +166,15 @@ def new_placeholder(project, pagenumber, pchange, location, section_name, alias,
 
 
 def sectionchange(project, section_name):
-    "Returns the section change"
+    """Returns the section change
+
+       Given a project name, and an existing section name within the project,
+       returns a 'change' uuid associated  with the section. A new random uuid
+       is generated every time a section is edited, and is therefore a measure
+       that a given section both exists, and has not changed since the last time
+       it was accessed.
+       The project must be currently loaded as either the root project or a sub-project.
+       Returns None if no section with this name is found."""
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(section_name, str):

@@ -52,7 +52,14 @@ def _get_folder(project, foldernumber):
 
 
 def folderchange(project, foldernumber):
-    "Returns None if foldernumber is not found (or is a page), otherwise returns the folder change uuid"
+    """Returns the folder change UUID string
+
+       Given a project name, and the integer ident number of a folder within the project,
+       returns a 'change' uuid associated  with the folder. A new random uuid is generated
+       every time a folder is changed, and is therefore a measure that a given folder both
+       exists, and has not changed since the last time it was accessed.
+       The project must be currently loaded as either the root project or a sub-project.
+       Returns None if no folder with this foldernumber is found."""
     # raise error if invalid project
     project_loaded(project)
     info = item_info(project, foldernumber)
@@ -64,7 +71,12 @@ def folderchange(project, foldernumber):
 
 
 def rename_folder(project, foldernumber, fchange, newname):
-    "rename this folder, return folder change uuid on success, raises ServerError on failure"
+    """Rename the folder, return folder change uuid on success, raises ServerError on failure
+
+       Given a project name, the integer ident number of a folder within the project,
+       the folder change uuid and a new folder name, it changes the folder name and
+       returns a new uuid on success, or raises a ServerError on failure.
+       The project must be currently loaded as either the root project or a sub-project."""
     if not newname:
         raise ServerError(message="No new folder name given")
     # get a copy of the folder, which can have a new name set
