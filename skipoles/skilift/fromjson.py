@@ -41,7 +41,11 @@ def project_json_file(project):
 
 
 def part_to_OD(project, pagenumber, section_name, location):
-    """Builds an Ordered Dictionary from the part, ServerError if not found"""
+    """Returns an Ordered Dictionary defining the part and its contents.
+
+       The project must be currently loaded as either the root project or a sub-project, and the part must exist in the page.
+       pagenumber and section_name are mutually exclusive, one must be None
+       The function is valid for an html page element such as a div which can contain further elements or widgets."""
     # part is either in a page or a section
     if (pagenumber is None) and (section_name is None):
         raise ServerError("Page and section both missing")
@@ -62,13 +66,26 @@ def part_to_OD(project, pagenumber, section_name, location):
 
 
 def part_to_json(project, pagenumber, section_name, location, indent=0):
-    """Builds a json string from the part, ServerError if not found"""
+    """Returns a json string defining the HTML element and its contents.
+
+       The project must be currently loaded as either the root project or a sub-project, and the part must exist in the page.
+       pagenumber and section_name are mutually exclusive, one must be None
+       The indent parameter should be the number of indentation spaces to use when formatting the string.
+       The function is valid for an html page element such as a div which can contain further elements or widgets."""
     part_dict = part_to_OD(project, pagenumber, section_name, location)
     return json.dumps(part_dict, indent=indent, separators=(',', ':'))
 
 
 def create_section(project, section_name, json_data):
-    """Builds the section from the given json string or ordered dictionary, and adds it to project"""
+    """Builds the section from the given json string or ordered dictionary, and adds it to project
+
+
+       Given a project name, a section name and a json string (or ordered dictionary) describing the section,
+       this function creates a new section (or overwrites a section with the same name).
+       The project must be currently loaded as either the root project or a sub-project.
+       The json_data string or Ordered Dictionary is typically taken from a JSON file created by any of the functions;
+       section_to_OD, section_to_json, part_to_OD, part_to_json.
+"""
     # raise error if invalid project
     project_loaded(project)
     try:
@@ -78,7 +95,10 @@ def create_section(project, section_name, json_data):
 
 
 def section_to_OD(project, section_name):
-    """Builds an Ordered Dictionary from the section, ServerError if not found"""
+    """Given a project name, and a section name, returns an Ordered Dictionary defining the section.
+
+       The project must be currently loaded as either the root project or a sub-project,
+       and the section must exist in the project."""
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
@@ -89,7 +109,12 @@ def section_to_OD(project, section_name):
 
 
 def section_to_json(project, section_name, indent=0):
-    """Builds a json string from the section, ServerError if not found"""
+    """Given a project name, and a section name, returns a json string defining the section.
+
+       The project must be currently loaded as either the root project or a sub-project,
+       and the section must exist in the project.
+       The indent parameter should be the number of indentation spaces to use
+       when formatting the string."""
     section_dict = section_to_OD(project, section_name)
     return json.dumps(section_dict, indent=indent, separators=(',', ':'))
 
@@ -115,7 +140,11 @@ def container_to_OD(project, pagenumber, section_name, widget_name, container):
 
 
 def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_data):
-    """Builds a page from the given json string / ordered dictionary, and adds it to project"""
+    """Builds a page from the given json string / ordered dictionary, and adds it to project
+
+       Given a project name, a parent folder number, a new page number, a page name, a brief description
+       and a json string (or ordered dictionary) describing the page, it creates a new page with the new page number.
+       The number should not already exist in the project."""
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(pagenumber, int):
@@ -144,7 +173,10 @@ def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_d
 
 
 def page_to_OD(project, pagenumber):
-    """Returns an Ordered Dictionary from the given page, ServerError if not found"""
+    """Given a project name, and a page number, returns an Ordered Dictionary defining the page.
+
+       The project must be currently loaded as either the root project or a sub-project,
+       and the page must exist in the project."""
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(pagenumber, int):
@@ -162,14 +194,27 @@ def page_to_OD(project, pagenumber):
 
 
 def page_to_json(project, pagenumber, indent=0):
-    """Builds a json string from the given page, ServerError if not found"""
+    """Given a project name, and a page number, returns a json string defining the page.
+
+       The project must be currently loaded as either the root project or a sub-project,
+       and the page must exist in the project.
+       The indent parameter should be the number of indentation spaces to use when formatting the string."""
     page_dict = page_to_OD(project, pagenumber)
     return json.dumps(page_dict, indent=indent, separators=(',', ':'))
 
 
 def create_folder(project, parentnumber, addition_number, folder_name, restricted, json_data):
     """Builds a folder and contents from the given json string / ordered dictionary, and adds it to project
-       returns top folder_number"""
+       returns top folder_number
+
+
+       Given a project name, a parent folder number, an addition_number, a folder name, a True or False restricted value
+       and a json string (or ordered dictionary) describing the folder and its contents, it creates a new folder and contents.
+       The folder name should not already exist in the parent folder.
+       The json string is typically derived from a previously saved JSON file, and each folder and page within it will already
+       have an ident number. The 'addition_number' argument of this function is added to each ident number, and should take the
+       new ident numbers outside the range of existing numbers within the project.
+"""
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(addition_number, int):
@@ -189,7 +234,10 @@ def create_folder(project, parentnumber, addition_number, folder_name, restricte
 
 
 def folder_to_OD(project, foldernumber):
-    """Returns an Ordered Dictionary from the given folder, ServerError if not found"""
+    """Given a project name, and a folder number, returns an Ordered Dictionary defining the folder and its contents.
+
+       The project must be currently loaded as either the root project or a sub-project,
+       and the folder must exist in the project."""
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(foldernumber, int):
@@ -203,23 +251,30 @@ def folder_to_OD(project, foldernumber):
 
 
 def folder_to_json(project, foldernumber, indent=0):
-    """Builds a json string from the given folder, ServerError if not found"""
+    """Given a project name, and a folder number, returns a json string defining the folder and its contents.
+
+       The project must be currently loaded as either the root project or a sub-project,
+       and the folder must exist in the project.
+       The indent parameter should be the number of indentation spaces to use when formatting the string."""
     folder_dict = folder_to_OD(project, foldernumber)
     return json.dumps(folder_dict, indent=indent, separators=(',', ':'))
 
 
 def project_to_OD(project):
-    """Returns an Ordered Dictionary of the project, ServerError if not found"""
+    """For the given project, returns an Ordered Dictionary, which could be large.
+
+       The dictionary describes the project pages and widgets."""
     # raise error if invalid project
     project_loaded(project)
     return dump_project.project_to_OD(project)
 
 
 def project_to_json(project, save_to_file=True, indent=0):
-    """If save_to_file is True:
-         creates the file project.json under the projectfiles/project/data directory
-         and then returns None
-       If save_to_file is False, returns a json string of the project"""
+    """For the given project, creates a json file, or returns a json string, which could be large.
+
+       If save_to_file is True, this function creates the file project.json under the projectfiles/project/data directory, and returns None.
+       If save_to_file is False, the function returns a json string. This string describes the project pages and widgets.
+       The indent parameter should be the number of indentation spaces to use when formatting the string."""
 
     project_dict = project_to_OD(project)
 
@@ -234,9 +289,11 @@ def project_to_json(project, save_to_file=True, indent=0):
 
 
 def get_defaults(project, key=None):
-    """If key not given, returns the defaults dictionary,
-       if key given returns the value,
-       if key given, but not present, returns None"""
+    """Obtains values from the defaults.json file of the given project.
+
+        If a key is given, it returns the value of that key,
+        otherwise it returns the entire dictionary of the JSON file.
+        If no value is found, returns None."""
     defaults = {}
     defaultsfile = skiboot.project_defaults(proj_ident=project)
     if os.path.isfile(defaultsfile):
@@ -254,7 +311,18 @@ def get_defaults(project, key=None):
 
 
 def get_widget_default_field_value(project, widg_module, widg_class, widg_field):
-    "Returns the default value to set into a widget field argument, returns '' if not found"
+    """Returns the default value to set into a widget field argument, returns '' if not found
+
+       When a widget is created or edited, certain fields can be set with defaults - currently CSS classes and CSS Styles.
+       You have the option to save these defaults for the widget field.
+       These defaults are held in the project 'defaults.json' file.
+       This function reads the defaults.json file and returns the default string value for the given widget and field.
+       To specify the widget and field, you need to supply the project name, and:
+
+       widg_module is the module name of the widget.
+       widg_class is the class name of the widget
+       widg_field is the field name of the widget
+       If the default value is not found, the function returns an empty string."""
     if not (widg_module and widg_class and widg_field):
         return ''
     widg_defaults_dict = get_defaults(project, key='widgets')
@@ -281,7 +349,7 @@ def get_widget_default_field_value(project, widg_module, widg_class, widg_field)
 
 
 def set_defaults(project, key, value):
-    "Sets a key, value into defaults"
+    "Sets a key:value pair into the defaults.json file for the project."
     defaults = get_defaults(project)
     if not defaults:
         defaults = {}
@@ -290,7 +358,7 @@ def set_defaults(project, key, value):
 
 
 def save_defaults(project, defaults):
-    "Saves defaults.json"
+    "Given a defaults dictionary, saves the entire dictionary as the defaults.json file for the project."
     # create defaults.json
     defaults_json_filename = skiboot.project_defaults(project)
     # write out the project defaults dictionary to a json file
@@ -311,7 +379,15 @@ def save_defaults(project, defaults):
 
 
 def save_widget_default_field_value(project, widg_module, widg_class, widg_field, value):
-    "Saves the default value to set into a widget field argument, returns True if ok, False if not"
+    """Saves a default value string for a given widget field (currently CSS classes and CSS styles) in the project 'defaults.json' file.
+
+       To specify the widget and field, you need to supply the project name, and:
+
+       widg_module is the module name of the widget.
+       widg_class is the class name of the widget
+       widg_field is the field name of the widget
+
+       The function returns True if ok, False if not."""
     if not (widg_module and widg_class and widg_field):
         return False
     widg_defaults_dict = get_defaults(project, key='widgets')
@@ -333,7 +409,7 @@ def save_widget_default_field_value(project, widg_module, widg_class, widg_field
     widg_class_dict[widg_field] = value
     try:
         set_defaults(project, key='widgets', value=widg_defaults_dict)
-    except e:
+    except Exception:
         return False
     return True
 
