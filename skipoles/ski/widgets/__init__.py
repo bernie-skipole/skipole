@@ -571,6 +571,10 @@ class Widget(tag.Part):
         # If the widget is in error status, this becomes True
         self.error_status = False
 
+    @classmethod
+    def module_name(cls):
+        return cls.__module__.split('.')[-1]
+
     def _create_name_dict(self):
         "Creates a dictionary of names against field arguments"
         self._names = { field.name:field_arg for field_arg, field in self.fields.items() }
@@ -1464,6 +1468,10 @@ class ClosedWidget(tag.ClosedPart):
 
         # If the widget is in error status, this becomes True
         self.error_status = False
+
+    @classmethod
+    def module_name(cls):
+        return cls.__module__.split('.')[-1]
 
     @classmethod
     def can_contain(cls):
