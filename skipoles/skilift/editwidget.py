@@ -152,7 +152,7 @@ def page_widget_description(project, pagenumber, pchange, name):
     fields_table = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_table() ]
     fields_dictionary = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_dictionary() ]
     widgetsection_name, parent_widget_name, parent_container = widget.embedded
-    return WidgetDescription( widget.__class__.__module__.split('.')[-1],
+    return WidgetDescription( widget.module_name(),
                               widget.__class__.__name__,
                               widget.brief,
                               widget.description_ref(),
@@ -179,7 +179,7 @@ def section_widget_description(project, section_name, schange, name):
     fields_table = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_table() ]
     fields_dictionary = [ FieldDescription(*fld, False, False) for fld in widget.field_arguments_dictionary() ]
     widgetsection_name, parent_widget_name, parent_container = widget.embedded
-    return WidgetDescription( widget.__class__.__module__.split('.')[-1],
+    return WidgetDescription( widget.module_name(),
                               widget.__class__.__name__,
                               widget.brief,
                               widget.description_ref(),
