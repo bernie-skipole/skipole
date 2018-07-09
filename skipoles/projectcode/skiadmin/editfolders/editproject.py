@@ -137,30 +137,6 @@ def retrieve_about_skilift(caller_ident, ident_list, submit_list, submit_dict, c
     page_data[("adminhead","page_head","large_text")] = "skilift"
 
 
-def retrieve_about_editfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "About editfolder module"
-    page_data[("adminhead","page_head","large_text")] = "editfolder"
-    call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
-
-
-def retrieve_about_editpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "About editpage module"
-    page_data[("adminhead","page_head","large_text")] = "editpage"
-    call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
-
-
-def retrieve_about_editsection(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "About editsection module"
-    page_data[("adminhead","page_head","large_text")] = "editsection"
-    call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
-
-
-def retrieve_about_off_piste(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "About off_piste module"
-    page_data[("adminhead","page_head","large_text")] = "off_piste"
-    call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
-
-
 def get_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Finds any widget submitting 'get_field' with value of a textblock ref, returns
        page_data with key widget with field 'div_content' and value the textblock text"""
