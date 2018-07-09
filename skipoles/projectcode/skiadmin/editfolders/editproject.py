@@ -137,12 +137,6 @@ def retrieve_about_skilift(caller_ident, ident_list, submit_list, submit_dict, c
     page_data[("adminhead","page_head","large_text")] = "skilift"
 
 
-def retrieve_about_fromjson(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "About fromjson module"
-    page_data[("adminhead","page_head","large_text")] = "fromjson"
-    call_data['extend_nav_buttons'] = [[70005, "skilift", False, '']]
-
-
 def retrieve_about_editfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "About editfolder module"
     page_data[("adminhead","page_head","large_text")] = "editfolder"

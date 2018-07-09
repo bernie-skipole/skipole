@@ -37,7 +37,10 @@ from .info_tuple import ProjectInfo, ItemInfo, PartInfo, PageInfo, FolderInfo, W
 
 
 def project_loaded(project, error_if_not=True):
-    "Returns True if the project is loaded, False if not, or raise ServerError"
+    """Returns True if the project is the root or a sub project.
+
+     If the given project is not one of these, either raises a ServerError exception (if error_if_not is True) or returns False.
+"""
     if isinstance(project, str) and skiboot.is_project(project):
         return True
     if error_if_not:
@@ -114,7 +117,15 @@ def project_info(project):
 
 
 def projectURLpaths():
-    "Returns a dictionary of project name : project path"
+    """Returns a dictionary of project name : project path
+
+       This function takes no arguments and returns a dictionary of project names as keys with the URL paths as values.
+       The projects being the root project and any sub-projects attached to it.
+       Please note, if this project is being administered using 'skiadmin' - then the project 'skiadmin' will be visible in this dictionary,
+       however when the project is running without skiadmin, this project will no longer be present.
+
+      You should expect to see the root project itself in the dictionary, and at least the 'lib' project which is normally attached as a sub-project.
+"""
     rootproject = skiboot.getproject()
     paths = {ident:path for ident,path in rootproject.subproject_paths.items()}
     paths[rootproject.proj_ident] = rootproject.url
@@ -122,7 +133,7 @@ def projectURLpaths():
 
 
 def get_root():
-    "Returns the root project name"
+    "Takes no arguments and returns the project name of the current root project."
     return skiboot.project_ident()
 
 
@@ -185,15 +196,21 @@ def set_proj_data(project, key, value):
     proj.proj_data[key] = value
 
 def get_projectfiles_dir(project=None):
-    """If project not given, returns the projectfiles directory path
-       If project is given, returns the projectfiles/project directory path"""
+    """Returns the directory where your project files are saved
+
+    Static files, and control files (such as the json files defining your project) are saved outside
+    the python package structure under a 'projectfiles' directory.
+    If project not given, returns the projectfiles directory path
+    If project is given, returns the projectfiles/project directory path"""
     if project:
         return os.path.join(skiboot.projectfiles(), project)
     else:
         return skiboot.projectfiles()
 
 def get_projectcode_dir(project=None):
-    """If project not given, returns the projectcode directory path
+    """Returns the directory where your project code is saved
+
+       If project not given, returns the projectcode directory path
        If project is given, returns the projectcode/project directory path"""
     return skiboot.projectcode(project)
 
@@ -206,25 +223,29 @@ def next_ident_number(project):
 
 
 def get_textblock_text(textref, lang, project=None):
-    """Gets the textblock text, given a textref, if text for a given lang is not found, makes an
-       effort to still get text, if project not given assumes
-       the root project, project must exist as either the root, or a sub project of the root
-       returns None if nothing found"""
+    """This function returns the textblock text, given a textblock reference string,
+
+       lang is the language tuple of (preferred language, default language).
+       If text for a given language is not found, the function makes an effort to get text by trying the default language.
+
+       If project is not given assumes the root project, if given, project must exist as either the root,
+       or a sub project of the root.
+       If no textblock is found, returns None."""
     if project is None:
         project = skiboot.project_ident()
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
     if proj is None:
-        return ''
+        return
     return proj.textblocks.get_text(textref, lang)
 
 
 def get_accesstextblocks(project=None):
-    """Returns the instance of the AccessTextBlocks class used by the
-       project to get TextBlock text.
-       If project not given, assumes the root project
-       If project is given, returns the AccessTextBlocks of the project"""
+    """This function returns the instance of the AccessTextBlocks class used by the project to get TextBlock text.
+
+       If project is None, assumes the root project, if project is given; returns the AccessTextBlocks instance
+       of the project. If given, project must exist as either the root, or a sub project of the root."""
     if project is None:
         project = skiboot.project_ident()
     # raise error if invalid project
@@ -268,8 +289,25 @@ def get_itemnumber(project, item):
 
 
 def item_info(project, itemnumber):
-    """Returns None if page or folder not found, otherwise returns a namedtuple with contents
-       project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted
+    """Returns None if page or folder not found, otherwise returns a namedtuple of item information.
+
+       The project must exist as either the root, or a sub project of the root, itemnumber is the ident number of a page or folder.
+
+       The function returns None, if no page or folder is found, otherwise returns a namedtuple with contents:
+       project, project_version, itemnumber, item_type, name, brief, path, label_list, change, parentfolder_number, restricted.
+
+       The values are:
+       'project' - the project name from the argument.
+       'project_version' is the project version string.
+       'itemnumber' is the itemnumber from the argument.
+       item_type' - one of 'TemplatePage', 'Folder', 'JSON', 'CSS', 'RespondPage', 'FilePage', 'SVG'.
+       'name' holds the page or folder name.
+       'brief' holds the brief description of the item.
+       'path' is the url path.
+       'label_list' is a list of labels (as there could be more than one) pointing to this item.
+       'change' is a uuid of the item, changed whenever the item is altered by this admin site.
+       'parentfolder_number' is the integer number of the parentfolder or None if this is the root folder.
+       'restricted' is True if access is restricted (cannot be called by URL), False otherwise.
     """
     # raise error if invalid project
     project_loaded(project)
@@ -302,12 +340,21 @@ def item_info(project, itemnumber):
 
 
 def part_info(project, pagenumber, section_name, location):
-    """location is a tuple or list consisting of three items:
-       a string (such as head or section name or widget name)
+    """Returns a PartInfo named tuple, giving the information about a part at a location in a page or section.
+
+       The project must exist as either the root, or a sub project of the root,
+       pagenumber and section_name are mutually exclusive, one must be None.
+
+       location is a tuple or list consisting of three items:
+       a string (such as 'head' or section name or widget name)
        a container integer, such as 0 for widget container 0, or None if not in container
        a tuple or list of location integers
-       raise ServerError if part not found, otherwise returns a namedtuple with items
-       project, pagenumber, page_part, section_name, name, location, part_type, brief
+
+       Returns None if part not found, otherwise returns a namedtuple with items
+       project, pagenumber, page_part, section_name, name, location, part_type, brief.
+
+       page_part is one of 'head', 'body', 'svg' or None if the part is in a section,
+       name is the widgets name if it is a widget.
     """
 
     # part is either in a page or a section
@@ -470,7 +517,7 @@ def widget_info(project, pagenumber, section_name, widget_name):
 
 
 def ident_exists(project, itemnumber):
-    "Return True if ident exists, False otherwise"
+    "Return True if a page or folder with this itemnumber exists, False otherwise."
     return skiboot.ident_exists((project, itemnumber))
 
 
@@ -488,7 +535,10 @@ def ident_numbers(project=None):
 
 
 def labels(project=None):
-    "return dictionary of labels to page, folder tuple idents or urls"
+    """Returns a dictionary of labels to page, folder tuple idents or urls
+
+       If project is not given assumes the root project, if given, project must exist as either the root, or a sub project of the root.
+"""
     if project is None:
         project = skiboot.project_ident()
     # raise error if invalid project
@@ -500,7 +550,27 @@ def labels(project=None):
 
 
 def pages(project, foldernumber):
-    """Returns generator of PageInfo named tuples, one for each page in the folder"""
+    """Returns generator of PageInfo named tuples, one for each page in the folder
+
+       The project must exist as either the root, or a sub project of the root, foldernumber is the ident number of a folder.
+
+       The generator raises a ServerError if no folder is found, otherwise the generator yields a namedtuple describing each page within the folder over each iterated pass.
+
+       The named tuple has contents:
+       'name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change', 'parentfolder_number'
+
+       The values are:
+       'name' holds the page name.
+       'number' is the ident page number.
+       'restricted' is True if access is restricted (cannot be called by URL), False otherwise.
+       'brief' holds the brief description of the page.
+       'item_type' - one of 'TemplatePage', 'JSON', 'CSS', 'RespondPage', 'FilePage', 'SVG'.
+       'responder' - responder Class name, such as 'SubmitData' etc., or empty string if the page is not a responder.
+       'enable_cache' - True if client caching is enabled on the page, False otherwise.
+       'change' - A UUID string changed whenever the page is edited
+       'parentfolder_number' - The uident number of the folder containing this page
+"""
+
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
@@ -526,7 +596,24 @@ def pages(project, foldernumber):
 
 
 def page_info(project, pagenumber):
-    """Returns PageInfo named tuple for page"""
+    """Returns PageInfo named tuple for page
+
+       The project must exist as either the root, or a sub project of the root, pagenumber is the ident number of a page.
+
+       The function raises a ServerError, if no page is found, otherwise returns a namedtuple with contents:
+       'name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change', 'parentfolder_number'
+
+       The values are:
+       'name' holds the page name.
+       'number' is the page number from the argument.
+       'restricted' is True if access is restricted (cannot be called by URL), False otherwise.
+       'brief' holds the brief description of the page.
+       'item_type' - one of 'TemplatePage', 'JSON', 'CSS', 'RespondPage', 'FilePage', 'SVG'.
+       'responder' - responder Class name, such as 'SubmitData' etc., or empty string if the page is not a responder.
+       'enable_cache' - True if client caching is enabled on the page, False otherwise.
+       'change' - A UUID string changed whenever the page is edited
+       'parentfolder_number' - The uident number of the folder containing this page
+"""
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
@@ -552,7 +639,24 @@ def page_info(project, pagenumber):
 
 
 def folders(project, foldernumber):
-    """Returns generator of FolderInfo named tuples, one for each sub folders in the folder"""
+    """Returns generator of FolderInfo named tuples, one for each sub folder in the folder
+
+    The project must exist as either the root, or a sub project of the root, foldernumber is the ident number of a folder.
+
+    The generator raises a ServerError if no folder is found, otherwise the generator yields a namedtuple describing each sub folder within the folder over each iterated pass.
+
+    The named tuple has contents:
+    'name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders', 'change'.
+
+    The values are:
+    'name' holds the sub folder name.
+    'number' is the sub folder number.
+    'restricted' is True if access is restricted (cannot be called by URL), False otherwise.
+    'brief' holds the brief description of the sub folder.
+    'contains_pages' - True if the sub folder contains pages, False otherwise.
+    'contains_folders' - True if the sub folder contains pages, False otherwise.
+    'change' - A UUID string, changed whenever the folder is changed.
+"""
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
@@ -566,7 +670,22 @@ def folders(project, foldernumber):
 
 
 def folder_info(project, foldernumber):
-    """Returns FolderInfo named tuple for folder"""
+    """Returns FolderInfo named tuple for folder
+
+    The project must exist as either the root, or a sub project of the root, foldernumber is the ident number of a folder.
+
+    The function raises a ServerError, if no folder is found, otherwise returns a namedtuple with contents:
+    'name', 'number', 'restricted', 'brief', 'contains_pages', 'contains_folders', 'change'.
+
+    The values are:
+    'name' holds the folder name.
+    'number' is the folder number from the argument.
+    'restricted' is True if access is restricted (cannot be called by URL), False otherwise.
+    'brief' holds the brief description of the folder.
+    'contains_pages' - True if the folder contains pages, False otherwise.
+    'contains_folders' - True if the folder contains pages, False otherwise.
+    'change' - A UUID string, changed whenever the folder is changed
+"""
     # raise error if invalid project
     project_loaded(project)
     proj = skiboot.getproject(project)
