@@ -56,7 +56,7 @@ SectionElement = namedtuple('SectionElement', ['project', 'section_name', 'schan
 SectionTextBlock = namedtuple('SectionTextBlock', ['project', 'section_name', 'schange', 'location', 'textref', 'failmessage', 'escape', 'linebreaks', 'decode'])
 
 
-WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'reference', 'fields', 'containers', 'illustration',
+WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'fields', 'containers', 'illustration',
                                                      'fields_single', 'fields_list', 'fields_table', 'fields_dictionary', 'parent_widget', 'parent_container'])
 # 'fields' is a list of lists: [ field arg, field ref]
 # 'containers' is the number of containers in the widget, 0 for none

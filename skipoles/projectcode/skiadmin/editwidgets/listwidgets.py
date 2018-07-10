@@ -110,7 +110,7 @@ def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, ca
     widget_list = editwidget.widgets_in_module(module_name)
     contents = []
     for widget in widget_list:
-        ref = widget.reference
+        ref = ".".join(("widgets", module_name, widget.classname))
         notfound = 'Textblock reference %s not found' % ref
         classname = widget.classname
         contents.append([classname, classname, '', ref, notfound, ''])
@@ -150,7 +150,7 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
     # widg is a WidgetDescription named tuple
 
     page_data[("adminhead","page_head","large_text")] = "Create widget of type %s" % (widget_class_name,)
-    page_data[('widgetdesc','textblock_ref')] = widg.reference
+    page_data[('widgetdesc','textblock_ref')] = ".".join(("widgets", module_name, widget_class_name))
 
     page_data[('fieldtable','contents')] = widg.fields
 

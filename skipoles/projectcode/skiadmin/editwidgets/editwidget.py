@@ -113,7 +113,7 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     
 
     page_data[('widget_type','para_text')] = "This widget is of type %s.%s." % (widgetdescription.modulename, widgetdescription.classname)
-    page_data[('widget_textblock','textblock_ref')] = widgetdescription.reference
+    page_data[('widget_textblock','textblock_ref')] = ".".join(("widgets", widgetdescription.modulename, widgetdescription.classname))
     page_data[('widget_name','input_text')] = widget_name
     page_data[('widget_brief','input_text')] = widgetdescription.brief
 
