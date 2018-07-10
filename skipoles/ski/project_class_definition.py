@@ -573,9 +573,9 @@ class Project(object):
     def set_special_page(self, label, target):
         "Sets a special page"
         if not label:
-            raise ValidateError(message="Sorry, a special page label must be given")
+            raise ServerError(message="Sorry, a special page label must be given")
         if not target:
-            raise ValidateError(message="Sorry, a label target must be given")
+            raise ServerError(message="Sorry, a label target must be given")
         if isinstance(target, str) and ( '/' in target ):
                 # item is a url
                 item = target
@@ -586,7 +586,7 @@ class Project(object):
         else:
             item = skiboot.make_ident(target, self._proj_ident)
             if not item:
-                raise ValidateError(message="Sorry, the page target is not recognised")
+                raise ServerError(message="Sorry, the page target is not recognised")
         self.special_pages[label] = item
 
 

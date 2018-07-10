@@ -31,7 +31,6 @@ import re, html
 from .... import skilift
 from ....skilift import fromjson, editsection, editpage, editwidget
 
-from ....ski import skiboot, tag, widgets
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
 
