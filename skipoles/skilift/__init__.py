@@ -142,6 +142,16 @@ def admin_project():
     return skiboot.admin_project()
 
 
+def lib_list():
+    "Returns list of library labels"
+    return skiboot.lib_list()[:]
+
+
+def sys_list():
+    "Returns list of system page labels"
+    return skiboot.sys_list()[:]
+
+
 def add_sub_project(sub_project):
     "Adds a sub_project to the current root project"
     root_project = skiboot.getproject()
@@ -547,6 +557,24 @@ def labels(project=None):
     if proj is None:
         return {}
     return proj.labels()
+
+
+def set_label(project, label, target):
+    """Sets a label and target, where target is a page ident or url"""
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError("Project not recognised")
+    proj.set_special_page(label, target)
+
+
+def delete_label(project, label):
+    """Deletes a label"""
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        raise ServerError("Project not recognised")
+    proj.delete_special_page(label)
 
 
 def pages(project, foldernumber):

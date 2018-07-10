@@ -30,59 +30,55 @@ import re
 _AN = re.compile('[^\w_]')
 
 
-from ....ski import skiboot
 from .... import skilift
-from ....skilift import fromjson
 
-from .. import utils
 from ....ski.excepts import FailPage, ValidateError, ServerError
 
 
 def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is for the manage special pages page"
 
-    editedproj = call_data['editedproj']
-    editedproj_ident = editedproj.proj_ident
-    specials = editedproj.special_pages
+    project = call_data['editedprojname']
+    labeldict = skilift.labels(project)
 
     page_data[("adminhead","page_head","large_text")] = "Manage page labels"
 
-    system_list = skiboot.sys_list()
+    system_list = skilift.sys_list()
     page_data['system:col_label'] = system_list
-    page_data['system:col_input'] = _make_list(editedproj_ident, system_list, specials)
+    page_data['system:col_input'] = _make_list(project, system_list, labeldict)
     page_data['system:hidden_field1'] = system_list
 
-    lib_list = skiboot.lib_list()
+    lib_list = skilift.lib_list()
     page_data['jq:col_label'] = lib_list
-    page_data['jq:col_input'] = _make_list(editedproj_ident, lib_list, specials)
+    page_data['jq:col_input'] = _make_list(project, lib_list, labeldict)
     page_data['jq:hidden_field1'] = lib_list
 
-    user_label_list = [item for item in specials if ( (item not in system_list) and (item not in lib_list) )]
+    user_label_list = [item for item in labeldict if ( (item not in system_list) and (item not in lib_list) )]
     if user_label_list:
         user_label_list.sort()
         page_data['user:col_label'] = user_label_list
-        page_data['user:col_input'] = _make_list(editedproj_ident, user_label_list, specials)
+        page_data['user:col_input'] = _make_list(project, user_label_list, labeldict)
         page_data['user:hidden_field1'] = user_label_list
     else:
         page_data['user:show'] = False
 
 
 
-def _make_list(editedproj_ident, reflist, specials):
+def _make_list(project, reflist, labeldict):
     "Creates a list of url's or string ident numbers of items in reflist"
     result = []
     for item in reflist:
-        if item in specials:
-            target = specials[item]
+        if item in labeldict:
+            target = labeldict[item]
             if isinstance(target, str):
                 # its a url
                 result.append(target)
             else:
-                # its an ident
-                if target.proj == editedproj_ident:
-                    result.append(str(target.num))
+                # its a tuple
+                if target[0] == project:
+                    result.append(str(target[1]))
                 else:
-                    result.append(target.to_comma_str())
+                    result.append(",".join(target))
         else:
             result.append('')
     return result
@@ -91,8 +87,7 @@ def _make_list(editedproj_ident, reflist, specials):
 def submit_special_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets special page"
 
-    editedproj = call_data['editedproj']
-
+    project = call_data['editedprojname']
     label = call_data["label"]
     ident_or_url = call_data["ident_or_url"]
     if (not label) or (not ident_or_url):
@@ -112,14 +107,14 @@ def submit_special_page(caller_ident, ident_list, submit_list, submit_dict, call
         raise FailPage(message = "Invalid label (Danger of confusion with a page ident).")
 
     try:
-        editedproj.set_special_page(label, ident_or_url)
-    except (ValidateError, ServerError) as e:
+        skilift.set_label(project, label, ident_or_url)
+    except ServerError as e:
         raise FailPage(message = e.message)
 
-    if label in skiboot.sys_list():
+    if label in skilift.sys_list():
         call_data['status'] = 'System special page %s set' % (label,)
         return
-    if label in skiboot.lib_list():
+    if label in skilift.lib_list():
         call_data['status'] = 'Library special page %s set' % (label,)
         return
     call_data['status'] = 'Label %s set' % (label,)
@@ -128,8 +123,7 @@ def submit_special_page(caller_ident, ident_list, submit_list, submit_dict, call
 def add_user_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Sets user defined label and target"
 
-    editedproj = call_data['editedproj']
-
+    project = call_data['editedprojname']
     label = call_data["label"]
     ident_or_url = call_data["ident_or_url"]
     if (not label) or (not ident_or_url):
@@ -148,30 +142,28 @@ def add_user_page(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if label.isdigit():
         raise FailPage(message = "Invalid label (Danger of confusion with a page ident).")
 
-    if label in skiboot.lib_list():
+    if label in skilift.lib_list():
         raise FailPage(message = "Invalid label, reserved for system files.")
-    if label in skiboot.sys_list():
+    if label in skilift.sys_list():
         raise FailPage(message = "Invalid label, reserved for system pages.")
 
     try:
-        editedproj.set_special_page(label, ident_or_url)
-    except (ValidateError, ServerError) as e:
+        skilift.set_label(project, label, ident_or_url)
+    except ServerError as e:
         raise FailPage(message = e.message)
-
     call_data['status'] = 'Label %s set' % (label,)
 
 
 def submit_user_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Edits or deletes a special user page"
 
-    editedproj = call_data['editedproj']
-
+    project = call_data['editedprojname']
     if 'label' not in call_data:
         raise FailPage(message = "Invalid label.")
     label = call_data["label"]
-    if label in skiboot.lib_list():
+    if label in skilift.lib_list():
         raise FailPage(message = "Invalid label.")
-    if label in skiboot.sys_list():
+    if label in skilift.sys_list():
         raise FailPage(message = "Invalid label.")
     if ("edit" in call_data) and (call_data["edit"]):
         submit_special_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -179,8 +171,8 @@ def submit_user_page(caller_ident, ident_list, submit_list, submit_dict, call_da
     if ("delete" not in call_data) or (not call_data["delete"]):
         raise FailPage(message = "Invalid submission.")
     try:
-        editedproj.delete_special_page(label)
-    except (ValidateError, ServerError) as e:
+        skilift.delete_label(project, label)
+    except ServerError as e:
         raise FailPage(message = e.message)
     call_data['status'] = 'User label deleted'
 
