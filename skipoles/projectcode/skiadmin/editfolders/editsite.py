@@ -41,10 +41,10 @@ from ....projectcode import code_reload
 def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves all field data for admin index page"
 
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
     adminproj = skilift.admin_project()
 
-    projectinfo = skilift.project_info(editedprojname)
+    projectinfo = skilift.project_info(project)
     admininfo = skilift.project_info(adminproj)
 
     page_data["projversion", "input_text"] = projectinfo.version
@@ -53,7 +53,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
     page_data["deflang:input_text"] = projectinfo.default_language
     page_data["deflang:bottomtext"] = "Current value: " + projectinfo.default_language
 
-    page_data["download","link_ident"] = admininfo.path + editedprojname + ".tar.gz"
+    page_data["download","link_ident"] = admininfo.path + project + ".tar.gz"
 
     if "root_path" in call_data:
         # "root_path" is set in call_data, so return it
@@ -77,7 +77,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
         projinfo = skilift.project_info(proj)
         ctable.append([proj, suburl, projinfo.brief, proj, '', proj, '', True, True])
     # append the final row showing this edited project
-    ctable.append([editedprojname, projectinfo.path, projectinfo.brief, '', '', '', '', False, False])
+    ctable.append([project, projectinfo.path, projectinfo.brief, '', '', '', '', False, False])
     page_data["projtable:contents"] = ctable
 
     # list directories under projects_dir()
@@ -88,7 +88,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
     else:
         # get projects which have json files
         for directory in dirs:
-            if directory == editedprojname or (directory in subprojects):
+            if directory == project or (directory in subprojects):
                 # do not include the current edited project or already loaded projects
                 continue
             proj_jsonfile = fromjson.project_json_file(directory)
@@ -103,7 +103,7 @@ def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call
         page_data['sdd1:selectvalue'] = page_data['sdd1:option_list'][0]
     else:
         page_data['sdd1:selectvalue'] = ''
-    page_data['l2','content'] = "about %s.tar.gz can be found here." % editedprojname
+    page_data['l2','content'] = "about %s.tar.gz can be found here." % project
 
 
 def _clear_index_input_accepted(page_data):
@@ -131,17 +131,17 @@ def retrieve_help(caller_ident, ident_list, submit_list, submit_dict, call_data,
 
 def about_export(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves text for about export page"
-    editedprojname = call_data['editedprojname']
+    project = call_data['editedprojname']
     adminproj = skilift.admin_project()
     admininfo = skilift.project_info(adminproj)
 
     # fill in header information
-    page_data[("adminhead","page_head","large_text")] = "Project: %s" % (editedprojname,)
+    page_data[("adminhead","page_head","large_text")] = "Project: %s" % (project,)
 
-    page_data["l2","link_ident"] = admininfo.path + editedprojname + ".tar.gz"
+    page_data["l2","link_ident"] = admininfo.path + project + ".tar.gz"
 
     # set the directory structure
-    page_data[('tar_contents','pre_text')] = _tar_contents(editedprojname)
+    page_data[('tar_contents','pre_text')] = _tar_contents(project)
 
 
 def retrieve_colour_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -412,16 +412,16 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
     "Goes to the edit page, folder etc depending on the item submitted"
 
     edited_item = call_data["edited_item"]
-    editedprojname = call_data["editedprojname"]
+    project = call_data['editedprojname']
 
     # clear call data
     utils.no_ident_data(call_data)
 
-    itemnumber = skilift.get_itemnumber(editedprojname, edited_item)
+    itemnumber = skilift.get_itemnumber(project, edited_item)
     if itemnumber is None:
         raise FailPage(message="Item not found")
 
-    item = skilift.item_info(editedprojname, itemnumber)
+    item = skilift.item_info(project, itemnumber)
     if item is None:
         raise FailPage(message="Item not found")
 
@@ -520,12 +520,12 @@ def set_version(caller_ident, ident_list, submit_list, submit_dict, call_data, p
 
 
 def debugtoggle(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    if skiboot.get_debug():
-        skiboot.set_debug(False)
+    if skilift.get_debug():
+        skilift.set_debug(False)
         page_data["debugtoggle", "button_text"] = "Set Debug ON"
         call_data['status'] = 'Debug mode set OFF'
     else:
-        skiboot.set_debug(True)
+        skilift.set_debug(True)
         page_data["debugtoggle", "button_text"] = "Set Debug OFF"
         call_data['status'] = 'Debug mode set ON'
 
@@ -552,7 +552,7 @@ def filter_from_tar(editedproj):
                 return tarinfo
             if paths[3] == editedproj.proj_ident:
                 return tarinfo
-            if paths[3] == skiboot.admin_project():
+            if paths[3] == skilift.admin_project():
                 return None
             if paths[3] == "__init__.py":
                 return tarinfo
@@ -585,7 +585,7 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         tar.dereference = True
         # generate a myapp.py file in a temporary file to insert into the tar file
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as tempmyapp:
-            tempmyapp.write(skipole_myapp(editedproj))
+            tempmyapp.write(skipole_myapp(proj_ident))
         # add temporary file to the archive
         tar.add(tempmyapp.name, arcname=os.path.join(export,  "myapp.py"))
         # and delete the temporary file
@@ -597,7 +597,7 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         else:
             # generate a __main__.py file in a temporary file to insert into the tar file
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tempfp:
-                tempfp.write(skipole_run(editedproj))
+                tempfp.write(skipole_run(proj_ident))
             # add temporary file to the archive
             tar.add(tempfp.name, arcname=os.path.join(export,  "__main__.py"))
             # and delete the temporary file
@@ -626,7 +626,7 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
 
         projects = editedproj.subprojects
         for subproj_ident in projects:
-            if subproj_ident == skiboot.admin_project():
+            if subproj_ident == skilift.admin_project():
                 continue
             # projectfiles\subproj_ident\static -> export\projectfiles\subproj_ident\static
             static_dir = skiboot.projectstatic(subproj_ident)
@@ -817,8 +817,8 @@ def ski_theme(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
 
 def set_widgets_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "sets default css classes into widgets"
-    editedproj = call_data['editedproj']
-    off_piste.set_widget_css_to_default(editedproj.proj_ident)
+    project = call_data["editedprojname"]
+    off_piste.set_widget_css_to_default(project)
     call_data['status'] = 'Widget CSS classes set'
 
 
@@ -894,12 +894,12 @@ def _tar_contents(proj_ident):
 
 def reload_project_code(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Reloads the edited project user code"
-    editedproj = call_data['editedproj']
-    code_reload(editedproj.proj_ident)
-    call_data['status'] = "Project %s code reloaded" % (editedproj.proj_ident,)
+    project = call_data["editedprojname"]
+    code_reload(project)
+    call_data['status'] = "Project %s code reloaded" % (project,)
 
 
-def skipole_myapp(editedproj):
+def skipole_myapp(project):
     "Create myapp.py file for the tar"
     runfile = """
 
@@ -924,18 +924,16 @@ projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projec
 
 application = skipoles.WSGIApplication("%s", {}, projectfiles)
 
-""" % (editedproj.proj_ident,)
+""" % (project,)
     return runfile
 
 
 
-def skipole_run(editedproj):
+def skipole_run(project):
 
-    proj_ident = editedproj.proj_ident
-    proj_brief = editedproj.brief
-    proj_version = editedproj.version
+    projectinfo = skilift.project_info(project)
 
-    runfile = """#!/usr/bin/env python3
+    return """#!/usr/bin/env python3
 
 # sys is used for the sys.exit function and to check python version
 import sys, argparse, os
@@ -1018,6 +1016,6 @@ else:
     # using wsgiref.simple_server
     httpd = make_server("", port, application)
     httpd.serve_forever()
-""" % (proj_ident, proj_brief, proj_version)
-    return runfile
+""" % (project, projectinfo.brief, projectinfo.version)
+
 
