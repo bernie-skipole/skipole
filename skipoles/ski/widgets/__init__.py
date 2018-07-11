@@ -753,43 +753,6 @@ class Widget(tag.Part):
 
 
     @classmethod
-    def classargs(cls):
-        """Returns four lists, args, arg_list, arg_table, and arg_dict, each is a list of lists.
-        The inner list consists of: [ field arg, field ref, field type].
-        In the case of fieldarg_table, field type is a list of column types
-        Each of the lists is sorted by field argument"""
-        args = []
-        arg_list = []
-        arg_table = []
-        arg_dict = []
-        for arg, item in cls.arg_descriptions.items():
-            description = cls.description_ref(dataarg=arg)
-            if isinstance(item, FieldArg):
-                args.append( [arg, description, item.field_type] )
-            elif isinstance(item, FieldArgList):
-                arg_list.append( [arg, description, item.field_type] )
-            elif isinstance(item, FieldArgTable):
-                arg_table.append( [arg, description, item.field_type] )
-            elif isinstance(item, FieldArgDict):
-                arg_dict.append( [arg, description, item.field_type] )
-        if 'show' not in cls.arg_descriptions:
-            args.append( ['show', 'widgets.show', 'boolean'] )
-        if 'widget_class' not in cls.arg_descriptions:
-            args.append( ['widget_class', 'widgets.widget_class', 'cssclass'] )
-        if 'widget_style' not in cls.arg_descriptions:
-            args.append( ['widget_style', 'widgets.widget_style', 'cssstyle'] )
-        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append( ['show_error', 'widgets.show_error', 'text'] )
-        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
-            args.append( ['clear_error', 'widgets.clear_error', 'boolean'] )
-        args.sort(key=lambda row: row[0])
-        arg_list.sort(key=lambda row: row[0])
-        arg_table.sort(key=lambda row: row[0])
-        arg_dict.sort(key=lambda row: row[0])
-        return args, arg_list, arg_table, arg_dict
-
-
-    @classmethod
     def field_arguments_single(cls):
         """Returns a list of lists.
         The inner list consists of: [ field arg, field ref, field type, valdt, jsonset, cssclass, cssstyle]
@@ -1508,43 +1471,6 @@ class ClosedWidget(tag.ClosedPart):
             else:
                 return ''
         return description + '.' + dataarg
-
-
-    @classmethod
-    def classargs(cls):
-        """Returns four lists, args, arg_list, arg_table, and arg_dict, each is a list of lists.
-        The inner list consists of: [ field arg, field ref, field type].
-        In the case of fieldarg_table, field type is a list of column types
-        Each of the lists is sorted by field argument"""
-        args = []
-        arg_list = []
-        arg_table = []
-        arg_dict = []
-        for arg, item in cls.arg_descriptions.items():
-            description = cls.description_ref(dataarg=arg)
-            if isinstance(item, FieldArg):
-                args.append( [arg, description, item.field_type] )
-            elif isinstance(item, FieldArgList):
-                arg_list.append( [arg, description, item.field_type] )
-            elif isinstance(item, FieldArgTable):
-                arg_table.append( [arg, description, item.field_type] )
-            elif isinstance(item, FieldArgDict):
-                arg_dict.append( [arg, description, item.field_type] )
-        if 'show' not in cls.arg_descriptions:
-            args.append( ['show', 'widgets.show', 'boolean'] )
-        if 'widget_class' not in cls.arg_descriptions:
-            args.append( ['widget_class', 'widgets.widget_class', 'cssclass'] )
-        if 'widget_style' not in cls.arg_descriptions:
-            args.append( ['widget_style', 'widgets.widget_style', 'cssstyle'] )
-        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append( ['show_error', 'widgets.show_error', 'text'] )
-        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
-            args.append( ['clear_error', 'widgets.clear_error', 'text'] )
-        args.sort(key=lambda row: row[0])
-        arg_list.sort(key=lambda row: row[0])
-        arg_table.sort(key=lambda row: row[0])
-        arg_dict.sort(key=lambda row: row[0])
-        return args, arg_list, arg_table, arg_dict
 
 
     @classmethod
