@@ -37371,6 +37371,43 @@ false
 ]
 }
 }
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "zzz",
+"brief": "zzzz",
+"fields": {
+"action": "",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"clear_error": false,
+"container_class": "",
+"div_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ski_left_label",
+"left_label": "",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+[
+"Text",
+"Set text here"
+]
+]
+}
 ]
 ]
 }

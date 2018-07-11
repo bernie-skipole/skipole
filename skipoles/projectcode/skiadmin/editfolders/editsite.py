@@ -414,7 +414,7 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
     project = call_data['editedprojname']
 
     # clear call data
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
 
     itemnumber = skilift.get_itemnumber(project, edited_item)
     if itemnumber is None:

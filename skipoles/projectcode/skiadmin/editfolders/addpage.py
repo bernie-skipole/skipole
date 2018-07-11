@@ -144,7 +144,7 @@ def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
@@ -304,7 +304,7 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
@@ -367,7 +367,7 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
@@ -407,7 +407,7 @@ def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_dat
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['fchange'] = fchange
     # Currently, after adding a json page, go back to edit folder
@@ -450,7 +450,7 @@ def submit_new_file(caller_ident, ident_list, submit_list, submit_dict, call_dat
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
@@ -525,7 +525,7 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
     except ServerError as e:
         raise FailPage(message=e.message)
     # clear and re-populate call_data for edit page
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['folder_number'] = foldernumber
     call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
@@ -579,7 +579,7 @@ def submit_copy_page(caller_ident, ident_list, submit_list, submit_dict, call_da
     except ServerError as e:
         raise FailPage(e.message)
     edited_folder = call_data['edited_folder']
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['fchange'] = fchange
     call_data['edited_folder'] = edited_folder
     call_data['folder_number'] = foldernumber
@@ -634,7 +634,7 @@ def submit_upload_page(caller_ident, ident_list, submit_list, submit_dict, call_
     except ServerError as e:
         raise FailPage(message = e.message)
     edited_folder = call_data['edited_folder']
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['edited_folder'] = edited_folder
     call_data['folder_number'] = foldernumber
     call_data['fchange'] = fchange

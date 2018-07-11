@@ -684,18 +684,6 @@ class Widget(tag.Part):
 
 
     @classmethod
-    def get_container_ref(cls, index):
-        """Returns the textblock reference of the container, in this case index is not
-           the part location, it is the index in the self._container list"""
-        if cls._container is None:
-            return
-        if (index < 0) or (index >= len(cls._container)):
-            return
-        module_name = cls.__module__.split('.')[-1]
-        return "widgets." + module_name + "." + cls.__name__ + "." + "container" + str(index)
-
-
-    @classmethod
     def len_containers(cls):
         "Returns number of containers"
         if cls._container is None:

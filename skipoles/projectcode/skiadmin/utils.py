@@ -30,7 +30,7 @@ from ...ski.excepts import FailPage, ServerError
 from ... import skilift
 
 
-def no_ident_data(call_data, keep=None):
+def clear_call_data(call_data, keep=None):
     "Clears call data apart from set of required values"
     required = ['editedprojname',
                 'editedprojurl',

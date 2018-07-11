@@ -64,7 +64,7 @@ WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 
 
 FieldDescription = namedtuple('FieldDescription', ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle'])
 
-ContainerInfo = namedtuple('ContainerInfo', ['container', 'container_ref', 'empty'])
+ContainerInfo = namedtuple('ContainerInfo', ['container', 'empty'])
 
 
 ResponderInfo = namedtuple('ResponderInfo', ['responder',
