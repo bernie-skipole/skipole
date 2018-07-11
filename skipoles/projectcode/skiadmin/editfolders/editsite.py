@@ -462,28 +462,30 @@ def retrieve_download(caller_ident, ident_list, submit_list, submit_dict, call_d
 
 
 def submit_rootpath(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Sets the path of the root project"
+    project = call_data['editedprojname']
     if "root_path" not in call_data:
-        raise ValidateError(message='Invalid call')
-    editedproj = call_data['editedproj']
-    if not editedproj.rootproject:
+        raise FailPage(message='Invalid call')
+    if project != skilift.get_root():
         # cannot set a rootpath if this is not the rootproject
         raise FailPage(message='Invalid: Not the root project', widget = "rtpath")
     try:
-        editedproj.url = call_data["root_path"]
-    except (ValidateError, ServerError) as e:
+        path = skilift.set_root_project_path(call_data["root_path"])
+    except ServerError as e:
         raise FailPage(message = e.message, widget = "rtpath")
-    call_data['editedprojurl'] = editedproj.url
+    call_data['editedprojurl'] = path
     page_data['rtpath','set_input_accepted'] = True
     call_data['status'] = 'Root path set'
 
 
 def submit_language(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Sets the default language of the edited project"
+    project = call_data['editedprojname']
     if "default_language" not in call_data:
         raise FailPage(message = 'Invalid call')
-    editedproj = call_data['editedproj']
     try:
-        editedproj.default_language = call_data["default_language"]
-    except (ValidateError, ServerError) as e:
+        skilift.set_proj_default_language(project, call_data["default_language"])
+    except ServerError as e:
         raise FailPage(message = e.message)
     _clear_index_input_accepted(page_data)
     page_data['deflang','set_input_accepted'] = True
@@ -491,30 +493,32 @@ def submit_language(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 
 def submit_brief(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Sets the brief description of the edited project"
+    project = call_data['editedprojname']
     if ('brief','input_text') not in call_data:
-        raise ValidateError(message='Invalid call')
-    editedproj = call_data['editedproj']
+        raise FailPage(message='Invalid call')
     try:
-        editedproj.brief = call_data['brief','input_text']
+        skilift.set_proj_brief(project, call_data['brief','input_text'])
     except ServerError as e:
         raise FailPage(message = e.message)
-    call_data['editedprojbrief'] = editedproj.brief
+    call_data['editedprojbrief'] = call_data['brief','input_text']
     page_data['brief','set_input_accepted'] = True
     call_data['status'] = 'Project brief set'
 
 
 def set_version(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Sets the version of the edited project"
+    project = call_data['editedprojname']
     if ('projversion','input_text') not in call_data:
-        raise ValidateError(message='Invalid call')
-    editedproj = call_data['editedproj']
+        raise FailPage(message='Invalid call')
     try:
-        editedproj.version = call_data['projversion','input_text']
+        skilift.set_proj_version(project, call_data['projversion','input_text'])
     except ServerError as e:
         raise FailPage(message = e.message)
     _clear_index_input_accepted(page_data)
-    call_data['editedprojversion'] = editedproj.version
+    call_data['editedprojversion'] = call_data['projversion','input_text']
     page_data['projversion','set_input_accepted'] = True
-    page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (editedproj.proj_ident,editedproj.version)
+    page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (project,call_data['projversion','input_text'])
     call_data['status'] = 'Project version set'
 
 
@@ -563,19 +567,16 @@ def filter_from_tar(projinfo):
 
 def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "save the project to tarfile projectfiles\project_name\project_name.tar"
-
-    editedproj = call_data['editedproj']
-    proj_ident = editedproj.proj_ident
-
-    export =proj_ident
+    project = call_data['editedprojname']
+    export = project
     tar = None
     try:
-        projinfo = skilift.project_info(proj_ident)
+        projinfo = skilift.project_info(project)
         # Create textblock json files
-        accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+        accesstextblocks = skilift.get_accesstextblocks(project)
         accesstextblocks.save()
         # create project.json
-        fromjson.project_to_json(proj_ident)
+        fromjson.project_to_json(project)
         # open "project.tar.gz" for writing - first deleting any old version
         tar_dst = projinfo.tar_path
         if os.path.isfile(tar_dst):
@@ -584,7 +585,7 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         tar.dereference = True
         # generate a myapp.py file in a temporary file to insert into the tar file
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as tempmyapp:
-            tempmyapp.write(skipole_myapp(proj_ident))
+            tempmyapp.write(skipole_myapp(project))
         # add temporary file to the archive
         tar.add(tempmyapp.name, arcname=os.path.join(export,  "myapp.py"))
         # and delete the temporary file
@@ -596,7 +597,7 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         else:
             # generate a __main__.py file in a temporary file to insert into the tar file
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tempfp:
-                tempfp.write(skipole_run(proj_ident))
+                tempfp.write(skipole_run(project))
             # add temporary file to the archive
             tar.add(tempfp.name, arcname=os.path.join(export,  "__main__.py"))
             # and delete the temporary file
@@ -607,20 +608,20 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         skipoles_dir = os.path.dirname(os.path.realpath(skipoles_file))
         tar.add(skipoles_dir, arcname=tar_skipoles, filter=filter_from_tar(projinfo))
 
-        # projectfiles\proj_ident\static -> export\projectfiles\proj_ident\static
+        # projectfiles\project\static -> export\projectfiles\project\static
         static_dir = projinfo.static_path
         if not os.path.isdir(static_dir):
             # make static dir
             os.mkdir(static_dir)
-        tar_static_dir = os.path.join(export, 'projectfiles', proj_ident, 'static')
+        tar_static_dir = os.path.join(export, 'projectfiles', project, 'static')
         tar.add(static_dir, arcname=tar_static_dir)
 
-        # projectfiles\proj_ident\data -> export\projectfiles\proj_ident\data
+        # projectfiles\project\data -> export\projectfiles\project\data
         data_dir = projinfo.data_path
         if not os.path.isdir(data_dir):
             # make data dir
             os.mkdir(data_dir)
-        tar_data_dir = os.path.join(export, 'projectfiles', proj_ident, 'data')
+        tar_data_dir = os.path.join(export, 'projectfiles', project, 'data')
         tar.add(data_dir, arcname=tar_data_dir)
 
         projects = projinfo.subprojects
@@ -669,25 +670,25 @@ def submit_hex_color(caller_ident, ident_list, submit_list, submit_dict, call_da
     # generate colours
     colours = css_styles.get_colours(*palette)
     # set test colours in proj_data
-    skilift.set_proj_data(adminproj.proj_ident, 'adminbackcol', adminbackcol)
-    skilift.set_proj_data(adminproj.proj_ident, 'colours', colours)
+    skilift.set_proj_data(adminproj, 'adminbackcol', adminbackcol)
+    skilift.set_proj_data(adminproj, 'colours', colours)
     # set test colours in defaults.json
-    fromjson.set_defaults(adminproj.proj_ident, key="backcol", value=adminbackcol)
+    fromjson.set_defaults(adminproj, key="backcol", value=adminbackcol)
     ordered_colours = collections.OrderedDict(sorted(colours.items(), key=lambda t: t[0]))
-    fromjson.set_defaults(adminproj.proj_ident, key="colours", value=ordered_colours)
+    fromjson.set_defaults(adminproj, key="colours", value=ordered_colours)
     # change name of 220 to avoid css cache
-    pchange = editpage.pagechange(adminproj.proj_ident, 220)
+    pchange = editpage.pagechange(adminproj, 220)
     if pchange is None:
         raise ServerError(message="Admin page 220, label w3-theme-ski has not been found")
     newname = "w3-theme-ski-" + str(random.randint(10000, 99999)) + ".css"
-    editpage.rename_page(adminproj.proj_ident, 220, pchange, newname)
+    editpage.rename_page(adminproj, 220, pchange, newname)
 
 
 def set_colour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "sets individual colour string"
     adminproj = call_data['adminproj']
     # get colors from project data
-    colours = skilift.get_proj_data(adminproj.proj_ident, 'colours')
+    colours = skilift.get_proj_data(adminproj, 'colours')
     if call_data["l5_color","inputcol","input_text"]:
         colours['w3_theme_l5_color'] = call_data["l5_color","inputcol","input_text"]
         call_data['status'] = 'w3-theme-l5 color set'
@@ -795,20 +796,20 @@ def set_colour(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
         return
     # etc for each colour
     # Then set colours into project data
-    skilift.set_proj_data(adminproj.proj_ident, 'colours', colours)
+    skilift.set_proj_data(adminproj, 'colours', colours)
     # set test colours in defaults.json
-    fromjson.set_defaults(adminproj.proj_ident, key="colours", value=colours)
+    fromjson.set_defaults(adminproj, key="colours", value=colours)
     # change name of 220 to avoid css cache
-    pchange = editpage.pagechange(adminproj.proj_ident, 220)
+    pchange = editpage.pagechange(adminproj, 220)
     if pchange is None:
         raise ServerError(message="Admin page 220, label w3-theme-ski has not been found")
     newname = "w3-theme-ski-" + str(random.randint(10000, 99999)) + ".css"
-    editpage.rename_page(adminproj.proj_ident, 220, pchange, newname)
+    editpage.rename_page(adminproj, 220, pchange, newname)
 
 
 def ski_theme(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "set colours into the w3-theme-ski.css page"
-    adminproject = skilift.admin_project()
+    adminproject = call_data['adminproj']
     colours = skilift.get_proj_data(adminproject, 'colours')
     if not colours:
         return {}

@@ -74,24 +74,16 @@ def start_project(project, projectfiles, path, option):
 def start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):
     "Checks initial incoming call parameters, and using ident_data, retrieves session data and populates call_data"
 
-    # get the root project - which is the project being edited, and set it into call_data
-    editedproj = skiboot.getproject()
-
-    # Note, eventual aim is to use functions from skilift rather than directly altering
-    # objects, so editedprojname should in future replace editedproj
+    # initially populate call_data with some project info
     editedprojname = skilift.get_root()
 
     projinfo = skilift.project_info(editedprojname)
-
-    # also set this admin project into call_data
-    adminproj = skiboot.getproject(project)
 
     call_data = {'editedprojname':editedprojname,
                  'editedprojurl':projinfo.path,
                  'editedprojversion':projinfo.version,
                  'editedprojbrief':projinfo.brief,
-                 'editedproj':editedproj,
-                 'adminproj':adminproj,
+                 'adminproj':project,
                  'extend_nav_buttons':[],
                  'caller_ident':caller_ident}
 
