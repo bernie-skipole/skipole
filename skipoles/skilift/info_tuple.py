@@ -58,7 +58,7 @@ SectionTextBlock = namedtuple('SectionTextBlock', ['project', 'section_name', 's
 
 WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'fields', 'containers', 'illustration',
                                                      'fields_single', 'fields_list', 'fields_table', 'fields_dictionary', 'parent_widget', 'parent_container'])
-# 'fields' is a list of lists: [ field arg, field ref]
+# 'fields' is a list of field args
 # 'containers' is the number of containers in the widget, 0 for none
 
 
