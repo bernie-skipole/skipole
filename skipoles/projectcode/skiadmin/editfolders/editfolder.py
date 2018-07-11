@@ -38,7 +38,7 @@ def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     "Go to edit root folder, with no other call_data contents other than those set here"
     # called by responder 3, edit_root link from Root Folder nav button
     # this responder then targets responder 22008 to fill in root folder fields
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['folder_number'] = 0
 
 

@@ -65,7 +65,7 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
     page_data[("sectiontable", "contents")] = contents
 
     # clear call_data, as no session info needed from this page
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
 
 
 def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -232,7 +232,7 @@ def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_
         editsection.create_new_section(project, section_name, tag_name, brief)
     except (ValidateError, ServerError) as e:
         raise FailPage(message = e.message)
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['status'] = 'Section %s created' % (section_name,)
 
 
@@ -334,7 +334,7 @@ def file_new_section(caller_ident, ident_list, submit_list, submit_dict, call_da
         raise FailPage(message = e.message)
 
     # new section created
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
     call_data['status'] = 'Section %s created' % (section_name,)
 
 

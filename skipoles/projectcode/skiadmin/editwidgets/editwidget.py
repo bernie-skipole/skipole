@@ -641,7 +641,7 @@ def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name + " container: " + str(container)
 
     # so header text and navigation done, now continue with the page contents
-    page_data[('container_description','textblock_ref')] = containerinfo.container_ref
+    page_data[('container_description','textblock_ref')] = ".".join(("widgets",widgetdescription.modulename, widgetdescription.classname, "container" + str(container)))
     if containerinfo.empty:
         # empty container
         page_data[('further_description','para_text')] = "The container is empty. Please choose an item to insert."
@@ -806,7 +806,7 @@ def back_to_parent_container(caller_ident, ident_list, submit_list, submit_dict,
     except ServerError as e:
         raise FailPage(e.message)
 
-    utils.no_ident_data(call_data)
+    utils.clear_call_data(call_data)
 
     if section_name:
         call_data['section_name'] = section_name

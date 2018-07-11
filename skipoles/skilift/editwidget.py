@@ -364,7 +364,7 @@ def container_in_page(project, pagenumber, pchange, widget_name, container):
     widget = page.widgets.get(widget_name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
         raise ServerError("Widget not found")
-    return ContainerInfo(container, widget.get_container_ref(container), widget.is_container_empty(container))
+    return ContainerInfo(container, widget.is_container_empty(container))
 
 
 def container_in_section(project, section_name, schange, widget_name, container):
@@ -373,7 +373,7 @@ def container_in_section(project, section_name, schange, widget_name, container)
     widget = section.widgets.get(widget_name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
         raise ServerError("Widget not found")
-    return ContainerInfo(container, widget.get_container_ref(container), widget.is_container_empty(container))
+    return ContainerInfo(container, widget.is_container_empty(container))
 
 
 
