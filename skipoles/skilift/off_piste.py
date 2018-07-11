@@ -177,7 +177,7 @@ def set_widget_css_to_default(project):
             if not field_css:
                 continue                
             # for each css field in the widget, if it has a default in field_css, set it
-            args, arg_list, arg_table, arg_dict = widget.classargs()
+            args = widget.field_arguments_single()
             for field in args:
                 field_arg = field[0]
                 field_type = field[2]
