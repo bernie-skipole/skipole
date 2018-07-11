@@ -819,25 +819,24 @@ class Widget(tag.Part):
 
 
     @classmethod
-    def arg_references(cls):
-        """Returns a list of lists: [ field arg, field ref]"""
+    def field_arguments(cls):
+        """Returns a list of field args"""
         args = []
-        module_name = cls.__module__.split('.')[-1]
-        ref = "widgets." + module_name + "." + cls.__name__
         for arg in cls.arg_descriptions:
-            args.append([arg, ref + '.' + arg])
+            args.append(arg)
         if 'show' not in cls.arg_descriptions:
-            args.append( ['show', 'widgets.show'] )
+            args.append('show')
         if 'widget_class' not in cls.arg_descriptions:
-            args.append( ['widget_class', 'widgets.widget_class'] )
+            args.append('widget_class')
         if 'widget_style' not in cls.arg_descriptions:
-            args.append( ['widget_style', 'widgets.widget_style'] )
+            args.append('widget_style')
         if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append( ['show_error', 'widgets.show_error'] )
+            args.append('show_error')
         if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
-            args.append( ['clear_error', 'widgets.clear_error'] )
-        args.sort(key=lambda row: row[0])
+            args.append('clear_error')
+        args.sort()
         return args
+
 
     def field_arg_info(self, dataarg):
         """Returns (field name, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.cssstyle)
@@ -1540,23 +1539,24 @@ class ClosedWidget(tag.ClosedPart):
 
 
     @classmethod
-    def arg_references(cls):
-        """Returns a list of lists: [ field arg, field ref]"""
+    def field_arguments(cls):
+        """Returns a list of field args"""
         args = []
-        module_name = cls.__module__.split('.')[-1]
-        ref = "widgets." + module_name + "." + cls.__name__
         for arg in cls.arg_descriptions:
-            args.append([arg, ref + '.' + arg])
+            args.append(arg)
         if 'show' not in cls.arg_descriptions:
-            args.append( ['show', 'widgets.show'] )
+            args.append('show')
         if 'widget_class' not in cls.arg_descriptions:
-            args.append( ['widget_class', 'widgets.widget_class'] )
+            args.append('widget_class')
         if 'widget_style' not in cls.arg_descriptions:
-            args.append( ['widget_style', 'widgets.widget_style'] )
+            args.append('widget_style')
         if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append( ['show_error', 'widgets.show_error'] )
-        args.sort(key=lambda row: row[0])
+            args.append('show_error')
+        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
+            args.append('clear_error')
+        args.sort()
         return args
+
 
     def field_arg_info(self, dataarg):
         """Returns (field name, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
