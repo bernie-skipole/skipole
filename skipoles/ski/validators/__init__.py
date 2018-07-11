@@ -49,14 +49,6 @@ class Validator(object):
     def module_name(cls):
         return cls.__module__.split('.')[-1]
 
-    @classmethod
-    def description_ref(cls, arg_name=None):
-        "Returns the TextBlock reference of the class, or of the data argument if dataarg is given"
-        module_name = cls.__module__.split('.')[-1]
-        description = "validators." + module_name + "." + cls.__name__
-        if not arg_name:
-            return description
-        return description + "." + arg_name
 
     def __init__(self, message='', message_ref='', displaywidget='', allowed_values=[], **val_args):
         """message is the message to be displayed in displaywidget if this validation fails

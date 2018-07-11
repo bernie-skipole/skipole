@@ -840,8 +840,8 @@ class Widget(tag.Part):
         return args
 
     def field_arg_info(self, dataarg):
-        """Returns (field name, field description ref, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.cssstyle) where fieldarg class string is
-           one of the strings 'args', 'arg_list', 'arg_table', 'arg_dict'
+        """Returns (field name, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.cssstyle)
+           where fieldarg class string is one of the strings 'args', 'arg_list', 'arg_table', 'arg_dict'
            returns an empty tuple if not found"""
         if not dataarg in self.fields:
             return ()
@@ -856,7 +856,7 @@ class Widget(tag.Part):
             fieldarg = 'arg_dict'
         else:
             return ()
-        return (field.name, self.description_ref(dataarg), field.value, field.string_value, fieldarg, field.field_type, field.valdt, field.jsonset, field.cssclass, field.cssstyle)
+        return (field.name, field.value, field.string_value, fieldarg, field.field_type, field.valdt, field.jsonset, field.cssclass, field.cssstyle)
 
 
     def field_arg_val_list(self, dataarg):
@@ -1559,8 +1559,8 @@ class ClosedWidget(tag.ClosedPart):
         return args
 
     def field_arg_info(self, dataarg):
-        """Returns (field name, field description ref, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle) where fieldarg class string is
-           one of the strings 'args', 'arg_list', 'arg_table', 'arg_dict'
+        """Returns (field name, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
+           where fieldarg class string is one of the strings 'args', 'arg_list', 'arg_table', 'arg_dict'
            returns an empty tuple if not found"""
         if not dataarg in self.fields:
             return ()
@@ -1575,7 +1575,7 @@ class ClosedWidget(tag.ClosedPart):
             fieldarg = 'arg_dict'
         else:
             return ()
-        return (field.name, self.description_ref(dataarg), field.value, field.string_value, fieldarg, field.field_type, field.valdt, field.jsonset, field.cssclass, field.cssstyle)
+        return (field.name, field.value, field.string_value, fieldarg, field.field_type, field.valdt, field.jsonset, field.cssclass, field.cssstyle)
 
     def field_arg_val_list(self, dataarg):
         "Returns the list of validators attached to this field"
