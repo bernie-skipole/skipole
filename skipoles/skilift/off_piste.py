@@ -69,10 +69,10 @@ def set_widget_field_value(project, widget_name, widget_field_name, new_value, n
             if field_arg is None:
                 continue
             field_info = widget.field_arg_info(field_arg)
-            # (field name, field description ref, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
-            if field_info[4] != 'args':
+            # (field name, fieldvalue, str_fieldvalue, fieldarg class string, field type, field.valdt, field.jsonset, field.cssclass, field.csstyle)
+            if field_info[3] != 'args':
                 raise ServerError(message="Invalid field type in widget in page %s " % (page.ident,))
-            if (field_info[5] == "ident" or field_info[5] == "url") and field_value.isdigit():
+            if (field_info[4] == "ident" or field_info[4] == "url") and field_value.isdigit():
                 # A digit is being input as a page ident
                 field_value = project + '_' + field_value
             widget.set_field_value(field_arg, field_value)
