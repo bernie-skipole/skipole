@@ -99,7 +99,7 @@ def get_proj_section(project, section_name, schange=None):
 
 def project_info(project):
     """Returns a namedtuple with contents
-       project, version, brief, path, default_language, subprojects, json_file, tar_path
+       project, version, brief, path, default_language, subprojects, json_path, tar_path, main_path, static_path, data_path
        where subprojects is an ordered dictionary of projectname:path
     """
     project_loaded(project)
@@ -112,7 +112,10 @@ def project_info(project):
                    proj.default_language,
                    proj.subproject_paths,
                    skiboot.project_json(project),
-                   skiboot.tar_path(project)
+                   skiboot.tar_path(project),
+                   skiboot.project_main(project),
+                   skiboot.projectstatic(project),
+                   skiboot.projectdata(project)
                    )
 
 
@@ -223,6 +226,7 @@ def get_projectcode_dir(project=None):
        If project not given, returns the projectcode directory path
        If project is given, returns the projectcode/project directory path"""
     return skiboot.projectcode(project)
+
 
 def next_ident_number(project):
     "Returns next ident number in the project by incrementing highest existing number"

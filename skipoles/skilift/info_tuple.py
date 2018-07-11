@@ -31,7 +31,7 @@ named tuples used by other modules
 from collections import namedtuple
 
 
-ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_file', 'tar_path'])
+ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_path', 'tar_path', 'main_path', 'static_path', 'data_path'])
 
 ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'])
 

@@ -32,7 +32,6 @@ from .... import skilift
 from ....skilift import off_piste, fromjson, editpage
 
 from .. import utils, css_styles
-from ....ski import skiboot
 from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
 
 from ....projectcode import code_reload
@@ -530,11 +529,11 @@ def debugtoggle(caller_ident, ident_list, submit_list, submit_dict, call_data, p
         call_data['status'] = 'Debug mode set ON'
 
 
-def filter_from_tar(editedproj):
+def filter_from_tar(projinfo):
     "Returns a function which excludes unwanted files"
     def filter_out(tarinfo):
         "When creating the tar file, leave some things out of the skipole code directory"
-        nonlocal editedproj
+        nonlocal projinfo
         # return None if filename is to be excluded
         # or tarinfo if it is to be added
         filename = tarinfo.name
@@ -550,14 +549,13 @@ def filter_from_tar(editedproj):
             if len(paths) < 4:
                 # must be export/skipoles/projectcode
                 return tarinfo
-            if paths[3] == editedproj.proj_ident:
+            if paths[3] == projinfo.project:
                 return tarinfo
             if paths[3] == skilift.admin_project():
                 return None
             if paths[3] == "__init__.py":
                 return tarinfo
-            projects = editedproj.subprojects
-            if paths[3] not in projects:
+            if paths[3] not in projinfo.subprojects:
                 return None
         return tarinfo
     return filter_out
@@ -570,15 +568,16 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
     proj_ident = editedproj.proj_ident
 
     export =proj_ident
-    export_tar = proj_ident + ".tar.gz"
     tar = None
     try:
+        projinfo = skilift.project_info(proj_ident)
         # Create textblock json files
-        editedproj.textblocks.save()
+        accesstextblocks = skilift.get_accesstextblocks(proj_ident)
+        accesstextblocks.save()
         # create project.json
         fromjson.project_to_json(proj_ident)
-        # open export_tar for writing - first deleting any old version
-        tar_dst = os.path.join(skiboot.projectpath(proj_ident), export_tar)
+        # open "project.tar.gz" for writing - first deleting any old version
+        tar_dst = projinfo.tar_path
         if os.path.isfile(tar_dst):
             os.remove(tar_dst)
         tar = tarfile.open(tar_dst, "w:gz")
@@ -591,7 +590,7 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         # and delete the temporary file
         os.unlink(tempmyapp.name)
         # create export\__main__.py
-        main_file = skiboot.project_main(proj_ident=proj_ident)
+        main_file = projinfo.main_path
         if os.path.isfile(main_file):
             tar.add(main_file, arcname=os.path.join(export,  "__main__.py"))
         else:
@@ -606,10 +605,10 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         tar_skipoles = os.path.join(export,'skipoles')
         from .... import __file__ as skipoles_file
         skipoles_dir = os.path.dirname(os.path.realpath(skipoles_file))
-        tar.add(skipoles_dir, arcname=tar_skipoles, filter=filter_from_tar(editedproj))
+        tar.add(skipoles_dir, arcname=tar_skipoles, filter=filter_from_tar(projinfo))
 
         # projectfiles\proj_ident\static -> export\projectfiles\proj_ident\static
-        static_dir = skiboot.projectstatic(proj_ident)
+        static_dir = projinfo.static_path
         if not os.path.isdir(static_dir):
             # make static dir
             os.mkdir(static_dir)
@@ -617,23 +616,24 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
         tar.add(static_dir, arcname=tar_static_dir)
 
         # projectfiles\proj_ident\data -> export\projectfiles\proj_ident\data
-        data_dir = skiboot.projectdata(proj_ident)
+        data_dir = projinfo.data_path
         if not os.path.isdir(data_dir):
             # make data dir
             os.mkdir(data_dir)
         tar_data_dir = os.path.join(export, 'projectfiles', proj_ident, 'data')
         tar.add(data_dir, arcname=tar_data_dir)
 
-        projects = editedproj.subprojects
+        projects = projinfo.subprojects
         for subproj_ident in projects:
             if subproj_ident == skilift.admin_project():
                 continue
+            subprojinfo = skilift.project_info(subproj_ident)
             # projectfiles\subproj_ident\static -> export\projectfiles\subproj_ident\static
-            static_dir = skiboot.projectstatic(subproj_ident)
+            static_dir = subprojinfo.static_path
             tar_static_dir = os.path.join(export, 'projectfiles', subproj_ident, 'static')
             tar.add(static_dir, arcname=tar_static_dir)
             # projectfiles\subproj_ident\data -> export\projectfiles\subproj_ident\data
-            data_dir = skiboot.projectdata(subproj_ident)
+            data_dir = subprojinfo.data_path
             tar_data_dir = os.path.join(export, 'projectfiles', subproj_ident, 'data')
             tar.add(data_dir, arcname=tar_data_dir)
     except Exception as e:
@@ -901,7 +901,7 @@ def reload_project_code(caller_ident, ident_list, submit_list, submit_dict, call
 
 def skipole_myapp(project):
     "Create myapp.py file for the tar"
-    runfile = """
+    return """
 
 # this may need to be edited and uncommented so that the skipoles package can be found
 
@@ -925,7 +925,6 @@ projectfiles = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projec
 application = skipoles.WSGIApplication("%s", {}, projectfiles)
 
 """ % (project,)
-    return runfile
 
 
 
