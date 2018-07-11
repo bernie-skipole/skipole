@@ -36,7 +36,6 @@ def no_ident_data(call_data, keep=None):
                 'editedprojurl',
                 'editedprojversion',
                 'editedprojbrief',
-                'editedproj',
                 'adminproj',
                 'extend_nav_buttons',
                 'caller_ident']

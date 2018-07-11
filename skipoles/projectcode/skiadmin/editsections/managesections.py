@@ -302,7 +302,7 @@ def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data
 def file_new_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Create new section from uploaded file"
 
-    editedproj = call_data['editedproj']
+    project = call_data['editedprojname']
 
     # get new section name
 
@@ -320,7 +320,7 @@ def file_new_section(caller_ident, ident_list, submit_list, submit_dict, call_da
         raise FailPage(message="Invalid section name, must not start with an underscore")
     if section_name.isdigit():
         raise FailPage(message="Unable to create the section, the name must include some letters")
-    section_list = editedproj.list_section_names()
+    section_list = editsection.list_section_names(project)
     if section_name in section_list:
         raise FailPage(message = "Section name already exists", widget="new")
 
@@ -329,7 +329,7 @@ def file_new_section(caller_ident, ident_list, submit_list, submit_dict, call_da
     json_string = file_contents.decode(encoding='utf-8')
     # create the section
     try:
-        fromjson.create_section(editedproj.proj_ident, section_name, json_string)
+        fromjson.create_section(project, section_name, json_string)
     except ServerError as e:
         raise FailPage(message = e.message)
 

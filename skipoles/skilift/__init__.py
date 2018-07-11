@@ -181,6 +181,13 @@ def set_sub_project_path(sub_project, path):
     root_project.set_project_url(sub_project, path)
 
 
+def set_root_project_path(path):
+    "Sets the project path of the root project, returns the path"
+    root_project = skiboot.getproject()
+    root_project.url = path
+    return root_project.url
+
+
 def get_debug():
     "Returns the debug mode"
     return skiboot.get_debug()
@@ -207,6 +214,37 @@ def set_proj_data(project, key, value):
     if proj is None:
         return
     proj.proj_data[key] = value
+
+
+def set_proj_default_language(project, default_language):
+    "Sets the default language of the project"
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return
+    proj.default_language = default_language
+
+
+def set_proj_brief(project, brief):
+    "Sets the brief description of the project"
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return
+    proj.brief = brief
+
+
+def set_proj_version(project, version):
+    "Sets the version of the project"
+    # raise error if invalid project
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    if proj is None:
+        return
+    proj.version = version
+
 
 def get_projectfiles_dir(project=None):
     """Returns the directory where your project files are saved
