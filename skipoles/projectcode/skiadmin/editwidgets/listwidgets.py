@@ -152,7 +152,23 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
     page_data[("adminhead","page_head","large_text")] = "Create widget of type %s" % (widget_class_name,)
     page_data[('widgetdesc','textblock_ref')] = ".".join(("widgets", module_name, widget_class_name))
 
-    page_data[('fieldtable','contents')] = widg.fields
+    field_contents = []
+    ref = "widgets." + widg.modulename + "." + widg.classname
+    for field_argument in widg.fields:
+        if field_argument == 'show':
+            field_contents.append([field_argument, 'widgets.show'])
+        elif field_argument == 'widget_class':
+            field_contents.append([field_argument, 'widgets.widget_class'])
+        elif field_argument == 'widget_style':
+            field_contents.append([field_argument, 'widgets.widget_style'])
+        elif field_argument == 'show_error':
+            field_contents.append([field_argument, 'widgets.show_error'])
+        elif field_argument == 'clear_error':
+            field_contents.append([field_argument, 'widgets.clear_error'])
+        else:
+            field_contents.append([field_argument, ref + '.' + field_argument])
+
+    page_data[('fieldtable','contents')] = field_contents
 
     if widg.containers:
         page_data[('containerdesc','show')] = True
