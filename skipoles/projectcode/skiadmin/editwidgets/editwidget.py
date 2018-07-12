@@ -133,7 +133,7 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page_data[('widget_brief','input_text')] = widgetdescription.brief
 
     # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
-    # with items ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
+    # with items ['field_arg', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
 
     args = widgetdescription.fields_single
     arg_list = widgetdescription.fields_list
@@ -163,6 +163,7 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if args:
         for arg in args:
             name = _field_name(widget, arg.field_arg)
+            ref = _field_ref(widgetdescription, arg.field_arg)
             if arg.valdt:   
                 name = "* " + name
                 args_valdt = True
@@ -171,7 +172,7 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
             if len(field_value) > 20:
                 field_value = field_value[:18]
                 field_value += '...'
-            arg_row = [ name, arg.field_arg, '',field_value, arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
+            arg_row = [ name, arg.field_arg, '',field_value, ref, 'No description for %s' % (ref,), '']
             args_content.append(arg_row)
         page_data[('args','link_table')] = args_content
     else:
@@ -194,10 +195,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if arg_list:
         for arg in arg_list:
             name = _field_name(widget, arg.field_arg)
+            ref = _field_ref(widgetdescription, arg.field_arg)
             if arg.valdt:
                 name = "* " + name
                 args_valdt = True
-            arg_row = [ name, arg.field_arg, '', arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
+            arg_row = [ name, arg.field_arg, '', ref, 'No description for %s' % (ref,), '']
             arg_list_content.append(arg_row)
         page_data[('arg_list','link_table')] = arg_list_content
     else:
@@ -208,10 +210,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if arg_table:
         for arg in arg_table:
             name = _field_name(widget, arg.field_arg)
+            ref = _field_ref(widgetdescription, arg.field_arg)
             if arg.valdt:
                 name = "* " + name
                 args_valdt = True
-            arg_row = [ name, arg.field_arg, '', arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
+            arg_row = [ name, arg.field_arg, '', ref, 'No description for %s' % (ref,), '']
             arg_table_content.append(arg_row)
         page_data[('arg_table','link_table')] = arg_table_content
     else:
@@ -222,10 +225,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
     if arg_dict:
         for arg in arg_dict:
             name = _field_name(widget, arg.field_arg)
+            ref = _field_ref(widgetdescription, arg.field_arg)
             if arg.valdt:
                 name = "* " + name
                 args_valdt = True
-            arg_row = [ name, arg.field_arg, '', arg.field_ref, 'No description for %s' % (arg.field_ref,), '']
+            arg_row = [ name, arg.field_arg, '', ref, 'No description for %s' % (ref,), '']
             arg_dict_content.append(arg_row)
         page_data[('arg_dict','link_table')] = arg_dict_content
     else:
@@ -342,7 +346,7 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
     page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
 
     # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
-    # with items ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
+    # with items ['field_arg', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
 
     # create dictionaries of {field_arg : namedtuples }
     fields_single = { arg.field_arg:arg for arg in widgetdescription.fields_single }
@@ -380,13 +384,15 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
     value, field_value = _field_value(widget, field_arg)
 
     # show the textblock description with .full, or if it doesnt exist, without the .full
-    full_textref = field_datalist.field_ref + '.full'   # the field reference string
+    ref = _field_ref(widgetdescription, field_arg)
+
+    full_textref = ref + '.full'   # the field reference string
     adminaccesstextblocks = skilift.get_accesstextblocks(skilift.admin_project())
 
     if adminaccesstextblocks.textref_exists(full_textref):
         page_data[('widget_field_textblock','textblock_ref')] = full_textref
     else:
-        page_data[('widget_field_textblock','textblock_ref')] = field_datalist.field_ref
+        page_data[('widget_field_textblock','textblock_ref')] = ref
     page_data[('field_name','input_text')] = field_name
 
     replace_strings = [widget_name+'\",\"'+field_name]

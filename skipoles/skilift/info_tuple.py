@@ -62,7 +62,7 @@ WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 
 # 'containers' is the number of containers in the widget, 0 for none
 
 
-FieldDescription = namedtuple('FieldDescription', ['field_arg', 'field_ref', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle'])
+FieldDescription = namedtuple('FieldDescription', ['field_arg', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle'])
 
 ContainerInfo = namedtuple('ContainerInfo', ['container', 'empty'])
 
