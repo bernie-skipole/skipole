@@ -63,6 +63,22 @@ def _field_value(widget, field_argument):
     return value, field_value
 
 
+def _field_ref(widgetdescription, field_argument):
+    "Returns a field textblock reference string"
+    if field_argument == 'show':
+        return 'widgets.show'
+    elif field_argument == 'widget_class':
+        return 'widgets.widget_class'
+    elif field_argument == 'widget_style':
+        return 'widgets.widget_style'
+    elif field_argument == 'show_error':
+        return 'widgets.show_error'
+    elif field_argument == 'clear_error':
+        return 'widgets.clear_error'
+    else:
+        return ".".join(("widgets", widgetdescription.modulename, widgetdescription.classname, field_argument))
+
+
 def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Fills in the edit a widget page"
 
