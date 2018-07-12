@@ -18,7 +18,7 @@ def test_skiadmin(project):
     proj_info = skilift.project_info(project)
 
     assert proj_info.project == "skiadmin"
-    assert proj_info.version == "0.9.6"
+    assert proj_info.version == "0.9.7"
     assert proj_info.brief == "skiadmin - The Skipole Admin project"
     assert proj_info.path == "/skiadmin/"
     assert proj_info.default_language == "en"
