@@ -29,7 +29,6 @@ import pkgutil, re, collections, uuid, os, random
 from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks, edittext, editvalidators
 
 from .. import FailPage, GoTo, ValidateError, ServerError
-from ...ski import skiboot
 
 from ... import skilift
 from ...skilift.fromjson import get_defaults
