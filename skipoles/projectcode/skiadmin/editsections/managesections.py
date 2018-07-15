@@ -85,6 +85,8 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     if section_name not in section_list:
         raise FailPage(message = "Section name invalid")
 
+    call_data['schange'] = editsection.sectionchange(project, section_name)
+
     # fill in the section dom table
 
     # section location is a tuple of section_name, None for no container, () tuple of location integers
