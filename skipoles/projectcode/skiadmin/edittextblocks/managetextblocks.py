@@ -31,10 +31,14 @@ _TB = re.compile('[^\w\.]')
 
 from ....ski.excepts import FailPage
 from .... import skilift
+from .. import utils
 
 
 def retrieve_link_table(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the manage textblocks page"
+
+    # clears any session data
+    utils.clear_call_data(call_data)
 
     project = call_data['editedprojname']
 
@@ -151,6 +155,9 @@ def retrieve_more(caller_ident, ident_list, submit_list, submit_dict, call_data,
 def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the edit textblock page"
 
+    # clears any session data
+    utils.clear_call_data(call_data)
+
     project = call_data['editedprojname']
     language = lang[0].lower()
     default_language = lang[1]
@@ -254,7 +261,7 @@ def submit_new_textblock(caller_ident, ident_list, submit_list, submit_dict, cal
         # A new TextBlock is to be created
         try:
             accesstextblocks.set_text("Insert text here", new_textblock_ref, accesstextblocks.default_language)
-        except:
+        except Exception:
             raise FailPage(message = "Failed to write to the textblocks database")
     # store the reference, as this goes to textblock edit responder which requires this data
     call_data['textblock'] = new_textblock_ref

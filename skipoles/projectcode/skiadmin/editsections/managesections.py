@@ -38,6 +38,9 @@ _AN = re.compile('[^\w]')
 def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     # this call is for the manage sections page
 
+    # clears any session data
+    utils.clear_call_data(call_data)
+
     project = call_data['editedprojname']
 
     page_data[("adminhead","page_head","large_text")] = "Manage Sections"
@@ -70,6 +73,9 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
 
 def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call fills in the section dom table"
+
+    # clears any session data, keeping section_name and schange
+    utils.clear_call_data(call_data, ["section_name", "schange"])
 
     project = call_data['editedprojname']
 
@@ -191,28 +197,10 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
 
 def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is for the edit section contents page"
-
     # fill in section dom table
     retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-
+    # set page head text
     page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (call_data["section_name"],)
-
-    # remove any unwanted fields from session call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'field_arg' in call_data:
-        del call_data['field_arg']
-    if 'validx' in call_data:
-        del call_data['validx']
-    if 'module' in call_data:
-        del call_data['module']
-    if 'widget_name' in call_data:
-        del call_data['widget_name']
-    if 'container' in call_data:
-        del call_data['container']
-    if 'widgetclass' in call_data:
-        del call_data['widgetclass']
-
 
 
 def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

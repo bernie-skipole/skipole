@@ -31,12 +31,16 @@ _AN = re.compile('[^\w_]')
 
 
 from .... import skilift
+from .. import utils
 
 from ....ski.excepts import FailPage, ValidateError, ServerError
 
 
 def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "this call is for the manage special pages page"
+
+    # clears any session data
+    utils.clear_call_data(call_data)
 
     project = call_data['editedprojname']
     labeldict = skilift.labels(project)

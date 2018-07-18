@@ -40,6 +40,9 @@ from ....projectcode import code_reload
 def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves all field data for admin index page"
 
+    # clears any session data
+    utils.clear_call_data(call_data)
+
     project = call_data['editedprojname']
     adminproj = skilift.admin_project()
 
@@ -452,6 +455,9 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
 
 def retrieve_download(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Set page_data['filepath'] to the url of the edited project tar.gz file"
+    # clears any session data
+    utils.clear_call_data(call_data)
+    # set filepath to tar file
     project = call_data["editedprojname"]
     projinfo = skilift.project_info(project)
     filepath = os.path.join(project, project + '.tar.gz')
