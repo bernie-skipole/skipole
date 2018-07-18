@@ -104,99 +104,16 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     if not caller_ident:
         return called_ident, call_data, page_data, lang
 
-    # get the called_ident page number
-    projname, identnum = called_ident
+    # if ident_data is given, then session data can be found in _SESSION_DATA[ident_data]
+    # so this is added to call_data
 
-    # If the called page does not use session data, do not bother getting any
-    if identnum in (
-                       1,         # index page
-                      90,         # tar file
-                    4001,         # manage textblocks
-                    4010,         # edit textblock
-                    5001,         # manage special pages
-                    7001,         # manage sections
-                   80001          # operations
-                    ):
-        return called_ident, call_data, page_data, lang
-
-    # get session data from received ident_data
-    if ident_data in _SESSION_DATA:
-        session_data = _SESSION_DATA[ident_data]
-    else:
-        session_data = {}
-
-    if identnum == 7030:
-        if 'section_name' in session_data:
-            call_data['section_name'] = session_data['section_name']
-            call_data['schange'] = session_data['schange']
-        return called_ident, call_data, page_data, lang
-
-    if identnum == 2003:
-        if 'folder_number' in session_data:
-            call_data['folder_number'] = session_data['folder_number']
-            call_data['fchange'] = session_data['fchange']
-            return called_ident, call_data, page_data, lang
-        else:
-            return "admin_home", call_data, page_data, lang
-
-    # set the received session data into the call_data dictionary
-
-    if 'location' in session_data:
-        # Set a list of leading string, container integer (or None) and location tuple in call_data
-        call_data['location'] = session_data['location']
-        if 'field_arg' in session_data:
-            if not _AN.search(session_data['field_arg']):
-                call_data['field_arg'] = session_data['field_arg']
-
-    # When creating a new widget, a widget class is chosen
-    if 'widgetclass' in session_data:
-        call_data['widgetclass'] = session_data['widgetclass']
-
-    if 'field_arg' in session_data:
-        call_data['field_arg'] = session_data['field_arg']
-
-    if 'validx' in session_data:
-        try:
-            validx = int(session_data['validx'])
-        except:
-            # validx is rejected
-            pass
-        else:
-            call_data['validx'] = session_data['validx']
-
-
-    if 'module' in session_data:
-        # module should be a widget module
-        # If ok, set module string into call_data
-        if session_data['module'] in widget_modules():
-            call_data['module'] = session_data['module']
-
-    # either a section is being edited, or a folder/page - not both
-    if ('section_name' in session_data) and ('page_number' in session_data):
-        return "admin_home", call_data, page_data, lang
-
-    if 'section_name' in session_data:
-        call_data['section_name'] = session_data['section_name']
-        call_data['schange'] = session_data['schange']
-    elif 'page_number' in session_data:
-        call_data['page_number'] = session_data['page_number']
-        call_data['pchange'] = session_data['pchange']
-
-
-    if 'widget_name' in session_data:
-        call_data['widget_name'] = session_data['widget_name']
-
-    if 'container' in session_data:
-        call_data['container'] = session_data['container']
-
-    if 'folder_number' in session_data:
-        call_data['folder_number'] = session_data['folder_number']
-        call_data['fchange'] = session_data['fchange']
-
-    if 'add_to_foldernumber' in session_data:
-        call_data['add_to_foldernumber'] = session_data['add_to_foldernumber']
+    if (ident_data) and (ident_data in _SESSION_DATA):
+        # update call_data with session_data
+        call_data.update(_SESSION_DATA[ident_data])
 
     return called_ident, call_data, page_data, lang
+
+
 
 
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

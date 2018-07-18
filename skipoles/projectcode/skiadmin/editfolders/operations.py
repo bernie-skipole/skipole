@@ -31,12 +31,15 @@ _AN = re.compile('[^\w_]')
 from ....skilift import fromjson, off_piste
 from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
 
-from .. import css_styles
+from .. import utils, css_styles
 
 
 
 def retrieve_operations_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves field data for operations page"
+
+    # clears any session data
+    utils.clear_call_data(call_data)
 
     editedprojname = call_data['editedprojname']
 

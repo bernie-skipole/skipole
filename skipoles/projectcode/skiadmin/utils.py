@@ -43,8 +43,7 @@ def clear_call_data(call_data, keep=None):
         required.extend(keep)
     temp_storage = {key:value for key,value in call_data.items() if key in required}
     call_data.clear()
-    for key,value in temp_storage.items():
-        call_data[key] = value
+    call_data.update(temp_storage)
 
 
 def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
