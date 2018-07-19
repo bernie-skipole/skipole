@@ -118,6 +118,8 @@ def _clear_index_input_accepted(page_data):
 
 def retrieve_help(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Uses skilift.get_textblock_text to get text help for the admin pages"
+    # clears any session data
+    utils.clear_call_data(call_data)
     page_data.clear()
     adminproj = skilift.admin_project()
     caller_ident = call_data['caller_ident']
@@ -659,12 +661,16 @@ def json_submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, 
     tar_dst = _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
     page_data[("saveresult","para_text")] = "Project saved in file %s" % tar_dst
     page_data[("saveresult","show_para")] = True
+    # clears any session data
+    utils.clear_call_data(call_data)
     call_data['status'] = "Project saved"
 
 
 def html_submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "save the project to tarfile projectfiles\project_name\export.tar"
     tar_dst = _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    # clears any session data
+    utils.clear_call_data(call_data)
     call_data['status'] = "Project saved in file %s" % tar_dst
 
 

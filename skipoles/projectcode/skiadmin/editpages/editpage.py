@@ -39,6 +39,9 @@ from .. import utils
 def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves data for the edit page"
 
+    # clears any session data, keeping page_number and pchange
+    utils.clear_call_data(call_data, keep=["page_number", "pchange"])
+
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
         str_pagenumber = str(pagenumber)
@@ -51,6 +54,8 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
 
         if pageinfo.item_type != 'TemplatePage':
             raise FailPage(message = "Invalid page")
+
+        call_data['pchange'] = pageinfo.change
 
         # fills in the data for editing page name, brief, parent, etc., 
         page_data[("adminhead","page_head","large_text")] = pageinfo.name
@@ -111,21 +116,7 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[('interval', 'input_text')] = '0'
         page_data[('interval_target', 'input_text')] = ''
 
-    # remove any unwanted fields from session call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'field_arg' in call_data:
-        del call_data['field_arg']
-    if 'validx' in call_data:
-        del call_data['validx']
-    if 'module' in call_data:
-        del call_data['module']
-    if 'widget_name' in call_data:
-        del call_data['widget_name']
-    if 'container' in call_data:
-        del call_data['container']
-    if 'widgetclass' in call_data:
-        del call_data['widgetclass']
+
 
 
 

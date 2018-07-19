@@ -156,7 +156,7 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
     "Gets data for the edit textblock page"
 
     # clears any session data
-    utils.clear_call_data(call_data)
+    utils.clear_call_data(call_data, keep=['textblock','text'] )
 
     project = call_data['editedprojname']
     language = lang[0].lower()
