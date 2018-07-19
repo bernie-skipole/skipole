@@ -152,12 +152,12 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
 
 
 def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
-    """Stores session data under a random generated key in _SESSION_DATA and send the key as ident_data
+    """Sets navigation menus, and stores session data under a random generated key in _SESSION_DATA and send the key as ident_data
        Also limits the length of _SESSION_DATA by popping the oldest member"""
 
     global _SESSION_DATA, _IDENT_DATA
 
-    # do not include session data for these types of pages
+    # do not include session data or navigation for these types of pages
     if page_type in ('FilePage', 'CSS'):
         return
 
@@ -183,77 +183,35 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
         page_data[("adminhead","show_status","hide")] = False
 
 
-    # do not send any session data for the following pages
- 
-    if identnum in (
-                    4,               # help json file
-                    20001,           # index_template
-                    20041,           # project saved json file
-                    24001,           # textblock_management
-                    24019,           # edit textblock
-                    25001,           # special page management
-                    27001,           # manage sections
-                    70150,           # json of textblock contents
-                    80001):          # operations template
-        return
-
-    # for all other pages, store the data from call_data
+    # store any required session data which has been set into call_data
 
     sent_session_data = {}
 
-    if 'location' in call_data:
-        sent_session_data['location'] = call_data['location']
+    # this is a list of items to store in session data if they are available in call_data
+    session_keys = ['location', 'field_arg', 'validx', 'module', 'widgetclass', 'widget_name', 'container', 'add_to_foldernumber', 
+                    'section_name', 'schange', 'page_number', 'pchange', 'folder_number', 'fchange']
 
-    if 'field_arg' in call_data:
-        sent_session_data['field_arg'] = call_data['field_arg']
+    for key, val in call_data.items():
+        if key in session_keys:
+            sent_session_data[key] = val
 
-    if 'validx' in call_data:
-        sent_session_data['validx'] = call_data['validx']
+    if not sent_session_data:
+        return
 
-    if 'module' in call_data:
-        sent_session_data['module'] = call_data['module']
+    # store as a key:value in _SESSION_DATA, and send the key as ident_data
+    # this key will be saved in the returned page, and then sent back in the next call to the server
+    # on being received by the start_call function, the key will be used to read the session values
+    # from _SESSION_DATA
 
-    if 'widgetclass' in call_data:
-        sent_session_data['widgetclass'] = call_data['widgetclass']
-
-    if 'widget_name' in call_data:
-        sent_session_data['widget_name'] = call_data['widget_name']
-
-    if 'container' in call_data:
-        sent_session_data['container'] = call_data['container']
-
-    if 'add_to_foldernumber' in call_data:
-        sent_session_data['add_to_foldernumber'] = call_data['add_to_foldernumber']
-
-
-    # either a section is being edited, or a folder/page - not both
-    if ('section_name' in call_data) and ('schange' in call_data):
-        sent_session_data['section_name'] = call_data['section_name']
-        sent_session_data['schange'] = call_data['schange']
-    else:
-        # send page or folder as a tuple of its ident
-        if ('page_number' in call_data) and ('pchange' in call_data):
-            sent_session_data['page_number'] = call_data['page_number']
-            sent_session_data['pchange'] = call_data['pchange']
-
-        if ('folder_number' in call_data) and ('fchange' in call_data):
-            sent_session_data['folder_number'] = call_data['folder_number']
-            sent_session_data['fchange'] = call_data['fchange']
-
-    if sent_session_data:
-        # store in _SESSION_DATA, and send the key as ident_data
-        # generate a key
-        _IDENT_DATA += 1
-        if "ident_data" in call_data:
-            ident_data = str(_IDENT_DATA) + "a" + str(random.randrange(1000, 9999)) + "b" + str(call_data["ident_data"])
-        else:
-            ident_data = str(_IDENT_DATA) + "a" + str(random.randrange(1000, 9999)) + "b0"
-        _SESSION_DATA[ident_data] = sent_session_data
-        # if length of _SESSION_DATA is longer than 50, remove old values
-        if len(_SESSION_DATA)>50:
-            _SESSION_DATA.popitem(last=False)
-        page_data['ident_data'] = ident_data
-    return
+    # generate a key, being a combination of incrementing _IDENT_DATA and a random number
+    _IDENT_DATA += 1
+    ident_data_key = str(_IDENT_DATA) + "a" + str(random.randrange(1000, 9999))
+    _SESSION_DATA[ident_data_key] = sent_session_data
+    # if length of _SESSION_DATA is longer than 50, remove old values,
+    # this expires old sessions
+    if len(_SESSION_DATA)>50:
+        _SESSION_DATA.popitem(last=False)
+    page_data['ident_data'] = ident_data_key
 
 
 def set_navigation(identnum, call_data, page_data):
