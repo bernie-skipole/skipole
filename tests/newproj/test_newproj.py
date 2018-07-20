@@ -11,3 +11,15 @@ def test_index_template(project):
     assert page.url == "/restricted/index_template"
 
 
+
+def test_add_subproject(project):
+    "Tests skilift.add_sub_project"
+    # lib should already be loaded
+    assert skilift.project_loaded("lib", error_if_not=False)
+    # remove it
+    skilift.remove_sub_project("lib")
+    assert not skilift.project_loaded("lib", error_if_not=False)
+    # and add it again
+    skilift.add_sub_project("lib")
+    assert skilift.project_loaded("lib", error_if_not=False)
+
