@@ -23,3 +23,8 @@ def test_add_subproject(project):
     skilift.add_sub_project("lib")
     assert skilift.project_loaded("lib", error_if_not=False)
 
+
+def test_labels(project):
+    "Tests skilit.get_itemnumber, and labels home and general_json"
+    assert skilift.get_itemnumber(project, "home") == 1
+    assert skilift.get_itemnumber(project, "general_json") == 2002
