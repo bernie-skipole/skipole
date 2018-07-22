@@ -155,14 +155,13 @@ def edit_placeholder(project, pagenumber, pchange, location, section_name, alias
 
 def new_placeholder(project, pagenumber, pchange, location, section_name, alias, brief):
     """Create a new placeholder at project, pagenumber, location
-       with section_name, alias, brief returns page change uuid """
+       with section_name, alias, brief returns page change uuid and new location"""
     # create new placeholder
     newplaceholder = tag.SectionPlaceHolder(section_name=section_name,
                                             placename=alias,
                                             brief=brief)
-    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
-    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, newplaceholder)
-    return new_pchange
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange and new location
+    return insert_item_in_page(project, pagenumber, pchange, location, newplaceholder)
 
 
 def sectionchange(project, section_name):
