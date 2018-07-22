@@ -52,7 +52,7 @@ def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict,
         location = call_data['location']
  
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Section"
+    page_data[("adminhead","page_head","large_text")] = "Edit Section place holder"
 
     # header done, now page contents
 
@@ -176,7 +176,7 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage("Page not identified")
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Insert Section"
+    page_data[("adminhead","page_head","large_text")] = "Insert Section place holder"
 
     # get current sections
     section_list = editsection.list_section_names(project)
@@ -205,24 +205,6 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
         raise FailPage("Page not identified")
 
-    part_top, container, location_integers = call_data['location']
-
-    # page to go back to
-    label = None
-    if part_top == 'head':
-        label = "page_head"   # label to 3320
-    elif part_top == 'body':
-        label = "page_body"   # label to 3340
-    elif part_top == 'svg':
-        label = "page_svg"   # label to 3420
-
-    if container is not None:
-        label = "back_to_container"   # label to 44704
-
-    if label is None:
-        raise FailPage("Invalid location")
-
-
     # create the item
 
     if 'newsectionname' not in call_data:
@@ -243,10 +225,10 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
         raise FailPage(message="Invalid alias")
 
     try:
-        call_data['pchange'] = editsection.new_placeholder(project, pagenumber, call_data['pchange'], call_data['location'], section_name, alias, call_data['newbrief'])
+        call_data['pchange'], call_data['location'] = editsection.new_placeholder(project, pagenumber, call_data['pchange'], call_data['location'], section_name, alias, call_data['newbrief'])
     except ServerError as e:
         raise FailPage(e.message)
 
     call_data['status'] = "Section placeholder inserted"
-    raise GoTo(target = label, clear_submitted=True)
+
 

@@ -9858,7 +9858,7 @@ false
 "editplaceholder",
 "create_insert"
 ],
-"target_ident": "admin_home"
+"target_ident": 55007
 },
 "original_fields": {}
 }
@@ -10648,7 +10648,7 @@ false
 "clear_error": false,
 "error_class": "w3-panel w3-red",
 "para_class": "",
-"para_text": "If you have previously created a section, this feature allows you to insert the section into the page.\nHowever, currently you have not created any sections! Choose Manage Sections from the Admin page to create one.",
+"para_text": "This feature allows you to insert a section into the page. However you have no sections available! Choose Sections from the left menu to create one.",
 "pre_line": true,
 "show": false,
 "show_error": "",
@@ -10667,7 +10667,7 @@ false
 "clear_error": false,
 "error_class": "w3-panel w3-red",
 "para_class": "",
-"para_text": "Choose a section, and provide an alias.",
+"para_text": "This feature allows you to set a place holder where a section will be inserted. Choose a section, and provide an alias.",
 "pre_line": true,
 "show": true,
 "show_error": "",
@@ -10831,6 +10831,21 @@ false
 ]
 ]
 }
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Further description",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Once you have created a section placeholder you will be given further options to edit it, including the option to 'multiply' the section."
 ]
 ]
 }
