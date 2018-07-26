@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "0.9.6",
+"skipole": "0.9.9",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -47,13 +47,13 @@
 "sections": {},
 "RootFolder": {
 "brief": "Site root",
-"default_page_name": "index",
+"default_page_name": "no_javascript",
 "restricted": false,
 "folders": {
 "css": {
 "ident": 300,
 "brief": "Folder holding css pages",
-"default_page_name": "index",
+"default_page_name": "w3.css",
 "restricted": false,
 "folders": {},
 "pages": {

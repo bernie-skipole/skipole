@@ -85,6 +85,7 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
     if (not info) or (info.item_type != "Folder"):
         raise FailPage(message = "Invalid folder")
 
+    call_data['fchange'] = info.change
 
     contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
     page_data['ftree', 'contents'] = contents
