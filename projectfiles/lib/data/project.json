@@ -47,7 +47,7 @@
 "sections": {},
 "RootFolder": {
 "brief": "Site root",
-"default_page_name": "no_javascript",
+"default_page_name": "url_not_found",
 "restricted": false,
 "folders": {
 "css": {
@@ -1693,6 +1693,195 @@
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
+},
+"url_not_found": {
+"ident": 890,
+"brief": "Copy of URL Not found to act as default page in lib project",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"url"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"URL not found"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "sl1",
+"brief": "Do not remove. Link to jquery library",
+"fields": {
+"script_ident": "jquery_core",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "skiboot_js",
+"brief": "Do not remove. Link to skipole js library",
+"fields": {
+"script_ident": "skipole_js",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_basic",
+"brief": "Link to skipole javascript validators",
+"fields": {
+"script_ident": "ski_basic",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ScriptLink",
+"name": "ski_paras",
+"brief": "Link to ski_paras",
+"fields": {
+"script_ident": "ski_paras",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "404 Not Found",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"404 Not Found"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph introducing the URL",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Page not found."
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
 }
 }
 }
