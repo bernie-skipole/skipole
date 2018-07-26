@@ -24,11 +24,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import pkgutil, re, collections, uuid, os, random
+import re, collections, uuid, os, random
 
-from . import editfolders, editresponders, editpages, editcss, editfiles, editparts, css_styles, editspecialpages, editwidgets, editsections, editsectionplaces, edittextblocks, edittext, editvalidators
 
-from .. import FailPage, GoTo, ValidateError, ServerError
+from .. import FailPage, GoTo, ValidateError, ServerError, use_submit_list
 
 from ... import skilift
 from ...skilift.fromjson import get_defaults
@@ -114,41 +113,11 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     return called_ident, call_data, page_data, lang
 
 
-
-
+# submit_list defines package, module, function to call
+@use_submit_list
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Call the appropriate submit_data function"
-
-    # routes to appropriate function depending on submit_list
-    if submit_list and (len(submit_list) > 2):
-        if submit_list[0] == 'editfolders':
-            return editfolders.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editresponders':
-            return editresponders.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editpages':
-            return editpages.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editcss':
-            return editcss.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editfiles':
-            return editfiles.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editparts':
-            return editparts.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editspecialpages':
-            return editspecialpages.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editwidgets':
-            return editwidgets.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editsections':
-            return editsections.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editsectionplaces':
-            return editsectionplaces.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'edittextblocks':
-            return edittextblocks.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'edittext':
-            return edittext.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        elif submit_list[0] == 'editvalidators':
-            return editvalidators.submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-
-    raise ServerError("submit_data function not found for responder %s,%s" % ident_list[-1])
+    "The decorator calls the appropriate submit_data function, if submit_list is invalid, then this function raises ServerError"
+    raise ServerError("submit_list invalid for responder %s,%s" % ident_list[-1])
 
 
 def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
