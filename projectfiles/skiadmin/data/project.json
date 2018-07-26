@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.9.8",
-"skipole": "0.9.8",
+"version": "0.9.9",
+"skipole": "0.9.9",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
