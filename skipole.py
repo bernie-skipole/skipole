@@ -81,6 +81,7 @@ def create_application(project, options={}, projectfiles=None):
 
 if __name__ == "__main__":
 
+    print("SKIPOLE +-->\n")
     if not os.path.isdir(PROJECTFILES):
         print("Directory %s has not been found" % (PROJECTFILES,))
         sys.exit(1)
