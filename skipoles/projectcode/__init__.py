@@ -30,12 +30,8 @@
 
 import sys, traceback, re, os
 
-#if sys.version_info[0] == 3 and sys.version_info[1] < 4:
-#    from imp import reload
-#else:
-#    from importlib import reload
-
-from importlib import reload, import_module
+from importlib import import_module
+from functools import wraps
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
@@ -52,6 +48,39 @@ _TEXTBLOCKS = {}
 
 # set this projectcode directory into skiboot
 skiboot.set_projectcode(os.path.dirname(os.path.realpath(__file__)))
+
+
+def use_submit_list(submit_data):
+    "Used to decorate submit_data to enable submit_list to define package,module,function"
+    @wraps(submit_data)
+    def submit_function(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+        "This function replaces submit_data, if submit_list has two or more elements"
+        if not submit_list:
+            # do nothing, simply return the original submit_data
+            return submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        if len(submit_list) < 2:
+            # do nothing, simply return the original submit_data
+            return submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        submitpath = ".".join(submit_list[:-1])
+        fullsubmitpath = "." + submit_dict['project'] + "." + submitpath
+        try:
+            submitmodule = import_module(fullsubmitpath, __name__)
+        except:
+            if skiboot.get_debug():
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                message = ''
+                for item in str_list:
+                    message += item
+                raise ServerError(message)
+            raise ServerError("Unable to import project module defined as %s in submit list" % (submitpath,))
+        # now obtain and run the specified function
+        try:
+            submitfunc = getattr(submitmodule, submit_list[-1])
+        except:
+            raise ServerError("submit_list package %s found, but the required function %s is not recognised" % (submitpath, submit_list[-1]))
+        return submitfunc(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    return submit_function
 
 
 def _import_project_code(proj_ident):
@@ -90,25 +119,6 @@ def make_AccessTextBlocks(project, projectfiles, default_language):
     return textblocks_module.AccessTextBlocks(project, projectfiles, default_language)
 
 
-def code_reload(proj_ident):
-    "Re-loads user code"
-    global _PROJECTS
-    try:
-        if proj_ident in _PROJECTS:
-            _PROJECTS[proj_ident] = reload(_PROJECTS[proj_ident])
-        else:
-            _PROJECTS[proj_ident] = import_module("."+proj_ident, __name__)
-    except:
-        if skiboot.get_debug():
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            message = ''
-            for item in str_list:
-                message += item
-            raise ServerError(message)
-        raise ServerError("Unable to reload module")
-
-
 def start_project(proj_ident, path, option):
     """On a project being loaded, and before the wsgi service is started, this is called once, and in
           turn calls the appropriate  project start_project function. It can be used to initiate any required service.
@@ -117,7 +127,6 @@ def start_project(proj_ident, path, option):
     if proj_ident  not in _PROJECTS:
         _PROJECTS[proj_ident] = import_module("."+proj_ident, __name__)
     project_code =  _PROJECTS[proj_ident]
-
     proj_data = project_code.start_project(proj_ident, skiboot.projectfiles(), path, option)
     return proj_data
 
@@ -169,6 +178,7 @@ def start_call(environ, path, proj_ident, ident, caller_ident, received_cookies,
             raise ServerError(message)
         raise ServerError("Error in start_call")
     return new_called_ident, call_data, page_data, new_lang
+
 
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Calls the appropriate submit_data function"

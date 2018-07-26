@@ -7,6 +7,9 @@ This package will be called by the Skipole framework to access your data.
 
 from .. import FailPage, GoTo, ValidateError, ServerError
 
+# This optional decorator function can be used to wrap submit_data if required
+from .. import use_submit_list
+
 ##############################################################################
 #
 # Your code needs to provide your own version of the following functions
@@ -30,6 +33,10 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     page_data = {}
     return called_ident, call_data, page_data, lang
 
+
+# if submit_data is decorated with use_submit_list, the submit_list will be used to specify
+# the module and function (or package, module and function) to use when submit_data is requested
+# If submit_list is empty, or only has one element, then this submit_data function will be called
 
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "This function is called when a Responder wishes to submit data for processing in some manner"

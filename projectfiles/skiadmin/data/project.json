@@ -150,7 +150,6 @@
 "part_insert": 43501,
 "placeholder_insert": 45501,
 "redirector": "lib,redirector",
-"reload_code": 70002,
 "remove_allowed_value": 46051,
 "remove_container_dom": 44420,
 "remove_field": 6110,
@@ -1701,18 +1700,25 @@ false,
 "Part",
 {
 "tag_name": "p",
-"brief": "About skilift",
+"brief": "About use_submit_list",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
+"Text",
+"You can also optionally import the decorator function use_submit_list which, if used as a decorator around your submit_data function, will replace it with a function defined by 'package', 'module' and function listed in your submit_list."
+]
+]
 }
 ],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About skilift",
+"show": true,
+"hide_if_empty": false,
+"parts": [
 [
 "Text",
 "Your code can optionally import further useful functions from the skilift package."
@@ -1748,67 +1754,6 @@ false,
 }
 ]
 ]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About reload",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
-],
-[
-"Text",
-"After you have edited your code, You generally need to stop and restart your server. However as an experimental feature (perhaps not to be trusted yet) you can reload it by choosing the link:"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Link to reload user code",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "links.Link",
-"name": "reloadlink",
-"brief": "Reload user code",
-"fields": {
-"content": "This link re-imports your python code",
-"force_ident": true,
-"get_field1": "",
-"get_field2": "",
-"link_ident": "reload_code",
-"show": true,
-"target": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Linebreak",
-"show": true
 }
 ],
 [
@@ -2217,30 +2162,6 @@ false,
 "retrieve_about_code"
 ],
 "target_ident": 70101
-},
-"original_fields": {}
-}
-},
-"reload_user_code": {
-"ident": 70002,
-"brief": "Reloads user code",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-70101
-],
-"alternate_ident": "admin_home",
-"fail_ident": 70001,
-"submit_list": [
-"editfolders",
-"editsite",
-"reload_project_code"
-],
-"submit_option": true,
-"target_ident": 70001,
-"validate_fail_ident": null,
-"validate_option": false
 },
 "original_fields": {}
 }

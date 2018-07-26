@@ -34,8 +34,6 @@ from ....skilift import off_piste, fromjson, editpage
 from .. import utils, css_styles
 from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
 
-from ....projectcode import code_reload
-
 
 def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves all field data for admin index page"
@@ -904,12 +902,6 @@ def _tar_contents(proj_ident):
 
     return text
 
-
-def reload_project_code(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    "Reloads the edited project user code"
-    project = call_data["editedprojname"]
-    code_reload(project)
-    call_data['status'] = "Project %s code reloaded" % (project,)
 
 
 def skipole_myapp(project):
