@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "0.9.6",
+"skipole": "0.9.8",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -236,8 +236,29 @@
 },
 "parts": [
 [
-"Text",
-"Well done!\r\nThis is the home page of your new project."
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph of text",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "margin-top:60px;margin-left: auto;margin-right: auto;width: 30em"
+},
+"parts": [
+[
+"TextBlock",
+{
+"textref": "welcome_text",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true,
+"decode": false
+}
+]
+]
+}
 ]
 ]
 }
