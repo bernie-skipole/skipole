@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "0.9.9",
-"skipole": "0.9.9",
+"version": "1.0.0",
+"skipole": "1.0.0",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -2137,7 +2137,7 @@ false,
 "parts": [
 [
 "Text",
-"Within the 'skipoles' package there is a 'skilift' sub-package, which contains functions providing project information and editing capability.\r\n\r\nThese functions are normally only used by the 'skiadmin' project.  You could import the package and use the functions from your own code. However any function which alters a project should only be used if only one user is accessing the web site. Multiple access while changes are being implemented could cause problems."
+"Within the 'skipoles' package there is a 'skilift' sub-package, which contains further modules and functions providing project information and editing capability.\r\n\r\nPlease view the skilift source for further information.\r\n\r\nThese functions are normally only used by the 'skiadmin' project.  You could import the package and use the functions from your own code. However any function which alters a project should only be used if only one user is accessing the web site. Multiple access while changes are being implemented could cause problems.\r\n\r\nTo import into your __init__.py\r\n\r\nfrom ... import skilift\r\n\r\nAnd a typical function would be:\r\n\r\nget_textblock_text(textref, lang, project=None)\r\n\r\nwith docstring:\r\n\r\nThis function returns the textblock text, given a textblock reference string,\r\n\r\nlang is the language tuple of (preferred language, default language).\r\nIf text for a given language is not found, the function makes an effort to get text by trying the default language.\r\n\r\nIf project is not given assumes the root project, if given, project must exist as either the root, or a sub project of the root.\r\nIf no textblock is found, returns None."
 ]
 ]
 }
