@@ -722,10 +722,10 @@ class Project(object):
                 if (path.find(projurl) == 0) or (path + "/" == projurl):
                     # this url is within a sub project
                     subproj = self.subprojects[proj]
-                    return subproj.proj_respond(environ, path, lang, received_cookies)
+                    return subproj.proj_respond(environ, projurl, path, lang, received_cookies)
 
             # the call is for a page in this root project
-            return self.proj_respond(environ, path, lang, received_cookies)
+            return self.proj_respond(environ, self._url, path, lang, received_cookies)
         except ServerError as e:
             page = self._system_page("server_error")
             if (not page) or (page.page_type != "TemplatePage"):
@@ -761,12 +761,8 @@ class Project(object):
             return e.status, headers, page.data()
 
 
-    def proj_respond(self, environ, path, lang, received_cookies):
+    def proj_respond(self, environ, projurl, path, lang, received_cookies):
         "Calls start call, and depending on the returned page, calls the project status_headers_data method"
-
-        # get the initial called page from the path
-        page = self.page_from_path(path)
-        # note; page could be None if not found from a path
 
         caller_page = None
         call_ident = None
@@ -826,14 +822,10 @@ class Project(object):
 
         # so caller_page could be either given, or could be None
 
+        # get the called ident, could be None
+        ident = self.page_ident_from_path(projurl, path)
+
         # now call the project start_call function
-
-        if page is None:
-            ident = None
-        else:
-            ident = page.ident  # this is the called page ident
-
-        # call the project start_call
         try:
             if caller_page:
                 caller_page_ident = caller_page.ident
@@ -899,16 +891,14 @@ class Project(object):
         if not isinstance(pident, skiboot.Ident):
             raise ServerError(message="Invalid ident returned from start_call")
 
-        # ident is the ident originally called, pident is the ident returned from start_call
-        if pident != ident:
-            # a new page is requested
-            page = pident.item()
-            if page is None:
+        # pident is the ident returned from start_call, may be in a different project
+        page = pident.item()
+        if page is None:
+            raise ServerError(message="Invalid ident returned from start_call")
+        if page.page_type == 'Folder':
+            page = page.default_page
+            if not page:
                 raise ServerError(message="Invalid ident returned from start_call")
-            if page.page_type == 'Folder':
-                page = page.default_page
-                if not page:
-                    raise ServerError(message="Invalid ident returned from start_call")
 
         # read any submitted data from rawformdata, and place in form_data
         try:
@@ -1058,19 +1048,68 @@ class Project(object):
         return status, headers, page.data()
 
 
-
-    def page_from_path(self, path):
-        """Tests cache, if item exists, return it, if not, call self.root.page_from_path(path)
-           and cach the result, then return the page"""
+    def page_ident_from_path(self, projurl, path):
+        """Tests if ident exists in the cache, return it, if not, call self.root.page_ident_from_path
+           and cach the result, then return the ident. If no ident found, or if ident within a restricted folder, return None."""
         if path in self._paths:
-            ident = self._paths[path]
-            if ident is None:
-                return
-            return self[ident]
-        page = self.root.page_from_path(path)
-        if page is not None:
-            self._paths[path] = page.ident
-        return page
+            return self._paths[path]
+        ident = None
+        strip_path = path.strip("/")
+        pathlist = strip_path.split("/")
+        strip_projurl = projurl.strip("/")
+        # The projurl must be removed from the pathlist before the call to self.root.page_ident_from_path()
+        if (not strip_projurl):
+            # no projurl to remove
+            ident = self.root.page_ident_from_path(self.identitems, pathlist)
+        else:
+            # strip_projurl may be something like "lib", remove the projurl from the pathlist
+            projurl_list = strip_projurl.split("/")
+            for item in projurl_list:
+                if not pathlist:
+                    # invalid call, the pathlist must start with the projurl
+                    return
+                if item == pathlist[0]:
+                    pathlist.pop(0)
+                else:
+                    # invalid call, the pathlist must start with the projurl
+                    return
+            ident = self.root.page_ident_from_path(self.identitems, pathlist)
+        if ident is not None:
+            self._paths[path] = ident
+        return ident
+
+
+    def oldpage_ident_from_path(self, projurl, path):
+        """Tests if ident exists in the cache, return it, if not, call self.root.page_ident_from_path
+           and cach the result, then return the ident. If no ident found, or if ident within a restricted folder, return None."""
+        if path in self._paths:
+            return self._paths[path]
+        ident = None
+        strip_path = path.strip("/")
+        strip_projurl = projurl.strip("/")
+        if not strip_path:
+            # path must be "/", so if project is at "/" return root default ident
+            if (not strip_projurl): 
+                ident = self.root.default_page_ident
+        else:
+            pathlist = strip_path.split("/")
+            if (not strip_projurl): 
+                ident = self.root.page_ident_from_path(self.identitems, pathlist)
+            else:
+                # strip_projurl may be something like "lib", remove the projurl from the pathlist
+                projurl_list = strip_projurl.split("/")
+                for index, item in enumerate(projurl_list):
+                    if index > len(pathlist):
+                        break
+                    if item == pathlist[0]:
+                        pathlist.pop(0)
+                    else:
+                        break
+                ident = self.root.page_ident_from_path(self.identitems, pathlist)
+        if ident is not None:
+            self._paths[path] = ident
+        return ident
+
 
 
     @property
