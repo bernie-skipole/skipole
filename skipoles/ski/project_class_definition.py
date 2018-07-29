@@ -1055,7 +1055,10 @@ class Project(object):
             return self._paths[path]
         ident = None
         strip_path = path.strip("/")
-        pathlist = strip_path.split("/")
+        if not strip_path:
+            pathlist = []
+        else:
+            pathlist = strip_path.split("/")
         strip_projurl = projurl.strip("/")
         # The projurl must be removed from the pathlist before the call to self.root.page_ident_from_path()
         if (not strip_projurl):
@@ -1077,39 +1080,6 @@ class Project(object):
         if ident is not None:
             self._paths[path] = ident
         return ident
-
-
-    def oldpage_ident_from_path(self, projurl, path):
-        """Tests if ident exists in the cache, return it, if not, call self.root.page_ident_from_path
-           and cach the result, then return the ident. If no ident found, or if ident within a restricted folder, return None."""
-        if path in self._paths:
-            return self._paths[path]
-        ident = None
-        strip_path = path.strip("/")
-        strip_projurl = projurl.strip("/")
-        if not strip_path:
-            # path must be "/", so if project is at "/" return root default ident
-            if (not strip_projurl): 
-                ident = self.root.default_page_ident
-        else:
-            pathlist = strip_path.split("/")
-            if (not strip_projurl): 
-                ident = self.root.page_ident_from_path(self.identitems, pathlist)
-            else:
-                # strip_projurl may be something like "lib", remove the projurl from the pathlist
-                projurl_list = strip_projurl.split("/")
-                for index, item in enumerate(projurl_list):
-                    if index > len(pathlist):
-                        break
-                    if item == pathlist[0]:
-                        pathlist.pop(0)
-                    else:
-                        break
-                ident = self.root.page_ident_from_path(self.identitems, pathlist)
-        if ident is not None:
-            self._paths[path] = ident
-        return ident
-
 
 
     @property
