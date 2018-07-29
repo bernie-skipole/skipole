@@ -217,56 +217,6 @@ class Folder(object):
         return self._parentfolder_ident.url() + self.name + "/"
 
 
-    def page_from_pathlist(self, pathlist):
-        """Return deepcopy of the page, or if not found, or path is restricted, return None
-              where pathlist is a list of names of folders and the final page, starting with this one"""
-        if self._restricted:
-            return
-        if pathlist[0] != self._name:
-            return
-        if len(pathlist) == 1:
-            # request matches this folder, therefore return the default page
-            return self.default_page
-        newlist = pathlist[1:]
-        name = newlist[0]
-        if name in self.pages:
-            if len(newlist) > 1:
-                # page followed by further items is an error
-                return
-            # its a  page
-            return skiboot.from_ident(self.pages[name])
-        if name in self.folders:
-            # requesting a folder
-                folder = skiboot.get_item(self.folders[name])
-                return folder.page_from_pathlist(newlist)
-
-
-    def page_from_path(self, path):
-        "Return deep copy of the page, or if not found, or path is restricted, return None"
-        if self._restricted:
-            return None
-        myurl = self.url
-        if (myurl == path) or (myurl == path+"/"):
-            # request matches url path, therefore return the default page
-            return self.default_page
-        if path.find(myurl) != 0:
-            # path does not start with this folders url
-            return
-        remaining_path = path[len(myurl):].strip("/")
-        pathlist = remaining_path.split("/")
-        name = pathlist[0]
-        if name in self.pages:
-            if len(pathlist) > 1:
-                # page followed by further items is an error
-                return
-            # its a  page
-            return skiboot.from_ident(self.pages[name])
-        if name in self.folders:
-            # requesting a folder
-                folder = skiboot.get_item(self.folders[name])
-                return folder.page_from_pathlist(pathlist)
-
-
     def page_ident_from_path(self, identitems, pathlist):
         """"Return a page ident, where pathlist is a list of folder names and a final page name
         pathlist does not include the initial project url or this folders name
@@ -290,7 +240,6 @@ class Folder(object):
             folder_ident = self.folders[name]
             folder = identitems[folder_ident]
             return folder.page_ident_from_path(identitems, pathlist[1:])
-
 
 
     def ident_from_path(self, path):
@@ -477,12 +426,6 @@ class RootFolder(Folder):
         if self.ident.proj == topproject.proj_ident:
             return topproject.url
         return topproject.subproject_paths[self.ident.proj]
-
-
-    def page_from_pathlist(self, pathlist):
-        "Not valid method for root folder"
-        return
-
 
 
     def __repr__(self):

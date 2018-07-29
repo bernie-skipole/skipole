@@ -318,18 +318,6 @@ def ident_exists_strict(ident):
 
 
 # usefull functions
-
-def page_from_referer(referer):
-    "Returns page with the referer url, if it cannot be found, return None"
-    referer = referer.lower()
-    # create list
-    ref_list = referer.split("//")
-    if len(ref_list) != 2: return
-    referer = ref_list[1]
-    ref_list = referer.split("/")
-    if len(ref_list)<2: return None
-    path = '/' + '/'.join(ref_list[1:])
-    return root().page_from_path(path)
     
 
 def mergedict(dict1, dict2):
