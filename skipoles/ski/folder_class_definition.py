@@ -161,12 +161,19 @@ class Folder(object):
     @property
     def default_page(self):
         "return a deep copy of the default page, or None if one not set"
+        default_ident = self.default_page_ident()
+        if default_ident:
+            return skiboot.from_ident(default_ident)
+
+
+    @property
+    def default_page_ident(self):
+        "return the default page ident, or None if one not set"
         if self._restricted:
-            return None
+            return
         if self.default_page_name and (self.default_page_name in self.pages):
-            # get the page
-            default_page_ident = self.pages[self.default_page_name]
-            return skiboot.from_ident(default_page_ident)
+            return self.pages[self.default_page_name]
+
 
     def get_name(self):
         return self._name
@@ -258,6 +265,31 @@ class Folder(object):
             # requesting a folder
                 folder = skiboot.get_item(self.folders[name])
                 return folder.page_from_pathlist(pathlist)
+
+
+    def page_ident_from_path(self, identitems, pathlist):
+        """"Return a page ident, where pathlist is a list of folder names and a final page name
+        pathlist does not include the initial project url or this folders name
+        identitems is the project {ident:folder or page} dictionary
+        Return None if page not found, or a folder in the path is restricted"""
+        if self._restricted:
+            return
+        # If pathlist is empty, return default page ident
+        if not pathlist:
+            return self.default_page_ident
+        name = pathlist[0]
+        # could be a page
+        if name in self.pages:
+            if len(pathlist) > 1:
+                # page followed by further items is an error
+                return
+            # its a  page
+            return self.pages[name]
+        if name in self.folders:
+            # requesting a folder
+            folder_ident = self.folders[name]
+            folder = identitems[folder_ident]
+            return folder.page_ident_from_path(identitems, pathlist[1:])
 
 
 
@@ -404,6 +436,7 @@ class RootFolder(Folder):
         """Initiates a RootFolder instance"""
         Folder.__init__(self, name=None, brief=brief, default_page_name = default_page_name, restricted=False)
         self.ident = skiboot.Ident(proj_ident, 0)  # rootfolder always has Ident.num of zero
+        self._restricted = False
 
     @property
     def restricted(self):
@@ -449,6 +482,7 @@ class RootFolder(Folder):
     def page_from_pathlist(self, pathlist):
         "Not valid method for root folder"
         return
+
 
 
     def __repr__(self):
