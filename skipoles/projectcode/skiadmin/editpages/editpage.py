@@ -39,8 +39,8 @@ from .. import utils
 def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves data for the edit page"
 
-    # clears any session data, keeping page_number and pchange
-    utils.clear_call_data(call_data, keep=["page_number", "pchange"])
+    # clears any session data, keeping page_number, pchange and any status message
+    utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
 
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -307,6 +307,9 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
 def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the svg edit page"
 
+    # clears any session data, keeping page_number, pchange and any status message
+    utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
+
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
         str_pagenumber = str(pagenumber)
@@ -322,6 +325,8 @@ def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, ca
 
     if pageinfo.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
+
+    call_data['pchange'] = pageinfo.change
 
     # fills in the data for editing page name, brief, parent, etc., 
     page_data[("adminhead","page_head","large_text")] = pageinfo.name
@@ -527,6 +532,9 @@ def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit json page"
 
+    # clears any session data, keeping page_number, pchange and any status message
+    utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
+
     project = call_data['editedprojname']
     
     if 'page_number' in call_data:
@@ -542,6 +550,9 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
         pageinfo = skilift.page_info(project, pagenumber)
         if pageinfo.item_type != 'JSON':
             raise FailPage(message = "Invalid page")
+
+        call_data['pchange'] = pageinfo.change
+
     except ServerError as e:
         raise FailPage(message = e.message)
 

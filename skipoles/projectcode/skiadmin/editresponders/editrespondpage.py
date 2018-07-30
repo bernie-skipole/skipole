@@ -34,6 +34,7 @@ from ....skilift import editresponder
 
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
+from .. import utils
 
 def _ident_to_str(ident):
     "Returns string ident or label"
@@ -69,29 +70,34 @@ def _t_ref(r_info, item):
 def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit respond page"
 
+    # clears any session data, keeping page_number, pchange and any status message
+    utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
+
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
         str_pagenumber = str(pagenumber)
     else:
         raise FailPage(message = "page missing")
 
-    project = call_data['editedprojname']
-    pageinfo = skilift.page_info(project, pagenumber)
-
-    if pageinfo.item_type != 'RespondPage':
-        raise FailPage(message = "Invalid page")
-
-    # fills in the data for editing page name, brief, parent, etc., 
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name
-    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
-
-    # get a ResponderInfo named tuple with information about the responder
     try:
+        project = call_data['editedprojname']
+        pageinfo = skilift.page_info(project, pagenumber)
+
+        if pageinfo.item_type != 'RespondPage':
+            raise FailPage(message = "Invalid page")
+
+        call_data['pchange'] = pageinfo.change
+
+        # fills in the data for editing page name, brief, parent, etc., 
+        page_data[("adminhead","page_head","large_text")] = pageinfo.name
+        page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+        page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+        page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+
+        # get a ResponderInfo named tuple with information about the responder
         r_info = editresponder.responder_info(project, pagenumber, call_data['pchange'])
     except ServerError as e:
         raise FailPage(message=e.message)
