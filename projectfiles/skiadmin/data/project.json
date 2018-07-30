@@ -33568,7 +33568,7 @@ false
 "parts": [
 [
 "Text",
-"Set the url of the sub project (relevant to this site only):"
+"Set the path of the sub project (relevant to this site only):"
 ]
 ]
 }
@@ -33578,7 +33578,7 @@ false
 {
 "class": "inputtext.SubmitTextInput1",
 "name": "subprojurl",
-"brief": "Set URL",
+"brief": "Set sub project path",
 "fields": {
 "action": "set_url",
 "action_json": "",
@@ -33597,7 +33597,7 @@ false
 "input_text": "",
 "inputandbutton_class": "",
 "inputdiv_class": "w3-section",
-"label": "Sub-project URL:",
+"label": "Sub-project path:",
 "label_class": "ski_left_label",
 "maxlength": "150",
 "pattern": "",
