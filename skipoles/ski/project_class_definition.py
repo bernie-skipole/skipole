@@ -69,7 +69,7 @@ class Project(object):
         self.brief = "Project %s" % proj_ident
         self.version = "0.0.0"
         # The url of the root folder
-        self._url = url
+        self._url = url.lower()
         # The root Folder
         self.root = None
         # dictionary of special pages, key = label: value = page ident
@@ -551,7 +551,8 @@ class Project(object):
         
 
     def set_url(self, url):
-        url=url.strip("/")
+        "Sets the project url, and if this is rootproject, ensure sub projects have this url prepended"
+        url=url.strip("/").lower()
         if url:
             url = "/" + url + "/"
         else:
@@ -1124,7 +1125,7 @@ class Project(object):
             return sub_paths[proj_id]
         if url is None:
             url = this_url + proj_id
-        url=url.strip("/")
+        url=url.strip("/").lower()
         url = "/" + url + "/"
         # Ensure url starts with this project url
         if not url.startswith(this_url):
@@ -1163,7 +1164,7 @@ class Project(object):
         this_url = self.url
         if url is None:
             url = this_url + proj_id
-        url=url.strip("/")
+        url=url.strip("/").lower()
         if url:
             url = "/" + url + "/"
         else:
