@@ -32,9 +32,15 @@ from ....ski.excepts import ValidateError, FailPage, ServerError
 from .... import skilift
 from ....skilift import editpage
 
+from .. import utils
+
 
 def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit file page"
+
+    # clears any session data, keeping page_number, pchange and any status message
+    utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
+
     project = call_data['editedprojname']
     
     if 'page_number' in call_data:
@@ -50,6 +56,9 @@ def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, c
         pageinfo = skilift.page_info(project, pagenumber)
         if pageinfo.item_type != 'FilePage':
             raise FailPage(message = "Invalid page")
+
+        call_data['pchange'] = pageinfo.change
+
         filepath, mimetype = editpage.file_parameters(project, pagenumber)
     except ServerError as e:
         raise FailPage(message = e.message)

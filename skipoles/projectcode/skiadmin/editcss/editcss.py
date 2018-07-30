@@ -34,9 +34,15 @@ from ....ski.excepts import ValidateError, FailPage, ServerError
 from .... import skilift
 from ....skilift import editpage
 
+from .. import utils
+
 
 def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Retrieves widget data for the edit css page"
+
+    # clears any session data, keeping page_number, pchange and any status message
+    utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -49,6 +55,9 @@ def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, ca
         pageinfo = skilift.page_info(project, pagenumber)
         if pageinfo.item_type != 'CSS':
             raise FailPage(message = "Invalid page")
+
+        call_data['pchange'] = pageinfo.change
+
         selectors = list(editpage.css_style(project, pagenumber).keys())
     except ServerError as e:
         raise FailPage(message = e.message)
