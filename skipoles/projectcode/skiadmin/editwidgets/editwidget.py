@@ -433,7 +433,7 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[("set_field_default",'show')] = False
 
     # Show validators
-    if field_datalist[3]:
+    if field_datalist.valdt:
         page_data[("validators_desc",'show')] = True
         page_data[("validators_desc2",'show')] = True
         page_data[("add_validator",'show')] = True

@@ -1512,6 +1512,7 @@
   "widgets.svgmeters.Traditional1": "A curved scale, fitting in a 700x400 space, with arrow indicating the measurement value.",
   "widgets.svgmeters.Traditional1.arrow_stroke": "The outline colour for the arrow.",
   "widgets.svgmeters.Traditional1.font_family": "Font of the text on the scale.",
+  "widgets.svgmeters.Traditional1.full": "A curved scale, fitting in a 700x400 space, with arrow indicating the measurement value.\r\n\r\nThe widget should either be set within an SVG page, or if in an HTML template page, then it should be within a set of svg tags, or an SVGContainer widget.\r\n\r\nThe transform attribute can be used to scale, move or rotate the widget, any svg standard documentation will give further information.",
   "widgets.svgmeters.Traditional1.largeintervals": "An incremental value at which large ticks will be placed on the scale, with text value labels.",
   "widgets.svgmeters.Traditional1.maximum": "The maximum value, at the right of the scale.",
   "widgets.svgmeters.Traditional1.measurement": "The actual measurement, the arrow will rotate and point to this value. JSON enabled.",
