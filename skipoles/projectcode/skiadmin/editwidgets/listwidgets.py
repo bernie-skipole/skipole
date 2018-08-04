@@ -29,6 +29,7 @@
 
 import re
 
+from .... import skilift
 from ....skilift import editwidget
 
 from ....ski.excepts import ServerError, FailPage, ValidateError, GoTo
@@ -150,10 +151,20 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
     # widg is a WidgetDescription named tuple
 
     page_data[("adminhead","page_head","large_text")] = "Create widget of type %s" % (widget_class_name,)
-    page_data[('widgetdesc','textblock_ref')] = ".".join(("widgets", module_name, widget_class_name))
+
+
+    ref = "widgets." + widg.modulename + "." + widg.classname
+    full_textref = ref + '.full'   # the widget full reference string
+
+    adminaccesstextblocks = skilift.get_accesstextblocks(skilift.admin_project())
+
+    if adminaccesstextblocks.textref_exists(full_textref):
+        page_data['widgetdesc','textblock_ref'] = full_textref
+    else:
+        page_data['widgetdesc','textblock_ref'] = ref
 
     field_contents = []
-    ref = "widgets." + widg.modulename + "." + widg.classname
+
     for field_argument in widg.fields:
         if field_argument == 'show':
             field_contents.append([field_argument, 'widgets.show'])
