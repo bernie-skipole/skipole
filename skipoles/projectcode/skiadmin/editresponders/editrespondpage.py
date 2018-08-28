@@ -54,6 +54,8 @@ def _field_to_string(wfield):
         return wfield, wfield
     # a widgfield has four elements, reduce it to the non empty elements
     shortwfield = [ w for w in wfield if w ]
+    if len(shortwfield) == 1:
+        return shortwfield[0], shortwfield[0]
     wf1 = ",".join(shortwfield)
     if len(shortwfield) == 2:
         wf2 = shortwfield[0] + ":" + shortwfield[1]
