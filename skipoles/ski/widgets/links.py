@@ -541,6 +541,10 @@ class ButtonLink2(Widget):
             self[1][0].update_attribs({"class":self.get_field_value('button_class')})
         # get url and button text
         url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        if not url:
+            # setting self._error replaces the entire tag
+            self._error = "Warning: Invalid link"
+            return
         if self.get_field_value("button_text"):
             self[1][0][0] = self.get_field_value("button_text")
         else:
