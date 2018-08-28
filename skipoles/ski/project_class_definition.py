@@ -854,7 +854,7 @@ class Project(object):
                 for item in str_list:
                     message += item
             raise ServerError(message)
- 
+
         if pident is None:
             # URL NOT FOUND and start_call does not divert
             page = self._system_page("url_not_found")
