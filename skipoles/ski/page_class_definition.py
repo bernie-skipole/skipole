@@ -1120,6 +1120,8 @@ class FilePage(ParentPage):
         self.enable_cache = enable_cache
         # flag for headers auto set
         self._headers_flag = True
+        # environ, set by the update methon
+        self._environ = None
 
     def set_enable_cache(self, enable_cache):
         "Sets enable cache in header"
@@ -1196,6 +1198,7 @@ class FilePage(ParentPage):
 
     def update(self, environ, call_data, lang, ident_list=[]):
         """"If filepath set, then this is the file returned, if not, then projectfiles/project/static/name is returned"""
+        self._environ = environ
         mimetype = self.mimetype
         if mimetype and self._headers_flag:
             # only add mimetype if headers auto set, not if headers specified in page_data
@@ -1215,14 +1218,14 @@ class FilePage(ParentPage):
         if self.session_cookie:
             self.headers.append(self.session_cookie)
 
-    def readfile(self, size=8192):
+    def readfile(self, size=1024):
+        "Return a file"
         with open(self._filepath_relative_to_project_files, "rb") as f:
-            while True:
+            data = f.read(size)
+            while data:
+                yield data
                 data = f.read(size)
-                if data:
-                    yield data
-                else:
-                    break
+
 
     def data(self):
         "returns an iterator reading the file"
