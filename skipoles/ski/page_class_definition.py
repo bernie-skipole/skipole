@@ -1218,8 +1218,9 @@ class FilePage(ParentPage):
         if self.session_cookie:
             self.headers.append(self.session_cookie)
 
-    def readfile(self, size=1024):
-        "Return a file"
+
+    def _readfile(self, size=1024):
+        "Return a generator reading the file"
         with open(self._filepath_relative_to_project_files, "rb") as f:
             data = f.read(size)
             while data:
@@ -1232,9 +1233,15 @@ class FilePage(ParentPage):
         if not self._filepath:
             return ["<!DOCTYPE HTML>\n<html>ERROR:NO FILEPATH SET\n</html>".encode('ascii', 'xmlcharrefreplace')]
         try:
-            return self.readfile()
-        except IOError:
+            size = 1024
+            if 'wsgi.file_wrapper' in self._environ:
+                f = open(self._filepath_relative_to_project_files, "rb")
+                return self._environ['wsgi.file_wrapper'](f, size)
+            else:
+                return self._readfile(size)
+        except IOError:            
             return ["<!DOCTYPE HTML>\n<html>ERROR:UNABLE TO OPEN FILE\n</html>".encode('ascii', 'xmlcharrefreplace')]
+
 
     def __str__(self):
         return self.filepath
