@@ -20005,7 +20005,7 @@ false
 "validate_option": true
 },
 "original_fields": {
-"arg_dict:show_get_field1": "field"
+"arg_dict:show_get_field1": "field_arg"
 }
 }
 },
@@ -20022,7 +20022,7 @@ false
 "validate_option": true
 },
 "original_fields": {
-"arg_list:show_get_field1": "field"
+"arg_list:show_get_field1": "field_arg"
 }
 }
 },
