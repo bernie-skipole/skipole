@@ -1019,7 +1019,7 @@
   "widgets.links.ButtonLink2.button_class": "The CSS class applied to the button.",
   "widgets.links.ButtonLink2.button_text": "The text to be displayed within the button.",
   "widgets.links.ButtonLink2.button_text.full": "The text to be displayed within the button. If none given, the target page url will be used.",
-  "widgets.links.ButtonLink2.button_wait_text": "A 'please wait' message shown on the button if a JSON call is made.",
+  "widgets.links.ButtonLink2.button_wait_text": "A 'please wait' message shown on the button when a call is made.",
   "widgets.links.ButtonLink2.buttondiv_class": "The CSS class applied to the div containing the button.",
   "widgets.links.ButtonLink2.buttondiv_style": "The CSS style applied to the div containing the button.",
   "widgets.links.ButtonLink2.error_class": "CSS class given to a normally hidden error div.",
