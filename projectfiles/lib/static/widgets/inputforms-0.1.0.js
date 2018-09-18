@@ -183,7 +183,15 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
         e.preventDefault();
         }
     else {
-        // form validated, so if action_json url set, call a json page
+        // form validated, set please wait message on button
+        var btn = $("#" + this.fieldvalues["buttonident"]);
+        var buttontext = btn.attr("value");
+        // set button_wait_text
+        var button_wait_text = this.fieldvalues["button_wait_text"]
+        if (button_wait_text) {
+            btn.attr("value", button_wait_text);
+            }
+        // if action_json url set, call a json page
         var jsonurl = this.fieldvalues["url"];
         if (jsonurl) {
             // json url set, send data with a request for json and prevent default
@@ -202,6 +210,9 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
                           if (self.get_error(result)) {
                               // if error, set any results received from the json call
                               SKIPOLE.setfields(result);
+                              if (btn.attr("value") == button_wait_text) {
+                                   btn.attr("value", buttontext);
+                                   }
                               }
                           else {
                               // If no error received, clear any previous error
@@ -222,6 +233,9 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
                                   document.close();
                                   }
                               else {
+                                  if (btn.attr("value") == button_wait_text) {
+                                      btn.attr("value", buttontext);
+                                      }
                                   alert(errorThrown);
                                   }
                       });

@@ -318,6 +318,7 @@ class SubmitForm1(Widget):
                         'hidden_field3':FieldArg("text", '', valdt=True),
                         'hidden_field4':FieldArg("text", '', valdt=True),
                         'button_text':FieldArg("text",'Submit'),
+                        'button_wait_text':FieldArg("text", ''),
                         'button_class':FieldArg("cssclass", ''),
                         'div_class':FieldArg("cssclass", ''),
                         'container_class':FieldArg("cssclass", ''),
@@ -338,6 +339,7 @@ class SubmitForm1(Widget):
         hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
         hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
         button_text: The text on the button
+        button_wait_text: A 'please wait' message shown on the button
         button_class: The css class of the button
         div_class: the class attribute of the div tag which contains the label and button
         container_class: the class attribute of the div holding the container
@@ -426,8 +428,9 @@ class SubmitForm1(Widget):
     }});
 """.format(ident=self.get_id())
         if self._jsonurl:
-            return jscript + self._make_fieldvalues(url=self._jsonurl)
-        return jscript
+            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id(), url=self._jsonurl)
+        else:
+            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id())
 
 
     @classmethod
