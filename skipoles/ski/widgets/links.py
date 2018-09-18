@@ -1444,11 +1444,13 @@ class Table3_Buttons2(Widget):
                         'link_ident1':FieldArg("url",''),
                         'json_ident1':FieldArg("url", ''),
                         'button_text1':FieldArg('text', ''),
+                        'button_wait_text1':FieldArg("text", ''),
                         'get_field1_1':FieldArg('boolean',True, valdt=True),
                         'get_field1_2':FieldArg('boolean',True, valdt=True),
                         'link_ident2':FieldArg("url",''),
                         'json_ident2':FieldArg("url", ''),
                         'button_text2':FieldArg('text', ''),
+                        'button_wait_text2':FieldArg("text", ''),
                         'get_field2_1':FieldArg("boolean", True, valdt=True),
                         'get_field2_2':FieldArg("boolean",True, valdt=True),
                         'contents':FieldArgTable(['text', 'text', 'text', 'text', 'text', 'text', 'text', "boolean", "boolean"])
@@ -1466,9 +1468,11 @@ class Table3_Buttons2(Widget):
         link_ident1: The target page link ident of the first link, if json_ident1 not present or no javascript
         json_ident1: The target JSON page link ident of the first link
         button_text1: Text on the first link button
+        button_wait_text1: A 'please wait' message shown on button1
         link_ident2: The target page link ident of the second link, if json_ident2 not present or no javascript
         json_ident2: The target JSON page link ident of the second link
         button_text2: Text on the second link button
+        button_wait_text2: A 'please wait' message shown on button2
         get_field1_1: The field name is the name (not value) of the get field 1 of the first link, value is bool: True, if get field exists, False if not 
         get_field1_2: The field name is the name (not value) of the get field 2 of the first link, value is bool: True, if get field exists, False if not
         get_field2_1: The field name is the name (not value) of the get field 1 of the second link, value is bool: True, if get field exists, False if not
@@ -1585,13 +1589,11 @@ class Table3_Buttons2(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        #if not (self._jsonurl1 or self._jsonurl2):
-         #   return
         jscript = """  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """.format(ident = self.get_id())
-        return jscript + self._make_fieldvalues( url1=self._jsonurl1, url2=self._jsonurl2)
+        return jscript + self._make_fieldvalues('button_wait_text1', 'button_wait_text2', url1=self._jsonurl1, url2=self._jsonurl2)
 
 
     @classmethod
