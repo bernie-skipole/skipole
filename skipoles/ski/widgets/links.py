@@ -496,7 +496,7 @@ class ButtonLink2(Widget):
         link_ident: The link to an html page taken if the client does not have javascript
         hide: if True, and no error, button will be hidden
         button_text: The text to be placed within the link, if none given, the page url will be used
-        button_wait_text: A 'please wait' message shown on the button if a JSON call is made
+        button_wait_text: A 'please wait' message shown on the button
         button_class: A CSS class applied to the button
         buttondiv_class: A CSS class applied to the div containing the button
         buttondiv_style: A CSS style applied to the div containing the button
