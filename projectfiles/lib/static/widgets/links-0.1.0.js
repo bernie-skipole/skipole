@@ -643,6 +643,7 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
         }
     var fieldvalues = this.fieldvalues;
     var button = $(e.target);
+    var buttontext = button.text();
     var myCol = button.parent().index();
     var href = button.attr('href');
     if (!href) {
@@ -651,6 +652,13 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
     var senddata = href.substring(href.indexOf('?')+1);
 
     if (myCol === 3) {
+
+       // set button_wait_text
+        var button_wait_text = fieldvalues["button_wait_text1"]
+        if (button_wait_text) {
+            button.text(button_wait_text);
+            }
+
         if (!fieldvalues["url1"]) {
             return;
             }
@@ -664,6 +672,9 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
                  if (jqXHR.responseJSON) {
                       // JSON response
                       SKIPOLE.setfields(result);
+                      if (button.text() == button_wait_text) {
+                          button.text(buttontext);
+                          }
                       } else {
                           // html response
                           document.open();
@@ -678,10 +689,20 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
                               document.close();
                               }
                           else {
+                              if (button.text() == button_wait_text) {
+                                  button.text(buttontext);
+                                  }
                               alert(errorThrown);
                                }
                   });
         } else if (myCol === 4) {
+
+            // set button_wait_text
+            var button_wait_text = fieldvalues["button_wait_text2"]
+            if (button_wait_text) {
+                button.text(button_wait_text);
+                }
+
             if (!fieldvalues["url2"]) {
                 return;
                 }
@@ -695,6 +716,9 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
                      if (jqXHR.responseJSON) {
                           // JSON response
                           SKIPOLE.setfields(result);
+                          if (button.text() == button_wait_text) {
+                              button.text(buttontext);
+                              }
                           } else {
                               // html response
                               document.open();
@@ -709,6 +733,9 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
                                   document.close();
                                   }
                               else {
+                                  if (button.text() == button_wait_text) {
+                                      button.text(buttontext);
+                                      }
                                   alert(errorThrown);
                                    }
                       });

@@ -345,6 +345,11 @@
 "odd_class": "w3-theme-d2",
 "widget_class": "w3-table w3-theme-d1 w3-border w3-bordered"
 },
+"ThreeColTable1": {
+"header_class": "w3-theme-d3",
+"odd_class": "w3-theme-d2",
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered"
+},
 "TwoColTable1": {
 "header_class": "w3-theme-d2",
 "odd_class": "w3-theme-d1",

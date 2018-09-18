@@ -218,6 +218,9 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
                               // If no error received, clear any previous error
                               self.clear_error();
                               SKIPOLE.setfields(result);
+                              if (btn.attr("value") == button_wait_text) {
+                                   btn.attr("value", buttontext);
+                                   }
                               }
                            } else {
                               // html response
