@@ -587,6 +587,170 @@ class ButtonLink2(Widget):
 
 
 
+class MessageButton(Widget):
+    """A div containing a hidden 'message div' and button link. When the link is called the
+       message div is displayed and contains a further div with a paragraph
+       of text and an X button which hides the message.
+       Typically calling a link will be so fast the message will not be displayed, so this
+       widget could be used with a link which calls a very slow loading page, or
+       perhaps opens a new window or tab, and displays a message stating
+       a new window has openned."""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'hide':FieldArg("boolean", True, jsonset=True),
+                        'para_text':FieldArg("text", "Please wait, a page will shortly open in a new window.", jsonset=True),
+                        'pre_line':FieldArg("boolean", True),
+                        'messagediv_class':FieldArg("cssclass", ""),
+                        'boxdiv_class':FieldArg("cssclass", ""),
+                        'inner_class':FieldArg("cssclass", ""),
+                        'inner_style':FieldArg("cssstyle", ""),
+                        'xdiv_class':FieldArg("cssclass", ""),
+                        'xdiv_style':FieldArg("cssstyle", ""),
+                        'x_class':FieldArg("cssclass", ""),
+                        'link_ident':FieldArg("url", ''),
+                        'button_text':FieldArg("text", "Submit"),
+                        'button_class':FieldArg("cssclass", ""),
+                        'buttondiv_class':FieldArg("cssclass", ""),
+                        'buttondiv_style':FieldArg("cssstyle", ""),
+                        'get_field1':FieldArg("text", "", valdt=True),
+                        'get_field2':FieldArg("text","", valdt=True),
+                        'target':FieldArg("text", "_blank"),
+                        'force_ident':FieldArg("boolean", False)
+            }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        hide: If True, sets display: none; on the message, can be set/unset via JSON file
+              If False, sets display:block
+        para_text: The text appearing in the paragraph
+        pre_line: If True, sets style="white-space: pre-line;" into the paragraph which preserves
+                  new line breaks
+        messagediv_class: class of the div holding message
+        boxdiv_class: class of the box holding paragraph and X button
+        inner_class: The CSS class of the div holding the paragraph
+        buttondiv_class: The class of the div holding the button
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        # message div
+        self[0] = tag.Part(tag_name="div")
+        # div holding X button
+        self[0][0] = tag.Part(tag_name="div")
+        self[0][0][0] = tag.Part(tag_name="button")
+        self[0][0][0][0] = tag.HTMLSymbol("&times;")
+        # The location 0,1 is the div holding the text paragraph
+        self[0][1] = tag.Part(tag_name="div")
+        self[0][1][0] = tag.Part(tag_name="p")
+        self[0][1][0][0] = ''
+        # buttondiv and button
+        self[1] = tag.Part(tag_name="div")
+        self[1][0] = tag.Part(tag_name="a", attribs={"role":"button"})
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the box"
+        # set an id in the message box
+        self[0].insert_id()
+        # Hides message block hide if is True
+        if self.get_field_value("hide"):
+            self[0].set_hide()
+        else:
+            self[0].set_block()
+        if self.get_field_value("boxdiv_class"):
+            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+        # buttondiv
+        if self.get_field_value("xdiv_class"):
+            self[0][0].update_attribs({"class":self.get_field_value('xdiv_class')})
+        if self.get_field_value("xdiv_style"):
+            self[0][0].update_attribs({'style':self.get_field_value("xdiv_style")})
+        # inner div
+        if self.error_status and self.get_field_value("error_class"):
+            self[0][1].update_attribs({"class":self.get_field_value('error_class')})
+        elif self.get_field_value("inner_class"):
+            self[0][1].update_attribs({"class":self.get_field_value('inner_class')})
+        if self.get_field_value("inner_style"):
+            self[0][1].update_attribs({'style':self.get_field_value("inner_style")})
+        # x button
+        if self.get_field_value('x_class'):
+            self[0][0][0].update_attribs({"class":self.get_field_value('x_class')})
+        # paragraph
+        if self.get_field_value("pre_line"):
+            self[0][1][0].attribs={"style":"white-space: pre-line;"}
+        self[0][1][0][0] = self.get_field_value("para_text")
+        # link button
+        if not self.get_field_value("link_ident"):
+            # setting self._error replaces the entire tag
+            self._error = "Warning: No link ident"
+            return
+        # set buttondiv
+        if self.get_field_value('buttondiv_class'):
+            self[1].attribs = {"class":self.get_field_value('buttondiv_class')}
+        if self.get_field_value('buttondiv_style'):
+            self[1].update_attribs({"style":self.get_field_value('buttondiv_style')})
+        # set button class
+        if self.get_field_value('button_class'):
+            self[1][0].update_attribs({"class":self.get_field_value('button_class')})
+        # get url and button text
+        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        if not url:
+            # setting self._error replaces the entire tag
+            self._error = "Warning: Invalid link"
+            return
+        if self.get_field_value("button_text"):
+            self[1][0][0] = self.get_field_value("button_text")
+        else:
+            self[1][0][0] = url
+        # create a url for the href
+        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
+                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+        self[1][0].update_attribs({"href": url})
+        if self.get_field_value("target"):
+            self[1][0].update_attribs({"target":self.get_field_value("target")})
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler on the a button"""
+        jscript = """  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+  $("#{ident} button").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        return jscript + self._make_fieldvalues(messagebox_id = self[0].get_id())
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div> <!-- with widget id and class widget_class -->
+  <div> <!-- With messagediv_class -->
+      <div> <!-- With boxdiv_class -->
+        <div> <!-- with class set by xdiv_class and style by xdiv_style -->
+          <button>
+            <!-- With class set by x_class -->
+            <!-- the button will show the &times; symbol -->
+          </button>
+        </div>
+        <div> <!-- With class set by inner_class -->
+          <p style = "white-space: pre-line;"> <!-- style set if pre_line is True -->
+            <!-- para_text or error message appears in this paragraph -->
+          </p>
+        </div>
+      </div>
+  </div>
+  <div> <!-- with class set by buttondiv_class and style by buttondiv_style -->
+    <a role="button" href="#">
+      <!-- With class set by button_class, and the href link will be the url of the link_ident -->
+      <!-- the button will show the button_text. -->
+    </a>
+  </div>
+</div>"""
+
 
 class ImageLink1(Widget):
     """A link to the page with the given ident, with three optional get fields.
