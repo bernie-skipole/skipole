@@ -445,6 +445,71 @@ SKIPOLE.links.OpenButton.prototype.eventfunc = function (e) {
     };
 
 
+
+SKIPOLE.links.MessageButton = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.MessageButton.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.MessageButton.prototype.constructor = SKIPOLE.links.ProjectiFrame;
+
+SKIPOLE.links.MessageButton.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var the_widg = this.widg;
+    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    var messagebox_id = fieldvalues["messagebox_id"];
+    if (!messagebox_id) {
+        return
+        }
+    var messagebox = $("#"+messagebox_id);
+    var para = messagebox.find('p');
+    if (para_text) {
+        para.text(para_text);
+        }
+
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (messagebox.is(":visible")) {
+                messagebox.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(messagebox.is(":visible"))) {
+                messagebox.fadeIn('slow');
+                 }
+            }
+        }
+    };
+
+SKIPOLE.links.MessageButton.prototype.eventfunc = function (e) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var the_widg = this.widg;
+    // get id of message box
+    var messagebox_id = fieldvalues["messagebox_id"];
+    if (!messagebox_id) {
+        return
+        }
+    var messagebox = $("#"+messagebox_id);
+
+    var button_pressed = $(e.target);
+
+    if ( button_pressed.is( "button" ) ){
+           messagebox.fadeOut('slow');
+           }           
+    else {
+           messagebox.fadeIn('slow');
+           }
+    };
+
+
+
 SKIPOLE.links.ImageLink1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
