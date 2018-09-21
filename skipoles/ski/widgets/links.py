@@ -600,7 +600,7 @@ class MessageButton(Widget):
     display_errors = False
 
     arg_descriptions = {'hide':FieldArg("boolean", True, jsonset=True),
-                        'para_text':FieldArg("text", "Please wait, a page will shortly open in a new window.", jsonset=True),
+                        'para_text':FieldArg("text", "Please wait...", jsonset=True),
                         'pre_line':FieldArg("boolean", True),
                         'messagediv_class':FieldArg("cssclass", ""),
                         'boxdiv_class':FieldArg("cssclass", ""),
@@ -610,6 +610,7 @@ class MessageButton(Widget):
                         'xdiv_style':FieldArg("cssstyle", ""),
                         'x_class':FieldArg("cssclass", ""),
                         'link_ident':FieldArg("url", ''),
+                        'json_ident':FieldArg("url", ''),
                         'button_text':FieldArg("text", "Submit"),
                         'button_class':FieldArg("cssclass", ""),
                         'buttondiv_class':FieldArg("cssclass", ""),
@@ -649,6 +650,7 @@ class MessageButton(Widget):
         # buttondiv and button
         self[1] = tag.Part(tag_name="div")
         self[1][0] = tag.Part(tag_name="a", attribs={"role":"button"})
+        self._jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -695,6 +697,9 @@ class MessageButton(Widget):
         # set button class
         if self.get_field_value('button_class'):
             self[1][0].update_attribs({"class":self.get_field_value('button_class')})
+        # get json url
+        if self.get_field_value("json_ident"):
+            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
         # get url and button text
         url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
         if not url:
@@ -723,7 +728,10 @@ class MessageButton(Widget):
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """.format(ident = self.get_id())
-        return jscript + self._make_fieldvalues(messagebox_id = self[0].get_id())
+        if self._jsonurl:
+            return jscript + self._make_fieldvalues(messagebox_id = self[0].get_id(), url=self._jsonurl)
+        else:
+            return jscript + self._make_fieldvalues(messagebox_id = self[0].get_id())
 
 
     @classmethod
