@@ -502,10 +502,46 @@ SKIPOLE.links.MessageButton.prototype.eventfunc = function (e) {
 
     if ( button_pressed.is( "button" ) ){
            messagebox.fadeOut('slow');
-           }           
-    else {
-           messagebox.fadeIn('slow');
+           return;
            }
+
+    // not the message box button, so it is the link button 
+    messagebox.fadeIn('slow');
+
+    if (!fieldvalues["url"]) {
+        // no json url, return and call html link
+        return;
+        }
+    var href = button_pressed.attr('href');
+    var senddata = href.substring(href.indexOf('?')+1);
+    e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["url"],
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          alert(errorThrown);
+                           }
+              });
+
     };
 
 
