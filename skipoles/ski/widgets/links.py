@@ -636,14 +636,16 @@ class MessageButton(Widget):
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         # message div
         self[0] = tag.Part(tag_name="div")
-        # div holding X button
+        # boxdiv
         self[0][0] = tag.Part(tag_name="div")
-        self[0][0][0] = tag.Part(tag_name="button")
-        self[0][0][0][0] = tag.HTMLSymbol("&times;")
-        # The location 0,1 is the div holding the text paragraph
-        self[0][1] = tag.Part(tag_name="div")
-        self[0][1][0] = tag.Part(tag_name="p")
-        self[0][1][0][0] = ''
+        # div holding X button
+        self[0][0][0] = tag.Part(tag_name="div")
+        self[0][0][0][0] = tag.Part(tag_name="button")
+        self[0][0][0][0][0] = tag.HTMLSymbol("&times;")
+        # The location 0,0,1 is the inner div holding the text paragraph
+        self[0][0][1] = tag.Part(tag_name="div")
+        self[0][0][1][0] = tag.Part(tag_name="p")
+        self[0][0][1][0][0] = ''
         # buttondiv and button
         self[1] = tag.Part(tag_name="div")
         self[1][0] = tag.Part(tag_name="a", attribs={"role":"button"})
@@ -653,32 +655,33 @@ class MessageButton(Widget):
         "build the box"
         # set an id in the message box
         self[0].insert_id()
+        if self.get_field_value("messagediv_class"):
+            self[0].update_attribs({"class":self.get_field_value('messagediv_class')})
         # Hides message block hide if is True
         if self.get_field_value("hide"):
             self[0].set_hide()
         else:
             self[0].set_block()
+        # boxdiv
         if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+            self[0][0].update_attribs({"class":self.get_field_value('boxdiv_class')})
         # buttondiv
         if self.get_field_value("xdiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('xdiv_class')})
+            self[0][0][0].update_attribs({"class":self.get_field_value('xdiv_class')})
         if self.get_field_value("xdiv_style"):
-            self[0][0].update_attribs({'style':self.get_field_value("xdiv_style")})
-        # inner div
-        if self.error_status and self.get_field_value("error_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('error_class')})
-        elif self.get_field_value("inner_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('inner_class')})
-        if self.get_field_value("inner_style"):
-            self[0][1].update_attribs({'style':self.get_field_value("inner_style")})
+            self[0][0][0].update_attribs({'style':self.get_field_value("xdiv_style")})
         # x button
         if self.get_field_value('x_class'):
-            self[0][0][0].update_attribs({"class":self.get_field_value('x_class')})
+            self[0][0][0][0].update_attribs({"class":self.get_field_value('x_class')})
+        # inner div
+        if self.get_field_value("inner_class"):
+            self[0][0][1].update_attribs({"class":self.get_field_value('inner_class')})
+        if self.get_field_value("inner_style"):
+            self[0][0][1].update_attribs({'style':self.get_field_value("inner_style")})
         # paragraph
         if self.get_field_value("pre_line"):
-            self[0][1][0].attribs={"style":"white-space: pre-line;"}
-        self[0][1][0][0] = self.get_field_value("para_text")
+            self[0][0][1][0].attribs={"style":"white-space: pre-line;"}
+        self[0][0][1][0][0] = self.get_field_value("para_text")
         # link button
         if not self.get_field_value("link_ident"):
             # setting self._error replaces the entire tag
