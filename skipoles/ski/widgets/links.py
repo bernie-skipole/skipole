@@ -588,13 +588,12 @@ class ButtonLink2(Widget):
 
 
 class MessageButton(Widget):
-    """A div containing a hidden 'message div' and button link. When the link is called the
+    """A div containing a link with a hidden 'message div'. When the link is called the
        message div is displayed and contains a further div with a paragraph
        of text and an X button which hides the message.
        Typically calling a link will be so fast the message will not be displayed, so this
        widget could be used with a link which calls a very slow loading page, or
-       perhaps opens a new window or tab, and displays a message stating
-       a new window has openned."""
+       perhaps a please wait until the message is updated via json."""
 
     # This class does not display any error messages
     display_errors = False
@@ -609,7 +608,7 @@ class MessageButton(Widget):
                         'xdiv_class':FieldArg("cssclass", ""),
                         'xdiv_style':FieldArg("cssstyle", ""),
                         'x_class':FieldArg("cssclass", ""),
-                        'link_ident':FieldArg("url", ''),
+                        'link_ident':FieldArg("url", 'no_javascript'),
                         'json_ident':FieldArg("url", ''),
                         'button_text':FieldArg("text", "Submit"),
                         'button_class':FieldArg("cssclass", ""),

@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "1.0.3",
-"skipole": "1.0.3",
+"version": "1.1.0",
+"skipole": "1.1.0",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -391,26 +391,6 @@
 "link_ident": "https://skipole.bitbucket.io",
 "show": true,
 "target": "_blank",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "debug_tools.ShowResponders",
-"name": "showresponders",
-"brief": "Shows responders",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"para_class": "",
-"paradiv_class": "",
-"show": true,
-"show_error": "",
-"table_class": "w3-table w3-bordered",
-"toptext": "DEBUG MODE IS ON",
 "widget_class": "",
 "widget_style": ""
 }
@@ -37175,182 +37155,6 @@ false
 }
 },
 "pages": {
-"aaaa": {
-"ident": 85002,
-"brief": "aaa",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#a56600",
-"default_error_widget": [
-"",
-"top_error"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The viewport meta declaration",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Page 85002"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "links.MessageButton",
-"name": "zzz",
-"brief": "zzzz",
-"fields": {
-"boxdiv_class": "w3-modal-content w3-panel w3-theme-d4",
-"button_class": "",
-"button_text": "submit",
-"buttondiv_class": "",
-"buttondiv_style": "",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"inner_class": "w3-panel w3-theme-d4",
-"inner_style": "",
-"link_ident": "admin_home",
-"messagediv_class": "w3-modal",
-"para_text": "Please wait",
-"pre_line": true,
-"show": true,
-"target": "_blank",
-"widget_class": "",
-"widget_style": "",
-"x_class": "w3-bar-item w3-button w3-right w3-theme-l2",
-"xdiv_class": "w3-bar",
-"xdiv_style": ""
-}
-}
-]
-]
-}
-]
-},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
