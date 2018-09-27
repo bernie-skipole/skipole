@@ -56,10 +56,10 @@ margin-left : 35%;}
 margin-bottom : 10px;
 margin-top : 10px;}
 
-input[type=text].ski_input_accepted {
+.ski_input_accepted {
 box-shadow : 0 0 0 2px green;}
 
-input[type=text].ski_input_errored {
+.ski_input_errored {
 box-shadow : 0 0 0 2px red;}
 
 .ski_confirm {

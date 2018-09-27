@@ -39,7 +39,7 @@ SKIPOLE.logins.NamePasswd1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var text1 = this.widg.find('input[type="text"]');
+    var text1 = this.widg.find('input:first');
     // Check for set_input_accepted1 or set_input_errored1
     var input_accepted1 = this.fieldarg_in_result('set_input_accepted1', result, fieldlist);
     this.set_accepted(text1, input_accepted1);
@@ -50,7 +50,7 @@ SKIPOLE.logins.NamePasswd1.prototype.setvalues = function (fieldlist, result) {
     if (input_text1) {
         text1.val(input_text1);
         }
-    var text2 = this.widg.find('input[type="password"]');
+    var text2 = this.widg.find('input:eq(1)');
     // Check for set_input_accepted2 or set_input_errored2
     var input_accepted2 = this.fieldarg_in_result('set_input_accepted2', result, fieldlist);
     this.set_accepted(text2, input_accepted2);
@@ -127,9 +127,9 @@ SKIPOLE.logins.NamePasswd1.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var text1 = this.widg.find('input[type="text"]');
+    var text1 = this.widg.find('input:first');
     this.set_errored(text1, false);
-    var text2 = this.widg.find('input[type="password"]');
+    var text2 = this.widg.find('input:eq(1)');
     this.set_errored(text2, false);
     };
 
