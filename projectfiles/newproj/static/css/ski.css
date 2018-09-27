@@ -43,6 +43,9 @@ text-align : left;}
 .ski_left_40_20_10 {
 margin-left : 40%;}
 
+.ski_left_40_10 {
+margin-left : 40%;}
+
 .ski_left_marg_30_percent {
 margin-left : 30%;}
 
@@ -124,6 +127,9 @@ white-space: nowrap;}
 
 .ski_left_40_20_10 {
 margin-left : 20%;}
+
+.ski_left_40_10 {
+margin-left : 10%;}
 
 .ski_left_label {
 text-align : left;

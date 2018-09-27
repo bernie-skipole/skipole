@@ -30,6 +30,111 @@ logins-0.1.0.js  - javascript widgets
 SKIPOLE.logins = {};
 
 
+SKIPOLE.logins.NamePasswd1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.logins.NamePasswd1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.logins.NamePasswd1.prototype.constructor = SKIPOLE.logins.NamePasswd1;
+SKIPOLE.logins.NamePasswd1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var text1 = this.widg.find('input[type="text"]');
+    // Check for set_input_accepted1 or set_input_errored1
+    var input_accepted1 = this.fieldarg_in_result('set_input_accepted1', result, fieldlist);
+    this.set_accepted(text1, input_accepted1);
+    var input_errored1 = this.fieldarg_in_result('set_input_errored1', result, fieldlist);
+    this.set_errored(text1, input_errored1);
+    // input_text1
+    var input_text1 = this.fieldarg_in_result('input_text1', result, fieldlist);
+    if (input_text1) {
+        text1.val(input_text1);
+        }
+    var text2 = this.widg.find('input[type="password"]');
+    // Check for set_input_accepted2 or set_input_errored2
+    var input_accepted2 = this.fieldarg_in_result('set_input_accepted2', result, fieldlist);
+    this.set_accepted(text2, input_accepted2);
+    var input_errored2 = this.fieldarg_in_result('set_input_errored2', result, fieldlist);
+    this.set_errored(text2, input_errored2);
+    // input_text2
+    var input_text2 = this.fieldarg_in_result('input_text2', result, fieldlist);
+    if (input_text2) {
+        text2.val(input_text2);
+        }
+    };
+SKIPOLE.logins.NamePasswd1.prototype.eventfunc = function (e) {
+    if (e.type == 'submit') {
+        // form submitted
+        if (!SKIPOLE.form_validate(this.widg)) {
+            // prevent the submission if validation failure
+            e.preventDefault();
+            }
+        else {
+            // form validated, so if json url set, call a json page
+            var jsonurl = this.fieldvalues["url"];
+            if (jsonurl) {
+                var self = this
+                var widgform = this.widg.find('form');
+                var senddata = widgform.serializeArray();
+                e.preventDefault();
+                // respond to json or html
+                $.ajax({
+                      url: jsonurl,
+                      data: senddata
+                          })
+                      .done(function(result, textStatus, jqXHR) {
+                         if (jqXHR.responseJSON) {
+                              // JSON response
+                              if (self.get_error(result)) {
+                                  // if error, set any results received from the json call
+                                  SKIPOLE.setfields(result);
+                                  }
+                              else {
+                                  // If no error received, clear any previous error
+                                  self.clear_error();
+                                  SKIPOLE.setfields(result);
+                                  // enable input event, which is used to clear set_accepted class on input
+                                  self.widg.on('input', function(e) {self.eventfunc(e)});
+                                  }
+                               } else {
+                                  // html response
+                                  document.open();
+                                  document.write(result);
+                                  document.close();
+                                  }
+                          })
+                      .fail(function( jqXHR, textStatus, errorThrown ) {
+                                  if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                                      document.open();
+                                      document.write(jqXHR.responseText);
+                                      document.close();
+                                      }
+                                  else {
+                                      alert(errorThrown);
+                                      }
+                          });
+                }
+            }
+        }
+    else if (e.type == 'input'){
+        // text changed in input field
+        this.widg.off(e);
+        this.set_accepted($(e.target),false);
+        }
+    };
+SKIPOLE.logins.NamePasswd1.prototype.clear_error = function() {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.clear_error.call(this);
+    var text1 = this.widg.find('input[type="text"]');
+    this.set_errored(text1, false);
+    var text2 = this.widg.find('input[type="password"]');
+    this.set_errored(text2, false);
+    };
+
+
+
 SKIPOLE.logins.Pin4 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     };
