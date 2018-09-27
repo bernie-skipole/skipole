@@ -265,6 +265,14 @@
 "odd_class": "w3-theme-d2",
 "widget_class": "w3-table w3-theme-d1 w3-border w3-bordered"
 },
+"MessageButton": {
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d4",
+"buttondiv_class": "",
+"inner_class": "w3-panel w3-theme-d4",
+"messagediv_class": "w3-modal",
+"x_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"xdiv_class": "w3-bar"
+},
 "Table1_Button": {
 "header_class": "w3-theme-d3",
 "odd_class": "w3-theme-d2",

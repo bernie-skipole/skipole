@@ -328,6 +328,21 @@
 }
 },
 "logins": {
+"NamePasswd1": {
+"button_class": "w3-button w3-theme-d4 w3-margin",
+"button_style": "margin-left:40%",
+"div1_class": "w3-section",
+"div2_class": "w3-section",
+"div3_class": "ski_left_40_10",
+"error_class": "w3-panel w3-red",
+"input_class1": "ski_input w3-margin-left",
+"input_class2": "ski_input  w3-margin-left",
+"inputdiv_class": "w3-container",
+"label_class": "ski_left_label",
+"label_class1": "ski_left_label",
+"label_class2": "ski_left_label",
+"widget_class": ""
+},
 "Pin4": {
 "butt_div_class": "w3-section",
 "button_class": "w3-button w3-theme-d4",
