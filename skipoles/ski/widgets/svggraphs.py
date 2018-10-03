@@ -573,3 +573,119 @@ class Graph48Hr(Widget):
   <!-- lines and text which draw the graph -->
 </g>"""
 
+
+
+class StarChart(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'fill':FieldArg("text", "white"),
+                        'stroke_width':FieldArg("integer", 1),
+                        'stroke':FieldArg("text", "black"),
+                        'stars':FieldArgTable(('text', 'text', 'text')),   # star diameter, ra, dec
+                        'ra':FieldArg("text", "0"),      # right ascension 0 to 360
+                        'dec':FieldArg("text", "90"),    # declination 90 to -90
+                        'view':FieldArg("text", "180"),  # the field of view
+                        'flip_horizontal':FieldArg("boolean", False),
+                        'flip_vertical':FieldArg("boolean", False)
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a circular star chart, held in a 500 high x 500 wide space
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self[0] = tag.ClosedPart(tag_name='circle', attribs={"cx":"250",
+                                                             "cy":"250",
+                                                             "r":"250",
+                                                             "fill":"white",
+                                                             "stroke":"black",
+                                                             "stroke-width":"1"})
+
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+        stroke_width = self.get_field_value("stroke_width")
+        if stroke_width:
+            self[0].update_attribs({"stroke-width":str(stroke_width)})
+        # stroke will be the star colour
+        stroke = self.get_field_value("stroke")
+        if not stroke:
+            stroke = 'black'
+        self[0].update_attribs({"stroke":stroke})
+        fill = self.get_field_value("fill")
+        if fill:
+            self[0].update_attribs({"fill":fill})
+        if not self.get_field_value("stars"):
+            return
+
+        ra0 = math.radians(float(self.get_field_value("ra")))
+        dec0 = math.radians(float(self.get_field_value("dec")))
+
+        scale = 500 * (180 / math.pi) / float(self.get_field_value("view"))
+
+        cosdec0 = math.cos(dec0)
+        sindec0 = math.sin(dec0)
+
+        # taken from www.projectpluto.com/project.htm
+
+
+        for star in self.get_field_value("stars"):
+            # get the radius of a circle to plot
+            if star[0]:
+                radius = float(star[0])/2.0
+            else:
+                radius = 0.5
+            if not radius:
+                radius = 0.5
+
+            ra = math.radians(float(star[1]))
+            dec = math.radians(float(star[2]))
+            delta_ra = ra - ra0
+            sindec = math.sin(dec)
+            cosdec = math.cos(dec)
+            cosdelta_ra = math.cos(delta_ra)
+
+            x1 = cosdec * math.sin(delta_ra);
+            y1 = sindec * cosdec0 - cosdec * cosdelta_ra * sindec0
+            z1 = sindec * sindec0 + cosdec * cosdec0 * cosdelta_ra
+            if z1 < -0.9:
+               d = 20.0 * math.sqrt(( 1.0 - 0.81) / ( 1.00001 - z1 * z1))
+            else:
+               d = 2.0 / (z1 + 1.0)
+            x = x1 * d * scale
+            y = y1 * d * scale
+
+            if 62500 > x*x + y*y:
+                # move origin
+                if self.get_field_value("flip_horizontal"):
+                    cx = 250 + x
+                else:
+                    cx = 250 - x
+                if self.get_field_value("flip_vertical"):
+                    cy = 250 + y
+                else:
+                    cy = 250 - y
+                self.append(tag.ClosedPart(tag_name='circle', attribs={"cx":str(cx),
+                                                                       "cy":str(cy),
+                                                                       "r":str(radius),
+                                                                       "fill":stroke,
+                                                                       "stroke":stroke}))
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <circle /> <!-- A circle with fill, stroke and stroke width, and diameter 500 -->
+  <!-- with mulitple 'star' circles, positioned according to the given ra and dec values -->
+  <!-- and each with a drawn diameter given per star -->
+</g>"""
+

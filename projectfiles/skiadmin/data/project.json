@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "1.1.0",
-"skipole": "1.1.0",
+"version": "1.2.0",
+"skipole": "1.2.0",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -37155,6 +37155,56 @@ false
 }
 },
 "pages": {
+"aaaa": {
+"ident": 85002,
+"brief": "stars",
+"SVG": {
+"enable_cache": false,
+"width": "510",
+"height": "600"
+},
+"svg": [
+"Part",
+{
+"tag_name": "svg",
+"brief": "The svg section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"baseProfile": "full",
+"height": "600",
+"version": "1.1",
+"width": "510",
+"xmlns": "http://www.w3.org/2000/svg"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "svggraphs.StarChart",
+"name": "stars",
+"brief": "stars",
+"fields": {
+"dec": "90",
+"fill": "white",
+"flip_horizontal": false,
+"flip_vertical": false,
+"ra": "0",
+"show": true,
+"stars": [],
+"stroke": "black",
+"stroke_width": "1",
+"transform": "",
+"view": "180",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
