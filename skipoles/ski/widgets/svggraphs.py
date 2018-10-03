@@ -685,7 +685,7 @@ class StarChart(Widget):
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
   <circle /> <!-- A circle with fill, stroke and stroke width, and diameter 500 -->
-  <!-- with mulitple 'star' circles, positioned according to the given ra and dec values -->
+  <!-- with multiple 'star' circles, positioned according to the given ra and dec values -->
   <!-- and each with a drawn diameter given per star -->
 </g>"""
 
