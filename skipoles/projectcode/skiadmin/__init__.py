@@ -293,11 +293,12 @@ def set_navigation(identnum, call_data, page_data):
         if item_info:
             if (item_info.item_type == 'TemplatePage') or (item_info.item_type == 'SVG'):
                 # add page name to navbuttons
-                page_data["left_nav","navbuttons","nav_links"].append(['back_to_page', item_info.name, True, ''])
                 if item_info.item_type == 'TemplatePage':
+                    page_data["left_nav","navbuttons","nav_links"].append(['back_to_page', item_info.name, True, ''])
                     page_data["left_nav","navbuttons","nav_links"].append(['page_head', item_info.name + ' - Head', True, ''])
                     page_data["left_nav","navbuttons","nav_links"].append(['page_body', item_info.name + ' - Body', True, ''])
                 if item_info.item_type == 'SVG':
+                    page_data["left_nav","navbuttons","nav_links"].append(['back_to_svgpage', item_info.name, True, ''])
                     page_data["left_nav","navbuttons","nav_links"].append(['page_svg', 'SVG', True, ''])
                 if ('widget_name' in call_data) and ((item_info.item_type == 'TemplatePage') or (item_info.item_type == 'SVG')):
                     widget_info = skilift.widget_info(editedprojname, item_number, None, call_data['widget_name'])

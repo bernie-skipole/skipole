@@ -117,9 +117,6 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[('interval_target', 'input_text')] = ''
 
 
-
-
-
 def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Gets data for the page head"
 
@@ -316,27 +313,27 @@ def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, ca
     else:
         raise FailPage(message = "page missing")
 
-    project = call_data['editedprojname']
-
     try:
+        project = call_data['editedprojname']
         pageinfo = skilift.page_info(project, pagenumber)
+
+        if pageinfo.item_type != 'SVG':
+            raise FailPage(message = "Invalid page")
+
+        call_data['pchange'] = pageinfo.change
+
+        # fills in the data for editing page name, brief, parent, etc., 
+        page_data[("adminhead","page_head","large_text")] = pageinfo.name
+        page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
+        page_data[('page_edit','p_rename','input_text')] = pageinfo.name
+        page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
+        page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+        page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
+
     except ServerError as e:
         raise FailPage(message=e.message)
-
-    if pageinfo.item_type != 'SVG':
-        raise FailPage(message = "Invalid page")
-
-    call_data['pchange'] = pageinfo.change
-
-    # fills in the data for editing page name, brief, parent, etc., 
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name
-    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
-    page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
 def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
