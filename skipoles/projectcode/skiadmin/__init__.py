@@ -99,6 +99,10 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
         # else the call is to a url not found
         return None, {}, {}, lang
 
+    ###########
+    if called_ident[1] == 85002:
+        page_data['stars','stars'] = [[1,0,80], [1,90,70], [2,180,60], [4,275,50], [5,360,45], [6, 90, 45]]
+
     # If caller_ident is not given there should be no further session data
     if not caller_ident:
         return called_ident, call_data, page_data, lang

@@ -58,7 +58,7 @@ _AN = re.compile('[^\w]')
 # widgfield
 # cssclass
 # cssstyle
-# data          - python datetime.data object
+# date          - python datetime.date object
 # datetime      - python datetime.datetime object
 
 
