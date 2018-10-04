@@ -591,7 +591,8 @@ class StarChart(Widget):
                         'dec':FieldArg("text", "90"),    # declination 90 to -90
                         'view':FieldArg("text", "180"),  # the field of view
                         'flip_horizontal':FieldArg("boolean", False),
-                        'flip_vertical':FieldArg("boolean", False)
+                        'flip_vertical':FieldArg("boolean", False),
+                        'cross':FieldArg("boolean", False)
                        }
 
 
@@ -725,6 +726,22 @@ class StarChart(Widget):
                                                                    "fill":stroke,
                                                                    "stroke":stroke}))
 
+            if self.get_field_value("cross"):
+                # plot a + on the chart centre
+                self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
+                                                                     "y1":"250",
+                                                                     "x2":"260",
+                                                                     "y2":"250",
+                                                                     "stroke":stroke,
+                                                                     "stroke-width":"1"}))
+                self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"250",
+                                                                     "y1":"240",
+                                                                     "x2":"250",
+                                                                     "y2":"260",
+                                                                     "stroke":stroke,
+                                                                     "stroke-width":"1"}))
+
+
 
     @classmethod
     def description(cls):
@@ -734,5 +751,6 @@ class StarChart(Widget):
   <circle /> <!-- A circle with fill, stroke and stroke width, and diameter 500 -->
   <!-- with multiple 'star' spots, positioned according to the given ra and dec values -->
   <!-- and each with a drawn diameter given per star -->
+  <!-- centre cross drawn if cross is True -->
 </g>"""
 
