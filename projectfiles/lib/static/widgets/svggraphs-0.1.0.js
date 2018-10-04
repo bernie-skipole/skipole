@@ -88,6 +88,20 @@ SKIPOLE.svggraphs.Chart1.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svggraphs.StarChart = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svggraphs.StarChart.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svggraphs.StarChart.prototype.constructor = SKIPOLE.svggraphs.StarChart;
+SKIPOLE.svggraphs.StarChart.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    };
+
+
 SKIPOLE.svggraphs.Graph48Hr = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
