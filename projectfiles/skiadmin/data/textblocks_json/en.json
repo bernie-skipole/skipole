@@ -1591,6 +1591,7 @@
   "widgets.svggraphs.Graph48Hr.transform": "The widget is contained within a g tag, with a transform attribute which can be set here.",
   "widgets.svggraphs.Graph48Hr.values": "List of two element lists, [[value, datetime], ...]",
   "widgets.svggraphs.StarChart": "A 500 unit diameter circle displaying a stereographic projection of stars.",
+  "widgets.svggraphs.StarChart.cross": "If True a cross will be drawn in the chart centre.",
   "widgets.svggraphs.StarChart.dec": "The Declination (in degrees) of the centre of the chart.",
   "widgets.svggraphs.StarChart.dec.full": "The Declination (in degrees), which, together with the ra field, defines the point in the sky which this chart will be centred upon.",
   "widgets.svggraphs.StarChart.fill": "Background colour within the chart circle, normally white.",
