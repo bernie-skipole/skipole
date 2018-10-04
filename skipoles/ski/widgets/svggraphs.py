@@ -625,28 +625,72 @@ class StarChart(Widget):
         if not self.get_field_value("stars"):
             return
 
-        ra0 = math.radians(float(self.get_field_value("ra")))
-        dec0 = math.radians(float(self.get_field_value("dec")))
+        # limit centre of the chart
+        ra0_deg = float(self.get_field_value("ra"))
+        if (ra0_deg < 0.0) or (ra0_deg > 360.0):
+            ra0_deg = 0.0
+        ra0 = math.radians(ra0_deg)
 
-        scale = 500 * (180 / math.pi) / float(self.get_field_value("view"))
+        dec0_deg = float(self.get_field_value("dec"))
+        if dec0_deg > 90.0:
+            dec0_deg = 90.0
+        if dec0_deg < -90.0:
+            dec0_deg = -90.0
+        dec0 = math.radians(dec0_deg)
+
+        view_deg = float(self.get_field_value("view"))
+
+        # avoid division by zero
+        if view_deg < 0.000001:
+            view_deg = 0.00001
+
+        # avoid extra wide angle
+        if view_deg > 270.0:
+            view_deg = 270.0
+
+        max_dec = dec0_deg + view_deg / 2.0
+        if max_dec > 90.0:
+            max_dec = 90.0
+
+        min_dec = dec0_deg - view_deg / 2.0
+        if min_dec < -90.0:
+            min_dec = -90.0
+
+        scale = 500 / math.radians(view_deg)
 
         cosdec0 = math.cos(dec0)
         sindec0 = math.sin(dec0)
 
+        # stereographic algorithm
         # taken from www.projectpluto.com/project.htm
 
 
         for star in self.get_field_value("stars"):
-            # get the radius of a circle to plot
+
+            ra_deg = float(star[1])
+            dec_deg = float(star[2])
+
+            if (ra_deg < 0.0) or (ra_deg > 360.0):
+                # something wrong, do not plot this star
+                continue
+
+            # don't calculate star position if its declination is outside required view
+            # unfortunately ra is more complicated
+            if dec_deg > max_dec:
+                continue
+            if dec_deg < min_dec:
+                continue
+
+            # get the radius of a star circle to plot
             if star[0]:
                 radius = float(star[0])/2.0
             else:
                 radius = 0.5
-            if not radius:
-                radius = 0.5
+            if radius < 0.1:
+                radius = 0.1
 
-            ra = math.radians(float(star[1]))
-            dec = math.radians(float(star[2]))
+            ra = math.radians(ra_deg)
+            dec = math.radians(dec_deg)
             delta_ra = ra - ra0
             sindec = math.sin(dec)
             cosdec = math.cos(dec)
@@ -662,21 +706,24 @@ class StarChart(Widget):
             x = x1 * d * scale
             y = y1 * d * scale
 
-            if 62500 > x*x + y*y:
-                # move origin
-                if self.get_field_value("flip_horizontal"):
-                    cx = 250 + x
-                else:
-                    cx = 250 - x
-                if self.get_field_value("flip_vertical"):
-                    cy = 250 + y
-                else:
-                    cy = 250 - y
-                self.append(tag.ClosedPart(tag_name='circle', attribs={"cx":str(cx),
-                                                                       "cy":str(cy),
-                                                                       "r":str(radius),
-                                                                       "fill":stroke,
-                                                                       "stroke":stroke}))
+            if x*x + y*y > 62500:
+                # star position is outside the circle
+                continue
+
+            # move origin to circle centre (250,250)
+            if self.get_field_value("flip_horizontal"):
+                cx = 250 + x
+            else:
+                cx = 250 - x
+            if self.get_field_value("flip_vertical"):
+                cy = 250 + y
+            else:
+                cy = 250 - y
+            self.append(tag.ClosedPart(tag_name='circle', attribs={"cx":str(cx),
+                                                                   "cy":str(cy),
+                                                                   "r":str(radius),
+                                                                   "fill":stroke,
+                                                                   "stroke":stroke}))
 
 
     @classmethod
@@ -685,7 +732,7 @@ class StarChart(Widget):
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
   <circle /> <!-- A circle with fill, stroke and stroke width, and diameter 500 -->
-  <!-- with multiple 'star' circles, positioned according to the given ra and dec values -->
+  <!-- with multiple 'star' spots, positioned according to the given ra and dec values -->
   <!-- and each with a drawn diameter given per star -->
 </g>"""
 
