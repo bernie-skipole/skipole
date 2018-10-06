@@ -221,6 +221,13 @@
 "label_class": "ski_left_label",
 "widget_class": "w3-section"
 },
+"TextInput3": {
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_errored_class": "ski_input_errored",
+"input_style": "margin-right:1em;",
+"left_class": "ski_left_label"
+},
 "TextInput4": {
 "input_class": "ski_input",
 "inputdiv_class": "ski_left_marg_35_percent",
