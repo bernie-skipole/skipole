@@ -887,6 +887,7 @@
   "widgets.inputtext.TextInput3.input_class": "The css class of the input field.",
   "widgets.inputtext.TextInput3.input_errored_class": "A class which can be added to the input field.",
   "widgets.inputtext.TextInput3.input_errored_class.full": "A class which will be added to the input field if 'set_input_errored' is set to True. If widget_class is set, then this class will be added to the class list of the input field.",
+  "widgets.inputtext.TextInput3.input_style": "A css style set on the input field.",
   "widgets.inputtext.TextInput3.input_text": "The name of the input text field, with default value.",
   "widgets.inputtext.TextInput3.input_text.full": "The name of the input text field, set the value of this field to the default value shown in the field, the user will change this value which will then be returned. Validators can be added to this field.",
   "widgets.inputtext.TextInput3.left_class": "A CSS class for the left label.",
