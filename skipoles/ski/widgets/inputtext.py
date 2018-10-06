@@ -517,6 +517,7 @@ class TextInput3(Widget):
 
     arg_descriptions = {
                         'input_class':FieldArg("cssclass", ''),
+                        'input_style':FieldArg("cssclass", ''),
                         'input_accepted_class':FieldArg("cssclass", ''),
                         'input_errored_class':FieldArg("cssclass", ''),
                         'set_input_accepted':FieldArg("boolean", False, jsonset=True),
@@ -537,6 +538,7 @@ class TextInput3(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """
         input_class: The css class of the input field
+        input_style: The css style of the input field
         input_accepted_class: A class which can be set on the input field
         input_errored_class: A class which can be set on the input field
         set_input_accepted: If True, input_accepted_class will be set on the input field
@@ -586,6 +588,8 @@ class TextInput3(Widget):
         if input_class:
             self[1].update_attribs({"class":input_class})
 
+        if self.get_field_value('input_style'):
+            self[1].update_attribs({"style":self.get_field_value('input_style')})
         if self.get_field_value('size'):
             self[1].update_attribs({"size":self.get_field_value('size')})
         if self.get_field_value('maxlength'):
