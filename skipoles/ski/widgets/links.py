@@ -394,7 +394,7 @@ class JSONButtonLink(Widget):
 
 class ButtonLink1(Widget):
     """A button link to the page with the given ident, label or url,
-       and two optional get fields.  On error replace the button text
+       and four optional get fields.  On error replace the button text
        by the error message, and set widget class to error_class. You will
        need to provide a css button"""
 
@@ -404,6 +404,8 @@ class ButtonLink1(Widget):
                         'hide':FieldArg("boolean", False, jsonset=True),
                         'get_field1':FieldArg("text", "", valdt=True),
                         'get_field2':FieldArg("text","", valdt=True),
+                        'get_field3':FieldArg("text", "", valdt=True),
+                        'get_field4':FieldArg("text","", valdt=True),
                         'button_text':FieldArg("text", "", jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'target':FieldArg("text", ""),
@@ -416,6 +418,8 @@ class ButtonLink1(Widget):
         hide: if True, and no error, button will be hidden
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
+        get_field3: Optional third 'get' string set in the target url
+        get_field4: Optional fourt 'get' string set in the target url
         button_text: The text to be displayed within the button. If none given, the page url will be used.
         widget_class: The class applied to the widget, should describe a button
         error_class: class which replaces widget_class on error
@@ -451,7 +455,9 @@ class ButtonLink1(Widget):
             self[0] = url
         # create a url for the href
         get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+                      self.get_formname("get_field2"):self.get_field_value("get_field2"),
+                      self.get_formname("get_field3"):self.get_field_value("get_field3"),
+                      self.get_formname("get_field4"):self.get_field_value("get_field4")}
         url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
         self.update_attribs({"href": url})
         if self.get_field_value("target"):
@@ -466,7 +472,7 @@ class ButtonLink1(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <a role="button" href="#">
- <!-- with widget id and class widget_class, and the href link will be the url of the link_ident with the two get_fields -->
+ <!-- with widget id and class widget_class, and the href link will be the url of the link_ident with the get_fields -->
  <!-- the button will show the button_text, on error this will be replaced by the error message -->
 </a>"""
 
