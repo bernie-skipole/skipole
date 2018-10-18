@@ -1604,6 +1604,7 @@
   "widgets.svggraphs.StarChart.flip_vertical": "Flips the chart about a vertical axis.",
   "widgets.svggraphs.StarChart.ra": "The Right Ascension (in degrees) of the centre of the chart.",
   "widgets.svggraphs.StarChart.ra.full": "The Right Ascension (in degrees), which, together with the dec field, defines the point in the sky which this chart will be centred upon.",
+  "widgets.svggraphs.StarChart.square": "If True a square will be drawn in the chart centre.",
   "widgets.svggraphs.StarChart.stars": "A list of inner lists each defining a star.",
   "widgets.svggraphs.StarChart.stars.full": "You have to obtain a list of stars to display, typically extracted from an astronomical catalogue. This field should be set to a list of lists each defining a star. Each inner list having three elements:\r\nIndex 0 : The drawn diameter of the star, typically 1 for a point, but could be bigger to indicate brighter stars.\r\nIndex 1 : The Right Ascension of the star in degrees.\r\nIndex 2 : The Declination of the star in degrees.",
   "widgets.svggraphs.StarChart.stroke": "The stroke of the circle and stars, normally a colour such as black.",
