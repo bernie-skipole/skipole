@@ -592,7 +592,8 @@ class StarChart(Widget):
                         'view':FieldArg("text", "180"),  # the field of view
                         'flip_horizontal':FieldArg("boolean", False),
                         'flip_vertical':FieldArg("boolean", False),
-                        'cross':FieldArg("boolean", False)
+                        'cross':FieldArg("boolean", False),
+                        'square':FieldArg("boolean", False)
                        }
 
 
@@ -726,6 +727,15 @@ class StarChart(Widget):
                                                                    "fill":stroke,
                                                                    "stroke":stroke}))
 
+
+            if self.get_field_value("square"):
+                # plot a square on the chart centre
+                self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"240",
+                                                                     "y":"240",
+                                                                     "width":"20",
+                                                                     "height":"20",
+                                                                     "style":"stroke:%s;stroke-width:1;fill-opacity:0;" % (stroke,)}))
+
             if self.get_field_value("cross"):
                 # plot a + on the chart centre
                 self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
@@ -742,7 +752,7 @@ class StarChart(Widget):
                                                                      "stroke-width":"1"}))
 
 
-
+ 
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
