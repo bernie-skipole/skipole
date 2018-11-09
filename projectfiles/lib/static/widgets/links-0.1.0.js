@@ -545,6 +545,24 @@ SKIPOLE.links.MessageButton.prototype.eventfunc = function (e) {
     };
 
 
+SKIPOLE.links.Image1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.Image1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.Image1.prototype.constructor = SKIPOLE.links.Image1;
+SKIPOLE.links.Image1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    var fieldvalues = this.fieldvalues;
+    var img_url = this.fieldarg_in_result("img_url", result, fieldlist);
+    if (img_url) {
+        the_widg.attr("src", img_url);
+        }
+    };
+
 
 SKIPOLE.links.ImageLink1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
