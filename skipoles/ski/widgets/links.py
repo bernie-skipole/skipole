@@ -869,6 +869,53 @@ class ImageLink1(Widget):
 </a>"""
 
 
+
+class Image1(ClosedWidget):
+    """An image"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'img_url':FieldArg("text", '', jsonset=True),
+                        'width':FieldArg("text","100"),
+                        'height':FieldArg("text","100"),
+                        'alt':FieldArg("text","")
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        img_url: The src url string (not ident) of the image page
+        width: The width of the image
+        height: The height of the image
+        alt: The alt attribute
+        """
+        ClosedWidget.__init__(self, name=name, tag_name="img", brief=brief, **field_args)
+        self._img_url = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the link"
+        if self.get_field_value('width'):
+            self.update_attribs({'width':self.get_field_value('width')})
+        if self.get_field_value('height'):
+            self.update_attribs({'height':self.get_field_value('height')})
+        if self.get_field_value('alt'):
+            self.update_attribs({'alt':self.get_field_value('alt')})
+
+        if not self.get_field_value("img_url"):
+            self._error = "Warning: broken link"
+        else:
+            self.update_attribs({"src": quote(self.get_field_value("img_url"), safe='/:')})
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<img src="#" />   <!-- with src set to img_url -->
+"""
+
+
+
+
 class CSSLink(ClosedWidget):
     "Defines a link to a stylesheet"
 
