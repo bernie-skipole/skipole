@@ -2,7 +2,7 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "1.3.0",
+"version": "1.4.0",
 "skipole": "1.3.0",
 "subprojects": {
 "lib": {
@@ -2171,6 +2171,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -2188,6 +2189,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -4262,6 +4264,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -5671,6 +5674,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editpages",
@@ -5688,6 +5692,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editpages",
@@ -6807,6 +6812,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editpages",
@@ -6824,6 +6830,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editpages",
@@ -7068,6 +7075,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editpages",
@@ -7312,6 +7320,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 1,
 "submit_list": [
 "editpages",
@@ -7556,6 +7565,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "general_json",
 "submit_list": [
 "editpages",
@@ -7573,6 +7583,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 23407,
 "submit_list": [
 "editpages",
@@ -7590,6 +7601,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 23207,
 "submit_list": [
 "editpages",
@@ -7607,6 +7619,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 23099,
 "submit_list": [
 "editpages",
@@ -7624,6 +7637,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 23099,
 "submit_list": [
 "editpages",
@@ -7641,6 +7655,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editpages",
@@ -8121,6 +8136,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editparts",
@@ -9367,6 +9383,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editparts",
@@ -9384,6 +9401,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editparts",
@@ -9401,6 +9419,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 53007,
 "submit_list": [
 "editparts",
@@ -9778,6 +9797,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 55507,
 "submit_list": [
 "editsectionplaces",
@@ -10803,6 +10823,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editsectionplaces",
@@ -10820,6 +10841,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editsectionplaces",
@@ -11049,6 +11071,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "edittextblocks",
@@ -11696,6 +11719,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "edittextblocks",
@@ -12239,6 +12263,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "edittextblocks",
@@ -12256,6 +12281,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 52017,
 "submit_list": [
 "edittextblocks",
@@ -13472,6 +13498,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "edittext",
@@ -13489,6 +13516,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "edittext",
@@ -13506,6 +13534,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "edittext",
@@ -13523,6 +13552,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "edittext",
@@ -14212,6 +14242,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editvalidators",
@@ -15300,6 +15331,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54020,
 "submit_list": [
 "editvalidators",
@@ -15317,6 +15349,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54020,
 "submit_list": [
 "editvalidators",
@@ -15334,6 +15367,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 56007,
 "submit_list": [
 "editvalidators",
@@ -15351,6 +15385,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54020,
 "submit_list": [
 "editvalidators",
@@ -15368,6 +15403,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editvalidators",
@@ -15385,6 +15421,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editvalidators",
@@ -15402,6 +15439,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54020,
 "submit_list": [
 "editvalidators",
@@ -15419,6 +15457,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editvalidators",
@@ -15436,6 +15475,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 56007,
 "submit_list": [
 "editvalidators",
@@ -15453,6 +15493,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 56107,
 "submit_list": [
 "editvalidators",
@@ -15470,6 +15511,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 56007,
 "submit_list": [
 "editvalidators",
@@ -15487,6 +15529,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 56007,
 "submit_list": [
 "editvalidators",
@@ -15504,6 +15547,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 56007,
 "submit_list": [
 "editvalidators",
@@ -16785,6 +16829,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editwidgets",
@@ -16802,6 +16847,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editwidgets",
@@ -16832,6 +16878,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54527,
 "submit_list": [
 "editwidgets",
@@ -19790,6 +19837,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "general_json",
 "submit_list": [
 "editwidgets",
@@ -19807,6 +19855,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editwidgets",
@@ -19824,6 +19873,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editwidgets",
@@ -19841,6 +19891,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editwidgets",
@@ -19858,6 +19909,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editwidgets",
@@ -19875,6 +19927,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editwidgets",
@@ -19892,6 +19945,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54020,
 "submit_list": [
 "editwidgets",
@@ -19909,6 +19963,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54020,
 "submit_list": [
 "editwidgets",
@@ -19926,6 +19981,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54007,
 "submit_list": [
 "editwidgets",
@@ -19943,6 +19999,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54007,
 "submit_list": [
 "editwidgets",
@@ -20633,6 +20690,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 54020,
 "submit_list": [
 "editwidgets",
@@ -21420,6 +21478,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editcss",
@@ -21437,6 +21496,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 28007,
 "submit_list": [
 "editcss",
@@ -21454,6 +21514,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 28007,
 "submit_list": [
 "editcss",
@@ -21471,6 +21532,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "validate_error",
 "target_ident": 28409
 },
@@ -21737,6 +21799,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 28007,
 "submit_list": [
 "editcss",
@@ -22105,6 +22168,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 28007,
 "submit_list": [
 "editcss",
@@ -22122,6 +22186,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 28007,
 "submit_list": [
 "editcss",
@@ -22139,6 +22204,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 28007,
 "submit_list": [
 "editcss",
@@ -22156,6 +22222,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 28307,
 "submit_list": [
 "editcss",
@@ -22885,6 +22952,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfiles",
@@ -22902,6 +22970,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 29007,
 "submit_list": [
 "editfiles",
@@ -22919,6 +22988,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 29007,
 "submit_list": [
 "editfiles",
@@ -22936,6 +23006,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 29007,
 "submit_list": [
 "editfiles",
@@ -24692,6 +24763,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -24709,6 +24781,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -24726,6 +24799,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -24743,6 +24817,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -24760,6 +24835,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -24777,6 +24853,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -26312,6 +26389,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -26329,6 +26407,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22006,
 "submit_list": [
 "editfolders",
@@ -26346,6 +26425,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22006,
 "submit_list": [
 "editfolders",
@@ -26440,6 +26520,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22450,
 "submit_list": [
 "editfolders",
@@ -26457,6 +26538,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22107,
 "submit_list": [
 "editfolders",
@@ -26474,6 +26556,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -26491,6 +26574,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -26508,6 +26592,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 22307,
 "submit_list": [
 "editfolders",
@@ -27355,6 +27440,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editresponders",
@@ -27389,6 +27475,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27406,6 +27493,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27423,6 +27511,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27440,6 +27529,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27457,6 +27547,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27474,6 +27565,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27491,6 +27583,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27508,6 +27601,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -27525,6 +27619,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 26007,
 "submit_list": [
 "editresponders",
@@ -29727,6 +29822,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 5001,
 "submit_list": [
 "editspecialpages",
@@ -29744,6 +29840,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 5001,
 "submit_list": [
 "editspecialpages",
@@ -29761,6 +29858,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 5001,
 "submit_list": [
 "editspecialpages",
@@ -29843,6 +29941,7 @@ false,
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 4001,
 "submit_list": [
 "edittextblocks",
@@ -30780,6 +30879,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 24017,
 "submit_list": [
 "edittextblocks",
@@ -30797,6 +30897,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 24017,
 "submit_list": [
 "edittextblocks",
@@ -30814,6 +30915,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 24017,
 "submit_list": [
 "edittextblocks",
@@ -30831,6 +30933,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 4001,
 "submit_list": [
 "edittextblocks",
@@ -30848,6 +30951,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 24017,
 "submit_list": [
 "edittextblocks",
@@ -34627,6 +34731,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editpages",
@@ -34644,6 +34749,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -34661,6 +34767,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -34678,6 +34785,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -34695,6 +34803,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -34712,6 +34821,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 20041,
 "submit_list": [
 "editfolders",
@@ -34729,6 +34839,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -36194,6 +36305,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editsections",
@@ -36211,6 +36323,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editsections",
@@ -36228,6 +36341,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "general_json",
 "submit_list": [
 "editsections",
@@ -36546,6 +36660,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 27003,
 "submit_list": [
 "editsections",
@@ -36880,6 +36995,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editspecialpages",
@@ -37015,6 +37131,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 1,
 "submit_list": [
 "edittextblocks",
@@ -37300,6 +37417,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -37338,6 +37456,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -37381,6 +37500,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -37493,6 +37613,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "admin_home",
 "submit_list": [
 "editfolders",
@@ -37510,6 +37631,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 1,
 "submit_list": [
 "editfolders",
@@ -37527,6 +37649,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "general_json",
 "submit_list": [
 "editfolders",
@@ -37563,6 +37686,7 @@ false
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "",
 "submit_list": [
 "editfolders",

@@ -53,6 +53,9 @@ If submit_data raises a FailPage then the fail_ident page will be called.
     # This indicates a target page ident is required
     target_ident_required = True
 
+    # This indicates a list of allowed caller idents is required
+    allowed_callers_required = True
+
     # This indicates an optional submit_list and fail_ident is required
     submit_required = True
 
@@ -73,7 +76,7 @@ If submit_data raises a FailPage then the fail_ident page will be called.
             caller_ident = caller_page.ident
         else:
             caller_ident = None
-
+        self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
         try:
             projectcode.submit_data(caller_ident,
