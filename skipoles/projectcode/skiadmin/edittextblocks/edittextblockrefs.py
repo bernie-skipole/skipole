@@ -36,8 +36,11 @@ from ....skilift import item_info, editpage, editsection
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 
-def retrieve_textblockref(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_textblockref(skicall):
     "Fills in the edit textblockref page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -111,8 +114,11 @@ def retrieve_textblockref(caller_ident, ident_list, submit_list, submit_dict, ca
 
 
 
-def set_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_textblock(skicall):
     "Sets the textblock reference, fail message, linebreaks or escape"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     pagenumber = None
     section_name = None
@@ -199,8 +205,11 @@ def set_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = message
 
 
-def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_insert(skicall):
     "Fills in the insert a textblock ref page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # Fill in header
     if 'page_number' in call_data:
@@ -223,8 +232,11 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page_data[("decode","radio_checked")] = 'OFF'
 
 
-def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_insert(skicall):
     "Creates the textblock ref"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

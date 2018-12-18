@@ -69,8 +69,11 @@ def _t_ref(r_info, item):
     return ".".join(["responders", r_info.module_name, r_info.responder, item])
 
 
-def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_respondpage(skicall):
     "Retrieves widget data for the edit respond page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -285,8 +288,12 @@ def retrieve_edit_respondpage(caller_ident, ident_list, submit_list, submit_dict
     #????????????????????????????????????????????????????????
 
 
-def submit_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_widgfield(skicall):
     "Sets widgfield"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -302,8 +309,12 @@ def submit_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_da
     call_data['status'] = 'WidgField set'
 
 
-def submit_alternate_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_alternate_ident(skicall):
     "Sets the alternate page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -319,8 +330,12 @@ def submit_alternate_ident(caller_ident, ident_list, submit_list, submit_dict, c
 
 
 
-def submit_target_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_target_ident(skicall):
     "Sets the target ident"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -335,8 +350,12 @@ def submit_target_ident(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['status'] = 'Target Ident set'
 
 
-def submit_validate_fail_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_validate_fail_ident(skicall):
     "Sets the validate fail ident"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -351,8 +370,12 @@ def submit_validate_fail_ident(caller_ident, ident_list, submit_list, submit_dic
     call_data['status'] = 'Validate Fail Ident set'
 
 
-def submit_fail_ident(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_fail_ident(skicall):
     "Sets the fail ident"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -366,8 +389,12 @@ def submit_fail_ident(caller_ident, ident_list, submit_list, submit_dict, call_d
     call_data['status'] = 'Fail Ident set'
 
 
-def add_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_allowed_caller(skicall):
     "Adds a new allowed caller"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -380,8 +407,12 @@ def add_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, call_
         raise FailPage(e.message)
 
 
-def delete_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def delete_allowed_caller(skicall):
     "Deletes an allowed caller"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -394,8 +425,12 @@ def delete_allowed_caller(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage(e.message)
 
 
-def remove_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_field(skicall):
     "Deletes a field"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -408,8 +443,12 @@ def remove_field(caller_ident, ident_list, submit_list, submit_dict, call_data, 
         raise FailPage(e.message)
 
 
-def add_field_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_field_value(skicall):
     "Adds a field and value"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -444,8 +483,12 @@ def add_field_value(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage(e.message)
 
 
-def add_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_field(skicall):
     "Adds a field"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -460,8 +503,12 @@ def add_field(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
         raise FailPage(e.message)
 
 
-def set_single_field(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_single_field(skicall):
     "Sets the field in a responder, which require s single field only"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -479,8 +526,12 @@ def set_single_field(caller_ident, ident_list, submit_list, submit_dict, call_da
 
 
 
-def delete_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def delete_submit_list_string(skicall):
     "deletes an indexed string from the submit_list"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -496,8 +547,12 @@ def delete_submit_list_string(caller_ident, ident_list, submit_list, submit_dict
         raise FailPage(e.message)
 
 
-def add_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_submit_list_string(skicall):
     "Adds a new submit_list string"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -512,8 +567,12 @@ def add_submit_list_string(caller_ident, ident_list, submit_list, submit_dict, c
         raise FailPage(e.message)
 
 
-def set_validate_option(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_validate_option(skicall):
     "Enable or disable the validate option"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -532,8 +591,12 @@ def set_validate_option(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['status'] = 'Validator changed'
 
 
-def set_submit_option(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_submit_option(skicall):
     "Enable or disable the submit option"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']

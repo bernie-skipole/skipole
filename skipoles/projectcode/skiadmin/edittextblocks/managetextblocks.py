@@ -34,8 +34,11 @@ from .... import skilift
 from .. import utils
 
 
-def retrieve_link_table(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_link_table(skicall):
     "Gets data for the manage textblocks page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data
     utils.clear_call_data(call_data)
@@ -82,8 +85,11 @@ def retrieve_link_table(caller_ident, ident_list, submit_list, submit_dict, call
     page_data[('moretblocks', 'contents')].sort(key=lambda r: r[0])
 
 
-def retrieve_more(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_more(skicall):
     "Gets data for further textblock tables"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -152,8 +158,11 @@ def retrieve_more(caller_ident, ident_list, submit_list, submit_dict, call_data,
     page_data[('moretblocks', 'contents')].sort(key=lambda r: r[0])
 
 
-def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_textblock(skicall):
     "Gets data for the edit textblock page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data
     utils.clear_call_data(call_data, keep=['textblock','text'] )
@@ -239,8 +248,11 @@ def retrieve_textblock(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data['sb1:show'] = True
 
 
-def submit_new_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_textblock(skicall):
     "A new textblock is to be created"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -267,8 +279,11 @@ def submit_new_textblock(caller_ident, ident_list, submit_list, submit_dict, cal
     call_data['textblock'] = new_textblock_ref
 
 
-def submit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_text(skicall):
     "Set the text of the textblock"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -284,8 +299,11 @@ def submit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     call_data['status'] = "TextBlock updated"
 
 
-def submit_delete_language(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_delete_language(skicall):
     "Delete a language"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -310,8 +328,11 @@ def submit_delete_language(caller_ident, ident_list, submit_list, submit_dict, c
     call_data['status'] = "Language deleted"
 
 
-def submit_delete_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_delete_textblock(skicall):
     "Delete a textblock"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     status = False
@@ -327,8 +348,11 @@ def submit_delete_textblock(caller_ident, ident_list, submit_list, submit_dict, 
     call_data['status'] = "TextBlock deleted"
 
 
-def submit_copy_textblock(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_copy_textblock(skicall):
     "Copy a textblock"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

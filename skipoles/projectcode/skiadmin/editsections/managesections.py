@@ -35,8 +35,11 @@ from ....skilift import fromjson, part_info, part_contents, editsection
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
-def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    # this call is for the manage sections page
+def retrieve_managepage(skicall):
+    "this call is for the manage sections page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data
     utils.clear_call_data(call_data)
@@ -69,8 +72,11 @@ def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call
 
 
 
-def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_section_dom(skicall):
     "this call fills in the section dom table"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data, keeping section_name and schange
     utils.clear_call_data(call_data, ["section_name", "schange"])
@@ -193,16 +199,20 @@ def retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, cal
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
 
 
-def retrieve_section_contents(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_section_contents(skicall):
     "this call is for the edit section contents page"
     # fill in section dom table
-    retrieve_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    retrieve_section_dom(skicall)
     # set page head text
-    page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (call_data["section_name"],)
+    skicall.page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (skicall.call_data["section_name"],)
 
 
-def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_section(skicall):
     "Create new section"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     # get new section name
     if ("newsection", "section_name") not in call_data:
@@ -224,8 +234,12 @@ def submit_new_section(caller_ident, ident_list, submit_list, submit_dict, call_
     call_data['status'] = 'Section %s created' % (section_name,)
 
 
-def delete_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def delete_section(skicall):
     "Deletes a section"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if "delete_section" not in call_data:
         raise FailPage(message = "Section name missing from call_data", widget="table_error")
@@ -243,8 +257,12 @@ def delete_section(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = 'Section %s deleted' % (section_name,)
 
 
-def downloadsection(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def downloadsection(skicall):
     "Gets section, and returns a json dictionary, this will be sent as an octet file to be downloaded"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'section_name' not in call_data:
         raise FailPage(message = "section missing")
     section_name = call_data["section_name"]
@@ -260,8 +278,12 @@ def downloadsection(caller_ident, ident_list, submit_list, submit_dict, call_dat
     return line_list
 
 
-def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def newsectionpage(skicall):
     "Populate the page which creates a new section"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'new_section_name' not in call_data:
         raise FailPage(message = "new section name missing")
@@ -287,8 +309,11 @@ def newsectionpage(caller_ident, ident_list, submit_list, submit_dict, call_data
     page_data["uploadsection","section_name"] = section_name
 
 
-def file_new_section(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def file_new_section(skicall):
     "Create new section from uploaded file"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -326,8 +351,12 @@ def file_new_section(caller_ident, ident_list, submit_list, submit_dict, call_da
     call_data['status'] = 'Section %s created' % (section_name,)
 
 
-def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def edit_section_dom(skicall):
     "Called by domtable to edit an item in a section"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
     editedprojname = call_data['editedprojname']
@@ -390,9 +419,12 @@ def edit_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
     raise FailPage("Item to edit has not been recognised")
 
 
-def add_to_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_to_section_dom(skicall):
     """Called by domtable to either insert or append an item in a section
        sets page_data to populate the insert or append page and then go to appropriate template page"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -447,8 +479,11 @@ def add_to_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
         raise GoTo(target = '23509', clear_submitted=True)
 
 
-def remove_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_section_dom(skicall):
     "Called by domtable to remove an item in a section"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -495,8 +530,11 @@ def remove_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_
     call_data['status'] = 'Item deleted'
 
 
-def move_up_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_up_in_section_dom(skicall):
     "Called by domtable to move an item in a section up"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -554,8 +592,11 @@ def move_up_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, c
         raise FailPage(message = e.message)
 
 
-def move_up_right_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_up_right_in_section_dom(skicall):
     "Called by domtable to move an item in a section up and to the right"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -619,8 +660,11 @@ def move_up_right_in_section_dom(caller_ident, ident_list, submit_list, submit_d
         raise FailPage(message = e.message)
 
 
-def move_down_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_down_in_section_dom(skicall):
     "Called by domtable to move an item in a section down"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -687,8 +731,11 @@ def move_down_in_section_dom(caller_ident, ident_list, submit_list, submit_dict,
         raise FailPage(message = e.message)
 
 
-def move_down_right_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_down_right_in_section_dom(skicall):
     "Called by domtable to move an item in a section down and to the right"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -756,8 +803,11 @@ def move_down_right_in_section_dom(caller_ident, ident_list, submit_list, submit
 
 
 
-def move_in_section_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_in_section_dom(skicall):
     "Called by domtable to move an item in a section after a drag and drop"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'dragrows') not in call_data:
         raise FailPage(message = "item to drop missing")

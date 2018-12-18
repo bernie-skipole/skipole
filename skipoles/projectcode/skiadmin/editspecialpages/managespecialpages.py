@@ -36,8 +36,11 @@ from .. import utils
 from ....ski.excepts import FailPage, ValidateError, ServerError
 
 
-def retrieve_managepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_managepage(skicall):
     "this call is for the manage special pages page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data
     utils.clear_call_data(call_data)
@@ -88,8 +91,11 @@ def _make_list(project, reflist, labeldict):
     return result
 
 
-def submit_special_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_special_page(skicall):
     "Sets special page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     label = call_data["label"]
@@ -124,8 +130,11 @@ def submit_special_page(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['status'] = 'Label %s set' % (label,)
 
 
-def add_user_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_user_page(skicall):
     "Sets user defined label and target"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     label = call_data["label"]
@@ -158,8 +167,11 @@ def add_user_page(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = 'Label %s set' % (label,)
 
 
-def submit_user_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_user_page(skicall):
     "Edits or deletes a special user page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     if 'label' not in call_data:
@@ -170,7 +182,7 @@ def submit_user_page(caller_ident, ident_list, submit_list, submit_dict, call_da
     if label in skilift.sys_list():
         raise FailPage(message = "Invalid label.")
     if ("edit" in call_data) and (call_data["edit"]):
-        submit_special_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+        submit_special_page(skicall)
         return
     if ("delete" not in call_data) or (not call_data["delete"]):
         raise FailPage(message = "Invalid submission.")

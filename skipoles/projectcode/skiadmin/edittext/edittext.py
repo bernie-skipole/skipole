@@ -31,8 +31,11 @@ from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 
 
-def retrieve_edittextpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edittextpage(skicall):
     "Fills in the edit text page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -79,8 +82,11 @@ def retrieve_edittextpage(caller_ident, ident_list, submit_list, submit_dict, ca
 
 
 
-def edit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def edit_text(skicall):
     "Submits new text"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     location = call_data['location']
@@ -101,8 +107,11 @@ def edit_text(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     call_data['status'] = "Text changed"
 
 
-def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_insert(skicall):
     "Creates new text"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -130,8 +139,11 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['location'] = new_location
 
 
-def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_insert_symbol(skicall):
     "Creates new html symbol"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -159,8 +171,11 @@ def create_insert_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
     call_data['location'] = new_location
 
 
-def retrieve_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_symbol(skicall):
     "Fills in the edit html symbol page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -206,8 +221,11 @@ def retrieve_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, cal
     page_data["symbol_input","input_text"] = sym
 
 
-def set_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_edit_symbol(skicall):
     "Submits new symbol after editing"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     location = call_data['location']
@@ -231,8 +249,11 @@ def set_edit_symbol(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = "Symbol changed"
 
 
-def retrieve_edit_comment(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_comment(skicall):
     "Fills in the edit html comment page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -279,8 +300,11 @@ def retrieve_edit_comment(caller_ident, ident_list, submit_list, submit_dict, ca
 
 
 
-def set_edit_comment(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_edit_comment(skicall):
     "Submits new comment after editing"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     location = call_data['location']
@@ -305,8 +329,11 @@ def set_edit_comment(caller_ident, ident_list, submit_list, submit_dict, call_da
 
 
 
-def create_insert_comment(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_insert_comment(skicall):
     "Creates new html comment"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
