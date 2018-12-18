@@ -42,8 +42,12 @@ def _field_name(widget, field_argument):
     return field_argument
 
 
-def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_editvalidator(skicall):
     "Fills in the edit a validator page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -135,8 +139,12 @@ def retrieve_editvalidator(caller_ident, ident_list, submit_list, submit_dict, c
         page_data[('description5','show')] = False
 
 
-def set_e_message(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_e_message(skicall):
     "Sets a validator error message"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -182,8 +190,12 @@ def set_e_message(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = "Validator error message changed"
 
 
-def set_e_message_ref(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_e_message_ref(skicall):
     "Sets a validator error message reference"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -229,8 +241,12 @@ def set_e_message_ref(caller_ident, ident_list, submit_list, submit_dict, call_d
     call_data['status'] = "Validator error message reference changed"
 
 
-def set_displaywidget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_displaywidget(skicall):
     "Sets a validator displaywidget"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -276,8 +292,12 @@ def set_displaywidget(caller_ident, ident_list, submit_list, submit_dict, call_d
     call_data['status'] = "Validator display widget changed"
 
 
-def set_allowed_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_allowed_value(skicall):
     "Adds a validator allowed value"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -323,8 +343,12 @@ def set_allowed_value(caller_ident, ident_list, submit_list, submit_dict, call_d
     call_data['status'] = "Validator allowed values changed"
 
 
-def remove_allowed_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_allowed_value(skicall):
     "Removes a validator allowed value"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -370,8 +394,12 @@ def remove_allowed_value(caller_ident, ident_list, submit_list, submit_dict, cal
     call_data['status'] = "Validator allowed values changed"
 
 
-def retrieve_arg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_arg(skicall):
     "Fills in the edit a validator argument page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -439,8 +467,12 @@ def retrieve_arg(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     page_data[('arg_val','hidden_field1')] = arg_name
 
 
-def set_arg_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_arg_value(skicall):
     "Sets a validator argument value"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -485,8 +517,12 @@ def set_arg_value(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = "Validator argument changed"
 
 
-def move_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_up(skicall):
     "Moves a validator up in a field validator list"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -527,8 +563,12 @@ def move_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
     del call_data['validx']
 
 
-def move_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_down(skicall):
     "Moves a validator down in a field validator list"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -566,8 +606,12 @@ def move_down(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     del call_data['validx']
 
 
-def remove_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_validator(skicall):
     "Removes a validator"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -607,8 +651,12 @@ def remove_validator(caller_ident, ident_list, submit_list, submit_dict, call_da
     call_data['status'] = "Validator removed"
 
 
-def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_validator_modules(skicall):
     "Creates a list of validator modules"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -666,8 +714,12 @@ def retrieve_validator_modules(caller_ident, ident_list, submit_list, submit_dic
     page_data[("modulestable","link_table")] = [ [name, name, '', ".".join(('validators', name, 'module')), 'Description not found', ''] for name in validator_modules ]
 
 
-def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_validator_list(skicall):
     "Creates a list of validators"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None
@@ -737,8 +789,12 @@ def retrieve_validator_list(caller_ident, ident_list, submit_list, submit_dict, 
     page_data[("validators","link_table")] = [ [name, name, module_name, ".".join(("validators",module_name,name)), 'Description not found', ''] for name in validators ]
 
 
-def create_validator(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_validator(skicall):
     "Creates a validator and adds it to the field"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     section_name = None
     pagenumber = None

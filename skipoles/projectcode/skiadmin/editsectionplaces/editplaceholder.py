@@ -35,9 +35,11 @@ from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 from ....skilift import part_info, editsection, item_info
 
 
-def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_editplaceholder(skicall):
     "Fills in the edit placeholder page"
 
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -85,8 +87,11 @@ def retrieve_editplaceholder(caller_ident, ident_list, submit_list, submit_dict,
     call_data['location'] = location
 
 
-def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_placeholder(skicall):
     "Sets the placeholder section name, brief, or placename"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -159,8 +164,11 @@ def set_placeholder(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = message
 
 
-def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_insert(skicall):
     "Fills in the insert a placeholder page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -190,8 +198,11 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
     page_data[('sectionname','selectvalue')] = section_list[0]
 
 
-def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_insert(skicall):
     "Creates the section placeholder"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

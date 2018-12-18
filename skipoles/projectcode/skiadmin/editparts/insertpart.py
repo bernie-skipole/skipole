@@ -31,8 +31,12 @@ from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 from ....skilift import item_info, editpage, editsection
 
 
-def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_insert(skicall):
     "Fills in the insert an html element page header"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pageinfo = item_info(project, call_data['page_number'])
@@ -46,8 +50,12 @@ def retrieve_insert(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage("Insertion page/section for html element is missing")
 
 
-def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_insert(skicall):
     "Creates the html element"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
 
     try:
@@ -114,8 +122,11 @@ def create_insert(caller_ident, ident_list, submit_list, submit_dict, call_data,
     raise GoTo(target = target, clear_submitted=True)
 
 
-def file_new_part(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def file_new_part(skicall):
     "Create new part from uploaded file"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = None

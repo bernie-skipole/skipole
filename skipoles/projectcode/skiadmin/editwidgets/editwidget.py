@@ -79,8 +79,11 @@ def _field_ref(widgetdescription, field_argument):
         return ".".join(("widgets", widgetdescription.modulename, widgetdescription.classname, field_argument))
 
 
-def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_widget(skicall):
     "Fills in the edit a widget page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # get the widget name
     if ("left_nav","navbuttons","nav_links") in call_data:
@@ -257,8 +260,11 @@ def retrieve_widget(caller_ident, ident_list, submit_list, submit_dict, call_dat
         del call_data['validx']
 
 
-def set_widget_params(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_widget_params(skicall):
     "Sets widget name and brief"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -307,8 +313,11 @@ def set_widget_params(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage(e.message)
 
 
-def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_editfield(skicall):
     "Fills in the edit a widget field page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -465,8 +474,11 @@ def retrieve_editfield(caller_ident, ident_list, submit_list, submit_dict, call_
         del call_data['validx']
 
 
-def set_field_name(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_field_name(skicall):
     "Sets a widget field name"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -505,8 +517,11 @@ def set_field_name(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = "Field name changed"
 
 
-def set_field_value(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_field_value(skicall):
     "Sets a widget field value"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -545,8 +560,11 @@ def set_field_value(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = "Field value changed"
 
 
-def set_field_default(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_field_default(skicall):
     "Sets a widget field default value"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -604,8 +622,11 @@ def set_field_default(caller_ident, ident_list, submit_list, submit_dict, call_d
 
 
 
-def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_container(skicall):
     "Edits a widget container"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
@@ -693,11 +714,14 @@ def retrieve_container(caller_ident, ident_list, submit_list, submit_dict, call_
 
     # fill in the table
     call_data['location_string'] = widget_name
-    retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    retrieve_container_dom(skicall)
 
 
-def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_container_dom(skicall):
     "this call fills in the container dom table"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -806,8 +830,11 @@ def retrieve_container_dom(caller_ident, ident_list, submit_list, submit_dict, c
 
 
 
-def back_to_parent_container(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def back_to_parent_container(skicall):
     "Sets call_data['widget_name'] to parent_widget and call_data['container'] to parent_container"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -840,8 +867,11 @@ def back_to_parent_container(caller_ident, ident_list, submit_list, submit_dict,
 
 
 
-def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def edit_container_dom(skicall):
     "Called by domtable to edit an item in a container"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = None
@@ -917,9 +947,12 @@ def edit_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_
     raise FailPage("Item to edit has not been recognised")
 
 
-def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_to_container_dom(skicall):
     """Called by domtable to either insert or append an item in a container
        sets page_data to populate the insert or append page and then go to appropriate template page"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = None
@@ -999,8 +1032,11 @@ def add_to_container_dom(caller_ident, ident_list, submit_list, submit_dict, cal
         raise GoTo(target = '23509', clear_submitted=True)
 
 
-def remove_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_container_dom(skicall):
     "Called by domtable to remove an item in a container"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = None
@@ -1118,8 +1154,11 @@ def _item_to_move(call_data):
     return part_tuple
 
 
-def move_up_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_up_in_container_dom(skicall):
     "Called by domtable to move an item in a container up"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1160,8 +1199,11 @@ def move_up_in_container_dom(caller_ident, ident_list, submit_list, submit_dict,
         raise FailPage(message = e.message)
 
 
-def move_up_right_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_up_right_in_container_dom(skicall):
     "Called by domtable to move an item in a container up and to the right"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1208,8 +1250,11 @@ def move_up_right_in_container_dom(caller_ident, ident_list, submit_list, submit
         raise FailPage(message = e.message)
 
 
-def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_down_in_container_dom(skicall):
     "Called by domtable to move an item in a container down"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1259,8 +1304,11 @@ def move_down_in_container_dom(caller_ident, ident_list, submit_list, submit_dic
         raise FailPage(message = e.message)
 
 
-def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_down_right_in_container_dom(skicall):
     "Called by domtable to move an item in a container down and to the right"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1310,8 +1358,11 @@ def move_down_right_in_container_dom(caller_ident, ident_list, submit_list, subm
         raise FailPage(message = e.message)
 
 
-def move_in_container_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_in_container_dom(skicall):
     "Called by domtable to move an item in a container after a drag and drop"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'dragrows') not in call_data:
         raise FailPage(message = "item to drop missing")

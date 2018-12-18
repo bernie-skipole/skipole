@@ -32,8 +32,11 @@ from ....skilift import fromjson, editpage, editsection
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 
 
-def retrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_editpart(skicall):
     "Fills in the edit a part page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -137,8 +140,11 @@ def retrieve_editpart(caller_ident, ident_list, submit_list, submit_dict, call_d
         page_data['aboutdownload', 'show'] = False
 
 
-def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_tag(skicall):
     "Sets the part tag name, or brief, adds an attribute"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     pagenumber = None
     section_name = None
@@ -208,8 +214,11 @@ def set_tag(caller_ident, ident_list, submit_list, submit_dict, call_data, page_
     call_data['status'] = message
 
 
-def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_tag_attribute(skicall):
     "Removes the given tag attribute"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     pagenumber = None
     section_name = None
@@ -247,8 +256,11 @@ def remove_tag_attribute(caller_ident, ident_list, submit_list, submit_dict, cal
         raise FailPage(e.message)
 
 
-def downloadpart(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def downloadpart(skicall):
     "Gets part, and returns a json dictionary, this will be sent as an octet file to be downloaded"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

@@ -38,8 +38,11 @@ from ....ski.excepts import ServerError, FailPage, ValidateError, GoTo
 _AN = re.compile('[^\w]')
 
 
-def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_module_list(skicall):
     "this call is to retrieve data for listing widget modules"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # Fill in header
     page_data[("adminhead","page_head","large_text")] = "Choose module"
@@ -71,8 +74,11 @@ def retrieve_module_list(caller_ident, ident_list, submit_list, submit_dict, cal
     page_data[("modules","link_table")] = contents
 
 
-def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_widgets_list(skicall):
     "this call is to retrieve data for listing widgets in a module"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # Fill in header
     call_data['extend_nav_buttons'].append(["list_widget_modules", "Modules", True, ''])
@@ -119,8 +125,11 @@ def retrieve_widgets_list(caller_ident, ident_list, submit_list, submit_dict, ca
     page_data[("widgets","link_table")] = contents
 
 
-def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_new_widget(skicall):
     "this call is to retrieve data for displaying a new widget"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # Fill in header
     call_data['extend_nav_buttons'].extend([["list_widget_modules", "Modules", True, ''], ["back_widget_list", "Widgets", True, '']])
@@ -191,8 +200,11 @@ def retrieve_new_widget(caller_ident, ident_list, submit_list, submit_dict, call
     page_data[('widget_code','pre_text')] = widg.illustration
 
 
-def create_new_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def create_new_widget(skicall):
     "this call is to create and insert a new widget, goes on to widget edit"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
