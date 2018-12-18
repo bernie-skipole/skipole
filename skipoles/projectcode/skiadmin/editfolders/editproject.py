@@ -162,12 +162,12 @@ def get_text(skicall):
 
     # adminproj is the admin project name, normally skiadmin
     adminproj = skilift.admin_project()
-    if 'received' not in submit_dict:
+    if 'received' not in skicall.submit_dict:
         return
-    received_widgfields = submit_dict['received']
+    received_widgfields = skicall.submit_dict['received']
     for key, val in received_widgfields.items():
         if isinstance(key, tuple) and (key[-1] == 'get_field'):
-            text = skilift.get_textblock_text(val, lang, project=adminproj).replace('\n', '\n<br />')
+            text = skilift.get_textblock_text(val, skicall.lang, project=adminproj).replace('\n', '\n<br />')
             if text is None:
                 continue
             if len(key) == 3:
