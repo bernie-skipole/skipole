@@ -35,8 +35,11 @@ from .. import utils, css_styles
 from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
 
 
-def retrieve_index_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_index_data(skicall):
     "Retrieves all field data for admin index page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data
     utils.clear_call_data(call_data)
@@ -114,8 +117,12 @@ def _clear_index_input_accepted(page_data):
     page_data['brief','set_input_accepted'] = False
 
 
-def retrieve_help(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_help(skicall):
     "Uses skilift.get_textblock_text to get text help for the admin pages"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # clears any session data
     utils.clear_call_data(call_data)
     page_data.clear()
@@ -131,8 +138,12 @@ def retrieve_help(caller_ident, ident_list, submit_list, submit_dict, call_data,
     page_data[("adminhead","show_help","hide")] = False
 
 
-def about_export(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def about_export(skicall):
     "Retrieves text for about export page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     adminproj = skilift.admin_project()
     admininfo = skilift.project_info(adminproj)
@@ -146,8 +157,11 @@ def about_export(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     page_data[('tar_contents','pre_text')] = _tar_contents(project)
 
 
-def retrieve_colour_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_colour_data(skicall):
     "Retrieves all field data for admin colour page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     adminproj = skilift.admin_project()
 
@@ -410,8 +424,11 @@ def retrieve_colour_data(caller_ident, ident_list, submit_list, submit_dict, cal
     page_data["hover_border_color", "boxcol","set_text"] = hover_border_color
 
 
-def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def goto_edit_item(skicall):
     "Goes to the edit page, folder etc depending on the item submitted"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     edited_item = call_data["edited_item"]
     project = call_data['editedprojname']
@@ -453,8 +470,12 @@ def goto_edit_item(caller_ident, ident_list, submit_list, submit_dict, call_data
     raise FailPage(message="Item not found")
     
 
-def retrieve_download(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_download(skicall):
     "Set page_data['filepath'] to the url of the edited project tar.gz file"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # clears any session data
     utils.clear_call_data(call_data)
     # set filepath to tar file
@@ -467,8 +488,12 @@ def retrieve_download(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage(message="File %s not yet created" % (filepath,))
 
 
-def submit_rootpath(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_rootpath(skicall):
     "Sets the path of the root project"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if "root_path" not in call_data:
         raise FailPage(message='Invalid call')
@@ -484,8 +509,12 @@ def submit_rootpath(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = 'Root path set'
 
 
-def submit_language(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_language(skicall):
     "Sets the default language of the edited project"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if "default_language" not in call_data:
         raise FailPage(message = 'Invalid call')
@@ -498,8 +527,12 @@ def submit_language(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = 'Language set'
 
 
-def submit_brief(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_brief(skicall):
     "Sets the brief description of the edited project"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if ('brief','input_text') not in call_data:
         raise FailPage(message='Invalid call')
@@ -512,8 +545,12 @@ def submit_brief(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     call_data['status'] = 'Project brief set'
 
 
-def set_version(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_version(skicall):
     "Sets the version of the edited project"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if ('projversion','input_text') not in call_data:
         raise FailPage(message='Invalid call')
@@ -528,7 +565,11 @@ def set_version(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     call_data['status'] = 'Project version set'
 
 
-def debugtoggle(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def debugtoggle(skicall):
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if skilift.get_debug():
         skilift.set_debug(False)
         page_data["debugtoggle", "button_text"] = "Set Debug ON"
@@ -571,8 +612,12 @@ def filter_from_tar(projinfo):
     return filter_out
 
 
-def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def _submit_saveproject(skicall):
     "save the project to tarfile projectfiles\project_name\project_name.tar"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     export = project
     tar = None
@@ -654,9 +699,13 @@ def _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call
     return tar_dst
 
 
-def json_submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def json_submit_saveproject(skicall):
     "save the project to tarfile projectfiles\project_name\project_name.tar"
-    tar_dst = _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    tar_dst = _submit_saveproject(skicall)
     page_data[("saveresult","para_text")] = "Project saved in file %s" % tar_dst
     page_data[("saveresult","show_para")] = True
     # clears any session data
@@ -664,16 +713,24 @@ def json_submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, 
     call_data['status'] = "Project saved"
 
 
-def html_submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def html_submit_saveproject(skicall):
     "save the project to tarfile projectfiles\project_name\export.tar"
-    tar_dst = _submit_saveproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    tar_dst = _submit_saveproject(skicall)
     # clears any session data
     utils.clear_call_data(call_data)
     call_data['status'] = "Project saved in file %s" % tar_dst
 
 
-def submit_hex_color(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_hex_color(skicall):
     "set palette background color - from hex"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     adminproj = call_data['adminproj']
     palette = css_styles.hex_int(call_data['hexcol'].lower())
     adminbackcol = css_styles.int_hex(*palette)
@@ -694,8 +751,12 @@ def submit_hex_color(caller_ident, ident_list, submit_list, submit_dict, call_da
     editpage.rename_page(adminproj, 220, pchange, newname)
 
 
-def set_colour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_colour(skicall):
     "sets individual colour string"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     adminproj = call_data['adminproj']
     # get colors from project data
     colours = skilift.get_proj_data(adminproj, 'colours')
@@ -817,8 +878,12 @@ def set_colour(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
     editpage.rename_page(adminproj, 220, pchange, newname)
 
 
-def ski_theme(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def ski_theme(skicall):
     "set colours into the w3-theme-ski.css page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     adminproject = call_data['adminproj']
     colours = skilift.get_proj_data(adminproject, 'colours')
     if not colours:
@@ -826,8 +891,12 @@ def ski_theme(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     return colours
 
 
-def set_widgets_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_widgets_css(skicall):
     "sets default css classes into widgets"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data["editedprojname"]
     off_piste.set_widget_css_to_default(project)
     call_data['status'] = 'Widget CSS classes set'

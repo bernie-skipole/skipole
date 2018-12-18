@@ -35,8 +35,11 @@ from .. import utils, css_styles
 
 
 
-def retrieve_operations_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_operations_data(skicall):
     "Retrieves field data for operations page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data
     utils.clear_call_data(call_data)
@@ -105,15 +108,23 @@ def retrieve_operations_data(caller_ident, ident_list, submit_list, submit_dict,
         page_data[('js_links', 'contents')] = contents
 
 
-def set_widgets_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_widgets_css(skicall):
     "sets default css classes into widgets"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
     off_piste.set_widget_css_to_default(editedprojname)
     call_data['status'] = 'Widget CSS classes set'
 
 
-def submit_project_color(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_project_color(skicall):
     "set project default background color"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     try:
         backcol = call_data['htmlbackcol','input_text']
     except:
@@ -129,8 +140,12 @@ def submit_project_color(caller_ident, ident_list, submit_list, submit_dict, cal
     call_data['status'] = 'Project background colour set'
 
 
-def set_bodyclass_in_pages(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_bodyclass_in_pages(skicall):
     "sets css class into page body tags"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     try:
         bodyclass = call_data['bodyclass','input_text']
     except:
@@ -147,8 +162,12 @@ def set_bodyclass_in_pages(caller_ident, ident_list, submit_list, submit_dict, c
 
 
 
-def insert_css_link(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def insert_css_link(skicall):
     "inserts css link into page head before element with given brief"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     try:
         brief = call_data['insert_css_link_brief','input_text']
         label = call_data['insert_css_link_label','input_text']
@@ -165,8 +184,12 @@ def insert_css_link(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 
 
-def set_css_class(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_css_class(skicall):
     "sets css class into elements with given brief"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     try:
         brief = call_data['set_css_class_brief','input_text']
         cssclass = call_data['set_css_class_string','input_text']
@@ -182,8 +205,11 @@ def set_css_class(caller_ident, ident_list, submit_list, submit_dict, call_data,
         call_data['status'] = 'No changes, brief not found.'
 
 
-def add_default_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_default_css(skicall):
     "Add a label to the default css list"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 
@@ -216,8 +242,12 @@ def add_default_css(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise FailPage(message = "Unable to save defaults.json")
 
 
-def css_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def css_remove(skicall):
     "Removes css default label"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
         label = call_data['css_label']
@@ -234,8 +264,12 @@ def css_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
             raise FailPage(message = "Unable to save defaults.json")
 
 
-def css_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def css_up(skicall):
     "Moves css default label up"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
         label = call_data['css_label']
@@ -254,8 +288,12 @@ def css_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_d
             raise FailPage(message = "Unable to save defaults.json")
 
 
-def css_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def css_down(skicall):
     "Moves css default label down"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
         label = call_data['css_label']
@@ -274,8 +312,11 @@ def css_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page
             raise FailPage(message = "Unable to save defaults.json")
 
 
-def add_default_js(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_default_js(skicall):
     "Add a label to the default javascript list"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 
@@ -308,8 +349,12 @@ def add_default_js(caller_ident, ident_list, submit_list, submit_dict, call_data
         raise FailPage(message = "Unable to save defaults.json")
 
 
-def js_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def js_remove(skicall):
     "Removes js default label"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
         label = call_data['js_label']
@@ -326,8 +371,12 @@ def js_remove(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
             raise FailPage(message = "Unable to save defaults.json")
 
 
-def js_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def js_up(skicall):
     "Moves js default label up"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
         label = call_data['js_label']
@@ -345,8 +394,13 @@ def js_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_da
         except e:
             raise FailPage(message = "Unable to save defaults.json")
 
-def js_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+
+def js_down(skicall):
     "Moves js default label down"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
         label = call_data['js_label']

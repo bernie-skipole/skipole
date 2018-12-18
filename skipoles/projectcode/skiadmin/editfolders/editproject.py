@@ -31,8 +31,11 @@ from .... import skilift
 from ....ski.excepts import FailPage, ValidateError, ServerError
 
 
-def retrieve_edit_project(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_project(skicall):
     "Fill in the page to edit the sub project url"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # project is the edited project name
     project = call_data['editedprojname']
@@ -57,8 +60,11 @@ def retrieve_edit_project(caller_ident, ident_list, submit_list, submit_dict, ca
     page_data[("adminhead","page_head","large_text")] = "Sub-project : " + sub_project
 
 
-def submit_addproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_addproject(skicall):
     "add a project"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # project is the edited project name
     project = call_data['editedprojname']
@@ -77,8 +83,11 @@ def submit_addproject(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage(message = e.message)
 
 
-def submit_removeproject(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_removeproject(skicall):
     "remove a project"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "remove_project" not in call_data:
         raise FailPage(message='Invalid call')
@@ -95,8 +104,11 @@ def submit_removeproject(caller_ident, ident_list, submit_list, submit_dict, cal
         raise FailPage(message = e.message)
 
 
-def submit_suburl(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_suburl(skicall):
     "sets the url of a sub project"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # project is the edited project name
     project = call_data['editedprojname']
@@ -122,8 +134,12 @@ def submit_suburl(caller_ident, ident_list, submit_list, submit_dict, call_data,
     call_data['status'] = "Sub project URL set."
 
 
-def retrieve_about_code(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_about_code(skicall):
     "About your code page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # project is the edited project name
     project = call_data['editedprojname']
     page_data[("adminhead","page_head","large_text")] = "Your Code"
@@ -132,14 +148,18 @@ def retrieve_about_code(caller_ident, ident_list, submit_list, submit_dict, call
     page_data[("filelocation","para_text")] = os.path.join(skilift.get_projectfiles_dir(project), "static")
 
 
-def retrieve_about_skilift(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_about_skilift(skicall):
     "About skilift page"
-    page_data[("adminhead","page_head","large_text")] = "skilift"
+    skicall.page_data[("adminhead","page_head","large_text")] = "skilift"
 
 
-def get_text(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def get_text(skicall):
     """Finds any widget submitting 'get_field' with value of a textblock ref, returns
        page_data with key widget with field 'div_content' and value the textblock text"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # adminproj is the admin project name, normally skiadmin
     adminproj = skilift.admin_project()
     if 'received' not in submit_dict:

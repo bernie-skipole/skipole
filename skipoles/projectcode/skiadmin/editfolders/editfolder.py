@@ -34,17 +34,25 @@ from ....skilift import editpage, editfolder, fromjson
 from .. import utils
 
 
-def edit_root(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def edit_root(skicall):
     "Go to edit root folder, with no other call_data contents other than those set here"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # called by responder 3, edit_root link from Root Folder nav button
     # this responder then targets responder 22008 to fill in root folder fields
     utils.clear_call_data(call_data)
     call_data['folder_number'] = 0
 
 
-def goto_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def goto_edited_folder(skicall):
     """Called by responder 2001 with requests from various places to to edit a folder
        This responder passes the call to another responder which calls retrieve_edited_folder"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+    submit_dict = skicall.submit_dict
 
     if 'received_data' not in submit_dict:
         raise FailPage(message = "Folder missing")
@@ -55,8 +63,11 @@ def goto_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_
         call_data['edit_folder'] = widgfields['ftree','edited_item']
 
 
-def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edited_folder(skicall):
     "Fills in the edit folder page, including the tree of folder contents"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 
@@ -164,8 +175,12 @@ def retrieve_edited_folder(caller_ident, ident_list, submit_list, submit_dict, c
         page_data['sdd1:show'] = False
 
 
-def move_to_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_to_folder(skicall):
     "moves item defined by dragrows to folder defined by droprows and refreshes ftree via JSON call"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     editedprojname = call_data['editedprojname']
 
     # folder_number is the top folder of ftree
@@ -214,8 +229,12 @@ def move_to_folder(caller_ident, ident_list, submit_list, submit_dict, call_data
     # this is sent by json to the page
 
 
-def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def choose_edit_action(skicall):
     "Choose which action to take when called from ftree"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if ('ftree', 'contents') not in call_data:
         raise FailPage(message = "Requested action not recognised")
     action = call_data['ftree', 'contents']
@@ -260,8 +279,12 @@ def choose_edit_action(caller_ident, ident_list, submit_list, submit_dict, call_
 
 
 
-def choose_remove_action(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def choose_remove_action(skicall):
     "Choose to remove a page or folder, fills in confirm box"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if ('ftree', 'contents') not in call_data:
         raise FailPage(message = "Requested action not recognised")
     action = call_data['ftree', 'contents']
@@ -283,8 +306,12 @@ def choose_remove_action(caller_ident, ident_list, submit_list, submit_dict, cal
 
 
 
-def delete_item(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def delete_item(skicall):
     "Deletes a folder or page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     try:
         ident = call_data['page_delete','get_field2_1'].split('_')
         project = ident[0]
@@ -332,8 +359,12 @@ def delete_item(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     call_data['status'] = 'Page deleted'
 
 
-def submit_rename_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_rename_folder(skicall):
     "rename this folder"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     if 'name' not in call_data:
@@ -347,8 +378,12 @@ def submit_rename_folder(caller_ident, ident_list, submit_list, submit_dict, cal
     call_data['status'] = 'Folder renamed'
 
 
-def submit_folder_brief(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_folder_brief(skicall):
     "set this folders brief"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     project = call_data['editedprojname']
@@ -367,8 +402,12 @@ def submit_folder_brief(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['status'] = 'Folder description set : %s' % (new_brief,)
 
 
-def submit_default_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_default_page(skicall):
     "Set this folder's default page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     project = call_data['editedprojname']
@@ -387,8 +426,12 @@ def submit_default_page(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['status'] = 'Default page set'
 
 
-def submit_restricted(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_restricted(skicall):
     "set this folder as restricted"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     # restrict the folder
@@ -398,8 +441,12 @@ def submit_restricted(caller_ident, ident_list, submit_list, submit_dict, call_d
         raise FailPage(e.message)
 
 
-def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_unrestricted(skicall):
     "set this folder as unrestricted"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     # un-restrict the folder
@@ -409,8 +456,12 @@ def submit_unrestricted(caller_ident, ident_list, submit_list, submit_dict, call
         raise FailPage(e.message)
 
 
-def downloadfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def downloadfolder(skicall):
     "Gets folder, and returns a json dictionary, this will be sent as an octet file to be downloaded"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
     jsonstring =  fromjson.folder_to_json(call_data['editedprojname'], call_data['folder_number'], indent=4)
