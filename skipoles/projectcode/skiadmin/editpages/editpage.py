@@ -36,8 +36,11 @@ from ....skilift import fromjson, part_contents, editpage
 from .. import utils
 
 
-def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_page_edit(skicall):
     "Retrieves data for the edit page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -117,8 +120,11 @@ def retrieve_page_edit(caller_ident, ident_list, submit_list, submit_dict, call_
         page_data[('interval_target', 'input_text')] = ''
 
 
-def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_page_head(skicall):
     "Gets data for the page head"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -145,8 +151,11 @@ def retrieve_page_head(caller_ident, ident_list, submit_list, submit_dict, call_
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
-def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_page_dom(skicall):
     "this call fills in the page dom table"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -273,8 +282,11 @@ def retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_d
 
 
 
-def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_page_body(skicall):
     "Gets data for the page body"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -301,8 +313,11 @@ def retrieve_page_body(caller_ident, ident_list, submit_list, submit_dict, call_
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
-def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_svgpage_edit(skicall):
     "Retrieves widget data for the svg edit page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -336,8 +351,11 @@ def retrieve_svgpage_edit(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage(message=e.message)
 
 
-def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_page_svg(skicall):
     "Gets data for the page svg part"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -359,8 +377,12 @@ def retrieve_page_svg(caller_ident, ident_list, submit_list, submit_dict, call_d
     retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
-def set_html_lang(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_html_lang(skicall):
     "Sets language in the page html tag"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -378,8 +400,12 @@ def set_html_lang(caller_ident, ident_list, submit_list, submit_dict, call_data,
         call_data['status'] = "Page language set to %s" % new_lang
 
 
-def enable_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def enable_backcolour(skicall):
     """Enables background colour in HTML tag"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -400,8 +426,11 @@ def enable_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_d
     call_data['status'] = result
 
 
-def set_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_backcolour(skicall):
     """Sets the background colour in the HTML tag"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -426,8 +455,11 @@ def set_backcolour(caller_ident, ident_list, submit_list, submit_dict, call_data
 
 
 
-def set_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_last_scroll(skicall):
     "Sets page last_scroll flag"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -446,8 +478,11 @@ def set_last_scroll(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = text
 
 
-def submit_refresh(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_refresh(skicall):
     "Sets JSON refresh facility"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -488,8 +523,12 @@ def submit_refresh(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = text
 
 
-def submit_default_error_widget(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_default_error_widget(skicall):
     "Sets page default_error_widget"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -502,8 +541,12 @@ def submit_default_error_widget(caller_ident, ident_list, submit_list, submit_di
     call_data['status'] = "default error widget set"
 
 
-def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_cache(skicall):
     "Sets cache true or false"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -526,8 +569,11 @@ def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 ################## JSON PAGE #############################
 
 
-def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_jsonpage(skicall):
     "Retrieves widget data for the edit json page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -587,8 +633,12 @@ def retrieve_edit_jsonpage(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
-def set_json_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def set_json_cache(skicall):
     "Sets cache true or false"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -608,8 +658,12 @@ def set_json_cache(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = message
 
 
-def remove_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_json_widgfield(skicall):
     "Removes widgfield from JSON page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -624,8 +678,12 @@ def remove_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, ca
 
 
 
-def add_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_json_widgfield(skicall):
     "Adds a widgfield to JSON page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -647,8 +705,11 @@ def add_json_widgfield(caller_ident, ident_list, submit_list, submit_dict, call_
     call_data['status'] = "Widgfield added"
 
 
-def downloadpage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def downloadpage(skicall):
     "Gets template or SVG page, and returns a json dictionary, this will be sent as an octet file to be downloaded"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -676,8 +737,11 @@ def downloadpage(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     return line_list
 
 
-def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_up_in_page_dom(skicall):
     "Called by domtable to move an item in a page up"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -745,8 +809,11 @@ def move_up_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call
         raise FailPage(message = e.message)
 
 
-def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_up_right_in_page_dom(skicall):
     "Called by domtable to move an item in a page up and to the right"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -820,8 +887,11 @@ def move_up_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict
         raise FailPage(message = e.message)
 
 
-def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_down_in_page_dom(skicall):
     "Called by domtable to move an item in a page down"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -898,8 +968,11 @@ def move_down_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, ca
         raise FailPage(message = e.message)
 
 
-def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_down_right_in_page_dom(skicall):
     "Called by domtable to move an item in a page down and to the right"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -977,8 +1050,11 @@ def move_down_right_in_page_dom(caller_ident, ident_list, submit_list, submit_di
 
 
 
-def after_dom_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def after_dom_edit(skicall):
     "Called after a dom edit to refresh the correct page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if 'location_string' not in call_data:
         raise FailPage("Cannot return to item")
@@ -994,8 +1070,11 @@ def after_dom_edit(caller_ident, ident_list, submit_list, submit_dict, call_data
 
 
 
-def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_in_page_dom(skicall):
     "Called by domtable to move an item in a page after a drag and drop"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1103,8 +1182,11 @@ def move_in_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_da
 
 
 
-def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def edit_page_dom(skicall):
     "Called by domtable to edit an item in a page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1177,9 +1259,12 @@ def edit_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data,
     raise FailPage("Item to edit has not been recognised")
 
 
-def add_to_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def add_to_page_dom(skicall):
     """Called by domtable to either insert or append an item in a page
        sets page_data to populate the insert or append page and then go to appropriate template page"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1244,8 +1329,11 @@ def add_to_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
         raise GoTo(target = '23509', clear_submitted=True)
 
 
-def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def remove_page_dom(skicall):
     "Called by domtable to remove an item in a page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1298,9 +1386,6 @@ def remove_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_dat
         call_data['pchange'] = editpage.del_location(editedprojname, pagenumber, call_data['pchange'], location)
     except ServerError as e:
         raise FailPage(message = e.message)
-
-
-
 
 
 

@@ -32,8 +32,12 @@ from ....skilift.editpage import rename_page, page_description, new_parent
 
 
 
-def submit_rename_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_rename_page(skicall):
     "rename this page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     if 'page_number' not in call_data:
         raise FailPage(message = "Page missing")
     if 'new_name' not in call_data:
@@ -49,8 +53,12 @@ def submit_rename_page(caller_ident, ident_list, submit_list, submit_dict, call_
 
 
 
-def submit_new_parent(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_parent(skicall):
     "Gives a page a new parent"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -67,8 +75,12 @@ def submit_new_parent(caller_ident, ident_list, submit_list, submit_dict, call_d
     call_data['status'] = 'Page moved'
 
 
-def submit_page_brief(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_page_brief(skicall):
     "Sets new page brief"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
@@ -85,8 +97,13 @@ def submit_page_brief(caller_ident, ident_list, submit_list, submit_dict, call_d
     call_data['status'] = 'Page brief set: %s' % (new_brief,)
 
 
-def goto_edit(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    caller_num = caller_ident[1]
+def goto_edit(skicall):
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+
+    caller_num = skicall.caller_ident[1]
     if caller_num == 28009:
         raise GoTo(28007)         # css edit page
     elif caller_num == 20409:
