@@ -53,7 +53,7 @@ def start_project(project, projectfiles, path, option):
        Note: it may be called multiple times if your web server starts multiple processes.
        This function should return a dictionary (typically an empty dictionary if this value is not used).
        Can be used to set any initial parameters, and the dictionary returned will be passed as
-       'proj_data' to subsequent start_call functions."""
+       the attribute 'skicall.proj_data'."""
 
     # get pallet of colours from defaults.json and place in proj_data
     # these will be used to populate w3-theme-ski.css and the Colours page
@@ -69,7 +69,7 @@ def start_project(project, projectfiles, path, option):
 
 
 
-def start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):
+def start_call(called_ident, skicall):
     "Checks initial incoming call parameters, and using ident_data, retrieves session data and populates call_data"
 
     # initially populate call_data with some project info
@@ -77,15 +77,13 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 
     projinfo = skilift.project_info(editedprojname)
 
-    call_data = {'editedprojname':editedprojname,
-                 'editedprojurl':projinfo.path,
-                 'editedprojversion':projinfo.version,
-                 'editedprojbrief':projinfo.brief,
-                 'adminproj':project,
-                 'extend_nav_buttons':[],
-                 'caller_ident':caller_ident}
-
-    page_data = {}
+    skicall.call_data = {'editedprojname':editedprojname,
+                         'editedprojurl':projinfo.path,
+                         'editedprojversion':projinfo.version,
+                         'editedprojbrief':projinfo.brief,
+                         'adminproj':skicall.project,
+                         'extend_nav_buttons':[],
+                         'caller_ident':skicall.caller_ident}
 
     # The tar.gz file, being dynamically created, does not have a called_ident, so if called_ident is None,
     # check the path is a request for the tar.gz file, and route the call to the responder which sets the file
@@ -93,34 +91,36 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 
     if called_ident is None:
         tarfile = editedprojname + ".tar.gz"
-        if path.endswith(tarfile):
+        if skicall.path.endswith(tarfile):
             # request is for the edited project tar.gz
-            return 90, call_data, page_data, lang
+            return 90
         # else the call is to a url not found
-        return None, {}, {}, lang
+        return
 
     # If caller_ident is not given there should be no further session data
-    if not caller_ident:
-        return called_ident, call_data, page_data, lang
+    if not skicall.caller_ident:
+        return called_ident
 
     # if ident_data is given, then session data can be found in _SESSION_DATA[ident_data]
     # so this is added to call_data
 
+    ident_data = skicall.ident_data
+
     if (ident_data) and (ident_data in _SESSION_DATA):
         # update call_data with session_data
-        call_data.update(_SESSION_DATA[ident_data])
+        skicall.call_data.update(_SESSION_DATA[ident_data])
 
-    return called_ident, call_data, page_data, lang
+    return called_ident
 
 
 # submit_list defines package, module, function to call
 @use_submit_list
-def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_data(skicall):
     "The decorator calls the appropriate submit_data function, if submit_list is invalid, then this function raises ServerError"
-    raise ServerError("submit_list invalid for responder %s,%s" % ident_list[-1])
+    raise ServerError("submit_list invalid for responder %s,%s" % skicall.ident_list[-1])
 
 
-def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
+def end_call(page_ident, page_type, skicall):
     """Sets navigation menus, and stores session data under a random generated key in _SESSION_DATA and send the key as ident_data
        Also limits the length of _SESSION_DATA by popping the oldest member"""
 
@@ -129,6 +129,9 @@ def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     # do not include session data or navigation for these types of pages
     if page_type in ('FilePage', 'CSS'):
         return
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 

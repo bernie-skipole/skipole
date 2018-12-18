@@ -51,8 +51,11 @@ def _get_folder_info(project, folder):
     return folder_info, folder_url
 
 
-def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_add_folder(skicall):
     "Fill in the add a folder page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -98,7 +101,7 @@ def retrieve_add_folder(caller_ident, ident_list, submit_list, submit_dict, call
         page_data[('it2','folder_ident_number')] = str(skilift.next_ident_number(project))
 
 
-def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_addfolder(skicall):
     """ Creates a folder by making a dictionary similar to:
 
     {
@@ -113,6 +116,9 @@ def submit_addfolder(caller_ident, ident_list, submit_list, submit_dict, call_da
     Also calls _make_static_folder if folderpath is in call data
 
 """
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -222,8 +228,11 @@ def _make_static_folder(project, folder_dict, fullpath, folderpath):
 
 
 
-def submit_upload_folder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_upload_folder(skicall):
     "Copy a folder from uploaded file"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

@@ -37,8 +37,11 @@ from ....skilift import editpage
 from .. import utils
 
 
-def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_csspage(skicall):
     "Retrieves widget data for the edit css page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -94,8 +97,12 @@ def retrieve_edit_csspage(caller_ident, ident_list, submit_list, submit_dict, ca
     page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
-def retrieve_edit_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_selector(skicall):
     "Retrieves widget data for the edit selector page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -132,8 +139,12 @@ def retrieve_edit_selector(caller_ident, ident_list, submit_list, submit_dict, c
 
 
 
-def retrieve_print_csspage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_print_csspage(skicall):
     "Retrieves widget data for the print css page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -152,8 +163,12 @@ def retrieve_print_csspage(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['page_contents:para_text'] = page_string
 
 
-def submit_new_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_selector(skicall):
     "Sets new selector"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -179,8 +194,12 @@ def submit_new_selector(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['status'] = 'Selector \"%s\" added.' % (new_selector,)
 
 
-def submit_delete_selector(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_delete_selector(skicall):
     "Deletes selector"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -206,8 +225,12 @@ def submit_delete_selector(caller_ident, ident_list, submit_list, submit_dict, c
     call_data['status'] = 'Selector deleted'
 
 
-def submit_selector_properties(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_selector_properties(skicall):
     "Sets the selector properties"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -246,8 +269,12 @@ def submit_selector_properties(caller_ident, ident_list, submit_list, submit_dic
     call_data['status'] = 'Properties set'
         
 
-def move_selector_up(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_selector_up(skicall):
     "Moves selector upwards"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -278,8 +305,12 @@ def move_selector_up(caller_ident, ident_list, submit_list, submit_dict, call_da
         raise FailPage(message=e.message)
 
 
-def move_selector_down(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def move_selector_down(skicall):
     "Moves selector downwardswards"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -310,8 +341,12 @@ def move_selector_down(caller_ident, ident_list, submit_list, submit_dict, call_
         raise FailPage(message=e.message)
 
 
-def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_cache(skicall):
     "Sets cache true or false"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
