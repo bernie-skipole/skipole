@@ -35,8 +35,11 @@ from ....skilift import editpage
 from .. import utils
 
 
-def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_edit_filepage(skicall):
     "Retrieves widget data for the edit file page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -76,8 +79,12 @@ def retrieve_edit_filepage(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
 
 
-def submit_new_filepath(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_filepath(skicall):
     "Sets new page filepath"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -98,8 +105,12 @@ def submit_new_filepath(caller_ident, ident_list, submit_list, submit_dict, call
     call_data['status'] = 'Page filepath set: %s' % (new_filepath,)
 
 
-def submit_mimetype(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_mimetype(skicall):
     "Sets mimetype"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -118,8 +129,12 @@ def submit_mimetype(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = 'Mimetype set'
 
 
-def submit_cache(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_cache(skicall):
     "Sets cache true or false"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # this function is duplicated in editpage, may be better to remove this file and transfer conetents to editpage
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']

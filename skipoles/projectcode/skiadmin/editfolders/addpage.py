@@ -41,7 +41,10 @@ _AND = re.compile('[^\w\.]')
 _ANDH = re.compile('[^\w\.\-]')
 
 
-def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_add_page(skicall):
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     if 'edited_folder' not in call_data:
@@ -87,8 +90,12 @@ def retrieve_add_page(caller_ident, ident_list, submit_list, submit_dict, call_d
         page_data['it3:page_ident_number'] = str(skilift.next_ident_number(project))
 
 
-def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def _common_page_items(skicall):
     "Returns project, parent foldernumber, new pagenumber, new_name, new_brief"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     project = call_data['editedprojname']
     if 'edited_folder' not in call_data:
         raise FailPage(message = "Folder missing")
@@ -130,10 +137,14 @@ def _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_
     return project, foldernumber, pagenumber, new_name, new_brief
 
 
-def submit_new_template(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_template(skicall):
     "Create a new template page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     # create page dictionary
     page_dict = _create_templatepagedict(project, new_name, pagenumber, new_brief)
     # create the new page
@@ -258,7 +269,7 @@ def _body_dict(project):
     return body
 
 
-def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_svg(skicall):
     """ Creates a new svg page by making a dictionary similar to:
 
     {
@@ -275,8 +286,12 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     And then calling editfolder.make_new_page(project, parent_number, page_dict)
 
 """
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     if 'width' in call_data:
         width = call_data['width']
     else:
@@ -312,11 +327,14 @@ def submit_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = 'SVG %s added' % (new_name,)
 
 
-def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_new_svg(skicall):
     "Retrieve data for creating a new SVG page"
 
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
 
     parent_url = skilift.page_path(project, foldernumber)
 
@@ -333,7 +351,7 @@ def retrieve_new_svg(caller_ident, ident_list, submit_list, submit_dict, call_da
     page_data[('dimensions','hidden_field4')] = str(pagenumber)
 
 
-def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_css(skicall):
     """ Creates a new css page by making a dictionary similar to:
 
     {
@@ -349,8 +367,12 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     And then calling editfolder.make_new_page(project, parent_number, page_dict)
 
 """
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     # create a new page dictionary
     page_dict = {"name":new_name,
                  "ident":pagenumber,
@@ -375,7 +397,7 @@ def submit_new_css(caller_ident, ident_list, submit_list, submit_dict, call_data
     call_data['status'] = 'CSS page %s added' % (new_name,)
 
 
-def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_json(skicall):
     """Create a new json page by making a dictionary similar to:
 
     {
@@ -390,8 +412,12 @@ def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     And then calling editfolder.make_new_page(project, parent_number, page_dict)
 """
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     # create a new page dictionary
     page_dict = {"name":new_name,
                  "ident":pagenumber,
@@ -414,7 +440,7 @@ def submit_new_json(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = 'JSON page %s added' % (new_name,)
 
 
-def submit_new_file(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_file(skicall):
     """Create a new file page by making a dictionary similar to:
 
     {
@@ -429,8 +455,12 @@ def submit_new_file(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
     And then calling editfolder.make_new_page(project, parent_number, page_dict)
 """
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     # get the submitted filepath this page links to
     filepath = call_data['filepath']
     # create a new page dictionary
@@ -458,11 +488,14 @@ def submit_new_file(caller_ident, ident_list, submit_list, submit_dict, call_dat
     call_data['status'] = 'File link page %s added' % (new_name,)
 
 
-def retrieve_new_file(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_new_file(skicall):
     "Gets data for a create filepage"
 
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
 
     parent_url = skilift.page_path(project, foldernumber)
 
@@ -486,7 +519,7 @@ called myfile in the static directory, the path should be %s""" % (os.path.join(
     page_data['setfilepath:parent'] = str(foldernumber)
 
 
-def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_new_responder(skicall):
     """Create a new responder page by making a dictionary similar to:
 
     {
@@ -503,8 +536,11 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
     And then calling editfolder.make_new_page(project, parent_number, page_dict)
 """
 
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     # responder class name
     responder_class = call_data['responder_class']
     # create a new page dictionary
@@ -534,11 +570,14 @@ def submit_new_responder(caller_ident, ident_list, submit_list, submit_dict, cal
 
 
 
-def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_new_responder(skicall):
     "Gets data for a create respondpage"
 
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
 
     parent_url = skilift.page_path(project, foldernumber)
 
@@ -566,10 +605,14 @@ def retrieve_new_responder(caller_ident, ident_list, submit_list, submit_dict, c
     page_data['responderlinks:hidden_field4'] = str(pagenumber)
 
 
-def submit_copy_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_copy_page(skicall):
     "Copy a page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, new_page_number, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, new_page_number, new_name, new_brief = _common_page_items(skicall)
     # Get the page to be copied
     if 'copyident' not in call_data:
         raise FailPage(message = "The ident of the page to be copied has not been found", widget='copyident')
@@ -586,11 +629,14 @@ def submit_copy_page(caller_ident, ident_list, submit_list, submit_dict, call_da
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
-def retrieve_new_copypage(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def retrieve_new_copypage(skicall):
     "Gets data for a create a page copy"
 
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     parent_url = skilift.page_path(project, foldernumber)
 
     page_data[("adminhead","page_head","large_text")] = "Add a page copy to : %s" % (parent_url,)
@@ -618,10 +664,14 @@ def retrieve_new_copypage(caller_ident, ident_list, submit_list, submit_dict, ca
         page_data['copyident','input_text'] = call_data['copyident']
 
 
-def submit_upload_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_upload_page(skicall):
     "Copy a page from uploaded file"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
     # first get submitted data for the new page
-    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     # get uploaded file contents
     if "upload" not in call_data:
         raise FailPage("upload missing from call data")
