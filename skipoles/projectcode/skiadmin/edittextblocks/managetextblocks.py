@@ -168,8 +168,8 @@ def retrieve_textblock(skicall):
     utils.clear_call_data(call_data, keep=['textblock','text'] )
 
     project = call_data['editedprojname']
-    language = lang[0].lower()
-    default_language = lang[1]
+    language = skicall.lang[0].lower()
+    default_language = skicall.lang[1]
 
     page_data[("adminhead","page_head","large_text")] = "Edit TextBlock"
     call_data['extend_nav_buttons'] = []
