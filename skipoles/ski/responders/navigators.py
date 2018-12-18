@@ -34,7 +34,6 @@ import re
 
 from .. import skiboot, tag
 from ..excepts import ValidateError, ServerError
-from ... import projectcode
 
 from . import Respond
 
@@ -63,15 +62,15 @@ This is not considered an error, and no error message will be raised
                      'single_field': False}            # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Matches the value given in field self.widgfield against the fields given"
         if (not self.widgfield.w) or (not self.widgfield.f):
             raise ServerError(message="Invalid widgfield set in CaseSwitch Responder")
         if self.widgfield in form_data:
             value = form_data[self.widgfield]
             if value in self.fields:
-                return self.get_page_from_ident(self.fields[value], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-        return self.get_alternate_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+                return self.get_page_from_ident(self.fields[value], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_alternate_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
  
 class EmptyGoto(Respond):
@@ -106,14 +105,14 @@ empty, any page can call it - on failure, calls the project validate error page.
                      'single_field': False}            # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Matches the field values against the data"
         if caller_page is None:
             raise ValidateError()
-        self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         if (self.widgfield not in form_data) or (form_data[self.widgfield] == ''):
-            return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-        return self.get_alternate_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_alternate_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
 
 class EmptyCallDataGoto(Respond):
@@ -139,13 +138,13 @@ to alternate_ident.
                      'single_field': True}            # Only a single field is accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Matches the field against the data"
 
         for field in self.fields:
             if (field not in call_data) or (call_data[field] == ''):
-                return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-        return self.get_alternate_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+                return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_alternate_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
 
 
@@ -168,14 +167,14 @@ For a single given key in call data, if present, that key:value will be deleted 
                      'single_field': True}            # Only a single field is accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Deletes call_data item with the given field key"
         for field in self.fields:
             if field in call_data:
                 del call_data[field]
                 # there should only be one field
                 break
-        return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
 
 class NoOperation(Respond):
@@ -196,9 +195,9 @@ Goes to Target page, can be used as a temporary place holder
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Goes to target page"
-        return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
 
 

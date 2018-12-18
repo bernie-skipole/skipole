@@ -69,28 +69,21 @@ If submit_data raises a FailPage then the fail_ident page will be called.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
 
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-        self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
         try:
-            projectcode.submit_data(caller_ident,
-                                   ident_list,
+            projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # so all ok, get the target page
-        return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
 
 class ColourSubstitute(Respond):
@@ -118,28 +111,19 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-
-
 
         try:
-            colours = projectcode.submit_data(caller_ident,
-                                   ident_list,
+            colours = projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # return fail page unchanged
-            return self.get_fail_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            return self.get_fail_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # so all ok, get the target page
-        csspage = self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        csspage = self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         if colours and isinstance(colours, dict):
             csspage.colour_substitution = colours
         return csspage
@@ -166,34 +150,24 @@ Sets a language cookie with a persistance of 30 days
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data to get a language string such as 'en'"""
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-
-
-
         try:
-            language_string = projectcode.submit_data(caller_ident,
-                                   ident_list,
+            language_string = projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-             self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+             self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # language_string: a string should be returned
         if language_string:
             newlang = (language_string, lang[1])
-            page = self.get_target_page(environ, newlang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            page = self.get_target_page(skicall, environ, newlang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
             # set cookie in target_page
             page.headers.append(("Set-Cookie", "language=%s; Path=%s; Max-Age=2592000" % (language_string, skiboot.root().url)))
         else:
-            page = self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            page = self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         return page
 
 
@@ -222,26 +196,20 @@ Sets cookies, submit_data should return an instance of http.cookies.BaseCookie
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data to get a http.cookies.BaseCookie object"""
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-        self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+
+        self._check_allowed_callers(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
         try:
-            sendcookies = projectcode.submit_data(caller_ident,
-                                   ident_list,
+            sendcookies = projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-             self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
-        page = self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+             self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        page = self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # sets the cookies in the page headers
         if sendcookies:
             if not isinstance(sendcookies, cookies.BaseCookie):
@@ -283,33 +251,30 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
 
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Gets the target page, filling in the form data"
         if caller_page is None:
             raise ValidateError()
-        self._check_allowed_callers(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # previous caller is allowed
 
         submit_dict['widgfield']=self.widgfield.to_tuple_no_i()
         try:
             # and send the widgfield to submit_data
-            defaultdict = projectcode.submit_data(caller_page.ident,
-                                                   ident_list,
+            defaultdict = projectcode.submit_data( ident_list,
                                                    self.submit_list.copy(),
                                                    submit_dict,
-                                                   call_data,
-                                                   page_data,
-                                                   lang)
+                                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         if not isinstance(defaultdict, dict):
             raise ValidateError()
 
         # if widgfield empty
         if (self.widgfield not in form_data) or (not form_data[self.widgfield]):
             form_data[self.widgfield] = defaultdict
-            return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
         formdict = form_data[self.widgfield]
         if not isinstance(formdict, dict):
@@ -320,7 +285,7 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
                 formdict[field] = val
 
         # so all ok, get the target page
-        return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
 
 class FieldStoreSubmit(Respond):
@@ -345,7 +310,7 @@ class FieldStoreSubmit(Respond):
                      'single_field': True}            # A single field is accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
 
         # field_name
         field_name = ''
@@ -367,24 +332,16 @@ class FieldStoreSubmit(Respond):
                    received[field.to_tuple_no_i()] = value
         submit_dict['received'] = received
 
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-
         try:
-            projectcode.submit_data(caller_ident,
-                                   ident_list,
+            projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # so all ok, get the target page
-        return self.get_target_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+        return self.get_target_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
 
 class _JSON(object):
@@ -460,25 +417,17 @@ the error message ignored.
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-
 
         try:
-            jsondict = projectcode.submit_data(caller_ident,
-                                   ident_list,
+            jsondict = projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # so all ok, return JSON file
         return _JSON(ident_list[-1], jsondict)
 
@@ -550,24 +499,16 @@ Only page_data['status'] and page_data['headers'] will be used if given
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-
         try:
-            text = projectcode.submit_data(caller_ident,
-                                   ident_list,
+            text = projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # so all ok, return a _PlainText instance
         return _PlainText(ident_list[-1], text)
 
@@ -707,24 +648,17 @@ list of two element lists acting as css declaration blocks.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
 
         try:
-            styledict = projectcode.submit_data(caller_ident,
-                                   ident_list,
+            styledict = projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # so all ok, return a _CSS instance
         return _CSS(ident_list[-1], styledict)
 
@@ -750,7 +684,7 @@ Given media queries and CSS page targets, wraps the targets with the media queri
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         "Matches the value given in field self.widgfield against the fields given"
 
         media_target =  self.fields.copy()
@@ -760,32 +694,25 @@ Given media queries and CSS page targets, wraps the targets with the media queri
 
         # update media target with result of submit_data
         if self.submit_option:
-            if caller_page:
-                caller_ident = caller_page.ident
-            else:
-                caller_ident = None
             try:
                 submit_dict['media_target'] = media_target.copy()
-                mediadict = projectcode.submit_data(caller_ident,
-                                       ident_list,
+                mediadict = projectcode.submit_data(ident_list,
                                        self.submit_list.copy(),
                                        submit_dict,
-                                       call_data,
-                                       page_data,
-                                       lang)
+                                       skicall)
                 if mediadict:
                     media_target.update(mediadict)
             except FailPage as e:
                 # raises a PageError exception
-                self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+                self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
         if not media_target:
-            return self.get_alternate_page(environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            return self.get_alternate_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
         style_binary = ["@charset \"UTF-8\";\n".encode('UTF-8')]
         
         for media_query, target_ident in media_target.items():
-            target = self.get_page_from_ident(target_ident, environ, lang, form_data, caller_page, ident_list.copy(), call_data, page_data, proj_ident, rawformdata)
+            target = self.get_page_from_ident(target_ident, skicall, environ, lang, form_data, caller_page, ident_list.copy(), call_data, page_data, proj_ident, rawformdata)
             if hasattr(target, 'style'):
                 target_style = target.style
             else:
@@ -880,24 +807,16 @@ submit_data should return a binary file iterator
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
         """Calls submit_data"""
-        if caller_page:
-            caller_ident = caller_page.ident
-        else:
-            caller_ident = None
-
         try:
-            biniterator = projectcode.submit_data(caller_ident,
-                                   ident_list,
+            biniterator = projectcode.submit_data(ident_list,
                                    self.submit_list.copy(),
                                    submit_dict,
-                                   call_data,
-                                   page_data,
-                                   lang)
+                                   skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         # so all ok, return a _Iterator instance
         return _Iterator(ident_list[-1], biniterator)
 

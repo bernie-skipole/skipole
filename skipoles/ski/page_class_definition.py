@@ -935,7 +935,7 @@ class RespondPage(ParentPage):
         # - or more usually, an instance of a child of the Respond class
         self.responder = responder
 
-    def call_responder(self, environ, lang, form_data, caller_ident, ident_list, call_data, page_data, rawformdata, error_dict=None):
+    def call_responder(self, skicall, environ, lang, form_data, caller_ident, ident_list, call_data, page_data, rawformdata, error_dict=None):
         """Checks for circulating calls, then updates ident_list with this pages ident,
            then calls the respond objects call method, note rawformdata is a cgi.FieldStorage object"""
         if self.responder is None:
@@ -944,7 +944,7 @@ class RespondPage(ParentPage):
             raise ServerError(message="Circulating call to Respond page: ident %s in %s" % (self.ident, ident_list))
         ident_list.append(self.ident)
         proj = self.ident.proj
-        page = self.responder(environ, lang, form_data, caller_ident, ident_list, call_data, page_data, proj, rawformdata, error_dict)
+        page = self.responder(skicall, environ, lang, form_data, caller_ident, ident_list, call_data, page_data, proj, rawformdata, error_dict)
         return page
 
     def set_values(self, page_data):
