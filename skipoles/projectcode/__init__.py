@@ -50,19 +50,42 @@ _TEXTBLOCKS = {}
 skiboot.set_projectcode(os.path.dirname(os.path.realpath(__file__)))
 
 
+class SkiCall(object):
+
+    def __init__(self, environ, path, project, rootproject, caller_ident, received_cookies, ident_data, lang, option, proj_data):
+
+        self.environ = environ
+        self.path = path
+        self.project = project
+        self.rootproject = project
+        self.caller_ident = caller_ident
+        self.received_cookies = received_cookies
+        self.ident_data = ident_data
+        self.lang = lang
+        self.option = option
+        self.proj_data = proj_data
+
+        self.ident_list = []
+        self.submit_list = []
+        self.submit_dict = {}
+        self.call_data = {}
+        self.page_data = {}
+ 
+
+
 def use_submit_list(submit_data):
     "Used to decorate submit_data to enable submit_list to define package,module,function"
     @wraps(submit_data)
-    def submit_function(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-        "This function replaces submit_data, if submit_list has two or more elements"
-        if not submit_list:
+    def submit_function(skicall):
+        "This function replaces submit_data, if skicall.submit_list has two or more elements"
+        if not skicall.submit_list:
             # do nothing, simply return the original submit_data
-            return submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        if len(submit_list) < 2:
+            return submit_data(skicall)
+        if len(skicall.submit_list) < 2:
             # do nothing, simply return the original submit_data
-            return submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-        submitpath = ".".join(submit_list[:-1])
-        fullsubmitpath = "." + submit_dict['project'] + "." + submitpath
+            return submit_data(skicall)
+        submitpath = ".".join(skicall.submit_list[:-1])
+        fullsubmitpath = "." + skicall.project + "." + submitpath
         try:
             submitmodule = import_module(fullsubmitpath, __name__)
         except:
@@ -76,10 +99,10 @@ def use_submit_list(submit_data):
             raise ServerError("Unable to import project module defined as %s in submit list" % (submitpath,))
         # now obtain and run the specified function
         try:
-            submitfunc = getattr(submitmodule, submit_list[-1])
+            submitfunc = getattr(submitmodule, skicall.submit_list[-1])
         except:
-            raise ServerError("submit_list package %s found, but the required function %s is not recognised" % (submitpath, submit_list[-1]))
-        return submitfunc(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+            raise ServerError("submit_list package %s found, but the required function %s is not recognised" % (submitpath, skicall.submit_list[-1]))
+        return submitfunc(skicall)
     return submit_function
 
 
@@ -131,7 +154,7 @@ def start_project(proj_ident, path, option):
     return proj_data
 
 
-def start_call(environ, path, proj_ident, ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):
+def start_call(environ, path, proj_ident, rootproject, ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):
     """Calls the appropriate project start_call function
        ident is the ident of the page being called, could be None if not recognised
        Returns new called_ident, dictionaries 'call_data', 'page_data' and new tuple lang"""
@@ -148,18 +171,27 @@ def start_call(environ, path, proj_ident, ident, caller_ident, received_cookies,
 
     if (ident_data is not None) and _AN.search(ident_data):
         ident_data = None
+
     try:
         project_code = _import_project_code(proj_ident)
-        new_called_ident, call_data, page_data, new_lang = project_code.start_call(environ,
-                                                                                   path,
-                                                                                   proj_ident,
-                                                                                   called_ident,
-                                                                                   tuple_caller_ident,
-                                                                                   received_cookies,
-                                                                                   ident_data,
-                                                                                   lang,
-                                                                                   option,
-                                                                                   proj_data)
+
+
+        # create the SkiCall object
+
+        skicall = SkiCall(environ = environ,
+                          path = path,
+                          project = proj_ident,
+                          rootproject = rootproject,
+                          caller_ident = tuple_caller_ident,
+                          received_cookies = received_cookies,
+                          ident_data = ident_data,
+                          lang = lang,
+                          option = option,
+                          proj_data = proj_data)
+
+        # the skicall object is changed in place, with call_data, page_data and lang being set
+        new_called_ident = project_code.start_call(called_ident, skicall)
+
         # convert returned tuple to an Ident object
         if isinstance(new_called_ident, int):
             new_called_ident = (proj_ident, new_called_ident)
@@ -177,19 +209,22 @@ def start_call(environ, path, proj_ident, ident, caller_ident, received_cookies,
                 message += item
             raise ServerError(message)
         raise ServerError("Error in start_call")
-    return new_called_ident, call_data, page_data, new_lang
+    return new_called_ident, skicall
 
 
-def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_data(ident_list, submit_list, submit_dict, skicall):
     "Calls the appropriate submit_data function"
-    if not caller_ident:
-        tuple_caller_ident = ()
-    else:
-        tuple_caller_ident = caller_ident.to_tuple()
     proj_ident = ident_list[-1].proj
     this_project = skiboot.getproject(proj_ident)
     if this_project is None:
         raise FailPage()
+
+    # the call could have been passed to another project
+    skicall.project = proj_ident
+    skicall.option = this_project.option
+    skicall.proj_data = this_project.proj_data
+    skicall.rootproject = this_project.rootproject
+
     # add project name to submit_dict
     submit_dict['project'] = proj_ident
     # add project proj_data to submit_dict
@@ -203,13 +238,12 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     tuple_ident_list = [ ident.to_tuple() for ident in ident_list ]
     try:
         project_code = _import_project_code(proj_ident)
-        result = project_code.submit_data(tuple_caller_ident,
-                                             tuple_ident_list,
-                                             submit_list,
-                                             submit_dict,
-                                             call_data,
-                                             page_data,
-                                             lang)
+
+        skicall.ident_list = tuple_ident_list
+        skicall.submit_list = submit_list
+        skicall.submit_dict = submit_dict
+
+        result = project_code.submit_data(skicall)
     except (GoTo, FailPage, ServerError, ValidateError) as e:
         raise e
     except:
@@ -223,17 +257,17 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
     return result
 
 
-def end_call(proj_ident, page, call_data, page_data, proj_data, lang):
+def end_call(page, skicall):
     """Calls the project end_call function"""
     try:
-        project_code = _import_project_code(proj_ident)
+        project_code = _import_project_code(skicall.project)
         page_ident = page.ident
         if not isinstance(page_ident, tuple):
             page_ident = page_ident.to_tuple()
-        session_string = project_code.end_call(page_ident, page.page_type, call_data, page_data, proj_data, lang)
+        session_string = project_code.end_call(page_ident, page.page_type, skicall)
         if session_string:
             # set cookie in target_page
-            page.session_cookie = ("Set-Cookie", "%s=%s; Path=%s" % (proj_ident, session_string, skiboot.root().url))
+            page.session_cookie = ("Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root().url))
     except GoTo as e:
         raise ServerError("Invalid GoTo exception in end_call")
     except FailPage as e:

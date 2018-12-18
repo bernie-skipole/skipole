@@ -835,16 +835,20 @@ class Project(object):
             # start_call could return a different page ident, or None
             # call_data will be the dictionary of values passed between responders
             # page_data will be the dictionary of widgfields and values to set in the page
-            pident, call_data, page_data, lang = projectcode.start_call(environ,
-                                                                       path,
-                                                                       self._proj_ident,
-                                                                       ident,
-                                                                       caller_page_ident,
-                                                                       received_cookies,
-                                                                       call_ident,
-                                                                       lang,
-                                                                       self.option,
-                                                                       self.proj_data)
+            pident, skicall = projectcode.start_call(environ,
+                                                       path,
+                                                       self._proj_ident,
+                                                       self.rootproject,
+                                                       ident,
+                                                       caller_page_ident,
+                                                       received_cookies,
+                                                       call_ident,
+                                                       lang,
+                                                       self.option,
+                                                       self.proj_data)
+            call_data = skicall.call_data
+            page_data = skicall.page_data
+            lang = skicall.lang
         except Exception:
             message = "Invalid exception in start_call function."
             if skiboot.get_debug():
@@ -926,10 +930,10 @@ class Project(object):
             if page.ident.proj != self._proj_ident:
                 # page returned from start_call is in another project
                 subproj = self.subprojects.get(page.ident.proj)
-                return subproj.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+                return subproj.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
                 
             # call status_headers_data to return status, headers and data to the top script
-            return self.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+            return self.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
 
         except ValidateError as e:
             page = self._system_page("validate_error")
@@ -951,7 +955,7 @@ class Project(object):
             return e.status, headers, page.data()
 
 
-    def status_headers_data(self, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data):
+    def status_headers_data(self, skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data):
         """calls responders until it can return status, headers, page.data()"""
 
         try:
@@ -960,7 +964,7 @@ class Project(object):
                 if page.responder is None:
                     raise ServerError(message="Respond page %s does not have any responder set" % page.url)
                 try: 
-                    page = page.call_responder(environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
+                    page = page.call_responder(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
                     if isinstance(page, str):
                         # must be a url
                         call_data.clear()
@@ -1014,7 +1018,7 @@ class Project(object):
                 # it is possible that a jump to a page in another project has been made
                 if page.ident.proj != self._proj_ident:
                     subproj = skiboot.getproject(proj_ident=page.ident.proj)
-                    return subproj.status_headers_data(environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+                    return subproj.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
                 
         except (ServerError, ValidateError) as e:
             e.ident_list = ident_list
@@ -1025,7 +1029,11 @@ class Project(object):
 
         # call the user function end_call
         try:
-            projectcode.end_call(self._proj_ident, page, call_data, page_data, self.proj_data, lang)
+            skicall.project = self._proj_ident
+            skicall.option = self.option
+            skicall.proj_data = self.proj_data
+            skicall.rootproject = self.rootproject
+            projectcode.end_call(page, skicall)
         except Exception:
             message = "Invalid exception in end_call function."
             if skiboot.get_debug():
