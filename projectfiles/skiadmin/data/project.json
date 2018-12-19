@@ -1465,6 +1465,31 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
+"name": "skicall",
+"brief": "About the skicall object",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "skicall -",
+"button_show_text": "skicall +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skicall",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
 "name": "startproj",
 "brief": "Describes start_project",
 "fields": {
@@ -1686,7 +1711,7 @@ false,
 "parts": [
 [
 "Text",
-"You can also optionally import the decorator function use_submit_list which, if used as a decorator around your submit_data function, will use the submit_list argument to find an alternative function in your code, where submit_list is a list of 'package', 'module' and 'function' string names."
+"You can also optionally import the decorator function use_submit_list which, if used as a decorator around your submit_data function, will use the skicall.submit_list attribute to find an alternative function in your code."
 ]
 ]
 }
