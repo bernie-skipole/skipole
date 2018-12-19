@@ -4,6 +4,27 @@ from skipoles import skilift
 
 from skipoles.projectcode import skiadmin
 
+class SkiCall(object):
+
+    def __init__(self, environ, path, project, rootproject, caller_ident, received_cookies, ident_data, lang, option, proj_data):
+
+        self.environ = environ
+        self.path = path
+        self.project = project
+        self.rootproject = project
+        self.caller_ident = caller_ident
+        self.received_cookies = received_cookies
+        self.ident_data = ident_data
+        self.lang = lang
+        self.option = option
+        self.proj_data = proj_data
+
+        self.ident_list = []
+        self.submit_list = []
+        self.submit_dict = {}
+        self.call_data = {}
+        self.page_data = {}
+
 def test_ident(project):
     "Checks project is skiadmin"
     assert project == "skiadmin"
@@ -18,7 +39,7 @@ def test_skiadmin(project):
     proj_info = skilift.project_info(project)
 
     assert proj_info.project == "skiadmin"
-    assert proj_info.version == "1.0.0"
+    assert proj_info.version == "2.0.0"
     assert proj_info.brief == "skiadmin - The Skipole Admin project"
     assert proj_info.path == "/skiadmin/"
     assert proj_info.default_language == "en"
@@ -32,6 +53,7 @@ def test_start_call(project):
 
     environ = {}
     path = proj.url
+    rootproject = True
     called_ident = None
     caller_ident = None
     received_cookies = {}
@@ -39,13 +61,12 @@ def test_start_call(project):
     lang = ('en-GB', 'en')
     option = {}
     proj_data = proj.proj_data
+
+    skicall = SkiCall(environ, path, project, rootproject, caller_ident, received_cookies, ident_data, lang, option, proj_data)
+
     # call skiadmin start_call
-    called_ident, call_data, page_data, lang = skiadmin.start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data)
+    called_ident = skiadmin.start_call(called_ident, skicall)
     assert called_ident is None
-    assert call_data == {}
-    assert page_data == {}
-    assert lang == lang
-    
 
 
 

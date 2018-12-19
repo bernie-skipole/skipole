@@ -310,7 +310,7 @@ def retrieve_page_body(skicall):
 
     # fill in the table
     call_data['location_string'] = 'body'
-    retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    retrieve_page_dom(skicall)
 
 
 def retrieve_svgpage_edit(skicall):
