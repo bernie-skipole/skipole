@@ -1490,6 +1490,31 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
+"name": "page_data",
+"brief": "About the skicall.page_data dictionary",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "skicall.page_data -",
+"button_show_text": "skicall.page_data +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.page_data",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
 "name": "startproj",
 "brief": "Describes start_project",
 "fields": {
