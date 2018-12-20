@@ -1621,7 +1621,7 @@ false,
 "parts": [
 [
 "Text",
-"Your code needs to provide the above functions, you can also import exceptions ServerError, ValidateError, FailPage and GoTo and raise them when required. Each is described below."
+"You can also import exceptions ServerError, ValidateError, FailPage and GoTo and raise them when required. Each is described below."
 ]
 ]
 }
@@ -38034,7 +38034,7 @@ false
 }
 }
 },
-"w3-theme-ski-93492.css": {
+"w3-theme-ski-19556.css": {
 "ident": 220,
 "brief": "sets colour in w3-theme-ski.css",
 "RespondPage": {
