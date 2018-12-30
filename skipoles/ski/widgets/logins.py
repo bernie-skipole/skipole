@@ -45,6 +45,7 @@ class Pin4(Widget):
 
     arg_descriptions = {
                         'hide':FieldArg("boolean", False, jsonset=True),
+                        'autofocus':FieldArg("boolean", True),
                         'action':FieldArg("url", ''),
                         'hidden_field1':FieldArg("text", '', valdt=True),
                         'hidden_field2':FieldArg("text", '', valdt=True),
@@ -159,43 +160,38 @@ class Pin4(Widget):
         if self.get_field_value('char_div_style'):
             self[0][2][0].update_attribs({"style":self.get_field_value('char_div_style')})
 
-        # set autofocus on first non-disabled input field
-        autofocus = False
+        # enable disable the pin number fields
 
         # first input field
         self[0][2][0][0].update_attribs({"name":self.get_formname('pin1')})
-        if self.get_field_value('pin1'):
-            self[0][2][0][0].update_attribs({"autofocus":"autofocus"})
-            autofocus = True
-        else:
+        if not self.get_field_value('pin1'):
             self[0][2][0][0].update_attribs({"disabled":"disabled", "value":"X"})
 
         # second input field
         self[0][2][0][2].update_attribs({"name":self.get_formname('pin2')})
-        if self.get_field_value('pin2'):
-            if not autofocus:
-                self[0][2][0][2].update_attribs({"autofocus":"autofocus"})
-                autofocus = True
-        else:
+        if not self.get_field_value('pin2'):
             self[0][2][0][2].update_attribs({"disabled":"disabled", "value":"X"})
 
         # third input field
         self[0][2][0][4].update_attribs({"name":self.get_formname('pin3')})
-        if self.get_field_value('pin3'):
-            if not autofocus:
-                self[0][2][0][4].update_attribs({"autofocus":"autofocus"})
-                autofocus = True
-        else:
+        if not self.get_field_value('pin3'):
             self[0][2][0][4].update_attribs({"disabled":"disabled", "value":"X"})
 
         # fourth input field
         self[0][2][0][6].update_attribs({"name":self.get_formname('pin4')})
-        if self.get_field_value('pin4'):
-            if not autofocus:
-                self[0][2][0][6].update_attribs({"autofocus":"autofocus"})
-                autofocus = True
-        else:
+        if not self.get_field_value('pin4'):
             self[0][2][0][6].update_attribs({"disabled":"disabled", "value":"X"})
+
+        if self.get_field_value("autofocus"):
+            # set autofocus on first non-disabled input field
+            if self.get_field_value('pin1'):
+                self[0][2][0][0].update_attribs({"autofocus":"autofocus"})
+            elif self.get_field_value('pin2'):
+                self[0][2][0][2].update_attribs({"autofocus":"autofocus"})
+            elif self.get_field_value('pin3'):
+                self[0][2][0][4].update_attribs({"autofocus":"autofocus"})
+            elif self.get_field_value('pin4'):
+                self[0][2][0][6].update_attribs({"autofocus":"autofocus"})
 
         # div containing the button
         if self.get_field_value('butt_div_class'):
@@ -227,6 +223,20 @@ class Pin4(Widget):
 
         # add ident and four hidden fields
         self.add_hiddens(self[0][2], page)
+
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a keypress event handler"""
+        jscript = """  $("#{ident} input").keypress(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        #if self._jsonurl:
+        #    return jscript + self._make_fieldvalues('button_wait_text', url=self._jsonurl)
+        #else:
+        #    return jscript + self._make_fieldvalues('button_wait_text')
+        return jscript
 
 
     @classmethod
