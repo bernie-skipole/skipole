@@ -1343,6 +1343,7 @@
   "widgets.logins.NamePasswd1.title2": "Text shown if the pattern regular expression does not match in the password input field.",
   "widgets.logins.Pin4": "Defines a form containing four single character input fields.",
   "widgets.logins.Pin4.action": "The target ident or label called when the form is submitted.",
+  "widgets.logins.Pin4.autofocus": "If True these PIN fields get focus on the page being loaded.",
   "widgets.logins.Pin4.butt_div_class": "The CSS class of the div containing the submit button and label.",
   "widgets.logins.Pin4.button_class": "The CSS class of the submit input field.",
   "widgets.logins.Pin4.button_text": "The text on the submit button.",

@@ -202,3 +202,34 @@ SKIPOLE.logins.Pin4.prototype.clear_error = function() {
         error_div.hide();
         }
     };
+
+SKIPOLE.logins.Pin4.prototype.eventfunc = function (e) {
+    // ignore backspace key
+    if(e.which === 8) {
+        return;
+        }
+    var tgt = $(e.target).next();
+    if (!tgt) {
+        return;
+        }
+    if (tgt.attr("disabled") == "disabled") {
+        tgt = tgt.next();
+        if (!tgt) {
+            return;
+            }
+        if (tgt.attr("disabled") == "disabled") {
+            tgt = tgt.next();
+            if (!tgt) {
+                return;
+                }
+            if (tgt.attr("disabled") == "disabled") {
+                return;
+                }
+           }
+       }
+    tgt.focus();
+    };
+
+
+
+
