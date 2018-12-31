@@ -308,6 +308,67 @@ class OpenButton(Widget):
 </a>"""
 
 
+
+class OpenButton2(Widget):
+    """A link button that opens a given section/widget, or if javascript is disabled, calls a link"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'link_ident':FieldArg("url", ''),
+                        'get_field1':FieldArg("text", "", valdt=True),
+                        'get_field2':FieldArg("text","", valdt=True),
+                        'target_section':FieldArg("text", ""),
+                        'target_widget':FieldArg("text", ""),
+                        'content':FieldArg("text", "Open", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        link_ident: The link to an html page taken if the client does not have javascript
+        get_field1: Optional 'get' string set in the target url
+        get_field2: Optional second 'get' string set in the target url
+        content: The text to be placed within the link
+        """
+        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        self.update_attribs({"role":"button"})
+        # where content can be placed
+        self[0] = 'Open'
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the link"
+        if self.get_field_value("content"):
+            self[0] = self.get_field_value("content")
+        if self.get_field_value("link_ident"):
+            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            if url:
+                # create a url for the href
+                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
+                              self.get_formname("get_field2"):self.get_field_value("get_field2")}
+                url = self.make_get_url(page, url, get_fields, True)
+                self.update_attribs({"href": url})
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        jscript = """  $("#{ident}").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        return jscript + self._make_fieldvalues('target_section', 'target_widget')
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<a role="button" href="#"> <!-- with widget id and class widget_class, and the href link will be the url of the link_ident -->
+      <!-- However if javascipt enabled the link will not be called, but the target widget will be displayed -->
+      <!-- The text of the content field will be set here -->
+</a>"""
+
+
+
 class JSONButtonLink(Widget):
     """A button link to the JSON page with the given ident, label or url.
        On error replace the button text
