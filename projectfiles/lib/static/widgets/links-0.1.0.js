@@ -107,7 +107,6 @@ SKIPOLE.links.JSONButtonLink.prototype.setvalues = function (fieldlist, result) 
     if (button_text) {
         the_widg.text(button_text);
         }
-    var href = the_widg.attr('href');
     /* get_field1 */
     var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
@@ -444,6 +443,83 @@ SKIPOLE.links.OpenButton.prototype.eventfunc = function (e) {
         }
     };
 
+
+SKIPOLE.links.OpenButton2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.OpenButton2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.OpenButton2.prototype.constructor = SKIPOLE.links.OpenButton2;
+SKIPOLE.links.OpenButton2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    // content
+    var content = this.fieldarg_in_result('content', result, fieldlist);
+    if (content) {
+        the_widg.text(content);
+        }
+    /* get_field1 */
+    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    if (get_field1 != undefined) {
+        var href = the_widg.attr('href');
+        var url = this.setgetfield(href, 'get_field1', get_field1);
+        the_widg.attr('href', url);
+        }
+    /* get_field2 */
+    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    if (get_field2 != undefined) {
+        var href = the_widg.attr('href');
+        var url = this.setgetfield(href, 'get_field2', get_field2);
+        the_widg.attr('href', url);
+        }
+    /* hide */
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (the_widg.is(":visible")) {
+                the_widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(the_widg.is(":visible"))) {
+                the_widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+SKIPOLE.links.OpenButton2.prototype.eventfunc = function (e) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var the_widg = this.widg;
+    // get id of target
+    var target_section = fieldvalues["target_section"];
+    var target_widget = fieldvalues["target_widget"];
+    if (target_section && target_widget) {
+        var target_id = target_section + "-" + target_widget;
+    } else if ( target_section ) {
+        var target_id = target_section;
+    } else if ( target_widget ) {
+        var target_id = target_widget;
+    } else {
+        var target_id = "";
+    }
+
+    if (!target_id) {
+        return;
+        }
+    // open item with target_id
+    var target = $("#"+target_id);
+    if (target) {
+        if (!(target.is(":visible"))) {
+            target.show();
+            }
+        e.preventDefault();
+        }
+    };
 
 
 SKIPOLE.links.MessageButton = function (widg_id, error_message, fieldmap) {
