@@ -29035,6 +29035,53 @@ false,
 [
 "Widget",
 {
+"class": "links.OpenButton",
+"name": "open_submit_dict",
+"brief": "Opens the submit dictionary description",
+"fields": {
+"get_field1": "",
+"get_field2": "",
+"link_ident": "no_javascript",
+"show": true,
+"target_section": "",
+"target_widget": "submit_dict_description",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "confirm.AlertClear1",
+"name": "submit_dict_description",
+"brief": "Shows the submit dictionary description",
+"fields": {
+"boxdiv_class": "",
+"button_class": "w3-button w3-round w3-theme-l1 w3-right",
+"buttondiv_class": "",
+"buttondiv_style": "position:fixed; top:84px; right:14px; z-index:100;",
+"clear_error": false,
+"error_class": "",
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"hide": true,
+"inner_class": "w3-container",
+"inner_style": "margin-right:20px;",
+"link_ident": "no_javascript",
+"para_text": "Unable to find help text for this page.",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-sidebar w3-container w3-theme-d4 w3-border-top w3-border-left w3-border-bottom",
+"widget_style": "width : 50%; right : 0; top : 80px;height : 70vh;"
+}
+}
+],
+[
+"Widget",
+{
 "class": "paras.TextBlockPara",
 "name": "final_paragraph",
 "brief": "TextBlockPara",

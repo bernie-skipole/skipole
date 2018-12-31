@@ -181,7 +181,15 @@ def retrieve_edit_respondpage(skicall):
         page_data['submit_status','show'] = False
 
     if r_info.submit_required or r_info.submit_option:
-        page_data['submit_list_description:textblock_ref'] = _t_ref(r_info, 'submit_list')
+
+        sdtextref = _t_ref(r_info, 'submit_dict')
+        text = skilift.get_textblock_text(sdtextref, skicall.lang, project=skicall.project)
+        if not text:
+            text = "No help text for %s has been found" % sdtextref
+        page_data['submit_dict_description','para_text'] = "\n" + text
+
+        page_data['submit_list_description','textblock_ref'] = 'responders.about_submit_list'
+
         if r_info.submit_list:
             contents = []
             for index, s in enumerate(r_info.submit_list):
