@@ -316,8 +316,9 @@ class OpenButton2(Widget):
     display_errors = False
 
     arg_descriptions = {'link_ident':FieldArg("url", ''),
-                        'get_field1':FieldArg("text", "", valdt=True),
-                        'get_field2':FieldArg("text","", valdt=True),
+                        'hide':FieldArg("boolean", False, jsonset=True),
+                        'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
+                        'get_field2':FieldArg("text","", valdt=True, jsonset=True),
                         'target_section':FieldArg("text", ""),
                         'target_widget':FieldArg("text", ""),
                         'content':FieldArg("text", "Open", jsonset=True)
@@ -329,6 +330,7 @@ class OpenButton2(Widget):
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
         content: The text to be placed within the link
+        hide: If True the button will be hidden
         """
         Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
         self.update_attribs({"role":"button"})
@@ -339,6 +341,8 @@ class OpenButton2(Widget):
         "Build the link"
         if self.get_field_value("content"):
             self[0] = self.get_field_value("content")
+        # Hides widget if hide is True
+        self.widget_hide(self.get_field_value("hide"))
         if self.get_field_value("link_ident"):
             url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
             if url:
