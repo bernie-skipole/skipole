@@ -69,8 +69,18 @@ def _t_ref(r_info, item):
     return ".".join(["responders", r_info.module_name, r_info.responder, item])
 
 
+
+def skicall_help(skicall):
+    "Retrieves help text for the skicall object"
+    text = skilift.get_textblock_text("aboutcode.skicall", skicall.lang, project=skicall.project)
+    if not text:
+        text = "No help text for aboutcode.skicall has been found"
+    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
+    skicall.page_data[("adminhead","show_help","hide")] = False
+
+
 def submit_dict_help(skicall):
-    "Retrieves hepl text for the responder submit_dict"
+    "Retrieves help text for the responder submit_dict"
     call_data = skicall.call_data
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -86,6 +96,27 @@ def submit_dict_help(skicall):
     text = skilift.get_textblock_text(sdtextref, skicall.lang, project=skicall.project)
     if not text:
         text = "No help text for %s has been found" % sdtextref
+    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
+    skicall.page_data[("adminhead","show_help","hide")] = False
+
+
+def call_data_help(skicall):
+    "Retrieves help text for the responder call_data"
+    call_data = skicall.call_data
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message = "page missing")
+    try:
+        project = call_data['editedprojname']
+        # get a ResponderInfo named tuple with information about the responder
+        r_info = editresponder.responder_info(project, pagenumber, call_data['pchange'])
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    cdtextref = _t_ref(r_info, 'call_data')
+    text = skilift.get_textblock_text(cdtextref, skicall.lang, project=skicall.project)
+    if not text:
+        text = "No help text for %s has been found" % cdtextref
     skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
     skicall.page_data[("adminhead","show_help","hide")] = False
 

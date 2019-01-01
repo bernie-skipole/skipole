@@ -368,9 +368,9 @@ main purpose is to act as a parent class for all other respond objects.
 
         # create submit_dict
         if error_dict:
-            submit_dict = {'environ':environ, 'error_dict':error_dict}
+            submit_dict = {'error_dict':error_dict}
         else:
-            submit_dict = {'environ':environ, 'error_dict':{}}
+            submit_dict = {'error_dict':{}}
 
         if self.target_ident_required:
             submit_dict['target_ident'] = self.ident_for_user(self.target_ident)
