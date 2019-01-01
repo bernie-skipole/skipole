@@ -21182,6 +21182,24 @@ false
 }
 }
 },
+"call_data_help": {
+"ident": 6022,
+"brief": "Returns JSON call_data help text",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [],
+"fail_ident": "admin_home",
+"submit_list": [
+"editresponders",
+"editrespondpage",
+"call_data_help"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+},
 "delete_allowed_caller": {
 "ident": 6090,
 "brief": "Check the delete_allowed_caller fields",
@@ -21382,6 +21400,24 @@ false
 "original_fields": {}
 }
 },
+"skicall_help": {
+"ident": 6021,
+"brief": "Returns JSON skicall help text",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [],
+"fail_ident": "admin_home",
+"submit_list": [
+"editresponders",
+"editrespondpage",
+"skicall_help"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+},
 "submit_dict_help": {
 "ident": 6020,
 "brief": "Returns JSON submit_dict help text",
@@ -21389,7 +21425,7 @@ false
 "class": "SubmitData",
 "original_args": {
 "allowed_callers": [],
-"fail_ident": "adminhome",
+"fail_ident": "admin_home",
 "submit_list": [
 "editresponders",
 "editrespondpage",
@@ -29102,6 +29138,29 @@ false,
 "Widget",
 {
 "class": "links.JSONButtonLink",
+"name": "open_skicall",
+"brief": "Opens the skicall description",
+"fields": {
+"button_text": "skicall",
+"button_wait_text": "Please wait...",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "6021",
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-button w3-theme-d4",
+"widget_style": "width:20%;"
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
 "name": "open_submit_dict",
 "brief": "Opens the submit dictionary description",
 "fields": {
@@ -29117,7 +29176,30 @@ false,
 "show": true,
 "show_error": "",
 "widget_class": "w3-button w3-theme-d4",
-"widget_style": ""
+"widget_style": "width:20%;"
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
+"name": "open_call_data",
+"brief": "Opens the call_data dictionary description",
+"fields": {
+"button_text": "skicall.call_data",
+"button_wait_text": "Please wait...",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "6022",
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-button w3-theme-d4",
+"widget_style": "width:20%;"
 }
 }
 ]
