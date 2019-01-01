@@ -21382,6 +21382,24 @@ false
 "original_fields": {}
 }
 },
+"submit_dict_help": {
+"ident": 6020,
+"brief": "Returns JSON submit_dict help text",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [],
+"fail_ident": "adminhome",
+"submit_list": [
+"editresponders",
+"editrespondpage",
+"submit_dict_help"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+},
 "target_ident": {
 "ident": 6060,
 "brief": "Sets the target ident",
@@ -29035,48 +29053,81 @@ false,
 [
 "Widget",
 {
-"class": "links.OpenButton",
-"name": "open_submit_dict",
-"brief": "Opens the submit dictionary description",
+"class": "paras.TagBlock",
+"name": "submit_info",
+"brief": "div to hold text and buttons about submit information",
 "fields": {
-"get_field1": "",
-"get_field2": "",
-"link_ident": "no_javascript",
+"drag": "",
+"drop": "",
+"dropident": "",
+"hide": false,
 "show": true,
-"target_section": "",
-"target_widget": "submit_dict_description",
+"tag": "div",
 "widget_class": "",
 "widget_style": ""
-}
+},
+"container_0": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div holding text and info buttons",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About submit_dict",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Your submit_data function will be called with a 'skicall' object as the function argument. This object has (amongst other attributes), a submit_dict attribute specific to this responder - choose the help buttons below for further information."
+]
+]
 }
 ],
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "div to hold buttons",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
 "Widget",
 {
-"class": "confirm.AlertClear1",
-"name": "submit_dict_description",
-"brief": "Shows the submit dictionary description",
+"class": "links.JSONButtonLink",
+"name": "open_submit_dict",
+"brief": "Opens the submit dictionary description",
 "fields": {
-"boxdiv_class": "",
-"button_class": "w3-button w3-round w3-theme-l1 w3-right",
-"buttondiv_class": "",
-"buttondiv_style": "position:fixed; top:84px; right:14px; z-index:100;",
+"button_text": "skicall.submit_dict",
+"button_wait_text": "Please wait...",
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-button w3-block w3-theme-action",
 "get_field1": "",
 "get_field2": "",
-"get_field3": "",
-"hide": true,
-"inner_class": "w3-container",
-"inner_style": "margin-right:20px;",
+"hide": false,
+"json_ident": "6020",
 "link_ident": "no_javascript",
-"para_text": "Unable to find help text for this page.",
-"pre_line": true,
 "show": true,
 "show_error": "",
-"widget_class": "w3-sidebar w3-container w3-theme-d4 w3-border-top w3-border-left w3-border-bottom",
-"widget_style": "width : 50%; right : 0; top : 80px;height : 70vh;"
+"widget_class": "w3-button w3-theme-d4",
+"widget_style": ""
 }
+}
+]
+]
+}
+]
+]
+}
+]
+]
 }
 ],
 [

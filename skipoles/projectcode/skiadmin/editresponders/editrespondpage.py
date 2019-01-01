@@ -69,6 +69,27 @@ def _t_ref(r_info, item):
     return ".".join(["responders", r_info.module_name, r_info.responder, item])
 
 
+def submit_dict_help(skicall):
+    "Retrieves hepl text for the responder submit_dict"
+    call_data = skicall.call_data
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message = "page missing")
+    try:
+        project = call_data['editedprojname']
+        # get a ResponderInfo named tuple with information about the responder
+        r_info = editresponder.responder_info(project, pagenumber, call_data['pchange'])
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    sdtextref = _t_ref(r_info, 'submit_dict')
+    text = skilift.get_textblock_text(sdtextref, skicall.lang, project=skicall.project)
+    if not text:
+        text = "No help text for %s has been found" % sdtextref
+    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
+    skicall.page_data[("adminhead","show_help","hide")] = False
+
+
 def retrieve_edit_respondpage(skicall):
     "Retrieves widget data for the edit respond page"
 
@@ -181,13 +202,6 @@ def retrieve_edit_respondpage(skicall):
         page_data['submit_status','show'] = False
 
     if r_info.submit_required or r_info.submit_option:
-
-        sdtextref = _t_ref(r_info, 'submit_dict')
-        text = skilift.get_textblock_text(sdtextref, skicall.lang, project=skicall.project)
-        if not text:
-            text = "No help text for %s has been found" % sdtextref
-        page_data['submit_dict_description','para_text'] = "\n" + text
-
         page_data['submit_list_description','textblock_ref'] = 'responders.about_submit_list'
 
         if r_info.submit_list:
