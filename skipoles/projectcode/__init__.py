@@ -212,7 +212,7 @@ def start_call(environ, path, proj_ident, rootproject, ident, caller_ident, rece
     return new_called_ident, skicall
 
 
-def submit_data(ident_list, submit_list, submit_dict, skicall):
+def submit_data(ident_list, submit_list, skicall):
     "Calls the appropriate submit_data function"
     proj_ident = ident_list[-1].proj
     this_project = skiboot.getproject(proj_ident)
@@ -226,7 +226,7 @@ def submit_data(ident_list, submit_list, submit_dict, skicall):
     skicall.rootproject = this_project.rootproject
 
     # add project brief to submit_dict
-    submit_dict['brief'] = this_project.brief
+    skicall.submit_dict['project_brief'] = this_project.brief
     tuple_ident_list = [ ident.to_tuple() for ident in ident_list ]
     try:
         project_code = _import_project_code(proj_ident)

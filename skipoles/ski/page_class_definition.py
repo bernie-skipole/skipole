@@ -944,6 +944,13 @@ class RespondPage(ParentPage):
             raise ServerError(message="Circulating call to Respond page: ident %s in %s" % (self.ident, ident_list))
         ident_list.append(self.ident)
         proj = self.ident.proj
+
+        # create submit_dict
+        if error_dict:
+            skicall.submit_dict = {"responder_brief":self.brief, "number":self.ident.num, 'error_dict':error_dict}
+        else:
+            skicall.submit_dict = {"responder_brief":self.brief, "number":self.ident.num, 'error_dict':{}}
+
         page = self.responder(skicall, environ, lang, form_data, caller_ident, ident_list, call_data, page_data, proj, rawformdata, error_dict)
         return page
 

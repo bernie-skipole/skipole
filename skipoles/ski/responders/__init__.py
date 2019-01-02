@@ -366,21 +366,15 @@ main purpose is to act as a parent class for all other respond objects.
     def __call__(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, error_dict=None):
         "gets the project ident, and page messages and calls self._respond"
 
-        # create submit_dict
-        if error_dict:
-            submit_dict = {'error_dict':error_dict}
-        else:
-            submit_dict = {'error_dict':{}}
-
         if self.target_ident_required:
-            submit_dict['target_ident'] = self.ident_for_user(self.target_ident)
+            skicall.submit_dict['target_ident'] = self.ident_for_user(self.target_ident)
         if self.submit_required or self.submit_option_available:
-            submit_dict['fail_ident'] = self.ident_for_user(self.fail_ident)
+            skicall.submit_dict['fail_ident'] = self.ident_for_user(self.fail_ident)
         if self.alternate_ident_required:
-            submit_dict['alternate_ident'] = self.ident_for_user(self.alternate_ident)
+            skicall.submit_dict['alternate_ident'] = self.ident_for_user(self.alternate_ident)
         # call self._respond
         try:
-            page = self._respond(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict)
+            page = self._respond(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         except GoTo as e:
             e.proj_ident=proj_ident
             raise e
@@ -403,7 +397,7 @@ main purpose is to act as a parent class for all other respond objects.
         return page
 
 
-    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata, submit_dict):
+    def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
         """Should be overridden
         this method then returns the target page - or the ultimate page
         if the target is itself another Respond page
