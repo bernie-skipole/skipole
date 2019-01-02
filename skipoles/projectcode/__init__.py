@@ -70,6 +70,17 @@ class SkiCall(object):
         self.submit_dict = {}
         self.call_data = {}
         self.page_data = {}
+
+    @property
+    def accesstextblocks(self):
+        "Returns the project instance of the AccessTextBlocks class"
+        this_project = skiboot.getproject(proj_ident=self.project)
+        return this_project.textblocks
+
+    def textblock_text(self, textref):
+        """This function returns the textblock text, given a textblock reference string
+           If no textblock is found, returns None."""
+        return self.accesstextblocks.get_text(textref, self.lang)
  
 
 
