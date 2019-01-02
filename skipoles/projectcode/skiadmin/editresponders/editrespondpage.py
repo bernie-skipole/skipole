@@ -79,6 +79,36 @@ def skicall_help(skicall):
     skicall.page_data[("adminhead","show_help","hide")] = False
 
 
+def use_submit_list_help(skicall):
+    "Retrieves help text for the use_submit_list decorator"
+    text = skilift.get_textblock_text("aboutcode.usesubmitlist", skicall.lang, project=skicall.project)
+    if not text:
+        text = "No help text for aboutcode.use_submit_list has been found"
+    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
+    skicall.page_data[("adminhead","show_help","hide")] = False
+
+
+def submit_data_help(skicall):
+    "Retrieves help text for the submit_data function"
+    call_data = skicall.call_data
+    if 'page_number' in call_data:
+        pagenumber = call_data['page_number']
+    else:
+        raise FailPage(message = "page missing")
+    try:
+        project = call_data['editedprojname']
+        # get a ResponderInfo named tuple with information about the responder
+        r_info = editresponder.responder_info(project, pagenumber, call_data['pchange'])
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    sdtextref = _t_ref(r_info, 'submit_data')
+    text = skilift.get_textblock_text(sdtextref, skicall.lang, project=skicall.project)
+    if not text:
+        text = "No help text for %s has been found" % sdtextref
+    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
+    skicall.page_data[("adminhead","show_help","hide")] = False
+
+
 def submit_dict_help(skicall):
     "Retrieves help text for the responder submit_dict"
     call_data = skicall.call_data
@@ -249,6 +279,7 @@ def retrieve_edit_respondpage(skicall):
         page_data['submit_list_description','show'] = False
         page_data['submit_list','show'] = False
         page_data['submit_string','show'] = False
+        page_data['submit_info','show'] = False
         page_data['fail_page_ident','show'] = False
 
     # final paragraph
