@@ -233,7 +233,6 @@ def submit_data(ident_list, submit_list, skicall):
 
         skicall.ident_list = tuple_ident_list
         skicall.submit_list = submit_list
-        skicall.submit_dict = submit_dict
 
         result = project_code.submit_data(skicall)
     except (GoTo, FailPage, ServerError, ValidateError) as e:

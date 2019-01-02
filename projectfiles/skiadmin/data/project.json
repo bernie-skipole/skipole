@@ -21418,6 +21418,24 @@ false
 "original_fields": {}
 }
 },
+"submit_data_help": {
+"ident": 6023,
+"brief": "Returns JSON submit_data help text",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [],
+"fail_ident": "admin_home",
+"submit_list": [
+"editresponders",
+"editrespondpage",
+"submit_data_help"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+},
 "submit_dict_help": {
 "ident": 6020,
 "brief": "Returns JSON submit_dict help text",
@@ -21486,6 +21504,24 @@ false
 "original_fields": {
 "target:input_text": "target_ident"
 }
+}
+},
+"use_submit_list_help": {
+"ident": 6024,
+"brief": "Returns JSON use_submit_list decorator help text",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [],
+"fail_ident": "admin_home",
+"submit_list": [
+"editresponders",
+"editrespondpage",
+"use_submit_list_help"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
 }
 },
 "validate_fail_ident": {
@@ -29141,11 +29177,34 @@ false,
 "Widget",
 {
 "class": "links.JSONButtonLink",
+"name": "open_submit_data",
+"brief": "Opens the submit_data description",
+"fields": {
+"button_text": "submit_data()",
+"button_wait_text": "submit_data()",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "6023",
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-bar-item w3-button w3-theme-d4",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
 "name": "open_skicall",
 "brief": "Opens the skicall description",
 "fields": {
 "button_text": "skicall",
-"button_wait_text": "Please wait...",
+"button_wait_text": "skicall",
 "clear_error": false,
 "error_class": "w3-button w3-block w3-theme-action",
 "get_field1": "",
@@ -29168,7 +29227,7 @@ false,
 "brief": "Opens the submit dictionary description",
 "fields": {
 "button_text": "skicall.submit_dict",
-"button_wait_text": "Please wait...",
+"button_wait_text": "skicall.submit_dict",
 "clear_error": false,
 "error_class": "w3-button w3-block w3-theme-action",
 "get_field1": "",
@@ -29191,13 +29250,36 @@ false,
 "brief": "Opens the call_data dictionary description",
 "fields": {
 "button_text": "skicall.call_data",
-"button_wait_text": "Please wait...",
+"button_wait_text": "skicall.call_data",
 "clear_error": false,
 "error_class": "w3-button w3-block w3-theme-action",
 "get_field1": "",
 "get_field2": "",
 "hide": false,
 "json_ident": "6022",
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-bar-item w3-button w3-theme-d4",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
+"name": "open_use_submit_list",
+"brief": "Opens the use_submit_list decorator description",
+"fields": {
+"button_text": "@use_submit_list",
+"button_wait_text": "@use_submit_list",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "6024",
 "link_ident": "no_javascript",
 "show": true,
 "show_error": "",
