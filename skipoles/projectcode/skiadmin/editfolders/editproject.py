@@ -157,17 +157,14 @@ def get_text(skicall):
     """Finds any widget submitting 'get_field' with value of a textblock ref, returns
        page_data with key widget with field 'div_content' and value the textblock text"""
 
-    call_data = skicall.call_data
     page_data = skicall.page_data
 
-    # adminproj is the admin project name, normally skiadmin
-    adminproj = skilift.admin_project()
     if 'received' not in skicall.submit_dict:
         return
     received_widgfields = skicall.submit_dict['received']
     for key, val in received_widgfields.items():
         if isinstance(key, tuple) and (key[-1] == 'get_field'):
-            text = skilift.get_textblock_text(val, skicall.lang, project=adminproj).replace('\n', '\n<br />')
+            text = skicall.textblock_text(val).replace('\n', '\n<br />')
             if text is None:
                 continue
             if len(key) == 3:

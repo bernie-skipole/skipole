@@ -118,7 +118,7 @@ def _clear_index_input_accepted(page_data):
 
 
 def retrieve_help(skicall):
-    "Uses skilift.get_textblock_text to get text help for the admin pages"
+    "Uses skicall.textblock_text to get text help for the admin pages"
 
     call_data = skicall.call_data
     page_data = skicall.page_data
@@ -126,12 +126,11 @@ def retrieve_help(skicall):
     # clears any session data
     utils.clear_call_data(call_data)
     page_data.clear()
-    adminproj = skilift.admin_project()
     caller_ident = call_data['caller_ident']
     if not caller_ident:
         return
     textref = 'page.' + str(caller_ident[1])
-    text = skilift.get_textblock_text(textref, skicall.lang, project=adminproj)
+    text = skicall.textblock_text(textref)
     if not text:
         text = "No help text for page %s has been found" % caller_ident[1]
     page_data[("adminhead","show_help","para_text")] = "\n" + text
