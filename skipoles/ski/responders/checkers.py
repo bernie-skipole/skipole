@@ -518,9 +518,6 @@ class PrettyFormData(Respond):
 
     def _respond(self, skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata):
 
-
-
-
         if form_data:
             new_dict = { key.to_tuple_no_i():val for key, val in form_data.items() }
             skicall.submit_dict['form_data'] = pprint.pformat(new_dict)
