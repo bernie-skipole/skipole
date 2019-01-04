@@ -37624,17 +37624,14 @@ false
 }
 },
 "pages": {
-"aaatest": {
-"ident": 85003,
+"aaa": {
+"ident": 85002,
 "brief": "test",
 "RespondPage": {
-"class": "StoreData",
+"class": "ColourSubstitute",
 "original_args": {
-"fail_ident": null,
-"submit_option": true,
-"target_ident": "",
-"validate_fail_ident": null,
-"validate_option": false
+"fail_ident": "",
+"target_ident": ""
 },
 "original_fields": {}
 }
