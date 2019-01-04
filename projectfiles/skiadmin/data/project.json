@@ -37628,7 +37628,7 @@ false
 "ident": 85002,
 "brief": "test",
 "RespondPage": {
-"class": "ColourSubstitute",
+"class": "LanguageCookie",
 "original_args": {
 "fail_ident": "",
 "target_ident": ""
