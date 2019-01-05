@@ -97,6 +97,51 @@ class Link(Widget):
 </a>"""
 
 
+class LinkToWidget(Widget):
+    """A link to a widget on the same page
+       On error replace the link by the error message"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'content':FieldArg("text", "", jsonset=True),
+                        'towidget':FieldArg("text", "", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        content: The text to be placed within the link, if none given, the towidget id will be used
+        towidget: widget name, or sectionalias,widgetname
+        """
+        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        # where content can be placed
+        self[0] = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the link"
+        # self[0] is initially set as the empty string ''
+        if self.get_field_value("content"):
+            self[0] = self.get_field_value("content")
+        wdgetname = self.get_field_value("towidget")
+        if not wdgetname:
+            self._error = "Warning: broken link"
+            return
+        widget_id = '#' + str( skiboot.make_widgfield(wdgetname, widgetonly=True) )
+        if not self[0]:
+            # if no content, place the widget id as content
+            self[0] = widget_id
+        self.update_attribs({"href": widget_id})
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<a href="#target_widget_id">  <!-- with widget id and class widget_class -->
+  <!-- content -->
+</a>"""
+
+
+
 class ImageOrTextLink(Widget):
     """A link to the page with the given ident, with four optional get fields.
        The displayed contents of the link is either an image page given by img_link

@@ -47,6 +47,38 @@ SKIPOLE.links.Link.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.links.LinkToWidget = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.LinkToWidget.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.LinkToWidget.prototype.constructor = SKIPOLE.links.LinkToWidget;
+SKIPOLE.links.LinkToWidget.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    // content
+    var content = this.fieldarg_in_result('content', result, fieldlist);
+    if (content) {
+        this.widg.text(content);
+        }
+    /* towidget */
+    var towidget = this.fieldarg_in_result('towidget', result, fieldlist);
+    if (towidget) {
+        var commaindex = towidget.indexOf(',');
+        if (commaindex === -1) {
+            // no comma
+            var widget_id = towidget.trim()
+            }
+         else {
+            var sw = towidget.split(',');
+            var widget_id = sw[0].trim() + '-' + sw[1].trim();
+            }      
+        this.widg.attr('href', '#' + widget_id);
+        }
+    };
+
+
 SKIPOLE.links.ImageOrTextLink = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
