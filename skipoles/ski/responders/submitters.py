@@ -263,7 +263,7 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
         if not isinstance(defaultdict, dict):
-            raise ValidateError()
+            raise ServerError(message = "Returned value from submit_data not valid")
 
         # if widgfield empty
         if (self.widgfield not in form_data) or (not form_data[self.widgfield]):
@@ -274,6 +274,12 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
         if not isinstance(formdict, dict):
             raise ValidateError()
 
+        # check if an unexpected item has been submitted
+        for field, val in formdict.items():
+            if field not in defaultdict:
+                raise ValidateError()
+
+        # fill in any missing key values
         for field, val in defaultdict.items():
             if field not in formdict:
                 formdict[field] = val
@@ -394,8 +400,6 @@ submit_data should return a dictionary which will be set into a _JSON object
 This dictionary is not widgfields, but is any data you like which can be transformed to JSON.
 If a dictionary is successfully returned, the given JSON dictionary will be returned to the client.
 Only page_data['status'] and page_data['headers'] will be used if given.
-If submit_data raises a FailPage then the fail page will be called with
-the error message ignored.
 """
 
     # This indicates an optional submit_list and fail_ident is required
