@@ -683,9 +683,6 @@ Given media queries and CSS page targets, wraps the targets with the media queri
 
         media_target =  self.fields.copy()
 
-
-
-
         # update media target with result of submit_data
         if self.submit_option:
             try:
@@ -726,7 +723,6 @@ Given media queries and CSS page targets, wraps the targets with the media queri
                         style_binary.append("\n{a} : {b};".format(a=a, b=b).encode('UTF-8'))
                     style_binary.append("}\n".encode('UTF-8'))
             style_binary.append("}\n".encode('UTF-8'))
-
 
         css_object = _CSS(ident_list[-1], {})
         css_object.style_binary = style_binary
