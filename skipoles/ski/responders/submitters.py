@@ -665,9 +665,6 @@ Given media queries and CSS page targets, wraps the targets with the media queri
     # The form data can be submitted
     submit_option_available = True
 
-    # This indicates a fail page ident is required
-    alternate_ident_required = True
-
     # Options for the fields argument
     field_options = {'fields': True,                  # If False, no fields are expected
                      'widgfields':False,               # If True, fields are widgfields, if False, can be other constants
@@ -697,7 +694,7 @@ Given media queries and CSS page targets, wraps the targets with the media queri
                 self.raise_error_page([e.errormessage], skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
 
         if not media_target:
-            return self.get_alternate_page(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, proj_ident, rawformdata)
+            raise ServerError(message = "No media queries found")
 
         style_binary = ["@charset \"UTF-8\";\n".encode('UTF-8')]
         

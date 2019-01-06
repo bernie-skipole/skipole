@@ -2,7 +2,7 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "2.0.1",
+"version": "2.1.0",
 "skipole": "2.0.1",
 "subprojects": {
 "lib": {
@@ -37624,6 +37624,17 @@ false
 }
 },
 "pages": {
+"aaa": {
+"ident": 85002,
+"brief": "aaa",
+"RespondPage": {
+"class": "SubmitIterator",
+"original_args": {
+"fail_ident": ""
+},
+"original_fields": {}
+}
+},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
