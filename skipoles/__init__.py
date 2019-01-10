@@ -169,7 +169,7 @@ def remove_project(proj_ident):
                 os.unlink(code_dir)
             else:
                 shutil.rmtree(code_dir)
-        except:
+        except Exception:
             print("Error while attempting to remove %s" % (code_dir,))
         else:
             print("Removed Symlink: %s" % (code_dir,))

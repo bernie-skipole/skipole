@@ -127,7 +127,7 @@ def set_placeholder(skicall):
     elif 'multiplier' in call_data:
         try:
             multiplier = int(call_data["multiplier"])
-        except:
+        except Exception:
             raise FailPage(message='Invalid multiplier, should be an integer of 1 or above')
         if multiplier < 1:
            raise FailPage(message='Invalid multiplier, should be an integer of 1 or above')

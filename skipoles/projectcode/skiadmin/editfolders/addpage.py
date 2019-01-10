@@ -117,7 +117,7 @@ def _common_page_items(skicall):
             elif '_' in page_ident:
                 page_ident = page_ident.split('_')[-1]
         pagenumber = int(page_ident)
-    except:
+    except Exception:
         raise FailPage(message = "The page number is invalid")
     if pagenumber < 1:
         raise FailPage(message = "The page number is invalid")

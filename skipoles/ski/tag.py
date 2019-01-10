@@ -52,7 +52,7 @@ def expand_text(text, escape=True, linebreaks=True, replace_strings=[]):
     if replace_strings:
         try:
             newtext = text % tuple(replace_strings)
-        except:
+        except Exception:
             # unable to complete the replace, so carry on
             pass
         else:
@@ -512,7 +512,7 @@ class Part(ParentPart):
         if isinstance(location_list, str):
             try:
                 location_list = int(location_list)
-            except:
+            except Exception:
                 raise TypeError('Invalid location')
         if isinstance(location_list, int):
             self[location_list] = value
@@ -532,7 +532,7 @@ class Part(ParentPart):
         if isinstance(location_list, str):
             try:
                 location_list = int(location_list)
-            except:
+            except Exception:
                 raise TypeError('Invalid location')
         if isinstance(location_list, int):
             self.insert(location_list, value)
@@ -552,7 +552,7 @@ class Part(ParentPart):
         if isinstance(location_list, str):
             try:
                 location_list = int(location_list)
-            except:
+            except Exception:
                 raise TypeError('Invalid location')
         if isinstance(location_list, int):
             return self.parts[location_list]
@@ -568,7 +568,7 @@ class Part(ParentPart):
         if isinstance(location_list, str):
             try:
                 location_list = int(location_list)
-            except:
+            except Exception:
                 raise TypeError('Invalid location')
         if isinstance(location_list, int):
             del self[location_list]
@@ -834,7 +834,7 @@ class SectionPlaceHolder(object):
         self.ident_string = ''
         try:
             mult = int(multiplier)
-        except:
+        except Exception:
             mult = 1
         if mult<1:
             mult = 1

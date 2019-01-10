@@ -144,7 +144,7 @@ class ParentFieldArg(object):
                     return 0
                 try:
                     int_val = int(val)
-                except:
+                except Exception:
                     raise ValidateError("Given value invalid, should be integer")
                 return int_val
             elif valtype =='widgfield':
@@ -1151,7 +1151,7 @@ class Widget(tag.Part):
                 endnumber = field_arg[4:]
                 try:
                     num = int(endnumber)
-                except:
+                except Exception:
                     continue
                 if not num: continue
                 if num > m:
@@ -1812,7 +1812,7 @@ class ClosedWidget(tag.ClosedPart):
                 endnumber = field_arg[4:]
                 try:
                     num = int(endnumber)
-                except:
+                except Exception:
                     continue
                 if not num: continue
                 if num > m:

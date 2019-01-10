@@ -235,7 +235,7 @@ def move_location(project, section_name, schange, from_location, to_location):
                 section.del_location_value(from_location_integers)
                 # and insert it in the new location
                 section.insert_location_value(to_location_integers, part)
-            except:
+            except Exception:
                 raise ServerError(message="Unable to move item")
         else:
             # move in the downwards direction
@@ -248,7 +248,7 @@ def move_location(project, section_name, schange, from_location, to_location):
                 section.insert_location_value(to_location_integers, part)
                 # delete part from current location
                 section.del_location_value(from_location_integers)
-            except:
+            except Exception:
                 raise ServerError(message="Unable to move item")
         # And save this section copy to the project
         return proj.add_section(section_name, section)
@@ -343,7 +343,7 @@ def create_part_in_section(project, section_name, schange, location, json_data):
     proj, section = get_proj_section(project, section_name, schange)
     try:
         newpart = read_json.make_part_for_section(section, json_data)
-    except:
+    except Exception:
         raise ServerError("Unable to create part")
     # call skilift.insert_item_in_section to insert the item, save the section and return schange
     new_schange, new_location = insert_item_in_section(project, section_name, schange, location, newpart)

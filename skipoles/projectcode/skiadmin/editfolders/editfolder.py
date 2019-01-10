@@ -77,7 +77,7 @@ def retrieve_edited_folder(skicall):
         try:
             proj,folder = call_data['edit_folder'].split('_')
             folder_number = int(folder)
-        except:
+        except Exception:
             raise FailPage(message = "Invalid Folder")
         if proj != editedprojname:
             raise FailPage(message = "Invalid Folder")
@@ -212,7 +212,7 @@ def move_to_folder(skicall):
     try:
         folder_num = int(folder_num)
         item_num = int(item_num)
-    except:
+    except Exception:
         raise FailPage(message="Submission not recognised - integer numbers of item idents are require")
 
     # call function in skilift.editfolder
@@ -242,7 +242,7 @@ def choose_edit_action(skicall):
         get_field_list = action.split('_')
         project = get_field_list[-2]
         itemnumber = int(get_field_list[-1])
-    except:
+    except Exception:
         raise FailPage(message = "Requested action not recognised")
     if action.startswith('edit_folder_'):
         call_data['edit_folder'] = action[12:]
@@ -258,7 +258,7 @@ def choose_edit_action(skicall):
         try:
             # pinfo is tuple 'name', 'number', 'restricted', 'brief', 'item_type', 'responder', 'enable_cache', 'change'
             pinfo = skilift.page_info(project, itemnumber)
-        except:
+        except Exception:
             raise FailPage(message = "Requested page not recognised")
         call_data['page_number'] = pinfo.number
         call_data['pchange'] = pinfo.change
@@ -293,7 +293,7 @@ def choose_remove_action(skicall):
         project = get_field_list[-2]
         itemnumber = int(get_field_list[-1])
         info = skilift.item_info(project, itemnumber)
-    except:
+    except Exception:
         raise FailPage(message = "Item to remove not recognised")
     if not info:
         raise FailPage(message = "Item to remove not recognised")
@@ -317,7 +317,7 @@ def delete_item(skicall):
         project = ident[0]
         itemnumber = int(ident[1])
         info = skilift.item_info(project, itemnumber)
-    except:
+    except Exception:
         raise FailPage(message = "Item to remove not recognised")
 
     if not info:

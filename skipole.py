@@ -187,7 +187,7 @@ if __name__ == "__main__":
         # installed on your server, package 'python3-waitress' with debian
         try:
             from waitress import serve
-        except:
+        except Exception:
             print("Unable to import waitress")
             sys.exit(1)
     else:

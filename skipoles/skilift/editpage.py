@@ -290,7 +290,7 @@ def move_location(project, pagenumber, pchange, from_location, to_location):
                 top_part.del_location_value(from_location_integers)
                 # and insert it in the new location
                 top_part.insert_location_value(to_location_integers, part)
-            except:
+            except Exception:
                 raise ServerError(message="Unable to move item")
         else:
             # move in the downwards direction
@@ -305,7 +305,7 @@ def move_location(project, pagenumber, pchange, from_location, to_location):
                 top_part.insert_location_value(to_location_integers, part)
                 # delete part from current location
                 top_part.del_location_value(from_location_integers)
-            except:
+            except Exception:
                 raise ServerError(message="Unable to move item")
         # And save this page copy to the project
         return proj.save_page(page)
@@ -445,7 +445,7 @@ def create_part_in_page(project, pagenumber, pchange, location, json_data):
         raise ServerError(message = "Invalid page type")
     try:
         newpart = read_json.make_part_for_page(page, json_data)
-    except:
+    except Exception:
         raise ServerError("Unable to create part")
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
     new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, newpart)

@@ -357,7 +357,7 @@ class TemplatePageAndSVG(ParentPage):
         sname, snumber = section_name.rsplit('_', 1)
         try:
             snumber = int(snumber)
-        except:
+        except Exception:
             return
         # 0 is not allowed, snumber must be greater than zero
         if snumber<1:
@@ -391,7 +391,7 @@ class TemplatePageAndSVG(ParentPage):
             if page_data and (placename,'multiplier') in page_data:
                 try:
                     multiplier = int(page_data[placename,'multiplier'])
-                except:
+                except Exception:
                     pass
                 else:
                     if multiplier > 0:
@@ -1219,7 +1219,7 @@ class FilePage(ParentPage):
             if self._headers_flag:
                 # only add content-length if headers auto set, not if headers specified in page_data
                 self.headers.append(('content-length', str(os.path.getsize(self._filepath_relative_to_project_files))))
-        except:
+        except Exception:
             raise ServerError(message="Unable to open file %s" % (self.name,))
         # if a session cookie is specified, add it even if headers have been user set
         if self.session_cookie:

@@ -34,7 +34,7 @@ import os, json, shutil
 _docutils_available = True
 try:
     from docutils import core
-except:
+except Exception:
     _docutils_available = False
 
 
@@ -207,7 +207,7 @@ class AccessTextBlocks(object):
             del langlist[pos]
             if not langlist:
                 del self._textrefs[textref]
-        except:
+        except Exception:
             pass
         # test if language used anywhere
         for langlist in self._textrefs.values():
