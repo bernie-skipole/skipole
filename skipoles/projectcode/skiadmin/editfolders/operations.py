@@ -127,7 +127,7 @@ def submit_project_color(skicall):
 
     try:
         backcol = call_data['htmlbackcol','input_text']
-    except:
+    except Exception:
         raise ValidateError(message='Invalid call')
     try:
         editedprojname = call_data['editedprojname']
@@ -148,7 +148,7 @@ def set_bodyclass_in_pages(skicall):
 
     try:
         bodyclass = call_data['bodyclass','input_text']
-    except:
+    except Exception:
         raise ValidateError(message='Invalid call')
     # set body class in all project template pages
     editedprojname = call_data['editedprojname']
@@ -171,7 +171,7 @@ def insert_css_link(skicall):
     try:
         brief = call_data['insert_css_link_brief','input_text']
         label = call_data['insert_css_link_label','input_text']
-    except:
+    except Exception:
         raise ValidateError(message='Invalid call')
     if not brief:
         raise ValidateError(message='A brief must be given')
@@ -193,7 +193,7 @@ def set_css_class(skicall):
     try:
         brief = call_data['set_css_class_brief','input_text']
         cssclass = call_data['set_css_class_string','input_text']
-    except:
+    except Exception:
         raise ValidateError(message='Invalid call')
     if not brief:
         raise ValidateError(message='A brief must be given')

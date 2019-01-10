@@ -968,7 +968,7 @@ def del_location_in_page(project, pagenumber, pchange, location):
         # remove the item
         try:
             top.del_location_value(location_integers)
-        except:
+        except Exception:
             raise ServerError(message="Unable to delete item")
         # And save this page copy to the project
         return proj.save_page(page)
@@ -999,7 +999,7 @@ def del_location_in_page(project, pagenumber, pchange, location):
     # remove the item
     try:
         top.del_location_value(item_location_ints)
-    except:
+    except Exception:
         raise ServerError(message="Unable to delete item")
     # And save this page copy to the project
     return proj.save_page(page)
@@ -1018,7 +1018,7 @@ def del_location_in_section(project, section_name, schange, location):
         # remove the item
         try:
             section.del_location_value(location_integers)
-        except:
+        except Exception:
             raise ServerError(message="Unable to delete item")
         # And save this section copy to the project
         return proj.add_section(section_name, section)
@@ -1039,7 +1039,7 @@ def del_location_in_section(project, section_name, schange, location):
     # remove the item
     try:
         section.del_location_value(item_location_ints)
-    except:
+    except Exception:
         raise ServerError(message="Unable to delete item")
     # And save this section copy to the project
     return proj.add_section(section_name, section)

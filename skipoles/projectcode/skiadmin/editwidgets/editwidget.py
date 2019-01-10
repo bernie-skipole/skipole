@@ -643,7 +643,7 @@ def retrieve_container(skicall):
         widget_name = widget_container[0]
         try:
             container = int(widget_container[1])
-        except:
+        except Exception:
             raise FailPage(message="Invalid container")
     elif ('widget_name' in call_data) and ('container' in call_data):
         widget_name = call_data['widget_name']
@@ -752,7 +752,7 @@ def retrieve_container_dom(skicall):
     try:
         contdict = fromjson.container_to_OD(project, pagenumber, section_name, location_string, container)
         partdict = {'parts': contdict['container']}
-    except:
+    except Exception:
        raise FailPage(message = "call to fromjson.container_to_OD failed")
 
     # widget editdom,domtable is populated with fields
@@ -903,7 +903,7 @@ def edit_container_dom(skicall):
         widget_name = location_list[0]
         container = int(location_list[1])
         location_integers = [ int(i) for i in location_list[2:]]
-    except:
+    except Exception:
         raise FailPage("Item to edit has not been recognised")
 
 
@@ -984,7 +984,7 @@ def add_to_container_dom(skicall):
         widget_name = location_list[0]
         container = int(location_list[1])
         location_integers = [ int(i) for i in location_list[2:]]
-    except:
+    except Exception:
         raise FailPage("Item to append to has not been recognised")
 
     # location is a tuple of widget_name, container, tuple of location integers
@@ -1068,7 +1068,7 @@ def remove_container_dom(skicall):
         widget_name = location_list[0]
         container = int(location_list[1])
         location_integers = [ int(i) for i in location_list[2:]]
-    except:
+    except Exception:
         raise FailPage("Item to remove has not been recognised")
 
     # location is a tuple of widget_name, container, tuple of location integers
@@ -1137,7 +1137,7 @@ def _item_to_move(call_data):
         widget_name = location_list[0]
         container = int(location_list[1])
         location_integers = [ int(i) for i in location_list[2:]]
-    except:
+    except Exception:
         raise FailPage("Item to move has not been recognised")
 
     # location is a tuple of widget_name, container, tuple of location integers
@@ -1393,7 +1393,7 @@ def move_in_container_dom(skicall):
         widget_name = location_list[0]
         container = int(location_list[1])
         location_to_move_integers = [ int(i) for i in location_list[2:]]
-    except:
+    except Exception:
         raise FailPage("Item to move has not been recognised")
 
     # location is a tuple of widget_name, container, tuple of location integers
@@ -1430,7 +1430,7 @@ def move_in_container_dom(skicall):
     else:
         try:
             target_location_integers = [ int(i) for i in location_list[2:]]
-        except:
+        except Exception:
             raise FailPage("Invalid move, location not accepted")
 
         # location is a tuple of widget_name, container, tuple of location integers

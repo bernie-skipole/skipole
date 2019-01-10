@@ -535,7 +535,7 @@ class Ident(collections.namedtuple('Ident', ['proj','num'])):
             return
         try:
             item = project[self]
-        except:
+        except Exception:
             return
         return item
 

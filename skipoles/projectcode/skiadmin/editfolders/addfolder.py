@@ -137,7 +137,7 @@ def submit_addfolder(skicall):
 
     try:
         folder_ident_number = int(call_data['folder_ident_number'])
-    except:
+    except Exception:
         raise FailPage("The Folder Ident number must be an integer")
     if folder_ident_number<1:
         raise FailPage("The Folder Ident number must be a positive integer greater than zero")
@@ -243,7 +243,7 @@ def submit_upload_folder(skicall):
     # get submitted data for new folder
     try:
         addident = int(call_data['addident'])
-    except:
+    except Exception:
         raise FailPage(message = "Addition integer is invalid")
     importname = call_data['importname']
     uploadfile = call_data['uploadfile']

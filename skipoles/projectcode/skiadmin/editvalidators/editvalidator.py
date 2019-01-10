@@ -76,7 +76,7 @@ def retrieve_editvalidator(skicall):
     # get validator
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Unknown validator to edit")
 
     # get validator and widget info
@@ -176,7 +176,7 @@ def set_e_message(skicall):
     # get validator index
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid validator")
 
     # set message
@@ -227,7 +227,7 @@ def set_e_message_ref(skicall):
     # get validator index
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid validator")
 
     # set message reference
@@ -278,7 +278,7 @@ def set_displaywidget(skicall):
     # get validator index
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid validator")
 
     # set displaywidge
@@ -321,7 +321,7 @@ def set_allowed_value(skicall):
     # get validator index
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid validator")
 
     if 'add_allowed' not in call_data:
@@ -372,7 +372,7 @@ def remove_allowed_value(skicall):
     # get validator index
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid validator")
 
     if 'remove_allowed' not in call_data:
@@ -380,7 +380,7 @@ def remove_allowed_value(skicall):
 
     try:
         idx = int(call_data['remove_allowed'])
-    except:
+    except Exception:
         raise FailPage("Invalid allowed value")
 
     # remove allowed_value
@@ -423,7 +423,7 @@ def retrieve_arg(skicall):
     # get validator
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Unknown validator to edit")
 
     if 'arg_name' not in call_data:
@@ -496,7 +496,7 @@ def set_arg_value(skicall):
     # get validator
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Unknown validator to edit")
 
     if 'arg_name' not in call_data:
@@ -546,7 +546,7 @@ def move_up(skicall):
     # get validator
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid value to move")
 
     if validx == 0:
@@ -592,7 +592,7 @@ def move_down(skicall):
     # get validator
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid value to move")
 
     # move validator
@@ -635,7 +635,7 @@ def remove_validator(skicall):
     # get validator
     try:
         validx = int(call_data['validx'])
-    except:
+    except Exception:
         raise FailPage("Invalid value to remove")
 
     # remove validator

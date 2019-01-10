@@ -90,7 +90,7 @@ def create_section(project, section_name, json_data):
     project_loaded(project)
     try:
         read_json.create_section(project, section_name, json_data)
-    except:
+    except Exception:
         raise ServerError("Unable to create section")
 
 

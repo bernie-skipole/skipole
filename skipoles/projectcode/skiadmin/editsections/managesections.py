@@ -112,7 +112,7 @@ def retrieve_section_dom(skicall):
 
     try:
         partdict = fromjson.part_to_OD(project, None, section_name, section_location)
-    except:
+    except Exception:
        raise FailPage(message = "call to fromjson.part_to_OD failed")
 
     # widget editdom,domtable is populated with fields

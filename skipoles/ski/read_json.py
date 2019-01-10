@@ -803,7 +803,7 @@ def _create_widget(part_dict, proj_ident):
     # import module
     try:
         mod = importlib.import_module('skipoles.ski.widgets.'+mod_name)
-    except:
+    except Exception:
         print("ERROR: Unable to import widget %s.%s" % (mod_name, widg_class_name))
         raise excepts.ServerError("Error reading file")
     for cls in inspect.getmembers(mod, inspect.isclass):
@@ -887,7 +887,7 @@ def _get_validators(widget, field_name, val_list, proj_ident):
         mod_name, val_class_name = val_class.split('.')
         try:
             mod = importlib.import_module('skipoles.ski.validators.'+mod_name)
-        except:
+        except Exception:
             print("ERROR: Unable to import validator %s.%s" % (mod_name, val_class_name))
             raise excepts.ServerError("Error reading file")
         # get Validator class

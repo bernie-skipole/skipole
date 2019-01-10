@@ -85,7 +85,7 @@ class MinLength(Validator):
         Validator.__setitem__(self, arg_name, value)
         try:
             intval = int(value)
-        except:
+        except Exception:
             raise ValidateError(message = 'minlength value must be an integer')
         if intval < 0:
             raise ValidateError(message = 'A minimum value of least 0 is expected')
@@ -108,7 +108,7 @@ class MaxLength(Validator):
         Validator.__setitem__(self, arg_name, value)
         try:
             intval = int(value)
-        except:
+        except Exception:
             raise ValidateError(message = 'maxlength value must be an integer')
         if intval < 1:
             raise ValidateError(message = 'A maximum value of of at least 1 is expected')
@@ -150,7 +150,7 @@ class IntMinMax(Validator):
         Validator.__setitem__(self, arg_name, value)
         try:
             intval = int(value)
-        except:
+        except Exception:
             raise ValidateError(message = 'values given must be integers')
         if arg_name == 'maxval':
             if intval < 1:
@@ -163,7 +163,7 @@ class IntMinMax(Validator):
     def _check(self, widgfield, item, environ, lang, form_data, call_data, caller_page_ident):
         try:
             i = int(item)
-        except:
+        except Exception:
             return '', False
         if self["maxval"] < self["minval"]:
             return '', False

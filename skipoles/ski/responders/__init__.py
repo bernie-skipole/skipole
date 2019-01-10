@@ -385,7 +385,7 @@ main purpose is to act as a parent class for all other respond objects.
         except PageError:
             raise
         # Any other error, raise ServerError
-        except:
+        except Exception:
             message = "Uncaught exception in user code responder %s,%s" % ident_list[-1]
             if skiboot.get_debug():
                 message += "\n"

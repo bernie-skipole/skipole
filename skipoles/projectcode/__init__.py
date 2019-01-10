@@ -99,7 +99,7 @@ def use_submit_list(submit_data):
         fullsubmitpath = "." + skicall.project + "." + submitpath
         try:
             submitmodule = import_module(fullsubmitpath, __name__)
-        except:
+        except Exception:
             if skiboot.get_debug():
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -111,7 +111,7 @@ def use_submit_list(submit_data):
         # now obtain and run the specified function
         try:
             submitfunc = getattr(submitmodule, skicall.submit_list[-1])
-        except:
+        except Exception:
             raise ServerError("submit_list package %s found, but the required function %s is not recognised" % (submitpath, skicall.submit_list[-1]))
         return submitfunc(skicall)
     return submit_function
@@ -122,7 +122,7 @@ def _import_project_code(proj_ident):
     try:
         if proj_ident  not in _PROJECTS:
             _PROJECTS[proj_ident] = import_module("."+proj_ident, __name__)
-    except:
+    except Exception:
         if skiboot.get_debug():
             exc_type, exc_value, exc_traceback = sys.exc_info()
             str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -140,7 +140,7 @@ def make_AccessTextBlocks(project, projectfiles, default_language):
     try:
         if project  not in _TEXTBLOCKS:
             _TEXTBLOCKS[project] = import_module("."+project+".textblocks", __name__)
-    except:
+    except Exception:
         if skiboot.get_debug():
             exc_type, exc_value, exc_traceback = sys.exc_info()
             str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -211,7 +211,7 @@ def start_call(environ, path, proj_ident, rootproject, ident, caller_ident, rece
         # could be a label
     except ServerError as e:
         raise e
-    except:
+    except Exception:
         if skiboot.get_debug():
             exc_type, exc_value, exc_traceback = sys.exc_info()
             str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -248,7 +248,7 @@ def submit_data(ident_list, submit_list, skicall):
         result = project_code.submit_data(skicall)
     except (GoTo, FailPage, ServerError, ValidateError) as e:
         raise e
-    except:
+    except Exception:
         message = 'Error in submit_data called by responder ' + str(tuple_ident_list[-1]) + '\n'
         if skiboot.get_debug():
             exc_type, exc_value, exc_traceback = sys.exc_info()

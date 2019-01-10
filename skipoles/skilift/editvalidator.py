@@ -215,7 +215,7 @@ def swap_page_field_validators(project, pagenumber, pchange, widget_name, field_
     # swap validators
     try:
         val_list[validx1], val_list[validx2] = val_list[validx2], val_list[validx1]
-    except:
+    except Exception:
         raise ServerError("Invalid operation")
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
@@ -227,7 +227,7 @@ def swap_section_field_validators(project, section_name, schange, widget_name, f
     # swap validators
     try:
         val_list[validx1], val_list[validx2] = val_list[validx2], val_list[validx1]
-    except:
+    except Exception:
         raise ServerError("Invalid operation")
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)

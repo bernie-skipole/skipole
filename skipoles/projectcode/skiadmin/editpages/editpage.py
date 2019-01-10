@@ -507,7 +507,7 @@ def submit_refresh(skicall):
         else:
             interval = int(call_data['interval', 'input_text'])
             interval_target = call_data['interval_target', 'input_text']
-    except:
+    except Exception:
         raise FailPage(message="Error setting JSON refresh")
 
     try:
