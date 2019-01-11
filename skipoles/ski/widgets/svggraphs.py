@@ -240,13 +240,16 @@ class Graph48Hr(Widget):
                         'axiscol':FieldArg("text", "green"),
                         'minvalue':FieldArg("text", "0"),
                         'maxvalue':FieldArg("text", "100"),
+                        'plot_values':FieldArg("boolean", True)
                        }
 
 
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a graph, held in a 1200 high x 1200 wide space
            values: a list of datetime objects within the last 48 hr
-           These will be plotted on the chart from 48hr ago to now
+           These will be plotted on the chart from 48hr ago to latest date in the values
+           If plot_values is False, axis will be displayed without any values plotted
+           set as the right hand datetime 
         """
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
         self._hr = datetime.timedelta(hours=1)
@@ -289,19 +292,17 @@ class Graph48Hr(Widget):
                                                            "stroke-width":"1"})
 
         values = self.get_field_value("values")
+
         if not values:
             return
 
-        # create time axis
-
+        # maxt is latest time
         maxt = values[0][1]
         for valpair in values:
             val, t = valpair
             # t is a datetime object
             if t > maxt:
                 maxt = t
-
-        # maxt is latest time
         maxt = maxt.replace(minute=0, second=0, microsecond=0) + self._hr
         mint = maxt - datetime.timedelta(days=2)
 
@@ -385,6 +386,8 @@ class Graph48Hr(Widget):
         else:
             int_maxv, str_minv, str_maxv = self._float_axis(float(maxv), float(minv))
 
+        if not self.get_field_value("plot_values"):
+            return
 
         ymin = Decimal(str_minv)
         ymax = Decimal(str_maxv)
