@@ -240,16 +240,15 @@ class Graph48Hr(Widget):
                         'axiscol':FieldArg("text", "green"),
                         'minvalue':FieldArg("text", "0"),
                         'maxvalue':FieldArg("text", "100"),
-                        'plot_values':FieldArg("boolean", True)
+                        'last_day':FieldArg("date", "")
                        }
 
 
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a graph, held in a 1200 high x 1200 wide space
-           values: a list of datetime objects within the last 48 hr
-           These will be plotted on the chart from 48hr ago to latest date in the values
-           If plot_values is False, axis will be displayed without any values plotted
-           set as the right hand datetime 
+           values: a list of datetime objects covering a 48 hr period
+           These will be plotted on the chart to the latest date in the values
+           If last_day given, rightmost axis will be midnight of that day 
         """
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
         self._hr = datetime.timedelta(hours=1)
@@ -292,18 +291,26 @@ class Graph48Hr(Widget):
                                                            "stroke-width":"1"})
 
         values = self.get_field_value("values")
+        last_day = self.get_field_value("last_day")
 
-        if not values:
+        if (not values) and (not last_day):
+            # do not know when to plot
             return
 
-        # maxt is latest time
-        maxt = values[0][1]
-        for valpair in values:
-            val, t = valpair
-            # t is a datetime object
-            if t > maxt:
-                maxt = t
-        maxt = maxt.replace(minute=0, second=0, microsecond=0) + self._hr
+        # get maxt the last datetime to plot
+        if last_day:
+            # set maxt at midnight of last_day
+            maxt = datetime.datetime(last_day.year, last_day.month, last_day.day) + datetime.timedelta(days=1)
+        else:
+            # set maxt as the start of the hour after the last plotted value
+            maxt = values[0][1]
+            for valpair in values:
+                val, t = valpair
+                # t is a datetime object
+                if t > maxt:
+                    maxt = t
+            maxt = maxt.replace(minute=0, second=0, microsecond=0) + self._hr
+
         mint = maxt - datetime.timedelta(days=2)
 
         axist = mint
@@ -386,9 +393,6 @@ class Graph48Hr(Widget):
         else:
             int_maxv, str_minv, str_maxv = self._float_axis(float(maxv), float(minv))
 
-        if not self.get_field_value("plot_values"):
-            return
-
         ymin = Decimal(str_minv)
         ymax = Decimal(str_maxv)
 
@@ -404,6 +408,9 @@ class Graph48Hr(Widget):
             val, t = valpair
             if t < mint:
                 # early point outside plottable range
+                continue
+            if t > maxt:
+                # late point outside plottable range
                 continue
             val = Decimal(val)
             if val < ymin:
