@@ -158,10 +158,21 @@ class ParentFieldArg(object):
                     return ''
                 return str(val)
             elif valtype =='date':
-                if not val:
-                    return datetime.date.today()
-                elif isinstance(val, datetime.date):
+                if isinstance(val, datetime.date):
                     return val
+                elif not val:
+                    return ''
+                elif isinstance(val, str):
+                    # only accept yyyy-mm-dd
+                    try:
+                        yearstring,monthstring,daystring = val.split('-')
+                        year = int(yearstring)
+                        month = int(monthstring)
+                        day = int(daystring)
+                        thisday = datetime.date(year,month,day)
+                    except:
+                        raise ValidateError("Given value invalid, should be yyyy-mm-dd or a datetime.date object")
+                    return thisday
                 else:
                     raise ValidateError("Given value invalid, should be a datetime.date object")
             elif valtype =='datetime':
