@@ -374,7 +374,7 @@ def retrieve_page_svg(skicall):
     page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' svg'
     # fill in the table
     call_data['location_string'] = 'svg'
-    retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    retrieve_page_dom(skicall)
 
 
 def set_html_lang(skicall):
