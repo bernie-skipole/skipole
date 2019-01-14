@@ -87,6 +87,15 @@ SKIPOLE.links.ImageOrTextLink.prototype = Object.create(SKIPOLE.BaseWidget.proto
 SKIPOLE.links.ImageOrTextLink.prototype.constructor = SKIPOLE.links.ImageOrTextLink;
 
 
+
+SKIPOLE.links.IconLink = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.IconLink.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.IconLink.prototype.constructor = SKIPOLE.links.IconLink;
+
+
 SKIPOLE.links.JSONButtonLink = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     };

@@ -34,6 +34,100 @@ from .. import skiboot, tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
+
+
+class IconLink(Widget):
+    """A link with two optional get fields to the page with the given ident, label or url,
+       with svg content"""
+
+    _container = ((0,0),)
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'link_ident':FieldArg("url", ''),
+                        'get_field1':FieldArg("text", "", valdt=True),
+                        'get_field2':FieldArg("text","", valdt=True),
+                        'svg_class':FieldArg("cssclass", ""),
+                        'svg_style':FieldArg("cssstyle", ""),
+                        'target':FieldArg("text", ""),
+                        'force_ident':FieldArg("boolean", False),
+                        'svg_width':FieldArg("text", "100"),
+                        'svg_height':FieldArg("text", "100"),
+                        'svg_viewBox':FieldArg("text", ""),
+                        'svg_preserveAspectRatio':FieldArg("text", ""),
+                        'transform':FieldArg("text", "")
+                        }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        link_ident: The url, ident or label to link with
+        get_field1: Optional 'get' string set in the target url
+        get_field2: Optional second 'get' string set in the target url
+        svg_class: the class attribute of the svg element holding the container
+        svg_style: the style attribute of the svg element holding the container
+        target: if given, the target attribute will be set
+        force_ident: If True then the page ident will be included, even if no get fields set
+                     If False, the page ident will only be included if a get field is set
+        """
+        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+
+        # The location 0,0 is available as a container
+        self[0] = tag.Part(tag_name="svg")
+        self[0][0] = tag.Part(tag_name="g")
+        self[0][0][0] = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the link"
+        if not self.get_field_value("link_ident"):
+            self._error = "Warning: broken link"
+            return
+        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        if not url:
+            self._error = "Warning: broken link"
+            return
+        # create a url for the href
+        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
+                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+        # add get fields and page ident_data to the url (defined in tag.ParentPart)
+        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+        self.update_attribs({"href": url})
+        if self.get_field_value("target"):
+            self.update_attribs({"target":self.get_field_value("target")})
+
+        # the svg tag holding the container
+        if self.get_field_value('svg_class'):
+            self[0].update_attribs({"class": self.get_field_value('svg_class')})
+        if self.get_field_value('svg_style'):
+            self[0].update_attribs({"style": self.get_field_value('svg_style')})
+        if self.get_field_value("svg_width"):
+            self[0].update_attribs({"width":self.get_field_value("svg_width")})
+        if self.get_field_value("svg_height"):
+            self[0].update_attribs({"height":self.get_field_value("svg_height")})
+        if self.get_field_value("svg_viewBox"):
+            self[0].update_attribs({"viewBox":self.get_field_value("svg_viewBox")})
+        if self.get_field_value("svg_preserveAspectRatio"):
+            self[0].update_attribs({"preserveAspectRatio":self.get_field_value("svg_preserveAspectRatio")})
+
+        if self.get_field_value("transform"):
+            self[0][0].update_attribs({"transform":self.get_field_value("transform")})
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<a href="#">  <!-- with widget id and class widget_class and href the url -->
+    <svg> <!-- with the specified svg attributes -->
+      <g> <!-- with transform attribute if given -->
+         <!-- container 0 for further svg elements -->
+      <g>
+    </svg>
+</a>"""
+
+
+
+
 class Link(Widget):
     """A link to the page with the given ident, label or url, with a text string as the
        visible content and two optional get fields.
