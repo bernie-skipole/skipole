@@ -121,7 +121,7 @@ class IconLink(Widget):
     <svg> <!-- with the specified svg attributes -->
       <g> <!-- with transform attribute if given -->
          <!-- container 0 for further svg elements -->
-      <g>
+      </g>
     </svg>
 </a>"""
 
