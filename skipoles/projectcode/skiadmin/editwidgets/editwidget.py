@@ -765,9 +765,10 @@ def retrieve_container_dom(skicall):
     #              1 - text to send with the call when a row is dropped here
     #    dropident: ident or label of target, called when a drop occurs which returns a JSON page
 
-    #    cols: A two element list for every column in the table, must be given with empty values if no links
+    #    cols: A three element list for every column in the table, must be given with empty values if no links
     #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
     #              1 - target JSON page link ident of buttons in each column,
+    #              2 - session storage key 'ski_part'
 
     #    contents: A list for every element in the table, should be row*col lists
     #               0 - text string, either text to display or button text
@@ -790,6 +791,8 @@ def retrieve_container_dom(skicall):
                    ['', '', False, '' ],
                    ['', '', False, '' ],
                    ['', '', False, '' ],
+                   ['', '', False, '' ],
+                   ['', '', False, '' ],
                    ['', '', False, '' ]
                 ]
 
@@ -804,15 +807,17 @@ def retrieve_container_dom(skicall):
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                       # tag name, no link
-                                                      ['',''],                                       # brief, no link
-                                                      ['move_up_in_container_dom',44540],            # up arrow
-                                                      ['move_up_right_in_container_dom',44550],      # up right
-                                                      ['move_down_in_container_dom',44560],          # down
-                                                      ['move_down_right_in_container_dom',44570],    # down right
-                                                      ['edit_container_dom',''],                     # edit, html only
-                                                      ['add_to_container_dom',''],                   # insert/append, html only
-                                                      ['remove_container_dom','']                    # remove, html only
+    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                       # tag name, no link
+                                                      ['','',''],                                       # brief, no link
+                                                      ['move_up_in_container_dom',44540,''],            # up arrow
+                                                      ['move_up_right_in_container_dom',44550,''],      # up right
+                                                      ['move_down_in_container_dom',44560,''],          # down
+                                                      ['move_down_right_in_container_dom',44570,''],    # down right
+                                                      ['edit_container_dom','',''],                     # edit, html only
+                                                      ['add_to_container_dom','',''],                   # insert/append, html only
+                                                      [1,1,''],                                         # copy
+                                                      [1,1,'ski_part'],                                 # paste
+                                                      ['remove_container_dom','','']                    # remove, html only
                                                    ]
     # for every row in the table
     dragrows = [[ False, '']]

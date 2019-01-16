@@ -148,7 +148,7 @@ def retrieve_page_head(skicall):
 
     # fill in the table
     call_data['location_string'] = 'head'
-    retrieve_page_dom(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    retrieve_page_dom(skicall)
 
 
 def retrieve_page_dom(skicall):
@@ -188,9 +188,10 @@ def retrieve_page_dom(skicall):
     #              1 - text to send with the call when a row is dropped here
     #    dropident: ident or label of target, called when a drop occurs which returns a JSON page
 
-    #    cols: A two element list for every column in the table, must be given with empty values if no links
+    #    cols: A three element list for every column in the table, must be given with empty values if no links
     #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
     #              1 - target JSON page link ident of buttons in each column,
+    #              2 - session storage key 'ski_part'
 
     #    contents: A list for every element in the table, should be row*col lists
     #               0 - text string, either text to display or button text
@@ -222,6 +223,8 @@ def retrieve_page_dom(skicall):
                    ['', '', False, '' ],                                                # no down_right arrow for top line
                    ['Edit',  'width : 1%;', True, location_string],                     # edit
                    ['Insert','width : 1%;text-align: center;', True, location_string],  # insert
+                   ['Copy','width : 1%;text-align: center;', True, location_string],    # copy image for top line
+                   ['Paste','width : 1%;text-align: center;', True, location_string],   # paste image for top line
                    ['', '', False, '' ],                                                # no remove image for top line
                 ]
 
@@ -236,15 +239,17 @@ def retrieve_page_dom(skicall):
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                               # tag name, no link
-                                                      ['',''],                               # brief, no link
-                                                      ['move_up_in_page_dom',3640],          # up arrow
-                                                      ['move_up_right_in_page_dom',3650],    # up right
-                                                      ['move_down_in_page_dom',3660],        # down
-                                                      ['move_down_right_in_page_dom',3670],  # down right
-                                                      ['edit_page_dom',''],                  # edit, html only
-                                                      ['add_to_page_dom',''],                # insert/append, html only
-                                                      ['remove_page_dom',3620]               # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                               # tag name, no link
+                                                      ['','',''],                               # brief, no link
+                                                      ['move_up_in_page_dom',3640,''],          # up arrow
+                                                      ['move_up_right_in_page_dom',3650,''],    # up right
+                                                      ['move_down_in_page_dom',3660,''],        # down
+                                                      ['move_down_right_in_page_dom',3670,''],  # down right
+                                                      ['edit_page_dom','',''],                  # edit, html only
+                                                      ['add_to_page_dom','',''],                # insert/append, html only
+                                                      [1,1,''],                                 # copy
+                                                      [1,1,'ski_part'],                         # paste
+                                                      ['remove_page_dom',3620,'']               # remove
                                                    ]
     # for every row in the table
     dragrows = [ [ False, '']]

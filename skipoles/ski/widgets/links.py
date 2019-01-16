@@ -2516,3 +2516,182 @@ class ProjectiFrame(Widget):
 </iframe>"""
 
 
+
+class GeneralButtonTable1(Widget):
+    """A table of buttons and text. Bottons include ability to send session stored data"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'dragrows':FieldArgTable(["boolean", "text"], valdt=True, jsonset=True),
+                        'droprows':FieldArgTable(["boolean", "text"], valdt=True, jsonset=True),
+                        'dropident':FieldArg("url", ""),
+                        'cols':FieldArgTable(['url', 'url', 'text']),
+                        'even_class':FieldArg("cssclass", ""),
+                        'odd_class':FieldArg("cssclass", ""),
+                        'hide':FieldArg("boolean", False, jsonset=True),
+                        'button_class':FieldArg("cssclass", ""),
+                        'contents':FieldArgTable(['text', 'text', 'boolean', 'text'], valdt=True, jsonset=True)
+                        }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        dragrows: A two element list for every row in the table, could be empty if no drag operation
+                  col 0 - True if draggable, False if not
+                  col 1 - If col 0 is True, this is data sent with the call wnen a row is dropped
+        droprows: A two element list for every row in the table, could be empty if no drop operation
+                  col 0 - True if droppable, False if not
+                  col 1 - text to send with the call when a row is dropped here
+        dropident: ident or label of target, called when a drop occurs which returns a JSON page
+        cols: A three element list for every column in the table, must be given with empty values if no links
+                  col 0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
+                  col 1 - target JSON page link ident of buttons in each column,
+                  col 2 - key of stored session data to send, empty if not used
+                  The 'cols' fieldname will be used as the widgfield for the sent data
+              col0, col1 values should be emty strings if no url applied to column
+        even_class: class of even rows, if empty string, then no class will be applied
+        odd_class: class of odd rows, if empty string, then no class will be applied
+        hide: if True, table will be hidden
+        button_class: The CSS class to apply to the buttons
+        contents: A list for every element in the table, should be row*col lists
+                   col 0 - text string, either text to display or button text
+                   col 1 - A 'style' string set on the td cell, if empty string, no style applied
+                   col 2 - Is button? If False only text will be shown, not a button, button class will not be applied
+                           If True a link to link_ident/json_ident will be set with button_class applied to it
+                   col 3 - The get field value of the button link, empty string if no get field
+                  This fieldname used as the widgfield for the get data
+        """
+        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        self._jsonurl_list = []
+        self._dropurl = ''
+        self._htmlurl_list = []
+        self._storagekey_list = []
+        self._button_class = ''
+        self._even = ''
+        self._odd = ''
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the table"
+        # Hides widget if no error and hide is True
+        self.widget_hide(self.get_field_value("hide"))
+        fieldtable = self.get_field_value("contents")
+        self._button_class = self.get_field_value('button_class')
+        get_field_name = self.get_formname("contents")
+        dragtable = self.get_field_value("dragrows")
+        droptable = self.get_field_value("droprows")
+        colidents = self.get_field_value("cols")
+        cols = len(colidents)
+        if not cols:
+            self.show = False
+            return
+        elements = len(fieldtable)
+        rows = elements//cols
+        if elements != rows*cols:
+            self._error = "Invalid table size : number of columns does not match table length"
+            return
+        if dragtable and (len(dragtable) != rows):
+            self._error = "Invalid table size : dragrows length does not match table rows"
+            return
+        if droptable and (len(droptable) != rows):
+            self._error = "Invalid table size : droprows length does not match table rows"
+            return
+        # list of json url's
+        self._jsonurl_list = [ skiboot.get_url(item[1], proj_ident=page.proj_ident) for item in colidents ]
+        # list of html url's
+        self._htmlurl_list = [ skiboot.get_url(item[0], proj_ident=page.proj_ident) for item in colidents ]
+        # list of storage key's
+        self._storagekey_list = [ item[2] for item in colidents ]
+        # dropurl
+        self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
+        # set even row class
+        if self.get_field_value('even_class'):
+            self._even = self.get_field_value('even_class')
+        # set odd row class
+        if self.get_field_value('odd_class'):
+            self._odd = self.get_field_value('odd_class')
+        # cell  increments for every table cell
+        cell = -1
+        # create rows
+        for rownumber  in range(rows):
+            if self._even and (rownumber % 2) :
+                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":self._even})
+            elif self._odd and not (rownumber % 2):
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":self._odd})
+            else:
+                self[rownumber] = tag.Part(tag_name='tr')
+            if dragtable:
+                if dragtable[rownumber][1]:
+                    dragdata = dragtable[rownumber][1]
+                else:
+                    dragdata = ""
+                if dragtable[rownumber][0]:
+                    self[rownumber].update_attribs(
+{"style":"cursor:move;",
+ "draggable":"true",
+ "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
+                                                                                  data = dragdata)})
+            if droptable:
+                if droptable[rownumber][1]:
+                    dropdata = droptable[rownumber][1]
+                else:
+                    dropdata = ""
+                if droptable[rownumber][0]:
+                    self[rownumber].update_attribs(
+{"ondrop":"SKIPOLE.widgets['{ident}'].dropfunc(event, '{data}')".format(ident = self.get_id(), data = dropdata),
+ "ondragover":"SKIPOLE.widgets['{ident}'].allowdropfunc(event)".format(ident = self.get_id())})
+            for colnumber in range(cols):
+                cell += 1
+                element = fieldtable[cell]
+                # cell text
+                if element[0]:
+                    celltext = element[0]
+                else:
+                    celltext = ''
+                # cell class
+                if element[1]:
+                    self[rownumber][colnumber] = tag.Part(tag_name='td', attribs={"style":element[1]})
+                else:
+                    self[rownumber][colnumber] = tag.Part(tag_name='td')
+                # get html url for this column
+                url = self._htmlurl_list[colnumber]
+                # is it a button link
+                if url and element[2]:
+                    # its a link, apply button class
+                    if self._button_class:
+                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self._button_class})
+                    else:
+                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
+                     # apply button text
+                    if celltext:
+                        self[rownumber][colnumber][0][0] = celltext
+                        self[rownumber][colnumber][0].htmlescaped = False
+                    else:
+                        self[rownumber][colnumber][0][0] = url
+                    # create a url for the href
+                    cellurl = self.make_get_url(page, url, {get_field_name:element[3]}, True)
+                    # apply url and href
+                    self[rownumber][colnumber][0].update_attribs({"href": cellurl})
+                else:
+                    # not a link
+                    self[rownumber][colnumber][0] = celltext
+                    self[rownumber][colnumber].htmlescaped = False
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        jscript = """  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        if self._jsonurl_list or self._dropurl or self._htmlurl_list:
+            return jscript + self._make_fieldvalues(json_url=self._jsonurl_list,
+                                                    dropurl=self._dropurl,
+                                                    html_url = self._htmlurl_list,
+                                                    keys = self._storagekey_list,
+                                                    button_class = self._button_class,
+                                                    even_class = self._even,
+                                                    odd_class = self._odd)
+        return jscript
+
+
