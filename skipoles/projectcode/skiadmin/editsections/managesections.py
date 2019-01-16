@@ -125,9 +125,10 @@ def retrieve_section_dom(skicall):
     #              1 - text to send with the call when a row is dropped here
     #    dropident: ident or label of target, called when a drop occurs which returns a JSON page
 
-    #    cols: A two element list for every column in the table, must be given with empty values if no links
+    #    cols: A three element list for every column in the table, must be given with empty values if no links
     #              0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
     #              1 - target JSON page link ident of buttons in each column,
+    #              2 - session storage key 'ski_part'
 
     #    contents: A list for every element in the table, should be row*col lists
     #               0 - text string, either text to display or button text
@@ -159,8 +160,10 @@ def retrieve_section_dom(skicall):
                    ['', '', False, '' ],                                             # no down_right arrow for top line
                    ['Edit',  'width : 1%;', True, section_name],                     # edit
                    ['Insert','width : 1%;text-align: center;', True, section_name],  # insert
-                   ['', '', False, '' ],                                             # no remove image for top line
-                ]
+                   ['Copy','width : 1%;text-align: center;', True, section_name],  # copy image for top line
+                   ['Paste','width : 1%;text-align: center;', True, section_name],  # paste image for top line
+                   ['', '', False, '' ]                                              # no remove image for top line
+                  ]
 
     # add further items to domcontents
     part_string_list = []
@@ -173,15 +176,17 @@ def retrieve_section_dom(skicall):
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['',''],                                  # tag name, no link
-                                                      ['',''],                                  # brief, no link
-                                                      ['move_up_in_section_dom',7540],          # up arrow
-                                                      ['move_up_right_in_section_dom',7550],    # up right
-                                                      ['move_down_in_section_dom',7560],        # down
-                                                      ['move_down_right_in_section_dom',7570],  # down right
-                                                      ['edit_section_dom',''],                  # edit, html only
-                                                      ['add_to_section_dom',''],                # insert/append, html only
-                                                      ['remove_section_dom',7520]               # remove
+    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                  # tag name, no link
+                                                      ['','',''],                                  # brief, no link
+                                                      ['move_up_in_section_dom',7540,''],          # up arrow
+                                                      ['move_up_right_in_section_dom',7550,''],    # up right
+                                                      ['move_down_in_section_dom',7560,''],        # down
+                                                      ['move_down_right_in_section_dom',7570,''],  # down right
+                                                      ['edit_section_dom','',''],                  # edit, html only
+                                                      ['add_to_section_dom','',''],                # insert/append, html only
+                                                      ['no_javascript',7480,''],                   # copy
+                                                      ['no_javascript',7490,'ski_part'],           # paste
+                                                      ['remove_section_dom',7520,'']               # remove
                                                    ]
     # for every row in the table
     dragrows = [ [ False, '']]
@@ -197,6 +202,55 @@ def retrieve_section_dom(skicall):
     page_data['editdom', 'domtable', 'droprows']  = droprows
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
+
+
+
+
+def _section_domcontents(project, section_name):
+    "Return the info for domtable contents"
+    section_location = (section_name, None, ())
+    partdict = fromjson.part_to_OD(project, None, section_name, section_location)
+    # create first row of the table
+    if "attribs" in partdict:
+        section_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
+    else:
+        section_tag = '&lt;' + partdict['tag_name'] + '&gt;'
+    section_brief = html.escape(partdict['brief'])
+    if len( section_brief)>40:
+        section_brief =  section_brief[:35] + '...'
+    if not section_brief:
+         section_brief = '-'
+    domcontents = [
+                   [section_tag, '', False, '' ],
+                   [section_brief, '', False, '' ],
+                   ['', '', False, '' ],                                             # no up arrow for top line
+                   ['', '', False, '' ],                                             # no up_right arrow for top line
+                   ['', '', False, '' ],                                             # no down arrow for top line
+                   ['', '', False, '' ],                                             # no down_right arrow for top line
+                   ['Edit',  'width : 1%;', True, section_name],                     # edit
+                   ['Insert','width : 1%;text-align: center;', True, section_name],  # insert
+                   ['Copy','width : 1%;text-align: center;', True, section_name],  # copy image for top line
+                   ['Paste','width : 1%;text-align: center;', True, section_name],  # paste image for top line
+                   ['', '', False, '' ]                                              # no remove image for top line
+                  ]
+    # add further items to domcontents
+    part_string_list = []
+
+    if 'parts' not in partdict:
+        rows = 1
+    else:
+        rows = utils.domtree(partdict, section_name, domcontents, part_string_list)
+    # for every row in the table
+    dragrows = [ [ False, '']]
+    droprows = [ [ True, section_name ]]
+
+    # for each row (minus 1 as the first row is done)
+    if rows > 1:
+        for row in range(0, rows-1):
+            dragrows.append( [ True, part_string_list[row]] )
+            droprows.append( [ True, part_string_list[row]] )
+    
+    return domcontents, dragrows, droprows
 
 
 def retrieve_section_contents(skicall):
@@ -276,6 +330,7 @@ def downloadsection(skicall):
         line_list.append(binline)
     page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
     return line_list
+
 
 
 def newsectionpage(skicall):
@@ -417,6 +472,80 @@ def edit_section_dom(skicall):
 
     # note : a sectionplaceholder cannot appear in a section
     raise FailPage("Item to edit has not been recognised")
+
+
+
+def copy_section(skicall):
+    "Gets section and return it in page_data['sessionStorage'] with key ski_part for browser session storage"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to copy missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is section name with location string of integers
+    # though string of integers may be missing if this is the section part itself
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    section_name = location_list[0]
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the section name, location_integers is ()
+        # copy the top section html part
+        jsonstring =  fromjson.section_to_json(editedprojname, section_name, indent=4)
+        page_data['sessionStorage'] = {'ski_part':jsonstring}
+        return
+
+    location_integers = tuple( int(i) for i in location_list[1:] )
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    location = (section_name, None, location_integers)
+    jsonstring =  fromjson.part_to_json(editedprojname, None, section_name, location, indent=4)
+    page_data['sessionStorage'] = {'ski_part':jsonstring}
+    call_data['status'] = 'Item copied, and can now be pasted.'
+
+
+def paste_section(skicall):
+    "Gets submitted json string and inserts it"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "position to paste missing")
+    if ('editdom', 'domtable', 'cols') not in call_data:
+        raise FailPage(message = "item to paste missing")
+    json_string = call_data['editdom', 'domtable', 'cols']
+
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is section name with location string of integers
+    # though string of integers may be missing if this is the section part itself
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    section_name = location_list[0]
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers, so location_list[0] is the section name, location_integers is ()
+        location_integers = ()
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    location = (section_name, None, location_integers)
+    call_data['schange'] = editsection.create_part_in_section(editedprojname, section_name, call_data['schange'], location, json_string)
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 def add_to_section_dom(skicall):

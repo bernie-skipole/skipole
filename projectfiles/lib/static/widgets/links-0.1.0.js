@@ -1294,3 +1294,334 @@ SKIPOLE.links.ProjectiFrame = function (widg_id, error_message, fieldmap) {
 SKIPOLE.links.ProjectiFrame.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.links.ProjectiFrame.prototype.constructor = SKIPOLE.links.ProjectiFrame;
 
+
+SKIPOLE.links.GeneralButtonTable1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.GeneralButtonTable1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.GeneralButtonTable1.prototype.constructor = SKIPOLE.links.GeneralButtonTable1;
+SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var button = $(e.target);
+    var href = button.attr('href');
+    if (!href) {
+        return;
+        }
+    if (!fieldvalues["json_url"]) {
+        return;
+        }
+
+    /* fieldvalues["json_url"] is a list of column json urls
+       need to get the column index to find which of these
+       urls to send the call to */
+    var col = button.parent().index();
+    if (!fieldvalues["json_url"][col]) {
+        return;
+        }
+    var key = fieldvalues["keys"][col];
+
+    if (key) {
+        // set stored data into senddata
+        var senddata = {};
+        if (typeof(Storage) !== "undefined") {
+            // get the key value from storage
+            var keyvalue = sessionStorage.getItem(key);
+            if (keyvalue != null) {
+                senddata[this.formname("cols")] = keyvalue;
+                }
+            }
+        // must also send ident here, and the link get value
+        let qstring = href.substring(href.indexOf('?')+1);
+        let params = new URLSearchParams(qstring);
+        senddata["ident"] = params.get("ident");
+        if ( params.get(this.formname("contents"))) {
+            senddata[this.formname("contents")] = params.get(this.formname("contents"));
+            }
+        }
+    else {
+        var senddata = href.substring(href.indexOf('?')+1);
+        }
+
+    e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["json_url"][col],
+          data: senddata,
+          method: "POST"
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          alert(errorThrown);
+                           }
+              });
+    };
+
+SKIPOLE.links.GeneralButtonTable1.prototype.dragstartfunc = function (e, data) {
+    e.dataTransfer.setData("text/widgid", this.widg_id);
+    e.dataTransfer.setData("text/plain", data);
+    };
+SKIPOLE.links.GeneralButtonTable1.prototype.dropfunc = function (e, data) {
+    e.preventDefault();
+    var widg_id = e.dataTransfer.getData("text/widgid");
+    if (widg_id != this.widg_id) {
+        return;
+        }
+    var url = this.fieldvalues["dropurl"];
+    if (!url) {
+        return;
+        }
+    // now make a call, including data from the drag element and the drop element
+    var dragwidgfield = this.formname('dragrows');
+    var dropwidgfield = this.formname('droprows');
+
+    var senddata = "ident=" + SKIPOLE.identdata;
+    if (data) {
+        senddata = senddata + "&" + dropwidgfield + "=" + data;
+        }
+    if (e.dataTransfer.getData("text/plain")) {
+        senddata = senddata + "&" + dragwidgfield + "=" + e.dataTransfer.getData("text/plain");
+        }
+    $("body").css('cursor','wait');
+    // respond to json or html
+    $.ajax({
+          url: url,
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  $("body").css('cursor','auto');
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          $("body").css('cursor','auto');
+                          alert(errorThrown);
+                           }
+              });
+    };
+SKIPOLE.links.GeneralButtonTable1.prototype.allowdropfunc = function (e) {
+     e.preventDefault();
+    };
+
+SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, result) {
+   if (!this.widg_id) {
+        return;
+        }
+    var widg_id = this.widg_id
+    var the_widg = this.widg;
+    var fieldvalues = this.fieldvalues;
+    // hide the widget
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide != undefined) {
+        if (set_hide) {
+            if (the_widg.is(":visible")) {
+                the_widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(the_widg.is(":visible"))) {
+                the_widg.fadeIn('slow');
+                 }
+            }
+        }
+    // the class of the button's if any
+    var button_class = fieldvalues["button_class"];
+    // the class of the rows
+    var even_class = fieldvalues["even_class"];
+    var odd_class = fieldvalues["odd_class"];
+    // get column urls and number of columns
+    var json_url = fieldvalues["json_url"];
+    var html_url = fieldvalues["html_url"];
+    var keys = fieldvalues["keys"];
+    if (json_url == undefined) {
+        return;
+        }
+    if (html_url == undefined) {
+        return;
+        }
+    if (keys == undefined) {
+        return;
+        }
+    var cols = html_url.length;
+    if (cols != json_url.length) {
+        return;
+        }
+    if (cols != keys.length) {
+        return;
+        }
+    // cols is the number of columns
+
+    // The table contents
+    var contents = this.fieldarg_in_result('contents', result, fieldlist);
+    if (contents) {
+        // If a request to renew the table is recieved, this bock
+        // empties the existing table, and re-draws it
+        var rows = Math.floor(contents.length/cols);
+        if (rows*cols != contents.length) {
+            return;
+            }
+        // empty the table
+        the_widg.empty();
+        // and now start filling it again
+        var htmlcontent = "";
+        var cell = -1;
+        for (row = 0; row < rows; row++) {
+            // for each row in the table
+            // row class
+            if (even_class && (row % 2)) {
+                htmlcontent += "<tr class = \"" + even_class + "\">";
+                }
+            else if (odd_class && (!(row % 2))) {
+                htmlcontent += "<tr class = \"" + odd_class + "\">";
+                }
+            else {
+                htmlcontent += "<tr>";
+                }
+
+            for (col = 0; col < cols; col++) {
+                cell += 1;
+                var element = contents[cell];
+                // cell text
+                var celltext = '';
+                if (element[0]) {
+                    celltext = element[0];
+                    }
+                // cell style
+                if (element[1]) {
+                    htmlcontent += "<td " + "style = \"" + element[1] + "\">";
+                    }
+                else {
+                    htmlcontent += "<td>";
+                    }
+                // get html url for this column
+                var url = html_url[col];
+                // is it a button link
+                if (url && element[2]) {
+                    // its a link, apply button class
+                    if (button_class) {
+                        htmlcontent +=  "<a role = \"button\" class = \"" + button_class + "\"";
+                        }
+                    else {
+                        htmlcontent +=  "<a role = \"button\"";
+                        }
+                    // get url and create href attribute
+                    if (element[3]) {
+                        url += "?ident=" + SKIPOLE.identdata + "&" + this.formname("contents") + "=" + element[3];
+                        }
+                    else {
+                        url += "?ident=" + SKIPOLE.identdata
+                        }
+                    htmlcontent +=  " href = \"" + url + "\">";
+                    // apply button text and close <a> tag
+                    if (celltext) {
+                        htmlcontent += celltext + "</a>";
+                        }
+                    else {
+                        htmlcontent += url + "</a>";
+                        }
+                    }
+                else {
+                    // not a link
+                    htmlcontent += celltext;
+                    }
+                // close the cell
+                htmlcontent += "</td>";
+                }
+            htmlcontent += "</tr>";
+            }
+        the_widg.html(htmlcontent);
+        // as table was emptied, a new click event has to be applied to the buttons
+        $("#" + widg_id + " a").click(function (e) {
+              SKIPOLE.widgets[widg_id].eventfunc(e);
+              });
+        }
+    // dragrows and droprows
+    var dragrows = this.fieldarg_in_result('dragrows', result, fieldlist);
+    var droprows = this.fieldarg_in_result('droprows', result, fieldlist);
+    if (dragrows || droprows) {
+        // count the number of rows in the current table
+        var tablerows = $("#" + this.widg_id + " tr");
+        var rows = tablerows.length;
+        }
+    else {
+        return;
+        }
+    if (dragrows) {
+        if (dragrows.length != rows) {
+            return;
+            }
+        tablerows.each(function( row ) {
+            if (dragrows[row][1]) {
+                var dragdata = dragrows[row][1];
+                }
+            else {
+                var dragdata = "";
+                }
+            if (dragrows[row][0]) {
+                $(this).attr("style","cursor:move;");
+                $(this).attr("draggable","true");
+                $(this).attr("ondragstart","SKIPOLE.widgets['" + widg_id + "'].dragstartfunc(event, '" + dragdata + "')");
+                }
+            else {
+                $(this).attr("style",null);
+                $(this).attr("draggable",null);
+                $(this).attr("ondragstart",null);
+                }
+            });
+        }
+    if (droprows) {
+        if (droprows.length != rows) {
+            return;
+            }
+        tablerows.each(function( row ) {
+            if (droprows[row][1]) {
+                var dropdata = droprows[row][1];
+                }
+            else {
+                var dropdata = "";
+                }
+            if (droprows[row][0]) {
+                $(this).attr("ondrop","SKIPOLE.widgets['" + widg_id + "'].dropfunc(event, '" + dropdata + "')");
+                $(this).attr("ondragover","SKIPOLE.widgets['" + widg_id + "'].allowdropfunc(event)");
+                }
+            else {
+                $(this).attr("ondrop",null);
+                $(this).attr("ondragover",null);
+                }
+            });
+        }
+    };
+
+
