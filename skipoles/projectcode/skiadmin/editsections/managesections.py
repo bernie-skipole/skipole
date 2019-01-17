@@ -497,15 +497,12 @@ def copy_section(skicall):
     # first item should be a string, rest integers
     if len(location_list) == 1:
         # no location integers, so location_list[0] is the section name, location_integers is ()
-        # copy the top section html part
-        jsonstring =  fromjson.section_to_json(editedprojname, section_name, indent=4)
-        page_data['sessionStorage'] = {'ski_part':jsonstring}
-        return
-
-    location_integers = tuple( int(i) for i in location_list[1:] )
+        location_integers = ()
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
     # location is a tuple of section_name, None for no container, tuple of location integers
     location = (section_name, None, location_integers)
-    jsonstring =  fromjson.part_to_json(editedprojname, None, section_name, location, indent=4)
+    jsonstring =  fromjson.item_to_json(editedprojname, None, section_name, location)
     page_data['sessionStorage'] = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
@@ -541,7 +538,7 @@ def paste_section(skicall):
         location_integers = tuple( int(i) for i in location_list[1:] )
     # location is a tuple of section_name, None for no container, tuple of location integers
     location = (section_name, None, location_integers)
-    call_data['schange'] = editsection.create_part_in_section(editedprojname, section_name, call_data['schange'], location, json_string)
+    call_data['schange'] = editsection.create_item_in_section(editedprojname, section_name, call_data['schange'], location, json_string)
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
     page_data['editdom', 'domtable', 'dragrows']  = dragrows
     page_data['editdom', 'domtable', 'droprows']  = droprows
