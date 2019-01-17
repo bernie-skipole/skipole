@@ -221,6 +221,9 @@ def move_location(project, section_name, schange, from_location, to_location):
                 break
             # so this digit is the same
             i += 1
+            if len(from_location_integers) == i:
+                # from location integers exhausted and equal to to_location! Trying to move an item under itself
+                return schange
             if len(to_location_integers) == i:
                 up = True
                 break
