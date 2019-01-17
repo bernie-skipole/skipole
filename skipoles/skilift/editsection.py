@@ -350,6 +350,21 @@ def create_part_in_section(project, section_name, schange, location, json_data):
     return new_schange
 
 
+def create_item_in_section(project, section_name, schange, location, json_string):
+    """Builds the item from the given json string, and adds it to project either inserted into the html element
+       currently at the given location, or if not an element that can accept contents, inserted after the element.
+       Returns new schange value"""
+    proj, section = get_proj_section(project, section_name, schange)
+    try:
+        newitem = read_json.make_item_for_section(section, json_string)
+    except Exception:
+        raise ServerError("Unable to create item")
+    # call skilift.insert_item_in_section to insert the item, save the section and return schange
+    new_schange, new_location = insert_item_in_section(project, section_name, schange, location, newitem)
+    return new_schange
+
+
+
 def section_element(project, section_name, schange, location):
     """Return a SectionElement tuple for the html element at the given location"""
 

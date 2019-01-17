@@ -40,6 +40,41 @@ def project_json_file(project):
     return skiboot.project_json(project)
 
 
+def item_spec(project, pagenumber, section_name, location):
+    """Returns a list defining the item and its contents. Such as ['Part', dictionary] for Part,
+      ['ClosedPart', dictionary] for ClosedPart etc.,
+
+       The project must be currently loaded as either the root project or a sub-project, and the part must exist in the page.
+       pagenumber and section_name are mutually exclusive, one must be None"""
+    # item is either in a page or a section
+    if (pagenumber is None) and (section_name is None):
+        raise ServerError("Page and section both missing")
+
+    if section_name:
+        if pagenumber is not None:
+            raise ServerError("Item cannot be in both a page and a section")
+        # item is in a section
+        proj, section = get_proj_section(project, section_name)
+        item = section.location_item(location)
+    else:
+        # item is in a page
+        proj, page = get_proj_page(project, pagenumber)
+        item = page.location_item(location)
+    if item is None:
+        raise ServerError("Item not recognised")
+    return dump_project.item_spec(project, item)
+
+
+def item_to_json(project, pagenumber, section_name, location, indent=0):
+    """Returns a json string defining the item and its contents.
+
+       The project must be currently loaded as either the root project or a sub-project, and the part must exist in the page.
+       pagenumber and section_name are mutually exclusive, one must be None
+       The indent parameter should be the number of indentation spaces to use when formatting the string."""
+    item_list = item_spec(project, pagenumber, section_name, location)
+    return json.dumps(item_list, indent=indent, separators=(',', ':'))
+
+
 def part_to_OD(project, pagenumber, section_name, location):
     """Returns an Ordered Dictionary defining the part and its contents.
 
@@ -66,7 +101,7 @@ def part_to_OD(project, pagenumber, section_name, location):
 
 
 def part_to_json(project, pagenumber, section_name, location, indent=0):
-    """Returns a json string defining the HTML element and its contents.
+    """Returns a json string defining the part and its contents.
 
        The project must be currently loaded as either the root project or a sub-project, and the part must exist in the page.
        pagenumber and section_name are mutually exclusive, one must be None
