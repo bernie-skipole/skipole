@@ -16938,6 +16938,31 @@ false
 "editdom-domtable:contents": ""
 }
 }
+},
+"paste_container_dom": {
+"ident": 44590,
+"brief": "paste a stored part into the container",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"paste_container"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:cols": "",
+"editdom-domtable:contents": ""
+}
+}
 }
 }
 },
@@ -37930,6 +37955,25 @@ false
 ]
 ]
 }
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Set text here"
+]
+]
+}
+],
+[
+"Text",
+"Set text here"
 ]
 ]
 }
