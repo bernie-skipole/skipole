@@ -790,8 +790,8 @@ def retrieve_container_dom(skicall):
                                                       ['move_down_right_in_container_dom',44570,''],    # down right
                                                       ['edit_container_dom','',''],                     # edit, html only
                                                       ['add_to_container_dom','',''],                   # insert/append, html only
-                                                      [1,1,''],                                         # copy
-                                                      [1,1,'ski_part'],                                 # paste
+                                                      ['no_javascript',44580,''],                       # copy
+                                                      ['no_javascript',1,'ski_part'],                   # paste
                                                       ['remove_container_dom','','']                    # remove, html only
                                                    ]
 
@@ -839,6 +839,51 @@ def _container_domcontents(project, pagenumber, section_name, location_string, c
             droprows.append( [ True, part_string_list[row]] )
     
     return domcontents, dragrows, droprows
+
+
+def copy_container(skicall):
+    "Gets container part and return it in page_data['sessionStorage'] with key ski_part for browser session storage"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+    project = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item missing")
+
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is widget_name, container with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_integers = [ int(i) for i in location_list[2:]]
+    except Exception:
+        raise FailPage("Item has not been recognised")
+
+    # location is a tuple of widget_name, container, tuple of location integers
+    location = (widget_name, container, location_integers)
+
+    jsonstring = fromjson.item_to_json(project, pagenumber, section_name, location)
+    page_data['sessionStorage'] = {'ski_part':jsonstring}
+    call_data['status'] = 'Item copied, and can now be pasted.'
 
 
 def back_to_parent_container(skicall):
