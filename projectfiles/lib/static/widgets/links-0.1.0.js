@@ -1311,17 +1311,22 @@ SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
     if (!href) {
         return;
         }
-    if (!fieldvalues["json_url"]) {
-        return;
-        }
 
     /* fieldvalues["json_url"] is a list of column json urls
        need to get the column index to find which of these
        urls to send the call to */
     var col = button.parent().index();
-    if (!fieldvalues["json_url"][col]) {
-        return;
+
+    if (!fieldvalues["json_url"]) {
+        var sendurl = fieldvalues["html_url"][col];
         }
+    else if (!fieldvalues["json_url"][col]) {
+        var sendurl = fieldvalues["html_url"][col];
+        }
+    else {
+        var sendurl = fieldvalues["json_url"][col];
+        }
+
     var key = fieldvalues["keys"][col];
 
     if (key) {
@@ -1349,7 +1354,7 @@ SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
     e.preventDefault();
     // respond to json or html
     $.ajax({
-          url: fieldvalues["json_url"][col],
+          url: sendurl,
           data: senddata,
           method: "POST"
               })
