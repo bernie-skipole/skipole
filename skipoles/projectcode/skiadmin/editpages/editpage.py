@@ -169,14 +169,11 @@ def retrieve_page_dom(skicall):
 
     location_string = call_data['location_string']
 
-    # page location is a tuple of either 'body' 'head' or 'svg', None for no container, () tuple of location integers
-    page_location = (location_string, None, ())
-    # get page_tuple from project, pagenumber, section_name, page_location
     try:
-        page_tuple = skilift.part_info(project, pagenumber, None, page_location)
-        partdict = fromjson.part_to_OD(project, pagenumber, None, page_location)
+        domcontents, dragrows, droprows = _page_domcontents(project, pagenumber, location_string)
     except ServerError as e:
         raise FailPage(message=e.message)
+
 
     # widget editdom,domtable is populated with fields
 
@@ -200,8 +197,51 @@ def retrieve_page_dom(skicall):
     #                       If True a link to link_ident/json_ident will be set with button_class applied to it
     #               3 - The get field value of the button link, empty string if no get field
 
-    # create first row of the table
+   
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
 
+    # for each column: html link, JSON link
+    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                               # tag name, no link
+                                                      ['','',''],                               # brief, no link
+                                                      ['move_up_in_page_dom',3640,''],          # up arrow
+                                                      ['move_up_right_in_page_dom',3650,''],    # up right
+                                                      ['move_down_in_page_dom',3660,''],        # down
+                                                      ['move_down_right_in_page_dom',3670,''],  # down right
+                                                      ['edit_page_dom','',''],                  # edit, html only
+                                                      ['add_to_page_dom','',''],                # insert/append, html only
+                                                      ['no_javascript',3680,''],                # copy
+                                                      ['no_javascript',1,'ski_part'],          # paste
+                                                      ['remove_page_dom',3620,'']               # remove
+                                                   ]
+
+    page_data['editdom', 'domtable', 'dropident']  = 'move_in_page_dom'
+
+    # remove any unwanted fields from session call_data
+    if 'location' in call_data:
+        del call_data['location']
+    if 'field_arg' in call_data:
+        del call_data['field_arg']
+    if 'validx' in call_data:
+        del call_data['validx']
+    if 'module' in call_data:
+        del call_data['module']
+    if 'widget_name' in call_data:
+        del call_data['widget_name']
+    if 'container' in call_data:
+        del call_data['container']
+    if 'widgetclass' in call_data:
+        del call_data['widgetclass']
+
+
+def _page_domcontents(project, pagenumber, location_string):
+    "Return the info for domtable contents, location_string is head', body or svg"
+
+    page_location = (location_string, None, ())
+    partdict = fromjson.part_to_OD(project, pagenumber, None, page_location)
+
+    # create first row of the table
     if "attribs" in partdict:
         part_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
     else:
@@ -236,21 +276,6 @@ def retrieve_page_dom(skicall):
     else:
         rows = utils.domtree(partdict, location_string, domcontents, part_string_list)
     
-    page_data['editdom', 'domtable', 'contents']  = domcontents
-
-    # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                               # tag name, no link
-                                                      ['','',''],                               # brief, no link
-                                                      ['move_up_in_page_dom',3640,''],          # up arrow
-                                                      ['move_up_right_in_page_dom',3650,''],    # up right
-                                                      ['move_down_in_page_dom',3660,''],        # down
-                                                      ['move_down_right_in_page_dom',3670,''],  # down right
-                                                      ['edit_page_dom','',''],                  # edit, html only
-                                                      ['add_to_page_dom','',''],                # insert/append, html only
-                                                      [1,1,''],                                 # copy
-                                                      [1,1,'ski_part'],                         # paste
-                                                      ['remove_page_dom',3620,'']               # remove
-                                                   ]
     # for every row in the table
     dragrows = [ [ False, '']]
     droprows = [ [ True, location_string ]]
@@ -263,27 +288,8 @@ def retrieve_page_dom(skicall):
         row_string = proj_page + part_string_list[row]
         dragrows.append( [ True, row_string] )
         droprows.append( [ True, part_string_list[row]] )
-
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-
-    page_data['editdom', 'domtable', 'dropident']  = 'move_in_page_dom'
-
-    # remove any unwanted fields from session call_data
-    if 'location' in call_data:
-        del call_data['location']
-    if 'field_arg' in call_data:
-        del call_data['field_arg']
-    if 'validx' in call_data:
-        del call_data['validx']
-    if 'module' in call_data:
-        del call_data['module']
-    if 'widget_name' in call_data:
-        del call_data['widget_name']
-    if 'container' in call_data:
-        del call_data['container']
-    if 'widgetclass' in call_data:
-        del call_data['widgetclass']
+    
+    return domcontents, dragrows, droprows
 
 
 
@@ -316,6 +322,50 @@ def retrieve_page_body(skicall):
     # fill in the table
     call_data['location_string'] = 'body'
     retrieve_page_dom(skicall)
+
+
+
+def copy_page(skicall):
+    "Gets page part and return it in page_data['sessionStorage'] with key ski_part for browser session storage"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to copy missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        location_integers = ()
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+
+    jsonstring =  fromjson.item_to_json(editedprojname, pagenumber, None, location)
+    page_data['sessionStorage'] = {'ski_part':jsonstring}
+    call_data['status'] = 'Item copied, and can now be pasted.'
+
+
+
 
 
 def retrieve_svgpage_edit(skicall):

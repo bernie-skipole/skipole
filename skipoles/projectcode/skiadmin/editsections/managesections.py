@@ -111,9 +111,10 @@ def retrieve_section_dom(skicall):
         raise FailPage("The section has not been recognised")
 
     try:
-        partdict = fromjson.part_to_OD(project, None, section_name, section_location)
-    except Exception:
-       raise FailPage(message = "call to fromjson.part_to_OD failed")
+        domcontents, dragrows, droprows = _section_domcontents(project, section_name)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+
 
     # widget editdom,domtable is populated with fields
 
@@ -137,43 +138,9 @@ def retrieve_section_dom(skicall):
     #                       If True a link to link_ident/json_ident will be set with button_class applied to it
     #               3 - The get field value of the button link, empty string if no get field
 
-    # create first row of the table
-
-    if "attribs" in partdict:
-        section_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
-    else:
-        section_tag = '&lt;' + partdict['tag_name'] + '&gt;'
-
-    section_brief = html.escape(partdict['brief'])
-
-    if len( section_brief)>40:
-        section_brief =  section_brief[:35] + '...'
-    if not section_brief:
-         section_brief = '-'
-
-    domcontents = [
-                   [section_tag, '', False, '' ],
-                   [section_brief, '', False, '' ],
-                   ['', '', False, '' ],                                             # no up arrow for top line
-                   ['', '', False, '' ],                                             # no up_right arrow for top line
-                   ['', '', False, '' ],                                             # no down arrow for top line
-                   ['', '', False, '' ],                                             # no down_right arrow for top line
-                   ['Edit',  'width : 1%;', True, section_name],                     # edit
-                   ['Insert','width : 1%;text-align: center;', True, section_name],  # insert
-                   ['Copy','width : 1%;text-align: center;', True, section_name],  # copy image for top line
-                   ['Paste','width : 1%;text-align: center;', True, section_name],  # paste image for top line
-                   ['', '', False, '' ]                                              # no remove image for top line
-                  ]
-
-    # add further items to domcontents
-    part_string_list = []
-
-    if 'parts' not in partdict:
-        rows = 1
-    else:
-        rows = utils.domtree(partdict, section_name, domcontents, part_string_list)
-    
     page_data['editdom', 'domtable', 'contents']  = domcontents
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
 
     # for each column: html link, JSON link
     page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                  # tag name, no link
@@ -184,22 +151,10 @@ def retrieve_section_dom(skicall):
                                                       ['move_down_right_in_section_dom',7570,''],  # down right
                                                       ['edit_section_dom','',''],                  # edit, html only
                                                       ['add_to_section_dom','',''],                # insert/append, html only
-                                                      ['no_javascript',7480,''],                   # copy
-                                                      ['no_javascript',7490,'ski_part'],           # paste
+                                                      ['no_javascript',7580,''],                   # copy
+                                                      ['no_javascript',7590,'ski_part'],           # paste
                                                       ['remove_section_dom',7520,'']               # remove
                                                    ]
-    # for every row in the table
-    dragrows = [ [ False, '']]
-    droprows = [ [ True, section_name ]]
-
-    # for each row (minus 1 as the first row is done)
-    if rows > 1:
-        for row in range(0, rows-1):
-            dragrows.append( [ True, part_string_list[row]] )
-            droprows.append( [ True, part_string_list[row]] )
-
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
 
@@ -476,7 +431,7 @@ def edit_section_dom(skicall):
 
 
 def copy_section(skicall):
-    "Gets section and return it in page_data['sessionStorage'] with key ski_part for browser session storage"
+    "Gets section part and return it in page_data['sessionStorage'] with key ski_part for browser session storage"
     call_data = skicall.call_data
     page_data = skicall.page_data
 

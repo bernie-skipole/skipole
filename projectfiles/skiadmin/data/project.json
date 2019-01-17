@@ -4752,6 +4752,31 @@ false
 "restricted": false,
 "folders": {},
 "pages": {
+"copy_page_dom": {
+"ident": 3680,
+"brief": "Copies a page part to sessionstorage",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editpages",
+"editpage",
+"copy_page"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:cols": "",
+"editdom-domtable:contents": ""
+}
+}
+},
 "move_down_in_page_dom": {
 "ident": 3660,
 "brief": "moves a dom item down in a page",
@@ -35506,30 +35531,6 @@ false
 }
 }
 },
-"copy_section_dom": {
-"ident": 7480,
-"brief": "Copies a section or part to sessionstorage",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "general_json",
-"submit_list": [
-"editsections",
-"managesections",
-"copy_section"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
 "edit_section_dom": {
 "ident": 7410,
 "brief": "Edit an item, such as widget, text in a section",
@@ -35650,31 +35651,6 @@ false
 }
 }
 },
-"paste_section_dom": {
-"ident": 7490,
-"brief": "paste a stored part into the section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "general_json",
-"submit_list": [
-"editsections",
-"managesections",
-"paste_section"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:cols": "",
-"editdom-domtable:contents": ""
-}
-}
-},
 "remove_section_dom": {
 "ident": 7420,
 "brief": "Remove an item from a section",
@@ -35708,6 +35684,31 @@ false
 "restricted": false,
 "folders": {},
 "pages": {
+"copy_section_dom": {
+"ident": 7580,
+"brief": "Copies a section or section part to sessionstorage",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"copy_section"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:cols": "",
+"editdom-domtable:contents": ""
+}
+}
+},
 "move_down_in_section_dom": {
 "ident": 7560,
 "brief": "moves a dom item down in a section",
@@ -35825,6 +35826,31 @@ false
 "validate_option": false
 },
 "original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"paste_section_dom": {
+"ident": 7590,
+"brief": "paste a stored part into the section",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editsections",
+"managesections",
+"paste_section"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:cols": "",
 "editdom-domtable:contents": ""
 }
 }
