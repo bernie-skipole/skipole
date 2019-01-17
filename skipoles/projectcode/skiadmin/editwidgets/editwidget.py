@@ -791,7 +791,7 @@ def retrieve_container_dom(skicall):
                                                       ['edit_container_dom','',''],                     # edit, html only
                                                       ['add_to_container_dom','',''],                   # insert/append, html only
                                                       ['no_javascript',44580,''],                       # copy
-                                                      ['no_javascript',1,'ski_part'],                   # paste
+                                                      ['no_javascript',44590,'ski_part'],               # paste
                                                       ['remove_container_dom','','']                    # remove, html only
                                                    ]
 
@@ -884,6 +884,61 @@ def copy_container(skicall):
     jsonstring = fromjson.item_to_json(project, pagenumber, section_name, location)
     page_data['sessionStorage'] = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
+
+
+def paste_container(skicall):
+    "Gets submitted json string and inserts it"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+    project = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item missing")
+    part = call_data['editdom', 'domtable', 'contents']
+    if ('editdom', 'domtable', 'cols') not in call_data:
+        raise FailPage(message = "item to paste missing")
+    json_string = call_data['editdom', 'domtable', 'cols']
+
+    # so part is widget_name, container with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_integers = [ int(i) for i in location_list[2:]]
+    except Exception:
+        raise FailPage("Item has not been recognised")
+
+    # location is a tuple of widget_name, container, tuple of location integers
+    location = (widget_name, container, location_integers)
+
+    if section_name:
+        call_data['schange'] = editsection.create_item_in_section(project, section_name, call_data['schange'], location, json_string)
+    else:
+        call_data['pchange'] = editpage.create_item_in_page(project, pagenumber, call_data['pchange'], location, json_string)
+
+    domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, widget_name, container)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+
 
 
 def back_to_parent_container(skicall):
