@@ -744,16 +744,14 @@ def retrieve_container_dom(skicall):
     else:
         raise FailPage(message = "widget_name not in call_data")
 
-
     if 'container' not in call_data:
         raise FailPage(message = "container not in call_data")
     container = call_data["container"]
 
     try:
-        contdict = fromjson.container_to_OD(project, pagenumber, section_name, location_string, container)
-        partdict = {'parts': contdict['container']}
-    except Exception:
-       raise FailPage(message = "call to fromjson.container_to_OD failed")
+        domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, location_string, container)
+    except ServerError as e:
+        raise FailPage(message=e.message)
 
     # widget editdom,domtable is populated with fields
 
@@ -779,6 +777,36 @@ def retrieve_container_dom(skicall):
 
     # create the table
 
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+
+    # for each column: html link, JSON link
+    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                       # tag name, no link
+                                                      ['','',''],                                       # brief, no link
+                                                      ['move_up_in_container_dom',44540,''],            # up arrow
+                                                      ['move_up_right_in_container_dom',44550,''],      # up right
+                                                      ['move_down_in_container_dom',44560,''],          # down
+                                                      ['move_down_right_in_container_dom',44570,''],    # down right
+                                                      ['edit_container_dom','',''],                     # edit, html only
+                                                      ['add_to_container_dom','',''],                   # insert/append, html only
+                                                      [1,1,''],                                         # copy
+                                                      [1,1,'ski_part'],                                 # paste
+                                                      ['remove_container_dom','','']                    # remove, html only
+                                                   ]
+
+    page_data['editdom', 'domtable', 'dropident'] = 'move_in_container_dom'
+
+
+
+def _container_domcontents(project, pagenumber, section_name, location_string, container):
+    "Return the info for domtable contents"
+
+    contdict = fromjson.container_to_OD(project, pagenumber, section_name, location_string, container)
+    partdict = {'parts': contdict['container']}
+
+    # create first row of the table
+
     top_row_widget = "Widget %s" % location_string
     top_row_container = "Container %s" % container
 
@@ -795,30 +823,11 @@ def retrieve_container_dom(skicall):
                    ['', '', False, '' ],
                    ['', '', False, '' ]
                 ]
-
-
     # add further items to domcontents
     part_string_list = []
-
     part_loc = location_string + '-' + str(container)
-
     rows = utils.domtree(partdict, part_loc, domcontents, part_string_list)
-    
-    page_data['editdom', 'domtable', 'contents']  = domcontents
 
-    # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                       # tag name, no link
-                                                      ['','',''],                                       # brief, no link
-                                                      ['move_up_in_container_dom',44540,''],            # up arrow
-                                                      ['move_up_right_in_container_dom',44550,''],      # up right
-                                                      ['move_down_in_container_dom',44560,''],          # down
-                                                      ['move_down_right_in_container_dom',44570,''],    # down right
-                                                      ['edit_container_dom','',''],                     # edit, html only
-                                                      ['add_to_container_dom','',''],                   # insert/append, html only
-                                                      [1,1,''],                                         # copy
-                                                      [1,1,'ski_part'],                                 # paste
-                                                      ['remove_container_dom','','']                    # remove, html only
-                                                   ]
     # for every row in the table
     dragrows = [[ False, '']]
     droprows = [[ True, part_loc]]
@@ -828,11 +837,8 @@ def retrieve_container_dom(skicall):
         for row in range(0, rows-1):
             dragrows.append( [ True, part_string_list[row]] )
             droprows.append( [ True, part_string_list[row]] )
-
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'dropident'] = 'move_in_container_dom'
-
+    
+    return domcontents, dragrows, droprows
 
 
 def back_to_parent_container(skicall):
