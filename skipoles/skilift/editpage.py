@@ -452,6 +452,23 @@ def create_part_in_page(project, pagenumber, pchange, location, json_data):
     return new_pchange
 
 
+def create_item_in_page(project, pagenumber, pchange, location, json_string):
+    """Builds the item from the given json string, and adds it to project either inserted into the html element
+       currently at the given location, or if not an element that can accept contents, inserted after the element.
+       Returns new pchange value"""
+
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if (page.page_type != "TemplatePage") and (page.page_type != "SVG"):
+        raise ServerError(message = "Invalid page type")
+    try:
+        newitem = read_json.make_item_for_page(page, json_string)
+    except Exception:
+        raise ServerError("Unable to create item")
+    # call skilift.insert_item_in_page to insert the item, save the page and return pchange
+    new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, newitem)
+    return new_pchange
+
+
 def page_element(project, pagenumber, pchange, location):
     """Return a PageElement tuple for the html element at the given location"""
 

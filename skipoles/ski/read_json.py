@@ -45,6 +45,17 @@ def make_part_for_page(page, json_data):
     return newpart
 
 
+def make_item_for_page(page, json_string):
+    "Returns object created from json string, the page argument is used to give any items unique names. The object is not inserted, and page remains unchanged"
+    item_list = json.loads(json_string, object_pairs_hook=collections.OrderedDict)
+    newitem = _create_item(item_list, page.proj_ident)
+    # ensure widgets and placeholders in newitem have unique names
+    if hasattr(newitem, 'set_unique_names'):
+        name_list = list(page.widgets.keys()) + list(page.section_places.keys())
+        newitem.set_unique_names(name_list)
+    return newitem
+
+
 def make_part_for_section(section, json_data):
     "Returns object created from json data, the section argument is used to give any items unique names. The object is not inserted, and section remains unchanged"
     if isinstance(json_data, str):
