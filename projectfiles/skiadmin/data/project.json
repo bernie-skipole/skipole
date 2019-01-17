@@ -16793,6 +16793,31 @@ false
 "restricted": false,
 "folders": {},
 "pages": {
+"copy_container_dom": {
+"ident": 44580,
+"brief": "Copies a container part to sessionstorage",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"copy_container"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:cols": "",
+"editdom-domtable:contents": ""
+}
+}
+},
 "move_down_in_container_dom": {
 "ident": 44560,
 "brief": "moves a dom item down in a container",
