@@ -212,7 +212,7 @@ def retrieve_page_dom(skicall):
                                                       ['edit_page_dom','',''],                  # edit, html only
                                                       ['add_to_page_dom','',''],                # insert/append, html only
                                                       ['no_javascript',3680,''],                # copy
-                                                      ['no_javascript',1,'ski_part'],          # paste
+                                                      ['no_javascript',3690,'ski_part'],        # paste
                                                       ['remove_page_dom',3620,'']               # remove
                                                    ]
 
@@ -365,6 +365,50 @@ def copy_page(skicall):
     call_data['status'] = 'Item copied, and can now be pasted.'
 
 
+def paste_page(skicall):
+    "Gets submitted json string and inserts it"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "position to paste missing")
+    if ('editdom', 'domtable', 'cols') not in call_data:
+        raise FailPage(message = "item to paste missing")
+    json_string = call_data['editdom', 'domtable', 'cols']
+
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers
+        location_integers = ()
+    else:
+        location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+
+    call_data['pchange'] = editpage.create_item_in_page(editedprojname, pagenumber, call_data['pchange'], location, json_string)
+
+    domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 
