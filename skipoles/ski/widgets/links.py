@@ -2527,7 +2527,7 @@ class GeneralButtonTable1(Widget):
                         'dragrows':FieldArgTable(["boolean", "text"], valdt=True, jsonset=True),
                         'droprows':FieldArgTable(["boolean", "text"], valdt=True, jsonset=True),
                         'dropident':FieldArg("url", ""),
-                        'cols':FieldArgTable(['url', 'url', 'text']),
+                        'cols':FieldArgTable(['url', 'url', 'text'], valdt=True),
                         'even_class':FieldArg("cssclass", ""),
                         'odd_class':FieldArg("cssclass", ""),
                         'hide':FieldArg("boolean", False, jsonset=True),
