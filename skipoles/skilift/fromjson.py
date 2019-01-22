@@ -68,41 +68,6 @@ def item_outline(project, pagenumber, section_name, location):
         return ['Text', str(item)]
 
 
-def part_to_OD(project, pagenumber, section_name, location):
-    """Returns an Ordered Dictionary defining the part and its contents.
-
-       The project must be currently loaded as either the root project or a sub-project, and the part must exist in the page.
-       pagenumber and section_name are mutually exclusive, one must be None
-       The function is valid for an html page element such as a div which can contain further elements or widgets."""
-    # part is either in a page or a section
-    if (pagenumber is None) and (section_name is None):
-        raise ServerError("Page and section both missing")
-
-    if section_name:
-        if pagenumber is not None:
-            raise ServerError("Part cannot be in both a page and a section")
-        # item is in a section
-        proj, section = get_proj_section(project, section_name)
-        part = section.location_item(location)
-    else:
-        # item is in a page
-        proj, page = get_proj_page(project, pagenumber)
-        part = page.location_item(location)
-    if part is None:
-        raise ServerError("Part not recognised")
-    return dump_project.part_to_OD(project, part)
-
-
-def part_to_json(project, pagenumber, section_name, location, indent=0):
-    """Returns a json string defining the part and its contents.
-
-       The project must be currently loaded as either the root project or a sub-project, and the part must exist in the page.
-       pagenumber and section_name are mutually exclusive, one must be None
-       The indent parameter should be the number of indentation spaces to use when formatting the string.
-       The function is valid for an html page element such as a div which can contain further elements or widgets."""
-    part_dict = part_to_OD(project, pagenumber, section_name, location)
-    return json.dumps(part_dict, indent=indent, separators=(',', ':'))
-
 
 def create_section(project, section_name, json_data):
     """Builds the section from the given json string or ordered dictionary, and adds it to project

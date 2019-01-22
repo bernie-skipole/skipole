@@ -239,7 +239,7 @@ def _page_domcontents(project, pagenumber, location_string):
     "Return the info for domtable contents, location_string is head', body or svg"
 
     page_location = (location_string, None, ())
-    partdict = fromjson.part_to_OD(project, pagenumber, None, page_location)
+    parttext,partdict = fromjson.item_outline(project, pagenumber, None, page_location)
 
     # create first row of the table
     if "attribs" in partdict:

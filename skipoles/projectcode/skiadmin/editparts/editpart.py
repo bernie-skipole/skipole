@@ -26,6 +26,7 @@
 
 "Functions implementing part editing"
 
+import json
 
 from .... import skilift
 from ....skilift import fromjson, editpage, editsection
@@ -279,7 +280,14 @@ def downloadpart(skicall):
     if not part_info:
         raise FailPage("Part not identified")
 
-    jsonstring =  fromjson.part_to_json(project, pagenumber, section_name, call_data['location'], indent=4)
+    parttext, part_dict = fromjson.item_outline(project, pagenumber, section_name, call_data['location'])
+    # set version and skipole as the first two items in the dictionary
+    versions = skilift.versions(project)
+    part_dict["skipole"] = versions.skipole
+    part_dict.move_to_end('skipole', last=False)
+    part_dict["version"] = versions.project
+    part_dict.move_to_end('version', last=False)
+    jsonstring = json.dumps(part_dict, indent=4, separators=(',', ':'))
     line_list = []
     n = 0
     for line in jsonstring.splitlines(True):

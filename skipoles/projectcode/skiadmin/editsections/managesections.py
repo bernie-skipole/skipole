@@ -164,7 +164,7 @@ def retrieve_section_dom(skicall):
 def _section_domcontents(project, section_name):
     "Return the info for domtable contents"
     section_location = (section_name, None, ())
-    partdict = fromjson.part_to_OD(project, None, section_name, section_location)
+    parttext,partdict = fromjson.item_outline(project, None, section_name, section_location)
     # create first row of the table
     if "attribs" in partdict:
         section_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'

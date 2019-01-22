@@ -669,11 +669,9 @@ def retrieve_container(skicall):
     try:
         if section_name:
             widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
-            widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
             containerinfo = editwidget.container_in_section(project, section_name, call_data['schange'], widget_name, container)
         else:
             widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
-            widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
             containerinfo = editwidget.container_in_page(project, pagenumber, call_data['pchange'], widget_name, container)
     except ServerError as e:
         raise FailPage(e.message)

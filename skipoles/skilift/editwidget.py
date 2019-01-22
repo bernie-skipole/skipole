@@ -128,7 +128,8 @@ def page_widget(project, pagenumber, pchange, name):
     widget = page.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
         raise ServerError("Widget not found")
-    return dump_project.widget_to_OD(project, widget)
+    parttext, partdict = widget.outline(project)
+    return partdict
 
 
 def section_widget(project, section_name, schange, name):
@@ -137,7 +138,8 @@ def section_widget(project, section_name, schange, name):
     widget = section.widgets.get(name)
     if (not isinstance(widget, widgets.Widget)) and (not isinstance(widget, widgets.ClosedWidget)):
         raise ServerError("Widget not found")
-    return dump_project.widget_to_OD(project, widget)
+    parttext, partdict = widget.outline(project)
+    return partdict
 
 
 def page_widget_description(project, pagenumber, pchange, name):
