@@ -26,7 +26,7 @@
 
 "Functions implementing widget editing"
 
-import re, html
+import re, html, json
 
 from .... import skilift
 from ....skilift import fromjson, editsection, editpage, editwidget
@@ -881,7 +881,12 @@ def copy_container(skicall):
     # location is a tuple of widget_name, container, tuple of location integers
     location = (widget_name, container, location_integers)
 
-    jsonstring = fromjson.item_to_json(project, pagenumber, section_name, location)
+    # get a json string dump of the item outline, however change any Sections to Parts
+    itempart, itemdict = fromjson.item_outline(project, pagenumber, section_name, location)
+    if itempart == 'Section':
+        jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
+    else:
+        jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
     page_data['sessionStorage'] = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
