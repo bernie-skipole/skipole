@@ -490,6 +490,31 @@ class FieldArgDict(ParentFieldArg):
         return False
 
 
+def _create_validator_list(val_list, proj_ident):
+    v_list = []
+    for validator in val_list:
+        val_dict = collections.OrderedDict()
+        v_mod = validator.__module__.split(".")[-1]
+        val_dict['class'] = "%s.%s" % (v_mod, validator.__class__.__name__)
+        # now write the validator fields
+        if validator.message:
+            val_dict["message"] = validator.message
+        if validator.message_ref:
+            val_dict["message_ref"] = validator.message_ref
+        if validator.displaywidget:
+            val_dict["displaywidget"] = validator.displaywidget.to_tuple()
+        allowed_values = validator.allowed_values
+        if allowed_values:
+            val_dict["allowed_values"] = tag.make_list(allowed_values, proj_ident)
+        val_args = {}
+        if validator.val_args:
+            val_args = collections.OrderedDict(sorted(validator.val_args.items(), key=lambda t: t[0]))
+            val_dict["val_args"] = tag.make_dictionary(val_args, proj_ident)
+        v_list.append(val_dict)
+    return v_list
+
+
+
 ############################################################
 #
 # The Widget class - subclassed to produce widgets
@@ -1337,6 +1362,50 @@ class Widget(tag.Part):
         return self.description()
 
 
+    def outline(self, proj_ident):
+        part_dict = collections.OrderedDict()
+        w_mod = self.__module__.split(".")[-1]
+        part_dict['class'] = "%s.%s" % (w_mod, self.__class__.__name__)
+        if self.name:
+            part_dict["name"] = self.name
+        if self.brief:
+            part_dict["brief"] = self.brief
+        fields_dict = {f_arg: f.value for f_arg, f in self.fields.items()}
+        if fields_dict:
+            ordered_fields_dict = collections.OrderedDict(sorted(fields_dict.items(), key=lambda t: t[0]))
+            part_dict["fields"] = tag.make_dictionary(ordered_fields_dict, proj_ident)
+        # set widget containers
+        if self.can_contain():
+            for cont in range(self.len_containers()):
+                container_name = "container_%s" % (cont,)
+                # get list of parts in the container
+                parts = self.get_container_parts(cont)
+                item_list = []
+                for item in parts:
+                    if hasattr(item, 'outline'):
+                        item_list.append(item.outline(proj_ident))
+                    else:
+                        # must be a text string
+                        item_list.append(['Text', str(item)])
+                part_dict[container_name] = item_list
+        # set widget field names
+        if fields_dict:
+            # check if any field name is not equal to f_arg
+            fields_names = {f_arg:f.name for f_arg, f in self.fields.items() if f_arg != f.name}
+            if fields_names:
+                ordered_fields_names = collections.OrderedDict(sorted(fields_names.items(), key=lambda t: t[0]))
+                part_dict["set_names"] = make_dictionary(ordered_fields_names, proj_ident)
+            # set widget validators
+            field_validators = {f.name:f.val_list for f in self.fields.values() if f.val_list}
+            if field_validators:
+                val_dict = {}
+                for name, val_list in field_validators.items():
+                    val_dict[name] = _create_validator_list(val_list, proj_ident)
+                part_dict["validators"] = collections.OrderedDict(sorted(val_dict.items(), key=lambda t: t[0]))
+        return ['Widget', part_dict]
+
+
+
 
 
 class ClosedWidget(tag.ClosedPart):
@@ -1948,9 +2017,34 @@ class ClosedWidget(tag.ClosedPart):
         return """<path />  <!-- with widget id and class widget_class -->
 """
 
-
     def __str__(self):
         """Returns a text string to illustrate the widget"""
         return self.description()
 
+
+    def outline(self, proj_ident):
+        part_dict = collections.OrderedDict()
+        w_mod = self.__module__.split(".")[-1]
+        part_dict['class'] = "%s.%s" % (w_mod, self.__class__.__name__)
+        if self.name:
+            part_dict["name"] = self.name
+        if self.brief:
+            part_dict["brief"] = self.brief
+        fields_dict = {f_arg: f.value for f_arg, f in self.fields.items()}
+        if fields_dict:
+            ordered_fields_dict = collections.OrderedDict(sorted(fields_dict.items(), key=lambda t: t[0]))
+            part_dict["fields"] = tag.make_dictionary(ordered_fields_dict, proj_ident)
+            # set widget field names, check if any field name is not equal to f_arg
+            fields_names = {f_arg:f.name for f_arg, f in self.fields.items() if f_arg != f.name}
+            if fields_names:
+                ordered_fields_names = collections.OrderedDict(sorted(fields_names.items(), key=lambda t: t[0]))
+                part_dict["set_names"] = make_dictionary(ordered_fields_names, proj_ident)
+            # set widget validators
+            field_validators = {f.name:f.val_list for f in self.fields.values() if f.val_list}
+            if field_validators:
+                val_dict = {}
+                for name, val_list in field_validators.items():
+                    val_dict[name] = _create_validator_list(val_list, proj_ident)
+                part_dict["validators"] = collections.OrderedDict(sorted(val_dict.items(), key=lambda t: t[0]))
+        return ['ClosedWidget', part_dict]
 

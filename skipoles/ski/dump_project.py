@@ -30,26 +30,6 @@ from collections import OrderedDict
 from . import skiboot, excepts, tag, widgets
 
 
-def item_spec(proj_ident, item):
-    "Returns a list of ['Part', dictionary] for Part, ['ClosedPart', dictionary] for ClosedPart etc.,"
-    if isinstance(item, widgets.Widget) or isinstance(item, widgets.ClosedWidget):
-        return _create_widget(item, proj_ident)
-    elif isinstance(item, tag.Part):
-        return _create_part(item, proj_ident)
-    elif isinstance(item, tag.ClosedPart):
-        return _create_closedpart(item, proj_ident)
-    elif isinstance(item, tag.TextBlock):
-        return _create_textblock(item, proj_ident)
-    elif isinstance(item, tag.SectionPlaceHolder):
-        return _create_sectionplaceholder(item, proj_ident)
-    elif isinstance(item, tag.HTMLSymbol):
-        return _create_htmlsymbol(item, proj_ident)
-    elif isinstance(item, tag.Comment):
-        return _create_comment(item, proj_ident)
-    else:
-        # text item returns  ['Text', "the text string"]
-        return _create_text(item, proj_ident)
-
 
 def part_to_OD(proj_ident, part):
     """Returns an OrderedDictionary of the part"""

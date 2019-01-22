@@ -26,7 +26,7 @@
 
 "Functions implementing admin page editing"
 
-import html
+import html, json
 
 from ....ski.excepts import ValidateError, FailPage, ServerError, GoTo
 
@@ -360,7 +360,12 @@ def copy_page(skicall):
     # location is a tuple of location_string, None for no container, tuple of location integers
     location = (location_string, None, location_integers)
 
-    jsonstring =  fromjson.item_to_json(editedprojname, pagenumber, None, location)
+    # get a json string dump of the item outline, however change any Sections to Parts
+    itempart, itemdict = fromjson.item_outline(editedprojname, pagenumber, None, location)
+    if itempart == 'Section':
+        jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
+    else:
+        jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
     page_data['sessionStorage'] = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 

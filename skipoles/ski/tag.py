@@ -37,6 +37,8 @@ Widget which inherits from Part and can be subclassed to create widgets
 
 import html, copy, uuid
 
+from collections import OrderedDict
+
 from urllib.parse import quote, quote_plus
 
 from . import skiboot
@@ -64,6 +66,66 @@ def expand_text(text, escape=True, linebreaks=True, replace_strings=[]):
         return text
     # linebreaks must be true
     return "<br />".join(text.split("\n"))
+
+
+def make_dictionary(input_dict, proj_ident):
+    """Used by other functions, takes input_dict and returns
+       an ordered dict, with TextBlocks, idents converted for json compatability"""
+    output_dict = OrderedDict()
+    if not input_dict: return output_dict
+    for key, val in input_dict.items():
+        if val is None:
+            output_dict[key] = None
+        elif val is '':
+            output_dict[key] = ""
+        elif isinstance(val, list):
+            output_dict[key] = make_list(val, proj_ident)
+        elif isinstance(val, dict):
+            output_dict[key] = make_dictionary(val, proj_ident)
+        elif val is True:
+            output_dict[key] = True
+        elif val is False:
+            output_dict[key] = False
+        elif isinstance(val, TextBlock):
+            output_dict[key] = val.textref
+        elif isinstance(val, skiboot.Ident):
+            if val.proj == proj_ident:
+                # ident is this project, put the number only
+                output_dict[key] = val.num
+            else:
+                # ident is another project, put the full ident
+                output_dict[key] = [val.proj, val.num]
+        else:
+            output_dict[key] = str(val)
+    return output_dict
+
+
+def make_list(input_list, proj_ident):
+    """Used by other functions, takes input_list and returns a list with items converted"""
+    if not input_list: return []
+    output_list = []
+    for item in input_list:
+        if item is None:
+            output_list.append(None)
+        elif item is '':
+            output_list.append('')
+        elif isinstance(item, list):
+            output_list.append(make_list(item, proj_ident))
+        elif isinstance(item, dict):
+            output_list.append(make_dictionary(item, proj_ident))
+        elif item is True:
+            output_list.append(True)
+        elif item is False:
+            output_list.append(False)
+        elif isinstance(item, skiboot.Ident):
+            if item.proj == proj_ident:
+                output_list.append(item.num)
+            else:
+                # ident is another project, put the full ident
+                output_list.append([item.proj, item.num])
+        else:
+            output_list.append(str(item))
+    return output_list
 
 
 class ParentPart(object):
@@ -382,6 +444,10 @@ class ParentPart(object):
         sp_n = '\n' + sp
         return sp + sp_n.join(display_list)
 
+    def outline(self, proj_ident):
+        """To be overwritten by child classes, returns a list defining the part used when creating JSON files representing the part"""
+        return ['Text', str(self)]
+
 
 
 class Part(ParentPart):
@@ -646,6 +712,30 @@ class Part(ParentPart):
         partbytes.append(end_tag)
         return partbytes
 
+
+    def outline(self, proj_ident):
+        "Creates a list of ['Part', dictionary]"
+        part_dict = OrderedDict()
+        part_dict["tag_name"] = self.tag_name
+        if self.brief:
+            part_dict["brief"] = self.brief
+        part_dict["show"] = self.show
+        part_dict["hide_if_empty"] = self.hide_if_empty
+        if self.attribs:
+            part_attribs = OrderedDict(sorted(self.attribs.items(), key=lambda t: t[0]))
+            part_dict["attribs"] = make_dictionary(part_attribs, proj_ident)
+        # now the Part contents in a list
+        parts = []
+        for item in self.parts:
+            if hasattr(item, 'outline'):
+                parts.append(item.outline(proj_ident))
+            else:
+                # must be a text string
+                parts.append(['Text', str(item)])
+        part_dict["parts"] = parts
+        return ['Part', part_dict]
+
+
     def __repr__(self):
         return '<' + self.tag_name + '>'
 
@@ -724,6 +814,19 @@ class ClosedPart(ParentPart):
                 return ["<span>", expand_text(self._error), "</span>"]
         parttext = "<{tag_name}{str_attribs} />".format(tag_name=self.tag_name, str_attribs=self.attributes_string)
         return [parttext]
+
+
+    def outline(self, proj_ident):
+        "Creates a list of ['ClosedPart', dictionary]"
+        part_dict = OrderedDict()
+        part_dict["tag_name"] = self.tag_name
+        if self.brief:
+            part_dict["brief"] = self.brief
+        part_dict["show"] = self.show
+        if self.attribs:
+            part_attribs = OrderedDict(sorted(self.attribs.items(), key=lambda t: t[0]))
+            part_dict["attribs"] = make_dictionary(part_attribs, proj_ident)
+        return ['ClosedPart', part_dict]
 
 
     def __repr__(self):
@@ -822,6 +925,11 @@ class Section(Part):
         # part not found
         return
 
+    def outline(self, proj_ident):
+        "Creates a list of ['Section', dictionary]"
+        part, part_dict = Part.outline(self, proj_ident)
+        return ['Section', part_dict]
+
 
 class SectionPlaceHolder(object):
     "Instance of this is added to a part, and acts as the placeholder for a section"
@@ -896,6 +1004,19 @@ class SectionPlaceHolder(object):
             number += 1
         self.placename = new_name 
         name_list.append(self.placename)
+
+    def outline(self, proj_ident):
+        """Creates a list of ['SectionPlaceHolder', dictionary]"""
+        part_dict = OrderedDict()
+        if self.brief:
+            part_dict["brief"] = self.brief
+        if self.section_name:
+            part_dict["section_name"] = self.section_name
+        if self.placename:
+            part_dict["placename"] = self.placename
+        part_dict["multiplier"] = self.multiplier
+        part_dict["mtag"] = self.mtag
+        return ['SectionPlaceHolder', part_dict]
 
 
     def __str__(self):
@@ -977,6 +1098,23 @@ class TextBlock(object):
             return False
         return proj.textblocks.textref_exists(self.textref)
 
+
+    def outline(self, proj_ident):
+        "Creates a list of ['TextBlock', dictionary]"
+        part_dict = OrderedDict()
+        part_dict["textref"] = self.textref
+        if self.text:
+            part_dict["text"] = self.text
+        if self.failmessage:
+            part_dict["failmessage"] = self.failmessage
+        part_dict["show"] = self.show
+        part_dict["escape"] = self.escape
+        part_dict["linebreaks"] = self.linebreaks
+        part_dict["decode"] = self.decode
+        if self.replace_strings:
+            part_dict["replace_strings"] = make_list(self.replace_strings, proj_ident)
+        return ['TextBlock', part_dict]
+
   
     def __str__(self):
         "Returns the text"
@@ -998,6 +1136,12 @@ class HTMLSymbol(object):
         "True if text has been set"
         return bool(self.text)
 
+    def outline(self, proj_ident):
+        """Creates a list of ['HTMLSymbol', {'text':text}]"""
+        part_dict = OrderedDict()
+        part_dict["text"] = self.text
+        return ['HTMLSymbol', part_dict]
+
     def __str__(self):
         "Returns the text"
         return self.text
@@ -1015,6 +1159,12 @@ class Comment(object):
         self._text=text.replace("--", "  ")
 
     text = property(get_text, set_text, doc="Text of the comment, not including <!-- and --> parts")
+
+    def outline(self, proj_ident):
+        """Creates a list of ['Comment', {'text':text}]"""
+        part_dict = OrderedDict()
+        part_dict["text"] = self._text
+        return ['Comment', part_dict]
 
     def __bool__(self):
         "True if text has been set"

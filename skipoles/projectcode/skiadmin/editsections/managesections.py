@@ -25,7 +25,7 @@
 #   limitations under the License.
 
 
-import pkgutil, re, html
+import pkgutil, re, html, json
 
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
@@ -457,7 +457,13 @@ def copy_section(skicall):
         location_integers = tuple( int(i) for i in location_list[1:] )
     # location is a tuple of section_name, None for no container, tuple of location integers
     location = (section_name, None, location_integers)
-    jsonstring =  fromjson.item_to_json(editedprojname, None, section_name, location)
+
+    # get a json string dump of the item outline, however change any Sections to Parts
+    itempart, itemdict = fromjson.item_outline(editedprojname, None, section_name, location)
+    if itempart == 'Section':
+        jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
+    else:
+        jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
     page_data['sessionStorage'] = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
