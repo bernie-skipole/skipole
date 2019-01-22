@@ -33,7 +33,7 @@ from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError
 
 from ..ski import skiboot, tag
 
-from .info_tuple import ProjectInfo, ItemInfo, PartInfo, PageInfo, FolderInfo, WidgetInfo
+from .info_tuple import ProjectInfo, ItemInfo, PartInfo, PageInfo, FolderInfo, WidgetInfo, VersionInfo
 
 
 def project_loaded(project, error_if_not=True):
@@ -95,6 +95,15 @@ def get_proj_section(project, section_name, schange=None):
     if (schange is not None) and (section.change != schange):
         raise ServerError(message="The section has been changed prior to this submission, someone else may be editing this project")
     return proj, section
+
+
+def versions(project):
+    """Returns a namedtuple with contents
+       skipole, project - these being the skipole version, and the project version
+    """
+    project_loaded(project)
+    proj = skiboot.getproject(project)
+    return VersionInfo(skiboot.version(), proj.version)
 
 
 def project_info(project):

@@ -30,6 +30,7 @@ named tuples used by other modules
 
 from collections import namedtuple
 
+VersionInfo = namedtuple('VersionInfo', ['skipole', 'project'])
 
 ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_path', 'tar_path', 'main_path', 'static_path', 'data_path'])
 
