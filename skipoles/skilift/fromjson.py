@@ -129,7 +129,18 @@ def container_to_OD(project, pagenumber, section_name, widget_name, container):
         widget = page.widgets[widget_name]
     if widget is None:
         raise ServerError("widget not recognised")
-    return dump_project.container_to_OD(project, container, widget)
+    container_dict = collections.OrderedDict()
+    container_dict["version"] = proj.version
+    # stores the version of this skipole
+    container_dict["skipole"] = skiboot.version()
+    parttext, partdict = widget.outline(project)
+    container_name = "container_%s" % container
+    container_dict['container'] = partdict[container_name]
+    return container_dict
+
+
+
+
 
 
 def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_data):
