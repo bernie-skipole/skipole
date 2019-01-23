@@ -31,37 +31,6 @@ from . import skiboot, excepts, tag, widgets
 
 
 
-def container_to_OD(proj_ident, container, widget):
-    """Returns an OrderedDictionary of the container"""
-    proj = skiboot.getproject(proj_ident)
-    container_dict = OrderedDict()
-    container_dict["version"] = proj.version
-    # stores the version of this skipole
-    container_dict["skipole"] = skiboot.version()
-    # get list of parts in the container
-    parts = widget.get_container_parts(container)
-    item_list = []
-    for item in parts:
-        if isinstance(item, widgets.Widget) or isinstance(item, widgets.ClosedWidget):
-            item_list.append( _create_widget(item, proj_ident) )
-        elif isinstance(item, tag.Part):
-            item_list.append( _create_part(item, proj_ident) )
-        elif isinstance(item, tag.ClosedPart):
-            item_list.append( _create_closedpart(item, proj_ident) )
-        elif isinstance(item, tag.TextBlock):
-            item_list.append( _create_textblock(item, proj_ident) )
-        elif isinstance(item, tag.SectionPlaceHolder):
-            item_list.append(_create_sectionplaceholder(item, proj_ident) )
-        elif isinstance(item, tag.HTMLSymbol):
-            item_list.append( _create_htmlsymbol(item, proj_ident) )
-        elif isinstance(item, tag.Comment):
-            item_list.append( _create_comment(item, proj_ident) )
-        else:
-            item_list.append(  _create_text(item, proj_ident) )
-    container_dict['container'] = item_list
-    return container_dict
-
-
 def section_to_OD(proj_ident, section_name, section):
     """Returns an OrderedDictionary of the section"""
     proj = skiboot.getproject(proj_ident)
