@@ -514,6 +514,7 @@ class OpenButton2(Widget):
 
 class JSONButtonLink(Widget):
     """A button link to the JSON page with the given ident, label or url.
+       Can send session or local storage values.
        On error replace the button text
        by the error message, and set widget class to error_class. You will
        need to provide a css button"""
@@ -527,6 +528,8 @@ class JSONButtonLink(Widget):
                         'button_wait_text':FieldArg("text", "Please wait..."),
                         'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
                         'get_field2':FieldArg("text","", valdt=True, jsonset=True),
+                        'session_storage':FieldArg("text", "", valdt=True),
+                        'local_storage':FieldArg("text","", valdt=True),
                         'error_class':FieldArg("cssclass", "")
                        }
 
@@ -539,14 +542,17 @@ class JSONButtonLink(Widget):
         button_wait_text: A 'please wait' message shown on the button while the call is made
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
+        session_storage: A session storage key, this widgfield returns the stored value if anything
+        local_storage: A local storage key, this widgfield returns the stored value if anything
         widget_class: The class applied to the widget, should describe a button
         error_class: class which replaces widget_class on error
         """
         Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
         self.update_attribs({"role":"button"})
-        self._jsonurl = ''
         # on error, button text is replaced by error message
         self[0] = ''
+        self._jsonurl = ''
+        self._htmlurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -557,8 +563,8 @@ class JSONButtonLink(Widget):
         self.widget_hide(self.get_field_value("hide"))
         if self.get_field_value("json_ident"):
             self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
-        if not url:
+        self._htmlurl = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        if not self._htmlurl:
             if self.get_field_value('error_class'):
                 self.update_attribs({'class':self.get_field_value('error_class')})
             self[0] = "Warning: broken link"
@@ -566,11 +572,11 @@ class JSONButtonLink(Widget):
         if self.get_field_value("button_text"):
             self[0] = self.get_field_value("button_text")
         else:
-            self[0] = url
+            self[0] = self._htmlurl
         # create a url for the href
         get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
                       self.get_formname("get_field2"):self.get_field_value("get_field2")}
-        url = self.make_get_url(page, url, get_fields, True)
+        url = self.make_get_url(page, self._htmlurl, get_fields, True)
         self.update_attribs({"href": url})
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
@@ -579,10 +585,14 @@ class JSONButtonLink(Widget):
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """.format(ident = self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues('button_wait_text', 'error_class', 'widget_class', url=self._jsonurl)
-        else:
-            return jscript + self._make_fieldvalues('button_wait_text', 'error_class', 'widget_class')
+        return jscript + self._make_fieldvalues('button_wait_text',
+                                                'error_class',
+                                                'widget_class',
+                                                'session_storage',
+                                                'local_storage',
+                                                json_url = self._jsonurl,
+                                                html_url = self._htmlurl)
+ 
 
     @classmethod
     def description(cls):
@@ -2567,9 +2577,6 @@ class GeneralButtonTable1(Widget):
         self._dropurl = ''
         self._htmlurl_list = []
         self._storagekey_list = []
-        self._button_class = ''
-        self._even = ''
-        self._odd = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -2577,7 +2584,6 @@ class GeneralButtonTable1(Widget):
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
         fieldtable = self.get_field_value("contents")
-        self._button_class = self.get_field_value('button_class')
         get_field_name = self.get_formname("contents")
         dragtable = self.get_field_value("dragrows")
         droptable = self.get_field_value("droprows")
@@ -2606,19 +2612,21 @@ class GeneralButtonTable1(Widget):
         # dropurl
         self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
         # set even row class
+        _even = None
         if self.get_field_value('even_class'):
-            self._even = self.get_field_value('even_class')
+            _even = self.get_field_value('even_class')
         # set odd row class
+        _odd = None
         if self.get_field_value('odd_class'):
-            self._odd = self.get_field_value('odd_class')
+            _odd = self.get_field_value('odd_class')
         # cell  increments for every table cell
         cell = -1
         # create rows
         for rownumber  in range(rows):
-            if self._even and (rownumber % 2) :
-                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":self._even})
-            elif self._odd and not (rownumber % 2):
-                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":self._odd})
+            if _even and (rownumber % 2) :
+                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":_even})
+            elif _odd and not (rownumber % 2):
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":_odd})
             else:
                 self[rownumber] = tag.Part(tag_name='tr')
             if dragtable:
@@ -2659,8 +2667,8 @@ class GeneralButtonTable1(Widget):
                 # is it a button link
                 if url and element[2]:
                     # its a link, apply button class
-                    if self._button_class:
-                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self._button_class})
+                    if self.get_field_value('button_class'):
+                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
                     else:
                         self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                      # apply button text
@@ -2685,13 +2693,13 @@ class GeneralButtonTable1(Widget):
     }});
 """.format(ident = self.get_id())
         if self._jsonurl_list or self._dropurl or self._htmlurl_list:
-            return jscript + self._make_fieldvalues(json_url=self._jsonurl_list,
+            return jscript + self._make_fieldvalues('even_class',
+                                                    'odd_class',
+                                                    'button_class',
+                                                    json_url=self._jsonurl_list,
                                                     dropurl=self._dropurl,
                                                     html_url = self._htmlurl_list,
-                                                    keys = self._storagekey_list,
-                                                    button_class = self._button_class,
-                                                    even_class = self._even,
-                                                    odd_class = self._odd)
+                                                    keys = self._storagekey_list)
         return jscript
 
 

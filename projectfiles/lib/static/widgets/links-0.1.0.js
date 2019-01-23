@@ -177,25 +177,72 @@ SKIPOLE.links.JSONButtonLink.prototype.setvalues = function (fieldlist, result) 
             }
         }
     };
+
 SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
     var fieldvalues = this.fieldvalues;
-    if (!fieldvalues["url"]) {
-        return;
+
+    if (fieldvalues["json_url"]) {
+        var sendurl = fieldvalues["json_url"];
         }
+    else {
+        var sendurl = fieldvalues["html_url"];
+        }
+
     var the_widg = this.widg;
     var href = the_widg.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
     var buttontext = the_widg.text();
     var button_wait_text = fieldvalues["button_wait_text"]
     the_widg.text(button_wait_text);
+
+    var sessionkey = fieldvalues["session_storage"];
+    var localkey = fieldvalues["local_storage"];
+
+    if (sessionkey || localkey) {
+        // set stored data into senddata
+        var senddata = {};
+        if (typeof(Storage) !== "undefined") {
+
+            if (sessionkey) {
+                // get the key value from storage
+                var skeyvalue = sessionStorage.getItem(sessionkey);
+                if (skeyvalue != null) {
+                    senddata[this.formname("session_storage")] = skeyvalue;
+                    }
+                }
+            if (localkey) {
+                // get the key value from storage
+                var lkeyvalue = localStorage.getItem(localkey);
+                if (lkeyvalue != null) {
+                    senddata[this.formname("local_storage")] = lkeyvalue;
+                    }
+                }
+
+            }
+        // must also send ident here, and the link get value
+        let qstring = href.substring(href.indexOf('?')+1);
+        let params = new URLSearchParams(qstring);
+        senddata["ident"] = params.get("ident");
+        if ( params.get(this.formname("get_field1"))) {
+            senddata[this.formname("get_field1")] = params.get(this.formname("get_field1"));
+            }
+        if ( params.get(this.formname("get_field2"))) {
+            senddata[this.formname("get_field2")] = params.get(this.formname("get_field2"));
+            }
+        }
+    else {
+        // no stored data to send
+        var senddata = href.substring(href.indexOf('?')+1);
+        }
+
     e.preventDefault();
     // respond to json or html
     $.ajax({
-          url: fieldvalues["url"],
-          data: senddata
+          url: sendurl,
+          data: senddata,
+          method: "POST"
               })
           .done(function(result, textStatus, jqXHR) {
              if (jqXHR.responseJSON) {
@@ -224,6 +271,7 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
                           alert(errorThrown);
                           }
               });
+
     };
 
 
