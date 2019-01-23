@@ -207,16 +207,16 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
 
             if (sessionkey) {
                 // get the key value from storage
-                var skeyvalue = sessionStorage.getItem(sessionkey);
-                if (skeyvalue != null) {
-                    senddata[this.formname("session_storage")] = skeyvalue;
+                let s_keyvalue = sessionStorage.getItem(sessionkey);
+                if (s_keyvalue != null) {
+                    senddata[this.formname("session_storage")] = s_keyvalue;
                     }
                 }
             if (localkey) {
                 // get the key value from storage
-                var lkeyvalue = localStorage.getItem(localkey);
-                if (lkeyvalue != null) {
-                    senddata[this.formname("local_storage")] = lkeyvalue;
+                let l_keyvalue = localStorage.getItem(localkey);
+                if (l_keyvalue != null) {
+                    senddata[this.formname("local_storage")] = l_keyvalue;
                     }
                 }
 

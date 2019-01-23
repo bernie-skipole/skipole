@@ -1174,7 +1174,7 @@
   "widgets.links.ImageOrTextLink.target": "If given, the target attribute will be set.",
   "widgets.links.ImageOrTextLink.width": "The image width.",
   "widgets.links.ImageOrTextLink.width.full": "The width of the image, ignored if text is to be displayed.",
-  "widgets.links.JSONButtonLink": "A button link with two optional get fields and sends stored data capability.",
+  "widgets.links.JSONButtonLink": "A button link with two optional get fields and optionally sends stored data.",
   "widgets.links.JSONButtonLink.button_text": "The text to be displayed within the button.",
   "widgets.links.JSONButtonLink.button_text.full": "The text to be displayed within the button. If none given, the target page url will be used.",
   "widgets.links.JSONButtonLink.button_wait_text": "The text to be displayed within the button as the call is made.",
