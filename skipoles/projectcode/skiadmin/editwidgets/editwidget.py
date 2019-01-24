@@ -800,8 +800,7 @@ def retrieve_container_dom(skicall):
 def _container_domcontents(project, pagenumber, section_name, location_string, container):
     "Return the info for domtable contents"
 
-    contdict = fromjson.container_to_OD(project, pagenumber, section_name, location_string, container)
-    partdict = {'parts': contdict['container']}
+    parttext, partdict = fromjson.container_outline(project, pagenumber, section_name, location_string, container)
 
     # create first row of the table
 

@@ -37953,7 +37953,27 @@ false
 "widget_class": "w3-section",
 "widget_style": ""
 },
-"container_0": []
+"container_0": [
+[
+"Text",
+"Set text here"
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Set text here"
+]
+]
+}
+]
+]
 }
 ]
 ]
