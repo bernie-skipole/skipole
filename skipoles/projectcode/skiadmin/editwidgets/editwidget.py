@@ -29,7 +29,7 @@
 import re, html, json
 
 from .... import skilift
-from ....skilift import fromjson, editsection, editpage, editwidget
+from ....skilift import fromjson, editsection, editpage, editwidget, versions
 
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo
@@ -714,6 +714,12 @@ def retrieve_container(skicall):
     call_data['location_string'] = widget_name
     retrieve_container_dom(skicall)
 
+    # and do show the download button
+    page_data['download_description', 'show'] = True
+    page_data['containerdownload', 'show'] = True
+
+
+
 
 def retrieve_container_dom(skicall):
     "this call fills in the container dom table"
@@ -941,6 +947,58 @@ def paste_container(skicall):
     page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
+
+def downloadcontainer(skicall):
+    "Gets container, and returns a json dictionary, this will be sent as an octet file to be downloaded"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+    project = call_data['editedprojname']
+
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+
+    if 'widget_name' in call_data:
+        widget_name = call_data['widget_name']
+    else:
+        raise FailPage(message = "widget_name not in call_data")
+
+    if 'container' not in call_data:
+        raise FailPage(message = "container not in call_data")
+    container = call_data["container"]
+
+    parttext, part_dict = fromjson.container_outline(project, pagenumber, section_name, widget_name, container)
+    # set contents into a div
+    part_dict["hide_if_empty"] = False
+    part_dict.move_to_end("hide_if_empty", last=False)
+    part_dict["show"] = True
+    part_dict.move_to_end("show", last=False)
+    part_dict["brief"] = "From widget %s container %s" % (widget_name, container)
+    part_dict.move_to_end("brief", last=False)
+    part_dict["tag_name"] = "div"
+    part_dict.move_to_end("tag_name", last=False)
+    # set version and skipole as the first two items in the dictionary
+    versions_tuple = versions(project)
+    part_dict["skipole"] = versions_tuple.skipole
+    part_dict.move_to_end('skipole', last=False)
+    part_dict["version"] = versions_tuple.project
+    part_dict.move_to_end('version', last=False)
+    jsonstring = json.dumps(part_dict, indent=4, separators=(',', ':'))
+    line_list = []
+    n = 0
+    for line in jsonstring.splitlines(True):
+        binline = line.encode('utf-8')
+        n += len(binline)
+        line_list.append(binline)
+    page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
+    return line_list
 
 
 def back_to_parent_container(skicall):
