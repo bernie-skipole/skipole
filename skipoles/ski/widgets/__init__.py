@@ -1394,7 +1394,7 @@ class Widget(tag.Part):
             fields_names = {f_arg:f.name for f_arg, f in self.fields.items() if f_arg != f.name}
             if fields_names:
                 ordered_fields_names = collections.OrderedDict(sorted(fields_names.items(), key=lambda t: t[0]))
-                part_dict["set_names"] = make_dictionary(ordered_fields_names, proj_ident)
+                part_dict["set_names"] = tag.make_dictionary(ordered_fields_names, proj_ident)
             # set widget validators
             field_validators = {f.name:f.val_list for f in self.fields.values() if f.val_list}
             if field_validators:
@@ -2038,7 +2038,7 @@ class ClosedWidget(tag.ClosedPart):
             fields_names = {f_arg:f.name for f_arg, f in self.fields.items() if f_arg != f.name}
             if fields_names:
                 ordered_fields_names = collections.OrderedDict(sorted(fields_names.items(), key=lambda t: t[0]))
-                part_dict["set_names"] = make_dictionary(ordered_fields_names, proj_ident)
+                part_dict["set_names"] = tag.make_dictionary(ordered_fields_names, proj_ident)
             # set widget validators
             field_validators = {f.name:f.val_list for f in self.fields.values() if f.val_list}
             if field_validators:

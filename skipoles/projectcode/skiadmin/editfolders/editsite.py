@@ -687,11 +687,6 @@ def _submit_saveproject(skicall):
             data_dir = subprojinfo.data_path
             tar_data_dir = os.path.join(export, 'projectfiles', subproj_ident, 'data')
             tar.add(data_dir, arcname=tar_data_dir)
-    except Exception as e:
-        if hasattr(e, 'message'):
-            raise FailPage(e.message)
-        else:
-            raise FailPage('Error: Unable to save the project')
     finally:
         if tar:
             tar.close()

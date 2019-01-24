@@ -68,7 +68,6 @@ def item_outline(project, pagenumber, section_name, location):
         return ['Text', str(item)]
 
 
-
 def create_section(project, section_name, json_data):
     """Builds the section from the given json string or ordered dictionary, and adds it to project
 
@@ -76,8 +75,6 @@ def create_section(project, section_name, json_data):
        Given a project name, a section name and a json string (or ordered dictionary) describing the section,
        this function creates a new section (or overwrites a section with the same name).
        The project must be currently loaded as either the root project or a sub-project.
-       The json_data string or Ordered Dictionary is typically taken from a JSON file created by any of the functions;
-       section_to_OD, section_to_json, part_to_OD, part_to_json.
 """
     # raise error if invalid project
     project_loaded(project)
@@ -87,8 +84,8 @@ def create_section(project, section_name, json_data):
         raise ServerError("Unable to create section")
 
 
-def section_to_OD(project, section_name):
-    """Given a project name, and a section name, returns an Ordered Dictionary defining the section.
+def section_outline(project, section_name):
+    """Given a project name, and a section name, returns an outline list defining the section.
 
        The project must be currently loaded as either the root project or a sub-project,
        and the section must exist in the project."""
@@ -98,18 +95,7 @@ def section_to_OD(project, section_name):
     section = proj.section(section_name, makecopy=False)
     if section is None:
         raise ServerError(message="Section not found")
-    return dump_project.section_to_OD(project, section_name, section)
-
-
-def section_to_json(project, section_name, indent=0):
-    """Given a project name, and a section name, returns a json string defining the section.
-
-       The project must be currently loaded as either the root project or a sub-project,
-       and the section must exist in the project.
-       The indent parameter should be the number of indentation spaces to use
-       when formatting the string."""
-    section_dict = section_to_OD(project, section_name)
-    return json.dumps(section_dict, indent=indent, separators=(',', ':'))
+    return section.outline(project)
 
 
 def container_to_OD(project, pagenumber, section_name, widget_name, container):
@@ -137,10 +123,6 @@ def container_to_OD(project, pagenumber, section_name, widget_name, container):
     container_name = "container_%s" % container
     container_dict['container'] = partdict[container_name]
     return container_dict
-
-
-
-
 
 
 def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_data):

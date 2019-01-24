@@ -37953,54 +37953,7 @@ false
 "widget_class": "w3-section",
 "widget_style": ""
 },
-"container_0": [
-[
-"Comment",
-{
-"text": "comment here"
-}
-],
-[
-"Comment",
-{
-"text": "comment here"
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Comment",
-{
-"text": "comment here"
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Comment",
-{
-"text": "comment here"
-}
-]
-]
-}
-]
-]
-}
-]
-]
+"container_0": []
 }
 ]
 ]

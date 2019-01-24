@@ -27,20 +27,8 @@
 
 from collections import OrderedDict
 
-from . import skiboot, excepts, tag, widgets
+from . import skiboot, excepts, tag
 
-
-
-def section_to_OD(proj_ident, section_name, section):
-    """Returns an OrderedDictionary of the section"""
-    proj = skiboot.getproject(proj_ident)
-    section_dict = OrderedDict()
-    section_dict['name'] = section_name
-    section_dict["version"] = proj.version
-    # stores the version of this skipole
-    section_dict["skipole"] = skiboot.version()
-    sectiontext, section_dict = _create_section(section_dict, section, proj_ident)
-    return section_dict
 
 
 def templatepage_to_OD(proj_ident, page):
@@ -142,8 +130,7 @@ def project_to_OD(proj_ident=None):
     projsections = proj.sections
     if projsections:
         for section_name, section in projsections.items():
-            section_dict = OrderedDict()
-            sections[section_name] = _create_section(section_dict, section, proj_ident)
+            sections[section_name] = section.outline(proj_ident)
         project["sections"] = OrderedDict(sorted(sections.items(), key=lambda t: t[0]))
     else:
         project["sections"] = OrderedDict()
@@ -365,7 +352,7 @@ def _create_svgpage(page_dict, page, ident, proj_ident):
     if page.css_list:
         page_args["css_list"] = _make_list(page.css_list, proj_ident)
     page_dict["SVG"] = page_args
-    page_dict["svg"] = _create_part(page.svg, proj_ident)
+    page_dict["svg"] = page.svg.outline(proj_ident)
 
     return page_dict
 
@@ -398,222 +385,9 @@ def _create_templatepage(page_dict, page, ident, proj_ident):
         page_args["default_error_widget"] = page.default_error_widget.sw_tuple()
 
     page_dict["TemplatePage"] = page_args
-    page_dict["head"] = _create_part(page.head, proj_ident)
-    page_dict["body"] = _create_part(page.body, proj_ident)
+    page_dict["head"] = page.head.outline(proj_ident)
+    page_dict["body"] = page.body.outline(proj_ident)
 
     return page_dict
 
-
-def _create_part(part, proj_ident):
-    "Creates a list of ['Part', dictionary]"
-    part_dict = OrderedDict()
-    part_dict["tag_name"] = part.tag_name
-    if part.brief:
-        part_dict["brief"] = part.brief
-    part_dict["show"] = part.show
-    part_dict["hide_if_empty"] = part.hide_if_empty
-    if part.attribs:
-        part_attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
-        part_dict["attribs"] = _make_dictionary(part_attribs, proj_ident)
-    # now the Part contents in a list
-    parts = []
-    for item in part:
-        if isinstance(item, widgets.Widget) or isinstance(item, widgets.ClosedWidget):
-            parts.append(_create_widget(item, proj_ident))
-        elif isinstance(item, tag.Part):
-            parts.append(_create_part(item, proj_ident))
-        elif isinstance(item, tag.ClosedPart):
-            parts.append(_create_closedpart(item, proj_ident))
-        elif isinstance(item, tag.TextBlock):
-            parts.append(_create_textblock(item, proj_ident))
-        elif isinstance(item, tag.SectionPlaceHolder):
-            parts.append(_create_sectionplaceholder(item, proj_ident))
-        elif isinstance(item, tag.HTMLSymbol):
-            parts.append(_create_htmlsymbol(item, proj_ident))
-        elif isinstance(item, tag.Comment):
-            parts.append(_create_comment(item, proj_ident))
-        else:
-            parts.append(_create_text(item, proj_ident))
-    part_dict["parts"] = parts
-    return ['Part', part_dict]
-
-
-def _create_closedpart(part, proj_ident):
-    "Creates a list of ['ClosedPart', dictionary]"
-    part_dict = OrderedDict()
-    part_dict["tag_name"] = part.tag_name
-    if part.brief:
-        part_dict["brief"] = part.brief
-    part_dict["show"] = part.show
-    if part.attribs:
-        part_attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
-        part_dict["attribs"] = _make_dictionary(part_attribs, proj_ident)
-    return ['ClosedPart', part_dict]
-
-
-def _create_textblock(part, proj_ident):
-    "Creates a list of ['TextBlock', dictionary]"
-    part_dict = OrderedDict()
-    part_dict["textref"] = part.textref
-    if part.text:
-        part_dict["text"] = part.text
-    if part.failmessage:
-        part_dict["failmessage"] = part.failmessage
-    part_dict["show"] = part.show
-    part_dict["escape"] = part.escape
-    part_dict["linebreaks"] = part.linebreaks
-    part_dict["decode"] = part.decode
-    if part.replace_strings:
-        part_dict["replace_strings"] = _make_list(part.replace_strings, proj_ident)
-    return ['TextBlock', part_dict]
-
-
-def _create_section(part_dict, part, proj_ident):
-    "Creates a list of ['Section', dictionary]"
-    part_dict["tag_name"] = part.tag_name
-    if part.brief:
-        part_dict["brief"] = part.brief
-    part_dict["show"] = part.show
-    part_dict["hide_if_empty"] = part.hide_if_empty
-    if part.attribs:
-        part_attribs = OrderedDict(sorted(part.attribs.items(), key=lambda t: t[0]))
-        part_dict["attribs"] = _make_dictionary(part_attribs, proj_ident)
-    # now the Part contents in a list
-    parts = []
-    for item in part:
-        if isinstance(item, widgets.Widget) or isinstance(item, widgets.ClosedWidget):
-            parts.append(_create_widget(item, proj_ident))
-        elif isinstance(item, tag.Part):
-            parts.append(_create_part(item, proj_ident))
-        elif isinstance(item, tag.ClosedPart):
-            parts.append(_create_closedpart(item, proj_ident))
-        elif isinstance(item, tag.TextBlock):
-            parts.append(_create_textblock(item, proj_ident))
-        elif isinstance(item, tag.SectionPlaceHolder):
-            parts.append(_create_sectionplaceholder(item, proj_ident))
-        elif isinstance(item, tag.HTMLSymbol):
-            parts.append(_create_htmlsymbol(item, proj_ident))
-        elif isinstance(item, tag.Comment):
-            parts.append(_create_comment(item, proj_ident))
-        else:
-            parts.append(_create_text(item, proj_ident))
-    part_dict["parts"] = parts
-    return ['Section', part_dict]
-
-
-
-def _create_sectionplaceholder(part, proj_ident):
-    "Creates a list of ['SectionPlaceHolder', dictionary]"
-    part_dict = OrderedDict()
-    if part.brief:
-        part_dict["brief"] = part.brief
-    if part.section_name:
-        part_dict["section_name"] = part.section_name
-    if part.placename:
-        part_dict["placename"] = part.placename
-    part_dict["multiplier"] = part.multiplier
-    part_dict["mtag"] = part.mtag
-    return ['SectionPlaceHolder', part_dict]
-
-
-def _create_htmlsymbol(part, proj_ident):
-    "Creates a list of ['HTMLSymbol', dictionary]"
-    part_dict = OrderedDict()
-    part_dict["text"] = part.text
-    return ['HTMLSymbol', part_dict]
-
-
-def _create_comment(part, proj_ident):
-    "Creates a list of ['Comment', dictionary]"
-    part_dict = OrderedDict()
-    part_dict["text"] = part.text
-    return ['Comment', part_dict]
-
-
-def _create_text(part, proj_ident):
-    "Creates a list of ['Text', text]"
-    return ['Text', str(part)]
-
-def _create_widget(widg, proj_ident):
-    part_dict = OrderedDict()
-    w_mod = widg.__module__.split(".")[-1]
-    part_dict['class'] = "%s.%s" % (w_mod, widg.__class__.__name__)
-    if widg.name:
-        part_dict["name"] = widg.name
-    if widg.brief:
-        part_dict["brief"] = widg.brief
-    fields_dict = {f_arg: f.value for f_arg, f in widg.fields.items()}
-    if fields_dict:
-        ordered_fields_dict = OrderedDict(sorted(fields_dict.items(), key=lambda t: t[0]))
-        part_dict["fields"] = _make_dictionary(ordered_fields_dict, proj_ident)
-    # set widget containers
-    if widg.can_contain():
-        for cont in range(widg.len_containers()):
-            container_name = "container_%s" % (cont,)
-            # get list of parts in the container
-            parts = widg.get_container_parts(cont)
-            item_list = []
-            for item in parts:
-                if isinstance(item, widgets.Widget) or isinstance(item, widgets.ClosedWidget):
-                    item_list.append( _create_widget(item, proj_ident) )
-                elif isinstance(item, tag.Part):
-                    item_list.append( _create_part(item, proj_ident) )
-                elif isinstance(item, tag.ClosedPart):
-                    item_list.append( _create_closedpart(item, proj_ident) )
-                elif isinstance(item, tag.TextBlock):
-                    item_list.append( _create_textblock(item, proj_ident) )
-                elif isinstance(item, tag.SectionPlaceHolder):
-                    item_list.append(_create_sectionplaceholder(item, proj_ident))
-                elif isinstance(item, tag.HTMLSymbol):
-                    item_list.append( _create_htmlsymbol(item, proj_ident) )
-                elif isinstance(item, tag.Comment):
-                    item_list.append( _create_comment(item, proj_ident) )
-                else:
-                    item_list.append(  _create_text(item, proj_ident) )
-            part_dict[container_name] = item_list
-    # set widget field names
-    if fields_dict:
-        # check if any field name is not equal to f_arg
-        fields_names = {f_arg:f.name for f_arg, f in widg.fields.items() if f_arg != f.name}
-        if fields_names:
-            ordered_fields_names = OrderedDict(sorted(fields_names.items(), key=lambda t: t[0]))
-            part_dict["set_names"] = _make_dictionary(ordered_fields_names, proj_ident)
-        # set widget validators
-        field_validators = {f.name:f.val_list for f in widg.fields.values() if f.val_list}
-        if field_validators:
-            val_dict = {}
-            for name, val_list in field_validators.items():
-                val_dict[name] = _create_validator_list(val_list, proj_ident)
-            part_dict["validators"] = OrderedDict(sorted(val_dict.items(), key=lambda t: t[0]))
-
-    if isinstance(widg, widgets.Widget):
-        return ['Widget', part_dict]
-    elif isinstance(widg, widgets.ClosedWidget):
-        return ['ClosedWidget', part_dict]
-    else:
-        return []
-
-
-def _create_validator_list(val_list, proj_ident):
-    v_list = []
-    for validator in val_list:
-        val_dict = OrderedDict()
-        v_mod = validator.__module__.split(".")[-1]
-        val_dict['class'] = "%s.%s" % (v_mod, validator.__class__.__name__)
-        # now write the validator fields
-        if validator.message:
-            val_dict["message"] = validator.message
-        if validator.message_ref:
-            val_dict["message_ref"] = validator.message_ref
-        if validator.displaywidget:
-            val_dict["displaywidget"] = validator.displaywidget.to_tuple()
-        allowed_values = validator.allowed_values
-        if allowed_values:
-            val_dict["allowed_values"] = _make_list(allowed_values, proj_ident)
-        val_args = {}
-        if validator.val_args:
-            val_args = OrderedDict(sorted(validator.val_args.items(), key=lambda t: t[0]))
-            val_dict["val_args"] = _make_dictionary(val_args, proj_ident)
-        v_list.append(val_dict)
-    return v_list
 
