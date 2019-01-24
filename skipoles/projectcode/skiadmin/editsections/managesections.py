@@ -30,7 +30,7 @@ import pkgutil, re, html, json
 from .. import utils
 from ....ski.excepts import FailPage, ValidateError, GoTo, ServerError
 from ....ski import tag
-from ....skilift import fromjson, part_info, part_contents, editsection
+from ....skilift import fromjson, part_info, part_contents, editsection, versions
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
@@ -276,7 +276,15 @@ def downloadsection(skicall):
         raise FailPage(message = "section missing")
     section_name = call_data["section_name"]
     project = call_data['editedprojname']
-    jsonstring =  fromjson.section_to_json(project, section_name, indent=4)
+
+    parttext, part_dict = fromjson.section_outline(project, section_name)
+    # set version and skipole as the first two items in the dictionary
+    versions_tuple = versions(project)
+    part_dict["skipole"] = versions_tuple.skipole
+    part_dict.move_to_end('skipole', last=False)
+    part_dict["version"] = versions_tuple.project
+    part_dict.move_to_end('version', last=False)
+    jsonstring = json.dumps(part_dict, indent=4, separators=(',', ':'))
     line_list = []
     n = 0
     for line in jsonstring.splitlines(True):
