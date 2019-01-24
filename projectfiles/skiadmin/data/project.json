@@ -61,6 +61,7 @@
 "delete_submit_list_string": 6400,
 "delete_textbox": 4050,
 "displaywidget": 46031,
+"downloadcontainer": 44715,
 "downloadfolder": 2250,
 "downloadpage": 3260,
 "downloadpart": 43060,
@@ -17414,6 +17415,102 @@ false
 }
 ],
 [
+"Widget",
+{
+"class": "paras.TagBlock",
+"name": "download_description",
+"brief": "div holding further info about download",
+"fields": {
+"drag": "",
+"drop": "",
+"dropident": "",
+"hide": false,
+"show": false,
+"tag": "div",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "New Tag",
+"show": true,
+"attribs": {
+"class": "margin-top:20px;margin-bottom:20px;"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"These contents can be downloaded to a block definition file which will contain a div encapsulating the above items."
+]
+]
+}
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for download",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "containerdownload",
+"brief": "Button link to download a container",
+"fields": {
+"button_text": "Download",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
+"hide": false,
+"link_ident": "downloadcontainer",
+"show": false,
+"show_error": "",
+"target": "",
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
 "SectionPlaceHolder",
 {
 "brief": "Section admin_footer with alias foot",
@@ -20812,6 +20909,22 @@ false
 "original_fields": {
 "boolean_field_value:radio_checked": ""
 }
+}
+},
+"container.json": {
+"ident": 44715,
+"brief": "Downloads a container as a block definition file",
+"RespondPage": {
+"class": "SubmitIterator",
+"original_args": {
+"fail_ident": "admin_home",
+"submit_list": [
+"editwidgets",
+"editwidget",
+"downloadcontainer"
+]
+},
+"original_fields": {}
 }
 },
 "create_new_widget": {
@@ -37792,194 +37905,6 @@ false
 }
 },
 "pages": {
-"aa": {
-"ident": 85002,
-"brief": "aaa",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#679877",
-"default_error_widget": [
-"",
-"top_error"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The viewport meta declaration",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Page 85002"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "inputforms.Form1",
-"name": "f1",
-"brief": "f1",
-"fields": {
-"action": "",
-"clear_error": false,
-"container_class": "",
-"enctype": "",
-"error_class": "",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-"Set text here"
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Set text here"
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
