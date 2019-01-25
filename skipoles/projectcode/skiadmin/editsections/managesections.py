@@ -153,7 +153,7 @@ def retrieve_section_dom(skicall):
                                                       ['add_to_section_dom','',''],                # insert/append, html only
                                                       ['no_javascript',7580,''],                   # copy
                                                       ['no_javascript',7590,'ski_part'],           # paste
-                                                      ['remove_section_dom',7520,'']               # remove
+                                                      ['no_javascript','remove_section_dom','']    # remove
                                                    ]
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
@@ -607,6 +607,27 @@ def remove_section_dom(skicall):
     if part_tuple is None:
         raise FailPage("Item to remove has not been recognised")
 
+    # prior to deleting, take a copy
+    # get a json string dump of the item outline, however change any Sections to Parts
+    itempart, itemdict = fromjson.item_outline(editedprojname, None, section_name, location)
+    if itempart == 'Section':
+        jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
+    else:
+        jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
+    page_data['sessionStorage'] = {'ski_part':jsonstring}
+
+    # remove the item
+    try:
+        call_data['schange'] = editsection.del_location(editedprojname, section_name, call_data['schange'], location)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    # and re-draw the table
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
     # once item is deleted, no info on the item should be
     # left in call_data - this may not be required in future
     if 'location' in call_data:
@@ -616,13 +637,7 @@ def remove_section_dom(skicall):
     if 'part_loc' in call_data:
         del call_data['part_loc']
 
-    # remove the item
-    try:
-        call_data['schange'] = editsection.del_location(editedprojname, section_name, call_data['schange'], location)
-    except ServerError as e:
-        raise FailPage(message = e.message)
-
-    call_data['status'] = 'Item deleted'
+    call_data['status'] = 'Item copied and then deleted. Use paste to recover or move it.'
 
 
 def move_up_in_section_dom(skicall):
