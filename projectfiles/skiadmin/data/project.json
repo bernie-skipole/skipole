@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "2.3.1",
-"skipole": "2.3.1",
+"version": "2.3.2",
+"skipole": "2.3.2",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -158,7 +158,7 @@
 "remove_item": 43104,
 "remove_page_dom": 3520,
 "remove_project": 110,
-"remove_section_dom": 7420,
+"remove_section_dom": 7520,
 "remove_selector": 8200,
 "remove_textblock": 4052,
 "remove_validator": 46221,
@@ -35856,30 +35856,6 @@ false
 "editdom-domtable:contents": ""
 }
 }
-},
-"remove_section_dom": {
-"ident": 7420,
-"brief": "Remove an item from a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editsections",
-"managesections",
-"remove_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
 }
 }
 },
@@ -36076,7 +36052,7 @@ false
 "remove_section_dom"
 ],
 "submit_option": true,
-"target_ident": 27040,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
