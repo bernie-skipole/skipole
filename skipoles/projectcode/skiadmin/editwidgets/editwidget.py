@@ -1272,11 +1272,8 @@ def remove_container_dom(skicall):
         except ServerError as e:
             raise FailPage(message = e.message)
 
-    # and re-draw the table
+    # and get info to re-draw the table
     domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, widget_name, container)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
 
     # once item is deleted, no info on the item should be
     # left in call_data - this may not be required in future
@@ -1290,6 +1287,17 @@ def remove_container_dom(skicall):
     call_data['container'] = container
     call_data['widget_name'] = widget_name
     call_data['status'] = 'Item copied and then deleted. Use paste to recover or move it.'
+
+    # If deleting item has left container empty, return a full retrieve of the container page
+    if len(domcontents) == 11:
+        # 11 items indicates the top title row only, with no further contents
+        raise GoTo("back_to_container")
+
+    # otherwise just redraw the table
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
 
 
 def _item_to_move(call_data):

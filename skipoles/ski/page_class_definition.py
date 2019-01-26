@@ -860,13 +860,15 @@ $(document).ready(function(){
 """
             if 'localStorage' in page_data:
                 for key,val in page_data['localStorage'].items():
-                    self._add_storage += """    localStorage.setItem("%s", "%s");
-""" % (key,val)
+                    escapedval = json.dumps(val)
+                    self._add_storage += """    localStorage.setItem("%s", %s);
+""" % (key,escapedval)
                 del page_data['localStorage']
             if 'sessionStorage' in page_data:
                 for key,val in page_data['sessionStorage'].items():
-                    self._add_storage += """    sessionStorage.setItem("%s", "%s");
-""" % (key,val)
+                    escapedval = json.dumps(val)
+                    self._add_storage += """    sessionStorage.setItem("%s", %s);
+""" % (key,escapedval)
                 del page_data['sessionStorage']
             self._add_storage += """    }
 """
