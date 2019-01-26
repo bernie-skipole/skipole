@@ -796,7 +796,7 @@ def retrieve_container_dom(skicall):
                                                       ['add_to_container_dom','',''],                   # insert/append, html only
                                                       ['no_javascript',44580,''],                       # copy
                                                       ['no_javascript',44590,'ski_part'],               # paste
-                                                      ['remove_container_dom','','']                    # remove, html only
+                                                      ['no_javascript','remove_container_dom','']       # remove
                                                    ]
 
     page_data['editdom', 'domtable', 'dropident'] = 'move_in_container_dom'
@@ -1249,14 +1249,14 @@ def remove_container_dom(skicall):
     if part_tuple is None:
         raise FailPage("Item to remove has not been recognised")
 
-    # once item is deleted, no info on the item should be
-    # left in call_data - this may not be required in future
-    if 'location' in call_data:
-        del call_data['location']
-    if 'part' in call_data:
-        del call_data['part']
-    if 'part_loc' in call_data:
-        del call_data['part_loc']
+    # prior to deleting, take a copy
+    # get a json string dump of the item outline, however change any Sections to Parts
+    itempart, itemdict = fromjson.item_outline(project, pagenumber, section_name, location)
+    if itempart == 'Section':
+        jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
+    else:
+        jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
+    page_data['sessionStorage'] = {'ski_part':jsonstring}
 
     # remove the item using functions from skilift.editsection and skilift.editpage
     if pagenumber is None:
@@ -1272,8 +1272,24 @@ def remove_container_dom(skicall):
         except ServerError as e:
             raise FailPage(message = e.message)
 
+    # and re-draw the table
+    domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, widget_name, container)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    # once item is deleted, no info on the item should be
+    # left in call_data - this may not be required in future
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
     call_data['container'] = container
     call_data['widget_name'] = widget_name
+    call_data['status'] = 'Item copied and then deleted. Use paste to recover or move it.'
 
 
 def _item_to_move(call_data):
