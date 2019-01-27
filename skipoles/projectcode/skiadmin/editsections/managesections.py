@@ -142,18 +142,18 @@ def retrieve_section_dom(skicall):
     page_data['editdom', 'domtable', 'dragrows']  = dragrows
     page_data['editdom', 'domtable', 'droprows']  = droprows
 
-    # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                  # tag name, no link
-                                                      ['','',''],                                  # brief, no link
-                                                      ['move_up_in_section_dom',7540,''],          # up arrow
-                                                      ['move_up_right_in_section_dom',7550,''],    # up right
-                                                      ['move_down_in_section_dom',7560,''],        # down
-                                                      ['move_down_right_in_section_dom',7570,''],  # down right
-                                                      ['edit_section_dom','',''],                  # edit, html only
-                                                      ['add_to_section_dom','',''],                # insert/append, html only
-                                                      ['no_javascript',7580,''],                   # copy
-                                                      ['no_javascript',7590,'ski_part'],           # paste
-                                                      ['no_javascript','remove_section_dom','']    # remove
+    # for each column: html link, JSON link, storage key
+    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                             # tag name, no link
+                                                      ['','',''],                                             # brief, no link
+                                                      ['no_javascript','move_up_in_section_dom',''],          # up arrow
+                                                      ['no_javascript','move_up_right_in_section_dom',''],    # up right
+                                                      ['no_javascript','move_down_in_section_dom',''],        # down
+                                                      ['no_javascript','move_down_right_in_section_dom',''],  # down right
+                                                      ['edit_section_dom','',''],                             # edit, html only
+                                                      ['add_to_section_dom','',''],                           # insert/append, html only
+                                                      ['no_javascript',7580,''],                              # copy
+                                                      ['no_javascript',7590,'ski_part'],                      # paste
+                                                      ['no_javascript','remove_section_dom','']               # remove
                                                    ]
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
@@ -701,6 +701,12 @@ def move_up_in_section_dom(skicall):
     except ServerError as e:
         raise FailPage(message = e.message)
 
+    # and re-draw the table
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
 
 def move_up_right_in_section_dom(skicall):
     "Called by domtable to move an item in a section up and to the right"
@@ -768,6 +774,12 @@ def move_up_right_in_section_dom(skicall):
         call_data['schange'] = editsection.move_location(editedprojname, section_name, call_data['schange'], location, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # and re-draw the table
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 def move_down_in_section_dom(skicall):
@@ -840,6 +852,12 @@ def move_down_in_section_dom(skicall):
     except ServerError as e:
         raise FailPage(message = e.message)
 
+    # and re-draw the table
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
 
 def move_down_right_in_section_dom(skicall):
     "Called by domtable to move an item in a section down and to the right"
@@ -910,6 +928,12 @@ def move_down_right_in_section_dom(skicall):
         call_data['schange'] = editsection.move_location(editedprojname, section_name, call_data['schange'], location, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # and re-draw the table
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 
@@ -1002,6 +1026,12 @@ def move_in_section_dom(skicall):
         call_data['schange'] = editsection.move_location(editedprojname, section_name, call_data['schange'], location_to_move, (section_name, None, new_location_integers))
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # and re-draw the table
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 

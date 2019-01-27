@@ -118,20 +118,20 @@
 "manage_textblocks": 4001,
 "mimetype_page": 9200,
 "move_down_in_container_dom": 44460,
-"move_down_in_page_dom": 3560,
-"move_down_in_section_dom": 7460,
+"move_down_in_page_dom": 3660,
+"move_down_in_section_dom": 7560,
 "move_down_right_in_container_dom": 44470,
-"move_down_right_in_page_dom": 3570,
-"move_down_right_in_section_dom": 7470,
+"move_down_right_in_page_dom": 3670,
+"move_down_right_in_section_dom": 7570,
 "move_in_container_dom": 44510,
 "move_in_page_dom": 3610,
 "move_in_section_dom": 7510,
 "move_up_in_container_dom": 44440,
-"move_up_in_page_dom": 3540,
-"move_up_in_section_dom": 7440,
+"move_up_in_page_dom": 3640,
+"move_up_in_section_dom": 7540,
 "move_up_right_in_container_dom": 44450,
-"move_up_right_in_page_dom": 3550,
-"move_up_right_in_section_dom": 7450,
+"move_up_right_in_page_dom": 3650,
+"move_up_right_in_section_dom": 7550,
 "mtag": 45020,
 "multiplier": 45015,
 "new_copypage": 2460,
@@ -167,7 +167,6 @@
 "responder_widgfield": 6030,
 "retrieve_container": 44710,
 "retrieve_container_dom": 54520,
-"retrieve_page_dom": 23020,
 "retrieve_widget": 44700,
 "save_project": 40,
 "selector_down": 8340,
@@ -4625,102 +4624,6 @@ false
 "editdom-domtable:contents": ""
 }
 }
-},
-"move_down_in_page_dom": {
-"ident": 3560,
-"brief": "moves a dom item down in a page",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "after_dom_edit",
-"submit_list": [
-"editpages",
-"editpage",
-"move_down_in_page_dom"
-],
-"submit_option": true,
-"target_ident": "after_dom_edit",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_down_right_in_page_dom": {
-"ident": 3570,
-"brief": "moves a dom item down and to the right in a page",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "after_dom_edit",
-"submit_list": [
-"editpages",
-"editpage",
-"move_down_right_in_page_dom"
-],
-"submit_option": true,
-"target_ident": "after_dom_edit",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_in_page_dom": {
-"ident": 3540,
-"brief": "moves a dom item up in a page",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "after_dom_edit",
-"submit_list": [
-"editpages",
-"editpage",
-"move_up_in_page_dom"
-],
-"submit_option": true,
-"target_ident": "after_dom_edit",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_right_in_page_dom": {
-"ident": 3550,
-"brief": "moves a dom item up and to the right in a page",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "after_dom_edit",
-"submit_list": [
-"editpages",
-"editpage",
-"move_up_right_in_page_dom"
-],
-"submit_option": true,
-"target_ident": "after_dom_edit",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
 }
 }
 },
@@ -4771,7 +4674,7 @@ false
 "move_down_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_page_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -4795,7 +4698,7 @@ false
 "move_down_right_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_page_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -4819,7 +4722,7 @@ false
 "move_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_page_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -4844,7 +4747,7 @@ false
 "move_up_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_page_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -4868,7 +4771,7 @@ false
 "move_up_right_in_page_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_page_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -7638,24 +7541,6 @@ false
 }
 ]
 },
-"retrieve_page_dom": {
-"ident": 23020,
-"brief": "Fills dom for a json call",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "general_json",
-"submit_list": [
-"editpages",
-"editpage",
-"retrieve_page_dom"
-],
-"target_ident": "general_json"
-},
-"original_fields": {}
-}
-},
 "submit_cache": {
 "ident": 23419,
 "brief": "sets the new cache instruction",
@@ -8324,132 +8209,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to widget module inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtables",
-"brief": "Link to ski_inputtables",
-"fields": {
-"script_ident": "ski_inputtables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_checkbox",
-"brief": "Link to ski_checkbox",
-"fields": {
-"script_ident": "ski_checkbox",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_tables",
-"brief": "Link to ski_tables",
-"fields": {
-"script_ident": "ski_tables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_error_messages",
-"brief": "Link to ski_error_messages",
-"fields": {
-"script_ident": "ski_error_messages",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -9919,48 +9678,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -10451,62 +10168,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_dropdown",
-"brief": "Link to ski_dropdown",
-"fields": {
-"script_ident": "ski_dropdown",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -11193,90 +10854,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_error_messages",
-"brief": "Link to ski_error_messages",
-"fields": {
-"script_ident": "ski_error_messages",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_radio",
-"brief": "Link to ski_radio",
-"fields": {
-"script_ident": "ski_radio",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -11837,90 +11414,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_error_messages",
-"brief": "Link to ski_error_messages",
-"fields": {
-"script_ident": "ski_error_messages",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_radio",
-"brief": "Link to ski_radio",
-"fields": {
-"script_ident": "ski_radio",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -12706,48 +12199,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -12884,6 +12335,13 @@ false
 "type": "text",
 "widget_class": "",
 "widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.NoOperation"
+}
+]
 }
 }
 ],
@@ -13004,48 +12462,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -13316,48 +12732,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_textarea",
-"brief": "Link to ski_textarea",
-"fields": {
-"script_ident": "ski_textarea",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -13936,34 +13310,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "skipole_js",
-"brief": "Do not remove. Link to skipole js library",
-"fields": {
-"script_ident": "skipole_js",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -14360,48 +13706,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_tables",
-"brief": "Link to ski_tables",
-"fields": {
-"script_ident": "ski_tables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -15077,20 +14381,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -15904,20 +15194,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -17537,104 +16813,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to widget module inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_tables",
-"brief": "Link to ski_tables",
-"fields": {
-"script_ident": "ski_tables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_radio",
-"brief": "Link to ski_radio",
-"fields": {
-"script_ident": "ski_radio",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -19172,34 +18350,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -19470,90 +18620,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_tables",
-"brief": "Link to widget module tables",
-"fields": {
-"script_ident": "ski_tables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to widget module inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to widget module inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -20412,34 +19478,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -21824,48 +20862,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "skipole_js",
-"brief": "Do not remove. Link to skipole js library",
-"fields": {
-"script_ident": "skipole_js",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_info",
-"brief": "Link to ski_info",
-"fields": {
-"script_ident": "ski_info",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -22131,62 +21127,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_info",
-"brief": "Link to ski_info",
-"fields": {
-"script_ident": "ski_info",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_textarea",
-"brief": "Link to ski_textarea",
-"fields": {
-"script_ident": "ski_textarea",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -35610,102 +34550,6 @@ false
 "editdom-domtable:contents": ""
 }
 }
-},
-"move_down_in_section_dom": {
-"ident": 7460,
-"brief": "moves a dom item down in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editsections",
-"managesections",
-"move_down_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_down_right_in_section_dom": {
-"ident": 7470,
-"brief": "moves a dom item down and to the right in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editsections",
-"managesections",
-"move_down_right_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_in_section_dom": {
-"ident": 7440,
-"brief": "moves a dom item up in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editsections",
-"managesections",
-"move_up_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_right_in_section_dom": {
-"ident": 7450,
-"brief": "moves a dom item up and to the right in a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editsections",
-"managesections",
-"move_up_right_in_section_dom"
-],
-"submit_option": true,
-"target_ident": 27047,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
 }
 }
 },
@@ -35756,7 +34600,7 @@ false
 "move_down_in_section_dom"
 ],
 "submit_option": true,
-"target_ident": 27040,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -35780,7 +34624,7 @@ false
 "move_down_right_in_section_dom"
 ],
 "submit_option": true,
-"target_ident": 27040,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -35804,7 +34648,7 @@ false
 "move_in_section_dom"
 ],
 "submit_option": true,
-"target_ident": 27040,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -35829,7 +34673,7 @@ false
 "move_up_in_section_dom"
 ],
 "submit_option": true,
-"target_ident": 27040,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -35853,7 +34697,7 @@ false
 "move_up_right_in_section_dom"
 ],
 "submit_option": true,
-"target_ident": 27040,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -36794,24 +35638,6 @@ false
 "retrieve_section_contents"
 ],
 "target_ident": 27049
-},
-"original_fields": {}
-}
-},
-"retrieve_section_dom": {
-"ident": 27040,
-"brief": "Returns JSON refresh of section dom table",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "general_json",
-"submit_list": [
-"editsections",
-"managesections",
-"retrieve_section_dom"
-],
-"target_ident": "general_json"
 },
 "original_fields": {}
 }
@@ -37872,6 +36698,14 @@ false
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
 "Widget",
 {
 "class": "inputforms.Form1",
@@ -37892,7 +36726,25 @@ false
 "widget_class": "w3-section",
 "widget_style": ""
 },
-"container_0": []
+"container_0": [
+[
+"Text",
+""
+]
+]
+}
+],
+[
+"Text",
+"Set text here"
+],
+[
+"Comment",
+{
+"text": "comment here"
+}
+]
+]
 }
 ]
 ]
