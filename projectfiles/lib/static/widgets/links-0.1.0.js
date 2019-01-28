@@ -737,22 +737,6 @@ SKIPOLE.links.ImageLink1.prototype = Object.create(SKIPOLE.BaseWidget.prototype)
 SKIPOLE.links.ImageLink1.prototype.constructor = SKIPOLE.links.ImageLink1;
 
 
-SKIPOLE.links.CSSLink = function (widg_id, error_message, fieldmap) {
-    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
-    this.display_errors = false;
-    };
-SKIPOLE.links.CSSLink.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.links.CSSLink.prototype.constructor = SKIPOLE.links.CSSLink;
-
-
-SKIPOLE.links.FaviconLink = function (widg_id, error_message, fieldmap) {
-    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
-    this.display_errors = false;
-    };
-SKIPOLE.links.FaviconLink.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.links.FaviconLink.prototype.constructor = SKIPOLE.links.FaviconLink;
-
-
 SKIPOLE.links.ScriptLink = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
