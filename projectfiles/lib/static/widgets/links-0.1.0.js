@@ -737,14 +737,6 @@ SKIPOLE.links.ImageLink1.prototype = Object.create(SKIPOLE.BaseWidget.prototype)
 SKIPOLE.links.ImageLink1.prototype.constructor = SKIPOLE.links.ImageLink1;
 
 
-SKIPOLE.links.ScriptLink = function (widg_id, error_message, fieldmap) {
-    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
-    this.display_errors = false;
-    };
-SKIPOLE.links.ScriptLink.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.links.ScriptLink.prototype.constructor = SKIPOLE.links.ScriptLink;
-
-
 SKIPOLE.links.LinkTextBlockTable1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;

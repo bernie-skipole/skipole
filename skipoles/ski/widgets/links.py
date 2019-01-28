@@ -1128,39 +1128,6 @@ class Image1(ClosedWidget):
 """
 
 
-class ScriptLink(Widget):
-    "Defines a link to a js filepage given by a page ident"
-
-    # This class does not display any error messages
-    display_errors = False
-
-    arg_descriptions = {'script_ident':FieldArg("url", "")}
-
-    def __init__(self, name=None, brief='', **field_args):
-        """
-        script_ident: A filepage ident
-        """
-        Widget.__init__(self, name=name, tag_name="script", brief=brief, **field_args)
-
-    def _build(self, page, ident_list, environ, call_data, lang):
-        "Build the link url"
-        if not self.get_field_value("script_ident"):
-            self._error = "Warning: broken link"
-            return
-        url = skiboot.get_url(self.get_field_value("script_ident"), proj_ident=page.proj_ident)
-        if not url:
-            self._error = "Warning: broken link"
-            return
-        self.update_attribs({"src": quote(url, safe='/:')})
-
-    @classmethod
-    def description(cls):
-        """Returns a text string to illustrate the widget"""
-        return """
-<script>  <!-- with widget id and class widget_class with src given by script_ident -->
-</script>"""
-
-
 class LinkTextBlockTable1(Widget):
     "A table of links to a page, with link text, two get fields and a TextBlock"
 
