@@ -117,19 +117,19 @@
 "manage_specialpages": 5001,
 "manage_textblocks": 4001,
 "mimetype_page": 9200,
-"move_down_in_container_dom": 44460,
+"move_down_in_container_dom": 44560,
 "move_down_in_page_dom": 3660,
 "move_down_in_section_dom": 7560,
-"move_down_right_in_container_dom": 44470,
+"move_down_right_in_container_dom": 44570,
 "move_down_right_in_page_dom": 3670,
 "move_down_right_in_section_dom": 7570,
 "move_in_container_dom": 44510,
 "move_in_page_dom": 3610,
 "move_in_section_dom": 7510,
-"move_up_in_container_dom": 44440,
+"move_up_in_container_dom": 44540,
 "move_up_in_page_dom": 3640,
 "move_up_in_section_dom": 7540,
-"move_up_right_in_container_dom": 44450,
+"move_up_right_in_container_dom": 44550,
 "move_up_right_in_page_dom": 3650,
 "move_up_right_in_section_dom": 7550,
 "mtag": 45020,
@@ -166,7 +166,6 @@
 "rename_page": 3021,
 "responder_widgfield": 6030,
 "retrieve_container": 44710,
-"retrieve_container_dom": 54520,
 "retrieve_widget": 44700,
 "save_project": 40,
 "selector_down": 8340,
@@ -15848,102 +15847,6 @@ false
 "editdom-domtable:contents": ""
 }
 }
-},
-"move_down_in_container_dom": {
-"ident": 44460,
-"brief": "moves a dom item down in a container",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editwidgets",
-"editwidget",
-"move_down_in_container_dom"
-],
-"submit_option": true,
-"target_ident": 54706,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_down_right_in_container_dom": {
-"ident": 44470,
-"brief": "moves a dom item down and to the right in a container",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editwidgets",
-"editwidget",
-"move_down_right_in_container_dom"
-],
-"submit_option": true,
-"target_ident": 54706,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_in_container_dom": {
-"ident": 44440,
-"brief": "moves a dom item up in a container",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editwidgets",
-"editwidget",
-"move_up_in_container_dom"
-],
-"submit_option": true,
-"target_ident": 54706,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
-},
-"move_up_right_in_container_dom": {
-"ident": 44450,
-"brief": "moves a dom item up and to the right in a container",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"editwidgets",
-"editwidget",
-"move_up_right_in_container_dom"
-],
-"submit_option": true,
-"target_ident": 54706,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"editdom-domtable:contents": ""
-}
-}
 }
 }
 },
@@ -15994,7 +15897,7 @@ false
 "move_down_in_container_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_container_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -16018,7 +15921,7 @@ false
 "move_down_right_in_container_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_container_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -16042,7 +15945,7 @@ false
 "move_in_container_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_container_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -16067,7 +15970,7 @@ false
 "move_up_in_container_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_container_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -16091,7 +15994,7 @@ false
 "move_up_right_in_container_dom"
 ],
 "submit_option": true,
-"target_ident": "retrieve_container_dom",
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },
@@ -18996,24 +18899,6 @@ false
 }
 ]
 },
-"retrieve_container_dom": {
-"ident": 54520,
-"brief": "Fills dom for a json call",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "general_json",
-"submit_list": [
-"editwidgets",
-"editwidget",
-"retrieve_container_dom"
-],
-"target_ident": "general_json"
-},
-"original_fields": {}
-}
-},
 "retrieve_editfield": {
 "ident": 54020,
 "brief": "Gets data for widget field edit page",
@@ -21498,76 +21383,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to widget module inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_radio",
-"brief": "Link to widget module radio",
-"fields": {
-"script_ident": "ski_radio",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_tables",
-"brief": "Link to widget module tables",
-"fields": {
-"script_ident": "ski_tables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -22282,48 +22097,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_radio",
-"brief": "Link to ski_radio",
-"fields": {
-"script_ident": "ski_radio",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -22794,90 +22567,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paths",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_paths",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to widget module inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to widget module inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_checkbox",
-"brief": "Link to ski_checkbox",
-"fields": {
-"script_ident": "ski_checkbox",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -36729,7 +36418,27 @@ false
 "container_0": [
 [
 "Text",
-""
+"Set text here"
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": []
+}
 ]
 ]
 }

@@ -785,18 +785,18 @@ def retrieve_container_dom(skicall):
     page_data['editdom', 'domtable', 'dragrows']  = dragrows
     page_data['editdom', 'domtable', 'droprows']  = droprows
 
-    # for each column: html link, JSON link
-    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                       # tag name, no link
-                                                      ['','',''],                                       # brief, no link
-                                                      ['move_up_in_container_dom',44540,''],            # up arrow
-                                                      ['move_up_right_in_container_dom',44550,''],      # up right
-                                                      ['move_down_in_container_dom',44560,''],          # down
-                                                      ['move_down_right_in_container_dom',44570,''],    # down right
-                                                      ['edit_container_dom','',''],                     # edit, html only
-                                                      ['add_to_container_dom','',''],                   # insert/append, html only
-                                                      ['no_javascript',44580,''],                       # copy
-                                                      ['no_javascript',44590,'ski_part'],               # paste
-                                                      ['no_javascript','remove_container_dom','']       # remove
+    # for each column: html link, JSON link, storage key
+    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                                 # tag name, no link
+                                                      ['','',''],                                                 # brief, no link
+                                                      ['no_javascript','move_up_in_container_dom',''],            # up arrow
+                                                      ['no_javascript','move_up_right_in_container_dom',''],      # up right
+                                                      ['no_javascript','move_down_in_container_dom',''],          # down
+                                                      ['no_javascript','move_down_right_in_container_dom',''],    # down right
+                                                      ['edit_container_dom','',''],                               # edit, html only
+                                                      ['add_to_container_dom','',''],                             # insert/append, html only
+                                                      ['no_javascript',44580,''],                                 # copy
+                                                      ['no_javascript',44590,'ski_part'],                         # paste
+                                                      ['no_javascript','remove_container_dom','']                 # remove
                                                    ]
 
     page_data['editdom', 'domtable', 'dropident'] = 'move_in_container_dom'
@@ -1358,6 +1358,8 @@ def move_up_in_container_dom(skicall):
     try:
         part_tuple = _item_to_move(call_data)
         location = part_tuple.location
+        widget_name = location[0]
+        container = int(location[1])
         location_integers = location[2]
 
         if (len(location_integers) == 1) and (location_integers[0] == 0):
@@ -1386,12 +1388,19 @@ def move_up_in_container_dom(skicall):
 
         if part_tuple.section_name:
             # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
-            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, None, part_tuple.section_name, widget_name, container)
         else:
             # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
-            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, part_tuple.pagenumber, None, widget_name, container)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # redraw the table
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 def move_up_right_in_container_dom(skicall):
@@ -1403,6 +1412,8 @@ def move_up_right_in_container_dom(skicall):
     try:
         part_tuple = _item_to_move(call_data)
         location = part_tuple.location
+        widget_name = location[0]
+        container = int(location[1])
         location_integers = location[2]
 
         if location_integers[-1] == 0:
@@ -1437,12 +1448,19 @@ def move_up_right_in_container_dom(skicall):
 
         if part_tuple.section_name:
             # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
-            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, None, part_tuple.section_name, widget_name, container)
         else:
             # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
-            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, part_tuple.pagenumber, None, widget_name, container)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # redraw the table
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 def move_down_in_container_dom(skicall):
@@ -1454,11 +1472,13 @@ def move_down_in_container_dom(skicall):
     try:
         part_tuple = _item_to_move(call_data)
         location = part_tuple.location
+        widget_name = location[0]
+        container = int(location[1])
         location_integers = location[2]
 
         if len(location_integers) == 1:
             # Just at immediate level below top
-            parent_location = (location[0], location[1], ())
+            parent_location = (widget_name, container, ())
             items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
             if location_integers[0] == (items_in_parent-1):
                 # At end, cannot be moved
@@ -1466,7 +1486,7 @@ def move_down_in_container_dom(skicall):
             new_location_integers = (location_integers[0]+2,)
         else:
             parent_integers = tuple(location_integers[:-1])
-            parent_location = (location[0], location[1], parent_integers)
+            parent_location = (widget_name, container, parent_integers)
             items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
             if location_integers[-1] == (items_in_parent-1):
                 # At end of a part, so move up a level
@@ -1491,12 +1511,19 @@ def move_down_in_container_dom(skicall):
 
         if part_tuple.section_name:
             # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
-            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, None, part_tuple.section_name, widget_name, container)
         else:
             # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
-            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, part_tuple.pagenumber, None, widget_name, container)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # redraw the table
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 def move_down_right_in_container_dom(skicall):
@@ -1508,13 +1535,15 @@ def move_down_right_in_container_dom(skicall):
     try:
         part_tuple = _item_to_move(call_data)
         location = part_tuple.location
+        widget_name = location[0]
+        container = int(location[1])
         location_integers = location[2]
 
         if len(location_integers) == 1:
-            parent_location = (location[0], location[1], ())
+            parent_location = (widget_name, container, ())
         else:
             parent_integers = list(location_integers[:-1])
-            parent_location = (location[0], location[1], parent_integers)
+            parent_location = (widget_name, container, parent_integers)
         items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
         if location_integers[-1] == (items_in_parent-1):
             # At end of a block, cannot be moved
@@ -1545,12 +1574,19 @@ def move_down_right_in_container_dom(skicall):
 
         if part_tuple.section_name:
             # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
-            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (location[0], location[1], new_location_integers))
+            call_data['schange'] = editsection.move_location(part_tuple.project, part_tuple.section_name, call_data['schange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, None, part_tuple.section_name, widget_name, container)
         else:
             # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
-            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (location[0], location[1], new_location_integers))
+            call_data['pchange'] = editpage.move_location(part_tuple.project, part_tuple.pagenumber, call_data['pchange'], location, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(part_tuple.project, part_tuple.pagenumber, None, widget_name, container)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # redraw the table
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
 def move_in_container_dom(skicall):
@@ -1663,10 +1699,17 @@ def move_in_container_dom(skicall):
         if section_name:
             # move the part in a section, using skilift.editsection.move_location(project, section_name, schange, from_location, to_location)
             call_data['schange'] = editsection.move_location(editedprojname, section_name, call_data['schange'], location_to_move, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(editedprojname, None, section_name, widget_name, container)
         else:
             # move the part in a page, using skilift.editpage.move_location(project, pagenumber, pchange, from_location, to_location)
             call_data['pchange']= editpage.move_location(editedprojname, pagenumber, call_data['pchange'], location_to_move, (widget_name, container, new_location_integers))
+            domcontents, dragrows, droprows = _container_domcontents(editedprojname, pagenumber, None, widget_name, container)
     except ServerError as e:
         raise FailPage(message = e.message)
+
+    # redraw the table
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
 
 
