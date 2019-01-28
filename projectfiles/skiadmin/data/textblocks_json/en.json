@@ -1276,8 +1276,6 @@
   "widgets.links.ProjectiFrame.sub_project": "The sub project name to be shown. The src attribute will be set automatically.",
   "widgets.links.ProjectiFrame.sub_project.full": "The sub project to be shown. The iframe will have a name attribute with this sub project name or sectionalias-subprojectname if the iframe is in a section",
   "widgets.links.ProjectiFrame.width": "The iframe width in pixels.",
-  "widgets.links.ScriptLink": "A script link to a javascript file.",
-  "widgets.links.ScriptLink.script_ident": "The label, ident or url which returns a javascript file.",
   "widgets.links.Table1_Button": "A table of a single text column, followed by a button link column.",
   "widgets.links.Table1_Button.button_class": "The CSS class to apply to the buttons.",
   "widgets.links.Table1_Button.button_text": "Text on the link button.",
