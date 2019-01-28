@@ -1195,90 +1195,6 @@ false,
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "jquery_core",
-"brief": "Link to jquery_core",
-"fields": {
-"script_ident": "jquery_core",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "skipole_js",
-"brief": "Link to skipole_js",
-"fields": {
-"script_ident": "skipole_js",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_info",
-"brief": "Link to ski_info",
-"fields": {
-"script_ident": "ski_info",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_error_messages",
-"brief": "Link to ski_error_messages",
-"fields": {
-"script_ident": "ski_error_messages",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -1988,90 +1904,6 @@ false,
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "jquery_core",
-"brief": "Link to jquery_core",
-"fields": {
-"script_ident": "jquery_core",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "skipole_js",
-"brief": "Link to skipole_js",
-"fields": {
-"script_ident": "skipole_js",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_info",
-"brief": "Link to ski_info",
-"fields": {
-"script_ident": "ski_info",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_error_messages",
-"brief": "Link to ski_error_messages",
-"fields": {
-"script_ident": "ski_error_messages",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_paras",
-"brief": "Link to ski_paras",
-"fields": {
-"script_ident": "ski_paras",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -5034,34 +4866,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -5386,34 +5190,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to javascript basic validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -29481,90 +29257,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_footers",
-"brief": "Link to widget module footers",
-"fields": {
-"script_ident": "ski_footers",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_info",
-"brief": "Link to widget module info",
-"fields": {
-"script_ident": "ski_info",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_tables",
-"brief": "Link to widget module tables",
-"fields": {
-"script_ident": "ski_tables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to widget module inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -30054,76 +29746,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to widget module inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to widget module inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_textarea",
-"brief": "Link to ski_textarea",
-"fields": {
-"script_ident": "ski_textarea",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -30862,20 +30484,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"ClosedWidget",
-{
-"class": "links.FaviconLink",
-"name": "favicon",
-"brief": "FaviconLink",
-"fields": {
-"favicon_ident": "logoicon",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -31884,48 +31492,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputforms",
-"brief": "Link to ski_inputforms",
-"fields": {
-"script_ident": "ski_inputforms",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_radio",
-"brief": "Link to ski_radio",
-"fields": {
-"script_ident": "ski_radio",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -32543,34 +32109,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_inputtext",
-"brief": "Link to ski_inputtext",
-"fields": {
-"script_ident": "ski_inputtext",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -32829,6 +32367,19 @@ false
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "favicon link to logoicon",
+"show": true,
+"attribs": {
+"href": "{logoicon}",
+"rel": "icon",
+"type": "image/png"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to w3_css",
 "show": true,
 "attribs": {
@@ -32861,20 +32412,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"ClosedWidget",
-{
-"class": "links.FaviconLink",
-"name": "favicon",
-"brief": "FaviconLink",
-"fields": {
-"favicon_ident": "logoicon",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -36176,220 +35713,6 @@ false
 }
 },
 "pages": {
-"aaaa": {
-"ident": 85002,
-"brief": "aa",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#679877",
-"default_error_widget": [
-"",
-"top_error"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The viewport meta declaration",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Page 85002"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "inputforms.Form1",
-"name": "test",
-"brief": "test",
-"fields": {
-"action": "",
-"clear_error": false,
-"container_class": "",
-"enctype": "",
-"error_class": "",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-"Set text here"
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": []
-}
-]
-]
-}
-],
-[
-"Text",
-"Set text here"
-],
-[
-"Comment",
-{
-"text": "comment here"
-}
-]
-]
-}
-]
-]
-}
-]
-},
 "about_export": {
 "ident": 500,
 "brief": "Description of the export file",
