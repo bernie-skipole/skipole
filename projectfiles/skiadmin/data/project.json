@@ -23818,20 +23818,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -24200,20 +24186,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -24550,48 +24522,6 @@ false
 "href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_basic",
-"brief": "Link to basic javascript validators",
-"fields": {
-"script_ident": "ski_basic",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_links",
-"brief": "Link to ski_links",
-"fields": {
-"script_ident": "ski_links",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ScriptLink",
-"name": "ski_tables",
-"brief": "Link to ski_tables",
-"fields": {
-"script_ident": "ski_tables",
-"show": true,
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
