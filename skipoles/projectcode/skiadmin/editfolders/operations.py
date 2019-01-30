@@ -161,50 +161,6 @@ def set_bodyclass_in_pages(skicall):
         call_data['status'] = 'CSS class removed from body tags'
 
 
-
-def insert_css_link(skicall):
-    "inserts css link into page head before element with given brief"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    try:
-        brief = call_data['insert_css_link_brief','input_text']
-        label = call_data['insert_css_link_label','input_text']
-    except Exception:
-        raise ValidateError(message='Invalid call')
-    if not brief:
-        raise ValidateError(message='A brief must be given')
-    if not label:
-        raise ValidateError(message='A label must be given')
-    # add CSS link in all project template pages
-    editedprojname = call_data['editedprojname']
-    off_piste.insert_css_link(editedprojname, label, brief)
-    call_data['status'] = 'CSS links inserted'
-
-
-
-def set_css_class(skicall):
-    "sets css class into elements with given brief"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    try:
-        brief = call_data['set_css_class_brief','input_text']
-        cssclass = call_data['set_css_class_string','input_text']
-    except Exception:
-        raise ValidateError(message='Invalid call')
-    if not brief:
-        raise ValidateError(message='A brief must be given')
-    editedprojname = call_data['editedprojname']
-    count =  off_piste.set_css_class(editedprojname, brief, cssclass)
-    if count:
-        call_data['status'] = 'CSS class set, %d changes.' % count
-    else:
-        call_data['status'] = 'No changes, brief not found.'
-
-
 def add_default_css(skicall):
     "Add a label to the default css list"
 
