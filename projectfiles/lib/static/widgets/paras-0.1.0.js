@@ -801,6 +801,24 @@ SKIPOLE.paras.TextBlockPara.prototype.clear_error = function() {
     };
 
 
+SKIPOLE.paras.TextBlockDiv = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.paras.TextBlockDiv.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.paras.TextBlockDiv.prototype.constructor = SKIPOLE.paras.TextBlockDiv;
+SKIPOLE.paras.TextBlockDiv.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts field - content_replaceblock */
+   if (!this.widg_id) {
+        return;
+        }
+    var content_replaceblock = this.fieldarg_in_result('content_replaceblock', result, fieldlist);
+    if (content_replaceblock) {
+        this.widg.html(content_replaceblock);
+        }
+    };
+
+
 SKIPOLE.paras.DecodedTextBlock = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;

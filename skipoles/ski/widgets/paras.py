@@ -640,6 +640,52 @@ class TextBlockPara(Widget):
 
 
 
+class TextBlockDiv(Widget):
+    """A div, containing a TextBlock. The TextBlock is not escaped, so may contain
+       html which is set directly into the div"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {'textblock_ref':FieldArg("textblock_ref", ""),
+                        'content_refnotfound':FieldArg("text", ""),
+                        'content_replaceblock':FieldArg("text", "" ,jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        textblock_ref: The reference of the TextBlock appearing in the div
+        content_refnotfound: content to appear if the textblock is not found
+        content_replaceblock: content set here will replace the textblock
+        """
+        # pass fields to Widget
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self[0] = ''
+        self.htmlescaped = False
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        # define the textblock
+        tblock = self.get_field_value("textblock_ref")
+        tblock.failmessage = self.get_field_value('content_refnotfound')
+        tblock.escape = False
+        tblock.linebreaks = False
+        # place it at location 0
+        if self.get_field_value("content_replaceblock"):
+            self[0] = tblockself.get_field_value("content_replaceblock")
+        else:
+            self[0] = tblock
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id, and class widget_class -->
+   <!-- set with either content_replaceblock or textblock content as unescaped html -->
+</div>"""
+
+
+
 class DecodedTextBlock(Widget):
 
     # This class does not display any error messages
