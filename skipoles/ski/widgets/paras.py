@@ -672,7 +672,7 @@ class TextBlockDiv(Widget):
         tblock.linebreaks = False
         # place it at location 0
         if self.get_field_value("content_replaceblock"):
-            self[0] = tblockself.get_field_value("content_replaceblock")
+            self[0] = self.get_field_value("content_replaceblock")
         else:
             self[0] = tblock
 
