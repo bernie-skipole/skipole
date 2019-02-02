@@ -10911,7 +10911,7 @@ false
 "hidden_field3": "",
 "hidden_field4": "",
 "left_class": "ski_left_label",
-"left_label": "Create new TextBlock:",
+"left_label": "Insert TextBlock:",
 "right_class": "",
 "right_label": "",
 "show": true,
