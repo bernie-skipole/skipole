@@ -768,6 +768,10 @@ def _create_section(part_dict, proj_ident):
 def _create_textblock(part_dict, proj_ident):
     "Creates a TextBlock"
     textref = part_dict["textref"]
+    project = ''
+    if "project" in part_dict:
+        if part_dict["project"] != proj_ident:
+            project = part_dict["project"]
     if "text" in part_dict:
         text = part_dict["text"]
     else:
@@ -787,7 +791,7 @@ def _create_textblock(part_dict, proj_ident):
         decode = part_dict["decode"]
     else:
         decode = False
-    return tag.TextBlock(textref=textref, failmessage=failmessage, escape=escape, linebreaks=linebreaks, replace_strings=replace_strings, decode=decode, show=show, text=text)
+    return tag.TextBlock(textref=textref, project=project, failmessage=failmessage, escape=escape, linebreaks=linebreaks, replace_strings=replace_strings, decode=decode, show=show, text=text)
 
 
 def _create_sectionplaceholder(part_dict, proj_ident):

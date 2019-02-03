@@ -586,18 +586,18 @@ def page_textblock(project, pagenumber, pchange, location):
     tblock = page.location_item(location)
     if not isinstance(tblock, tag.TextBlock):
         raise ServerError("Item at this location is not identified as a TextBlock")
-    return PageTextBlock(project, pagenumber, pchange, location, tblock.textref, tblock.failmessage, tblock.escape, tblock.linebreaks, tblock.decode)
+    return PageTextBlock(project, pagenumber, pchange, location, tblock.textref, tblock.project, tblock.failmessage, tblock.escape, tblock.linebreaks, tblock.decode)
 
 
-def create_textblock_in_page(project, pagenumber, pchange, location, textref, failmessage, escape, linebreaks, decode=False):
+def create_textblock_in_page(project, pagenumber, pchange, location, textref, failmessage, escape, linebreaks, decode=False, tblock_project=''):
     "Creates a new textblock in the given page, returns the new pchange and location"
-    tblock = tag.TextBlock(textref=textref, failmessage=failmessage, escape=escape, linebreaks=linebreaks, decode=decode)
+    tblock = tag.TextBlock(textref=textref, project=tblock_project, failmessage=failmessage, escape=escape, linebreaks=linebreaks, decode=decode)
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange
     new_pchange, new_location = insert_item_in_page(project, pagenumber, pchange, location, tblock)
     return new_pchange, new_location
 
 
-def edit_page_textblock(project, pagenumber, pchange, location, textref, failmessage, escape, linebreaks, decode):
+def edit_page_textblock(project, pagenumber, pchange, location, textref, tblock_project, failmessage, escape, linebreaks, decode):
     """Given an textblock at project, pagenumber, location
        sets the textblock values, returns page change uuid """
     proj, page = get_proj_page(project, pagenumber, pchange)
@@ -609,6 +609,10 @@ def edit_page_textblock(project, pagenumber, pchange, location, textref, failmes
     tblock.escape = escape
     tblock.linebreaks = linebreaks
     tblock.decode = decode
+    if project == tblock_project:
+        tblock.project = ''
+    else:
+        tblock.project = tblock_project
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
 

@@ -139,6 +139,7 @@ class ParentFieldArg(object):
                     if not val.text:
                         val.text = self._value.text
                     val.linebreaks = self._value.linebreaks
+                    val.project = self._value.project
             elif valtype == 'integer':
                 if not val:
                     return 0

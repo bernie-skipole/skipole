@@ -89,6 +89,7 @@ def retrieve_textblockref(skicall):
     # header done, now page contents
 
     page_data[("textblock_ref","input_text")]=tblock.textref
+    page_data["tblock_project", "input_text"]=tblock.tblock_project
     page_data[("textblock_failed","input_text")]=tblock.failmessage
 
     page_data[("linebreaks","radio_values")]=['ON', 'OFF']
@@ -151,6 +152,17 @@ def set_textblock(skicall):
         else:
             textref = tblock.textref
 
+        if 'tblock_project' in call_data:
+            tblock_project = call_data['tblock_project']
+            if tblock_project == project:
+                message = "TextBlock sub project removed"
+            elif tblock_project:
+                message = 'New TextBlock sub project set'
+            else:
+                message = "TextBlock sub project removed"
+        else:
+            tblock_project = tblock.project
+
         if 'textblock_failed' in call_data:
             failmessage = call_data["textblock_failed"]
             message = 'New fail message set'
@@ -195,9 +207,9 @@ def set_textblock(skicall):
             escape = tblock.escape
 
         if pagenumber:
-            call_data['pchange'] = editpage.edit_page_textblock(project, pagenumber, pchange, location, textref, failmessage, escape, linebreaks, decode)
+            call_data['pchange'] = editpage.edit_page_textblock(project, pagenumber, pchange, location, textref, tblock_project, failmessage, escape, linebreaks, decode)
         else:
-            call_data['schange'] = editsection.edit_section_textblock(project, section_name, schange, location, textref, failmessage, escape, linebreaks, decode)
+            call_data['schange'] = editsection.edit_section_textblock(project, section_name, schange, location, textref, tblock_project, failmessage, escape, linebreaks, decode)
 
     except ServerError as e:
         raise FailPage(e.message)
@@ -246,6 +258,11 @@ def create_insert(skicall):
     if _TB.search(call_data["textblock_ref"]):
         raise FailPage(message="Invalid reference")
     textref = call_data['textblock_ref']
+
+    if 'tblock_project' in call_data:
+        tblock_project = call_data['tblock_project']
+    else:
+        tblock_project = ''
 
     if 'textblock_failed' in call_data:
         failmessage = call_data["textblock_failed"]
@@ -312,7 +329,8 @@ def create_insert(skicall):
                                                                                      textref,
                                                                                      failmessage,
                                                                                      escape,
-                                                                                     linebreaks)
+                                                                                     linebreaks,
+                                                                                     tblock_project=tblock_project)
 
         elif 'section_name' in call_data:
             section_name = call_data['section_name']
@@ -329,7 +347,8 @@ def create_insert(skicall):
                                                                                           textref,
                                                                                           failmessage,
                                                                                           escape,
-                                                                                          linebreaks)
+                                                                                          linebreaks,
+                                                                                          tblock_project=tblock_project)
 
         else:
             raise FailPage("Either a page or section must be specified")
