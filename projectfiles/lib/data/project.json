@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "2.3.4",
+"skipole": "2.3.5",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
