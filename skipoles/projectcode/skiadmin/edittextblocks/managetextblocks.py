@@ -29,7 +29,7 @@ import re
 # a search for anything none-alphanumeric and not an underscore
 _TB = re.compile('[^\w\.]')
 
-from ....ski.excepts import FailPage
+from ....ski.excepts import FailPage, GoTo
 from .... import skilift
 from .. import utils
 
@@ -110,7 +110,7 @@ def retrieve_more(skicall):
 
     # list of textrefs
     accesstextblocks = skilift.get_accesstextblocks(project)
-    result = accesstextblocks.get_textrefs()              
+    result = accesstextblocks.get_textrefs()           
 
     # set result to a list of textrefs that start with refdot
     result = [ ref for ref in result if ref.startswith(refdot) ]
@@ -165,7 +165,7 @@ def retrieve_textblock(skicall):
     page_data = skicall.page_data
 
     # clears any session data
-    utils.clear_call_data(call_data, keep=['textblock','text'] )
+    utils.clear_call_data(call_data, keep=['textblock','text','language'] )
 
     project = call_data['editedprojname']
     language = skicall.lang[0].lower()
@@ -334,18 +334,37 @@ def submit_delete_textblock(skicall):
     call_data = skicall.call_data
     page_data = skicall.page_data
 
-    project = call_data['editedprojname']
-    status = False
-
     if "delete_textblock" not in call_data:
         raise ValidateError(message='Invalid call - no textblock reference')
     textref = call_data['delete_textblock']
-    accesstextblocks = skilift.get_accesstextblocks(project)
+    accesstextblocks = skicall.accesstextblocks
     if not accesstextblocks.textref_exists(textref):
         call_data['status'] = "TextBlock not found"
         return
     accesstextblocks.del_textblock(textref)
     call_data['status'] = "TextBlock deleted"
+    _find_previous_textblock(skicall, textref)
+
+
+def _find_previous_textblock(skicall, textref):
+    "raises a GoTo if a previous textref exists"
+    if '.' not in textref:
+        return
+    reflist = textref.split('.')
+    newref = '.'.join(reflist[:-1])
+    # do any newref.* exist ?
+    refdot = newref + '.'
+    accesstextblocks = skicall.accesstextblocks
+    # set result to a list of textrefs that start with refdot
+    result = [ ref for ref in accesstextblocks.get_textrefs() if ref.startswith(refdot) ]
+    if not result:
+        return _find_previous_textblock(skicall, newref)
+    # some do exist    
+    skicall.call_data['ref'] = newref
+    # fill in, then go to the template page
+    retrieve_more(skicall)
+    raise GoTo(24005)
+
 
 
 def submit_copy_textblock(skicall):
