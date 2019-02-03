@@ -72,7 +72,7 @@ class ConfirmBox1(Widget):
               If False, or error sets display:block
         boxdiv_class: class of the box holding paragraph and buttons
         paradiv_class: The class of the div containing the paragraph
-        para_class: The class of the TextBlock paragraph
+        para_class: The class of the paragraph
         buttondiv_class: The class of the div holding the buttons
         json_ident1: The url, ident or label to link by button1, expecting a json file to be returned
         json_ident2: The url, ident or label to link by button2, expecting a json file to be returned
