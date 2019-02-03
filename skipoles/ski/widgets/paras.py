@@ -591,6 +591,7 @@ class TextBlockPara(Widget):
     error_location = 0
 
     arg_descriptions = {'textblock_ref':FieldArg("textblock_ref", ""),
+                        'textblock_project':FieldArg("text", ""),
                         'text_refnotfound':FieldArg("text", ""),
                         'text_replaceblock':FieldArg("text", "" ,jsonset=True),
                         'replace_strings':FieldArgList("text"),
@@ -601,6 +602,7 @@ class TextBlockPara(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """
         textblock_ref: The reference of the TextBlock appearing in the paragraph
+        textblock_project: Set with a project name if the TextBlock is defined in a sub project
         text_refnotfound: text to appear if the textblock is not found
         text_replaceblock: text set here will replace the textblock
         replace_strings: A list of strings, if given, will be used with python % operator on the text
@@ -617,6 +619,7 @@ class TextBlockPara(Widget):
             # define the textblock
             tblock = self.get_field_value("textblock_ref")
             tblock.text = self.get_field_value('text_replaceblock')
+            tblock.project = self.get_field_value('textblock_project')
             tblock.failmessage = self.get_field_value('text_refnotfound')
             tblock.linebreaks = bool(self.get_field_value('linebreaks'))
             if self.get_field_value('replace_strings'):
@@ -649,6 +652,7 @@ class TextBlockDiv(Widget):
 
 
     arg_descriptions = {'textblock_ref':FieldArg("textblock_ref", ""),
+                        'textblock_project':FieldArg("text", ""),
                         'content_refnotfound':FieldArg("text", ""),
                         'content_replaceblock':FieldArg("text", "" ,jsonset=True)
                        }
@@ -656,6 +660,7 @@ class TextBlockDiv(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """
         textblock_ref: The reference of the TextBlock appearing in the div
+        textblock_project: Set with a project name if the TextBlock is defined in a sub project
         content_refnotfound: content to appear if the textblock is not found
         content_replaceblock: content set here will replace the textblock
         """
@@ -667,6 +672,7 @@ class TextBlockDiv(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         # define the textblock
         tblock = self.get_field_value("textblock_ref")
+        tblock.project = self.get_field_value('textblock_project')
         tblock.failmessage = self.get_field_value('content_refnotfound')
         tblock.escape = False
         tblock.linebreaks = False
@@ -692,6 +698,7 @@ class DecodedTextBlock(Widget):
     display_errors = False
 
     arg_descriptions = {'textblock_ref':FieldArg("textblock_ref", ""),
+                        'textblock_project':FieldArg("text", ""),
                         'text_refnotfound':FieldArg("text", ""),
                         'hide':FieldArg("boolean", False, jsonset=True)}
 
@@ -708,6 +715,7 @@ class DecodedTextBlock(Widget):
         self.widget_hide(self.get_field_value("hide"))
         # define the textblock
         tblock = self.get_field_value("textblock_ref")
+        tblock.project = self.get_field_value('textblock_project')
         tblock.failmessage = self.get_field_value('text_refnotfound')
         tblock.decode = True
         # place it at location 0
