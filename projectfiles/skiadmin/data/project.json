@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "2.3.3",
-"skipole": "2.3.3",
+"version": "2.3.4",
+"skipole": "2.3.4",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -200,6 +200,7 @@
 "set_tag_name": 43010,
 "set_target_ident": 6060,
 "set_target_ident_json": 6061,
+"set_tblock_project": 42070,
 "set_textblock_ref": 42020,
 "set_unrestricted_action": 2950,
 "set_url": 130,
@@ -10415,6 +10416,63 @@ false
 "Part",
 {
 "tag_name": "p",
+"brief": "About textblock project",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"If the TextBlock has been defined in this project, then leave the following blank.\r\nHowever if it is from a sub project, then give the sub project name here:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.SubmitTextInput1",
+"name": "tblock_project",
+"brief": "The textblock sub project",
+"fields": {
+"action": "set_tblock_project",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Submit",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputandbutton_class": "",
+"inputdiv_class": "",
+"label": "TextBlock sub project:",
+"label_class": "ski_left_label",
+"maxlength": "150",
+"pattern": "",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "Invalid text",
+"size": "50",
+"target": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
 "show": true,
 "hide_if_empty": false,
 "parts": [
@@ -11016,6 +11074,63 @@ false
 "Part",
 {
 "tag_name": "p",
+"brief": "About textblock project",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"If the TextBlock has been defined in this project, then leave the following blank. However if it is from a sub project, then give the sub project name here:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "tblock_project",
+"brief": "The textblock project",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "",
+"label": "TextBlock sub-project:",
+"label_class": "ski_left_label",
+"maxlength": "150",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "Invalid input",
+"size": "50",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.NotEmpty",
+"message": "A fail message must be provided"
+}
+]
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
 "brief": "About linebreaks",
 "show": true,
 "hide_if_empty": false,
@@ -11185,6 +11300,7 @@ false
 "original_fields": {
 "linebreaks:radio_checked": "linebreaks",
 "setescape:radio_checked": "setescape",
+"tblock_project:input_text": "tblock_project",
 "textblock_failed:input_text": "textblock_failed",
 "textblock_ref:input_text": "textblock_ref"
 }
@@ -11299,6 +11415,7 @@ false
 "edittextblockrefform:button_text": "",
 "linebreaks:radio_checked": "",
 "setescape:radio_checked": "",
+"tblock_project:input_text": "",
 "textblock_failed:input_text": "",
 "textblock_ref:input_text": ""
 }
@@ -11433,6 +11550,32 @@ false
 "original_fields": {
 "linebreaks:radio_checked": "",
 "linebreaksform:button_text": ""
+}
+}
+},
+"set_tblock_project": {
+"ident": 42070,
+"brief": "Sets the textblock project",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+52019
+],
+"alternate_ident": "admin_home",
+"fail_ident": 52017,
+"submit_list": [
+"edittextblocks",
+"edittextblockrefs",
+"set_textblock"
+],
+"submit_option": true,
+"target_ident": 52017,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"tblock_project:input_text": "tblock_project"
 }
 }
 },

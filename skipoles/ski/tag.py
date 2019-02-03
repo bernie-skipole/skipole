@@ -1025,7 +1025,9 @@ class SectionPlaceHolder(object):
 
 class TextBlock(object):
 
-    def __init__(self, textref='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], decode=False, show = True, text=''):
+    def __init__(self, textref='', project='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], decode=False, show = True, text=''):
+        # Note project is either '' for a textblock defined in this project, or the proj_ident of a sub project
+        self.project = project
         # set show to False if this textblock is not to be shown
         self.show = show
         self.textref = textref
@@ -1069,7 +1071,10 @@ class TextBlock(object):
     failmessage = property(get_failmessage, set_failmessage)
 
     def update(self, page, ident_list, environ, call_data, lang, ident_string, placeholder, embedded):
-        proj_ident = page.ident.proj
+        if self.project:
+            proj_ident = self.project
+        else:
+            proj_ident = page.ident.proj
         self._show_failmessage = False
         if self.text: return
         if not self.textref:
@@ -1089,11 +1094,16 @@ class TextBlock(object):
             self._displayedtext = result
 
 
-    def exists(self, proj_ident):
+    def exists(self, proj_ident=''):
         "Returns true if textref is available in the project"
         if not self.textref:
             return False
-        proj = skiboot.getproject(proj_ident)
+        if proj_ident:
+            proj = skiboot.getproject(proj_ident)
+        elif self.project:
+            proj = skiboot.getproject(self.project)
+        else:
+            return False
         if proj is None:
             return False
         return proj.textblocks.textref_exists(self.textref)
@@ -1105,6 +1115,8 @@ class TextBlock(object):
         part_dict["textref"] = self.textref
         if self.text:
             part_dict["text"] = self.text
+        if self.project and (self.project != proj_ident):
+            part_dict["project"] = self.project
         if self.failmessage:
             part_dict["failmessage"] = self.failmessage
         part_dict["show"] = self.show

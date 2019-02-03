@@ -2,5 +2,6 @@
   "authentication_failure": "Login failed: Authentication failure please try again",
   "hiding_text": "This paragraph is a paras000.TextBlockParaHider widget, it consists of a TextBlock (which you are reading now)\nand which is hideable - click on this text to see it vanish.",
   "index01": "Well done!\nYou have successfully installed Skipole!",
-  "index_footer_ref": "Skipole: an example page"
+  "index_footer_ref": "Skipole: an example page",
+  "svgicon.logo": "<rect rx=\"20\" height=\"128\" width=\"256\" ry=\"20\" style=\"fill:black\"/>\r\n<line y1=\"64\" y2=\"64\" x1=\"12\" style=\"stroke:yellow;stroke-width:8\" x2=\"60\"/>\r\n<line y1=\"40\" y2=\"88\" x1=\"36\" style=\"stroke:yellow;stroke-width:8\" x2=\"36\"/>\r\n<line y1=\"64\" y2=\"64\" x1=\"72\" style=\"stroke:yellow;stroke-width:8\" x2=\"120\"/>\r\n<line y1=\"64\" y2=\"64\" x1=\"132\" style=\"stroke:yellow;stroke-width:8\" x2=\"180\"/>\r\n<line y1=\"44\" y2=\"64\" x1=\"192\" style=\"stroke:yellow;stroke-width:8\" x2=\"240\"/>\r\n<line y1=\"84\" y2=\"64\" x1=\"192\" style=\"stroke:yellow;stroke-width:8\" x2=\"240\"/>\r\n<circle cy=\"64\" r=\"4\" style=\"fill:yellow\" cx=\"240\"/>"
 }
