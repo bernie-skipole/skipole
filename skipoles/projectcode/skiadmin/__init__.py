@@ -234,6 +234,18 @@ def set_navigation(identnum, call_data, page_data):
                                                             ['operations', "Operations", False, ''],
                                                             ["about_code", "Python Code", False, '']
                                                            ]
+    elif identnum == 510:
+        # about_lib page
+        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
+                                                            ['admin_home', "Admin", False, ''],
+                                                            [3, "Root Folder", False, ''],
+                                                            ["manage_specialpages", "Page Labels", False, ''],
+                                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                                            ["manage_sections", "Sections", False, ''],
+                                                            [300, "Colours", False, ''],
+                                                            ['operations', "Operations", False, ''],
+                                                            ["about_code", "Python Code", False, '']
+                                                           ]
     elif identnum == 80001:
         # operations index page
         page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],

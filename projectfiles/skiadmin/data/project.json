@@ -11,6 +11,7 @@
 },
 "specialpages": {
 "about_code": 70001,
+"about_lib": 510,
 "add_allowed_caller": 6080,
 "add_allowed_value": 46041,
 "add_field": 6210,
@@ -33011,6 +33012,45 @@ false
 }
 ],
 [
+"Part",
+{
+"tag_name": "p",
+"brief": "About the lib sub project",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Further information about the lib sub project can be found"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to about the lib project",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{about_lib}"
+},
+"parts": [
+[
+"Text",
+"here."
+]
+]
+}
+]
+]
+}
+],
+[
 "SectionPlaceHolder",
 {
 "brief": "Section admin_footer with alias foot",
@@ -35503,6 +35543,269 @@ false
 },
 "original_fields": {}
 }
+},
+"about_lib": {
+"ident": 510,
+"brief": "Description of the lib project",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#bbbbbb",
+"default_error_widget": [
+"adminhead",
+"show_status"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The lib project"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Sets class w3-theme",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "Left navigation box",
+"section_name": "left_nav",
+"placename": "left_nav",
+"multiplier": 1,
+"mtag": "div"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section top_header with alias adminhead",
+"section_name": "top_header",
+"placename": "adminhead",
+"multiplier": 1,
+"mtag": "div"
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Main content page div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container",
+"style": "margin-left:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "The lib sub project",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The lib sub-project."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Intro",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The lib sub project is a part of the skipole framework and is automatically added to your project.\r\nIt includes a number of pages - particularly javascript files used by widgets, and special pages such as the 'URL Not found' page.\r\nFor  example, your project will contain the special label 'url_not_found' which will point to 'lib,url_not_found'.\r\nWhen your project returns a URL Not found message to a client, it calls this label which pulls in the page from the lib sub-project.\r\nSimilarly, when widgets are used in a page, and when the page is dynamically created, special javascript files will be inserted into the page head. Again these come from the lib sub project and are defined by their labels (which can be seen under the left navigation 'Page Labels' button)."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "About TextBlocks",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"lib TextBlocks"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About lib TextBlocks",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The lib sub-project also includes a number of convenient TextBlocks.  These contain snippits of SVG code, which could be included within your own svg sections - such as within an svgbasics.TextBlockGroup widget to provide an icon.\r\n\r\nThese icon TextBlocks are listed below:"
+]
+]
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Section admin_footer with alias foot",
+"section_name": "admin_footer",
+"placename": "foot",
+"multiplier": 1,
+"mtag": "div"
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
 },
 "add_project": {
 "ident": 100,
