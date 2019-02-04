@@ -2,8 +2,8 @@
 "url": "/skiadmin/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "2.3.5",
-"skipole": "2.3.5",
+"version": "2.3.6",
+"skipole": "2.3.6",
 "subprojects": {
 "lib": {
 "path": "/skiadmin/lib/"
@@ -35798,6 +35798,90 @@ false
 "style": "padding:20px;"
 },
 "parts": [
+[
+"Part",
+{
+"tag_name": "tr",
+"brief": "Table row",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "td",
+"brief": "Table cell",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "padding:20px;"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "SVG element",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "50",
+"width": "50"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "group",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "scale(0.5,0.5)"
+},
+"parts": [
+[
+"TextBlock",
+{
+"textref": "svgicon.home",
+"project": "lib",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false,
+"decode": false
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "td",
+"brief": "Table cell",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "padding:20px;"
+},
+"parts": [
+[
+"Text",
+"Reference: svgicon.home\r\nWidth 100 height 100, this example is set into a group\r\nwith transform attribute \"scale(0.5,0.5)\"."
+]
+]
+}
+]
+]
+}
+],
 [
 "Part",
 {
