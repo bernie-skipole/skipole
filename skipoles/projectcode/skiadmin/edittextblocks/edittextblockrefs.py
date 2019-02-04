@@ -161,7 +161,7 @@ def set_textblock(skicall):
             else:
                 message = "TextBlock sub project removed"
         else:
-            tblock_project = tblock.project
+            tblock_project = tblock.tblock_project
 
         if 'textblock_failed' in call_data:
             failmessage = call_data["textblock_failed"]
