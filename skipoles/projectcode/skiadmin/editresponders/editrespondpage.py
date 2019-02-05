@@ -72,7 +72,7 @@ def _t_ref(r_info, item):
 
 def skicall_help(skicall):
     "Retrieves help text for the skicall object"
-    text = skicall.textblock_text("aboutcode.skicall")
+    text = skicall.textblock("aboutcode.skicall")
     if not text:
         text = "No help text for aboutcode.skicall has been found"
     skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
@@ -81,7 +81,7 @@ def skicall_help(skicall):
 
 def use_submit_list_help(skicall):
     "Retrieves help text for the use_submit_list decorator"
-    text = skicall.textblock_text("aboutcode.usesubmitlist")
+    text = skicall.textblock("aboutcode.usesubmitlist")
     if not text:
         text = "No help text for aboutcode.use_submit_list has been found"
     skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
@@ -90,7 +90,7 @@ def use_submit_list_help(skicall):
 
 def fail_page_help(skicall):
     "Retrieves help text for the fail page ident"
-    text = skicall.textblock_text("responders.fail_page")
+    text = skicall.textblock("responders.fail_page")
     if not text:
         text = "No help text for responders.fail_page has been found"
     skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
@@ -111,7 +111,7 @@ def submit_data_help(skicall):
     except ServerError as e:
         raise FailPage(message=e.message)
     sdtextref = _t_ref(r_info, 'submit_data')
-    text = skicall.textblock_text(sdtextref)
+    text = skicall.textblock(sdtextref)
     if not text:
         text = "No help text for %s has been found" % sdtextref
     skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
@@ -132,7 +132,7 @@ def submit_dict_help(skicall):
     except ServerError as e:
         raise FailPage(message=e.message)
     sdtextref = _t_ref(r_info, 'submit_dict')
-    text = skicall.textblock_text(sdtextref)
+    text = skicall.textblock(sdtextref)
     if not text:
         text = "No help text for %s has been found" % sdtextref
     skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
@@ -153,7 +153,7 @@ def call_data_help(skicall):
     except ServerError as e:
         raise FailPage(message=e.message)
     cdtextref = _t_ref(r_info, 'call_data')
-    text = skicall.textblock_text(cdtextref)
+    text = skicall.textblock(cdtextref)
     if not text:
         text = "No help text for %s has been found" % cdtextref
     skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
