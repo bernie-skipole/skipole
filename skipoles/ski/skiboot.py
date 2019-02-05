@@ -193,10 +193,6 @@ def project_main(proj_ident=None):
     "Returns projectfiles/proj_ident/data/__main__.py"
     return os.path.join(projectdata(proj_ident), "__main__.py")
 
-def textblocks_json_directory(proj_ident=None):
-    "Returns the directory holding the textblocks json files"
-    return os.path.join(projectdata(proj_ident), "textblocks_json")
-
 def default_language():
     "Returns the default language"
     return _CFG["default_language"]

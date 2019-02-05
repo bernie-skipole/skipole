@@ -78,7 +78,7 @@ class SkiCall(object):
         return this_project.textblocks
 
     def textblock(self, textref, project=None, decode=False):
-        """This function returns the textblock text, given a textblock reference string,
+        """This method returns the textblock text, given a textblock reference string,
            If project is not given assumes this project, if given, project must exist as either the root,
            or a sub project of the root.
            If no textblock is found, returns None."""
@@ -90,6 +90,18 @@ class SkiCall(object):
         if decode:
             return proj.textblocks.get_decoded_text(textref, self.lang)
         return proj.textblocks.get_text(textref, self.lang)
+
+    def label_value(self, label, project=None):
+        """Given a label, returns the associated ident or URL
+           If project is not given assumes this project, if given, project must exist as either the root,
+           or a sub project of the root.
+           If no label is found, returns None."""
+        if project is None:
+            project = self.project
+        proj = skiboot.getproject(project)
+        if proj is None:
+            return
+        return proj.label_value(label)
 
 
 
