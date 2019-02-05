@@ -621,6 +621,18 @@ class Project(object):
         return labels_dict
 
 
+    def label_value(self, key):
+        "Returns the url or tuple associated with the label"
+        val = self.special_pages.get(key)
+        if val is None:
+            return
+        labels_dict = {}
+        if isinstance(val, str):
+            return val
+        else:
+            return val.to_tuple()
+
+
     def _redirect_to_url(self, url, environ, call_data, page_data, lang):
         "Return status, headers, page.data() of the redirector page, with fields set to url"
         if '/' not in url:
