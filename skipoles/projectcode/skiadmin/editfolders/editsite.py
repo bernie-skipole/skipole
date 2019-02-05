@@ -130,7 +130,7 @@ def retrieve_help(skicall):
     if not caller_ident:
         return
     textref = 'page.' + str(caller_ident[1])
-    text = skicall.textblock_text(textref)
+    text = skicall.textblock(textref)
     if not text:
         text = "No help text for page %s has been found" % caller_ident[1]
     page_data[("adminhead","show_help","para_text")] = "\n" + text

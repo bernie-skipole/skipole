@@ -164,9 +164,10 @@ def get_text(skicall):
     received_widgfields = skicall.submit_dict['received']
     for key, val in received_widgfields.items():
         if isinstance(key, tuple) and (key[-1] == 'get_field'):
-            text = skicall.textblock_text(val).replace('\n', '\n<br />')
+            text = skicall.textblock(val)
             if text is None:
                 continue
+            text = text.replace('\n', '\n<br />')
             if len(key) == 3:
                 page_data[(key[0], key[1],'div_content')] = text
                 page_data[(key[0], key[1],'hide')] = False
