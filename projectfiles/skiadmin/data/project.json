@@ -11124,8 +11124,7 @@ false
 "validators": {
 "input_text": [
 {
-"class": "basic.NotEmpty",
-"message": "A fail message must be provided"
+"class": "basic.NoOperation"
 }
 ]
 }
@@ -35782,7 +35781,7 @@ false
 "parts": [
 [
 "Text",
-"The lib sub-project also includes a number of convenient TextBlocks.  These contain snippits of SVG code, which could be included within your own svg elements - such as within an svgbasics.TextBlockGroup widget to provide an icon.\r\nPlease note: These are not images - to provide the full image the TextBlock needs to appear within an <svg> element, and also possibly a <g> tag with a transform attribute to scale the item. \r\n\r\nThese icon TextBlocks are listed below:"
+"The lib sub-project also includes a number of convenient TextBlocks.  These contain snippits of SVG code, which could be included within your own svg elements - such as within an svgbasics.TextBlockGroup widget to provide an icon.\r\nPlease note: To provide the full icon image the TextBlock needs to appear within an <svg> element, and also possibly a <g> tag with a transform attribute to scale the item. \r\n\r\nThese icon TextBlocks are listed below:"
 ]
 ]
 }
@@ -35798,6 +35797,90 @@ false
 "style": "padding:20px;"
 },
 "parts": [
+[
+"Part",
+{
+"tag_name": "tr",
+"brief": "Table row",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "td",
+"brief": "Table cell",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "padding:20px;"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "SVG element",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "50",
+"width": "50"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "group",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "scale(0.5,0.5)"
+},
+"parts": [
+[
+"TextBlock",
+{
+"textref": "svgicon.alarm",
+"project": "lib",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false,
+"decode": false
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "td",
+"brief": "Table cell",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "padding:20px;"
+},
+"parts": [
+[
+"Text",
+"Reference: svgicon.alarm\r\nWidth 100 height 100, this example is set into a group\r\nwith transform attribute \"scale(0.5,0.5)\"."
+]
+]
+}
+]
+]
+}
+],
 [
 "Part",
 {
