@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "2.3.5",
+"skipole": "2.3.6",
 "subprojects": {},
 "specialpages": {
 "general_json": 870,
@@ -116,7 +116,6 @@
 "restricted": {
 "ident": 800,
 "brief": "Folder of system pages",
-"default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
@@ -379,6 +378,52 @@
 "show": true,
 "hide_if_empty": false,
 "parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "error icon",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "25",
+"width": "25"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "group for error icon",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "scale(0.25,0.25)"
+},
+"parts": [
+[
+"TextBlock",
+{
+"textref": "svgicon.alarm",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false,
+"decode": false
+}
+]
+]
+}
+]
+]
+}
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
 [
 "Text",
 "500 Internal Server Error"
