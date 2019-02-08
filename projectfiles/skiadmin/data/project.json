@@ -6388,6 +6388,25 @@ false
 },
 "parts": [
 [
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "pageid",
+"brief": "Shows the page ident",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "Page Ident :",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -6633,6 +6652,25 @@ false
 },
 "parts": [
 [
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "pageid",
+"brief": "Shows the page ident",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "Page Ident :",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -6877,6 +6915,25 @@ false
 "style": "margin-left:20%"
 },
 "parts": [
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "pageid",
+"brief": "Shows the page ident",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "Page Ident :",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
 [
 "Part",
 {
