@@ -420,7 +420,7 @@
 "brief": "shows colour",
 "fields": {
 "inner_tag": "div",
-"set_text": "",
+"set_html": "",
 "show": true,
 "style": "",
 "widget_class": "",

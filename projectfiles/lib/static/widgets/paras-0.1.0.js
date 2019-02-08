@@ -143,6 +143,17 @@ SKIPOLE.paras.DivStyleDiv = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.paras.DivStyleDiv.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.paras.DivStyleDiv.prototype.constructor = SKIPOLE.paras.DivStyleDiv;
+SKIPOLE.paras.DivStyleDiv.prototype.setvalues = function (fieldlist, result) {
+   if (!this.widg_id) {
+        return;
+        }
+    var widg_id = this.widg_id
+    var the_widg = this.widg;
+    var set_html = this.fieldarg_in_result('set_html', result, fieldlist);
+    if (set_html) {
+        the_widg.html(set_html);
+        }
+    };
 
 
 SKIPOLE.paras.DivHTML = function (widg_id, error_message, fieldmap) {

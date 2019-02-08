@@ -221,206 +221,206 @@ def retrieve_colour_data(skicall):
     page_data["l5_color","inputcol","label"] = "w3-theme-l5 color:"
     page_data["l5_color","inputcol","input_text"] = l5_color
     page_data["l5_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l5_color,l5_background_color)
-    page_data["l5_color", "boxcol","set_text"] = l5_color
+    page_data["l5_color", "boxcol","set_html"] = l5_color
 
     # l5_background_color
     page_data["l5_background_color","inputcol","label"] = "w3-theme-l5 background color:"
     page_data["l5_background_color","inputcol","input_text"] = l5_background_color
     page_data["l5_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l5_background_color, l5_color)
-    page_data["l5_background_color", "boxcol","set_text"] = l5_background_color
+    page_data["l5_background_color", "boxcol","set_html"] = l5_background_color
 
     # l4_color
     page_data["l4_color","inputcol","label"] = "w3-theme-l4 color:"
     page_data["l4_color","inputcol","input_text"] = l4_color
     page_data["l4_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l4_color,l4_background_color)
-    page_data["l4_color", "boxcol","set_text"] = l4_color
+    page_data["l4_color", "boxcol","set_html"] = l4_color
 
     # l4_background_color
     page_data["l4_background_color","inputcol","label"] = "w3-theme-l4 background color:"
     page_data["l4_background_color","inputcol","input_text"] = l4_background_color
     page_data["l4_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l4_background_color,l4_color)
-    page_data["l4_background_color", "boxcol","set_text"] = l4_background_color
+    page_data["l4_background_color", "boxcol","set_html"] = l4_background_color
 
     # l3_color
     page_data["l3_color","inputcol","label"] = "w3-theme-l3 color:"
     page_data["l3_color","inputcol","input_text"] = l3_color
     page_data["l3_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l3_color,l3_background_color)
-    page_data["l3_color", "boxcol","set_text"] = l3_color
+    page_data["l3_color", "boxcol","set_html"] = l3_color
 
     # l3_background_color
     page_data["l3_background_color","inputcol","label"] = "w3-theme-l3 background color:"
     page_data["l3_background_color","inputcol","input_text"] = l3_background_color
     page_data["l3_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l3_background_color,l3_color)
-    page_data["l3_background_color", "boxcol","set_text"] = l3_background_color
+    page_data["l3_background_color", "boxcol","set_html"] = l3_background_color
 
     # l2_color
     page_data["l2_color","inputcol","label"] = "w3-theme-l2 color:"
     page_data["l2_color","inputcol","input_text"] = l2_color
     page_data["l2_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l2_color,l2_background_color)
-    page_data["l2_color", "boxcol","set_text"] = l2_color
+    page_data["l2_color", "boxcol","set_html"] = l2_color
 
     # l2_background_color
     page_data["l2_background_color","inputcol","label"] = "w3-theme-l2 background color:"
     page_data["l2_background_color","inputcol","input_text"] = l2_background_color
     page_data["l2_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l2_background_color,l2_color)
-    page_data["l2_background_color", "boxcol","set_text"] = l2_background_color
+    page_data["l2_background_color", "boxcol","set_html"] = l2_background_color
 
     # l1_color
     page_data["l1_color","inputcol","label"] = "w3-theme-l1 color:"
     page_data["l1_color","inputcol","input_text"] = l1_color
     page_data["l1_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l1_color,l1_background_color)
-    page_data["l1_color", "boxcol","set_text"] = l1_color
+    page_data["l1_color", "boxcol","set_html"] = l1_color
 
     # l1_background_color
     page_data["l1_background_color","inputcol","label"] = "w3-theme-l1 background color:"
     page_data["l1_background_color","inputcol","input_text"] = l1_background_color
     page_data["l1_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l1_background_color,l1_color)
-    page_data["l1_background_color", "boxcol","set_text"] = l1_background_color
+    page_data["l1_background_color", "boxcol","set_html"] = l1_background_color
 
     # d1_color
     page_data["d1_color","inputcol","label"] = "w3-theme-d1 color:"
     page_data["d1_color","inputcol","input_text"] = d1_color
     page_data["d1_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d1_color,d1_background_color)
-    page_data["d1_color", "boxcol","set_text"] = d1_color
+    page_data["d1_color", "boxcol","set_html"] = d1_color
 
     # d1_background_color
     page_data["d1_background_color","inputcol","label"] = "w3-theme-d1 background color:"
     page_data["d1_background_color","inputcol","input_text"] = d1_background_color
     page_data["d1_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d1_background_color,d1_color)
-    page_data["d1_background_color", "boxcol","set_text"] = d1_background_color
+    page_data["d1_background_color", "boxcol","set_html"] = d1_background_color
 
     # d2_color
     page_data["d2_color","inputcol","label"] = "w3-theme-d2 color:"
     page_data["d2_color","inputcol","input_text"] = d2_color
     page_data["d2_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d2_color,d2_background_color)
-    page_data["d2_color", "boxcol","set_text"] = d2_color
+    page_data["d2_color", "boxcol","set_html"] = d2_color
 
     # d2_background_color
     page_data["d2_background_color","inputcol","label"] = "w3-theme-d2 background color:"
     page_data["d2_background_color","inputcol","input_text"] = d2_background_color
     page_data["d2_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d2_background_color,d2_color)
-    page_data["d2_background_color", "boxcol","set_text"] = d2_background_color
+    page_data["d2_background_color", "boxcol","set_html"] = d2_background_color
 
     # d3_color
     page_data["d3_color","inputcol","label"] = "w3-theme-d3 color:"
     page_data["d3_color","inputcol","input_text"] = d3_color
     page_data["d3_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d3_color,d3_background_color)
-    page_data["d3_color", "boxcol","set_text"] = d3_color
+    page_data["d3_color", "boxcol","set_html"] = d3_color
 
     # d3_background_color
     page_data["d3_background_color","inputcol","label"] = "w3-theme-d3 background color:"
     page_data["d3_background_color","inputcol","input_text"] = d3_background_color
     page_data["d3_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d3_background_color,d3_color)
-    page_data["d3_background_color", "boxcol","set_text"] = d3_background_color
+    page_data["d3_background_color", "boxcol","set_html"] = d3_background_color
 
     # d4_color
     page_data["d4_color","inputcol","label"] = "w3-theme-d4 color:"
     page_data["d4_color","inputcol","input_text"] = d4_color
     page_data["d4_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d4_color,d4_background_color)
-    page_data["d4_color", "boxcol","set_text"] = d4_color
+    page_data["d4_color", "boxcol","set_html"] = d4_color
 
     # d4_background_color
     page_data["d4_background_color","inputcol","label"] = "w3-theme-d4 background color:"
     page_data["d4_background_color","inputcol","input_text"] = d4_background_color
     page_data["d4_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d4_background_color,d4_color)
-    page_data["d4_background_color", "boxcol","set_text"] = d4_background_color
+    page_data["d4_background_color", "boxcol","set_html"] = d4_background_color
 
     # d5_color
     page_data["d5_color","inputcol","label"] = "w3-theme-d5 color:"
     page_data["d5_color","inputcol","input_text"] = d5_color
     page_data["d5_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d5_color,d5_background_color)
-    page_data["d5_color", "boxcol","set_text"] = d5_color
+    page_data["d5_color", "boxcol","set_html"] = d5_color
 
     # d5_background_color
     page_data["d5_background_color","inputcol","label"] = "w3-theme-d5 background color:"
     page_data["d5_background_color","inputcol","input_text"] = d5_background_color
     page_data["d5_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d5_background_color,d5_color)
-    page_data["d5_background_color", "boxcol","set_text"] = d5_background_color
+    page_data["d5_background_color", "boxcol","set_html"] = d5_background_color
 
 
     # light_color
     page_data["light_color","inputcol","label"] = "w3-theme-light color:"
     page_data["light_color","inputcol","input_text"] = light_color
     page_data["light_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (light_color,light_background_color)
-    page_data["light_color", "boxcol","set_text"] = light_color
+    page_data["light_color", "boxcol","set_html"] = light_color
 
     # light_background_color
     page_data["light_background_color","inputcol","label"] = "w3-theme-light background color:"
     page_data["light_background_color","inputcol","input_text"] = light_background_color
     page_data["light_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (light_background_color,light_color)
-    page_data["light_background_color", "boxcol","set_text"] = light_background_color
+    page_data["light_background_color", "boxcol","set_html"] = light_background_color
 
     # dark_color
     page_data["dark_color","inputcol","label"] = "w3-theme-dark color:"
     page_data["dark_color","inputcol","input_text"] = dark_color
     page_data["dark_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (dark_color,dark_background_color)
-    page_data["dark_color", "boxcol","set_text"] = dark_color
+    page_data["dark_color", "boxcol","set_html"] = dark_color
 
     # dark_background_color
     page_data["dark_background_color","inputcol","label"] = "w3-theme-dark background color:"
     page_data["dark_background_color","inputcol","input_text"] = dark_background_color
     page_data["dark_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (dark_background_color,dark_color)
-    page_data["dark_background_color", "boxcol","set_text"] = dark_background_color
+    page_data["dark_background_color", "boxcol","set_html"] = dark_background_color
 
     # action_color
     page_data["action_color","inputcol","label"] = "w3-theme-action color:"
     page_data["action_color","inputcol","input_text"] = action_color
     page_data["action_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (action_color,action_background_color)
-    page_data["action_color", "boxcol","set_text"] = action_color
+    page_data["action_color", "boxcol","set_html"] = action_color
 
     # action_background_color
     page_data["action_background_color","inputcol","label"] = "w3-theme-action background color:"
     page_data["action_background_color","inputcol","input_text"] = action_background_color
     page_data["action_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (action_background_color,action_color)
-    page_data["action_background_color", "boxcol","set_text"] = action_background_color
+    page_data["action_background_color", "boxcol","set_html"] = action_background_color
 
     # theme_color
     page_data["theme_color","inputcol","label"] = "w3-theme color:"
     page_data["theme_color","inputcol","input_text"] = theme_color
     page_data["theme_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (theme_color,theme_background_color)
-    page_data["theme_color", "boxcol","set_text"] = theme_color
+    page_data["theme_color", "boxcol","set_html"] = theme_color
 
     # theme_background_color
     page_data["theme_background_color","inputcol","label"] = "w3-theme background color:"
     page_data["theme_background_color","inputcol","input_text"] = theme_background_color
     page_data["theme_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (theme_background_color,theme_color)
-    page_data["theme_background_color", "boxcol","set_text"] = theme_background_color
+    page_data["theme_background_color", "boxcol","set_html"] = theme_background_color
 
     # text_color
     page_data["text_color","inputcol","label"] = "w3-text-theme color:"
     page_data["text_color","inputcol","input_text"] = text_color
     page_data["text_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (text_color,theme_background_color)
-    page_data["text_color", "boxcol","set_text"] = text_color
+    page_data["text_color", "boxcol","set_html"] = text_color
 
     # border_color
     page_data["border_color","inputcol","label"] = "w3-border-theme color:"
     page_data["border_color","inputcol","input_text"] = border_color
     page_data["border_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (border_color,theme_background_color)
-    page_data["border_color", "boxcol","set_text"] = border_color
+    page_data["border_color", "boxcol","set_html"] = border_color
 
     # hover_color
     page_data["hover_color","inputcol","label"] = "w3-hover-theme:hover color:"
     page_data["hover_color","inputcol","input_text"] = hover_color
     page_data["hover_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_color,hover_background_color)
-    page_data["hover_color", "boxcol","set_text"] = hover_color
+    page_data["hover_color", "boxcol","set_html"] = hover_color
 
     # hover_background_color
     page_data["hover_background_color","inputcol","label"] = "w3-hover-theme:hover background color:"
     page_data["hover_background_color","inputcol","input_text"] = hover_background_color
     page_data["hover_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_background_color,hover_color)
-    page_data["hover_background_color", "boxcol","set_text"] = hover_background_color
+    page_data["hover_background_color", "boxcol","set_html"] = hover_background_color
 
     # hover_text_color
     page_data["hover_text_color","inputcol","label"] = "w3-hover-text-theme:hover color:"
     page_data["hover_text_color","inputcol","input_text"] = hover_text_color
     page_data["hover_text_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_text_color,hover_background_color)
-    page_data["hover_text_color", "boxcol","set_text"] = hover_text_color
+    page_data["hover_text_color", "boxcol","set_html"] = hover_text_color
 
     # hover_border_color
     page_data["hover_border_color","inputcol","label"] = "w3-hover-border-theme:hover color:"
     page_data["hover_border_color","inputcol","input_text"] = hover_border_color
     page_data["hover_border_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_border_color,hover_background_color)
-    page_data["hover_border_color", "boxcol","set_text"] = hover_border_color
+    page_data["hover_border_color", "boxcol","set_html"] = hover_border_color
 
 
 def goto_edit_item(skicall):

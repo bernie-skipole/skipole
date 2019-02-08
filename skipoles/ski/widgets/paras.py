@@ -105,21 +105,23 @@ class DivStyleDiv(Widget):
     arg_descriptions = {
                         'inner_tag':FieldArg("text", 'div'),
                         'style':FieldArg("cssstyle", ''),
-                        'set_text':FieldArg("text", "")}
+                        'set_html':FieldArg("text", "", jsonset=True)}
 
     def __init__(self, name=None, brief='', **field_args):
-        """A div, containing a div which can have a style set, containing text
+        """A div, containing a div which can have a style set, containing unescaped html
             inner_tag - the tag of the inside element
            style - the style of the inside element"""
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name='div')
-        self[0][0] =  ""  # where text is to be set
+        self[0].htmlescaped = False
+        self[0].linebreaks=False
+        self[0][0] =  ""  # where html is to be set
 
     def _build(self, page, ident_list, environ, call_data, lang):
         self[0].tag_name = self.get_field_value('inner_tag')
         if self.get_field_value('style'):
             self[0].update_attribs({"style":self.get_field_value('style')})
-        self[0][0] = self.get_field_value("set_text")
+        self[0][0] = self.get_field_value("set_html")
 
     @classmethod
     def description(cls):
@@ -127,7 +129,7 @@ class DivStyleDiv(Widget):
         return """
 <div>  <!-- with widget id and class widget_class -->
   <div>  <!-- with div tag, or any other specified and the set style -->
-    <!-- set with text -->
+    <!-- set with unescaped html -->
   </div>
 </div>"""
 
