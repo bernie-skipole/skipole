@@ -145,6 +145,7 @@ def retrieve_page_head(skicall):
         raise FailPage(message = "Invalid page")
 
     page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' head'
+    page_data["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
 
     # fill in the table
     call_data['location_string'] = 'head'
@@ -318,6 +319,7 @@ def retrieve_page_body(skicall):
         raise FailPage(message = "Invalid page")
 
     page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' body'
+    page_data["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
 
     # fill in the table
     call_data['location_string'] = 'body'
@@ -476,6 +478,7 @@ def retrieve_page_svg(skicall):
     if pageinfo.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
     page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' svg'
+    page_data["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
     # fill in the table
     call_data['location_string'] = 'svg'
     retrieve_page_dom(skicall)
