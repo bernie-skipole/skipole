@@ -865,6 +865,8 @@ class MessageButton(Widget):
         # The location 0,0,1 is the inner div holding the text paragraph
         self[0][0][1] = tag.Part(tag_name="div")
         self[0][0][1][0] = tag.Part(tag_name="p")
+        # do not set any linebreaks, leave that to pre-line
+        self[0][0][1][0].linebreaks = False
         self[0][0][1][0][0] = ''
         # buttondiv and button
         self[1] = tag.Part(tag_name="div")
@@ -968,7 +970,7 @@ class MessageButton(Widget):
         </div>
         <div> <!-- With class set by inner_class -->
           <p style = "white-space: pre-line;"> <!-- style set if pre_line is True -->
-            <!-- para_text or error message appears in this paragraph -->
+            <!-- para_text appears in this paragraph -->
           </p>
         </div>
       </div>

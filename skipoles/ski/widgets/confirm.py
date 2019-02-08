@@ -390,7 +390,10 @@ class AlertClear1(Widget):
         # The location 0,1 is the div holding the text paragraph
         self[0][1] = tag.Part(tag_name="div")
         self[0][1][0] = tag.Part(tag_name="p")
+        # do not set any linebreaks, leave that to pre-line
+        self[0][1][0].linebreaks = False
         self[0][1][0][0] = ''
+
 
 
     def _build(self, page, ident_list, environ, call_data, lang):

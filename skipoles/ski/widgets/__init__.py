@@ -1038,6 +1038,7 @@ class Widget(tag.Part):
 
     def show_error(self, message=''):
         """Shows error message"""
+
         if not self.show:
             return
         if not self.display_errors:
