@@ -46,6 +46,8 @@ class SVGContainer(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an SVG widget, containing other widgets, so show, class and dimensions can be set"""
         Widget.__init__(self, name=name, tag_name="svg", brief=brief, **field_args)
+        self.htmlescaped = False
+        self.linebreaks = False
         # the widget is a container
         self[0] = ""
 
@@ -82,6 +84,8 @@ class Group(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an g widget, containing other widgets, so group class, style, transform can be set"""
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self.htmlescaped = False
+        self.linebreaks = False
         # The widget is a container
         self[0] = ""
 
@@ -124,6 +128,7 @@ class TextBlockGroup(Widget):
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
         self[0] = ''
         self.htmlescaped = False
+        self.linebreaks = False
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # define the textblock
