@@ -154,6 +154,7 @@ class DivHTML(Widget):
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = ""  # where the html string is to be set
         self.htmlescaped = False
+        self.linebreaks=False
         self._dropurl = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -668,6 +669,7 @@ class TextBlockDiv(Widget):
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = ''
         self.htmlescaped = False
+        self.linebreaks = False
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # define the textblock
