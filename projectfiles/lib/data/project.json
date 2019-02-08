@@ -116,6 +116,7 @@
 "restricted": {
 "ident": 800,
 "brief": "Folder of system pages",
+"default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
