@@ -1066,7 +1066,7 @@ false,
 "para_text": "",
 "pre_line": true,
 "show": true,
-"show_error": "",
+"show_error": "ERROR - No error message available.",
 "widget_class": "w3-modal",
 "widget_style": ""
 }

@@ -234,6 +234,8 @@ class ErrorClear1(Widget):
         # The location 0,0 is the div holding the text paragraph
         self[0][0] = tag.Part(tag_name="div")
         self[0][0][0] = tag.Part(tag_name="p")
+        # do not set any linebreaks, leave that to pre-line
+        self[0][0][0].linebreaks = False
         self[0][0][0][0] = ''
         # div holding buttons
         self[0][1] = tag.Part(tag_name="div")
@@ -351,6 +353,8 @@ class ErrorClear2(Widget):
         # The location 0,1 is the div holding the text
         self[0][1] = tag.Part(tag_name="div")
         self[0][1][0] = tag.Part(tag_name="p")
+        # do not set any linebreaks, leave that to pre-line
+        self[0][1][0].linebreaks = False
         self[0][1][0][0] = ''
 
 
