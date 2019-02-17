@@ -2425,7 +2425,7 @@ class ProjectiFrame(Widget):
 
 
 class GeneralButtonTable1(Widget):
-    """A table of buttons and text. Bottons include ability to send session stored data"""
+    """A table of buttons and text. Bottons include ability to send stored data"""
 
     # This class does not display any error messages
     display_errors = False
@@ -2454,7 +2454,7 @@ class GeneralButtonTable1(Widget):
         cols: A three element list for every column in the table, must be given with empty values if no links
                   col 0 - target HTML page link ident of buttons in each column, if col1 not present or no javascript
                   col 1 - target JSON page link ident of buttons in each column,
-                  col 2 - key of stored session data to send, empty if not used
+                  col 2 - key of stored local data to send, empty if not used
                   The 'cols' fieldname will be used as the widgfield for the sent data
               col0, col1 values should be emty strings if no url applied to column
         even_class: class of even rows, if empty string, then no class will be applied

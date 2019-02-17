@@ -1358,7 +1358,7 @@ SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
         var senddata = {};
         if (typeof(Storage) !== "undefined") {
             // get the key value from storage
-            var keyvalue = sessionStorage.getItem(key);
+            var keyvalue = localStorage.getItem(key);
             if (keyvalue != null) {
                 senddata[this.formname("cols")] = keyvalue;
                 }
