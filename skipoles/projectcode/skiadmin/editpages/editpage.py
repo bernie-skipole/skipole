@@ -328,7 +328,7 @@ def retrieve_page_body(skicall):
 
 
 def copy_page(skicall):
-    "Gets page part and return it in page_data['sessionStorage'] with key ski_part for browser session storage"
+    "Gets page part and return it in page_data['localStorage'] with key ski_part for browser session storage"
     call_data = skicall.call_data
     page_data = skicall.page_data
 
@@ -368,7 +368,7 @@ def copy_page(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['sessionStorage'] = {'ski_part':jsonstring}
+    page_data['localStorage'] = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
 
@@ -1516,7 +1516,7 @@ def remove_page_dom(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['sessionStorage'] = {'ski_part':jsonstring}
+    page_data['localStorage'] = {'ski_part':jsonstring}
 
     # remove the item
     try:

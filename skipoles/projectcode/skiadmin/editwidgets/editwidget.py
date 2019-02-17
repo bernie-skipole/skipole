@@ -845,7 +845,7 @@ def _container_domcontents(project, pagenumber, section_name, location_string, c
 
 
 def copy_container(skicall):
-    "Gets container part and return it in page_data['sessionStorage'] with key ski_part for browser session storage"
+    "Gets container part and return it in page_data['localStorage'] with key ski_part for browser session storage"
     call_data = skicall.call_data
     page_data = skicall.page_data
     project = call_data['editedprojname']
@@ -890,7 +890,7 @@ def copy_container(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['sessionStorage'] = {'ski_part':jsonstring}
+    page_data['localStorage'] = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
 
@@ -1256,7 +1256,7 @@ def remove_container_dom(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['sessionStorage'] = {'ski_part':jsonstring}
+    page_data['localStorage'] = {'ski_part':jsonstring}
 
     # remove the item using functions from skilift.editsection and skilift.editpage
     if pagenumber is None:

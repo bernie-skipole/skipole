@@ -119,7 +119,7 @@ SKIPOLE.setfields = function(result) {
            // set the local storage data
             if (typeof(Storage) !== "undefined") {
                 for (var key in result["localStorage"]) {
-                   sessionStorage.setItem(key, result["localStorage"][key]);
+                   localStorage.setItem(key, result["localStorage"][key]);
                    }
                // updates the value in any inputforms.HiddenLocalStorage widget
                if ( SKIPOLE.widget_register.hasOwnProperty("inputforms.HiddenLocalStorage") ) {
