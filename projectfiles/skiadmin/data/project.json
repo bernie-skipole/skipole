@@ -12,6 +12,7 @@
 "specialpages": {
 "about_code": 70001,
 "about_lib": 510,
+"about_tar": 500,
 "add_allowed_caller": 6080,
 "add_allowed_value": 46041,
 "add_field": 6210,
@@ -1780,6 +1781,45 @@ false,
 "widget_class": "",
 "widget_style": ""
 }
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About the tar file",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Finally the skipole framework bundles everything into a tar file, further info can be found"
+],
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to about tar",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{about_tar}"
+},
+"parts": [
+[
+"Text",
+"here."
+]
+]
+}
+]
+]
 }
 ],
 [
@@ -32829,7 +32869,7 @@ false
 "force_ident": false,
 "get_field1": "",
 "get_field2": "",
-"link_ident": 500,
+"link_ident": "about_tar",
 "show": true,
 "target": "",
 "widget_class": "",
