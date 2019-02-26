@@ -69,7 +69,11 @@ class Project(object):
         self.brief = "Project %s" % proj_ident
         self.version = "0.0.0"
         # The url of the root folder
-        self._url = url.lower()
+        url=url.strip("/").lower()
+        if url:
+            self._url = "/" + url + "/"
+        else:
+            self._url = "/"
         # The root Folder
         self.root = None
         # dictionary of special pages, key = label: value = page ident
@@ -724,12 +728,32 @@ class Project(object):
             else:
                 language = self.default_language
         lang = (language, self.default_language)
-        if 'PATH_INFO' in environ:
-            path = environ['PATH_INFO'].lower()
-        else:
-            path = ''
-
         try:
+
+            if 'PATH_INFO' in environ:
+                path = environ['PATH_INFO'].lower()
+            else:
+                raise ServerError(message="Invalid path")
+
+############################################################################
+
+            # the path must start with this root project url
+            if (path.find(self._url) != 0) and (path + "/" != self._url):
+                # path does not start with the root, so send URL NOT FOUND
+                page = self._system_page("url_not_found")
+                if (not page) or (page.page_type != "TemplatePage"):
+                    page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
+                    return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+                # create an ErrorMessage with the path as the message
+                err = ErrorMessage(message=html.escape(path))
+                # import any sections
+                page.import_sections()
+                page.show_error(error_messages=[err])
+                # update head and body parts
+                page.update(environ, {}, lang)
+                status, headers = page.get_status()
+                return '404 Not Found', headers, page.data()
+
             # This is the root project, check if the call is for a page in any sub project
             for proj, projurl in self._subproject_paths.items():
                 if (path.find(projurl) == 0) or (path + "/" == projurl):
