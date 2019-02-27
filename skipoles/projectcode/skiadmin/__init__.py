@@ -234,8 +234,8 @@ def set_navigation(identnum, call_data, page_data):
                                                             ['operations', "Operations", False, ''],
                                                             ["about_code", "Python Code", False, '']
                                                            ]
-    elif identnum == 510:
-        # about_lib page
+    elif (identnum == 510) or (identnum == 20500) or (identnum == 70105):
+        # about_lib page, about tar page, about skilift
         page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
                                                             ['admin_home', "Admin", False, ''],
                                                             [3, "Root Folder", False, ''],
@@ -246,14 +246,16 @@ def set_navigation(identnum, call_data, page_data):
                                                             ['operations', "Operations", False, ''],
                                                             ["about_code", "Python Code", False, '']
                                                            ]
-    elif identnum == 80001:
+    elif identnum == 85001:
         # operations index page
         page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
                                                             ['admin_home', "Admin", False, ''],
                                                             [3, "Root Folder", False, ''],
                                                             ["manage_specialpages", "Page Labels", False, ''],
                                                             ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, '']
+                                                            ["manage_sections", "Sections", False, ''],
+                                                            [300, "Colours", False, ''],
+                                                            ["about_code", "Python Code", False, '']
                                                            ]
     elif identnum == 20300:
         # colours index page
@@ -263,7 +265,8 @@ def set_navigation(identnum, call_data, page_data):
                                                             ["manage_specialpages", "Page Labels", False, ''],
                                                             ["manage_textblocks", "TextBlocks", False, ''],
                                                             ["manage_sections", "Sections", False, ''],
-                                                            ['operations', "Operations", False, '']
+                                                            ['operations', "Operations", False, ''],
+                                                            ["about_code", "Python Code", False, '']
                                                            ]
 
     elif identnum == 70101:
@@ -273,7 +276,9 @@ def set_navigation(identnum, call_data, page_data):
                                                             [3, "Root Folder", False, ''],
                                                             ["manage_specialpages", "Page Labels", False, ''],
                                                             ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, '']
+                                                            ["manage_sections", "Sections", False, ''],
+                                                            [300, "Colours", False, ''],
+                                                            ['operations', "Operations", False, '']
                                                            ]
 
     elif identnum == 25001:
