@@ -708,6 +708,31 @@ class Project(object):
         return form_data
 
 
+    def _url_not_found(self, environ, path, lang):
+        "Used to return the url not found page"
+        page = self._system_page("url_not_found")
+        if not page:
+            page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
+            return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+        if page.page_type == "TemplatePage":
+            # create an ErrorMessage with the path as the message
+            err = ErrorMessage(message=html.escape(path))
+            # import any sections
+            page.import_sections()
+            page.show_error(error_messages=[err])
+            # update head and body parts
+            page.update(environ, {}, lang)
+            status, headers = page.get_status()
+            return '404 Not Found', headers, page.data()
+        if page.page_type == "FilePage":
+            page.update(environ, {}, lang)
+            status, headers = page.get_status()
+            return '404 Not Found', headers, page.data()
+        # Either TemplatePage or FilePage - nothing else allowed
+        page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
+        return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+
+
     def respond(self, environ):
         "called from the project top script"
         # get cookies
@@ -735,24 +760,10 @@ class Project(object):
             else:
                 raise ServerError(message="Invalid path")
 
-############################################################################
-
             # the path must start with this root project url
             if (path.find(self._url) != 0) and (path + "/" != self._url):
                 # path does not start with the root, so send URL NOT FOUND
-                page = self._system_page("url_not_found")
-                if (not page) or (page.page_type != "TemplatePage"):
-                    page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
-                    return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
-                # create an ErrorMessage with the path as the message
-                err = ErrorMessage(message=html.escape(path))
-                # import any sections
-                page.import_sections()
-                page.show_error(error_messages=[err])
-                # update head and body parts
-                page.update(environ, {}, lang)
-                status, headers = page.get_status()
-                return '404 Not Found', headers, page.data()
+                return self._url_not_found(environ, path, lang)
 
             # This is the root project, check if the call is for a page in any sub project
             for proj, projurl in self._subproject_paths.items():
@@ -897,19 +908,7 @@ class Project(object):
 
         if pident is None:
             # URL NOT FOUND and start_call does not divert
-            page = self._system_page("url_not_found")
-            if (not page) or (page.page_type != "TemplatePage"):
-                page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
-                return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
-            # create an ErrorMessage with the path as the message
-            err = ErrorMessage(message=html.escape(path))
-            # import any sections
-            page.import_sections()
-            page.show_error(error_messages=[err])
-            # update head and body parts
-            page.update(environ, call_data, lang)
-            status, headers = page.get_status()
-            return '404 Not Found', headers, page.data()
+            return self._url_not_found(environ, path, lang)
 
         # pident is the ident of the diverted page or a label or url string
 

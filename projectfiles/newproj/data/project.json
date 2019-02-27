@@ -3,13 +3,14 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "0.9.8",
+"skipole": "2.4.1",
 "subprojects": {
 "lib": {
 "path": "/lib/"
 }
 },
 "specialpages": {
+"favicon": 3002,
 "general_json": 2002,
 "home": 1,
 "jquery_core": "lib,jquery_core",
@@ -76,6 +77,33 @@
 "filepath": "newproj/static/css/w3-theme-ski.css",
 "enable_cache": true,
 "mimetype": "text/css"
+}
+}
+}
+},
+"images": {
+"ident": 3000,
+"brief": "Folder serving images",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"logo.svg": {
+"ident": 3001,
+"brief": "skipole logo",
+"FilePage": {
+"filepath": "newproj/static/images/logo.svg",
+"enable_cache": true,
+"mimetype": "image/svg+xml"
+}
+},
+"logo_icon16.svg": {
+"ident": 3002,
+"brief": "skipole icon",
+"FilePage": {
+"filepath": "newproj/static/images/logo_icon16.svg",
+"enable_cache": true,
+"mimetype": "image/svg+xml"
 }
 }
 }
@@ -154,6 +182,19 @@
 "Index"
 ]
 ]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "link to favicon",
+"show": true,
+"attribs": {
+"href": "{favicon}",
+"rel": "icon",
+"type": "image/svg+xml"
+}
 }
 ],
 [
