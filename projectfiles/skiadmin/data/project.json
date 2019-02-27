@@ -113,7 +113,7 @@
 "list_validators": 46311,
 "list_widget_modules": 44501,
 "list_widgets": 44511,
-"logoicon": 30014,
+"logoicon": 30015,
 "manage_sections": 7001,
 "manage_specialpages": 5001,
 "manage_textblocks": 4001,
@@ -2900,6 +2900,15 @@ false,
 "filepath": "skiadmin/static/logo_icon16.png",
 "enable_cache": true,
 "mimetype": "image/png"
+}
+},
+"logo_icon16.svg": {
+"ident": 30015,
+"brief": "favicon +>",
+"FilePage": {
+"filepath": "skiadmin/static/logo_icon16.svg",
+"enable_cache": true,
+"mimetype": "image/svg+xml"
 }
 }
 }
@@ -32241,7 +32250,7 @@ false
 "attribs": {
 "href": "{logoicon}",
 "rel": "icon",
-"type": "image/png"
+"type": "image/svg+xml"
 }
 }
 ],
