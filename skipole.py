@@ -60,8 +60,6 @@ PROJECTFILES = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'projec
 # - such as manually editing skiboot.py or adding a config file read functionality there. 
 
 
-
-
 # Normally this skipole.py is used as a script run from a terminal by a user
 # who is developing a project.
 
@@ -74,9 +72,6 @@ def create_application(project, options={}, projectfiles=None):
     if projectfiles:
         PROJECTFILES = projectfiles
     return skipoles.WSGIApplication(project, options, PROJECTFILES)
-
-
-
 
 
 if __name__ == "__main__":
@@ -193,6 +188,8 @@ if __name__ == "__main__":
     else:
         # As default use the Python library web server
         from wsgiref.simple_server import make_server
+
+
 
     if not (args.addproj or args.skiadmin or args.remove or args.listprojects or args.newproj or args.option or args.project or args.cpproj or args.tarimport):
         # skipole.py has been called on its own, or just with a port option
