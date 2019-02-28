@@ -754,6 +754,8 @@ class Project(object):
                 language = self.default_language
         lang = (language, self.default_language)
         try:
+            # The tuple s_h_data is the tuple to return, start with it as None
+            s_h_data = None
 
             if 'PATH_INFO' in environ:
                 path = environ['PATH_INFO'].lower()
@@ -770,10 +772,18 @@ class Project(object):
                 if (path.find(projurl) == 0) or (path + "/" == projurl):
                     # this url is within a sub project
                     subproj = self.subprojects[proj]
-                    return subproj.proj_respond(environ, projurl, path, lang, received_cookies)
+                    s_h_data = subproj.proj_respond(environ, projurl, path, lang, received_cookies)
+                    break
+            else:
+                # the call is for a page in this root project
+                s_h_data = self.proj_respond(environ, self._url, path, lang, received_cookies)
 
-            # the call is for a page in this root project
-            return self.proj_respond(environ, self._url, path, lang, received_cookies)
+            if s_h_data is None:
+                # No page to return has been found, 
+                return self._url_not_found(environ, path, lang)
+
+            return s_h_data
+
         except ServerError as e:
             page = self._system_page("server_error")
             if (not page) or (page.page_type != "TemplatePage"):
@@ -908,7 +918,7 @@ class Project(object):
 
         if pident is None:
             # URL NOT FOUND and start_call does not divert
-            return self._url_not_found(environ, path, lang)
+            return None
 
         # pident is the ident of the diverted page or a label or url string
 
