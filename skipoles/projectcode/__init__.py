@@ -65,6 +65,8 @@ class SkiCall(object):
         self.option = option
         self.proj_data = proj_data
 
+        self.projectfiles = skiboot.projectfiles()
+
         self.ident_list = []
         self.submit_list = []
         self.submit_dict = {}

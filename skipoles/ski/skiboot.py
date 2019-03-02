@@ -38,7 +38,7 @@ _CFG = {
 "new_project"     : "newproj",           # copied to create a new project
 "admin_project"   : "skiadmin",          # The skipole admin project
 "lib_project"     : "lib",               # The skipole static library project
-"version"         : "2.4.1",             # The skipole version
+"version"         : "2.4.2",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
@@ -67,13 +67,13 @@ def set_site_root(project):
     ROOTPROJECT = project
 
 def set_projectfiles(projectfiles):
-    "Sets the directory where projectfiles can be found"
+    "Sets the directory entry where projectfiles can be found"
     global _CFG
     _CFG["projectfiles"] = projectfiles
 
 
 def projectfiles():
-    "Returns the directory where projectfiles can be found"
+    "Returns the directory entry where projectfiles can be found"
     return _CFG["projectfiles"]
 
 def lib_list():
