@@ -890,8 +890,6 @@ class Project(object):
             else:
                 caller_page_ident = None
             # start_call could return a different page ident, or None
-            # call_data will be the dictionary of values passed between responders
-            # page_data will be the dictionary of widgfields and values to set in the page
             pident, skicall = projectcode.start_call(environ,
                                                        path,
                                                        self._proj_ident,
@@ -903,8 +901,7 @@ class Project(object):
                                                        lang,
                                                        self.option,
                                                        self.proj_data)
-            call_data = skicall.call_data
-            page_data = skicall.page_data
+
             lang = skicall.lang
         except Exception:
             message = "Invalid exception in start_call function."
@@ -927,7 +924,7 @@ class Project(object):
             # either a label, or url
             if '/' in pident:
                 # get redirector page
-                return self._redirect_to_url(pident, environ, call_data, page_data, lang)
+                return self._redirect_to_url(pident, environ, skicall.call_data, skicall.page_data, lang)
             else:
                 # no '/' in pident so must be a label
                 pident = skiboot.find_ident_or_url(pident, self._proj_ident)
@@ -935,7 +932,7 @@ class Project(object):
                     raise ServerError(message="Returned page ident from start_call not recognised")
                 if isinstance(pident, str):
                     # must be a url, get redirector page
-                    return self._redirect_to_url(pident, environ, call_data, page_data, lang)
+                    return self._redirect_to_url(pident, environ, skicall.call_data, skicall.page_data, lang)
 
         # so pident must be an ident
         if not isinstance(pident, skiboot.Ident):
@@ -975,10 +972,10 @@ class Project(object):
             if page.ident.proj != self._proj_ident:
                 # page returned from start_call is in another project
                 subproj = self.subprojects.get(page.ident.proj)
-                return subproj.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+                return subproj.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
                 
             # call status_headers_data to return status, headers and data to the top script
-            return self.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+            return self.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
 
         except ValidateError as e:
             page = self._system_page("validate_error")
@@ -994,13 +991,13 @@ class Project(object):
             # show message passed by the exception
             page.show_error([e.errormessage])
             # update head and body parts
-            page.update(environ, call_data, lang, e.ident_list)
+            page.update(environ, skicall.call_data, lang, e.ident_list)
             status, headers = page.get_status()
             # return page data
             return e.status, headers, page.data()
 
 
-    def status_headers_data(self, skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data):
+    def status_headers_data(self, skicall, environ, lang, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data):
         """calls responders until it can return status, headers, page.data()"""
 
         try:
@@ -1009,22 +1006,22 @@ class Project(object):
                 if page.responder is None:
                     raise ServerError(message="Respond page %s does not have any responder set" % page.url)
                 try: 
-                    page = page.call_responder(skicall, environ, lang, form_data, caller_page, ident_list, call_data, page_data, rawformdata)
+                    page = page.call_responder(skicall, environ, lang, form_data, caller_page, ident_list, rawformdata)
                     if isinstance(page, str):
                         # must be a url
-                        call_data.clear()
-                        page_data.clear()
+                        skicall.call_data.clear()
+                        skicall.page_data.clear()
                         # get redirector page
-                        return self._redirect_to_url(page, environ, call_data, page_data, lang)
+                        return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, lang)
                 except PageError as ex:
                     # a jump to a page has occurred, with a list of errors
                     page = ex.page
                     if isinstance(page, str):
                         # must be a url
-                        call_data.clear()
-                        page_data.clear()
+                        skicall.call_data.clear()
+                        skicall.page_data.clear()
                         # get redirector page
-                        return self._redirect_to_url(page, environ, call_data, page_data, lang)
+                        return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, lang)
                     if page.ident in ident_list:
                         raise ServerError(message="Invalid Failure page: can cause circulating call")
                     # show the list of errors on the page
@@ -1033,7 +1030,7 @@ class Project(object):
                     if ex.clear_submitted:
                         form_data.clear()
                     if ex.clear_page_data:
-                        page_data.clear()
+                        skicall.page_data.clear()
                     if ex.clear_errors:
                         ex.e_list = []
                     target = skiboot.find_ident_or_url(ex.target, ex.proj_ident)
@@ -1052,8 +1049,8 @@ class Project(object):
                             raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,))
                     else:
                         # target is a URL
-                        call_data.clear()
-                        return self._redirect_to_url(target, environ, call_data, page_data, lang)
+                        skicall.call_data.clear()
+                        return self._redirect_to_url(target, environ, skicall.call_data, skicall.page_data, lang)
                     
                     # A divert to a fail page may lead to a GoTo exception which can therefore
                     # have an e_list
@@ -1063,7 +1060,7 @@ class Project(object):
                 # it is possible that a jump to a page in another project has been made
                 if page.ident.proj != self._proj_ident:
                     subproj = skiboot.getproject(proj_ident=page.ident.proj)
-                    return subproj.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, call_data, page_data, ident_list, e_list, form_data)
+                    return subproj.status_headers_data(skicall, environ, lang, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
                 
         except (ServerError, ValidateError) as e:
             e.ident_list = ident_list
@@ -1090,14 +1087,14 @@ class Project(object):
             raise ServerError(message)
 
         # import any sections
-        page.import_sections(page_data)
+        page.import_sections(skicall.page_data)
         if e_list:
             # show the list of errors on the page
             page.show_error(e_list)
         # now set the widget fields
-        if page_data:
-            page.set_values(page_data)
-        page.update(environ, call_data, lang, ident_list)
+        if skicall.page_data:
+            page.set_values(skicall.page_data)
+        page.update(environ, skicall.call_data, lang, ident_list)
         status, headers = page.get_status()
         return status, headers, page.data()
 
