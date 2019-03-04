@@ -1006,7 +1006,7 @@ class Project(object):
                 if page.responder is None:
                     raise ServerError(message="Respond page %s does not have any responder set" % page.url)
                 try: 
-                    page = page.call_responder(skicall, environ, lang, form_data, caller_page, ident_list, rawformdata)
+                    page = page.call_responder(skicall, lang, form_data, caller_page, ident_list, rawformdata)
                     if isinstance(page, str):
                         # must be a url
                         skicall.call_data.clear()
