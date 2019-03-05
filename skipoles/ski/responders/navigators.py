@@ -62,15 +62,15 @@ This is not considered an error, and no error message will be raised
                      'single_field': False}            # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Matches the value given in field self.widgfield against the fields given"
         if (not self.widgfield.w) or (not self.widgfield.f):
             raise ServerError(message="Invalid widgfield set in CaseSwitch Responder")
         if self.widgfield in form_data:
             value = form_data[self.widgfield]
             if value in self.fields:
-                return self.get_page_from_ident(self.fields[value], skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return self.get_alternate_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+                return self.get_page_from_ident(self.fields[value], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_alternate_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
  
 class EmptyGoto(Respond):
@@ -105,14 +105,14 @@ empty, any page can call it - on failure, calls the project validate error page.
                      'single_field': False}            # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Matches the field values against the data"
         if caller_page is None:
             raise ValidateError()
-        self._check_allowed_callers(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         if (self.widgfield not in form_data) or (form_data[self.widgfield] == ''):
-            return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return self.get_alternate_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_alternate_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 class EmptyCallDataGoto(Respond):
@@ -138,13 +138,13 @@ to alternate_ident.
                      'single_field': True}            # Only a single field is accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Matches the field against the data"
         call_data = skicall.call_data
         for field in self.fields:
             if (field not in call_data) or (call_data[field] == ''):
-                return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return self.get_alternate_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+                return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_alternate_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 
@@ -167,7 +167,7 @@ For a single given key in call data, if present, that key:value will be deleted 
                      'single_field': True}            # Only a single field is accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Deletes call_data item with the given field key"
         call_data = skicall.call_data
         for field in self.fields:
@@ -175,7 +175,7 @@ For a single given key in call data, if present, that key:value will be deleted 
                 del call_data[field]
                 # there should only be one field
                 break
-        return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 class NoOperation(Respond):
@@ -196,9 +196,9 @@ Goes to Target page, can be used as a temporary place holder
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Goes to target page"
-        return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 
