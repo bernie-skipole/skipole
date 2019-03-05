@@ -80,11 +80,11 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Gets the target page, filling in the form data"
         if caller_page is None:
             if self.alternate_ident:
-                return self.get_alternate_page(skicall, lang, {}, None, ident_list, proj_ident, rawformdata)
+                return self.get_alternate_page(skicall, {}, None, ident_list, proj_ident, rawformdata)
             else:
                 if skiboot.get_debug():
                     responder_ident = ident_list[-1]
@@ -92,7 +92,7 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
                     raise ValidateError(message)
                 else:
                     raise ValidateError(message='No caller page, and no alternate ident set in AllowedFields responder')
-        self._check_allowed_callers(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         # previous caller is allowed, now check the form data
 
         if not self.fields:
@@ -113,8 +113,8 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
                                        skicall)
                     except FailPage as e:
                         # raises a PageError exception
-                        self.raise_error_page([e.errormessage], skicall, lang, {}, caller_page, ident_list, proj_ident, rawformdata)
-                return self.get_target_page(skicall, lang, {}, caller_page, ident_list, proj_ident, rawformdata)
+                        self.raise_error_page([e.errormessage], skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
+                return self.get_target_page(skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
 
         # generate new form data
         new_form_data = {}
@@ -136,7 +136,7 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
                 new_form_data[field] = ''
                 
         if self.validate_option:
-            validated_form_data = self._validate_fields(skicall, lang, new_form_data, caller_page, ident_list, proj_ident, rawformdata)
+            validated_form_data = self._validate_fields(skicall, new_form_data, caller_page, ident_list, proj_ident, rawformdata)
         else:
             validated_form_data = new_form_data
 
@@ -159,10 +159,10 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
                                        skicall)
             except FailPage as e:
                 # raises a PageError exception
-                self.raise_error_page([e.errormessage], skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
                 
         # return the target page
-        return self.get_target_page(skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 class StoreData(Respond):
@@ -188,13 +188,13 @@ class StoreData(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
 
         if self.validate_option:
             if caller_page is None:
                 # raises a PageError exception
-                self.raise_error_page([], skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
-            validated_form_data = self._validate_fields(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page([], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+            validated_form_data = self._validate_fields(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         else:
             validated_form_data = form_data
 
@@ -220,9 +220,9 @@ class StoreData(Respond):
                                        skicall)
             except FailPage as e:
                 # raises a PageError exception
-                self.raise_error_page([e.errormessage], skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
  
-        return self.get_target_page(skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 class StoreDataKeyed(Respond):
@@ -247,13 +247,13 @@ class StoreDataKeyed(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
     
         if self.validate_option:
             if caller_page is None:
                 # raises a PageError exception
-                self.raise_error_page([], skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
-            validated_form_data = self._validate_fields(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page([], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+            validated_form_data = self._validate_fields(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         else:
             validated_form_data = form_data
 
@@ -279,9 +279,9 @@ class StoreDataKeyed(Respond):
                                        skicall)
             except FailPage as e:
                 # raises a PageError exception
-                self.raise_error_page([e.errormessage], skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
 
-        return self.get_target_page(skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 class AllowStoreKeyed(Respond):
@@ -323,15 +323,15 @@ with keys equal to the field values set here.
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Gets the target page, filling in the form data"
 
         if caller_page is None:
             if self.alternate_ident:
-                return self.get_alternate_page(skicall, lang, {}, None, ident_list, proj_ident, rawformdata)
+                return self.get_alternate_page(skicall, {}, None, ident_list, proj_ident, rawformdata)
             else:
                 raise ValidateError(message='No caller page, and no alternate ident set in AllowStoreKeyed responder')
-        self._check_allowed_callers(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         # previous caller is allowed
         
         if not self.fields:
@@ -348,8 +348,8 @@ with keys equal to the field values set here.
                                        skicall)
                     except FailPage as e:
                         # raises a PageError exception
-                        self.raise_error_page([e.errormessage], skicall, lang, {}, caller_page, ident_list, proj_ident, rawformdata)
-                return self.get_target_page(skicall, lang, {}, caller_page, ident_list, proj_ident, rawformdata)
+                        self.raise_error_page([e.errormessage], skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
+                return self.get_target_page(skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
         
         # check fields received are specified in this responder
         for field in form_data:
@@ -358,7 +358,7 @@ with keys equal to the field values set here.
                 raise ValidateError(message="Recieved data in a field not specified in the AllowStoreKeyed responder")
 
         if self.validate_option:
-            validated_form_data = self._validate_fields(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            validated_form_data = self._validate_fields(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         else:            
             # no validation
             validated_form_data = form_data
@@ -383,8 +383,8 @@ with keys equal to the field values set here.
                                        skicall)
             except FailPage as e:
                 # raises a PageError exception
-                self.raise_error_page([e.errormessage], skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return self.get_target_page(skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
         
         
 class AllowStore(Respond):
@@ -415,12 +415,12 @@ class AllowStore(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
 
    
         if caller_page is None:
             if self.alternate_ident:
-                return self.get_alternate_page(skicall, lang, {}, None, ident_list, proj_ident, rawformdata)
+                return self.get_alternate_page(skicall, {}, None, ident_list, proj_ident, rawformdata)
             else:
                 if skiboot.get_debug():
                     responder_ident = ident_list[-1]
@@ -428,7 +428,7 @@ class AllowStore(Respond):
                     raise ValidateError(message)
                 else:
                     raise ValidateError(message='No caller page, and no alternate ident set in AllowStore responder')
-        self._check_allowed_callers(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         # previous caller is allowed
         
         if not self.fields:
@@ -450,8 +450,8 @@ class AllowStore(Respond):
                                        skicall)
                     except FailPage as e:
                         # raises a PageError exception
-                        self.raise_error_page([e.errormessage], skicall, lang, {}, caller_page, ident_list, proj_ident, rawformdata)
-                return self.get_target_page(skicall, lang, {}, caller_page, ident_list, proj_ident, rawformdata)
+                        self.raise_error_page([e.errormessage], skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
+                return self.get_target_page(skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
         
         # check fields received are specified in this responder
         for field in form_data:
@@ -465,7 +465,7 @@ class AllowStore(Respond):
                     raise ValidateError(message="Recieved data in a field not specified in the AllowStore responder")
 
         if self.validate_option:
-            validated_form_data = self._validate_fields(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            validated_form_data = self._validate_fields(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         else:            
             # no validation
             validated_form_data = form_data
@@ -489,9 +489,9 @@ class AllowStore(Respond):
                                        skicall)
             except FailPage as e:
                 # raises a PageError exception
-                self.raise_error_page([e.errormessage], skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
  
-        return self.get_target_page(skicall, lang, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 class PrettyFormData(Respond):
@@ -516,7 +516,7 @@ class PrettyFormData(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
 
         if form_data:
             new_dict = { key.to_tuple_no_i():val for key, val in form_data.items() }
@@ -545,9 +545,9 @@ class PrettyFormData(Respond):
                                    skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         # so all ok, get the target page
-        return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 
@@ -572,7 +572,7 @@ class Accept(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
 
 
 
@@ -594,9 +594,9 @@ class Accept(Respond):
                                    skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         
-        return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 
@@ -628,11 +628,11 @@ class AllowedAccept(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
 
         if caller_page is None:
             if self.alternate_ident:
-                return self.get_alternate_page(skicall, lang, {}, None, ident_list, proj_ident, rawformdata)
+                return self.get_alternate_page(skicall, {}, None, ident_list, proj_ident, rawformdata)
             else:
                 if skiboot.get_debug():
                     responder_ident = ident_list[-1]
@@ -640,7 +640,7 @@ class AllowedAccept(Respond):
                     raise ValidateError(message)
                 else:
                     raise ValidateError(message='No caller page, and no alternate ident set in AllowedAccept responder')
-        self._check_allowed_callers(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         # previous caller is allowed, now store the received form data
 
 
@@ -657,9 +657,9 @@ class AllowedAccept(Respond):
                                    skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
         
-        return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
 
 
@@ -679,7 +679,7 @@ class PageData(Respond):
                      'single_field': False}           # Multiple fields accepted
 
 
-    def _respond(self, skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Places given widgfields and values into page_data"
         for field, value in self.fields.items():
             str_field = str(field)
@@ -689,5 +689,5 @@ class PageData(Respond):
             else:
                 # widgfield is actually a string, such as 'show_error'
                 skicall.page_data[str_field] = value
-        return self.get_target_page(skicall, lang, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 

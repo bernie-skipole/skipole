@@ -937,7 +937,7 @@ class RespondPage(ParentPage):
         # - or more usually, an instance of a child of the Respond class
         self.responder = responder
 
-    def call_responder(self, skicall, lang, form_data, caller_ident, ident_list, rawformdata, error_dict=None):
+    def call_responder(self, skicall, form_data, caller_ident, ident_list, rawformdata, error_dict=None):
         """Checks for circulating calls, then updates ident_list with this pages ident,
            then calls the respond objects call method, note rawformdata is a cgi.FieldStorage object"""
         if self.responder is None:
@@ -953,7 +953,7 @@ class RespondPage(ParentPage):
         else:
             skicall.submit_dict = {"responder_brief":self.brief, "number":self.ident.num, 'error_dict':{}}
 
-        page = self.responder(skicall, lang, form_data, caller_ident, ident_list, proj, rawformdata, error_dict)
+        page = self.responder(skicall, form_data, caller_ident, ident_list, proj, rawformdata, error_dict)
         return page
 
     def set_values(self, page_data):
