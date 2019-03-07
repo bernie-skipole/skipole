@@ -57,7 +57,7 @@ class SkiCall(object):
         self.environ = environ
         self.path = path
         self.project = project
-        self.rootproject = project
+        self.rootproject = rootproject
         self.caller_ident = caller_ident
         self.received_cookies = received_cookies
         self.ident_data = ident_data
@@ -66,13 +66,19 @@ class SkiCall(object):
         self.option = option
         self.proj_data = proj_data
 
-        self.projectfiles = skiboot.projectfiles()
+        self._projectfiles = skiboot.projectfiles()
 
         self.ident_list = []
         self.submit_list = []
         self.submit_dict = {}
         self.call_data = {}
         self.page_data = {}
+
+
+    @property
+    def projectfiles(self):
+        "Returns the projectfiles string"
+        return self._projectfiles
 
     @property
     def lang(self):
