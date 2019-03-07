@@ -414,7 +414,7 @@ main purpose is to act as a parent class for all other respond objects.
 # import all responders here
 
 from .checkers import AllowedFields, PrettyFormData, StoreData, StoreDataKeyed, AllowStoreKeyed, AllowStore, Accept, AllowedAccept, PageData
-from .submitters import SubmitData, SubmitCSS, GetDictionaryDefaults, FieldStoreSubmit, ColourSubstitute, LanguageCookie, SetCookies, SubmitJSON, SubmitPlainText, SubmitIterator, MediaQuery
+from .submitters import SubmitData, SubmitCSS, GetDictionaryDefaults, FieldStoreSubmit, ColourSubstitute, SetCookies, SubmitJSON, SubmitPlainText, SubmitIterator, MediaQuery
 from .navigators import CaseSwitch, EmptyGoto, EmptyCallDataGoto, DelCallDataItem, NoOperation
 
 

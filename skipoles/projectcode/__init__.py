@@ -61,7 +61,8 @@ class SkiCall(object):
         self.caller_ident = caller_ident
         self.received_cookies = received_cookies
         self.ident_data = ident_data
-        self.lang = lang
+        self._lang = lang
+        self._lang_cookie = None
         self.option = option
         self.proj_data = proj_data
 
@@ -72,6 +73,23 @@ class SkiCall(object):
         self.submit_dict = {}
         self.call_data = {}
         self.page_data = {}
+
+    @property
+    def lang(self):
+        "Returns the lang tuple"
+        return self._lang
+
+    def get_language(self):
+        "Returns the language string"
+        return self._lang[0]
+
+    def set_language(self, language):
+        "Sets the language string and creates a language cookie with a persistance of 30 days"
+        if language:
+            self._lang = (language, self._lang[1])
+            self._lang_cookie = "Set-Cookie", "language=%s; Path=%s; Max-Age=2592000" % (language_string, skiboot.root().url)
+
+    language = property(get_language, set_language)
 
     @property
     def accesstextblocks(self):
@@ -292,7 +310,9 @@ def end_call(page, skicall):
         session_string = project_code.end_call(page_ident, page.page_type, skicall)
         if session_string:
             # set cookie in target_page
-            page.session_cookie = ("Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root().url))
+            page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root().url)
+        if skicall._lang_cookie:
+            page.language_cookie = skicall._lang_cookie
     except GoTo as e:
         raise ServerError("Invalid GoTo exception in end_call")
     except FailPage as e:

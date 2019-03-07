@@ -65,6 +65,7 @@ class ParentPage(object):
         self.ident_data = ''
         # Set by end_call
         self.session_cookie = ()
+        self.language_cookie = ()
 
     def get_name(self):
         "The page name"
@@ -168,6 +169,8 @@ class ParentPage(object):
         "override"
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
     def show_error(self, error_messages=None):
         """override"""
@@ -719,6 +722,8 @@ $(document).ready(function(){
         self.make_js(ident_list, environ, call_data, lang)
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
 
     def set_idents(self):
@@ -1060,6 +1065,8 @@ class SVG(TemplatePageAndSVG):
         self.svg.update(self, ident_list, environ, call_data, lang, ident_string)
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
     def add_javascript(self, contents):
         "Currently not used"
@@ -1226,6 +1233,8 @@ class FilePage(ParentPage):
         # if a session cookie is specified, add it even if headers have been user set
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
 
     def _readfile(self, size=1024):
@@ -1487,6 +1496,8 @@ class JSON(ParentPage):
         "Adds session_cookie, and also ident_list if debug mode is on"
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
         if skiboot.get_debug():
             # include environ, call_data and ident_list in json file
             self.content['environ'] = pprint.pformat(environ)
