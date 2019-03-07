@@ -126,47 +126,6 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
         return csspage
 
 
-class LanguageCookie(Respond):
-    """
-Sets a language cookie with a persistance of 30 days
-"""
-
-    # This indicates a target page ident is required
-    target_ident_required = True
-
-    # This indicates an optional submit_list and fail_ident is required
-    submit_required = True
-
-    # Options for the fields argument
-    field_options = {'fields': False,                  # If False, no fields are expected
-                     'widgfields':False,              # If True, fields are widgfields, if False, can be other constants
-                     'widgfield_values':False,        # If True the field values are widgfields
-                     'fields_optional': False,         # if fields is True, then False here means fields must be supplied
-                     'field_values':False,            # if True, field values are used
-                     'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
-                     'single_field': False}           # Multiple fields accepted
-
-
-    def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
-        """Calls submit_data to get a language string such as 'en'"""
-        try:
-            language_string = projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
-        except FailPage as e:
-            # raises a PageError exception
-             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        # language_string: a string should be returned
-        if language_string:
-            skicall.lang = (language_string, skicall.lang[1])
-            page = self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-            # set cookie in target_page
-            page.headers.append(("Set-Cookie", "language=%s; Path=%s; Max-Age=2592000" % (language_string, skiboot.root().url)))
-        else:
-            page = self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return page
-
-
 
 class SetCookies(Respond):
     """
@@ -363,6 +322,7 @@ class _JSON(object):
         self.ident_data = None
         # Set by end_call
         self.session_cookie = ()
+        self.language_cookie = ()
 
     def import_sections(self, page_data):
         "Only used by Template and SVG, everything else just returns"
@@ -387,6 +347,8 @@ class _JSON(object):
     def update(self, environ, call_data, lang, ident_list=[]):
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
     def data(self):
          return [self.jsondict]
@@ -445,6 +407,7 @@ class _PlainText(object):
         self.ident_data = None
         # Set by end_call
         self.session_cookie = ()
+        self.language_cookie = ()
 
     def import_sections(self, page_data):
         "Only used by Template and SVG, everything else just returns"
@@ -469,6 +432,8 @@ class _PlainText(object):
     def update(self, environ, call_data, lang, ident_list=[]):
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
     def data(self):
          return [self.text]
@@ -533,6 +498,7 @@ class _CSS(object):
         self.ident_data = None
         # Set by end_call
         self.session_cookie = ()
+        self.language_cookie = ()
 
 
     # property style is a dictionary of lists
@@ -595,6 +561,8 @@ class _CSS(object):
     def update(self, environ, call_data, lang, ident_list=[]):
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
     def data(self):
         "Returns the page as a list of binary strings"
@@ -741,6 +709,7 @@ class _Iterator(object):
         self.ident_data = None
         # Set by end_call
         self.session_cookie = ()
+        self.language_cookie = ()
 
     def import_sections(self, page_data):
         "Only used by Template and SVG, everything else just returns"
@@ -770,6 +739,8 @@ class _Iterator(object):
     def update(self, environ, call_data, lang, ident_list=[]):
         if self.session_cookie:
             self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
 
     def data(self):
          return self.biniterator
