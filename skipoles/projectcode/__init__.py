@@ -233,9 +233,7 @@ def start_call(environ, path, proj_ident, rootproject, ident, caller_ident, rece
     try:
         project_code = _import_project_code(proj_ident)
 
-
         # create the SkiCall object
-
         skicall = SkiCall(environ = environ,
                           path = path,
                           project = proj_ident,
@@ -317,14 +315,15 @@ def end_call(page, skicall):
         if session_string:
             # set cookie in target_page
             page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root().url)
-        if skicall._lang_cookie:
-            page.language_cookie = skicall._lang_cookie
     except GoTo as e:
         raise ServerError("Invalid GoTo exception in end_call")
     except FailPage as e:
         page.show_error([e.errormessage])
     except (ServerError, ValidateError) as e:
         raise e
+    finally:
+        if skicall._lang_cookie:
+            page.language_cookie = skicall._lang_cookie
 
 
 
