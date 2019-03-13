@@ -33,7 +33,6 @@ import pprint
 
 from .. import skiboot, tag
 from ..excepts import ValidateError, ServerError, FailPage, ErrorMessage
-from ... import projectcode
 
 from . import Respond
 
@@ -108,9 +107,7 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
                 # no form_data received, no fields to check, go to target page or submit_data
                 if self.submit_option:
                     try:
-                        projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                        self._submit_data(ident_list, skicall)
                     except FailPage as e:
                         # raises a PageError exception
                         self.raise_error_page([e.errormessage], skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
@@ -154,9 +151,7 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
             skicall.submit_dict['received_data'] = received_data
 
             try:
-                projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                self._submit_data(ident_list, skicall)
             except FailPage as e:
                 # raises a PageError exception
                 self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -215,9 +210,7 @@ class StoreData(Respond):
                 caller_ident = caller_page.ident
 
             try:
-                projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                self._submit_data(ident_list, skicall)
             except FailPage as e:
                 # raises a PageError exception
                 self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -274,9 +267,7 @@ class StoreDataKeyed(Respond):
                 caller_ident = caller_page.ident
 
             try:
-                projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                self._submit_data(ident_list, skicall)
             except FailPage as e:
                 # raises a PageError exception
                 self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -343,9 +334,7 @@ with keys equal to the field values set here.
                 if self.submit_option:
 
                     try:
-                        projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                        self._submit_data(ident_list, skicall)
                     except FailPage as e:
                         # raises a PageError exception
                         self.raise_error_page([e.errormessage], skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
@@ -378,9 +367,7 @@ with keys equal to the field values set here.
         if self.submit_option:
 
             try:
-                projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                self._submit_data(ident_list, skicall)
             except FailPage as e:
                 # raises a PageError exception
                 self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -445,9 +432,7 @@ class AllowStore(Respond):
                 if self.submit_option:
 
                     try:
-                        projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                        self._submit_data(ident_list, skicall)
                     except FailPage as e:
                         # raises a PageError exception
                         self.raise_error_page([e.errormessage], skicall, {}, caller_page, ident_list, proj_ident, rawformdata)
@@ -484,9 +469,7 @@ class AllowStore(Respond):
         if self.submit_option:
 
             try:
-                projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                self._submit_data(ident_list, skicall)
             except FailPage as e:
                 # raises a PageError exception
                 self.raise_error_page([e.errormessage], skicall, validated_form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -540,9 +523,7 @@ class PrettyFormData(Respond):
             skicall.submit_dict['raw_data'] = ''
 
         try:
-            projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -589,9 +570,7 @@ class Accept(Respond):
         skicall.submit_dict['received_data'] = received_data
 
         try:
-            projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -652,9 +631,7 @@ class AllowedAccept(Respond):
         skicall.submit_dict['received_data'] = received_data
 
         try:
-            projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)

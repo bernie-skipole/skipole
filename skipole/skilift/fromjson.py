@@ -274,6 +274,31 @@ def project_to_json(project, save_to_file=True, indent=0):
     return json.dumps(project_dict, indent=indent, separators=(',', ':'))
 
 
+def get_defaults_from_file(projectfiles, project, key=None):
+    """Obtains values from the defaults.json file of the given project.
+       This can be called before a WSGIApplication object is created
+       since it uses the projectfiles information
+
+        If a key is given, it returns the value of that key,
+        otherwise it returns the entire dictionary of the JSON file.
+        If no value is found, returns None."""
+    defaults = {}
+    defaultsfile = os.path.join(projectfiles, project, 'data', 'defaults.json')
+    if os.path.isfile(defaultsfile):
+        # load defaultsfile into defaults
+        with open(defaultsfile, 'r') as fp:
+            defaults = json.load(fp, object_pairs_hook=collections.OrderedDict)
+    else:
+        return
+    if not defaults:
+        return
+    if not key:
+        return defaults
+    if key in defaults:
+        return defaults[key]
+
+
+
 def get_defaults(project, key=None):
     """Obtains values from the defaults.json file of the given project.
 

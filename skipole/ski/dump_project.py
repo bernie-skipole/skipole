@@ -101,16 +101,6 @@ def project_to_OD(proj_ident=None):
     # stores the version of this skipole
     project["skipole"] = skiboot.version()
 
-    # proj.subproject_dicts is a dictionary of {proj_ident: {'path':path,...}}
-    # currently only path is stored, but other project items could be stored
-    subprojects = proj.subproject_dicts
-    if skiboot.admin_project() in subprojects:
-        del subprojects[skiboot.admin_project()]
-    if subprojects:
-        project["subprojects"] = OrderedDict(sorted(subprojects.items(), key=lambda t: t[0]))
-    else:
-        project["subprojects"] = OrderedDict()
-
     specialpages = {}
     specpages = proj.special_pages
     if specpages:

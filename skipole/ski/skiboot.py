@@ -34,18 +34,16 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"projectfiles"    : None,                # The location of the projectfiles directory, set by the set_projectfiles() function
 "new_project"     : "newproj",           # copied to create a new project
 "admin_project"   : "skiadmin",          # The skipole admin project
-"lib_project"     : "lib",               # The skipole static library project
-"version"         : "2.5.0",             # The skipole version
+"lib_project"     : "skis",              # The skipole static library project
+"version"         : "3.0.0",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
 
-ROOTPROJECT = None
-
-_PROJECT_CODE_DIR = ''
+# create a dictionary of all projects, {proj_ident:project}
+PROJECT_REGISTER = {}
 
 _LIB_LABELS = ["skipole_js", "jquery_core",
                "ski_basic", "ski_checkbox", "ski_confirm", "ski_debug_tools", "ski_dropdown", "ski_error_messages",
@@ -59,22 +57,36 @@ _SYS_LABELS = ["url_not_found", "validate_error", "server_error", "redirector", 
 Info = collections.namedtuple('Info', ['project', 'project_version', 'ident', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_ident', 'restricted'])
 
 
-
-def set_site_root(project):
-    "Sets the given project as the root project of the site"
-    global ROOTPROJECT
-    project.rootproject = True
-    ROOTPROJECT = project
-
-def set_projectfiles(projectfiles):
-    "Sets the directory entry where projectfiles can be found"
-    global _CFG
-    _CFG["projectfiles"] = projectfiles
+def add_to_project_register(project):
+    "Adds the project to a list of all projects"
+    global PROJECT_REGISTER
+    PROJECT_REGISTER[project.proj_ident] = project
 
 
-def projectfiles():
-    "Returns the directory entry where projectfiles can be found"
-    return _CFG["projectfiles"]
+def project_register():
+    "Return a dictionary of all projects"
+    global PROJECT_REGISTER
+    return PROJECT_REGISTER.copy()
+
+def project_ident_register():
+    "Return a list of all project idents"
+    global PROJECT_REGISTER
+    return list(PROJECT_REGISTER.keys())
+
+def root_project():
+    "Return the root project"
+    global PROJECT_REGISTER
+    for proj in PROJECT_REGISTER.values():
+        if proj.rootproject:
+            return proj
+
+def projectfiles(proj_ident=None):
+    """Returns the directory entry where projectfiles can be found for a given project
+       If proj_ident is None, then returns projectfiles for the root project"""
+    proj = getproject(proj_ident)
+    if proj is None:
+        return
+    return proj.projectfiles
 
 def lib_list():
     "Returns list of library labels"
@@ -86,19 +98,15 @@ def sys_list():
 
 def is_project(proj_ident):
     "Returns True if this project is in the site, False otherwise"
-    global ROOTPROJECT
-    if proj_ident == ROOTPROJECT.proj_ident:
-        return True
-    if proj_ident in ROOTPROJECT.subprojects:
+    if proj_ident in PROJECT_REGISTER:
         return True
     return False
 
 def is_sub_project(proj_ident):
     "Returns True if this project is not root and is in the site, False otherwise"
-    global ROOTPROJECT
     if not proj_ident:
         return False
-    if proj_ident in ROOTPROJECT.subprojects:
+    if proj_ident in root_project().subprojects:
         return True
     return False
 
@@ -125,7 +133,7 @@ def set_debug(mode):
 
 def tar_path(proj_ident):
     "Returns the path to the tar file"
-    return os.path.join(projectpath(proj_ident), proj_ident + ".tar.gz")
+    return os.path.join(projectdir(proj_ident), proj_ident + ".tar.gz")
 
 def admin_ident():
     "Returns the ident of the root folder of the admin project"
@@ -140,46 +148,34 @@ def getproject(proj_ident=None):
     """If proj_ident is None, returns the site root project
        otherwise returns the project given by the proj_ident
        If proj_ident given, but project does not exist, return None"""
-    global ROOTPROJECT
-    if ROOTPROJECT is None:
-        # root project not created yet
-        return
-    if (proj_ident is None) or (proj_ident == ROOTPROJECT.proj_ident):
-        return ROOTPROJECT
-    if proj_ident in ROOTPROJECT.subprojects:
-        return ROOTPROJECT.subprojects[proj_ident]
+    if (proj_ident is not None) and (proj_ident in PROJECT_REGISTER):
+        return PROJECT_REGISTER[proj_ident]
+    if proj_ident is None:
+        return root_project()
 
 
 def project_ident(proj_ident=None):
     "Returns the given project ident, if it is None, returns current site root project ident"
-    global ROOTPROJECT
     if proj_ident is None:
-        return ROOTPROJECT.proj_ident
+        return root_project().proj_ident
     return proj_ident
 
-def projectpath(proj_ident=None):
-    return os.path.join(projectfiles(), project_ident(proj_ident))
+def projectdir(proj_ident=None):
+    "Returns projectfiles/proj_ident"
+    return os.path.join(projectfiles(proj_ident), project_ident(proj_ident))
 
 def projectstatic(proj_ident=None):
     "Returns projectfiles/proj_ident/static"
-    return os.path.join(projectpath(proj_ident), 'static')
+    return os.path.join(projectdir(proj_ident), 'static')
 
 def projectdata(proj_ident=None):
     "Returns projectfiles/proj_ident/data"
-    return os.path.join(projectpath(proj_ident), 'data')
+    return os.path.join(projectdir(proj_ident), 'data')
 
 def projectcode(proj_ident=None):
-    """If proj_ident not given, returns the projectcode directory path
-       If project is given, returns the projectcode/project directory path"""
-    global _PROJECT_CODE_DIR
-    if proj_ident:
-        return os.path.join(_PROJECT_CODE_DIR, proj_ident)
-    return _PROJECT_CODE_DIR
+    "Returns projectfiles/proj_ident/code"
+    return os.path.join(projectdir(proj_ident), 'code')
 
-def set_projectcode(project_code_directory):
-    "Sets the directory containing project code, this is called by the projectcode __init__ file when first imported"
-    global _PROJECT_CODE_DIR
-    _PROJECT_CODE_DIR = project_code_directory
 
 def project_json(proj_ident=None):
     "Returns projectfiles/proj_ident/data/project.json"
@@ -204,12 +200,11 @@ def version():
 
 def root(proj_ident = None):
     "Returns the root folder of the given project, if proj not given returns this projects rootfolder"
-    global ROOTPROJECT
-    if (proj_ident is None) or (proj_ident == ROOTPROJECT.proj_ident):
-        return ROOTPROJECT.root
-    if proj_ident not in ROOTPROJECT.subprojects:
-        return None
-    return ROOTPROJECT.subprojects[proj_ident].root
+    proj = getproject(proj_ident)
+    if proj is None:
+        return
+    return proj.root
+
     
 
 # These functions deal with page and folder 'idents'.  They are defined here
@@ -519,7 +514,7 @@ class Ident(collections.namedtuple('Ident', ['proj','num'])):
             elif proj_ident:
                 proj = proj_ident
             else:
-                proj = ROOTPROJECT.proj_ident
+                proj = root_project().proj_ident
             return cls(proj, item)
 
     def item(self):

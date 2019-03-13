@@ -292,13 +292,13 @@ def _check_idents_for_create_folder(project_numbers, new_numbers, addition_numbe
 
 
 
-def read_project(proj_ident):
+def read_project(proj_ident, projectfiles):
     "Reads the project.json file and checks version, if ok returns the read project"
 
     if not proj_ident:
         raise excepts.ServerError("Sorry, the project has not been recognised")
 
-    filepath = skiboot.project_json(proj_ident)
+    filepath = os.path.join(projectfiles, proj_ident, "data", "project.json")
 
     try:
         with open(filepath, 'r') as fp:
@@ -339,24 +339,20 @@ def read_project(proj_ident):
 
 
 
-def create_project(proj_ident):
+def create_project(proj_ident, projectfiles):
     """Builds the project from the file project.json, returns a dictionary
           with the following keys
           url
          default_language
          brief
          version
-         subprojects - dictionary of subprojects {subprojectident:url,...}
          specialpages - dictionary of label:ident or url
          sections - dictionary of {name:section,..}
          itemlist - list of pages and folders 
         siteroot - the root folder
 """
 
-    if proj_ident is None:
-        proj_ident = skiboot.project_ident()
-
-    project = read_project(proj_ident)
+    project = read_project(proj_ident, projectfiles)
     projectdict = {}
 
     if 'RootFolder' not in project:
@@ -381,11 +377,6 @@ def create_project(proj_ident):
         projectdict['version'] = project['version']
     else:
         projectdict['version'] = "0.0.0"
-
-    if 'subprojects' in project:
-        projectdict['subprojects'] = project['subprojects']
-    else:
-       projectdict['subprojects'] = {}
 
     if 'specialpages' in project:
         # dictionary of label:integer or url
@@ -581,7 +572,7 @@ def _create_respondpage(page_name, brief, page_args, proj_ident):
     "Create a respondpage"
     responder_name = page_args['class']
     # import module
-    mod = importlib.import_module('.ski.responders', 'skipoles')
+    mod = importlib.import_module('.ski.responders', 'skipole')
     Responder = None
     for cls in inspect.getmembers(mod, inspect.isclass):
         # cls[0] is responder name, cls[1] is the responder class
@@ -830,7 +821,7 @@ def _create_widget(part_dict, proj_ident):
     mod_name, widg_class_name = part_dict['class'].split(".")
     # import module
     try:
-        mod = importlib.import_module('skipoles.ski.widgets.'+mod_name)
+        mod = importlib.import_module('skipole.ski.widgets.'+mod_name)
     except Exception:
         print("ERROR: Unable to import widget %s.%s" % (mod_name, widg_class_name))
         raise excepts.ServerError("Error reading file")
@@ -914,7 +905,7 @@ def _get_validators(widget, field_name, val_list, proj_ident):
             val_args = {}
         mod_name, val_class_name = val_class.split('.')
         try:
-            mod = importlib.import_module('skipoles.ski.validators.'+mod_name)
+            mod = importlib.import_module('skipole.ski.validators.'+mod_name)
         except Exception:
             print("ERROR: Unable to import validator %s.%s" % (mod_name, val_class_name))
             raise excepts.ServerError("Error reading file")

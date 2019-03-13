@@ -36,7 +36,6 @@ from string import Template
 
 from .. import skiboot, tag
 from ..excepts import ValidateError, ServerError, FailPage, ErrorMessage
-from ... import projectcode
 
 from . import Respond
 
@@ -74,9 +73,7 @@ If submit_data raises a FailPage then the fail_ident page will be called.
         self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
         try:
-            projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -113,9 +110,7 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
         """Calls submit_data"""
 
         try:
-            colours = projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            colours = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # return fail page unchanged
             return self.get_fail_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -157,9 +152,7 @@ Sets cookies, submit_data should return an instance of http.cookies.BaseCookie
         self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
 
         try:
-            sendcookies = projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            sendcookies = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
              self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -215,9 +208,7 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
         skicall.submit_dict['widgfield']=self.widgfield.to_tuple_no_i()
         try:
             # and send the widgfield to submit_data
-            defaultdict = projectcode.submit_data( ident_list,
-                                                   self.submit_list.copy(),
-                                                   skicall)
+            defaultdict = self._submit_data( ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -292,9 +283,7 @@ class FieldStoreSubmit(Respond):
         skicall.submit_dict['received'] = received
 
         try:
-            projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -380,9 +369,7 @@ Only page_data['status'] and page_data['headers'] will be used if given.
         """Calls submit_data"""
 
         try:
-            jsondict = projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            jsondict = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -463,9 +450,7 @@ Only page_data['status'] and page_data['headers'] will be used if given
     def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         """Calls submit_data"""
         try:
-            text = projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            text = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -615,9 +600,7 @@ list of two element lists acting as css declaration blocks.
         """Calls submit_data"""
 
         try:
-            styledict = projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            styledict = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
@@ -652,9 +635,7 @@ Given media queries and CSS page targets, wraps the targets with the media queri
         if self.submit_option:
             try:
                 skicall.submit_dict['media_target'] = media_target.copy()
-                mediadict = projectcode.submit_data(ident_list,
-                                       self.submit_list.copy(),
-                                       skicall)
+                mediadict = self._submit_data(ident_list, skicall)
                 if mediadict:
                     media_target.update(mediadict)
             except FailPage as e:
@@ -767,9 +748,7 @@ submit_data should return a binary file iterator
     def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         """Calls submit_data"""
         try:
-            biniterator = projectcode.submit_data(ident_list,
-                                   self.submit_list.copy(),
-                                   skicall)
+            biniterator = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
