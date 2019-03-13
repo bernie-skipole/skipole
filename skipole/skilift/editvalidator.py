@@ -73,7 +73,7 @@ def validator_modules():
 
 def validators_in_module(module_name):
     "Returns a tuple of validator names in a module"
-    module = importlib.import_module("skipoles.ski.validators." + module_name)
+    module = importlib.import_module("skipole.ski.validators." + module_name)
     return tuple(name for name,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)))
 
 
@@ -140,7 +140,7 @@ def create_section_field_validator(project, section_name, schange, widget_name, 
     val_modules = validator_modules()
     if validator_module not in val_modules:
         raise ServerError("Validator module not found")
-    module = importlib.import_module("skipoles.ski.validators." + validator_module)
+    module = importlib.import_module("skipole.ski.validators." + validator_module)
 
     validator_dict = {name:cls for (name,cls) in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__))}
 
@@ -170,7 +170,7 @@ def create_page_field_validator(project, pagenumber, pchange, widget_name, field
     val_modules = validator_modules()
     if validator_module not in val_modules:
         raise ServerError("Validator module not found")
-    module = importlib.import_module("skipoles.ski.validators." + validator_module)
+    module = importlib.import_module("skipole.ski.validators." + validator_module)
 
     validator_dict = {name:cls for (name,cls) in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__))}
 

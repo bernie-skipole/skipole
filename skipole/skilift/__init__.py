@@ -256,23 +256,32 @@ def set_proj_version(project, version):
 
 
 def get_projectfiles_dir(project=None):
-    """Returns the directory where your project files are saved
+    """Returns the projectfiles directory for the given project
 
     Static files, and control files (such as the json files defining your project) are saved outside
     the python package structure under a 'projectfiles' directory.
-    If project not given, returns the projectfiles directory path
-    If project is given, returns the projectfiles/project directory path"""
-    if project:
-        return os.path.join(skiboot.projectfiles(), project)
-    else:
-        return skiboot.projectfiles()
+    If project not given, returns the projectfiles directory path for the root project"""
+    return skiboot.projectfiles(project)
+
+
+def get_projectdir(project=None):
+    """Returns the projectfiles/project directory for the given project
+
+    Static files, and control files (such as the json files defining your project) are saved outside
+    the python package structure under a 'projectfiles/project' directory.
+    If project not given, returns the projectfiles/project path for the root project"""
+    return skiboot.projectdir(project)
+
 
 def get_projectcode_dir(project=None):
     """Returns the directory where your project code is saved
-
-       If project not given, returns the projectcode directory path
-       If project is given, returns the projectcode/project directory path"""
+    If project not given, returns the projectcode directory path for the root project"""
     return skiboot.projectcode(project)
+
+def get_projectstatic_dir(project=None):
+    """Returns the directory where your project static files are saved
+    If project not given, returns the projectstatic directory path for the root project"""
+    return skiboot.projectstatic(project)
 
 
 def next_ident_number(project):

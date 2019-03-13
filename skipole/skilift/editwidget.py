@@ -49,7 +49,7 @@ def widget_modules():
 
 def widgets_in_module(module_name):
     "Returns a list of WidgetDescription's present in the module"
-    module = importlib.import_module("skipoles.ski.widgets." + module_name)
+    module = importlib.import_module("skipole.ski.widgets." + module_name)
     widget_list = []
     for classname,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
         fields_single = [ FieldDescription(*fld) for fld in obj.field_arguments_single() ]
@@ -88,7 +88,7 @@ def _create_new_widget(project, module_name, widget_classname, name, brief):
     modules_tuple = widget_modules()
     if module_name not in modules_tuple:
         raise FailPage("Module not identified")
-    module = importlib.import_module("skipoles.ski.widgets." + module_name)
+    module = importlib.import_module("skipole.ski.widgets." + module_name)
     widget_dict = {name:cls for (name,cls) in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__))}
     if widget_classname not in widget_dict:
         raise ServerError(message="Widget not identified")

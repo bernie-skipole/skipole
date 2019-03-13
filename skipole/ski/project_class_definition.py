@@ -1,6 +1,6 @@
 ####### SKIPOLE WEB FRAMEWORK #######
 #
-# project_class_definition.py  - Contains project class
+# project_class_definition.py  - Contains WSGIApplication and SkiCall classes
 #
 # This file is part of the Skipole web framework
 #
@@ -26,54 +26,47 @@
 
 
 """
-This module defines the Project class
+This module defines the WSGIApplication class and SkiCall class
 """
 
 
-import copy, os, cgi, collections, html, pprint, json, shutil, uuid, sys, traceback
+import copy, os, cgi, collections, html, pprint, json, shutil, uuid, sys, traceback, re
 
 from http import cookies
 
+# a search for anything none-alphanumeric and not an underscore
+_AN = re.compile('[^\w]')
+
 from . import skiboot, read_json
 from .excepts import ValidateError, ServerError, ErrorMessage, GoTo, PageError
-from .. import projectcode
+from .. import textblocks
 
 
-class Project(object):
-    """Represents the project"""
+class WSGIApplication(object):
+    """The WSGIApplication - an instance being a callable WSGI application"""
 
 
-    def __init__(self, proj_ident, url="/", options={}, rootproject=False):
+    def __init__(self, project, projectfiles=None, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
         """Initiates a Project instance"""
 
-        # get project location
-        project_dir = skiboot.projectpath(proj_ident)
-        if not os.path.isdir(project_dir):
-            raise ServerError("Project %s not found" % (proj_ident,))
+        self._proj_ident = project
+        self.projectfiles = projectfiles
+        self.proj_data = proj_data
+        self.start_call = start_call
+        self.submit_data = submit_data
+        self.end_call = end_call
 
-        # ensure projectfiles has been set
-        projectfiles = skiboot.projectfiles()
-        if not projectfiles:
-            raise ServerError("Configuration item projectfiles has not been set")
+        # initially, sub projects can be added
+        self.rootproject = True
 
-        self._proj_ident = str(proj_ident)
-
-        # This parameter is sent to the user start_call function
-        self.options = options
-        self.option = None
-        if options:
-            if self._proj_ident in options:
-                self.option = options[self._proj_ident]
-
-
-        self.brief = "Project %s" % proj_ident
+        self.brief = "Project %s" % project
         self.version = "0.0.0"
         # The url of the root folder
         url=url.strip("/").lower()
         if url:
-            self._url = "/" + url + "/"
+            self.url = "/" + url + "/"
         else:
-            self._url = "/"
+            self.url = "/"
         # The root Folder
         self.root = None
         # dictionary of special pages, key = label: value = page ident
@@ -83,9 +76,6 @@ class Project(object):
 
         # an ordered dictionary of {proj_ident: url,...}, ordered by length of url
         self._subproject_paths = collections.OrderedDict()
-        # A dictionary of subproject dicts {proj_ident: {'path':path,...}}
-        # this dictionary being loaded from the project.json file
-        self.subproject_dicts = {}
         # self.subprojects is a dictionary of sub projects {proj_ident: Project instance,.....}
         self.subprojects = {}
 
@@ -93,24 +83,24 @@ class Project(object):
         # note keys are full Ident instances, values are  folder or page instances
         self.identitems = {}
 
-        # This is set to True if the project is the top root project
-        # otherwise it is False - which means this is a subproject
-        self.rootproject = rootproject
-
-        # This dictionary is available to the user
-        self.proj_data = {}
-
         # Create an instance of the AccessTextBlocks class for this project
-        self.textblocks = projectcode.make_AccessTextBlocks(self._proj_ident, 
-                                                            projectfiles,
-                                                            skiboot.default_language())
+        self.textblocks = textblocks.AccessTextBlocks(self._proj_ident, projectfiles, skiboot.default_language())
 
         # maintain a cach dictionary of paths against idents {path:ident}
         self._paths = {}
 
         # load project from json files
-        self.load_from_json(rootproject)
+        self.load_from_json()
 
+        # and add this project to the project register
+        skiboot.add_to_project_register(self)
+
+
+    def __call__(self, environ, start_response):
+        "Defines this projects callable as the wsgi application"
+        status, headers, data = self.respond(environ)
+        start_response(status, headers)
+        return data
 
     def set_default_language(self, language):
         "Sets the project default language"
@@ -127,24 +117,9 @@ class Project(object):
         self._paths = {}
 
 
-    def load_from_json(self, rootproject = False):
-        "Loads project with data saved in project.json file, set rootproject True if this is a rootproject "
-        self.rootproject = rootproject
-        projectdict = read_json.create_project(self._proj_ident)
-        self.url = projectdict['url']
-        self.subproject_dicts = projectdict["subprojects"]
-        if self.subproject_dicts and rootproject:
-            # pull out a dictionary of sub project ident:path
-            sub_paths = {sub_ident:sub_dict['path'] for sub_ident,sub_dict in self.subproject_dicts.items()}
-            # make this an ordered dictionary, ordered by length of path elements
-            self._subproject_paths = collections.OrderedDict(sorted(sub_paths.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
-            for subproj_ident in self._subproject_paths:
-                subproject = Project(subproj_ident, options=self.options)
-                # and add it to this site
-                self.subprojects[subproj_ident] = subproject
-        else:
-            self._subproject_paths = collections.OrderedDict()
-            self.subprojects = {}
+    def load_from_json(self):
+        "Loads project with data saved in project.json file"
+        projectdict = read_json.create_project(self._proj_ident, self.projectfiles)
         self.default_language = projectdict['default_language']
         self.brief = projectdict['brief']
         self.version = projectdict['version']
@@ -156,17 +131,6 @@ class Project(object):
         if itemlist:
             for item in itemlist:
                 self.identitems[item.ident] = item
-
-    def start_project(self, path=None):
-        "Called from  load_project to call the user start_project function"
-        if not self.rootproject:
-            self.proj_data = projectcode.start_project(self._proj_ident, path, self.option)
-            return
-        # root project
-        self.proj_data = projectcode.start_project(self._proj_ident, self.url, self.option)
-        # and call start_project for each subproject
-        for subproj_ident, proj in self.subprojects.items():
-            proj.start_project(path=self._subproject_paths[subproj_ident])
 
 
     @property
@@ -536,45 +500,6 @@ class Project(object):
     def __bool__(self):
         return True
 
-
-    def get_url(self):
-        "Return self._url if this is the rootproject, or the subproject url if not"
-        if self.rootproject:
-            if self._url:
-                return self._url
-            return "/"
-        # Not root, so get root project
-        rp = skiboot.getproject()
-        # may be a subproject instance created before a root project has been defined
-        # or not yet added to a root project
-        if (rp is not None) and  (self._proj_ident in rp.subproject_paths):
-            return rp.subproject_paths[self._proj_ident]
-        if self._url:
-            return self._url
-        return "/"
-        
-
-    def set_url(self, url):
-        "Sets the project url, and if this is rootproject, ensure sub projects have this url prepended"
-        url=url.strip("/").lower()
-        if url:
-            url = "/" + url + "/"
-        else:
-            url = "/"
-        if self.rootproject:
-            current_url = self._url
-            # set the url of all sub projects
-            sub_paths = collections.OrderedDict()
-            if self._subproject_paths:
-                for proj_ident, proj_url in self._subproject_paths.items():
-                    sub_paths[proj_ident] = proj_url.replace(current_url, url, 1)
-                    self.subproject_dicts[proj_ident]["path"] = sub_paths[proj_ident]
-                self._subproject_paths = sub_paths
-        self._url = url
-
-    url = property(get_url, set_url)
-
-
     def set_special_page(self, label, target):
         "Sets a special page"
         if not label:
@@ -763,7 +688,7 @@ class Project(object):
                 raise ServerError(message="Invalid path")
 
             # the path must start with this root project url
-            if (path.find(self._url) != 0) and (path + "/" != self._url):
+            if (path.find(self.url) != 0) and (path + "/" != self.url):
                 # path does not start with the root, so send URL NOT FOUND
                 return self._url_not_found(environ, path, lang)
 
@@ -776,7 +701,7 @@ class Project(object):
                     break
             else:
                 # the call is for a page in this root project
-                s_h_data = self.proj_respond(environ, self._url, path, lang, received_cookies)
+                s_h_data = self.proj_respond(environ, self.url, path, lang, received_cookies)
 
             if s_h_data is None:
                 # No page to return has been found, 
@@ -890,17 +815,13 @@ class Project(object):
             else:
                 caller_page_ident = None
             # start_call could return a different page ident, or None
-            pident, skicall = projectcode.start_call(environ,
-                                                       path,
-                                                       self._proj_ident,
-                                                       self.rootproject,
-                                                       ident,
-                                                       caller_page_ident,
-                                                       received_cookies,
-                                                       call_ident,
-                                                       lang,
-                                                       self.option,
-                                                       self.proj_data)
+            pident, skicall = self.proj_start_call(environ,
+                                                   path,
+                                                   ident,
+                                                   caller_page_ident,
+                                                   received_cookies,
+                                                   call_ident,
+                                                   lang)
         except Exception:
             message = "Invalid exception in start_call function."
             if skiboot.get_debug():
@@ -995,6 +916,60 @@ class Project(object):
             return e.status, headers, page.data()
 
 
+    def proj_start_call(self, environ, path, ident, caller_ident, received_cookies, ident_data, lang):
+        """Calls the appropriate project start_call function
+           ident is the ident of the page being called, could be None if not recognised
+           Returns new called_ident, dictionaries 'call_data', 'page_data' and new tuple lang"""
+
+        if not caller_ident:
+            tuple_caller_ident = ()
+        else:
+            tuple_caller_ident = caller_ident.to_tuple()
+
+        if ident is None:
+            called_ident = None
+        else:
+            called_ident = ident.to_tuple()
+
+        if (ident_data is not None) and _AN.search(ident_data):
+            ident_data = None
+
+        try:
+            # create the SkiCall object
+            skicall = SkiCall(environ = environ,
+                              path = path,
+                              project = self._proj_ident,
+                              rootproject = self.rootproject,
+                              caller_ident = tuple_caller_ident,
+                              received_cookies = received_cookies,
+                              ident_data = ident_data,
+                              lang = lang,
+                              proj_data = self.proj_data)
+
+            # the skicall object is changed in place, with call_data and page_data
+            # being set by the users own start_call function
+            new_called_ident = self.start_call(called_ident, skicall)
+
+            # convert returned tuple to an Ident object
+            if isinstance(new_called_ident, int):
+                new_called_ident = (self._proj_ident, new_called_ident)
+            if isinstance(new_called_ident, tuple):
+                new_called_ident = skiboot.make_ident(new_called_ident, self._proj_ident)
+            # could be a label
+        except ServerError as e:
+            raise e
+        except Exception:
+            if skiboot.get_debug():
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                message = ''
+                for item in str_list:
+                    message += item
+                raise ServerError(message)
+            raise ServerError("Error in start_call")
+        return new_called_ident, skicall
+
+
     def status_headers_data(self, skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data):
         """calls responders until it can return status, headers, page.data()"""
 
@@ -1070,10 +1045,20 @@ class Project(object):
         # call the user function end_call
         try:
             skicall.project = self._proj_ident
-            skicall.option = self.option
             skicall.proj_data = self.proj_data
             skicall.rootproject = self.rootproject
-            projectcode.end_call(page, skicall)
+            try:
+                session_string = self.end_call(page.ident.to_tuple(), page.page_type, skicall)
+                if session_string:
+                    # set cookie in target_page
+                    page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root().url)
+            except FailPage as e:
+                page.show_error([e.errormessage])
+            finally:
+                if skicall._lang_cookie:
+                    page.language_cookie = skicall._lang_cookie
+        except GoTo as e:
+            raise ServerError("Invalid GoTo exception in end_call")
         except Exception:
             message = "Invalid exception in end_call function."
             if skiboot.get_debug():
@@ -1150,116 +1135,40 @@ class Project(object):
 
     def add_project(self, proj, url=None):
         """Add a project to self, returns the url
-           proj can be the sub project itself, sub project rootfolder, or the sub project ident string.
+           proj is the sub project application.
            This adds a reference to the project to the subproject_paths, returns the sub project path"""
         if not self.rootproject:
            raise ValidateError(message="Cannot add to a sub project")
-        if hasattr(proj, 'proj_ident'):
-            proj_id = proj.proj_ident
-        else:
-            proj_id = proj
-        if not proj_id:
-            raise ValidateError(message="Sorry, invalid project id")
-        if not proj_id.isalnum():
-            raise ValidateError(message="Sorry, invalid project id")
+        proj_id = proj.proj_ident
+
         # get a copy of the {proj_id:url} subproject_paths dictionary, and this projects url
         sub_paths = self._subproject_paths.copy()
         this_url = self.url
-        if proj_id in sub_paths:
-            # sub project already exists, overwrite current one with new one, in case of changes
-            if isinstance(proj, Project):
-                proj.rootproject = False
-                self.subprojects[proj_id] = proj
-            return sub_paths[proj_id]
+
         if url is None:
-            url = this_url + proj_id
-        url=url.strip("/").lower()
+            url = proj.url.strip("/").lower()
+            if not url:
+                url = proj_id.lower()
+        else:
+            url=url.strip("/").lower()
+            if not url:
+                raise ValidateError(message="Invalid URL passed to add_project, it must be a path longer than the root application path")
         url = "/" + url + "/"
         # Ensure url starts with this project url
         if not url.startswith(this_url):
-            url = url.lstrip("/")
-            url = this_url + url
+            raise ValidateError(message="Invalid URL passed to add_project, it must be a path longer than the root application path")
         # add this ident and url to subproject_paths
         sub_paths[proj_id] = url
         # save new subproject_paths dictionary
         self._subproject_paths = collections.OrderedDict(sorted(sub_paths.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
         # add the subproject to this project
-        if isinstance(proj, Project):
-            proj.rootproject = False
-            self.subprojects[proj_id] = proj
-        else:
-            subproj = Project(proj_id, options=self.options)
-            self.subprojects[proj_id] = subproj
-        # add the subproject to the self.subproject_dicts
-        self.subproject_dicts[proj_id] = {}
-        self.subproject_dicts[proj_id]["path"] = url
-        # call the subproject start_project function
-        self.subprojects[proj_id].start_project(url)
+        proj.rootproject = False
+        proj.url = url
+        proj._subproject_paths = collections.OrderedDict()
+        proj.subprojects = {}
+        self.subprojects[proj_id] = proj
         return url
 
-    def set_project_url(self, proj, url=None):
-        """Sets the url of the given sub project, the project must have been added
-           returns the url"""
-        if hasattr(proj, 'proj_ident'):
-            proj_id = proj.proj_ident
-        else:
-            proj_id = proj
-        if not proj_id:
-            raise ValidateError(message="Sorry, invalid project id")
-        if not proj_id.isalnum():
-            raise ValidateError(message="Sorry, invalid project id")
-        # get a copy of this projects url
-        this_url = self.url
-        if url is None:
-            url = this_url + proj_id
-        url=url.strip("/").lower()
-        if url:
-            url = "/" + url + "/"
-        else:
-            url = "/"
-        if proj_id == self._proj_ident:
-            # setting the url of this project
-            self.url = url
-            return url
-        sub_paths = self._subproject_paths.copy()
-        if proj_id not in sub_paths:
-            raise ValidateError(message="Sorry, this sub project does not exist")
-        if url == "/":
-            raise ValidateError(message="Sorry, a sub project cannot have a url of '/'")
-        if this_url == url:
-            raise ValidateError(message="Sorry, a url identical to the parent project is not allowed")
-        # Ensure url starts with this project url
-        if not url.startswith(this_url):
-            url = url.lstrip("/")
-            url = this_url + url
-        if url in sub_paths.values():
-            raise ValidateError(message="Sorry, a sub project with this url already exists")
-        # add this ident and url to sub_paths
-        sub_paths[proj_id] = url
-        # save new subproject_paths dictionary
-        self._subproject_paths = collections.OrderedDict(sorted(sub_paths.items(), key=lambda t: len(t[1].strip("/").split("/")), reverse=True))
-        self.subproject_dicts[proj_id]["path"] = url
-        return url
-
-    def remove_project(self, proj):
-        "Remove a project from self"
-        if hasattr(proj, 'proj_ident'):
-            proj_id = proj.proj_ident
-        else:
-            proj_id = proj
-        if not proj_id:
-            raise ValidateError(message="Sorry, invalid project id")
-        if not proj_id.isalnum():
-            raise ValidateError(message="Sorry, invalid project id")
-        if proj_id not in self.subproject_paths:
-            return
-        del self._subproject_paths[proj_id]
-        # remove from subprojects
-        if proj_id in self.subprojects:
-            del self.subprojects[proj_id]
-        # remove from subproject_dicts
-        if proj_id in self.subproject_dicts:
-            del self.subproject_dicts[proj_id]
 
     @property
     def root_ident(self):
@@ -1271,6 +1180,85 @@ class Project(object):
         return skiboot.Ident(self._proj_ident, self.max_ident_num+1)
 
     def __repr__(self):
-        return "Project(\'%s\', \'%s\')" % (self.proj_ident, self.url)
+        return "WSGIApplication(\'%s\', \'%s\', \'%s\', start_call, submit_data, end_call, \'%s\')" % (self.proj_ident, self.projectfiles, self.proj_data, self.url)
+
+
+class SkiCall(object):
+
+    def __init__(self, environ, path, project, rootproject, caller_ident, received_cookies, ident_data, lang, proj_data):
+
+        self.environ = environ
+        self.path = path
+        self.project = project
+        self.rootproject = rootproject
+        self.caller_ident = caller_ident
+        self.received_cookies = received_cookies
+        self.ident_data = ident_data
+        self._lang = lang
+        self._lang_cookie = None
+        self.proj_data = proj_data
+
+        self._projectfiles = skiboot.projectfiles(project)
+
+        self.ident_list = []
+        self.submit_list = []
+        self.submit_dict = {}
+        self.call_data = {}
+        self.page_data = {}
+
+
+    @property
+    def projectfiles(self):
+        "Returns the projectfiles string"
+        return self._projectfiles
+
+    @property
+    def lang(self):
+        "Returns the lang tuple"
+        return self._lang
+
+    def get_language(self):
+        "Returns the language string"
+        return self._lang[0]
+
+    def set_language(self, language):
+        "Sets the language string and creates a language cookie with a persistance of 30 days"
+        if language:
+            self._lang = (language, self._lang[1])
+            self._lang_cookie = "Set-Cookie", "language=%s; Path=%s; Max-Age=2592000" % (language_string, skiboot.root().url)
+
+    language = property(get_language, set_language)
+
+    @property
+    def accesstextblocks(self):
+        "Returns the project instance of the AccessTextBlocks class"
+        this_project = skiboot.getproject(proj_ident=self.project)
+        return this_project.textblocks
+
+    def textblock(self, textref, project=None, decode=False):
+        """This method returns the textblock text, given a textblock reference string,
+           If project is not given assumes this project, if given, project must exist as either the root,
+           or a sub project of the root.
+           If no textblock is found, returns None."""
+        if project is None:
+            project = self.project
+        proj = skiboot.getproject(project)
+        if proj is None:
+            return
+        if decode:
+            return proj.textblocks.get_decoded_text(textref, self.lang)
+        return proj.textblocks.get_text(textref, self.lang)
+
+    def label_value(self, label, project=None):
+        """Given a label, returns the associated ident or URL
+           If project is not given assumes this project, if given, project must exist as either the root,
+           or a sub project of the root.
+           If no label is found, returns None."""
+        if project is None:
+            project = self.project
+        proj = skiboot.getproject(project)
+        if proj is None:
+            return
+        return proj.label_value(label)
 
 

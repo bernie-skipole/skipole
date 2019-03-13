@@ -45,7 +45,6 @@ from http import cookies
 
 from . import skiboot, responders
 from .excepts import ServerError
-from .. import projectcode
 
 
 class Folder(object):

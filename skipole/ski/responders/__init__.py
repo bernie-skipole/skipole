@@ -241,6 +241,37 @@ main purpose is to act as a parent class for all other respond objects.
         return string_dict
 
 
+    def _submit_data(self, ident_list, skicall):
+        "Calls the appropriate user submit_data function"
+        # the call could have been passed to another project
+        # so update skicall with this project
+        proj_ident = ident_list[-1].proj
+        this_project = skiboot.getproject(proj_ident)
+        skicall.project = proj_ident
+        skicall.proj_data = this_project.proj_data
+        skicall.rootproject = this_project.rootproject
+
+        # add project brief to submit_dict
+        skicall.submit_dict['project_brief'] = this_project.brief
+        tuple_ident_list = [ ident.to_tuple() for ident in ident_list ]
+        try:
+            skicall.ident_list = tuple_ident_list
+            skicall.submit_list = self.submit_list.copy()
+            result = this_project.submit_data(skicall)
+        except (GoTo, FailPage, ServerError, ValidateError) as e:
+            raise e
+        except Exception:
+            message = 'Error in submit_data called by responder ' + str(tuple_ident_list[-1]) + '\n'
+            if skiboot.get_debug():
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                for item in str_list:
+                    message += item
+            raise ServerError(message)
+        return result
+
+
+
     def _check_allowed_callers(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         """Method to check allowed callers, raises a ValidateError if caller not in list of allowed callers
            Only useful for responders that have 'allowed_callers_required'"""

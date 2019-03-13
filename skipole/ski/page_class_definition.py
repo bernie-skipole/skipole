@@ -1224,7 +1224,7 @@ class FilePage(ParentPage):
         if not filepath:
             raise ServerError(message="Filepath not set")
         try:
-            self._filepath_relative_to_project_files = os.path.join(skiboot.projectfiles(), filepath)
+            self._filepath_relative_to_project_files = os.path.join(skiboot.projectfiles(self.proj_ident), filepath)
             if self._headers_flag:
                 # only add content-length if headers auto set, not if headers specified in page_data
                 self.headers.append(('content-length', str(os.path.getsize(self._filepath_relative_to_project_files))))

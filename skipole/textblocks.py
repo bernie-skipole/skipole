@@ -9,21 +9,11 @@
 # To obtain the text, the framework imports this module and creates an instance
 # of the AccessTextBlocks object, and uses its methods to find the text.
 #
-# Therefore this module, and the AccessTextBlocks class must exist in your code.
-#
-# The example shown here can generally be left as it is. It reads TextBlocks from
-# JSON files, stores them into memory and serves them to the framework when requested.
+# This class reads TextBlocks from JSON files, stores them into memory and
+# serves them to the framework when requested.
 #
 # The class also has methods for writing and saving TextBlocks to the JSON files
 # which are used by skiadmin to create TextBlocks.
-#
-# This class is placed here, rather than in the framework code, as your project
-# may require TextBlocks to be sited elsewhere, such as in a database. If that
-# is the case, you can re-write the AccessTextBlocks, but be sure to provide
-# all the public attributes and methods of the original.
-#
-# Also be aware that if your web server creates multiple processes, then multiple
-# instances of AccessTextBlocks will be created.
 #
 ########################################################################################
 
