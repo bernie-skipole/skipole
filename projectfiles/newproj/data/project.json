@@ -1,0 +1,320 @@
+{
+"url": "/",
+"default_language": "en",
+"brief": "New Project",
+"version": "0.0.1",
+"skipole": "2.5.0",
+"specialpages": {
+"favicon": 3002,
+"general_json": 2002,
+"home": 1,
+"jquery_core": "skis,jquery_core",
+"no_javascript": "skis,no_javascript",
+"redirector": "skis,redirector",
+"server_error": "skis,server_error",
+"ski_basic": "skis,ski_basic",
+"ski_checkbox": "skis,ski_checkbox",
+"ski_confirm": "skis,ski_confirm",
+"ski_css": 1004,
+"ski_debug_tools": "skis,ski_debug_tools",
+"ski_dropdown": "skis,ski_dropdown",
+"ski_error_messages": "skis,ski_error_messages",
+"ski_footers": "skis,ski_footers",
+"ski_headers": "skis,ski_headers",
+"ski_info": "skis,ski_info",
+"ski_inputforms": "skis,ski_inputforms",
+"ski_inputtables": "skis,ski_inputtables",
+"ski_inputtext": "skis,ski_inputtext",
+"ski_links": "skis,ski_links",
+"ski_lists": "skis,ski_lists",
+"ski_logins": "skis,ski_logins",
+"ski_paras": "skis,ski_paras",
+"ski_paths": "skis,ski_paths",
+"ski_radio": "skis,ski_radio",
+"ski_svgbasics": "skis,ski_svgbasics",
+"ski_svggraphs": "skis,ski_svggraphs",
+"ski_svgmeters": "skis,ski_svgmeters",
+"ski_tables": "skis,ski_tables",
+"ski_textarea": "skis,ski_textarea",
+"ski_upload": "skis,ski_upload",
+"skipole_js": "skis,skipole_js",
+"url_not_found": "skis,url_not_found",
+"validate_error": "skis,validate_error",
+"w3_css": "skis,w3_css",
+"w3_theme_ski_css": 1008
+},
+"sections": {},
+"RootFolder": {
+"brief": "Site root",
+"default_page_name": "index",
+"restricted": false,
+"folders": {
+"css": {
+"ident": 1000,
+"brief": "Holds CSS pages",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"ski.css": {
+"ident": 1004,
+"brief": "skipole css",
+"FilePage": {
+"filepath": "newproj/static/css/ski.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+},
+"w3-theme-ski.css": {
+"ident": 1008,
+"brief": "color theme",
+"FilePage": {
+"filepath": "newproj/static/css/w3-theme-ski.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+}
+}
+},
+"images": {
+"ident": 3000,
+"brief": "Folder serving images",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"logo.svg": {
+"ident": 3001,
+"brief": "skipole logo",
+"FilePage": {
+"filepath": "newproj/static/images/logo.svg",
+"enable_cache": true,
+"mimetype": "image/svg+xml"
+}
+},
+"logo_icon16.svg": {
+"ident": 3002,
+"brief": "skipole icon",
+"FilePage": {
+"filepath": "newproj/static/images/logo_icon16.svg",
+"enable_cache": true,
+"mimetype": "image/svg+xml"
+}
+}
+}
+},
+"restricted": {
+"ident": 2000,
+"brief": "Holds pages not accessable directly via URL",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"general_json": {
+"ident": 2002,
+"brief": "Empty JSON file for general use",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
+},
+"index_template": {
+"ident": 2001,
+"brief": "The template for the index page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#b3b8bc",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Index"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "link to favicon",
+"show": true,
+"attribs": {
+"href": "{favicon}",
+"rel": "icon",
+"type": "image/svg+xml"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski.css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph of text",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "margin-top:60px;margin-left: auto;margin-right: auto;width: 30em"
+},
+"parts": [
+[
+"TextBlock",
+{
+"textref": "welcome_text",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true,
+"decode": false
+}
+]
+]
+}
+]
+]
+}
+]
+}
+}
+}
+},
+"pages": {
+"index": {
+"ident": 1,
+"brief": "Responder to fill in index_template fields",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": 2001
+},
+"original_fields": {}
+}
+}
+}
+}
+}
