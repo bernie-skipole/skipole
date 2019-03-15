@@ -9,7 +9,7 @@ import os, sys
 # lines - and with the skipole_package_location set to the
 # directory containing the skipole package
 
-skipole_package_location = "/home/bernie/myprojects"
+skipole_package_location = "/home/bernie/mercurial/skipole"
 if skipole_package_location not in sys.path:
     sys.path.append(skipole_package_location)
 
@@ -22,7 +22,7 @@ from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError,
 
 # the framework needs to know the location of the projectfiles directory
 # The following line assumes, as default, that this file is located beneath
-# ...projectfiles/thisprojectname/code/
+# ...projectfiles/newproj/code/
 
 PROJECTFILES = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 PROJECT = 'newproj'
@@ -108,7 +108,7 @@ application.add_project(skis_application, url='/skis')
 
 # for example, using gunicorn3 by command line
 
-# gunicorn3 -w 4 thisfilename:application
+# gunicorn3 -w 4 newproj:application
 
 # Where gunicorn3 is the python3 version of gunicorn
 
