@@ -4,13 +4,13 @@
 #
 # This file is part of the Skipole web framework
 #
-# Date : 20130205
+# Date : 20190315
 #
 # Author : Bernard Czenkusz
 # Email  : bernie@skipole.co.uk
 #
 #
-#   Copyright 2013 Bernard Czenkusz
+#   Copyright 2019 Bernard Czenkusz
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -26,22 +26,7 @@
 
 import os, sys, re, collections, uuid, random
 
-# This project needs to import the skipole package, which
-# should normally be immediately available if skipole
-# has been installed on your system. However if it has not
-# then skipole must be added to your path with the following
-# lines - and with the skipole_package_location set to the
-# directory containing the skipole package
-
-skipole_package_location = "/home/bernie/mercurial/skipole"
-if skipole_package_location not in sys.path:
-    sys.path.append(skipole_package_location)
-
-
-
-from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug
-
-from skipole import skilift
+from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
 from skipole.skilift.fromjson import get_defaults_from_file
 
 import skiadminpackages
