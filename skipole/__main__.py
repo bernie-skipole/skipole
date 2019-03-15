@@ -50,7 +50,7 @@ if __name__ == "__main__":
     
     if len(args) == 3:
         project_name = args[1]
-        projectfiles = args[2]
+        projectfiles = os.path.abspath(os.path.expanduser(args[2]))
         if _AN.search(project_name):
             print( "Error: Invalid project name, alphanumeric or underscore only")
             sys.exit(1)
@@ -59,57 +59,147 @@ if __name__ == "__main__":
             sys.exit(1)
     elif len(args) == 2:
         project_name = None
-        projectfiles = args[1]
+        projectfiles = os.path.abspath(os.path.expanduser(args[1]))
     else:
         print( "Invalid input. " + DESCRIPTION)
         sys.exit(1)
 
-    # get the location of the template directory which is to be copied
+    # get the location of the directories to be copied
     template_directory = os.path.join(os.path.dirname(os.path.dirname(args[0])), 'projectfiles')
     if not os.path.isdir(template_directory):
         print("Error: Cannot find the template data for the skis and skiadmin projects")
         sys.exit(1)
+    template_skis_directory = os.path.join(template_directory, 'skis')
+    if not os.path.isdir(template_skis_directory):
+        print("Error: Cannot find the template data for the skis project")
+        sys.exit(1)
+    template_skiadmin_directory = os.path.join(template_directory, 'skiadmin')
+    if not os.path.isdir(template_skiadmin_directory):
+        print("Error: Cannot find the template data for the skiadmin project")
+        sys.exit(1)
+    template_newproj_directory = os.path.join(template_directory, 'newproj')
+    if not os.path.isdir(template_newproj_directory):
+        print("Error: Cannot find the template data for the newproj project")
+        sys.exit(1)
 
-    # Does the given directory exist
+
+
+    # If the given projectfiles directory does not exist
     if not os.path.isdir(projectfiles):
-        # directory does not exist, create it by copying the template_directory
+
+        # create the directory by copying the template_directory
         shutil.copytree(template_directory, projectfiles)
-        template_newproj_directory = os.path.join(projectfiles, 'newproj')
+
+        # new directory which has been created
+        newproj_directory = os.path.join(projectfiles, 'newproj')
+
         if project_name is None:
-            # remove the template new project
-            shutil.rmtree(template_newproj_directory)
+            # remove the new project
+            shutil.rmtree(newproj_directory)
             print("Project directory %s created" % (projectfiles,))
             sys.exit(0)
-        # A project name is given,
-        new_code_path = os.path.join(projectfiles, project_name, "code", project_name + ".py")
+
+        # A project name is given, change the name of the newproj_directory to project_name
+        project_directory = os.path.join(projectfiles, project_name)
+        os.rename(newproj_directory, project_directory)
+
+
+        new_code_path = os.path.join(project_directory, "code", project_name + ".py")
         print("Creating %s" % (new_code_path,))
+
         # change newproj.py to project_name.py, including the contents
-        template_newproj_file = os.path.join(template_newproj_directory, "code", "newproj.py")
-        with open(template_newproj_file, "r") as tnf:
+        ## READ newproj.py
+        newproj_file = os.path.join(project_directory, "code", "newproj.py")
+        with open(newproj_file, "r") as tnf:
             templatecontents = tnf.read()
-        os.remove(template_newproj_file)
+        os.remove(newproj_file)
+        ## REPLACE newproj with the new project name
         newcontents = templatecontents.replace("newproj", project_name)
-        project_file = os.path.join(template_newproj_directory, "code", project_name + ".py")
-        with open(project_file, "w") as pf:
+        ## WRITE the new file
+        with open(new_code_path, "w") as pf:
             pf.write(newcontents)
 
         # change data/project.json contents
-        template_data_file = os.path.join(template_newproj_directory, "data", "project.json")
-        with open(template_data_file, "r") as tdf:
+        ## READ project.json
+        data_file = os.path.join(project_directory, "data", "project.json")
+        with open(data_file, "r") as tdf:
             templatedatacontents = tdf.read()
-        os.remove(template_data_file)
+        os.remove(data_file)
+        ## REPLACE newproj with the new project name
         newdatacontents = templatedatacontents.replace("newproj", project_name)
-        with open(template_data_file, "w") as tdf2:
+        ## WRITE the new file
+        with open(data_file, "w") as tdf2:
             tdf2.write(newdatacontents)
-        # and change the name of the template_newproj_directory to project_name
-        os.rename(template_newproj_directory, os.path.join(projectfiles, project_name))
+
+
         print("Project directory %s created, with new project %s" % (projectfiles,project_name))
         print("""Use the command:
 python3 %s
 To serve the project at url localhost:8000
 and localhost:8000/skiadmin for the admin pages""" % (new_code_path,))
         sys.exit(0)
-        
+
+    # The given projectfiles does exist, so use it for the new project
+
+    print("Replacing project skis")
+    # if skis exists, delete it, then copy the template
+    skis_directory = os.path.join(projectfiles, 'skis')
+    if os.path.isdir(skis_directory):
+        shutil.rmtree(skis_directory)
+    shutil.copytree(template_skis_directory, skis_directory)
+
+    print("Replacing project skiadmin")
+    # if skiadmin exists, delete it, then copy the template
+    skiadmin_directory = os.path.join(projectfiles, 'skiadmin')
+    if os.path.isdir(skiadmin_directory):
+        shutil.rmtree(skiadmin_directory)
+    shutil.copytree(template_skiadmin_directory, skiadmin_directory)
+
+    if project_name is None:
+        print("skis and skiadmin have been replaced.")
+        sys.exit(0)
+
+    project_directory = os.path.join(projectfiles, project_name)
+    if os.path.isdir(project_directory):
+        print("skis and skiadmin have been replaced, however project % already exists, and has not been altered." % (project_name,))
+        sys.exit(0)
+
+    # create a new project
+    shutil.copytree(template_newproj_directory, project_directory)
+
+    new_code_path = os.path.join(project_directory, "code", project_name + ".py")
+    print("Creating %s" % (new_code_path,))
+
+    # change newproj.py to project_name.py, including the contents
+    ## READ newproj.py
+    newproj_file = os.path.join(project_directory, "code", "newproj.py")
+    with open(newproj_file, "r") as tnf:
+        templatecontents = tnf.read()
+    os.remove(newproj_file)
+    ## REPLACE newproj with the new project name
+    newcontents = templatecontents.replace("newproj", project_name)
+    ## WRITE the new file
+    with open(new_code_path, "w") as pf:
+        pf.write(newcontents)
+
+    # change data/project.json contents
+    ## READ project.json
+    data_file = os.path.join(project_directory, "data", "project.json")
+    with open(data_file, "r") as tdf:
+        templatedatacontents = tdf.read()
+    os.remove(data_file)
+    ## REPLACE newproj with the new project name
+    newdatacontents = templatedatacontents.replace("newproj", project_name)
+    ## WRITE the new file
+    with open(data_file, "w") as tdf2:
+        tdf2.write(newdatacontents)
+
+    print("skis and skiadmin have been replaced, and new project %s created." % (project_name,))
+    print("""Use the command:
+python3 %s
+To serve the project at url localhost:8000
+and localhost:8000/skiadmin for the admin pages""" % (new_code_path,))
+    sys.exit(0)
 
 
 
