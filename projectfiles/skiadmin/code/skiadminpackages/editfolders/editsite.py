@@ -45,18 +45,14 @@ def retrieve_index_data(skicall):
     utils.clear_call_data(call_data)
 
     project = call_data['editedprojname']
-    adminproj = skilift.admin_project()
 
     projectinfo = skilift.project_info(project)
-    admininfo = skilift.project_info(adminproj)
 
     page_data["projversion", "input_text"] = projectinfo.version
     page_data["brief:input_text"] = projectinfo.brief
     page_data["brief:bottomtext"] = "Current value: " + projectinfo.brief
     page_data["deflang:input_text"] = projectinfo.default_language
     page_data["deflang:bottomtext"] = "Current value: " + projectinfo.default_language
-
-    page_data["download","link_ident"] = admininfo.path + project + ".tar.gz"
 
     if "root_path" in call_data:
         # "root_path" is set in call_data, so return it
@@ -89,7 +85,6 @@ def retrieve_index_data(skicall):
     # sdd1 must be deleted
     page_data['sdd1:show_add_project'] = False
     page_data['sdd1:selectvalue'] = ''
-    page_data['l2','content'] = "about %s.tar.gz can be found here." % project
 
 
 def _clear_index_input_accepted(page_data):
@@ -118,25 +113,6 @@ def retrieve_help(skicall):
         text = "No help text for page %s has been found" % caller_ident[1]
     page_data[("adminhead","show_help","para_text")] = "\n" + text
     page_data[("adminhead","show_help","hide")] = False
-
-
-def about_export(skicall):
-    "Retrieves text for about export page"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    project = call_data['editedprojname']
-    adminproj = skilift.admin_project()
-    admininfo = skilift.project_info(adminproj)
-
-    # fill in header information
-    page_data[("adminhead","page_head","large_text")] = "Project: %s" % (project,)
-
-    page_data["l2","link_ident"] = admininfo.path + project + ".tar.gz"
-
-    # set the directory structure
-    page_data[('tar_contents','pre_text')] = "No longer available"
 
 
 def retrieve_colour_data(skicall):
@@ -451,45 +427,6 @@ def goto_edit_item(skicall):
     del call_data['pchange']
     raise FailPage(message="Item not found")
     
-
-def retrieve_download(skicall):
-    "Set page_data['filepath'] to the url of the edited project tar.gz file"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    # clears any session data
-    utils.clear_call_data(call_data)
-    # set filepath to tar file
-    project = call_data["editedprojname"]
-    projinfo = skilift.project_info(project)
-    filepath = os.path.join(project, project + '.tar.gz')
-    if os.path.isfile(projinfo.tar_path):
-        page_data["filepath"] = filepath
-    else:
-        raise FailPage(message="File %s not yet created" % (filepath,))
-
-
-def submit_rootpath(skicall):
-    "Sets the path of the root project"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    project = call_data['editedprojname']
-    if "root_path" not in call_data:
-        raise FailPage(message='Invalid call')
-    if project != skilift.get_root():
-        # cannot set a rootpath if this is not the rootproject
-        raise FailPage(message='Invalid: Not the root project', widget = "rtpath")
-    try:
-        path = skilift.set_root_project_path(call_data["root_path"])
-    except ServerError as e:
-        raise FailPage(message = e.message, widget = "rtpath")
-    call_data['editedprojurl'] = path
-    page_data['rtpath','set_input_accepted'] = True
-    call_data['status'] = 'Root path set'
-
 
 def submit_language(skicall):
     "Sets the default language of the edited project"
