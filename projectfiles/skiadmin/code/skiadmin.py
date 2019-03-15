@@ -33,7 +33,7 @@ import os, sys, re, collections, uuid, random
 # lines - and with the skipole_package_location set to the
 # directory containing the skipole package
 
-skipole_package_location = "/home/bernie/myprojects"
+skipole_package_location = "/home/bernie/mercurial/skipole"
 if skipole_package_location not in sys.path:
     sys.path.append(skipole_package_location)
 
