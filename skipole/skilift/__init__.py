@@ -190,13 +190,6 @@ def set_sub_project_path(sub_project, path):
     root_project.set_project_url(sub_project, path)
 
 
-def set_root_project_path(path):
-    "Sets the project path of the root project, returns the path"
-    root_project = skiboot.getproject()
-    root_project.url = path
-    return root_project.url
-
-
 def get_debug():
     "Returns the debug mode"
     return skiboot.get_debug()

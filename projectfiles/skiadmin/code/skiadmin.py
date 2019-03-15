@@ -61,16 +61,8 @@ def start_call(called_ident, skicall):
                          'extend_nav_buttons':[],
                          'caller_ident':skicall.caller_ident}
 
-    # The tar.gz file, being dynamically created, does not have a called_ident, so if called_ident is None,
-    # check the path is a request for the tar.gz file, and route the call to the responder which sets the file
-    # to be returned in a file page
-
     if called_ident is None:
-        tarfile = editedprojname + ".tar.gz"
-        if skicall.path.endswith(tarfile):
-            # request is for the edited project tar.gz
-            return 90
-        # else the call is to a url not found
+        # The call is to a url not found
         return
 
     # If caller_ident is not given there should be no further session data
