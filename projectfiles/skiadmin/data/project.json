@@ -1,5 +1,5 @@
 {
-"url": "/skiadmin/",
+"url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
 "version": "3.0.0",
@@ -36736,6 +36736,17 @@ false
 "filepath": "skiadmin/static/ski.css",
 "enable_cache": true,
 "mimetype": "text/css"
+}
+},
+"skiadmin": {
+"ident": 500,
+"brief": "redirects to admin_home",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": "admin_home"
+},
+"original_fields": {}
 }
 },
 "sub_project_url": {

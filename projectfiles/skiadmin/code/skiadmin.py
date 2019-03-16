@@ -81,11 +81,11 @@ def start_call(called_ident, skicall):
     return called_ident
 
 
-# submit_list defines packages, module, function to call
+# skicall.submit_list defines packages, module, function to call
 @use_submit_list
 def submit_data(skicall):
-    "The decorator calls the appropriate submit_data function, if submit_list is invalid, then this function raises ServerError"
-    raise ServerError("submit_list invalid for responder %s,%s" % skicall.ident_list[-1])
+    "The decorator calls the appropriate submit_data function, if skicall.submit_list is invalid, then this function raises ServerError"
+    raise ServerError("skicall.submit_list invalid for responder %s,%s" % skicall.ident_list[-1])
 
 
 def end_call(page_ident, page_type, skicall):
@@ -171,6 +171,9 @@ def makeapp(projectfiles, proj_data={}):
         adminbackcol_rgb = skiadminpackages.css_styles.hex_int(adminbackcol)
         colours = skiadminpackages.css_styles.get_colours(*adminbackcol_rgb)
 
+    # The WSGIApplication created here has a URL of "/", however when this
+    # application is added to another, it is generally given a URL of "/skiadmin"
+    # in the application.add_project method which overwrites the URL given here
 
     return WSGIApplication(project=PROJECT,
                            projectfiles=projectfiles,
@@ -178,7 +181,7 @@ def makeapp(projectfiles, proj_data={}):
                            start_call=start_call,
                            submit_data=submit_data,
                            end_call=end_call,
-                           url="/" + PROJECT)
+                           url="/")
 
 
 def set_navigation(identnum, call_data, page_data):
@@ -229,8 +232,8 @@ def set_navigation(identnum, call_data, page_data):
                                                             ['operations', "Operations", False, ''],
                                                             ["about_code", "Python Code", False, '']
                                                            ]
-    elif (identnum == 510) or (identnum == 20500) or (identnum == 70105):
-        # about_lib page, about tar page, about skilift
+    elif (identnum == 510) or (identnum == 70105):
+        # about_lib page, about skilift
         page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
                                                             ['admin_home', "Admin", False, ''],
                                                             [3, "Root Folder", False, ''],
@@ -372,8 +375,7 @@ if __name__ == "__main__":
         sys.path.append(skis_code)
     import skis
     skis_application = skis.makeapp(PROJECTFILES)
-    application.add_project(skis_application, url='/'+ PROJECT + '/skis')
-
+    application.add_project(skis_application, url='/lib')
 
     from wsgiref.simple_server import make_server
 
@@ -382,7 +384,7 @@ if __name__ == "__main__":
     port = 8000
 
     httpd = make_server(host, port, application)
-    print("Serving %s on port %s , go to url /%s to edit." % (PROJECT, port, PROJECT))
+    print("Serving %s on port %s , go to url '/' to edit." % (PROJECT, port))
     httpd.serve_forever()
 
 

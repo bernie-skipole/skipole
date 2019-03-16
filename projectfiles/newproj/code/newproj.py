@@ -88,10 +88,12 @@ if skis_code not in sys.path:
     sys.path.append(skis_code)
 import skis
 skis_application = skis.makeapp(PROJECTFILES)
-application.add_project(skis_application, url='/skis')
+application.add_project(skis_application, url='/lib')
 
-# The add_project method of application, enables the added application
-# to be served at a URL which should extend the URL of the main 'root' application
+# The add_project method of application, enables the added sub application
+# to be served at a URL which should extend the URL of the main 'root' application.
+# The above shows the main newproj application served at "/" and the skis library
+# project served at "/lib"
 
 # Note if you want to add further sub-projects you would typically:
 #     Place the sub project code location on your sys.path
