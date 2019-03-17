@@ -46,7 +46,7 @@ WidgetInfo = namedtuple('WidgetInfo', ['project', 'pagenumber', 'section_name', 
 
 PageElement = namedtuple('PageElement', ['project', 'pagenumber', 'pchange', 'location', 'page_part', 'part_type', 'tag_name', 'brief', 'hide_if_empty', 'attribs'])
 
-PageTextBlock = namedtuple('PageTextBlock', ['project', 'pagenumber', 'pchange', 'location', 'textref', 'tblock_project', 'failmessage', 'escape', 'linebreaks', 'decode'])
+PageTextBlock = namedtuple('PageTextBlock', ['project', 'pagenumber', 'pchange', 'location', 'textref', 'tblock_project', 'failmessage', 'escape', 'linebreaks'])
 
 WidgFieldInfo = namedtuple('WidgFieldInfo', ['tuple_widgfield', 'str_widgfield', 'str_comma_widgfield'])
 
@@ -54,7 +54,7 @@ PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'secti
 
 SectionElement = namedtuple('SectionElement', ['project', 'section_name', 'schange', 'location', 'part_type', 'tag_name', 'brief', 'show', 'hide_if_empty', 'attribs'])
 
-SectionTextBlock = namedtuple('SectionTextBlock', ['project', 'section_name', 'schange', 'location', 'textref', 'tblock_project', 'failmessage', 'escape', 'linebreaks', 'decode'])
+SectionTextBlock = namedtuple('SectionTextBlock', ['project', 'section_name', 'schange', 'location', 'textref', 'tblock_project', 'failmessage', 'escape', 'linebreaks'])
 
 
 WidgetDescription = namedtuple('WidgetDescription', ['modulename', 'classname', 'brief', 'fields', 'containers', 'illustration',

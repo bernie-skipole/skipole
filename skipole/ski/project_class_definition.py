@@ -1235,7 +1235,7 @@ class SkiCall(object):
         this_project = skiboot.getproject(proj_ident=self.project)
         return this_project.textblocks
 
-    def textblock(self, textref, project=None, decode=False):
+    def textblock(self, textref, project=None):
         """This method returns the textblock text, given a textblock reference string,
            If project is not given assumes this project, if given, project must exist as either the root,
            or a sub project of the root.
@@ -1245,8 +1245,6 @@ class SkiCall(object):
         proj = skiboot.getproject(project)
         if proj is None:
             return
-        if decode:
-            return proj.textblocks.get_decoded_text(textref, self.lang)
         return proj.textblocks.get_text(textref, self.lang)
 
     def label_value(self, label, project=None):

@@ -483,18 +483,18 @@ def section_textblock(project, section_name, schange, location):
     tblock = section.location_item(location)
     if not isinstance(tblock, tag.TextBlock):
         raise ServerError("Item at this location is not identified as a TextBlock")
-    return SectionTextBlock(project, section_name, schange, location, tblock.textref, tblock.project, tblock.failmessage, tblock.escape, tblock.linebreaks, tblock.decode)
+    return SectionTextBlock(project, section_name, schange, location, tblock.textref, tblock.project, tblock.failmessage, tblock.escape, tblock.linebreaks)
 
 
-def create_textblock_in_section(project, section_name, schange, location, textref, failmessage, escape, linebreaks, decode=False, tblock_project=''):
+def create_textblock_in_section(project, section_name, schange, location, textref, failmessage, escape, linebreaks, tblock_project=''):
     "Creates a new textblock in the given section, returns the new schange and location"
-    tblock = tag.TextBlock(textref=textref, project=tblock_project, failmessage=failmessage, escape=escape, linebreaks=linebreaks, decode=decode)
+    tblock = tag.TextBlock(textref=textref, project=tblock_project, failmessage=failmessage, escape=escape, linebreaks=linebreaks)
     # call skilift.insert_item_in_section to insert the item, save the section and return schange
     new_schange, new_location = insert_item_in_section(project, section_name, schange, location, tblock)
     return new_schange, new_location
 
 
-def edit_section_textblock(project, section_name, schange, location, textref, tblock_project, failmessage, escape, linebreaks, decode):
+def edit_section_textblock(project, section_name, schange, location, textref, tblock_project, failmessage, escape, linebreaks):
     """Given an textblock at project, section_name, location
        sets the textblock values, returns section change uuid """
     proj, section = get_proj_section(project, section_name, schange)
@@ -505,7 +505,6 @@ def edit_section_textblock(project, section_name, schange, location, textref, tb
     tblock.failmessage = failmessage
     tblock.escape = escape
     tblock.linebreaks = linebreaks
-    tblock.decode = decode
     if project == tblock_project:
         tblock.project = ''
     else:

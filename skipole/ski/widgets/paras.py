@@ -695,46 +695,6 @@ class TextBlockDiv(Widget):
 </div>"""
 
 
-
-class DecodedTextBlock(Widget):
-
-    # This class does not display any error messages
-    display_errors = False
-
-    arg_descriptions = {'textblock_ref':FieldArg("textblock_ref", ""),
-                        'textblock_project':FieldArg("text", ""),
-                        'text_refnotfound':FieldArg("text", ""),
-                        'hide':FieldArg("boolean", False, jsonset=True)}
-
-
-    def __init__(self, name=None, brief='', **field_args):
-        """A div, containing a TextBlock, so show, class and hide can be set
-           The TextBlock has decode set, so when text is inserted the
-           get_decoded_text method of AccessTextBlocks will be called"""
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-        self[0] =  ""  # where the textblock is located
-
-    def _build(self, page, ident_list, environ, call_data, lang):
-        # Hides widget if hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        # define the textblock
-        tblock = self.get_field_value("textblock_ref")
-        tblock.project = self.get_field_value('textblock_project')
-        tblock.failmessage = self.get_field_value('text_refnotfound')
-        tblock.decode = True
-        # place it at location 0
-        self[0] = tblock
-
-    @classmethod
-    def description(cls):
-        """Returns a text string to illustrate the widget"""
-        return """
-<div>  <!-- with widget id and class widget_class -->
-       <!-- and attribute style=display:none if hide is True -->
-  <!-- The decoded TextBlock -->
-</div>"""
-
-
 class ShowPara1(Widget):
     """A div, containing a paragraph of text followed by an error div and paragraph.
     The text paragraph is normally visible (depending on the show_para field)

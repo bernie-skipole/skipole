@@ -1025,7 +1025,7 @@ class SectionPlaceHolder(object):
 
 class TextBlock(object):
 
-    def __init__(self, textref='', project='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], decode=False, show = True, text=''):
+    def __init__(self, textref='', project='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], show = True, text=''):
         # Note project is either '' for a textblock defined in this project, or the proj_ident of a sub project
         self.project = project
         # set show to False if this textblock is not to be shown
@@ -1037,7 +1037,6 @@ class TextBlock(object):
         self.text=text
         self.linebreaks=linebreaks
         self.escape=escape
-        self.decode=decode
         # uses the % operator
         self.replace_strings=replace_strings
         self._show_failmessage = False
@@ -1084,10 +1083,7 @@ class TextBlock(object):
         if proj is None:
             self._show_failmessage = True
             return
-        if self.decode:
-            result = proj.textblocks.get_decoded_text(self.textref, lang)
-        else:
-            result = proj.textblocks.get_text(self.textref, lang)
+        result = proj.textblocks.get_text(self.textref, lang)
         if result is None:
             self._show_failmessage = True
         else:
@@ -1122,7 +1118,6 @@ class TextBlock(object):
         part_dict["show"] = self.show
         part_dict["escape"] = self.escape
         part_dict["linebreaks"] = self.linebreaks
-        part_dict["decode"] = self.decode
         if self.replace_strings:
             part_dict["replace_strings"] = make_list(self.replace_strings, proj_ident)
         return ['TextBlock', part_dict]
@@ -1134,8 +1129,6 @@ class TextBlock(object):
             return expand_text(self.text, escape=self.escape, linebreaks=self.linebreaks, replace_strings=self.replace_strings)
         if self._show_failmessage:
             return expand_text(self.failmessage, escape=self.escape, linebreaks=self.linebreaks)
-        if self.decode:
-            return self._displayedtext
         return expand_text(self._displayedtext, escape=self.escape, linebreaks=self.linebreaks, replace_strings=self.replace_strings)
 
 

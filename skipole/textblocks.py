@@ -21,14 +21,6 @@
 import os, json, shutil
 
 
-_docutils_available = True
-try:
-    from docutils import core
-except Exception:
-    _docutils_available = False
-
-
-
 class AccessTextBlocks(object):
 
 
@@ -106,21 +98,6 @@ class AccessTextBlocks(object):
         "Get text with given textref and language, gets exact value, does not seek nearest, if not found return None"
         if (textref,language) in self._textblocks:
             return self._textblocks[(textref,language)]
-
-    def get_decoded_text(self, textref, lang):
-        """If the text of a Textblock is encoded in any special way, decode it here.
-           this example decodes references ending with .rst as restructured text to html,
-           it requires python3-docutils to be available, together with the docutils
-           CSS html4css1.css file to be served"""
-        text = self.get_text(textref, lang)
-        if text is None:
-            return
-        if textref.endswith(".rst") and _docutils_available:
-            # decode text as html
-            parts = core.publish_parts(source=text, writer_name='html')
-            return parts['html_body']
-        else:
-            return text
 
     def get_text(self, textref, lang):
         """Gets the text from the textblock, trying nearest language, returns None if not found
