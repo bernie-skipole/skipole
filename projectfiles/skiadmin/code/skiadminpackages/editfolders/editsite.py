@@ -68,8 +68,24 @@ def retrieve_index_data(skicall):
         page_data["debugstatus", "para_text"] = "Debug mode is OFF"
         page_data["debugtoggle", "button_text"] = "Set Debug ON"
 
-
+    # create table of projects
     subprojects = projectinfo.subprojects
+    col1 = []
+    col2 = []
+    col3 = []
+    for proj, suburl in subprojects.items():
+        projinfo = skilift.project_info(proj)
+        col1.append(proj)
+        col2.append(suburl)
+        col3.append(projinfo.brief)
+    # append the final row showing this edited project
+    col1.append(project)
+    col2.append(projectinfo.path)
+    col3.append(projectinfo.brief)
+    page_data['subs','col1'] = col1
+    page_data['subs','col2'] = col2
+    page_data['subs','col3'] = col3
+
 
     ctable = []
     for proj, suburl in subprojects.items():

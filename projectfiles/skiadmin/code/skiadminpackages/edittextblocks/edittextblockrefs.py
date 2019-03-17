@@ -94,24 +94,17 @@ def retrieve_textblockref(skicall):
 
     page_data[("linebreaks","radio_values")]=['ON', 'OFF']
     page_data[("linebreaks","radio_text")]=['On', 'Off']
-    if tblock.linebreaks and not tblock.decode:
+    if tblock.linebreaks:
         page_data[("linebreaks","radio_checked")] = 'ON'
     else:
         page_data[("linebreaks","radio_checked")] = 'OFF'
 
     page_data[("setescape","radio_values")]=['ON', 'OFF']
     page_data[("setescape","radio_text")]=['On', 'Off']
-    if tblock.escape and not tblock.decode:
+    if tblock.escape:
         page_data[("setescape","radio_checked")] = 'ON'
     else:
         page_data[("setescape","radio_checked")] = 'OFF'
-
-    page_data[("setdecode","radio_values")]=['ON', 'OFF']
-    page_data[("setdecode","radio_text")]=['On', 'Off']
-    if tblock.decode:
-        page_data[("setdecode","radio_checked")] = 'ON'
-    else:
-        page_data[("setdecode","radio_checked")] = 'OFF'
 
 
 
@@ -169,23 +162,11 @@ def set_textblock(skicall):
         else:
             failmessage = tblock.failmessage
 
-        if 'setdecode' in call_data:
-            if call_data['setdecode'] == 'ON':
-                decode = True
-                message = 'Text Decode set on'
-            else:
-                decode = False
-                message = 'Text Decode off'
-        else:
-            decode = tblock.decode
 
         if 'linebreaks' in call_data:
             if call_data['linebreaks'] == 'ON':
                 linebreaks = True
-                if decode:
-                    message = "Decode is on; linbreaks setting is overridden"
-                else:
-                    message = 'Linebreaks set on'
+                message = 'Linebreaks set on'
             else:
                 linebreaks = False
                 message = 'Linebreaks set off'
@@ -196,10 +177,7 @@ def set_textblock(skicall):
         if 'setescape' in call_data:
             if call_data['setescape'] == 'ON':
                 escape = True
-                if decode:
-                    message = "Decode is on; escape setting is overridden"
-                else:
-                    message = 'HTML escape set on'
+                message = 'HTML escape set on'
             else:
                 escape = False
                 message = 'HTML escape set off'
@@ -207,9 +185,9 @@ def set_textblock(skicall):
             escape = tblock.escape
 
         if pagenumber:
-            call_data['pchange'] = editpage.edit_page_textblock(project, pagenumber, pchange, location, textref, tblock_project, failmessage, escape, linebreaks, decode)
+            call_data['pchange'] = editpage.edit_page_textblock(project, pagenumber, pchange, location, textref, tblock_project, failmessage, escape, linebreaks)
         else:
-            call_data['schange'] = editsection.edit_section_textblock(project, section_name, schange, location, textref, tblock_project, failmessage, escape, linebreaks, decode)
+            call_data['schange'] = editsection.edit_section_textblock(project, section_name, schange, location, textref, tblock_project, failmessage, escape, linebreaks)
 
     except ServerError as e:
         raise FailPage(e.message)
@@ -238,10 +216,6 @@ def retrieve_insert(skicall):
     page_data[("setescape","radio_values")]=['ON', 'OFF']
     page_data[("setescape","radio_text")]=['On', 'Off']
     page_data[("setescape","radio_checked")] = 'ON'
-
-    page_data[("decode","radio_values")]=['ON', 'OFF']
-    page_data[("decode","radio_text")]=['On', 'Off']
-    page_data[("decode","radio_checked")] = 'OFF'
 
 
 def create_insert(skicall):
@@ -285,15 +259,6 @@ def create_insert(skicall):
     else:
         escape = True
 
-
-    ##### decode option not currently used when creating a new textblock
-    #if 'decode' in call_data:
-    #    if call_data['decode'] == 'ON':
-    #        decode = True
-    #    else:
-    #        decode = False
-    #else:
-    #    decode = False
 
     try:
         part_top, container, location_integers = call_data['location']

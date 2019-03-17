@@ -409,8 +409,7 @@
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]

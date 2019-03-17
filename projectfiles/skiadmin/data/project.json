@@ -16,7 +16,6 @@
 "add_new_page": 2400,
 "add_new_respondpage": 2420,
 "add_new_svgpage": 2430,
-"add_project": 100,
 "add_selector": 8100,
 "add_submit_list_string": 6410,
 "add_tag_attrib": 43030,
@@ -75,7 +74,6 @@
 "edit_jq_page": 5200,
 "edit_page": 8,
 "edit_page_dom": 3510,
-"edit_project": 120,
 "edit_section": 7030,
 "edit_section_dom": 7410,
 "edit_section_responder": 27032,
@@ -173,7 +171,6 @@
 "set_brief": 20,
 "set_colour": 34,
 "set_comment": 41220,
-"set_decode": 42060,
 "set_default_error_widget": 3250,
 "set_escape": 42050,
 "set_fail_ident": 6070,
@@ -198,7 +195,6 @@
 "set_tblock_project": 42070,
 "set_textblock_ref": 42020,
 "set_unrestricted_action": 2950,
-"set_url": 130,
 "set_validate_fail_ident": 6050,
 "set_validate_fail_ident_json": 6051,
 "set_validate_option": 6250,
@@ -1274,78 +1270,57 @@ false,
 "Part",
 {
 "tag_name": "h3",
-"brief": "Title four function",
+"brief": "Title three functions",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"This framework requires you to provide a package of Python code containing four functions."
+"This framework requires you to provide three functions."
 ]
 ]
 }
 ],
 [
-"Widget",
+"Part",
 {
-"class": "paras.TextBlockPara",
-"name": "t1",
-"brief": "first paragraph, block aboutcode.1",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
+"tag_name": "p",
+"brief": "About Code 1",
 "show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_project": "",
-"textblock_ref": "aboutcode.1",
-"widget_class": "",
-"widget_style": ""
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "aboutcode.1",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
 }
+]
+]
 }
 ],
 [
-"Widget",
+"Part",
 {
-"class": "paras.DivPara",
-"name": "codelocation",
-"brief": "Shows the path to your project code",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"para_class": "",
-"para_text": "Text not available",
-"pre_line": true,
+"tag_name": "p",
+"brief": "About Code 2",
 "show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
+"hide_if_empty": false,
+"parts": [
 [
-"Widget",
+"TextBlock",
 {
-"class": "paras.TextBlockPara",
-"name": "t2",
-"brief": "second paragraph, block aboutcode.2",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
+"textref": "aboutcode.2",
+"failmessage": "TextBlock not found",
 "show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_project": "",
-"textblock_ref": "aboutcode.2",
-"widget_class": "",
-"widget_style": ""
+"escape": true,
+"linebreaks": true
 }
+]
+]
 }
 ],
 [
@@ -1412,31 +1387,6 @@ false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
 "get_field": "aboutcode.page_data",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "startproj",
-"brief": "Describes start_project",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "start_project -",
-"button_show_text": "start_project +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.startproj",
 "hide": true,
 "htmlescaped": false,
 "json_ident": 70050,
@@ -2047,18 +1997,10 @@ false,
 },
 "index": {
 "ident": 70001,
-"brief": "Retrieves data for about user code page",
+"brief": "Calls the about code template",
 "RespondPage": {
-"class": "SubmitData",
+"class": "NoOperation",
 "original_args": {
-"allowed_callers": [],
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editproject",
-"retrieve_about_code"
-],
 "target_ident": 70101
 },
 "original_fields": {}
@@ -3094,8 +3036,7 @@ false,
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -3134,8 +3075,7 @@ false,
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -3228,8 +3168,7 @@ false,
 "failmessage": "failed to read textblocks database with ref index_background_colors",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -3636,8 +3575,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -10772,87 +10710,6 @@ false
 }
 ],
 [
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Call get_decoded_text method of AccessTextBlocks object to obtain text (disables the above two options):"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputforms.SubmitForm1",
-"name": "decodeform",
-"brief": "SubmitForm2",
-"fields": {
-"action": "set_decode",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4",
-"button_text": "Submit",
-"button_wait_text": "",
-"clear_error": false,
-"container_class": "",
-"div_class": "",
-"enctype": "",
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"left_class": "ski_left_label",
-"left_label": "Decode text:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-[
-"Widget",
-{
-"class": "radio.RadioButton1",
-"name": "setdecode",
-"brief": "RadioButton",
-"fields": {
-"clear_error": false,
-"div_class": "",
-"error_class": "w3-panel w3-red",
-"inputdiv_class": "",
-"label_class": "ski_right_label",
-"radio_checked": "",
-"radio_text": [],
-"radio_values": [],
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": "margin-left:30%;"
-},
-"validators": {
-"radio_checked": [
-{
-"class": "basic.AllowedValuesOnly",
-"allowed_values": [
-"ON",
-"OFF"
-]
-}
-]
-}
-}
-]
-]
-}
-],
-[
 "SectionPlaceHolder",
 {
 "brief": "Section admin_footer with alias foot",
@@ -11448,23 +11305,6 @@ false
 }
 }
 },
-"validate_decode": {
-"ident": 52062,
-"brief": "validate new textblock decode",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 52060,
-"validate_fail_ident": 52017,
-"validate_option": true
-},
-"original_fields": {
-"setdecode:radio_checked": "setdecode"
-}
-}
-},
 "validate_escape": {
 "ident": 52052,
 "brief": "validate new textblock escape",
@@ -11607,27 +11447,6 @@ false
 "validate_option": false
 },
 "original_fields": {}
-}
-},
-"set_decode": {
-"ident": 42060,
-"brief": "check textblock decode",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-52019
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 52062,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"setdecode:radio_checked": ""
-}
 }
 },
 "set_escape": {
@@ -13743,8 +13562,7 @@ false
 "failmessage": "failed to read textblocks database with ref validators.description4",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -14232,8 +14050,7 @@ false
 "failmessage": "failed to read textblocks database with ref validators.modules",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -28156,8 +27973,7 @@ false,
 "failmessage": "failed to read textblocks database with ref managespecialpages.about_pages",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -28248,8 +28064,7 @@ false,
 "failmessage": "failed to read textblocks database with ref managespecialpages.about_skisfiles",
 "show": true,
 "escape": true,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -28332,8 +28147,7 @@ false,
 "failmessage": "failed to read textblocks database with ref managespecialpages.user_pages",
 "show": true,
 "escape": true,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -30669,8 +30483,7 @@ false
 "failmessage": "failed to read textblocks database with ref index_test_colors",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ],
 [
@@ -32529,8 +32342,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -32695,8 +32507,7 @@ false
 "failmessage": "failed to read textblocks database with ref index_sub_projects",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -32706,48 +32517,22 @@ false
 "Part",
 {
 "tag_name": "div",
-"brief": "set table responsive",
+"brief": "Table of sub projects",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "w3-responsive"
-},
 "parts": [
 [
 "Widget",
 {
-"class": "links.Table3_Buttons2",
-"name": "projtable",
-"brief": "Table3_Buttons2",
+"class": "tables.ThreeColTable1",
+"name": "subs",
+"brief": "Table of sub projects",
 "fields": {
-"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
-"button_text1": "Edit",
-"button_text2": "Remove",
-"button_wait_text1": "",
-"button_wait_text2": "",
-"contents": [
-[
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-false,
-false
-]
-],
+"col1": [],
+"col2": [],
+"col3": [],
 "even_class": "",
-"get_field1_1": true,
-"get_field1_2": false,
-"get_field2_1": true,
-"get_field2_2": false,
 "header_class": "w3-theme-d3",
-"json_ident1": "",
-"json_ident2": "",
-"link_ident1": "edit_project",
-"link_ident2": "remove_project",
 "odd_class": "w3-theme-d2",
 "show": true,
 "title1": "Project",
@@ -32755,74 +32540,10 @@ false
 "title3": "Brief",
 "widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
 "widget_style": ""
-},
-"set_names": {
-"get_field1_1": "edit_project",
-"get_field2_1": "remove_project"
-},
-"validators": {
-"edit_project": [
-{
-"class": "paths.ProjectLoaded",
-"message": "A valid project ident is required",
-"val_args": {
-"include_root": false
-}
-}
-],
-"remove_project": [
-{
-"class": "paths.ProjectLoaded",
-"message": "A valid project ident is required",
-"val_args": {
-"include_root": false
-}
-}
-]
 }
 }
 ]
 ]
-}
-],
-[
-"Widget",
-{
-"class": "dropdown.SubmitDropDown1",
-"name": "sdd1",
-"brief": "SubmitDropDown1",
-"fields": {
-"action": "add_project",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"inputdiv_class": "",
-"label": "Add a sub project:",
-"label_class": "ski_left_label",
-"option_list": [],
-"select_class": "ski_input",
-"selectvalue": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"selectvalue": [
-{
-"class": "basic.NotEmpty",
-"message": "Invalid project"
-}
-]
-}
 }
 ],
 [
@@ -32903,82 +32624,6 @@ false
 "original_fields": {}
 }
 },
-"retrieve_edit_project": {
-"ident": 20121,
-"brief": "Fills in edit project page",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editproject",
-"retrieve_edit_project"
-],
-"target_ident": 20129
-},
-"original_fields": {}
-}
-},
-"set_sub_project_url": {
-"ident": 20139,
-"brief": "Creates the sub project url",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editproject",
-"submit_suburl"
-],
-"target_ident": 20121
-},
-"original_fields": {}
-}
-},
-"submit_add_project": {
-"ident": 20101,
-"brief": "Add the project",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editproject",
-"submit_addproject"
-],
-"target_ident": "admin_home"
-},
-"original_fields": {}
-}
-},
-"submit_remove_project": {
-"ident": 20111,
-"brief": "Remove the project",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editproject",
-"submit_removeproject"
-],
-"target_ident": "admin_home"
-},
-"original_fields": {}
-}
-},
 "submit_save_project": {
 "ident": 20040,
 "brief": "Save the project",
@@ -33023,75 +32668,6 @@ false
 "JSON": {
 "enable_cache": false,
 "content": {}
-}
-},
-"validate_add_project": {
-"ident": 20100,
-"brief": "check project to add",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20101,
-"validate_fail_ident": 1,
-"validate_option": true
-},
-"original_fields": {
-"sdd1:selectvalue": "add_project"
-}
-}
-},
-"validate_edit_project": {
-"ident": 20120,
-"brief": "Check project to be edited",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20121,
-"validate_fail_ident": 1,
-"validate_option": true
-},
-"original_fields": {
-"projtable:edit_project": "project"
-}
-}
-},
-"validate_remove_project": {
-"ident": 20110,
-"brief": "check project to remove",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20111,
-"validate_fail_ident": 1,
-"validate_option": true
-},
-"original_fields": {
-"projtable:remove_project": "remove_project"
-}
-}
-},
-"validate_sub_project_url": {
-"ident": 20130,
-"brief": "validate sub project url",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20139,
-"validate_fail_ident": "admin_home",
-"validate_option": true
-},
-"original_fields": {
-"subprojurl:hidden_field1": "project",
-"subprojurl:input_text": "project_url"
-}
 }
 },
 "w3-theme-ski": {
@@ -33760,8 +33336,7 @@ false
 "failmessage": "failed to read textblocks database with ref managesections.about_sections",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -33781,8 +33356,7 @@ false
 "failmessage": "failed to read textblocks database with ref managesections.new_section",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -33802,8 +33376,7 @@ false
 "failmessage": "failed to read textblocks database with ref managesections.more_about_sections",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -35673,8 +35246,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -35757,8 +35329,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -35841,8 +35412,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -35925,8 +35495,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -36009,8 +35578,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -36093,8 +35661,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -36177,8 +35744,7 @@ false
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": false,
-"decode": false
+"linebreaks": false
 }
 ]
 ]
@@ -36233,27 +35799,6 @@ false
 ]
 }
 ]
-},
-"add_project": {
-"ident": 100,
-"brief": "Check add_project fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-20001
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20100,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"sdd1:selectvalue": ""
-}
-}
 },
 "colours": {
 "ident": 300,
@@ -36397,27 +35942,6 @@ false
 }
 }
 },
-"edit_project": {
-"ident": 120,
-"brief": "Check edit_project fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-20001
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20120,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"projtable:edit_project": ""
-}
-}
-},
 "edit_root": {
 "ident": 3,
 "brief": "Goes to edit the root folder",
@@ -36518,27 +36042,6 @@ false
 },
 "original_fields": {
 "brief:input_text": ""
-}
-}
-},
-"remove_project": {
-"ident": 110,
-"brief": "Check remove_project fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-20001
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20110,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"projtable:remove_project": ""
 }
 }
 },
@@ -36747,28 +36250,6 @@ false
 "target_ident": "admin_home"
 },
 "original_fields": {}
-}
-},
-"sub_project_url": {
-"ident": 130,
-"brief": "Check edit a sub project url fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-20129
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 20130,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"subprojurl:hidden_field1": "",
-"subprojurl:input_text": ""
-}
 }
 },
 "w3-theme-ski-61785.css": {
