@@ -160,12 +160,10 @@ def retrieve_colour_data(skicall):
     call_data = skicall.call_data
     page_data = skicall.page_data
 
-    adminproj = skilift.admin_project()
-
     # get default admin background color from project data
-    adminbackcol = skilift.get_proj_data(adminproj, 'adminbackcol')
+    adminbackcol = skicall.proj_data['adminbackcol']
     # get individual admin colors from project data
-    colours = skilift.get_proj_data(adminproj, 'colours')
+    colours = skicall.proj_data['colours']
 
     page_data["colhextest", "input_text"] = adminbackcol
     admincol = css_styles.hex_int(adminbackcol)

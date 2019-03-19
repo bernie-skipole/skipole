@@ -149,11 +149,6 @@ def get_root():
     return skiboot.project_ident()
 
 
-def admin_project():
-    "Returns the ski admin project name"
-    return skiboot.admin_project()
-
-
 def lib_list():
     "Returns list of library labels"
     return skiboot.lib_list()[:]

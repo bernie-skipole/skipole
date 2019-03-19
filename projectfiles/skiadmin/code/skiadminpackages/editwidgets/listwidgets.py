@@ -165,7 +165,7 @@ def retrieve_new_widget(skicall):
     ref = "widgets." + widg.modulename + "." + widg.classname
     full_textref = ref + '.full'   # the widget full reference string
 
-    adminaccesstextblocks = skilift.get_accesstextblocks(skilift.admin_project())
+    adminaccesstextblocks = skilift.get_accesstextblocks(skicall.project)
 
     if adminaccesstextblocks.textref_exists(full_textref):
         page_data['widgetdesc','textblock_ref'] = full_textref

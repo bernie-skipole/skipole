@@ -106,7 +106,7 @@ def end_call(page_ident, page_type, skicall):
     projname, identnum = page_ident
 
     # do not include session data if target page is in another project
-    if projname != skilift.admin_project():
+    if projname != PROJECT:
         return
 
     if page_type == "TemplatePage":

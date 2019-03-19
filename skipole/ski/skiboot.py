@@ -34,7 +34,6 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"admin_project"   : "skiadmin",          # The skipole admin project
 "version"         : "3.0.0",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
@@ -108,10 +107,6 @@ def is_sub_project(proj_ident):
         return True
     return False
 
-def admin_project():
-    "Returns the ski admin project name"
-    return _CFG["admin_project"]
-
 def get_debug():
     "Returns the debug mode"
     return _CFG["debug"]
@@ -125,14 +120,6 @@ def tar_path(proj_ident):
     "Returns the path to the tar file"
     return os.path.join(projectdir(proj_ident), proj_ident + ".tar.gz")
 
-def admin_ident():
-    "Returns the ident of the root folder of the admin project"
-    return Ident(_CFG["admin_project"], 0)
-
-def adminurl():
-    "Returns the url of the admin folder"
-    proj = getproject()
-    return proj.url+_CFG["admin_project"]+"/"
 
 def getproject(proj_ident=None):
     """If proj_ident is None, returns the site root project
