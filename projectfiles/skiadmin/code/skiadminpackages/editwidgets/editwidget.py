@@ -396,7 +396,7 @@ def retrieve_editfield(skicall):
     ref = _field_ref(widgetdescription, field_arg)
 
     full_textref = ref + '.full'   # the field reference string
-    adminaccesstextblocks = skilift.get_accesstextblocks(skilift.admin_project())
+    adminaccesstextblocks = skilift.get_accesstextblocks(skicall.project)
 
     if adminaccesstextblocks.textref_exists(full_textref):
         page_data[('widget_field_textblock','textblock_ref')] = full_textref

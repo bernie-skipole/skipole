@@ -35,7 +35,6 @@ from .ski.project_class_definition import WSGIApplication
 from .ski.excepts import ValidateError, ServerError, GoTo, FailPage
 
 version = skiboot.version()
-adminproj = skiboot.admin_project()
 
 
 def set_debug(mode):
