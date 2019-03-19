@@ -27,17 +27,8 @@ class AccessTextBlocks(object):
     def __init__(self, project, projectfiles, default_language):
         """The project imports this module and creates an instance of this class, and uses it to read the
            text of TextBlocks.
-           As default, the text is stored in JSON files beneath the directory
+           The text is stored in JSON files beneath the directory
            projectfiles/project/data/textblocks_json
-           However if you wish to store the text elsewhere, such as in a database somewhere, you can
-           re-write this class.
-
-           Doing so may make your project less portable, and editing textblocks with skiadmin
-           may fail since it will depend on access to your database. You will probably need
-           to populate your TextBlocks database yourself, independently of skiadmin. 
-
-           A replacement class should have each of the public attributes and methods defined here
-           that is, all the attributes and methods not starting with an underscore
         """
 
         # the self.default_language attribute is expected to exist
