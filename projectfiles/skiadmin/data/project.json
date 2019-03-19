@@ -227,6 +227,7 @@
 "ski_tables": "skis,ski_tables",
 "ski_textarea": "skis,ski_textarea",
 "ski_upload": "skis,ski_upload",
+"skilift": 70005,
 "skipole_js": "skis,skipole_js",
 "skipolelogo": 30013,
 "submit_language": 4020,
@@ -1663,66 +1664,24 @@ false,
 "hide_if_empty": false,
 "parts": [
 [
-"Widget",
+"Part",
 {
-"class": "links.Link",
-"name": "to_skilift",
-"brief": "Link to skilift",
-"fields": {
-"content": "About the skilift package",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"link_ident": 70005,
+"tag_name": "a",
+"brief": "Link to skilift description",
 "show": true,
-"target": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
+"hide_if_empty": false,
+"attribs": {
+"href": "{skilift}"
+},
+"parts": [
+[
+"Text",
+"About skilift"
 ]
 ]
 }
-],
-[
-"Widget",
-{
-"class": "paras.TextBlockPara",
-"name": "t3",
-"brief": "About project files location",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_project": "",
-"textblock_ref": "aboutcode.3",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.DivPara",
-"name": "filelocation",
-"brief": "Shows where static files are located",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"para_class": "",
-"para_text": "Text not available",
-"pre_line": true,
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-}
+]
+]
 }
 ],
 [
@@ -1752,10 +1711,45 @@ false,
 "enable_cache": false,
 "content": {}
 }
+}
+}
+}
+},
+"pages": {
+"get_text": {
+"ident": 70050,
+"brief": "Returns a textblock text from get field",
+"RespondPage": {
+"class": "FieldStoreSubmit",
+"original_args": {
+"fail_ident": 70150,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editsite",
+"get_text"
+],
+"target_ident": 70150
+},
+"original_fields": {
+"get_field": ""
+}
+}
+},
+"index": {
+"ident": 70001,
+"brief": "Calls the about code template",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": 70101
+},
+"original_fields": {}
+}
 },
 "skilift": {
-"ident": 70105,
-"brief": "skilift template",
+"ident": 70005,
+"brief": "About skilift",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
@@ -1946,7 +1940,7 @@ false,
 "parts": [
 [
 "Text",
-"Within the 'skipole' package there is a 'skilift' sub-package, which contains further modules and functions providing project information and editing capability.\r\n\r\nPlease view the skilift source for further information.\r\n\r\nThese functions are normally only used by the 'skiadmin' project.  You could import the package and use the functions within your own code. However any function which alters a project should only be used if only one user is accessing the web site. Multiple access while changes are being implemented could cause problems.\r\n\r\nTo import into your __init__.py\r\n\r\nfrom ... import skilift\r\n\r\nAnd a typical function would be:\r\n\r\nget_textblock_text(textref, lang, project=None)\r\n\r\nwith docstring:\r\n\r\nThis function returns the textblock text, given a textblock reference string,\r\n\r\nlang is the language tuple of (preferred language, default language).\r\nIf text for a given language is not found, the function makes an effort to get text by trying the default language.\r\n\r\nIf project is not given assumes the root project, if given, project must exist as either the root, or a sub project of the root.\r\nIf no textblock is found, returns None."
+"Within the 'skipole' package there is a 'skilift' sub-package, which contains further modules and functions providing project information and editing capability.\r\n\r\nPlease view the skilift source for further information.\r\n\r\nThese functions are normally only used by the 'skiadmin' project.  You could import the package and use the functions within your own code. However any function which alters a project should only be used if only one user is accessing the web site. Multiple access while changes are being implemented could cause problems.\r\n\r\nTo import skilift\r\n\r\nfrom skipole import skilift\r\n\r\nAnd a typical function would be:\r\n\r\nskilift.get_textblock_text(textref, lang, project=None)\r\n\r\nwith docstring:\r\n\r\nThis function returns the textblock text, given a textblock reference string,\r\n\r\nlang is the language tuple of (preferred language, default language).\r\nIf text for a given language is not found, the function makes an effort to get text by trying the default language.\r\n\r\nIf project is not given assumes the root project, if given, project must exist as either the root, or a sub project of the root.\r\nIf no textblock is found, returns None."
 ]
 ]
 }
@@ -1970,60 +1964,6 @@ false,
 ]
 }
 ]
-}
-}
-}
-},
-"pages": {
-"get_text": {
-"ident": 70050,
-"brief": "Returns a textblock text from get field",
-"RespondPage": {
-"class": "FieldStoreSubmit",
-"original_args": {
-"fail_ident": 70150,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editproject",
-"get_text"
-],
-"target_ident": 70150
-},
-"original_fields": {
-"get_field": ""
-}
-}
-},
-"index": {
-"ident": 70001,
-"brief": "Calls the about code template",
-"RespondPage": {
-"class": "NoOperation",
-"original_args": {
-"target_ident": 70101
-},
-"original_fields": {}
-}
-},
-"skilift": {
-"ident": 70005,
-"brief": "About skilift",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editproject",
-"retrieve_about_skilift"
-],
-"target_ident": 70105
-},
-"original_fields": {}
-}
 }
 }
 },

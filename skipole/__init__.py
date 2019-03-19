@@ -36,9 +36,6 @@ from .ski.excepts import ValidateError, ServerError, GoTo, FailPage
 
 version = skiboot.version()
 adminproj = skiboot.admin_project()
-newproj = skiboot.new_project()
-libproj = skiboot.lib_project()
-
 
 
 def set_debug(mode):

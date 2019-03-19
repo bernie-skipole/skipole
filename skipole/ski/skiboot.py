@@ -34,9 +34,7 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"new_project"     : "newproj",           # copied to create a new project
 "admin_project"   : "skiadmin",          # The skipole admin project
-"lib_project"     : "skis",              # The skipole static library project
 "version"         : "3.0.0",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
@@ -113,14 +111,6 @@ def is_sub_project(proj_ident):
 def admin_project():
     "Returns the ski admin project name"
     return _CFG["admin_project"]
-
-def new_project():
-    "Returns the new project name"
-    return _CFG["new_project"]
-
-def lib_project():
-    "Returns the lib project name"
-    return _CFG["lib_project"]
 
 def get_debug():
     "Returns the debug mode"
