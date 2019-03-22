@@ -44,8 +44,6 @@ _AN = re.compile('[^\w]')
 
 
 if __name__ == "__main__":
-    # do the work
-    print("Skipole version: %s" % (version,))
     args = sys.argv
     
     if len(args) == 3:
@@ -56,31 +54,34 @@ if __name__ == "__main__":
             sys.exit(1)
         if (project_name == 'skis') or (project_name=='skiadmin'):
             print("Error: This project name is reserved")
-            sys.exit(1)
+            sys.exit(2)
     elif len(args) == 2:
+        if args[1] == "--version":
+            print(version)
+            sys.exit(0)
         project_name = None
         projectfiles = os.path.abspath(os.path.expanduser(args[1]))
     else:
         print( "Invalid input. " + DESCRIPTION)
-        sys.exit(1)
+        sys.exit(3)
 
     # get the location of the directories to be copied
     template_directory = os.path.join(os.path.dirname(os.path.dirname(args[0])), 'projectfiles')
     if not os.path.isdir(template_directory):
         print("Error: Cannot find the template data for the skis and skiadmin projects")
-        sys.exit(1)
+        sys.exit(4)
     template_skis_directory = os.path.join(template_directory, 'skis')
     if not os.path.isdir(template_skis_directory):
         print("Error: Cannot find the template data for the skis project")
-        sys.exit(1)
+        sys.exit(5)
     template_skiadmin_directory = os.path.join(template_directory, 'skiadmin')
     if not os.path.isdir(template_skiadmin_directory):
         print("Error: Cannot find the template data for the skiadmin project")
-        sys.exit(1)
+        sys.exit(6)
     template_newproj_directory = os.path.join(template_directory, 'newproj')
     if not os.path.isdir(template_newproj_directory):
         print("Error: Cannot find the template data for the newproj project")
-        sys.exit(1)
+        sys.exit(7)
 
 
 
