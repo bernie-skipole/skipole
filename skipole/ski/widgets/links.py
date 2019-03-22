@@ -2378,7 +2378,7 @@ class ProjectiFrame(Widget):
     # This class does not display any error messages
     display_errors = False
 
-    arg_descriptions = {'sub_project':FieldArg("text", ""),
+    arg_descriptions = {'project':FieldArg("text", ""),
                         'width':FieldArg("text", "800"),
                         'height':FieldArg("text", "800")
                        }
@@ -2394,12 +2394,12 @@ class ProjectiFrame(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the iframe"
-        proj_ident = self.get_field_value("sub_project")
+        proj_ident = self.get_field_value("project")
         if not proj_ident:
-            self._error = "Warning: sub-project for iframe is not given"
+            self._error = "Warning: project for iframe is not given"
             return
-        if not skiboot.is_sub_project(proj_ident):
-            self._error = "Warning: sub-project %s for iframe has not been found" % proj_ident
+        if not skiboot.is_project(proj_ident):
+            self._error = "Warning: project %s for iframe has not been found" % proj_ident
             return
         project_url = skiboot.getproject(proj_ident).url
         if self.placename:
@@ -2417,8 +2417,8 @@ class ProjectiFrame(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <iframe src="#">  <!-- with widget id and class widget_class
-    and src the url of the sub-project
-    name of subproject or sectionaliasname-project if in a section
+    and src the url of the project
+    name of project or sectionaliasname-project if in a section
     and height and width as given -->
 </iframe>"""
 

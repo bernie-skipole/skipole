@@ -420,12 +420,8 @@ class RootFolder(Folder):
     @property
     def url(self):
         "Returns the project url"
-        # Get the current top project
-        topproject = skiboot.getproject()
-        if self.ident.proj == topproject.proj_ident:
-            return topproject.url
-        return topproject.subproject_paths[self.ident.proj]
-
+        folder_project = skiboot.getproject(self.ident.proj)
+        return folder_project.url
 
     def __repr__(self):
         return "RootFolder ident %s" % (self.ident,)

@@ -99,14 +99,6 @@ def is_project(proj_ident):
         return True
     return False
 
-def is_sub_project(proj_ident):
-    "Returns True if this project is not root and is in the site, False otherwise"
-    if not proj_ident:
-        return False
-    if proj_ident in root_project().subprojects:
-        return True
-    return False
-
 def get_debug():
     "Returns the debug mode"
     return _CFG["debug"]
@@ -116,20 +108,12 @@ def set_debug(mode):
     global _CFG
     _CFG["debug"] = bool(mode)
 
-def tar_path(proj_ident):
-    "Returns the path to the tar file"
-    return os.path.join(projectdir(proj_ident), proj_ident + ".tar.gz")
 
-
-def getproject(proj_ident=None):
-    """If proj_ident is None, returns the site root project
-       otherwise returns the project given by the proj_ident
-       If proj_ident given, but project does not exist, return None"""
-    if (proj_ident is not None) and (proj_ident in PROJECT_REGISTER):
+def getproject(proj_ident):
+    """Returns the project given by the proj_ident
+       If the project does not exist, return None"""
+    if proj_ident in PROJECT_REGISTER:
         return PROJECT_REGISTER[proj_ident]
-    if proj_ident is None:
-        return root_project()
-
 
 def project_ident(proj_ident=None):
     "Returns the given project ident, if it is None, returns current site root project ident"

@@ -121,7 +121,6 @@ def project_info(project):
                    proj.default_language,
                    proj.subproject_paths,
                    skiboot.project_json(project),
-                   skiboot.tar_path(project),
                    skiboot.project_main(project),
                    skiboot.projectstatic(project),
                    skiboot.projectdata(project)
@@ -138,15 +137,13 @@ def projectURLpaths():
 
       You should expect to see the root project itself in the dictionary, and at least the 'lib' project which is normally attached as a sub-project.
 """
-    rootproject = skiboot.getproject()
-    paths = {ident:path for ident,path in rootproject.subproject_paths.items()}
-    paths[rootproject.proj_ident] = rootproject.url
-    return paths
+    all_projects = skiboot.project_register()
+    return {project.proj_ident:project.url for project in all_projects}
 
 
 def get_root():
     "Takes no arguments and returns the project name of the current root project."
-    return skiboot.project_ident()
+    return skiboot.root_project().proj_ident
 
 
 def lib_list():
@@ -157,32 +154,6 @@ def lib_list():
 def sys_list():
     "Returns list of system page labels"
     return skiboot.sys_list()[:]
-
-
-def add_sub_project(sub_project):
-    "Adds a sub_project to the current root project"
-    root_project = skiboot.getproject()
-    if sub_project == root_project.proj_ident:
-        raise ServerError(message="Cannot add a project to itself")
-    root_project.add_project(sub_project)
-
-
-def remove_sub_project(sub_project):
-    "Removes a sub_project from the current root project"
-    project_loaded(sub_project)
-    root_project = skiboot.getproject()
-    if sub_project == root_project.proj_ident:
-        raise ServerError(message="Cannot remove itself")
-    root_project.remove_project(sub_project)
-
-
-def set_sub_project_path(sub_project, path):
-    "Sets the project path of a sub project"
-    project_loaded(sub_project)
-    root_project = skiboot.getproject()
-    if sub_project == root_project.proj_ident:
-        raise ServerError(message="Cannot set root path")
-    root_project.set_project_url(sub_project, path)
 
 
 def get_debug():
