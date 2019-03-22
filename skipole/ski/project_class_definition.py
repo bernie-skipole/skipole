@@ -1143,6 +1143,10 @@ class WSGIApplication(object):
 
         # get a copy of the {proj_id:url} subproject_paths dictionary, and this projects url
         sub_paths = self._subproject_paths.copy()
+
+        if (proj_ident == self._proj_ident) or (proj_ident in sub_paths):
+            raise ValidateError(message="Project already exits")
+
         this_url = self.url
 
         if url is None:

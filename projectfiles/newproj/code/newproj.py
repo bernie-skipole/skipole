@@ -124,17 +124,17 @@ if __name__ == "__main__":
     # and serves the project. Typically you would do this with the 'skiadmin'
     # sub project added which can be used to develop pages for your project
 
-    ############################### THESE LINES ADD SKIADMIN ########
-                                                                    #
-    set_debug(True)                                                 #
-    skiadmin_code = os.path.join(PROJECTFILES, 'skiadmin', 'code')  #
-    if skiadmin_code not in sys.path:                               #
-        sys.path.append(skiadmin_code)                              #
-    import skiadmin                                                 #
-    skiadmin_application = skiadmin.makeapp(PROJECTFILES)           #
-    application.add_project(skiadmin_application, url='/skiadmin')  #
-                                                                    #
-    #################################################################
+    ############################### THESE LINES ADD SKIADMIN ######################
+                                                                                  #
+    set_debug(True)                                                               #
+    skiadmin_code = os.path.join(PROJECTFILES, 'skiadmin', 'code')                #
+    if skiadmin_code not in sys.path:                                             #
+        sys.path.append(skiadmin_code)                                            #
+    import skiadmin                                                               #
+    skiadmin_application = skiadmin.makeapp(PROJECTFILES, editedprojname=PROJECT) #
+    application.add_project(skiadmin_application, url='/skiadmin')                #
+                                                                                  #
+    ###############################################################################
 
     from wsgiref.simple_server import make_server
 

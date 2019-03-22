@@ -49,7 +49,7 @@ def start_call(called_ident, skicall):
     "Checks initial incoming call parameters, and using ident_data, retrieves session data and populates call_data"
 
     # initially populate call_data with some project info
-    editedprojname = skilift.get_root()
+    editedprojname = skicall.proj_data['editedprojname']
 
     projinfo = skilift.project_info(editedprojname)
 
@@ -154,11 +154,18 @@ def end_call(page_ident, page_type, skicall):
     page_data['ident_data'] = ident_data_key
 
 
-def makeapp(projectfiles, proj_data={}):
+# As this project is not intended to run as a stand-alone service, a function
+# is provided rather than an application object being immediately created.
+
+
+def makeapp(projectfiles, **proj_data):
     """This particular sub project does not know where its projectfiles are, so this function
        is called to provide that info, and returns the application
        skiadmin makes use of some color values, so these are set here and passed to the project
        as proj_data"""
+
+    if 'editedprojname' not in proj_data:
+        raise ServerError("The project name being edited is required")
 
     # get pallet of colours from defaults.json and place in proj_data
     # these will be used to populate w3-theme-ski.css and the Colours page
@@ -171,13 +178,17 @@ def makeapp(projectfiles, proj_data={}):
         adminbackcol_rgb = skiadminpackages.css_styles.hex_int(adminbackcol)
         colours = skiadminpackages.css_styles.get_colours(*adminbackcol_rgb)
 
+
+    proj_data["colours"] = colours
+    proj_data["adminbackcol"] = adminbackcol
+
     # The WSGIApplication created here has a URL of "/", however when this
     # application is added to another, it is generally given a URL of "/skiadmin"
     # in the application.add_project method which overwrites the URL given here
 
     return WSGIApplication(project=PROJECT,
                            projectfiles=projectfiles,
-                           proj_data={"colours":colours, "adminbackcol":adminbackcol},
+                           proj_data=proj_data,
                            start_call=start_call,
                            submit_data=submit_data,
                            end_call=end_call,
@@ -368,7 +379,7 @@ if __name__ == "__main__":
 
     set_debug(True)
 
-    application = makeapp(PROJECTFILES)
+    application = makeapp(PROJECTFILES, editedprojname=PROJECT)
 
     skis_code = os.path.join(PROJECTFILES, 'skis', 'code')
     if skis_code not in sys.path:
