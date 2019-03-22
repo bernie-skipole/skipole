@@ -61,10 +61,6 @@ SKIPOLE.paths = {
     /* no op */
     NameNotInFolder: function (item, allowed_values, args) {
         return true;
-    },
-    /* no op */
-    ProjectLoaded: function (item, allowed_values, args) {
-        return true;
     }
 }
 

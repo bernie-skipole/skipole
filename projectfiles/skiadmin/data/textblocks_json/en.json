@@ -275,7 +275,6 @@
   "validators.paths.NameNotInFolder": "Check a name does not already exist in a given folder.",
   "validators.paths.NameNotInFolder.folder_ident_field": "Set the ident of the folder you wish to check.",
   "validators.paths.PathLeadingTrailingSlashes": "Ensures leading or trailing slashes are in the given path.",
-  "validators.paths.ProjectLoaded": "Check a given project is loaded.",
   "validators.paths.module": "Validators for site folder and page checks.",
   "widgets.arg_dict_desc": "This field can have its name changed (alphanumeric and underscore only) if desired.  The value can be set at run time via the page_data dictionary, with a key of the tuple (\"%s\") and the value being the dictionary to insert here.\r\n\r\nNote: If the widget is contained in a section, the page_data tuple key should be expanded to three elements, with the first element being the section alias within the page.",
   "widgets.arg_list_desc": "This field can have its name changed (alphanumeric and underscore only) if desired.  The value can be set at run time via the page_data dictionary with a key of the tuple (\"%s\") and the value being the list to be set into this field.\r\n\r\nNote: If the widget is contained in a section, the page_data tuple key should be expanded to three elements, with the first element being the section alias within the page.",

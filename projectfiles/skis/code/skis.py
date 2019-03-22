@@ -21,9 +21,11 @@ def end_call(page_ident, page_type, skicall):
     "This project has no end_call functionality"
     return
 
+# As this project is not intended to run as a stand-alone service, a function
+# is provided rather than an application object being immediately created.
 
-def makeapp(projectfiles, proj_data={}):
-    """This function allows projectfiles and proj_data to be set into the skis application"""
+def makeapp(projectfiles, **proj_data):
+    """This function returns the skis application."""
 
     # The WSGIApplication created here has a URL of "/", however when this
     # application is added to another, it is generally given a URL of "/lib"
@@ -34,15 +36,14 @@ def makeapp(projectfiles, proj_data={}):
 
 
 # In normal use, the skis project is only imported, so the following is never run.
-# However if you want to use skiadmin to modify it, then it could be run like any other
-# project.
+# However if you want to use skiadmin to modify skis, then it could be run like any other
+# project. Please be aware new versions of skipole will include new versions of skis.
+# Any changes you make to skis will be lost should you upgrade to a later version.
 
 
 if __name__ == "__main__":
 
     # If called as a script, this portion runs the python wsgiref.simple_server
-    # and serves the project. Typically you would do this with the 'skiadmin'
-    # sub project added which can be used to develop pages for your project
 
     import sys, os
     from wsgiref.simple_server import make_server
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     if skiadmin_code not in sys.path:
         sys.path.append(skiadmin_code)
     import skiadmin
-    skiadmin_application = skiadmin.makeapp(PROJECTFILES)
+    skiadmin_application = skiadmin.makeapp(PROJECTFILES, editedprojname=PROJECT)
     application.add_project(skiadmin_application, url='/skiadmin')
 
     # serve the application

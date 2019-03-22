@@ -135,28 +135,3 @@ class NameNotInFolder(Validator):
         return name, True
 
 
-class ProjectLoaded(Validator):
-    """Checks the given project ident is that of a loaded project.
-       Raise an error if it not"""
-
-    arg_descriptions = {'include_root':False}
-
-    def __setitem__(self, arg_name, value):
-        "Sets an argument value"
-        Validator.__setitem__(self, arg_name, value)
-        if isinstance(value, str):
-            if val.lower() == 'false':
-                self._val_args[arg_name] = False
-        self._val_args[arg_name] = bool(value)
-
-    def _check(self, widgfield, item, environ, lang, form_data, call_data, caller_page_ident):
-        if not item:
-            return '', False
-        if item == skiboot.project_ident():
-            if self["include_root"]:
-                return item, True
-            else:
-                return '', False
-        if skiboot.is_project(item):
-            return item, True
-        return '', False
