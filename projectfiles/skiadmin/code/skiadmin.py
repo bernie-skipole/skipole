@@ -244,7 +244,7 @@ def set_navigation(identnum, call_data, page_data):
                                                             ["about_code", "Python Code", False, '']
                                                            ]
     elif (identnum == 510) or (identnum == 70105):
-        # about_lib page, about skilift
+        # about_skis page, about skilift
         page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
                                                             ['admin_home', "Admin", False, ''],
                                                             [3, "Root Folder", False, ''],
@@ -334,7 +334,7 @@ def set_navigation(identnum, call_data, page_data):
             widget_info = skilift.widget_info(editedprojname, None, call_data['section_name'], call_data['widget_name'])
 
     if widget_info:
-        # if widget has parent, dsiplay parent links
+        # if widget has parent, display parent links
         display_parent(widget_info, page_data)
         page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', widget_info.name, True, widget_info.name])
         # if widget has containers, display links to them
@@ -372,6 +372,9 @@ def display_parent(widget_info, page_data):
 # In normal use, the skiadmin project is only imported, so the following is never run.
 # However if you want to use skiadmin to modify itself, then it could be run like any other
 # project, however it's something of a risky business!
+# Please be aware new versions of skipole will include new versions of skiadmin.
+# Any changes you make to skiadmin will be lost should you upgrade to a later version.
+
 
 if __name__ == "__main__":
 

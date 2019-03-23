@@ -65,6 +65,6 @@ if __name__ == "__main__":
     port = 8000
 
     httpd = make_server(host, port, application)
-    print("Serving %s on port %s. Call http://localhost:8000/skiadmin to edit." % (PROJECT, port))
+    print("Serving %s on port %s. Call http://localhost:%s/skiadmin to edit." % (PROJECT, port, port))
     httpd.serve_forever()
 

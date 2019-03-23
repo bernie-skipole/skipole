@@ -5,22 +5,25 @@ import os, sys
 # This project needs to import the skipole package, which
 # should normally be immediately available if skipole
 # has been installed on your system. However if it has not
-# then skipole must be added to your path with the following
+# then skipole must be added to your path
+# One option is with the following
 # lines - and with the skipole_package_location set to the
 # directory containing the skipole package
+#
+#skipole_package_location = "/home/bernie/mercurial/skipole"
+#if skipole_package_location not in sys.path:
+#    sys.path.append(skipole_package_location)
+#
 
-skipole_package_location = "/home/bernie/mercurial/skipole"
-if skipole_package_location not in sys.path:
-    sys.path.append(skipole_package_location)
+# from the skipole framework import the WSGIApplication class
+# used to create a wsgi application and exception classes
+# which you will need in your functions
 
-
-# from the skipole framework
-# import the WSGIApplication class used to create a wsgi application
-# and exception classes which you will need in your functions
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, set_debug
 
 
-# the framework needs to know the location of the projectfiles directory
+# the framework needs to know the location of the projectfiles directory holding this and
+# other projects - specifically the skis and skiadmin projects
 # The following line assumes, as default, that this file is located beneath
 # ...projectfiles/newproj/code/
 
@@ -143,6 +146,6 @@ if __name__ == "__main__":
     port = 8000
 
     httpd = make_server(host, port, application)
-    print("Serving %s on port %s" % (PROJECT, port))
+    print("Serving %s on port %s. Call http://localhost:%s/skiadmin to edit." % (PROJECT, port, port))
     httpd.serve_forever()
 
