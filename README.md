@@ -1,6 +1,6 @@
 # README #
 
-skipole.py is a framework for creating wsgi applications. A web admin interface allows the developer to create web pages containing widgets.
+skipole is a framework for creating wsgi applications. A web admin interface allows the developer to create web pages containing widgets.
 
 Skipole requires python 3.2 or later.
  
