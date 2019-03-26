@@ -3,6 +3,26 @@
 #
 # python3 -m skipole mynewproj /path/to/projectfiles
 #
+#
+##################################################################
+#
+# Note to re-distributers. This file copies the contents of a
+# a 'template projectfiles directory' where newproj, skis and skiadmin are found
+# to the users specified projectfiles directory
+#
+# The template_directory is assumed here to be bundled together with skipole
+#
+#  ../skipole -
+#              |- projectfiles    (The template directory)
+#              |- skipole         (The skipole package)
+#
+# Hence the line below can find it:
+# template_directory = os.path.join(os.path.dirname(os.path.dirname(args[0])), 'projectfiles')
+#
+# However if the template directory is stored elsewhere, then that line has to be
+# suitably modified (its around line 87 the last time I looked)
+#
+######################################################################
 
 
 import sys, os, re, shutil
@@ -61,6 +81,7 @@ elif len(args) == 2:
 else:
     print( "Invalid input. " + DESCRIPTION)
     sys.exit(3)
+
 
 # get the location of the directories to be copied
 template_directory = os.path.join(os.path.dirname(os.path.dirname(args[0])), 'projectfiles')
