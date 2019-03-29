@@ -39,7 +39,7 @@ def add_to_project_register(project):
 def project_register():
     "Return a dictionary of all projects"
     global PROJECT_REGISTER
-    return PROJECT_REGISTER.copy()
+    return PROJECT_REGISTER
 
 def project_ident_register():
     "Return a list of all project idents"
