@@ -110,7 +110,7 @@ def projectURLpaths():
        Please note, if this project is being administered using 'skiadmin' - then the project 'skiadmin' will be visible in this dictionary,
        however when the project is running without skiadmin, this project will no longer be present.
 
-      You should expect to see the root project itself in the dictionary, and at least the 'lib' project which is normally attached as a sub-project.
+      You should expect to see the root project itself in the dictionary, and at least the 'skis' project which is normally attached as a sub-project.
 """
     all_projects = skiboot.project_register()
     return {proj_ident:proj.url for proj_ident, proj in all_projects.items()}

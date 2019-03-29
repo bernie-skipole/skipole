@@ -1239,3 +1239,11 @@ class SkiCall(object):
         return proj.label_value(label)
 
 
+    def projectpaths(self):
+        """Returns a dictionary of project name : project path
+
+           This method returns a dictionary of project names as keys with the project paths as values."""
+        all_projects = skiboot.project_register()
+        return {proj_ident:proj.url for proj_ident, proj in all_projects.items()}
+
+
