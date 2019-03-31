@@ -14,9 +14,13 @@ You should replace 'myproj' with your preferred name for a new project. A projec
 
 The framework provides a 'skiadmin' facility allowing you to create template pages of various types (html, css and svg) and also 'Responders' which are script 'pages' which call your functions defined in myproj.py
 
-The developer runs python3 myproj.py, then connects with a browser to localhost:8000 to view the project, and calls localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.
+The developer runs
 
-'pages' are of several types, the main ones being template and responder pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call, and then route data from the call to your own code. Your code sets data into a Python dictionary, which is set into a template page and returned to the caller.
+python3 /path/to/projectfiles/myproj/code/myproj.py
 
-Your Python functions called by the responders are described in greater detail within the skiadmin pages. These functions would typically call further code of your own, to serve whatever data you require.
+then connects with a browser to localhost:8000 to view the project, and calls localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.
+
+'pages' are of several types, the main ones being template and responder pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call, and then route data from the call to your own code in myproj.py. Your code sets data into a Python dictionary, which is set into a template page and returned to the caller.
+
+Your Python functions in myproj.py are described in greater detail within the skiadmin pages. These functions would typically call further code of your own, to serve whatever data you require.
 
