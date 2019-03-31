@@ -85,9 +85,13 @@ class ParentPage(object):
         return copy_page
 
     def root(self):
-        " Returns the page root folder"
-        if self.ident:
-            return skiboot.root(self.ident.proj)
+        "Returns the page root folder"
+        if self.ident():
+            proj = self.project()
+            if proj is None:
+                return
+            return proj.root
+
 
     def get_parentfolder(self):
         "Uncopied parent folder"

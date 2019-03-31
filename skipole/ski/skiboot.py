@@ -134,14 +134,6 @@ def version():
     "Returns the version string"
     return _CFG["version"]
 
-
-def root(proj_ident = None):
-    "Returns the root folder of the given project, if proj not given returns this projects rootfolder"
-    proj = getproject(proj_ident)
-    if proj is None:
-        return
-    return proj.root
-
     
 
 # These functions deal with page and folder 'idents'.  They are defined here
