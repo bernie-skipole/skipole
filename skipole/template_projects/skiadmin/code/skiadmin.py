@@ -2,6 +2,20 @@
 
 import os, sys, re, collections, uuid, random
 
+
+# This project needs to import the skipole package, which
+# should normally be immediately available if skipole
+# has been installed on your system. However if it has not
+# then skipole must be added to your path
+# One option is with the following
+# lines - and with the skipole_package_location set to the
+# directory containing the skipole package
+#
+# skipole_package_location = "/home/bernie/mercurial/skipole"
+# if skipole_package_location not in sys.path:
+#     sys.path.append(skipole_package_location)
+#
+
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
 from skipole.skilift.fromjson import get_defaults_from_file
 
