@@ -1026,7 +1026,7 @@ class WSGIApplication(object):
                 session_string = self.end_call(page.ident.to_tuple(), page.page_type, skicall)
                 if session_string:
                     # set cookie in target_page
-                    page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root().url)
+                    page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root_project().url)
             except FailPage as e:
                 page.show_error([e.errormessage])
             finally:
@@ -1204,7 +1204,7 @@ class SkiCall(object):
         "Sets the language string and creates a language cookie with a persistance of 30 days"
         if language:
             self._lang = (language, self._lang[1])
-            self._lang_cookie = "Set-Cookie", "language=%s; Path=%s; Max-Age=2592000" % (language_string, skiboot.root().url)
+            self._lang_cookie = "Set-Cookie", "language=%s; Path=%s; Max-Age=2592000" % (language_string, skiboot.root_project().url)
 
     language = property(get_language, set_language)
 
