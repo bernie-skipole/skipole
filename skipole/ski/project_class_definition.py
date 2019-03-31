@@ -13,7 +13,7 @@ from http import cookies
 _AN = re.compile('[^\w]')
 
 from . import skiboot, read_json
-from .excepts import ValidateError, ServerError, ErrorMessage, GoTo, PageError
+from .excepts import ValidateError, ServerError, FailPage, ErrorMessage, GoTo, PageError
 from .. import textblocks
 
 
