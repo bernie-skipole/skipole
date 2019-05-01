@@ -97,7 +97,8 @@ class ErrorDiv(Widget):
 
     arg_descriptions = {
                         'hide':FieldArg("boolean", True, jsonset=True),
-                        'error_class':FieldArg("cssclass", "")
+                        'error_class':FieldArg("cssclass", ""),
+                        'container_class':FieldArg("cssclass", '')
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -122,6 +123,9 @@ class ErrorDiv(Widget):
         if self.error_status:
             self.update_attribs({"style":"display: block;"})
             self[0].del_one_attrib("style")
+        # the div holding the container
+        if self.get_field_value('container_class'):
+            self[1].attribs = {"class": self.get_field_value('container_class')}
 
     @classmethod
     def description(cls):
@@ -131,7 +135,7 @@ class ErrorDiv(Widget):
   <div>  !-- class set to error_class -->
     <p> <!-- error message appears in this paragraph --> </p>
   </div>
-  <div>
+  <div>  <!-- this div has the class attribute set to container_class -->
     <!-- container 0 for further html -->
   </div>
 </div>"""
