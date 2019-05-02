@@ -2,29 +2,24 @@
 import os, sys
 
 
-# This project needs to import the skipole package, which
-# should normally be immediately available if skipole
-# has been installed on your system. However if it has not
-# then skipole must be added to your path
-# One option is with the following
-# lines - and with the skipole_package_location set to the
-# directory containing the skipole package
-#
-#skipole_package_location = "/home/bernie/mercurial/skipole"
-#if skipole_package_location not in sys.path:
-#    sys.path.append(skipole_package_location)
-#
+# This project needs to import the skipole package, which should normally be immediately
+# available if skipole has been installed on your system.
 
-# from the skipole framework import the WSGIApplication class
-# used to create a wsgi application and exception classes
-# which you will need in your functions
+# from skipole import the WSGIApplication class which will be used to create a wsgi
+# application, and exception classes which you will need in your functions
 
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, set_debug
 
+# The set_debug function is used during development, it adds exception data to server error
+# pages, and also stops javascript validation of input data on the client - this ensures that
+# server validation can be tested
+
+# You may also wish to import 'use_submit_list' whch can act as a decorator around your
+# submit_data function. See the skipole documentation for details.
 
 # the framework needs to know the location of the projectfiles directory holding this and
 # other projects - specifically the skis and skiadmin projects
-# The following line assumes, as default, that this file is located beneath
+# The following line assumes, as default, that this script file is located beneath
 # ...projectfiles/newproj/code/
 
 PROJECTFILES = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -117,17 +112,19 @@ application.add_project(skis_application, url='/lib')
 
 # Where gunicorn3 is the python3 version of gunicorn
 
-# You could remove everything below here when deploying and serving
-# the application. The following lines are used to serve the project locally
-# and add the skiadmin project for development.
+#############################################################################
+#
+# You could remove everything below here when deploying and serving your
+# finished application. The following lines are used to serve the project
+# locally and add the skiadmin project for development.
+#
+#############################################################################
 
 if __name__ == "__main__":
 
-    # If called as a script, this portion runs the python wsgiref.simple_server
-    # and serves the project. Typically you would do this with the 'skiadmin'
-    # sub project added which can be used to develop pages for your project
 
-    ############################### THESE LINES ADD SKIADMIN ######################
+    ############################### THESE LINES ADD SKIADMIN FOR DEVELOPMENT ONLY #
+    ###################### AND SHOULD BE REMOVED WHEN YOU DEPLOY YOUR APPLICATION #
                                                                                   #
     set_debug(True)                                                               #
     skiadmin_code = os.path.join(PROJECTFILES, 'skiadmin', 'code')                #
@@ -138,6 +135,15 @@ if __name__ == "__main__":
     application.add_project(skiadmin_application, url='/skiadmin')                #
                                                                                   #
     ###############################################################################
+
+    # TYPICALLY WHEN YOUR FINISHED APPLICATION IS DEPLOYED, YOUR WEB SERVER WILL
+    # IMPORT THIS MODULE AND THIS CODE WILL NEVER RUN AND COULD BE DELETED.
+    # ALTERNATIVELY YOU MAY WISH TO ALTER THIS TO SERVE A DIFFERENT WEB SERVER
+    # FROM THIS SCRIPT. FOR EXAMPLE, USING THE PYTHON 'WAITRESS' WEB SERVER:
+    #
+    # from waitress import serve
+    # serve(application, host='0.0.0.0', port=8000)
+    #
 
     from wsgiref.simple_server import make_server
 
