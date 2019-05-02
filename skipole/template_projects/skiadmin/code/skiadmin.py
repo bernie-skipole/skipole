@@ -2,20 +2,6 @@
 
 import os, sys, re, collections, uuid, random
 
-
-# This project needs to import the skipole package, which
-# should normally be immediately available if skipole
-# has been installed on your system. However if it has not
-# then skipole must be added to your path
-# One option is with the following
-# lines - and with the skipole_package_location set to the
-# directory containing the skipole package
-#
-#skipole_package_location = "/home/bernie/mercurial/skipole"
-#if skipole_package_location not in sys.path:
-#    sys.path.insert(0,skipole_package_location)
-#
-
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
 from skipole.skilift.fromjson import get_defaults_from_file
 
@@ -26,11 +12,11 @@ PROJECT = 'skiadmin'
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
-# dictionary of session numbers as keys
-# and values being a dictionary of items to carry over as session data
-# 'page' or 'folder' as a tuple of its ident
-# 'pchange', 'fchange', 'schange' as the page, folder, section integer change number
+# dictionary of session keys, and values being a dictionary of items to carry over as session data
 _SESSION_DATA = collections.OrderedDict()
+
+# A key will be created for _SESSION_DATA with a random number and an incrementing number stored in
+# this global variable 
 _IDENT_DATA = 0
 
 
@@ -74,12 +60,14 @@ def start_call(called_ident, skicall):
 # skicall.submit_list defines packages, module, function to call
 @use_submit_list
 def submit_data(skicall):
-    "The decorator calls the appropriate submit_data function, if skicall.submit_list is invalid, then this function raises ServerError"
+    """The decorator calls the appropriate submit_data function, using skicall.submit_list
+       if skicall.submit_list is invalid, then this function raises ServerError"""
     raise ServerError("skicall.submit_list invalid for responder %s,%s" % skicall.ident_list[-1])
 
 
 def end_call(page_ident, page_type, skicall):
-    """Sets navigation menus, and stores session data under a random generated key in _SESSION_DATA and send the key as ident_data
+    """Sets navigation menus, and stores session data under a random generated key in _SESSION_DATA
+       and send the key as ident_data.
        Also limits the length of _SESSION_DATA by popping the oldest member"""
 
     global _SESSION_DATA, _IDENT_DATA
@@ -355,41 +343,6 @@ def display_parent(widget_info, page_data):
     # display links to the parent widget
     page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', parent_name, True, parent_name])
     page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', parent_name + " " + str(location[1]), True, parent_name + "-" + str(location[1])])
-
-
-
-
-# In normal use, the skiadmin project is only imported, so the following is never run.
-# However if you want to use skiadmin to modify itself, then it could be run like any other
-# project, however it's something of a risky business!
-# Please be aware new versions of skipole will include new versions of skiadmin.
-# Any changes you make to skiadmin will be lost should you upgrade to a later version.
-
-
-if __name__ == "__main__":
-
-    PROJECTFILES = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-
-    set_debug(True)
-
-    application = makeapp(PROJECTFILES, editedprojname=PROJECT)
-
-    skis_code = os.path.join(PROJECTFILES, 'skis', 'code')
-    if skis_code not in sys.path:
-        sys.path.append(skis_code)
-    import skis
-    skis_application = skis.makeapp(PROJECTFILES)
-    application.add_project(skis_application, url='/lib')
-
-    from wsgiref.simple_server import make_server
-
-    # serve the application
-    host = "127.0.0.1"
-    port = 8000
-
-    httpd = make_server(host, port, application)
-    print("Serving %s on port %s , go to url '/' to edit." % (PROJECT, port))
-    httpd.serve_forever()
 
 
 
