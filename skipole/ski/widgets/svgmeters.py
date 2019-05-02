@@ -529,4 +529,317 @@ A %s %s 0 0 1 %s %s
 
 
 
+class Angle(Widget):
+    """An svg compass-like angle meter, fitting in a 500x500 space
+       Being a circle with scale or either 24, 100 or 360 and arrow
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'transform':FieldArg("text", "", jsonset=True),
+                        'font_family':FieldArg("text", "arial"),
+                        'measurement':FieldArg("text", "0", jsonset=True),
+                        'scale_units':FieldArg("text", "360"),
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds the compass, held in a 500 high x 500 wide space"""
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args) 
+        # insert a circle at arrow hub, of radius 240
+        self[0] = tag.ClosedPart(tag_name='circle', attribs={
+                                                       "cx": "250",
+                                                       "cy": "250",
+                                                       "r": "240",
+                                                       "fill":"white",
+                                                       "stroke":"black",
+                                                       "stroke-width":"4" })
+
+        self[1] = tag.ClosedPart(tag_name='circle', attribs={
+                                                       "cx": "250",
+                                                       "cy": "250",
+                                                       "r": "200",
+                                                       "fill":"white",
+                                                       "stroke":"black",
+                                                       "stroke-width":"2" })
+
+        self[2] = tag.ClosedPart(tag_name='circle', attribs={
+                                                       "cx": "250",
+                                                       "cy": "250",
+                                                       "r": "30",
+                                                       "fill":"black",
+                                                       "stroke":"black",
+                                                       "stroke-width":"2" })
+
+        self[3] = tag.ClosedPart(tag_name='polygon', attribs={
+                                                           "fill":"black",
+                                                           "stroke":"black",
+                                                           "stroke-width":"2",
+                                                           "points": "250,65 280,120 260,120 260,400, 240,400 240,120, 220,120" })
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "create compass"                  
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+        font_family = self.get_field_value("font_family")
+        if not font_family:
+            font_family = "arial"
+        self._scale_units = self.get_field_value("scale_units")
+        measurement = Decimal(self.get_field_value("measurement"))
+        rotate_string = ''
+        if self._scale_units == '24':
+            self._draw_24(font_family)
+            # now place arrow at the measurement point
+            if (measurement > 0) and (measurement < 24):
+                rotate_string = "rotate(" + str(measurement*15) + " 250 250)"
+        elif self._scale_units == '100':
+            self._draw_100(font_family)
+            # now place arrow at the measurement point
+            if (measurement > 0) and (measurement < 100):
+                rotate_string = "rotate(" + str(measurement*Decimal("3.6")) + " 250 250)"
+        else:
+            self._scale_units = '360'
+            self._draw_360(font_family)
+            # now place arrow at the measurement point
+            if (measurement > 0) and (measurement < 360):
+                rotate_string = "rotate(" + str(measurement) + " 250 250)"
+        if rotate_string:
+            self[3].update_attribs({"transform" : rotate_string})
+
+
+    def _draw_24(self, font_family):
+        "Draw a 24 hr scale"
+        for angle in range(0,24):
+            if angle:
+                rotate_string = "rotate(" + str(angle*15) + " 250 250)"
+                # two digit characters moved to the left a bit more than single digits
+                if angle < 10:
+                    x = '245'
+                else:
+                    x = '239'
+                self.append( tag.Part(tag_name='text', text=str(angle), attribs={
+                                                                'x':x,
+                                                                'y': '30',
+                                                                'font-size': '20',
+                                                                'font-family': font_family,
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : rotate_string  })  )
+                # major lines
+                self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'250',
+                                                            'y1':'40',
+                                                            'x2':'250',
+                                                            'y2':'55',
+                                                            'stroke':"black",
+                                                            'stroke-width':"2",
+                                                            'transform' : rotate_string  })  )
+                for n in range(1,4):
+                    # minor lines
+                    minor_rotate = "rotate(" + str(angle*15+n*3.75) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'40',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : minor_rotate  })  )
+            else:
+                self.append( tag.Part(tag_name='text', text="24", attribs={
+                                                                'x':'239',
+                                                                'y': '30',
+                                                                'font-size': '20',
+                                                                'font-family': font_family,
+                                                                'stroke':"black",
+                                                                'stroke-width':"1"  })  )
+                self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'250',
+                                                            'y1':'40',
+                                                            'x2':'250',
+                                                            'y2':'55',
+                                                            'stroke':"black",
+                                                            'stroke-width':"2"  })  )
+                for n in range(1,4):
+                    # minor lines
+                    minor_rotate = "rotate(" + str(n*3.75) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'40',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : minor_rotate  })  )
+
+
+    def _draw_100(self, font_family):
+        "Draw a 100 hr scale"
+        for angle in range(0,100,10):
+            if angle:
+                rotate_string = "rotate(" + str(angle*3.6) + " 250 250)"
+                # two digit characters moved to the left a bit more than single digits
+                if angle < 10:
+                    x = '245'
+                else:
+                    x = '239'
+                self.append( tag.Part(tag_name='text', text=str(angle), attribs={
+                                                                'x':x,
+                                                                'y': '30',
+                                                                'font-size': '20',
+                                                                'font-family': font_family,
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : rotate_string  })  )
+                # major lines
+                self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'250',
+                                                            'y1':'40',
+                                                            'x2':'250',
+                                                            'y2':'55',
+                                                            'stroke':"black",
+                                                            'stroke-width':"2",
+                                                            'transform' : rotate_string  })  )
+                for n in range(2,10,2):
+                    # minor lines
+                    minor_rotate = "rotate(" + str((angle+n)*3.6) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'40',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : minor_rotate  })  )
+                for n in range(1,11,2):
+                    # mini lines
+                    mini_rotate = "rotate(" + str((angle+n)*3.6) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'45',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : mini_rotate  })  )
+            else:
+                self.append( tag.Part(tag_name='text', text="0", attribs={
+                                                                'x':'245',
+                                                                'y': '30',
+                                                                'font-size': '20',
+                                                                'font-family': font_family,
+                                                                'stroke':"black",
+                                                                'stroke-width':"1"  })  )
+                self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'250',
+                                                            'y1':'40',
+                                                            'x2':'250',
+                                                            'y2':'55',
+                                                            'stroke':"black",
+                                                            'stroke-width':"2"  })  )
+                for n in range(2,10,2):
+                    # minor lines
+                    minor_rotate = "rotate(" + str(n*3.6) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'40',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : minor_rotate  })  )
+                for n in range(1,11,2):
+                    # mini lines
+                    mini_rotate = "rotate(" + str(n*3.6) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'45',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : mini_rotate  })  )
+
+    def _draw_360(self, font_family):
+        "Draw a 360 hr scale"
+        for angle in range(0,360,15):
+            if angle:
+                rotate_string = "rotate(" + str(angle) + " 250 250)"
+                # two digit characters moved to the left a bit more than single digits
+                if angle < 10:
+                    x = '245'
+                if angle < 100:
+                    x = '239'
+                else:
+                    x = '233'
+                self.append( tag.Part(tag_name='text', text=str(angle), attribs={
+                                                                'x':x,
+                                                                'y': '30',
+                                                                'font-size': '20',
+                                                                'font-family': font_family,
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : rotate_string  })  )
+                # major lines
+                self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'250',
+                                                            'y1':'40',
+                                                            'x2':'250',
+                                                            'y2':'55',
+                                                            'stroke':"black",
+                                                            'stroke-width':"2",
+                                                            'transform' : rotate_string  })  )
+                for n in range(5,15,5):
+                    # minor lines
+                    minor_rotate = "rotate(" + str(angle+n) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'40',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : minor_rotate  })  )
+            else:
+                self.append( tag.Part(tag_name='text', text="0", attribs={
+                                                                'x':'245',
+                                                                'y': '30',
+                                                                'font-size': '20',
+                                                                'font-family': font_family,
+                                                                'stroke':"black",
+                                                                'stroke-width':"1"  })  )
+                self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                            'x1':'250',
+                                                            'y1':'40',
+                                                            'x2':'250',
+                                                            'y2':'55',
+                                                            'stroke':"black",
+                                                            'stroke-width':"2"  })  )
+                for n in range(5,15,5):
+                    # minor lines
+                    minor_rotate = "rotate(" + str(n) + " 250 250)"
+                    self.append( tag.ClosedPart(tag_name='line', attribs={
+                                                                'x1':'250',
+                                                                'y1':'40',
+                                                                'x2':'250',
+                                                                'y2':'50',
+                                                                'stroke':"black",
+                                                                'stroke-width':"1",
+                                                                'transform' : minor_rotate  })  )
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sends scaling factor for mapping measurement to scale"""
+        return self._make_fieldvalues(scale_units=self._scale_units)
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <circle /> <!-- the compass circle with further scale and arrow contents -->
+</g>"""
+
+
 
