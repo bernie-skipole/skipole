@@ -151,4 +151,73 @@ SKIPOLE.svgmeters.Traditional1.prototype.setvalues = function (fieldlist, result
     };
 
 
+SKIPOLE.svgmeters.Angle = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgmeters.Angle.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgmeters.Angle.prototype.constructor = SKIPOLE.svgmeters.Angle;
+SKIPOLE.svgmeters.Angle.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    var the_widg = this.widg;
+    var arrow = the_widg.find('polygon');
+
+    // set the measurement
+    var measurement = this.fieldarg_in_result('measurement', result, fieldlist);
+    if (measurement == undefined) {
+        return;
+        }
+
+    var scale_units = this.fieldvalues["scale_units"];
+    if (scale_units == undefined) {
+        return;
+        }
+
+    var m = parseFloat(measurement);
+
+    if (scale_units == "24") {
+        if (m <= 0) {
+            arrow.removeAttr("transform");
+            return;
+            }
+        if (m >= 24) {
+            arrow.removeAttr("transform");
+            return;
+            }
+        var rotate = Math.round(m*15);
+        arrow.attr('transform', "rotate(" + rotate + " 250 250)");
+        }
+
+    if (scale_units == "100") {
+        if (m <= 0) {
+            arrow.removeAttr("transform");
+            return;
+            }
+        if (m >= 100) {
+            arrow.removeAttr("transform");
+            return;
+            }
+        var rotate = Math.round(m*3.6);
+        arrow.attr('transform', "rotate(" + rotate + " 250 250)");
+        }
+
+    if (scale_units == "360") {
+        if (m <= 0) {
+            arrow.removeAttr("transform");
+            return;
+            }
+        if (m >= 360) {
+            arrow.removeAttr("transform");
+            return;
+            }
+        var rotate = Math.round(m);
+        arrow.attr('transform', "rotate(" + rotate + " 250 250)");
+       }
+
+    };
+
+
 
