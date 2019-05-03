@@ -40,3 +40,7 @@ The widgets created have a look and feel set by CSS classes, you have the facili
 
 When you have fully developed your application, and wish to deploy it, you would remove the lines in myproj.py which run the library wsgiref.simple_server, and which add the skiadmin web pages, and you will be left with your final WSGI 'application' - which can be served by any wsgi compatable web server.
 
+### Further information ###
+
+The web admin pages have extensive documentation and help features, and the wiki at https://bitbucket.org/skipole/skipole has further documentation.
+
