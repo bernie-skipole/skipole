@@ -838,7 +838,8 @@ class Angle(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
-  <circle /> <!-- the compass circle with further scale and arrow contents -->
+  <circle /> <!-- the compass circle -->
+  <!-- with further scale and arrow contents -->
 </g>"""
 
 
