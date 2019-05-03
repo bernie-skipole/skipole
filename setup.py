@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="skipole-bernieski",
+    name="skipole",
     version="3.0.3",
     author="Bernard Czenkusz",
     author_email="bernie@skipole.co",
