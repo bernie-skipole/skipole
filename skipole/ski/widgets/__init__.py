@@ -112,8 +112,6 @@ class ParentFieldArg(object):
                 if isinstance(self._value, tag.TextBlock):
                     if (not val.failmessage_set()) and self._value.failmessage_set():
                         val.failmessage = self._value.failmessage
-                    if not val.text:
-                        val.text = self._value.text
                     val.linebreaks = self._value.linebreaks
                     val.project = self._value.project
             elif valtype == 'integer':

@@ -584,7 +584,7 @@ class TextBlockPara(Widget):
         textblock_project: Set with a project name if the TextBlock is defined in a sub project
         text_refnotfound: text to appear if the textblock is not found
         text_replaceblock: text set here will replace the textblock
-        replace_strings: A list of strings, if given, will be used with python % operator on the text
+        replace_strings: A list of strings, if given, will be used with python % operator on the textblock text (not on text_replaceblock)
         linebreaks: Set True if linebreaks in the text are to be shown as html breaks
         error_class: The class of the error text - which provides the appearance via CSS
                      replaces widget_class on error.
@@ -595,16 +595,22 @@ class TextBlockPara(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         if not self.error_status:
-            # define the textblock
-            tblock = self.get_field_value("textblock_ref")
-            tblock.text = self.get_field_value('text_replaceblock')
-            tblock.project = self.get_field_value('textblock_project')
-            tblock.failmessage = self.get_field_value('text_refnotfound')
-            tblock.linebreaks = bool(self.get_field_value('linebreaks'))
-            if self.get_field_value('replace_strings'):
-                tblock.replace_strings = self.get_field_value('replace_strings')
-            # place it at location 0
-            self[0] = tblock
+            linebreaks = bool(self.get_field_value('linebreaks'))
+            if self.get_field_value('text_replaceblock'):
+                # no textblock, just the replacement text
+                self[0] = self.get_field_value('text_replaceblock')
+                if not linebreaks:
+                    self.linebreaks = False             
+            else:
+                # define the textblock
+                tblock = self.get_field_value("textblock_ref")
+                tblock.project = self.get_field_value('textblock_project')
+                tblock.failmessage = self.get_field_value('text_refnotfound')
+                tblock.linebreaks = linebreaks
+                if self.get_field_value('replace_strings'):
+                    tblock.replace_strings = self.get_field_value('replace_strings')
+                # place it at location 0
+                self[0] = tblock
         if self.error_status and self.get_field_value('error_class'):
             self.update_attribs({"class":self.get_field_value('error_class')})
 
