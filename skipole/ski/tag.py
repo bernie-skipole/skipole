@@ -305,9 +305,6 @@ class ParentPart(object):
         style_list.append("display:block !important;")
         self._attribs['style'] = ";".join(style_list)
 
-
-
-
     def get_attribs(self):
         return self._attribs.copy()
 
@@ -404,6 +401,7 @@ class ParentPart(object):
         if message:
             self._error = message
         self.show = True
+
 
     def __bool__(self):
         return True
@@ -1000,7 +998,7 @@ class SectionPlaceHolder(object):
 
 class TextBlock(object):
 
-    def __init__(self, textref='', project='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], show = True, text=''):
+    def __init__(self, textref='', project='', failmessage=None, escape=True, linebreaks=True, replace_strings=[], show = True):
         # Note project is either '' for a textblock defined in this project, or the proj_ident of a sub project
         self.project = project
         # set show to False if this textblock is not to be shown
@@ -1008,25 +1006,27 @@ class TextBlock(object):
         self.textref = textref
         self._displayedtext = ""
         self._failmessage = failmessage
-        # If self.text is set, then do not read database
-        self.text=text
         self.linebreaks=linebreaks
         self.escape=escape
         # uses the % operator
         self.replace_strings=replace_strings
         self._show_failmessage = False
+        # error message
+        self._error_message = ''
 
     def __bool__(self):
-        "True if text or a reference have been set"
-        if self.text or self.textref:
+        "True if a reference have been set"
+        if self.textref:
             return True
         else:
             return False
 
     def show_error(self, message, message_ref):
         "Called by a widget containing this textblock if the widget wishes to display an error"
-        self.text = message
+        self._error_message = message
         self.textref = message_ref
+        # on error, do not place any replace strings
+        self.replace_strings=[]
 
     def failmessage_set(self):
         "Returns True if failmessage has been set, False otherwise"
@@ -1050,7 +1050,7 @@ class TextBlock(object):
         else:
             proj_ident = page.ident.proj
         self._show_failmessage = False
-        if self.text: return
+        if self._error_message: return
         if not self.textref:
             self._show_failmessage = True
             return
@@ -1084,8 +1084,6 @@ class TextBlock(object):
         "Creates a list of ['TextBlock', dictionary]"
         part_dict = OrderedDict()
         part_dict["textref"] = self.textref
-        if self.text:
-            part_dict["text"] = self.text
         if self.project and (self.project != proj_ident):
             part_dict["project"] = self.project
         if self.failmessage:
@@ -1100,8 +1098,8 @@ class TextBlock(object):
   
     def __str__(self):
         "Returns the text"
-        if self.text:
-            return expand_text(self.text, escape=self.escape, linebreaks=self.linebreaks, replace_strings=self.replace_strings)
+        if self._error_message:
+            return expand_text(self._error_message, escape=self.escape, linebreaks=self.linebreaks)
         if self._show_failmessage:
             return expand_text(self.failmessage, escape=self.escape, linebreaks=self.linebreaks)
         return expand_text(self._displayedtext, escape=self.escape, linebreaks=self.linebreaks, replace_strings=self.replace_strings)

@@ -270,7 +270,8 @@ class Redirector(Widget):
     arg_descriptions = {'url':FieldArg("text", ''),
                         'textblock_ref':FieldArg("textblock_ref", ""),
                         'text_refnotfound':FieldArg("text", "If this page does not redirect automatically, follow this link:"),
-                        'text_replaceblock':FieldArg("text", "If this page does not redirect automatically, follow this link:")
+                        'text_replaceblock':FieldArg("text", "If this page does not redirect automatically, follow this link:"),
+                        'linebreaks':FieldArg("boolean", True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -279,6 +280,7 @@ class Redirector(Widget):
         textblock_ref: The reference of the TextBlock appearing in the paragraph
         text_refnotfound: text to appear if the textblock is not found
         text_replaceblock: text set here will replace the textblock
+        linebreaks: Set True if linebreaks in the text are to be shown as html breaks
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
 
@@ -302,11 +304,19 @@ class Redirector(Widget):
 
         self[0][0] = "window.location.replace(\"%s\");" % (url,)
 
-        # define the textblock
-        tblock = self.get_field_value("textblock_ref")
-        tblock.text = self.get_field_value('text_replaceblock')
-        tblock.failmessage = self.get_field_value('text_refnotfound')
-        tblock.proj_ident = page.proj_ident
+        linebreaks = bool(self.get_field_value('linebreaks'))
+
+        if self.get_field_value('text_replaceblock'):
+            # no textblock, just the replacement text
+            tblock = self.get_field_value('text_replaceblock')
+            if not linebreaks:
+                self[1].linebreaks = False
+        else:
+            # define the textblock
+            tblock = self.get_field_value("textblock_ref")
+            tblock.failmessage = self.get_field_value('text_refnotfound')
+            tblock.linebreaks = linebreaks
+            tblock.proj_ident = page.proj_ident
 
         self[1][0] = tblock
         self[1][1] = tag.ClosedPart(tag_name='br')
