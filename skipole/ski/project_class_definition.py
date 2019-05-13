@@ -25,7 +25,10 @@ class WSGIApplication(object):
 
     def __init__(self, project, projectfiles=None, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
         """Initiates a Project instance"""
-
+        if _AN.search(project):
+            raise ServerError(message="Error: Invalid project name, alphanumeric only")
+        if '_' in project:
+            raise ServerError(message="Error: Invalid project name, alphanumeric only (no underscore).")
         self._proj_ident = project
         self.projectfiles = projectfiles
         self.proj_data = proj_data
