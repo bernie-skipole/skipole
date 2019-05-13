@@ -9,7 +9,7 @@ setuptools.setup(
     name="skipole",
     version="3.0.5",
     author="Bernard Czenkusz",
-    author_email="bernie@skipole.co",
+    author_email="bernie@skipole.co.uk",
     description="A WSGI Application generator",
     long_description=long_description,
     long_description_content_type="text/markdown",

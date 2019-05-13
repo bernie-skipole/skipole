@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.0.4",
-"skipole": "3.0.4",
+"version": "3.0.5",
+"skipole": "3.0.5",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -1094,7 +1094,7 @@ false,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -1757,7 +1757,7 @@ false,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -2788,7 +2788,7 @@ false,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -4302,7 +4302,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -4630,7 +4630,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -5000,7 +5000,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -5744,7 +5744,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -6140,7 +6140,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -6405,7 +6405,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -6670,7 +6670,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -7501,7 +7501,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -8152,7 +8152,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -8973,7 +8973,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -9467,7 +9467,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -10157,7 +10157,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -10698,7 +10698,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -11528,7 +11528,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -11795,7 +11795,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -12065,7 +12065,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -12648,7 +12648,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -13050,7 +13050,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -13727,7 +13727,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -14552,7 +14552,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -15598,7 +15598,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -16086,7 +16086,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -16948,7 +16948,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -17632,7 +17632,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -17906,7 +17906,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -18756,7 +18756,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -20198,7 +20198,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "",
 "top_error"
@@ -20429,7 +20429,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -20800,7 +20800,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -21518,7 +21518,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -21992,7 +21992,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -22672,7 +22672,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -23245,7 +23245,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -23613,7 +23613,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -23953,7 +23953,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -24260,7 +24260,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -24923,7 +24923,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -25960,7 +25960,7 @@ false,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -27730,7 +27730,7 @@ false,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -28508,7 +28508,7 @@ false,
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -28941,7 +28941,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -29439,7 +29439,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -30177,7 +30177,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -30895,7 +30895,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -31512,7 +31512,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -31797,7 +31797,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -33093,7 +33093,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -33514,7 +33514,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -33971,7 +33971,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -34896,7 +34896,7 @@ false
 "interval": 0,
 "interval_target": null,
 "lang": "en",
-"backcol": "#525204",
+"backcol": "#e5d29f",
 "default_error_widget": [
 "adminhead",
 "show_status"
@@ -36197,7 +36197,7 @@ false
 "original_fields": {}
 }
 },
-"w3-theme-ski-19957.css": {
+"w3-theme-ski-17586.css": {
 "ident": 220,
 "brief": "sets colour in w3-theme-ski.css",
 "RespondPage": {

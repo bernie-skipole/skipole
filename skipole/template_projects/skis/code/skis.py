@@ -1,5 +1,4 @@
 
-
 # This skis project is added to other projects and consists of
 # javascript and css files. As it is essentially a 'library'
 # it is usually given a URL of /lib when added - but this is

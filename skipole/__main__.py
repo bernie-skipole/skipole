@@ -47,7 +47,10 @@ if len(args) == 3:
     project_name = args[1]
     projectfiles = os.path.abspath(os.path.expanduser(args[2]))
     if _AN.search(project_name):
-        print( "Error: Invalid project name, alphanumeric or underscore only")
+        print( "Error: Invalid project name, alphanumeric only")
+        sys.exit(1)
+    if '_' in project_name:
+        print( "Error: Invalid project name, alphanumeric only (no underscore).")
         sys.exit(1)
     if (project_name == 'skis') or (project_name=='skiadmin'):
         print("Error: This project name is reserved")
