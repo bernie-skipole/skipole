@@ -2393,7 +2393,8 @@ class ProjectiFrame(Widget):
         return """
 <iframe src="#">  <!-- with widget id and class widget_class
     and src the url of the project
-    name of project or sectionaliasname-project if in a section
+    the name attribute will be the project name
+    or sectionaliasname-project if the widget is in a section
     and height and width as given -->
 </iframe>"""
 
