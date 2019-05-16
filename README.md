@@ -16,13 +16,15 @@ To create a new project you would normally run:
 
 python3 -m skipole myproj /path/to/projectfiles
 
-You should replace 'myproj' with your preferred name for a new project. A projectfiles directory will be created with your new project 'myproj' and support files within it.
+You should replace 'myproj' with your preferred name for a new project. A projectfiles directory will be created with your new project 'myproj' within it.
 
-Within /path/to/projectfiles/myproj/code you will see a skeleton python file myproj.py, this contains code which generates the wsgi application, and functions which you will develop further yourself.
+You will also see two other projects: 'skiadmin' which provides the web admin functions, and 'skis' which provides required support files.
+
+Within /path/to/projectfiles/myproj/code you will see a skeleton python file myproj.py, this contains code which generates the wsgi application, and functions which you will develop further yourself. It also adds the skiadmin and skis 'sub-projects' to your new project.
 
 ### Developing a project ###
 
-The framework provides a web based admin facility allowing you to create template pages of various types (html, json, css and svg) and also 'Responders' which are script 'pages' which call your functions defined in myproj.py
+The skiadmin sub project provides a web based admin facility allowing you to create template pages of various types (html, json, css and svg) and also 'Responders' which are script 'pages' which call your functions defined in myproj.py
 
 The developer runs:
 
@@ -58,7 +60,7 @@ Then, for each of the locations where you are developing projects:
 
 python3 -m skipole /path/to/projectfiles
 
-This will cause the skiadmin and skis projects under projectfiles to be replaced with the lates versions.
+This will cause the skiadmin and skis projects under projectfiles to be replaced with the latest versions.
 
 ### Further information ###
 
