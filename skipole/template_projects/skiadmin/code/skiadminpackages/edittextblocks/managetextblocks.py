@@ -309,10 +309,12 @@ def submit_delete_textblock(skicall):
     call_data = skicall.call_data
     page_data = skicall.page_data
 
+    project = call_data['editedprojname']
+
     if "delete_textblock" not in call_data:
         raise ValidateError(message='Invalid call - no textblock reference')
     textref = call_data['delete_textblock']
-    accesstextblocks = skicall.accesstextblocks
+    accesstextblocks = skilift.get_accesstextblocks(project)
     if not accesstextblocks.textref_exists(textref):
         call_data['status'] = "TextBlock not found"
         return
@@ -325,11 +327,12 @@ def _find_previous_textblock(skicall, textref):
     "raises a GoTo if a previous textref exists"
     if '.' not in textref:
         return
+    project = skicall.call_data['editedprojname']
     reflist = textref.split('.')
     newref = '.'.join(reflist[:-1])
     # do any newref.* exist ?
     refdot = newref + '.'
-    accesstextblocks = skicall.accesstextblocks
+    accesstextblocks = skilift.get_accesstextblocks(project)
     # set result to a list of textrefs that start with refdot
     result = [ ref for ref in accesstextblocks.get_textrefs() if ref.startswith(refdot) ]
     if not result:
