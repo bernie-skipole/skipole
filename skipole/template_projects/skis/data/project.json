@@ -3,8 +3,7 @@
 "default_language": "en",
 "brief": "Library project of static files",
 "version": "0.0.1",
-"skipole": "2.3.6",
-"subprojects": {},
+"skipole": "3.0.6",
 "specialpages": {
 "general_json": 870,
 "jquery_core": 20,
@@ -40,6 +39,7 @@
 "theme1_css": 330,
 "theme2_css": 340,
 "theme3_css": 350,
+"theme4_css": 360,
 "url_not_found": 880,
 "validate_error": 810,
 "w3_css": 320
@@ -80,6 +80,15 @@
 "brief": "Link to static/css/theme3.css",
 "FilePage": {
 "filepath": "skis/static/css/theme3.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+},
+"theme4.css": {
+"ident": 360,
+"brief": "Link to static/css/theme4.css",
+"FilePage": {
+"filepath": "skis/static/css/theme4.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
@@ -234,6 +243,7 @@
 "brief": "Redirector",
 "fields": {
 "clear_error": false,
+"linebreaks": true,
 "show": true,
 "show_error": "http://www.skipole.ski",
 "text_refnotfound": "If this page does not redirect automatically, follow this link:",
@@ -1589,6 +1599,7 @@
 "brief": "ErrorDiv",
 "fields": {
 "clear_error": false,
+"container_class": "",
 "error_class": "ski_errorcol",
 "hide": true,
 "show": true,
