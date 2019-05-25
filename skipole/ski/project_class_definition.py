@@ -80,7 +80,7 @@ class WSGIApplication(object):
         "Defines this projects callable as the wsgi application"
         status, headers, data = self.respond(environ)
         start_response(status, headers)
-        return data
+        return iter(data)
 
     def set_default_language(self, language):
         "Sets the project default language"
