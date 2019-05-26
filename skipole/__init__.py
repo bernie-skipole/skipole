@@ -34,7 +34,7 @@ def use_submit_list(submit_data):
             return submit_data(skicall)
         submitpath = ".".join(skicall.submit_list[:-1])
         try:
-            submitmodule = import_module(submitpath, __name__)
+            submitmodule = import_module(submitpath)
         except Exception:
             if skiboot.get_debug():
                 exc_type, exc_value, exc_traceback = sys.exc_info()
