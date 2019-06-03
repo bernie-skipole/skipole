@@ -310,9 +310,16 @@ def delete_item(skicall):
         if error:
             raise FailPage(message = "Unable to delete the folder")
         call_data['status'] = 'Folder deleted'
-        # place parentfolder into call_data
-        call_data["folder_number"] = parentfolder_number
-        call_data["fchange"] = editfolder.folderchange(project, parentfolder_number)
+        # get folder to show on ftree
+        if "folder_number" in call_data:
+            folder_number = call_data["folder_number"]
+            if folder_number == itemnumber:
+                folder_number = parentfolder_number
+                call_data["folder_number"] = parentfolder_number
+        else:
+            folder_number = parentfolder_number
+            call_data["folder_number"] = parentfolder_number
+        call_data["fchange"] = editfolder.folderchange(project, folder_number)
         return
 
     # If not a Folder, must be a page
@@ -329,9 +336,14 @@ def delete_item(skicall):
         del call_data['page_number']
     if 'page' in call_data:
         del call_data['page']
-    # place parentfolder into call_data
-    call_data["folder_number"] = parentfolder_number
-    call_data["fchange"] = editfolder.folderchange(project, parentfolder_number)
+
+    # get folder to show on ftree
+    if "folder_number" in call_data:
+        folder_number = call_data["folder_number"]
+    else:
+        folder_number = parentfolder_number
+        call_data["folder_number"] = parentfolder_number
+    call_data["fchange"] = editfolder.folderchange(project, folder_number)
     call_data['status'] = 'Page deleted'
 
 
