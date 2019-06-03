@@ -43,14 +43,18 @@ def folder_to_OD(proj_ident, folder):
     ident = folder.ident
     if ident.num:
         folder_dict = _create_folder(ident, proj_ident)
+        folder_name = folder.name
     else:
         folder_dict = _create_root_folder(proj_ident)
+        folder_dict["ident"] = 0
+        folder_dict.move_to_end("ident", last=False)
+        folder_name = proj_ident + "_root"
     # stores the version of this skipole
     folder_dict["skipole"] = skiboot.version()
     folder_dict.move_to_end("skipole", last=False)
     folder_dict["version"] = proj.version
     folder_dict.move_to_end("version", last=False)
-    folder_dict["name"] = folder.name
+    folder_dict["name"] = folder_name
     folder_dict.move_to_end("name", last=False)
     return folder_dict
 
