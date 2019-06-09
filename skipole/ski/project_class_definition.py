@@ -80,7 +80,7 @@ class WSGIApplication(object):
         "Defines this projects callable as the wsgi application"
         status, headers, data = self.respond(environ)
         start_response(status, headers)
-        return iter(data)
+        return data
 
     def set_default_language(self, language):
         "Sets the project default language"
@@ -586,6 +586,7 @@ class WSGIApplication(object):
                 # All widgfields have a : in them to separate widget name from field name
                 raise ValidateError(message="Form data not accepted, (invalid field %s)" % (field,))
             widgfield = skiboot.make_widgfield(field)
+            print(widgfield.s,widgfield.w)
             # get fields and values from the rawformdata and store them in form_data
             widget = caller_page.copy_widget_from_name(widgfield.s, widgfield.w)
             if widget is None:

@@ -342,9 +342,6 @@ class TemplatePageAndSVG(ParentPage):
             snumber = int(snumber)
         except Exception:
             return
-        # 0 is not allowed, snumber must be greater than zero
-        if snumber<1:
-            return
         sectionplaceholder = self.section_places.get(sname)
         if not sectionplaceholder:
             return
@@ -1217,7 +1214,7 @@ class FilePage(ParentPage):
             self.headers.append(self.language_cookie)
 
 
-    def _readfile(self, size=1024):
+    def _readfile(self, size=32768):
         "Return a generator reading the file"
         with open(self._filepath_relative_to_project_files, "rb") as f:
             data = f.read(size)
@@ -1231,7 +1228,7 @@ class FilePage(ParentPage):
         if not self._filepath:
             return ["<!DOCTYPE HTML>\n<html>ERROR:NO FILEPATH SET\n</html>".encode('ascii', 'xmlcharrefreplace')]
         try:
-            size = 1024
+            size = 32768
             if 'wsgi.file_wrapper' in self._environ:
                 f = open(self._filepath_relative_to_project_files, "rb")
                 return self._environ['wsgi.file_wrapper'](f, size)
