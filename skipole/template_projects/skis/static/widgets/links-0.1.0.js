@@ -697,7 +697,7 @@ SKIPOLE.links.Image1.prototype.setvalues = function (fieldlist, result) {
     var fieldvalues = this.fieldvalues;
     var img_url = this.fieldarg_in_result("img_url", result, fieldlist);
     if (img_url) {
-        the_widg.attr("src", img_url);
+        the_widg.attr("src", img_url + "#" + new Date().getTime());
         }
     };
 
