@@ -617,26 +617,24 @@ class WSGIApplication(object):
     def _url_not_found(self, environ, path, lang):
         "Used to return the url not found page"
         page = self._system_page("url_not_found")
+        page_content = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>".encode('ascii', 'xmlcharrefreplace')
         if not page:
-            page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
-            return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+            return '404 Not Found', [('content-type', 'text/html')], [page_content]
         if page.page_type == "TemplatePage":
             # create an ErrorMessage with the path as the message
             err = ErrorMessage(message=html.escape(path))
             # import any sections
             page.import_sections()
             page.show_error(error_messages=[err])
+        if (page.page_type == "TemplatePage") or (page.page_type == "FilePage"):
             # update head and body parts
             page.update(environ, {}, lang)
             status, headers = page.get_status()
-            return '404 Not Found', headers, page.data()
-        if page.page_type == "FilePage":
-            page.update(environ, {}, lang)
-            status, headers = page.get_status()
-            return '404 Not Found', headers, page.data()
-        # Either TemplatePage or FilePage - nothing else allowed
-        page_text = "<!DOCTYPE HTML>\n<html>\nERROR:UNKNOWN URL\n</html>"
-        return '404 Not Found', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+            page_data = page.data()
+            if page_data:
+                return '404 Not Found', headers, page_data
+        # if any other type of page, or no page content, then return this
+        return '404 Not Found', [('content-type', 'text/html')], [page_content]
 
 
     def respond(self, environ):
@@ -688,18 +686,17 @@ class WSGIApplication(object):
                 # No page to return has been found, 
                 return self._url_not_found(environ, path, lang)
 
+            if s_h_data[2] is None:
+                # No page data has been given
+                return self._url_not_found(environ, path, lang)
+
             return s_h_data
 
         except ServerError as e:
             page = self._system_page("server_error")
             if (not page) or (page.page_type != "TemplatePage"):
-                # make a temp page
-                text_start = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>Error code : %s</p>\n" % (e.code,)
-                if e.message:
-                    page_text = text_start + "<p>%s</p>\n</html>" % (html.escape(e.message),)
-                else:
-                    page_text = text_start + "</html>"
-                return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+                # return the default server error page
+                return self.default_server_error_page(e)
             # import any sections
             page.import_sections()
             # show message passed by the exception
@@ -721,8 +718,30 @@ class WSGIApplication(object):
             # update head and body parts
             page.update(environ, {}, lang, e.ident_list)
             status, headers = page.get_status()
+            data = page.data()
+            if not data:
+                return self.default_server_error_page(e)
             # return page data
-            return e.status, headers, page.data()
+            return e.status, headers, data
+
+
+    def default_server_error_page(self, e):
+        "Given a ServerError exception, return a default status,headers,data"
+        text_start = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>Error code : %s</p>\n" % (e.code,)
+        if e.message:
+            page_text = text_start + "<p>%s</p>\n</html>" % (html.escape(e.message),)
+        else:
+            page_text = text_start + "</html>"
+        return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+
+
+    def default_validate_error_page(self, e):
+        "Given a ValidateError exception, return a default status,headers,data"
+        if e.message:
+            page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
+        else:
+            page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n</html>"
+        return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
 
 
     def proj_respond(self, environ, projurl, path, lang, received_cookies):
@@ -768,12 +787,7 @@ class WSGIApplication(object):
         except ValidateError as e:
             page = self._system_page("validate_error")
             if (not page) or (page.page_type != "TemplatePage"):
-                # make a temp page
-                if e.message:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
-                else:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n</html>"
-                return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+                return self.default_validate_error_page(e)
             # import any sections
             page.import_sections()
             # show message passed by the exception
@@ -781,8 +795,11 @@ class WSGIApplication(object):
             # update head and body parts
             page.update(environ, {}, lang, e.ident_list)
             status, headers = page.get_status()
+            data = page.data()
+            if not data:
+                return self.default_validate_error_page(e)
             # return page data
-            return e.status, headers, page.data()
+            return e.status, headers, data
 
         # so caller_page could be either given, or could be None
 
@@ -880,12 +897,7 @@ class WSGIApplication(object):
         except ValidateError as e:
             page = self._system_page("validate_error")
             if (not page) or (page.page_type != "TemplatePage"):
-                # make a temp page
-                if e.message:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
-                else:
-                    page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n</html>"
-                return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
+                return self.default_validate_error_page(e)
             # import any sections
             page.import_sections()
             # show message passed by the exception
@@ -893,6 +905,9 @@ class WSGIApplication(object):
             # update head and body parts
             page.update(environ, skicall.call_data, skicall.lang, e.ident_list)
             status, headers = page.get_status()
+            data = page.data()
+            if not data:
+                return self.default_validate_error_page(e)
             # return page data
             return e.status, headers, page.data()
 

@@ -1196,17 +1196,16 @@ class FilePage(ParentPage):
         if mimetype and self._headers_flag:
             # only add mimetype if headers auto set, not if headers specified in page_data
             self.headers.append(('content-type', mimetype))
-        # get length of file
-        filepath = self.filepath
-        if not filepath:
+        if not self.filepath:
             raise ServerError(message="Filepath not set")
-        try:
-            self._filepath_relative_to_project_files = os.path.join(skiboot.projectfiles(self.proj_ident), filepath)
-            if self._headers_flag:
-                # only add content-length if headers auto set, not if headers specified in page_data
-                self.headers.append(('content-length', str(os.path.getsize(self._filepath_relative_to_project_files))))
-        except Exception:
-            raise ServerError(message="Unable to open file %s" % (self.name,))
+        self._filepath_relative_to_project_files = os.path.join(skiboot.projectfiles(self.proj_ident), self.filepath)
+        if not os.path.isfile(self._filepath_relative_to_project_files):
+            # no need to do anything further
+            return
+        # get length of file
+        if self._headers_flag:
+            # only add content-length if headers auto set, not if headers specified in page_data
+            self.headers.append(('content-length', str(os.path.getsize(self._filepath_relative_to_project_files))))
         # if a session cookie is specified, add it even if headers have been user set
         if self.session_cookie:
             self.headers.append(self.session_cookie)
@@ -1225,8 +1224,9 @@ class FilePage(ParentPage):
 
     def data(self):
         "returns an iterator reading the file"
-        if not self._filepath:
-            return ["<!DOCTYPE HTML>\n<html>ERROR:NO FILEPATH SET\n</html>".encode('ascii', 'xmlcharrefreplace')]
+        if not os.path.isfile(self._filepath_relative_to_project_files):
+            # no need to do anything further
+            return
         try:
             size = 32768
             if 'wsgi.file_wrapper' in self._environ:
