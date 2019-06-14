@@ -18,21 +18,19 @@ python3 -m skipole myproj /path/to/projectfiles
 
 You should replace 'myproj' with your preferred name for a new project. A projectfiles directory will be created with your new project 'myproj' within it.
 
-You will also see two other projects: 'skiadmin' which provides the web admin functions, and 'skis' which provides required support files.
-
-Within /path/to/projectfiles/myproj/code you will see a skeleton python file myproj.py, this contains code which generates the wsgi application, and functions which you will develop further yourself. It also adds the skiadmin and skis 'sub-projects' to your new project.
-
-### Developing a project ###
-
-The skiadmin sub project provides a web based admin facility allowing you to create template pages of various types (html, json, css and svg) and also 'Responders' which are script 'pages' which call your functions defined in myproj.py
-
-The developer runs:
+You would then run:
 
 python3 /path/to/projectfiles/myproj/code/myproj.py
 
-then connects with a browser to localhost:8000 to view the project, and calls localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.
+then connect with a browser to localhost:8000 to view the project, and call localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.
 
-'pages' are of several types, the main ones being template and responder pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call, and then route data from the call to your own functions in myproj.py. Your code sets data into a Python dictionary, which is set into a template page and returned to the caller.
+### Developing a project ###
+
+The file myproj.py contains code which generates the wsgi application, and functions which you will develop further yourself.
+
+Within /path/to/projectfiles/ you will see 'myproj' and you will also see two other projects: 'skiadmin' which provides the web admin functions, and 'skis' which provides required support files. These projects are automatically 'added' to your own project within myproj.py
+
+The skiadmin sub project provides the web based admin facility allowing you to create template and responder pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call, and then route data from the call to your own functions defined in myproj.py. Your code sets data into a Python dictionary, which is set into a template page and returned to the caller.
 
 Your Python functions in myproj.py are described in greater detail within the skiadmin pages. These functions would typically call further code of your own, to serve whatever data you require.
 
@@ -44,7 +42,7 @@ The widgets created have a look and feel set by CSS classes, you have the facili
 
 ### Final output ###
 
-When you have fully developed your application, and wish to deploy it, you would remove the lines in myproj.py which run the library wsgiref.simple_server, and which add the skiadmin web pages, and you will be left with your final WSGI 'application' - which can be served by any wsgi compatable web server.
+When you have fully developed your application, and wish to deploy it, you would remove the lines in myproj.py which run the library wsgiref.simple_server, and which add the skiadmin sub project, and you will be left with your final WSGI 'application' - which can be served by any wsgi compatable web server.
 
 ### Upgrading ###
 
