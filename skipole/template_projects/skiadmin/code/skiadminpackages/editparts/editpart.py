@@ -60,7 +60,7 @@ def retrieve_editpart(skicall):
 
     # header done, now page contents
 
-    if part.part_type == "Part":
+    if (part.part_type == "Part") or (part.part_type == "Section"):
         ending = ">"
     else:
         ending = " />"

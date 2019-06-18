@@ -140,7 +140,7 @@ def retrieve_textblock(skicall):
     page_data = skicall.page_data
 
     # clears any session data
-    utils.clear_call_data(call_data, keep=['textblock','text','language'] )
+    utils.clear_call_data(call_data, keep=['textblock','text','language','status'] )
 
     project = call_data['editedprojname']
     language = skicall.lang[0].lower()
