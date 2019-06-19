@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.1.0",
-"skipole": "3.1.0",
+"version": "3.2.0",
+"skipole": "3.2.0",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -1242,7 +1242,7 @@ false,
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -1252,7 +1252,7 @@ false,
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -1691,7 +1691,7 @@ false,
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -1905,7 +1905,7 @@ false,
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -1915,7 +1915,7 @@ false,
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -1952,7 +1952,7 @@ false,
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -2936,7 +2936,7 @@ false,
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -2946,7 +2946,7 @@ false,
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -3576,7 +3576,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -4450,7 +4450,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -4460,7 +4460,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -4607,7 +4607,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -4778,7 +4778,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -4788,7 +4788,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -4935,7 +4935,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -5148,7 +5148,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -5158,7 +5158,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -5180,7 +5180,7 @@ false
 "brief": "Section page_edit_widgets with alias page_edit",
 "section_name": "page_edit_widgets",
 "placename": "page_edit",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -5721,7 +5721,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -5892,7 +5892,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -5902,7 +5902,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -5924,7 +5924,7 @@ false
 "brief": "Section page_edit_widgets with alias page_edit",
 "section_name": "page_edit_widgets",
 "placename": "page_edit",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -6079,7 +6079,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -6288,7 +6288,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -6298,7 +6298,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -6350,7 +6350,7 @@ false
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -6363,7 +6363,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -6553,7 +6553,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -6563,7 +6563,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -6615,7 +6615,7 @@ false
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -6628,7 +6628,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -6818,7 +6818,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -6828,7 +6828,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -6880,7 +6880,7 @@ false
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -6893,7 +6893,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -7649,7 +7649,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -7659,7 +7659,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -8129,7 +8129,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -8300,7 +8300,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -8310,7 +8310,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -8511,7 +8511,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -9121,7 +9121,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -9131,7 +9131,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -9364,10 +9364,10 @@ false
 "input_text": [
 {
 "class": "basic.IntMinMax",
-"message": "Invalid multiplier, should be between 1 and 9999",
+"message": "Invalid multiplier, should be between 0 and 9999",
 "val_args": {
 "maxval": "9999",
-"minval": "1"
+"minval": "0"
 }
 }
 ]
@@ -9433,7 +9433,7 @@ false
 "parts": [
 [
 "Text",
-"A 'Section' will be inserted into the page with the given alias. Widget fields can then be set using a page_data key of (aliasname, widget name, field name).\r\n\r\nNormally, a multiplier of 1 is set, which means the section will be inserted once. However if the multiplier is given another value, say 3, then the section will appear three times, and the alias will have underscore and numbers attached, such as aliasname_0, aliasname_1 and aliasname_2.\r\n\r\nThis feature allows a section to be repeated down the page and populated entirely dependent on the data you wish to present.\r\n\r\nIf the multiplier is greater than one, the list of sections will be held within a containing element. The tag of the container can be set here - typically a 'div'.\r\n\r\nThe multiplier can be set dynamically at run time with page_data[aliasname, 'multiplier'] = number, and the containing tag can be set with page_data[aliasname, 'multiplier_tag'] = value."
+"A 'Section' will be inserted into the page with the given alias. Widget fields can then be set using a page_data key of (aliasname, widget name, field name).\r\n\r\nNormally, a multiplier of 0 is set, which means the section will be simply inserted. However if the multiplier is given another value, say 3, then the section will appear three times, and the alias will have underscore and numbers attached, such as aliasname_0, aliasname_1 and aliasname_2.\r\n\r\nThis feature allows a section to be repeated down the page and populated entirely dependent on the data you wish to present.\r\n\r\nIf the multiplier is greater than zero, the list of sections will be held within a containing element. The tag of the container can be set here - typically a 'div'.\r\n\r\nThe multiplier can be set dynamically at run time with page_data[aliasname, 'multiplier'] = number, and the containing tag can be set with page_data[aliasname, 'multiplier_tag'] = value."
 ]
 ]
 }
@@ -9444,7 +9444,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -9615,7 +9615,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -9625,7 +9625,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -9860,7 +9860,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -10305,7 +10305,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -10315,7 +10315,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -10656,7 +10656,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -10846,7 +10846,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -10856,7 +10856,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -11173,7 +11173,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -11676,7 +11676,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -11686,7 +11686,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -11772,7 +11772,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -11943,7 +11943,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -11953,7 +11953,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -12042,7 +12042,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -12213,7 +12213,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -12223,7 +12223,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -12282,7 +12282,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -12796,7 +12796,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -12806,7 +12806,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -13008,7 +13008,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -13198,7 +13198,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -13208,7 +13208,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -13704,7 +13704,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -13875,7 +13875,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -13885,7 +13885,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -14043,7 +14043,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -14700,7 +14700,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -14710,7 +14710,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -14901,7 +14901,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -15746,7 +15746,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -15756,7 +15756,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -15857,7 +15857,7 @@ false
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -16063,7 +16063,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -16234,7 +16234,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -16244,7 +16244,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -16925,7 +16925,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -17096,7 +17096,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -17106,7 +17106,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -17609,7 +17609,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -17780,7 +17780,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -17790,7 +17790,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -17883,7 +17883,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -18054,7 +18054,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -18064,7 +18064,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -18357,7 +18357,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -18904,7 +18904,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -18914,7 +18914,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -19029,7 +19029,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -20577,7 +20577,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -20587,7 +20587,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -20701,7 +20701,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -20948,7 +20948,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -20958,7 +20958,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -20980,7 +20980,7 @@ false
 "brief": "Section page_edit_widgets with alias page_edit",
 "section_name": "page_edit_widgets",
 "placename": "page_edit",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -21274,7 +21274,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -21666,7 +21666,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -21676,7 +21676,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -21698,7 +21698,7 @@ false
 "brief": "Section page_edit_widgets with alias page_edit",
 "section_name": "page_edit_widgets",
 "placename": "page_edit",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -21909,7 +21909,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -22140,7 +22140,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -22150,7 +22150,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -22649,7 +22649,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -22820,7 +22820,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -22830,7 +22830,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -23108,7 +23108,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -23393,7 +23393,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -23403,7 +23403,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -23590,7 +23590,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -23761,7 +23761,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -23771,7 +23771,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -23930,7 +23930,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -24101,7 +24101,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -24111,7 +24111,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -24237,7 +24237,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -24408,7 +24408,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -24418,7 +24418,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -24670,7 +24670,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -25071,7 +25071,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -25081,7 +25081,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -25517,7 +25517,7 @@ false,
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -26108,7 +26108,7 @@ false,
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -26118,7 +26118,7 @@ false,
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -26181,7 +26181,7 @@ false,
 "brief": "Section page_edit_widgets with alias page_edit",
 "section_name": "page_edit_widgets",
 "placename": "page_edit",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -27554,7 +27554,7 @@ false,
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -27878,7 +27878,7 @@ false,
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -27888,7 +27888,7 @@ false,
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -28344,7 +28344,7 @@ false,
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -28656,7 +28656,7 @@ false,
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -28666,7 +28666,7 @@ false,
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -28918,7 +28918,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -29089,7 +29089,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -29099,7 +29099,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -29321,7 +29321,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -29587,7 +29587,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -29597,7 +29597,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -29945,7 +29945,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -30325,7 +30325,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30335,7 +30335,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30532,7 +30532,7 @@ false
 "brief": "Set l5 color",
 "section_name": "colour",
 "placename": "l5_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30542,7 +30542,7 @@ false
 "brief": "Set l5 background color",
 "section_name": "colour",
 "placename": "l5_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30552,7 +30552,7 @@ false
 "brief": "Set l4 color",
 "section_name": "colour",
 "placename": "l4_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30562,7 +30562,7 @@ false
 "brief": "Set l4 background color",
 "section_name": "colour",
 "placename": "l4_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30572,7 +30572,7 @@ false
 "brief": "Set l3 color",
 "section_name": "colour",
 "placename": "l3_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30582,7 +30582,7 @@ false
 "brief": "Set l3 background color",
 "section_name": "colour",
 "placename": "l3_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30592,7 +30592,7 @@ false
 "brief": "Set l2 color",
 "section_name": "colour",
 "placename": "l2_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30602,7 +30602,7 @@ false
 "brief": "Set l2 background color",
 "section_name": "colour",
 "placename": "l2_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30612,7 +30612,7 @@ false
 "brief": "Set l1 color",
 "section_name": "colour",
 "placename": "l1_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30622,7 +30622,7 @@ false
 "brief": "Set l1 background color",
 "section_name": "colour",
 "placename": "l1_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30632,7 +30632,7 @@ false
 "brief": "Set d1 color",
 "section_name": "colour",
 "placename": "d1_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30642,7 +30642,7 @@ false
 "brief": "Set d1 background color",
 "section_name": "colour",
 "placename": "d1_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30652,7 +30652,7 @@ false
 "brief": "Set d2 color",
 "section_name": "colour",
 "placename": "d2_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30662,7 +30662,7 @@ false
 "brief": "Set d2 background color",
 "section_name": "colour",
 "placename": "d2_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30672,7 +30672,7 @@ false
 "brief": "Set d3 color",
 "section_name": "colour",
 "placename": "d3_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30682,7 +30682,7 @@ false
 "brief": "Set d3 background color",
 "section_name": "colour",
 "placename": "d3_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30692,7 +30692,7 @@ false
 "brief": "Set d4 color",
 "section_name": "colour",
 "placename": "d4_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30702,7 +30702,7 @@ false
 "brief": "Set d4 background color",
 "section_name": "colour",
 "placename": "d4_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30712,7 +30712,7 @@ false
 "brief": "Set d5 color",
 "section_name": "colour",
 "placename": "d5_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30722,7 +30722,7 @@ false
 "brief": "Set d5 background color",
 "section_name": "colour",
 "placename": "d5_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30732,7 +30732,7 @@ false
 "brief": "Set light color",
 "section_name": "colour",
 "placename": "light_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30742,7 +30742,7 @@ false
 "brief": "Set light background color",
 "section_name": "colour",
 "placename": "light_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30752,7 +30752,7 @@ false
 "brief": "Set dark color",
 "section_name": "colour",
 "placename": "dark_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30762,7 +30762,7 @@ false
 "brief": "Set dark background color",
 "section_name": "colour",
 "placename": "dark_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30772,7 +30772,7 @@ false
 "brief": "Set action color",
 "section_name": "colour",
 "placename": "action_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30782,7 +30782,7 @@ false
 "brief": "Set action background color",
 "section_name": "colour",
 "placename": "action_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30792,7 +30792,7 @@ false
 "brief": "Set theme color",
 "section_name": "colour",
 "placename": "theme_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30802,7 +30802,7 @@ false
 "brief": "Set theme background color",
 "section_name": "colour",
 "placename": "theme_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30812,7 +30812,7 @@ false
 "brief": "text color",
 "section_name": "colour",
 "placename": "text_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30822,7 +30822,7 @@ false
 "brief": "Set border color",
 "section_name": "colour",
 "placename": "border_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30832,7 +30832,7 @@ false
 "brief": "Set hover color",
 "section_name": "colour",
 "placename": "hover_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30842,7 +30842,7 @@ false
 "brief": "Set hover background color",
 "section_name": "colour",
 "placename": "hover_background_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30852,7 +30852,7 @@ false
 "brief": "Set hover text color",
 "section_name": "colour",
 "placename": "hover_text_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30862,7 +30862,7 @@ false
 "brief": "Set hover border color",
 "section_name": "colour",
 "placename": "hover_border_color",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -30872,7 +30872,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -31043,7 +31043,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -31053,7 +31053,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -31090,7 +31090,7 @@ false
 "brief": "Section page_edit_widgets with alias page_edit",
 "section_name": "page_edit_widgets",
 "placename": "page_edit",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -31489,7 +31489,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -31660,7 +31660,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -31670,7 +31670,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -31766,7 +31766,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -31958,7 +31958,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -31968,7 +31968,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -32536,7 +32536,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -33241,7 +33241,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -33251,7 +33251,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -33491,7 +33491,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -33662,7 +33662,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -33672,7 +33672,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -33910,7 +33910,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -34119,7 +34119,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -34129,7 +34129,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -34182,7 +34182,7 @@ false
 "brief": "editdom with widget domtable",
 "section_name": "editdom",
 "placename": "editdom",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -34249,7 +34249,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]
@@ -35044,7 +35044,7 @@ false
 "brief": "Left navigation box",
 "section_name": "left_nav",
 "placename": "left_nav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -35054,7 +35054,7 @@ false
 "brief": "Section top_header with alias adminhead",
 "section_name": "top_header",
 "placename": "adminhead",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -35731,7 +35731,7 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ]

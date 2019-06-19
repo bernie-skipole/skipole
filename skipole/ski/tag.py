@@ -907,7 +907,7 @@ class Section(Part):
 class SectionPlaceHolder(object):
     "Instance of this is added to a part, and acts as the placeholder for a section"
 
-    def __init__(self, section_name, placename, multiplier=1, mtag="div", brief=''):
+    def __init__(self, section_name, placename, multiplier=0, mtag="div", brief=''):
         self.brief = brief
         self.section_name = section_name
         self.placename = placename
@@ -916,9 +916,9 @@ class SectionPlaceHolder(object):
         try:
             mult = int(multiplier)
         except Exception:
-            mult = 1
+            mult = 0
         if mult<1:
-            mult = 1
+            mult = 0
         self.multiplier=mult
 
     def section_value(self):
