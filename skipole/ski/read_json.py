@@ -297,6 +297,9 @@ def read_project(proj_ident, projectfiles):
     if 'skipole' not in project:
         raise excepts.ServerError("Sorry, the project has not been recognised")
 
+    if 'RootFolder' not in project:
+        raise excepts.ServerError("Sorry, the project has not been recognised")
+
     proj_skipole_version = project['skipole']
     proj_tuple_skipole_version = tuple(int(v) for v in proj_skipole_version.split('.'))
     if len(proj_tuple_skipole_version) != 3:
@@ -310,29 +313,89 @@ def read_project(proj_ident, projectfiles):
     if (proj_tuple_skipole_version[0] == this_tuple_skipole_version[0]) and (proj_tuple_skipole_version[1] > this_tuple_skipole_version[1]):
         raise excepts.ServerError("Sorry, the project was created with a later version of skipole")
 
-    # version ok, return project
+    # update older versions
+
+    # Change multiplier:1 to multiplier:0 in versions 3.1.0 and earlier
+    if (proj_tuple_skipole_version[0] <= 3) and (proj_tuple_skipole_version[1] <= 1):
+        # get all pages from the rootfolder downwards
+        pages = _all_pages(project['RootFolder'])
+        for page_dict in pages:
+            if "SVG" in page_dict:
+                topsvg = page_dict["svg"]
+                placeholders = _allparts([[topsvg[0],topsvg[1]]], "SectionPlaceHolder")
+                for ph in placeholders:
+                    if ("multiplier" in ph) and (ph["multiplier"] == 1):
+                        ph["multiplier"] = 0
+            elif "TemplatePage" in page_dict:
+                tophead = page_dict["body"]
+                topbody = page_dict["body"]
+                placeholders = _allparts([[tophead[0],tophead[1]]], "SectionPlaceHolder")
+                for ph in placeholders:
+                    if ("multiplier" in ph) and (ph["multiplier"] == 1):
+                        ph["multiplier"] = 0
+                placeholders = _allparts([[topbody[0],topbody[1]]], "SectionPlaceHolder")
+                for ph in placeholders:
+                    if ("multiplier" in ph) and (ph["multiplier"] == 1):
+                        ph["multiplier"] = 0
+            else:
+                continue
     return project
 
+
+
+def _all_pages(topfolder):
+    """Return list of all page dictionaries in a folder and its sub folders
+       Where topfolder is the folder dictionary as read by read_project() """
+    # search through folders
+    page_list = []
+    if "folders" in topfolder:
+        for folder in topfolder['folders'].values():
+            page_list.extend(_all_pages(folder))
+    if "pages" in topfolder:
+        for page in topfolder['pages'].values():
+            page_list.append(page)
+    return page_list
+
+
+def _allparts(toplist, part_type):
+    """Return list of all part dictionaries within toplist that are of type part_type
+       Where toplist is the list of [part_type,part_dict] items as read by read_project()"""
+    # search through parts
+    part_list = []
+    for item in toplist:
+        item_type, item_dict = item
+        if item_type == part_type:
+            part_list.append(item_dict)
+            if item_type == 'Widget':
+                for key in item_dict.keys():
+                    if "container_" in key:
+                        part_list.extend(_allparts(item_dict[key], part_type))
+        elif item_type == 'Part':
+            part_list.extend(_allparts(item_dict['parts'], part_type))
+        elif item_type == 'Widget':
+            for key in item_dict.keys():
+                if "container_" in key:
+                    part_list.extend(_allparts(item_dict[key], part_type))
+    return part_list
+ 
 
 
 def create_project(proj_ident, projectfiles):
     """Builds the project from the file project.json, returns a dictionary
           with the following keys
-          url
+         original_skipole_version
+         url
          default_language
          brief
          version
          specialpages - dictionary of label:ident or url
          sections - dictionary of {name:section,..}
          itemlist - list of pages and folders 
-        siteroot - the root folder
+         siteroot - the root folder
 """
 
     project = read_project(proj_ident, projectfiles)
     projectdict = {}
-
-    if 'RootFolder' not in project:
-        raise excepts.ServerError("Sorry, the project has not been recognised")
 
     if 'url' in project:
         projectdict['url'] = project['url']
@@ -399,30 +462,30 @@ def create_project(proj_ident, projectfiles):
     else:
         projectdict['sections'] = {}
 
-    if 'RootFolder' in project:
-        rootfolder = project['RootFolder']
-        if 'brief' in rootfolder:
-            brief = rootfolder['brief']
-        else:
-            brief = "Root folder"
-        if 'default_page_name' in rootfolder:
-            default_page_name = rootfolder['default_page_name']
-        else:
-            default_page_name = 'index'
-        siteroot = folder_class_definition.RootFolder(proj_ident, brief, default_page_name)
-        # now fill root contents
-        item_list = []
-        if "folders" in rootfolder:
-            for folder_name, folder in rootfolder['folders'].items():
-                item_list.extend(_folder(siteroot, folder_name, folder, proj_ident))
-        if "pages" in rootfolder:
-            for page_name, page in rootfolder['pages'].items():
-                pageinstance = _page(siteroot, page_name, page, proj_ident)
-                if pageinstance is not None:
-                     item_list.append(pageinstance)
-        projectdict['itemlist'] = item_list
-        # and the root
-        projectdict['siteroot'] = siteroot
+    # read RootFolder and contents
+    rootfolder = project['RootFolder']
+    if 'brief' in rootfolder:
+        brief = rootfolder['brief']
+    else:
+        brief = "Root folder"
+    if 'default_page_name' in rootfolder:
+        default_page_name = rootfolder['default_page_name']
+    else:
+        default_page_name = 'index'
+    siteroot = folder_class_definition.RootFolder(proj_ident, brief, default_page_name)
+    # now fill root contents
+    item_list = []
+    if "folders" in rootfolder:
+        for folder_name, folder in rootfolder['folders'].items():
+            item_list.extend(_folder(siteroot, folder_name, folder, proj_ident))
+    if "pages" in rootfolder:
+        for page_name, page in rootfolder['pages'].items():
+            pageinstance = _page(siteroot, page_name, page, proj_ident)
+            if pageinstance is not None:
+                 item_list.append(pageinstance)
+    projectdict['itemlist'] = item_list
+    # and the root
+    projectdict['siteroot'] = siteroot
     return projectdict
 
 
@@ -764,7 +827,7 @@ def _create_sectionplaceholder(part_dict, proj_ident):
     if 'multiplier' in part_dict:
         multiplier = part_dict['multiplier']
     else:
-        multiplier = 1
+        multiplier = 0
     if 'mtag' in part_dict:
         mtag = part_dict['mtag']
     else:

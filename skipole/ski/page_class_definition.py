@@ -372,11 +372,10 @@ class TemplatePageAndSVG(ParentPage):
                 try:
                     multiplier = int(page_data[placename,'multiplier'])
                 except Exception:
-                    pass
+                    placeholder.multiplier = 0
                 else:
-                    if multiplier > 0:
-                        placeholder.multiplier = multiplier
-            if placeholder.multiplier > 1:
+                    placeholder.multiplier = multiplier
+            if placeholder.multiplier > 0:
                 for m in range(placeholder.multiplier):
                     self._import_multiplied_section(m, placeholder, toppart, page_data)
                 continue
@@ -576,7 +575,7 @@ class TemplatePage(TemplatePageAndSVG):
                 self._validator_scriptlinks.append(link_label)
 
     def import_sections(self, page_data=None):
-        "Imports javascript modules used by widgets and validators"
+        "Imports javascript modules used by widgets and validators, and then imports sections"
         if self._validator_scriptlinks:
             for link_label in self._validator_scriptlinks:
                         self.append_scriptlink(link_label)
