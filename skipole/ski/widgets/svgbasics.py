@@ -253,6 +253,72 @@ class SimpleText(Widget):
 </text>"""
 
 
+
+class TextList(Widget):
+    """An svg text tag with further tspan elements
+    """
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'font_family':FieldArg("text", "Arial", jsonset=True),
+                        'font_size':FieldArg("text", "20", jsonset=True),
+                        'fill':FieldArg("text", "white", jsonset=True),
+                        'stroke':FieldArg("text", "", jsonset=True),
+                        'stroke_width':FieldArg("text", "", jsonset=True),
+                        'lines': FieldArgTable(['integer', 'integer', 'text'])
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        font_family: font-family css  attribute, such as Arial
+        font_size: font-size css  attribute, such as 20
+        fill: The fill colour, use none for no fill
+        stroke: The outline edge colour
+        stroke_width: The outline edge width
+        lines: List of lists, of [x,y,text]
+        """
+        # pass fields to Widget
+        Widget.__init__(self, name=name, tag_name="text", brief=brief, **field_args)
+        self.hide_if_empty=False
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Set the attributes"
+        if self.get_field_value("font_family"):
+            self.update_attribs({"font-family":self.get_field_value("font_family")})
+        if self.get_field_value("font_size"):
+            self.update_attribs({"font-size":self.get_field_value("font_size")})
+        if self.get_field_value("fill"):
+            self.update_attribs({"fill":self.get_field_value("fill")})
+        if self.get_field_value("stroke"):
+            self.update_attribs({"stroke":self.get_field_value("stroke")})
+        if self.get_field_value("stroke_width"):
+            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
+        lines = self.get_field_value("lines")
+        if not lines:
+            return
+        line1 = lines[0]
+        self.update_attribs({"x":str(line1[0])})
+        self.update_attribs({"y":str(line1[1])})
+        self[0] = line1[2]
+        for line in lines[1:]:
+            tspan = tag.Part(tag_name='tspan', text = line[2])
+            tspan.update_attribs({"x":str(line[0])})
+            tspan.update_attribs({"y":str(line[1])})
+            self.append(tspan)
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<text> <!-- with widget id, class widget_class and the given attributes -->
+  <!-- contains given text, each line within tspan elements -->
+</text>"""
+
+
+
+
 class Circle(ClosedWidget):
     """An svg circle tag
     """

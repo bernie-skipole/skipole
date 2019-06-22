@@ -3,7 +3,7 @@
 
 import inspect
 
-from ..ski import skiboot, responders
+from ..ski import skiboot, responders, dump_project
 from ..ski.page_class_definition import RespondPage
 from ..ski.excepts import ServerError
 
@@ -34,7 +34,7 @@ def list_responders():
     return responderlist
 
 
-def responder_info(project, pagenumber, pchange):
+def responder_info(project, pagenumber, pchange=None):
     """Return a ResponderInfo named tuple"""
     proj, page = get_proj_page(project, pagenumber, pchange)
     if page.page_type != "RespondPage":
@@ -427,6 +427,31 @@ def toggle_submit_option(project, pagenumber, pchange):
     # save the altered page, and return the page.change uuid and submit option
     return proj.save_page(page), responder.submit_option
 
+
+def all_responders(project):
+    "Returns a list of all responder idents in the project"
+    # Get the root folder dictionary
+    responder_idents = []
+    rootdict = dump_project.folder_to_OD(project, skiboot.Ident(project, 0))
+    pages = _all_pages(rootdict)
+    for page_dict in pages:
+        if 'RespondPage' in page_dict:
+            responder_idents.append(page_dict["ident"])
+    return responder_idents 
+
+
+def _all_pages(topfolder):
+    """Return list of all page dictionaries in a folder and its sub folders
+       Where topfolder is the folder dictionary"""
+    # search through folders
+    page_list = []
+    if "folders" in topfolder:
+        for folder in topfolder['folders'].values():
+            page_list.extend(_all_pages(folder))
+    if "pages" in topfolder:
+        for page in topfolder['pages'].values():
+            page_list.append(page)
+    return page_list
 
 
 
