@@ -40,7 +40,10 @@ def svg_to_OD(proj_ident, page):
 def folder_to_OD(proj_ident, folder):
     """Returns an OrderedDictionary of the folder"""
     proj = skiboot.getproject(proj_ident)
-    ident = folder.ident
+    if isinstance(folder, skiboot.Ident):
+        ident = folder
+    else:
+        ident = folder.ident
     if ident.num:
         folder_dict = _create_folder(ident, proj_ident)
         folder_name = folder.name
