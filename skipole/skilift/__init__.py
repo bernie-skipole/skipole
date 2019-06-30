@@ -553,6 +553,15 @@ def labels(project=None):
     return proj.labels()
 
 
+def ident_from_label(project, label):
+    """Returns (itemproject, itemnumber) or url if found, otherwise None"""
+    item = skiboot.find_ident_or_url(label, project)
+    if isinstance(item, skiboot.Ident):
+        return item.proj, item.num
+    return item
+
+
+
 def set_label(project, label, target):
     """Sets a label and target, where target is a page ident or url"""
     project_loaded(project)
