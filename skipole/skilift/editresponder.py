@@ -437,6 +437,7 @@ def all_responders(project):
     for page_dict in pages:
         if 'RespondPage' in page_dict:
             responder_idents.append(page_dict["ident"])
+    responder_idents.sort()
     return responder_idents 
 
 

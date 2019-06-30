@@ -586,7 +586,6 @@ class WSGIApplication(object):
                 # All widgfields have a : in them to separate widget name from field name
                 raise ValidateError(message="Form data not accepted, (invalid field %s)" % (field,))
             widgfield = skiboot.make_widgfield(field)
-            print(widgfield.s,widgfield.w)
             # get fields and values from the rawformdata and store them in form_data
             widget = caller_page.copy_widget_from_name(widgfield.s, widgfield.w)
             if widget is None:
