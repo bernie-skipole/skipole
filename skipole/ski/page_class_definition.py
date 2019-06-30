@@ -367,8 +367,6 @@ class TemplatePageAndSVG(ParentPage):
                 toppart = self.svg
             else:
                 raise ServerError(message = 'Invalid section placeholder in page %s' % (self.ident,))
-            if page_data and (placename,'section') in page_data:
-                placeholder.section_name = page_data[placename,'section']
             if page_data and (placename,'multiplier') in page_data:
                 try:
                     multiplier = int(page_data[placename,'multiplier'])
