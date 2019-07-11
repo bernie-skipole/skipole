@@ -33,6 +33,25 @@ SKIPOLE.svgbasics.Group.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svgbasics.TextGroup = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.TextGroup.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.TextGroup.prototype.constructor = SKIPOLE.svgbasics.TextGroup;
+SKIPOLE.svgbasics.TextGroup.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - text and transform attribute */
+   if (!this.widg_id) {
+        return;
+        }
+    var text = this.fieldarg_in_result('text', result, fieldlist);
+    if (text) {
+        this.widg.html(text);
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    };
+
+
 SKIPOLE.svgbasics.TextBlockGroup = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
