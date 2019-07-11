@@ -1655,6 +1655,17 @@
   "widgets.svgbasics.TextBlockGroup.textblock_project": "Set with a project name if the TextBlock is defined in a sub project.",
   "widgets.svgbasics.TextBlockGroup.textblock_ref": "The reference string of the TextBlock to be set in the group.",
   "widgets.svgbasics.TextBlockGroup.transform": "A transform string such as translate and rotate can be set here. Can be set by JSON.",
+
+  "widgets.svgbasics.TextGroup": "A g tag, containing a string. The string is not escaped, so may contain svg commands which are set directly into the group.",
+  "widgets.svgbasics.TextGroup.text": "If text is set here it will be shown as unescaped xtml, and can be set by JSON.",
+  "widgets.svgbasics.TextGroup.transform": "A transform string such as translate and rotate can be set here. Can be set by JSON.",
+
+
+
+
+
+
+
   "widgets.svgbasics.module": "SVG basic tags and shapes.",
   "widgets.svggraphs.Chart1": "A chart filled with a list of values from the right to the left.",
   "widgets.svggraphs.Chart1.font_family": "Font of the text on the chart.",

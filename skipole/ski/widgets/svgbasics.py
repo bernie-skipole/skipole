@@ -131,6 +131,45 @@ class TextBlockGroup(Widget):
 
 
 
+class TextGroup(Widget):
+    """A g tag, containing a string. The string is not escaped, so may contain
+       svg commands which are set directly into the g"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {
+                        'text':FieldArg("text", "" ,jsonset=True),
+                        'transform':FieldArg("text", "", jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+       text: the string set here will be set as content
+        """
+        # pass fields to Widget
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self[0] = ''
+        self.htmlescaped = False
+        self.linebreaks = False
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("text"):
+            self[0] = self.get_field_value("text")
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+   <!-- set with text content as unescaped xtml -->
+</g>"""
+
+
+
 class Rect(ClosedWidget):
     """An svg rect tag
     """
