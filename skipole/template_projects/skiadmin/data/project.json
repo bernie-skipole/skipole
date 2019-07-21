@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.2.0",
-"skipole": "3.2.0",
+"version": "3.3.0",
+"skipole": "3.3.0",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -391,6 +391,371 @@
 ]
 }
 ],
+"alternatebox": [
+"Section",
+{
+"tag_name": "g",
+"brief": "alternate box to show page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "alttext",
+"brief": "Describes the alternate connection",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "",
+"font_size": "15",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "Alternate if no caller ident received.",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "40"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "line",
+"brief": "horizontal line",
+"show": true,
+"attribs": {
+"style": "stroke:black;stroke-width:3",
+"x1": "200",
+"x2": "340",
+"y1": "80",
+"y2": "80"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "line",
+"brief": "vertical line",
+"show": true,
+"attribs": {
+"style": "stroke:black;stroke-width:3",
+"x1": "200",
+"x2": "200",
+"y1": "80",
+"y2": "400"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "200",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "400"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "40",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "400"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderaccess",
+"brief": "Text showing restricted or open",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "430"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderid",
+"brief": "Text showing the responder id",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "480"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderlabels",
+"brief": "Text showing labels pointing to this id",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "510"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "respondertype",
+"brief": "Text showing the responder type",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "540"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderbrief",
+"brief": "Text showing the responder brief",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "570"
+}
+}
+]
+]
+}
+],
+"box": [
+"Section",
+{
+"tag_name": "g",
+"brief": "svg box to show page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "200",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "20"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "40",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "20"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderaccess",
+"brief": "Text showing restricted or open",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "50"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderid",
+"brief": "Text showing the responder id",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "100"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderlabels",
+"brief": "Text showing labels pointing to this id",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "130"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "respondertype",
+"brief": "Text showing the responder type",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "160"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderbrief",
+"brief": "Text showing the responder brief",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "190"
+}
+}
+]
+]
+}
+],
 "colour": [
 "Section",
 {
@@ -514,6 +879,55 @@
 "show": true,
 "widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
 "widget_style": ""
+}
+}
+]
+]
+}
+],
+"ellipse": [
+"Section",
+{
+"tag_name": "g",
+"brief": "ellipse with text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "ellipse",
+"brief": "ellipse containing text",
+"show": true,
+"attribs": {
+"cx": "400",
+"cy": "200",
+"rx": "200",
+"ry": "100",
+"style": "fill:white;stroke:black;stroke-width:3"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "textout",
+"brief": "Output text in ellipse",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "",
+"font_size": "15",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "Unknown output",
+"widget_class": "",
+"widget_style": "",
+"x": "250",
+"y": "200"
 }
 }
 ]
@@ -879,6 +1293,241 @@ false,
 ]
 }
 ],
+"submitdatabox": [
+"Section",
+{
+"tag_name": "g",
+"brief": "section submitdatabox",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "text",
+"brief": "submit list contents",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "smalltext",
+"x": "200",
+"y": "40"
+},
+"parts": [
+[
+"Text",
+"Submit List contents:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "Position the submit_list text",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(320, 40)"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "svgbasics.TextList",
+"name": "submitlist",
+"brief": "submit list passed from responder",
+"fields": {
+"fill": "",
+"font_family": "",
+"font_size": "",
+"lines": [],
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"widget_class": "smalltext",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "120",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "260"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "text",
+"brief": "submit_data",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"x": "20",
+"y": "280"
+},
+"parts": [
+[
+"Text",
+"Call function submit_data(skicall)"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "submitdatareturn",
+"brief": "Describes the return value of submit data",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "",
+"font_family": "",
+"font_size": "",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "which returns None",
+"widget_class": "",
+"widget_style": "",
+"x": "20",
+"y": "300"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "output",
+"brief": "text of target or output",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "",
+"font_size": "",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "Target Page",
+"widget_class": "",
+"widget_style": "",
+"x": "80",
+"y": "360"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "text",
+"brief": "fail page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"fill": "black",
+"x": "240",
+"y": "360"
+},
+"parts": [
+[
+"Text",
+"Fail Page"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "line",
+"brief": "line to fail page box",
+"show": true,
+"attribs": {
+"style": "stroke:black;stroke-width:3",
+"x1": "280",
+"x2": "280",
+"y1": "380",
+"y2": "500"
+}
+}
+]
+]
+}
+],
+"svgtextlist": [
+"Section",
+{
+"tag_name": "g",
+"brief": "section svgtextlist",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "svgbasics.TextList",
+"name": "callers",
+"brief": "List of calling idents",
+"fields": {
+"fill": "",
+"font_family": "",
+"font_size": "",
+"lines": [],
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"widget_class": "smalltext",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+"targetline": [
+"Section",
+{
+"tag_name": "g",
+"brief": "line from responder to target",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "line",
+"brief": "svg line",
+"show": true,
+"attribs": {
+"style": "stroke:black;stroke-width:3",
+"x1": "120",
+"x2": "120",
+"y1": "20",
+"y2": "720"
+}
+}
+]
+]
+}
+],
 "top_header": [
 "Section",
 {
@@ -1061,6 +1710,290 @@ false,
 "widget_class": "w3-modal",
 "widget_style": ""
 }
+}
+]
+]
+}
+],
+"validatebox": [
+"Section",
+{
+"tag_name": "g",
+"brief": "section validatebox",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "120",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "100"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "text",
+"brief": "validate box text",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"fill": "black",
+"font-size": "15",
+"x": "60",
+"y": "120"
+},
+"parts": [
+[
+"Text",
+"Validate received fields and values"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "text",
+"brief": "validate box text",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"fill": "black",
+"font-size": "10",
+"x": "60",
+"y": "140"
+},
+"parts": [
+[
+"Text",
+"Using tests set on the calling template page widgets"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "text",
+"brief": "fail text",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"fill": "black",
+"font-size": "15",
+"x": "80",
+"y": "200"
+},
+"parts": [
+[
+"Text",
+"FAIL"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "text",
+"brief": "pass text",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"fill": "black",
+"font-size": "15",
+"x": "300",
+"y": "200"
+},
+"parts": [
+[
+"Text",
+"PASS"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "line",
+"brief": "line to fail box",
+"show": true,
+"attribs": {
+"style": "stroke:black;stroke-width:3",
+"x1": "100",
+"x2": "100",
+"y1": "220",
+"y2": "500"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "svg box to show page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(-120,480)"
+},
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "200",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "20"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "rect",
+"brief": "Rectangle",
+"show": true,
+"attribs": {
+"height": "40",
+"style": "fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)",
+"width": "400",
+"x": "0",
+"y": "20"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderaccess",
+"brief": "Text showing restricted or open",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "50"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderid",
+"brief": "Text showing the responder id",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "100"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderlabels",
+"brief": "Text showing labels pointing to this id",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "130"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "respondertype",
+"brief": "Text showing the responder type",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "160"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "responderbrief",
+"brief": "Text showing the responder brief",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "14",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "UNKNOWN",
+"widget_class": "",
+"widget_style": "",
+"x": "10",
+"y": "190"
+}
+}
+]
+]
 }
 ]
 ]
@@ -19759,6 +20692,25 @@ false
 "original_fields": {}
 }
 },
+"map_page": {
+"ident": 6010,
+"brief": "Page with map",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [],
+"fail_ident": 26010,
+"submit_list": [
+"skiadminpackages",
+"editresponders",
+"editrespondpage",
+"map"
+],
+"target_ident": 26010
+},
+"original_fields": {}
+}
+},
 "newedit": {
 "ident": 6002,
 "brief": "edit responder",
@@ -25763,6 +26715,529 @@ false,
 "original_fields": {}
 }
 },
+"map_template": {
+"ident": 26010,
+"brief": "Template showing the responder map",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"lang": "en",
+"backcol": "#e5d29f",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Page 26010"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Holds svg image",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "margin:20px;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "svgbasics.SVGContainer",
+"name": "svgcontainer",
+"brief": "svg widget",
+"fields": {
+"height": "1600",
+"preserveAspectRatio": "",
+"show": true,
+"viewBox": "",
+"widget_class": "",
+"widget_style": "",
+"width": "1200"
+},
+"container_0": [
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "holds the map",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "svgtextstyle",
+"failmessage": "<text>TextBlock not found</text>",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"ClosedWidget",
+{
+"class": "svgbasics.Rect",
+"name": "background",
+"brief": "white background rectangle",
+"fields": {
+"fill": "white",
+"height": "1600",
+"rx": "0",
+"ry": "0",
+"show": true,
+"stroke": "black",
+"stroke_width": "3",
+"widget_class": "",
+"widget_style": "",
+"width": "1200",
+"x": "0",
+"y": "0"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgbasics.TextGroup",
+"name": "textgroup",
+"brief": "svg commands set in a g tag",
+"fields": {
+"show": true,
+"text": "",
+"transform": "",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "top list of calling idents",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(400,50)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "Top list of calling idents",
+"section_name": "svgtextlist",
+"placename": "callers",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "further list of calling idents",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(850,50)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "Further list of calling idents",
+"section_name": "svgtextlist",
+"placename": "callers2",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "top list of fail idents",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(100,50)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "Top list of calling idents",
+"section_name": "svgtextlist",
+"placename": "fails",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "Shows the target line",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(600,600)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "line from responder to target",
+"section_name": "targetline",
+"placename": "targetline",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "The responder box",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(400,400)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "box showing the responder",
+"section_name": "box",
+"placename": "responder",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "alternate responder",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(60,450)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "section showing the alternate responder",
+"section_name": "alternatebox",
+"placename": "alternatebox",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "Allowed callers",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(850,400)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "List of allowed callers",
+"section_name": "svgtextlist",
+"placename": "allowed",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "Shows the submit data function",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(600,600)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "submit_data function in map",
+"section_name": "submitdatabox",
+"placename": "submitdata",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "The fail page box",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(750,1080)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "fail page raised from submit_data",
+"section_name": "box",
+"placename": "submitdata_failpage",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "The target box",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(600,1300)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "target of the responder",
+"section_name": "box",
+"placename": "target",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "The output ellipse",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(320,1220)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "output of the responder",
+"section_name": "ellipse",
+"placename": "output",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "Shows the validate test",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "translate(400,600)"
+},
+"parts": [
+[
+"SectionPlaceHolder",
+{
+"brief": "validate test in map",
+"section_name": "validatebox",
+"placename": "validate",
+"multiplier": 0,
+"mtag": "div"
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
 "store_value": {
 "ident": 26203,
 "brief": "Store value",
@@ -26134,6 +27609,31 @@ false,
 "style": "margin-left:20%"
 },
 "parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "map",
+"brief": "Link to responder map",
+"fields": {
+"button_text": "Map",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
+"hide": false,
+"link_ident": "6010",
+"show": true,
+"show_error": "",
+"target": "_blank",
+"widget_class": "w3-button w3-theme-d4 w3-right",
+"widget_style": ""
+}
+}
+],
 [
 "Widget",
 {
@@ -35951,7 +37451,7 @@ false
 "class": "SubmitData",
 "original_args": {
 "allowed_callers": [],
-"fail_ident": "",
+"fail_ident": "server_error",
 "submit_list": [
 "skiadminpackages",
 "editfolders",

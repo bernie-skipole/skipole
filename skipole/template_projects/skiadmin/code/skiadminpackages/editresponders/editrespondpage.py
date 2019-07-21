@@ -675,3 +675,471 @@ def set_submit_option(skicall):
         raise FailPage(e.message)  
     call_data['status'] = 'Submit option changed'
 
+
+def map(skicall):
+    "Creates the responder map"
+    pagenumber = skicall.call_data['page_number']
+    project = skicall.call_data['editedprojname']
+    page_data = skicall.page_data
+    page_data['responder', 'responderid', 'text'] = "Ident: " + str(pagenumber)
+
+    # insert font text style
+    page_data['textstyle', 'text'] = """
+  <style>
+    /* <![CDATA[ */
+    text {
+      fill: black;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .bigtext {
+      font-size: 20px;
+    }
+    /* ]]> */
+  </style>
+    """
+
+
+    map_height = 1600
+
+    # get information about the responder
+    pageinfo = skilift.page_info(project, pagenumber)
+    r_info = editresponder.responder_info(project, pagenumber)
+    i_info = skilift.item_info(project, pagenumber)
+    label_list = i_info.label_list
+
+    # list of all responders
+    responder_list = editresponder.all_responders(project)
+
+    # Find all responders which call this responder
+
+    callers = [[0,0, "Responders in this project with %s as Target:" % pagenumber]]
+    callers2 = []
+    n = 40
+    for responder_id in responder_list:
+        responder_info = editresponder.responder_info(project, responder_id)
+        target = responder_info.target_ident
+        if target:
+            if isinstance(target, str) and (target in label_list):
+                moreinfo = skilift.page_info(project, responder_id)
+                if n<=300:
+                    callers.append([0,n,str(responder_id) + " " + moreinfo.brief])
+                else:
+                    callers2.append([0,n-280,str(responder_id) + " " + moreinfo.brief])
+                n += 20
+            elif isinstance(target, tuple) and (len(target) == 2) and (project == target[0]) and (pagenumber == target[1]):
+                moreinfo = skilift.page_info(project, responder_id)
+                if n<=300:
+                    callers.append([0,n,str(responder_id) + " " + moreinfo.brief])
+                else:
+                    callers2.append([0,n-280,str(responder_id) + " " + moreinfo.brief])
+                n += 20
+    if n == 40:
+        page_data['callers','show'] = False
+        page_data['callers2','show'] = False
+    elif not callers2:
+        page_data['callers', 'callers', 'lines'] = callers
+        page_data['callers2','show'] = False
+    else:
+        page_data['callers', 'callers', 'lines'] = callers
+        page_data['callers2', 'callers', 'lines'] = callers2
+
+
+    # Find all responders which call this responder on failure
+
+    fails = [[0,0, "Responders in this project with %s as Fail Page:" % pagenumber]]
+    n = 40
+    count = 0
+    for responder_id in responder_list:
+        responder_info = editresponder.responder_info(project, responder_id)
+        failident = responder_info.fail_ident
+        if failident:
+            if n > 300:
+                # do not display more than 14 responders, but continue to count remaining ones
+                count += 1
+                continue
+            if isinstance(failident, str) and (failident in label_list):
+                moreinfo = skilift.page_info(project, responder_id)
+                fails.append([0,n,str(responder_id) + " " + moreinfo.brief])
+                n += 20
+            elif isinstance(failident, tuple) and (len(failident) == 2) and (project == failident[0]) and (pagenumber == failident[1]):
+                moreinfo = skilift.page_info(project, responder_id)
+                fails.append([0,n,str(responder_id) + " " + moreinfo.brief])
+                n += 20
+    if count:
+        fails.append([0, 320, "Plus %s more responders." % (count,)]) 
+    if n == 40:
+        page_data['fails','show'] = False
+    else:
+        page_data['fails', 'callers', 'lines'] = fails
+
+
+    # Find allowed callers to this responder
+
+    allowed_list = r_info.allowed_callers
+    if allowed_list:
+        page_data['allowed','show'] = True
+        allowed = [[0,0, "Allowed callers to %s:" % pagenumber], [0,20, "(Calling page must provide ident information)"]]
+        n = 40
+        for allowedid in allowed_list:
+            allowedident = allowedid
+            if isinstance(allowedident, str):
+                allowedident = skilift.ident_from_label(project, allowedident)
+            if allowedident is None:
+                allowed.append([0,n,"UNKNOWN page: " + allowedid])
+                n += 20
+            elif isinstance(allowedident, str):
+                allowed.append([0,n,"INVALID ident: " + allowedident])
+                n += 20
+            elif isinstance(allowedident, tuple) and (len(allowedident) == 2):
+                allowedinfo = skilift.page_info(*allowedident)
+                if allowedident[0] == project:
+                    allowed.append([0,n,str(allowedident[1]) + ": " + allowedinfo.brief])
+                else:
+                    allowed.append([0,n,allowedident[0] + ", " + str(allowedident[1]) + ": " + allowedinfo.brief])
+                n += 20
+
+        page_data['allowed', 'callers', 'lines'] = allowed
+    else:
+        page_data['allowed','show'] = False
+
+
+    # If the responder has a target, draw a target line on the page
+    if r_info.target_ident or r_info.target_ident_required:
+        page_data['targetline','show'] = True
+    else:
+        page_data['targetline','show'] = False
+
+    # normally no output ellipse is shown
+    page_data['output','show'] = False
+
+
+    # fill in the box regarding this responder
+    if pageinfo.restricted:
+        page_data['responder', 'responderaccess', 'text'] = "Restricted access"
+    else:
+        page_data['responder', 'responderaccess', 'text'] = "Open access"
+    if label_list:
+        page_data['responder', 'responderlabels', 'text'] = "Label: " + ','.join(label_list)
+    else:
+        page_data['responder', 'responderlabels', 'show'] = False
+    page_data['responder', 'respondertype', 'text'] = "Responder: " + r_info.responder
+    page_data['responder', 'responderbrief', 'text'] = pageinfo.brief
+
+    # submit_data information
+    if r_info.submit_option or r_info.submit_required:
+        page_data['submitdata','show'] = True
+        if r_info.submit_list:
+            s_list = []
+            s = 0
+            for item in r_info.submit_list:
+                s_list.append([0,s,item])
+                s += 20
+            page_data['submitdata', 'submitlist','lines'] = s_list
+        # show the return value
+        if r_info.responder == "ColourSubstitute":
+            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary of strings: colour strings"
+        elif r_info.responder == "SetCookies":
+            page_data['submitdata','submitdatareturn','text'] = "Returns an instance of http.cookies.BaseCookie"
+        elif r_info.responder == "GetDictionaryDefaults":
+            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary with default values"
+        elif r_info.responder == "SubmitJSON":
+            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary"
+            # no target, but include a target line
+            page_data['targetline','show'] = True
+            # change 'Target Page' to 'Output'
+            page_data['submitdata','output', 'text'] = "Output"
+            # show an output ellipse
+            page_data['output','show'] = True
+            page_data['output','textout', 'text'] = "Send JSON data"
+            page_data['output','textout', 'x'] = 320
+        elif r_info.responder == "SubmitPlainText":
+            page_data['submitdata','submitdatareturn','text'] = "Returns a string"
+            # no target, but include a target line
+            page_data['targetline','show'] = True
+            # change 'Target Page' to 'Output'
+            page_data['submitdata','output', 'text'] = "Output"
+            # show an output ellipse
+            page_data['output','show'] = True
+            page_data['output','textout', 'text'] = "Send plain text"
+            page_data['output','textout', 'x'] = 320
+        elif r_info.responder == "SubmitCSS":
+            page_data['submitdata','submitdatareturn','text'] = "Returns a style"
+            # no target, but include a target line
+            page_data['targetline','show'] = True
+            # change 'Target Page' to 'Output'
+            page_data['submitdata','output', 'text'] = "Output"
+            # show an output ellipse
+            page_data['output','show'] = True
+            page_data['output','textout', 'text'] = "Send CSS data"
+            page_data['output','textout', 'x'] = 320
+        elif r_info.responder == "MediaQuery":
+            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary of media queries : CSS targets"
+            # no target, but include a target line
+            page_data['targetline','show'] = True
+            # change 'Target Page' to 'Output'
+            page_data['submitdata','output', 'text'] = "Output"
+            # show an output ellipse
+            page_data['output','show'] = True
+            page_data['output','textout', 'text'] = "Update query:target items"
+            page_data['output','textout', 'x'] = 320
+        elif r_info.responder == "SubmitIterator":
+            page_data['submitdata','submitdatareturn','text'] = "Returns a binary file iterator"
+            # no target, but include a target line
+            page_data['targetline','show'] = True
+            # change 'Target Page' to 'Output'
+            page_data['submitdata','output', 'text'] = "Output"
+            # show an output ellipse
+            page_data['output','show'] = True
+            page_data['output','textout', 'text'] = "Send Binary data"
+            page_data['output','textout', 'x'] = 320
+
+        # show the fail page
+        _show_submit_data_failpage(project, page_data, r_info)
+    else:
+        page_data['submitdata','show'] = False
+        page_data['submitdata_failpage','show'] = False
+
+    # The target page
+    _show_target(project, page_data, r_info)
+
+    # validation option
+    _show_validate_fail(project, page_data, r_info)
+
+    # The alternate option
+    _show_alternate(project, page_data, r_info)
+
+    if r_info.responder == 'CaseSwitch':
+        _show_caseswitch(project, page_data, r_info)
+    elif r_info.responder == 'EmptyCallDataGoto':
+        _show_emptycalldatagoto(project, page_data, r_info)
+    elif r_info.responder == 'EmptyGoto':
+        _show_emptygoto(project, page_data, r_info)
+    elif r_info.responder == "MediaQuery":
+        _show_mediaquery(project, page_data, r_info)
+
+
+def _show_target(project, page_data, r_info):
+    "The responder passes the call to this target"
+    if r_info.target_ident or r_info.target_ident_required:
+        page_data['target','show'] = True
+        if r_info.target_ident:
+            targetident = r_info.target_ident
+            if isinstance(targetident, str):
+                targetident = skilift.ident_from_label(project, targetident)
+            if targetident is None:
+                page_data['target','show'] = False
+            elif isinstance(targetident, str):
+                page_data['target', 'responderid', 'text'] = targetident
+            elif isinstance(targetident, tuple) and (len(targetident) == 2):
+                targetinfo = skilift.page_info(*targetident)
+                if targetident[0] == project:
+                    page_data['target', 'responderid', 'text'] = "Ident: " + str(targetident[1])
+                else:
+                    page_data['target', 'responderid', 'text'] = "Ident: " + targetident[0] + ", " + str(targetident[1])
+                if targetinfo.restricted:
+                    page_data['target', 'responderaccess', 'text'] = "Restricted access"
+                else:
+                    page_data['target', 'responderaccess', 'text'] = "Open access"
+                if isinstance(r_info.target_ident, str):
+                    page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident
+                else:
+                    page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident[0] + ", " + str(r_info.target_ident[1])
+                page_data['target', 'responderbrief', 'text'] = targetinfo.brief
+                if targetinfo.item_type == "RespondPage":
+                    page_data['target', 'respondertype', 'text'] = "Responder: " + targetinfo.responder
+                else:
+                    page_data['target', 'respondertype', 'text'] = targetinfo.item_type
+    else:
+        page_data['target','show'] = False
+
+
+def _show_submit_data_failpage(project, page_data, r_info):
+    "The responder calls submit data, which, if it raises a FailPage, calls this"
+    if r_info.fail_ident:
+        page_data['submitdata_failpage','show'] = True
+        failident = r_info.fail_ident
+        if isinstance(failident, str):
+            failident = skilift.ident_from_label(project, failident)
+        if failident is None:
+            page_data['submitdata_failpage','show'] = False
+        elif isinstance(failident, str):
+            page_data['submitdata_failpage', 'responderid', 'text'] = failident
+        elif isinstance(failident, tuple) and (len(failident) == 2):
+            failinfo = skilift.page_info(*failident)
+            if failident[0] == project:
+                page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + str(failident[1])
+            else:
+                page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
+            if failinfo.restricted:
+                page_data['submitdata_failpage', 'responderaccess', 'text'] = "Restricted access"
+            else:
+                page_data['submitdata_failpage', 'responderaccess', 'text'] = "Open access"
+            if isinstance(r_info.fail_ident, str):
+                page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
+            else:
+                page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
+            page_data['submitdata_failpage', 'responderbrief', 'text'] = failinfo.brief
+            if failinfo.item_type == "RespondPage":
+                page_data['submitdata_failpage', 'respondertype', 'text'] = "Responder: " + failinfo.responder
+            else:
+                page_data['submitdata_failpage', 'respondertype', 'text'] = failinfo.item_type
+    else:
+        page_data['submitdata_failpage','show'] = False
+
+
+def _show_validate_fail(project, page_data, r_info):
+    "The responder validates received data, on failure calls this"
+
+    if r_info.validate_option:
+        page_data['validate','show'] = True
+    else:
+        page_data['validate','show'] = False
+        return
+
+    if r_info.validate_fail_ident:
+        failident = r_info.validate_fail_ident
+        if isinstance(failident, str):
+            failident = skilift.ident_from_label(project, failident)
+        if isinstance(failident, str):
+            page_data['validate', 'responderid', 'text'] = failident
+        elif isinstance(failident, tuple) and (len(failident) == 2):
+            failinfo = skilift.page_info(*failident)
+            if failident[0] == project:
+                page_data['validate', 'responderid', 'text'] = "Ident: " + str(failident[1])
+            else:
+                page_data['validate', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
+            if failinfo.restricted:
+                page_data['validate', 'responderaccess', 'text'] = "Restricted access"
+            else:
+                page_data['validate', 'responderaccess', 'text'] = "Open access"
+            if isinstance(r_info.fail_ident, str):
+                page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
+            else:
+                page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
+            page_data['validate', 'responderbrief', 'text'] = failinfo.brief
+            if failinfo.item_type == "RespondPage":
+                page_data['validate', 'respondertype', 'text'] = "Responder: " + failinfo.responder
+            else:
+                page_data['validate', 'respondertype', 'text'] = failinfo.item_type
+
+
+def _show_alternate(project, page_data, r_info):
+    "The alternate page"
+
+    if r_info.alternate_ident:
+        page_data['alternatebox','show'] = True
+    else:
+        page_data['alternatebox','show'] = False
+        return
+
+    if r_info.alternate_ident:
+        altident = r_info.alternate_ident
+        if isinstance(altident, str):
+            altident = skilift.ident_from_label(project, altident)
+        if isinstance(altident, str):
+            page_data['alternatebox', 'responderid', 'text'] = altident
+        elif isinstance(altident, tuple) and (len(altident) == 2):
+            altinfo = skilift.page_info(*altident)
+            if altident[0] == project:
+                page_data['alternatebox', 'responderid', 'text'] = "Ident: " + str(altident[1])
+            else:
+                page_data['alternatebox', 'responderid', 'text'] = "Ident: " + altident[0] + ", " + str(altident[1])
+            if altinfo.restricted:
+                page_data['alternatebox', 'responderaccess', 'text'] = "Restricted access"
+            else:
+                page_data['alternatebox', 'responderaccess', 'text'] = "Open access"
+            if isinstance(r_info.alternate_ident, str):
+                page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident
+            else:
+                page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident[0] + ", " + str(r_info.alternate_ident[1])
+            page_data['alternatebox', 'responderbrief', 'text'] = altinfo.brief
+            if altinfo.item_type == "RespondPage":
+                page_data['alternatebox', 'respondertype', 'text'] = "Responder: " + altinfo.responder
+            else:
+                page_data['alternatebox', 'respondertype', 'text'] = altinfo.item_type
+
+    if r_info.responder == 'CaseSwitch':
+        page_data['alternatebox', 'alttext', 'text'] = "Called if no match found"
+    elif r_info.responder == 'EmptyCallDataGoto':
+        page_data['alternatebox', 'alttext', 'text'] = "Called if skicall.call_data has key with value"
+    elif r_info.responder == 'EmptyGoto':
+        page_data['alternatebox', 'alttext', 'text'] = "Called if widgfield is present with a value"
+
+
+def _show_caseswitch(project, page_data, r_info):
+
+    page_data['textgroup', 'transform'] = 'translate(500,600)'
+
+    if r_info.widgfield:
+        text_title = """<text x="0" y="90">CaseSwitch on widgfield %s</text>""" % r_info.widgfield
+    else:
+        text_title = ''
+
+    table_element = ''
+    if r_info.field_values_list:
+        for index, item in enumerate(r_info.field_values_list):
+            table_element += _caseswitchtable(index, r_info.field_values_list)
+
+    else:
+        table_element = ''
+    page_data['textgroup', 'text'] = text_title + table_element
+
+
+def _caseswitchtable(index, field_values_list):
+    y = 100 + 60*index
+    return """
+<rect height="60" style="fill:white;stroke-width:3;stroke:black" width="600" x="0" y="%s" />
+<line x1="180" y1="%s" x2="180" y2="%s" style="stroke-width:3;stroke:black" />
+<text x="20" y="%s">%s</text>
+<text x="200" y="%s">%s</text>
+""" % (y, y, y+60, y+30, field_values_list[index][0],y+30, field_values_list[index][1])
+
+
+def _show_emptycalldatagoto(project, page_data, r_info):
+    value = 'UNKNOWN'
+    if r_info.single_field:
+        value = r_info.single_field
+    page_data['textgroup', 'transform'] = 'translate(750,700)'
+    page_data['textgroup', 'text'] = """
+<text x="0" y="0">Test skicall.call_data["%s"]</text>
+<text x="0" y="60">Called if key not present, or has empty value.</text>
+""" % (value,)
+
+
+def _show_emptygoto(project, page_data, r_info):
+    value = 'UNKNOWN'
+    if r_info.widgfield:
+        value = r_info.widgfield
+    page_data['textgroup', 'transform'] = 'translate(750,700)'
+    page_data['textgroup', 'text'] = """
+<text x="0" y="0">Test widgfield %s</text>
+<text x="0" y="60">Called if widgfield not present, or has empty value.</text>
+""" % (value,)
+
+
+
+def _show_mediaquery(project, page_data, r_info):
+    page_data['textgroup', 'transform'] = 'translate(50,550)'
+
+    if r_info.field_values_list:
+        text_title = """<line x1="450" y1="70" x2="450" y2="100" style="stroke-width:3;stroke:black" />
+<text x="0" y="90">Query:target</text>"""
+    else:
+        return
+    table_element = ''
+    for index, item in enumerate(r_info.field_values_list):
+        table_element += _mediaquerytable(index, r_info.field_values_list)
+    page_data['textgroup', 'text'] = text_title + table_element
+
+
+def _mediaquerytable(index, field_values_list):
+    y = 100 + 60*index
+    return """
+<rect height="60" style="fill:white;stroke-width:3;stroke:black" width="600" x="0" y="%s" />
+<line x1="280" y1="%s" x2="280" y2="%s" style="stroke-width:3;stroke:black" />
+<text x="20" y="%s">%s</text>
+<text x="300" y="%s">%s</text>
+""" % (y, y, y+60, y+30, field_values_list[index][0],y+30, field_values_list[index][1])
+
+
+
