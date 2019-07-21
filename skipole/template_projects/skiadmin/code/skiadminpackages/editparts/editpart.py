@@ -211,6 +211,11 @@ def remove_tag_attribute(skicall):
     if (pagenumber is None) and (section_name is None):
         raise ValidateError("Page/section not identified")
 
+    if ('attribs_list','contents') not in call_data:
+        raise FailPage("A Tag attribute to remove has not been found")
+
+    att = call_data['attribs_list','contents']
+
     try:
         if pagenumber:
             part = editpage.page_element(project, pagenumber, pchange, location)
@@ -220,16 +225,22 @@ def remove_tag_attribute(skicall):
         if part is None:
             raise FailPage("Part not identified")
 
-        if ('attribs_list','contents') not in call_data:
+        if part.attribs and (att in part.attribs):
+            # set the attribute to be removed in the input boxes so it can be edited
+            page_data['add_attrib', 'input_text1'] = att
+            page_data['add_attrib', 'input_text2'] = part.attribs[att]
+        else:
             raise FailPage("A Tag attribute to remove has not been found")
 
         if pagenumber:
-            call_data['pchange'] = editpage.del_attrib(project, pagenumber, pchange, location, call_data['attribs_list','contents'])
+            call_data['pchange'] = editpage.del_attrib(project, pagenumber, pchange, location, att)
         else:
-            call_data['schange'] = editsection.del_attrib(project, section_name, schange, location, call_data['attribs_list','contents'])
+            call_data['schange'] = editsection.del_attrib(project, section_name, schange, location, att)
 
     except ServerError as e:
         raise FailPage(e.message)
+
+
 
 
 def downloadpart(skicall):

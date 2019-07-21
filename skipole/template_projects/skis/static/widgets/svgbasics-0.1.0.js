@@ -33,6 +33,25 @@ SKIPOLE.svgbasics.Group.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svgbasics.TextBlockGroup = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svgbasics.TextBlockGroup.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svgbasics.TextBlockGroup.prototype.constructor = SKIPOLE.svgbasics.TextBlockGroup;
+SKIPOLE.svgbasics.TextBlockGroup.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - content_replaceblock and transform attribute */
+   if (!this.widg_id) {
+        return;
+        }
+    var content_replaceblock = this.fieldarg_in_result('content_replaceblock', result, fieldlist);
+    if (content_replaceblock) {
+        this.widg.html(content_replaceblock);
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    };
+
+
 SKIPOLE.svgbasics.TextGroup = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
@@ -52,23 +71,6 @@ SKIPOLE.svgbasics.TextGroup.prototype.setvalues = function (fieldlist, result) {
     };
 
 
-SKIPOLE.svgbasics.TextBlockGroup = function (widg_id, error_message, fieldmap) {
-    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
-    this.display_errors = false;
-    };
-SKIPOLE.svgbasics.TextBlockGroup.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
-SKIPOLE.svgbasics.TextBlockGroup.prototype.constructor = SKIPOLE.svgbasics.TextBlockGroup;
-SKIPOLE.svgbasics.TextBlockGroup.prototype.setvalues = function (fieldlist, result) {
-    /* This widget accepts fields - content_replaceblock and transform attribute */
-   if (!this.widg_id) {
-        return;
-        }
-    var content_replaceblock = this.fieldarg_in_result('content_replaceblock', result, fieldlist);
-    if (content_replaceblock) {
-        this.widg.html(content_replaceblock);
-        }
-    this.set_attribute('transform', 'transform', result, fieldlist);
-    };
 
 
 SKIPOLE.svgbasics.Rect = function (widg_id, error_message, fieldmap) {
