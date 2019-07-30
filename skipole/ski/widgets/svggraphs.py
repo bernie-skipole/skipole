@@ -3,6 +3,7 @@
 import math, datetime
 
 from decimal import Decimal
+from collections import namedtuple
 
 from .. import tag
 
@@ -221,7 +222,7 @@ class Graph48Hr(Widget):
 
 
     def __init__(self, name=None, brief='', **field_args):
-        """A g element which holds a graph, held in a 1200 high x 1200 wide space
+        """A g element which holds a graph, held in a 1200 high x 1400 wide space
            values: a list of datetime objects covering a 48 hr period
            These will be plotted on the chart to the latest date in the values
            If last_day given, rightmost axis will be midnight of that day 
@@ -749,4 +750,810 @@ class StarChart(Widget):
   <!-- and each with a drawn diameter given per star -->
   <!-- centre cross drawn if cross is True -->
 </g>"""
+
+
+
+
+class Axis1(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+    _container = ((1,),)
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'fill':FieldArg("text", "white"),
+                        'fill_opacity':FieldArg("text", "1"),
+                        'font_family':FieldArg("text", "arial"),
+                        'axiscol':FieldArg("text", "green"),
+                        'minxvalue':FieldArg("text", "0"),
+                        'maxxvalue':FieldArg("text", "100"),
+                        'minyvalue':FieldArg("text", "0"),
+                        'maxyvalue':FieldArg("text", "100")
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a graph axis, held in a 1200 high x 1200 wide space
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self._axiscol = "green"
+        self._font_family = "arial"
+        self[0] = tag.Part(tag_name="g")
+        # The location 1 is available as a container
+        self[1] = tag.Part(tag_name='g')
+        self[1][0] = ''
+        self._leftspace = 240
+        self._topspace = 20
+
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+        fill = self.get_field_value("fill")
+        if not fill:
+            fill = "white"
+
+        fill_opacity = self.get_field_value("fill_opacity")
+        if not fill_opacity:
+            fill_opacity = "0"
+
+        self._font_family = self.get_field_value("font_family")
+        if not self._font_family:
+            self._font_family = "arial"
+
+        self._axiscol = self.get_field_value("axiscol")
+        if not self._axiscol:
+            self._axiscol = "green"
+
+        self[0][0] = tag.ClosedPart(tag_name='rect', attribs={"x":str(self._leftspace),
+                                                           "y":str(self._topspace),
+                                                           "width":"960",
+                                                           "height":"720",
+                                                           "fill":fill,
+                                                           "fill-opacity":fill_opacity,
+                                                           "stroke":self._axiscol,
+                                                           "stroke-width":"1"})
+
+        # create Y axis
+        minv = self.get_field_value("minyvalue")
+        maxv = self.get_field_value("maxyvalue")
+
+        isint = True
+        try: 
+            int_minv = int(minv)
+        except ValueError:
+            isint = False
+        if isint:
+            try: 
+                int_maxv = int(maxv)
+            except ValueError:
+                isint = False
+
+        if isint and (int_maxv > int_minv+4):
+            # create a Y axis of integer values
+           miny,maxy = self._integer_axis(int_maxv, int_minv)
+        else:
+           miny,maxy = self._float_axis(float(maxv), float(minv))
+
+
+        # create X axis
+        minv = self.get_field_value("minxvalue")
+        maxv = self.get_field_value("maxxvalue")
+
+        isint = True
+        try: 
+            int_minv = int(minv)
+        except ValueError:
+            isint = False
+        if isint:
+            try: 
+                int_maxv = int(maxv)
+            except ValueError:
+                isint = False
+
+        if isint and (int_maxv > int_minv+4):
+            # create a X axis of integer values
+            minx,maxx = self._integer_axis(int_maxv, int_minv, 0, True)
+        else:
+            minx,maxx = self._float_axis(float(maxv), float(minv), True)
+
+        # get line gradients and constants, note y starts from top and goes down the page
+        # x = m*val + c
+        # m = 960 / (xmax-xmin)
+        # c = m*xmin + leftspace
+
+        # y = m*val + c
+        # m = 960 / (ymin - ymax)   - note min-max to give negative gradient
+        # c = topspace - m*ymax
+
+        my = Decimal("720") / (miny-maxy)
+        cy = self._topspace - maxy*my
+
+        mx = Decimal("960") / (maxx-minx)
+        cx = minx*mx + self._leftspace
+
+        # ensure all contained parts have these values
+        AxisLimits = namedtuple('AxisLimits', ['miny','maxy','minx','maxx', 'my', 'cy', 'mx', 'cx'])
+
+        self.set_contained_values(AxisLimits(miny,maxy,minx,maxx,my,cy,mx,cx))
+
+
+
+    def _float_axis(self, maxv, minv, x=False):
+        "create an axis of float values"
+        if minv == 0.0:
+            # convert 0.0045 to 45
+            # convert 4500.0 to 45
+            tens = math.floor(math.log10(abs(maxv)))-1
+            int_maxv = math.ceil(maxv/10**tens)
+            return self._integer_axis(int_maxv, 0, tens, x)
+        else:
+            diff = maxv - minv
+            tens = math.floor(math.log10(abs(diff)))-1
+            int_maxv = math.ceil(maxv/10**tens)
+            int_minv = math.floor(minv/10**tens)
+            return self._integer_axis(int_maxv, int_minv, tens, x)
+
+
+
+    def _integer_axis(self, int_maxv, int_minv, tens=0, x=False):
+        "create an axis of integer values"
+        # diff is the difference between minimum and maximum, divide it into intervals
+        # the number of intervals should also divide 720 pixels nicely, i.e. 16, 15, 12, 10, 9, 8, 6, 5
+        # or into 960 pixels, 20, 16, 15, 12, 10, 8, 6, 5
+        if x:
+            divlist = (20, 16, 15, 12, 10, 8, 6, 5)
+        else:
+            divlist = (16, 15, 12, 10, 9, 8, 6, 5)
+
+        diff = int_maxv - int_minv
+
+        # order of prefferred interval spacing
+        prefferred = (5, 10, 2, 15, 4, 25, 20)
+
+        difftens = math.floor(math.log10(diff))
+
+        if difftens>2:
+            prefferred = ( item * 10**(difftens-1) for item in prefferred)
+
+        number_of_intervals = 0
+        for i in prefferred:
+            if (diff % i == 0) and (diff//i in divlist):
+                # intervals with spacing of i is given priority
+                number_of_intervals = diff//i
+                break
+
+        if not number_of_intervals:
+            for divd in divlist:
+                if diff % divd == 0:
+                    number_of_intervals = divd
+                    break
+            else:
+                # None of the items in divlist go nicely into diff, so add 1 to int_maxv and try again
+                return self._integer_axis(int_maxv+1, int_minv, tens, x)
+
+        if x:
+            return self._x_axis(int_maxv, int_minv, tens, number_of_intervals)
+        else:
+            return self._y_axis(int_maxv, int_minv, tens, number_of_intervals)
+
+
+
+    def _y_axis(self, int_maxv, int_minv, tens, number_of_intervals):
+        "Draw a y axis, return decimal values of ymin,ymax"
+
+        diff = int_maxv - int_minv
+
+        if tens:
+            mult = Decimal("1e" + str(tens))
+            if abs(tens)>3:
+                fstring = "0.4g"
+            elif tens<0:
+                fstring = "0." + str(abs(tens)) + "f"
+            else:
+                fstring = "0.2f"
+        else:
+            mult = 1
+            fstring = ''
+
+        # put the maximum value at the top of the axis
+        str_maxv = format(int_maxv*mult, fstring)
+        self[0].append(tag.Part(tag_name='text', text=str_maxv, attribs={
+                                                                    'x':str(self._leftspace-20),
+                                                                    'y': str(self._topspace+5),
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '20',
+                                                                    'font-family': self._font_family,
+                                                                    'fill':self._axiscol,
+                                                                    'stroke-width':"0"  }))
+
+        # put the minimum value at the bottom of the axis
+        if int_minv:
+            str_minv = format(int_minv*mult, fstring)
+        else:
+            str_minv = "0"
+        self[0].append(tag.Part(tag_name='text', text=str_minv, attribs={
+                                                                'x':str(self._leftspace-20),
+                                                                'y': str(720+self._topspace+5),
+                                                                'text-anchor':'end',
+                                                                'font-size': '20',
+                                                                'font-family': self._font_family,
+                                                                'fill':self._axiscol,
+                                                                'stroke-width':"0"  }))
+
+
+        # yval is the axis value at the intervals, so starting from the top
+        yval = int_maxv
+        y_interval = diff//number_of_intervals
+        # pixel_interval is the number of pixels in the interval
+        pixel_interval = 720//number_of_intervals
+        # with range limits so no line at top and bottem - so rectangle not overdrawn
+        for y in range(pixel_interval+self._topspace, 720+self._topspace, pixel_interval):
+            yval -= y_interval
+            self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
+                                                                 "y1":str(y),
+                                                                 "x2":str(self._leftspace+20),
+                                                                 "y2":str(y),
+                                                                 "stroke":self._axiscol,
+                                                                 "stroke-width":"1"}))
+            self[0].append(tag.Part(tag_name='text', text=format(yval*mult, fstring), attribs={
+                                                                        'x':str(self._leftspace-20),
+                                                                        'y': str(y+5),
+                                                                        'text-anchor':'end',
+                                                                        'font-size': '20',
+                                                                        'font-family': self._font_family,
+                                                                        'fill':self._axiscol,
+                                                                        'stroke-width':"0"  }))
+        return Decimal(str_minv), Decimal(str_maxv)
+
+
+
+    def _x_axis(self, int_maxv, int_minv, tens, number_of_intervals):
+        "Draw a x axis, return decimal values of xmin,xmax"
+
+        diff = int_maxv - int_minv
+
+        if tens:
+            mult = Decimal("1e" + str(tens))
+            if abs(tens)>3:
+                fstring = "0.4g"
+            elif tens<0:
+                fstring = "0." + str(abs(tens)) + "f"
+            else:
+                fstring = "0.2f"
+        else:
+            mult = 1
+            fstring = ''
+
+        # put the maximum value at the right of the axis
+        str_maxv = format(int_maxv*mult, fstring)
+        self[0].append(tag.Part(tag_name='text', text=str_maxv, attribs={
+                                                                    'x':str(self._leftspace+960+5),
+                                                                    'y': "780",
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '20',
+                                                                    'font-family': self._font_family,
+                                                                    'fill':self._axiscol,
+                                                                    'stroke-width':"0"  }))
+
+        # put the minimum value at the left of the axis
+        if int_minv:
+            str_minv = format(int_minv*mult, fstring)
+        else:
+            str_minv = "0"
+        self[0].append(tag.Part(tag_name='text', text=str_minv, attribs={
+                                                                'x':str(self._leftspace+5),
+                                                                'y': str(720+self._topspace+40),
+                                                                'text-anchor':'end',
+                                                                'font-size': '20',
+                                                                'font-family': self._font_family,
+                                                                'fill':self._axiscol,
+                                                                'stroke-width':"0"  }))
+
+
+        # xval is the axis value at the intervals, so starting from the left
+        xval = int_minv
+        x_interval = diff//number_of_intervals
+        # pixel_interval is the number of pixels in the interval
+        pixel_interval = 960//number_of_intervals
+        # with range limits so no line at right and left - so rectangle not overdrawn
+        for x in range(pixel_interval+self._leftspace, 1200, pixel_interval):
+            xval += x_interval
+            self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
+                                                                 "y1":str(720+self._topspace+5),
+                                                                 "x2":str(x),
+                                                                 "y2":str(720+self._topspace-20),
+                                                                 "stroke":self._axiscol,
+                                                                 "stroke-width":"1"}))
+            self[0].append(tag.Part(tag_name='text', text=format(xval*mult, fstring), attribs={
+                                                                        'x':str(x+5),
+                                                                        'y': str(720+self._topspace+40),
+                                                                        'text-anchor':'end',
+                                                                        'font-size': '20',
+                                                                        'font-family': self._font_family,
+                                                                        'fill':self._axiscol,
+                                                                        'stroke-width':"0"  }))
+        return Decimal(str_minv), Decimal(str_maxv)
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <g>
+    <rect x="240" y="20" height="720" width="960" /> <!-- the axis rectangle -->
+    <!-- lines and text which draw the axis -->
+  </g>
+  <g>
+    <!-- Container 0 with further items, typically a widget displaying values -->
+  </g>
+</g>"""
+
+
+
+
+class Points(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'values':FieldArgTable(('text', 'text')),
+                        'pointcol':FieldArg("text", "black")
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a table of points, intended to be included in the container 0
+           of an Axis widget. 
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self._minx = 0
+        self._maxx = 960
+        self._miny = 0
+        self._maxy = 720
+
+        self._my = -1
+        self._cy = 720
+        self._mx = 1
+        self._cx = 0
+
+
+    def set_contained_values(self, values):
+        "These values set by the containing widget"
+        self._minx = values.minx
+        self._maxx = values.maxx
+        self._miny = values.miny
+        self._maxy = values.maxy
+        self._my = values.my
+        self._cy = values.cy
+        self._mx = values.mx
+        self._cx = values.cx
+
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+        values = self.get_field_value("values")
+        if not values:
+            return
+
+        self._pointcol = self.get_field_value("pointcol")
+        if not self._pointcol:
+            self._pointcol = "black"
+
+
+        # for each point, plot a + on the graph
+        for valpair in values:
+            valx, valy = valpair
+            valx = Decimal(valx)
+            valy = Decimal(valy)
+            if valy < self._miny:
+                # low point outside plottable range
+                continue
+            if valy > self._maxy:
+                # high point outside plottable range
+                continue
+            if valx < self._minx:
+                # low point outside plottable range
+                continue
+            if valx > self._maxx:
+                # high point outside plottable range
+                continue
+            x = int(self._mx*valx + self._cx)
+            y = int(self._my*valy + self._cy)
+            self._plot_cross(x, y)
+
+
+
+    def _plot_cross(self, x, y):
+        "plot a + on the graph at x, y"
+        # Vertical line
+        self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
+                                                             "y1":str(y-5),
+                                                             "x2":str(x),
+                                                             "y2":str(y+5),
+                                                             "stroke":self._pointcol,
+                                                             "stroke-width":"1"}))
+        # Horizontal line
+        self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x-5),
+                                                             "y1":str(y),
+                                                             "x2":str(x+5),
+                                                             "y2":str(y),
+                                                             "stroke":self._pointcol,
+                                                             "stroke-width":"1"}))
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+    <!-- lines forming a cross at each point, positioned on the axis of the containing Axis widget -->
+</g>"""
+
+
+
+class Axis2(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+    _container = ((1,),)
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'fill':FieldArg("text", "white"),
+                        'fill_opacity':FieldArg("text", "1"),
+                        'font_family':FieldArg("text", "arial"),
+                        'axiscol':FieldArg("text", "green"),
+                        'minxvalue':FieldArg("text", "0"),
+                        'maxxvalue':FieldArg("text", "100"),
+                        'xinterval':FieldArg("text", "20"),
+                        'minyvalue':FieldArg("text", "0"),
+                        'maxyvalue':FieldArg("text", "100"),
+                        'yinterval':FieldArg("text", "20"),
+                        'leftspace':FieldArg("text", "240"),
+                        'topspace':FieldArg("text", "20"),
+                        'axiswidth':FieldArg("text", "960"),
+                        'axisheight':FieldArg("text", "720")
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a graph axis
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self._axiscol = "green"
+        self._font_family = "arial"
+        self[0] = tag.Part(tag_name="g")
+        # The location 1 is available as a container
+        self[1] = tag.Part(tag_name='g')
+        self[1][0] = ''
+        self._leftspace = 240
+        self._topspace = 20
+        self._axiswidth = 960
+        self._axisheight = 720
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+        fill = self.get_field_value("fill")
+        if not fill:
+            fill = "white"
+
+        fill_opacity = self.get_field_value("fill_opacity")
+        if not fill_opacity:
+            fill_opacity = "0"
+
+        self._font_family = self.get_field_value("font_family")
+        if not self._font_family:
+            self._font_family = "arial"
+
+        self._axiscol = self.get_field_value("axiscol")
+        if not self._axiscol:
+            self._axiscol = "green"
+
+        self._leftspace = int(self.get_field_value("leftspace"))
+        self._topspace = int(self.get_field_value("topspace"))
+        self._axiswidth = int(self.get_field_value("axiswidth"))
+        self._axisheight = int(self.get_field_value("axisheight"))
+
+
+        self[0][0] = tag.ClosedPart(tag_name='rect', attribs={"x":str(self._leftspace),
+                                                           "y":str(self._topspace),
+                                                           "width":str(self._axiswidth),
+                                                           "height":str(self._axisheight),
+                                                           "fill":fill,
+                                                           "fill-opacity":fill_opacity,
+                                                           "stroke":self._axiscol,
+                                                           "stroke-width":"1"})
+
+        # create Y axis
+        minv = self.get_field_value("minyvalue")
+        maxv = self.get_field_value("maxyvalue")
+        interval = self.get_field_value("yinterval")
+
+        isint = True
+        try: 
+            int_minv = int(minv)
+            int_maxv = int(maxv)
+            int_interval = int(interval)
+        except ValueError:
+            isint = False
+
+        if isint and (int_maxv > int_minv+int_interval):
+            # create a Y axis of integer values
+           miny,maxy = self._integer_axis(int_maxv, int_minv, int_interval)
+        else:
+           miny,maxy = self._float_axis(float(maxv), float(minv), float(interval))
+
+
+        # create X axis
+        minv = self.get_field_value("minxvalue")
+        maxv = self.get_field_value("maxxvalue")
+        interval = self.get_field_value("xinterval")
+
+        isint = True
+        try: 
+            int_minv = int(minv)
+            int_maxv = int(maxv)
+            int_interval = int(interval)
+        except ValueError:
+            isint = False
+
+        if isint and (int_maxv > int_minv+int_interval):
+            # create a X axis of integer values
+            minx,maxx = self._integer_axis(int_maxv, int_minv, int_interval, 0, True)
+        else:
+            minx,maxx = self._float_axis(float(maxv), float(minv), float(interval), True)
+
+        # get line gradients and constants, note y starts from top and goes down the page
+        # x = m*val + c
+        # m = 960 / (xmax-xmin)
+        # c = m*xmin + leftspace
+
+        # y = m*val + c
+        # m = 960 / (ymin - ymax)   - note min-max to give negative gradient
+        # c = topspace - m*ymax
+
+        my = Decimal(str(self._axisheight)) / (miny-maxy)
+        cy = self._topspace - maxy*my
+
+        mx = Decimal(str(self._axiswidth)) / (maxx-minx)
+        cx = minx*mx + self._leftspace
+
+        # ensure all contained parts have these values
+        AxisLimits = namedtuple('AxisLimits', ['miny','maxy','minx','maxx', 'my', 'cy', 'mx', 'cx'])
+
+        self.set_contained_values(AxisLimits(miny,maxy,minx,maxx,my,cy,mx,cx))
+
+
+
+    def _float_axis(self, maxv, minv, interval, x=False):
+        "create an axis of float values"
+        if minv == 0.0:
+            # convert 0.0045 to 45
+            # convert 4500.0 to 45
+            tens = math.floor(math.log10(abs(maxv)))-1
+            int_maxv = math.ceil(maxv/10**tens)
+            return self._integer_axis(int_maxv, 0, interval, tens, x)
+        else:
+            diff = maxv - minv
+            tens = math.floor(math.log10(abs(diff)))-1
+            int_maxv = math.ceil(maxv/10**tens)
+            int_minv = math.floor(minv/10**tens)
+            return self._integer_axis(int_maxv, int_minv, interval, tens, x)
+
+
+
+    def _integer_axis(self, int_maxv, int_minv, int_interval, tens=0, x=False):
+        "create an axis of integer values"
+        # diff is the difference between minimum and maximum, divide it into intervals
+        # the number of intervals should also divide 720 pixels nicely, i.e. 16, 15, 12, 10, 9, 8, 6, 5
+        # or into 960 pixels, 20, 16, 15, 12, 10, 8, 6, 5
+        if x:
+            divlist = (20, 16, 15, 12, 10, 8, 6, 5)
+        else:
+            divlist = (16, 15, 12, 10, 9, 8, 6, 5)
+
+        diff = int_maxv - int_minv
+
+        # order of prefferred interval spacing
+        prefferred = (5, 10, 2, 15, 4, 25, 20)
+
+        difftens = math.floor(math.log10(diff))
+
+        if difftens>2:
+            prefferred = ( item * 10**(difftens-1) for item in prefferred)
+
+        number_of_intervals = 0
+        for i in prefferred:
+            if (diff % i == 0) and (diff//i in divlist):
+                # intervals with spacing of i is given priority
+                number_of_intervals = diff//i
+                break
+
+        if not number_of_intervals:
+            for divd in divlist:
+                if diff % divd == 0:
+                    number_of_intervals = divd
+                    break
+            else:
+                # None of the items in divlist go nicely into diff, so add 1 to int_maxv and try again
+                return self._integer_axis(int_maxv+1, int_minv, tens, x)
+
+        if x:
+            return self._x_axis(int_maxv, int_minv, tens, number_of_intervals)
+        else:
+            return self._y_axis(int_maxv, int_minv, tens, number_of_intervals)
+
+
+
+    def _y_axis(self, int_maxv, int_minv, tens, number_of_intervals):
+        "Draw a y axis, return decimal values of ymin,ymax"
+
+        diff = int_maxv - int_minv
+
+        if tens:
+            mult = Decimal("1e" + str(tens))
+            if abs(tens)>3:
+                fstring = "0.4g"
+            elif tens<0:
+                fstring = "0." + str(abs(tens)) + "f"
+            else:
+                fstring = "0.2f"
+        else:
+            mult = 1
+            fstring = ''
+
+        # put the maximum value at the top of the axis
+        str_maxv = format(int_maxv*mult, fstring)
+        self[0].append(tag.Part(tag_name='text', text=str_maxv, attribs={
+                                                                    'x':str(self._leftspace-20),
+                                                                    'y': str(self._topspace+5),
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '20',
+                                                                    'font-family': self._font_family,
+                                                                    'fill':self._axiscol,
+                                                                    'stroke-width':"0"  }))
+
+        # put the minimum value at the bottom of the axis
+        if int_minv:
+            str_minv = format(int_minv*mult, fstring)
+        else:
+            str_minv = "0"
+        self[0].append(tag.Part(tag_name='text', text=str_minv, attribs={
+                                                                'x':str(self._leftspace-20),
+                                                                'y': str(720+self._topspace+5),
+                                                                'text-anchor':'end',
+                                                                'font-size': '20',
+                                                                'font-family': self._font_family,
+                                                                'fill':self._axiscol,
+                                                                'stroke-width':"0"  }))
+
+
+        # yval is the axis value at the intervals, so starting from the top
+        yval = int_maxv
+        y_interval = diff//number_of_intervals
+        # pixel_interval is the number of pixels in the interval
+        pixel_interval = 720//number_of_intervals
+        # with range limits so no line at top and bottem - so rectangle not overdrawn
+        for y in range(pixel_interval+self._topspace, 720+self._topspace, pixel_interval):
+            yval -= y_interval
+            self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
+                                                                 "y1":str(y),
+                                                                 "x2":str(self._leftspace+20),
+                                                                 "y2":str(y),
+                                                                 "stroke":self._axiscol,
+                                                                 "stroke-width":"1"}))
+            self[0].append(tag.Part(tag_name='text', text=format(yval*mult, fstring), attribs={
+                                                                        'x':str(self._leftspace-20),
+                                                                        'y': str(y+5),
+                                                                        'text-anchor':'end',
+                                                                        'font-size': '20',
+                                                                        'font-family': self._font_family,
+                                                                        'fill':self._axiscol,
+                                                                        'stroke-width':"0"  }))
+        return Decimal(str_minv), Decimal(str_maxv)
+
+
+
+    def _x_axis(self, int_maxv, int_minv, tens, number_of_intervals):
+        "Draw a x axis, return decimal values of xmin,xmax"
+
+        diff = int_maxv - int_minv
+
+        if tens:
+            mult = Decimal("1e" + str(tens))
+            if abs(tens)>3:
+                fstring = "0.4g"
+            elif tens<0:
+                fstring = "0." + str(abs(tens)) + "f"
+            else:
+                fstring = "0.2f"
+        else:
+            mult = 1
+            fstring = ''
+
+        # put the maximum value at the right of the axis
+        str_maxv = format(int_maxv*mult, fstring)
+        self[0].append(tag.Part(tag_name='text', text=str_maxv, attribs={
+                                                                    'x':str(self._leftspace+960+5),
+                                                                    'y': "780",
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '20',
+                                                                    'font-family': self._font_family,
+                                                                    'fill':self._axiscol,
+                                                                    'stroke-width':"0"  }))
+
+        # put the minimum value at the left of the axis
+        if int_minv:
+            str_minv = format(int_minv*mult, fstring)
+        else:
+            str_minv = "0"
+        self[0].append(tag.Part(tag_name='text', text=str_minv, attribs={
+                                                                'x':str(self._leftspace+5),
+                                                                'y': str(720+self._topspace+40),
+                                                                'text-anchor':'end',
+                                                                'font-size': '20',
+                                                                'font-family': self._font_family,
+                                                                'fill':self._axiscol,
+                                                                'stroke-width':"0"  }))
+
+
+        # xval is the axis value at the intervals, so starting from the left
+        xval = int_minv
+        x_interval = diff//number_of_intervals
+        # pixel_interval is the number of pixels in the interval
+        pixel_interval = 960//number_of_intervals
+        # with range limits so no line at right and left - so rectangle not overdrawn
+        for x in range(pixel_interval+self._leftspace, 1200, pixel_interval):
+            xval += x_interval
+            self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
+                                                                 "y1":str(720+self._topspace+5),
+                                                                 "x2":str(x),
+                                                                 "y2":str(720+self._topspace-20),
+                                                                 "stroke":self._axiscol,
+                                                                 "stroke-width":"1"}))
+            self[0].append(tag.Part(tag_name='text', text=format(xval*mult, fstring), attribs={
+                                                                        'x':str(x+5),
+                                                                        'y': str(720+self._topspace+40),
+                                                                        'text-anchor':'end',
+                                                                        'font-size': '20',
+                                                                        'font-family': self._font_family,
+                                                                        'fill':self._axiscol,
+                                                                        'stroke-width':"0"  }))
+        return Decimal(str_minv), Decimal(str_maxv)
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <g>
+    <rect x="240" y="20" height="720" width="960" /> <!-- the axis rectangle -->
+    <!-- lines and text which draw the axis -->
+  </g>
+  <g>
+    <!-- Container 0 with further items, typically a widget displaying values -->
+  </g>
+</g>"""
+
+
+
 

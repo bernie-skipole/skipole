@@ -175,6 +175,7 @@ class ParentPart(object):
                 part_ident_string = ident_string + "-" + str(index)
                 part.set_idents(part_ident_string, widgets, section_places, embedded_parts)
 
+
     def set_unique_names(self, name_list):
         "Ensures this item, and sub items have a unique name"
         if self.name:
@@ -466,6 +467,7 @@ class Part(ParentPart):
             self.parts = [text]
         self.hide_if_empty = hide_if_empty
 
+
     def make_js(self, page, ident_list, environ, call_data, lang):
         "Auto generates the javascript for any containing widgets"
         if not self.parts: return
@@ -490,6 +492,15 @@ class Part(ParentPart):
             self.parts = [text]
 
     text = property(get_text, set_text, doc="Equivalent to self[0]; note may not be text despite this attributes name")
+
+
+    def set_contained_values(self, values):
+        """This may be called during a _build by a widget wishing to set values into contained widgets
+           It is generally overwitten by widgets which are intended to be contained, and need to do something
+           with information from their parent container"""
+        for index, part in enumerate(self.parts):
+            if hasattr(part, "set_contained_values"):
+                part.set_contained_values(values)
 
         
     def update(self, page, ident_list, environ, call_data, lang, ident_string, placename='', embedded=('','',None)):
