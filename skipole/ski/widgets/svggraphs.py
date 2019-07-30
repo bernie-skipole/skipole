@@ -993,7 +993,9 @@ class Axis1(Widget):
         # pixel_interval is the number of pixels in the interval
         pixel_interval = 720//number_of_intervals
         # with range limits so no line at top and bottem - so rectangle not overdrawn
-        for y in range(pixel_interval+self._topspace, 720+self._topspace, pixel_interval):
+        y = self._topspace
+        for n in range(int(number_of_intervals)-1):
+            y += pixel_interval
             yval -= y_interval
             self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
                                                                  "y1":str(y),
@@ -1062,7 +1064,9 @@ class Axis1(Widget):
         # pixel_interval is the number of pixels in the interval
         pixel_interval = 960//number_of_intervals
         # with range limits so no line at right and left - so rectangle not overdrawn
-        for x in range(pixel_interval+self._leftspace, 1200, pixel_interval):
+        x = self._leftspace
+        for n in range(int(number_of_intervals)-1):
+            x += pixel_interval
             xval += x_interval
             self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
                                                                  "y1":str(720+self._topspace+5),
