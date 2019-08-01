@@ -1457,4 +1457,112 @@ class Axis2(Widget):
 
 
 
+class Lines(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'values':FieldArgTable(('text', 'text')),
+                        'linecol':FieldArg("text", "black"),
+                        'linewidth':FieldArg("text", "2"),
+                        'pointradius':FieldArg("text", "1")
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a table of points joined by lines, intended to be included in the container 0
+           of an Axis widget. 
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self._minx = 0
+        self._maxx = 960
+        self._miny = 0
+        self._maxy = 720
+
+        self._my = -1
+        self._cy = 720
+        self._mx = 1
+        self._cx = 0
+
+
+    def set_contained_values(self, values):
+        "These values set by the containing widget"
+        self._minx = values.minx
+        self._maxx = values.maxx
+        self._miny = values.miny
+        self._maxy = values.maxy
+        self._my = values.my
+        self._cy = values.cy
+        self._mx = values.mx
+        self._cx = values.cx
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+        values = self.get_field_value("values")
+        if not values:
+            return
+
+        self._linecol = self.get_field_value("linecol")
+        if not self._linecol:
+            self._linecol = "black"
+
+        self._linewidth = self.get_field_value("linewidth")
+
+        self._pointradius = self.get_field_value("pointradius")
+        if not self._pointradius:
+            self._pointradius = "2"
+
+        old_x = ''
+        old_y = ''
+        # for each point, plot a circle on the graph
+        for valpair in values:
+            valx, valy = valpair
+            valx = Decimal(valx)
+            valy = Decimal(valy)
+            if valy < self._miny:
+                # low point outside plottable range
+                continue
+            if valy > self._maxy:
+                # high point outside plottable range
+                continue
+            if valx < self._minx:
+                # low point outside plottable range
+                continue
+            if valx > self._maxx:
+                # high point outside plottable range
+                continue
+            x = int(self._mx*valx + self._cx)
+            y = int(self._my*valy + self._cy)
+            # plot a circle at point
+            self.append(tag.ClosedPart(tag_name='circle', attribs={"cx":str(x),
+                                                                   "cy":str(y),
+                                                                   "r":str(self._pointradius),
+                                                                   "fill":self._linecol,
+                                                                   "stroke":self._linecol}))
+            # plot a line from previous point
+            if old_x and self._linewidth:
+                self.append(tag.ClosedPart(tag_name='line', attribs={"x1":old_x,
+                                                                     "y1":old_y,
+                                                                     "x2":str(x),
+                                                                     "y2":str(y),
+                                                                     "stroke":self._linecol,
+                                                                     "stroke-width":self._linewidth}))
+            old_x = str(x)
+            old_y = str(y)
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+    <!-- lines linking value points, positioned on the axis of the containing Axis widget -->
+</g>"""
+
 

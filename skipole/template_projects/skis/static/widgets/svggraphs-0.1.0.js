@@ -128,3 +128,17 @@ SKIPOLE.svggraphs.Points.prototype.setvalues = function (fieldlist, result) {
     this.set_attribute('transform', 'transform', result, fieldlist);
     };
 
+
+SKIPOLE.svggraphs.Lines = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svggraphs.Lines.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svggraphs.Lines.prototype.constructor = SKIPOLE.svggraphs.Lines;
+SKIPOLE.svggraphs.Lines.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    };
+
