@@ -1110,7 +1110,7 @@ class Points(Widget):
 
     arg_descriptions = {
                         'transform':FieldArg("text", "", jsonset=True),
-                        'values':FieldArgTable(('text', 'text')),
+                        'values':FieldArgTable(('text', 'text'), jsonset=True),
                         'pointcol':FieldArg("text", "black")
                        }
 
@@ -1179,7 +1179,6 @@ class Points(Widget):
             self._plot_cross(x, y)
 
 
-
     def _plot_cross(self, x, y):
         "plot a + on the graph at x, y"
         # Vertical line
@@ -1196,6 +1195,19 @@ class Points(Widget):
                                                              "y2":str(y),
                                                              "stroke":self._pointcol,
                                                              "stroke-width":"1"}))
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets scale values"""
+        return self._make_fieldvalues('pointcol',
+                                      minx = float(self._minx),
+                                      maxx = float(self._maxx),
+                                      miny = float(self._miny),
+                                      maxy = float(self._maxy),
+                                      my = float(self._my),
+                                      cy = float(self._cy),
+                                      mx = float(self._mx),
+                                      cx = float(self._cx))
 
 
     @classmethod
@@ -1465,7 +1477,7 @@ class Lines(Widget):
 
     arg_descriptions = {
                         'transform':FieldArg("text", "", jsonset=True),
-                        'values':FieldArgTable(('text', 'text')),
+                        'values':FieldArgTable(('text', 'text'), jsonset=True),
                         'linecol':FieldArg("text", "black"),
                         'linewidth':FieldArg("text", "2"),
                         'pointradius':FieldArg("text", "1")
@@ -1555,6 +1567,21 @@ class Lines(Widget):
                                                                      "stroke-width":self._linewidth}))
             old_x = str(x)
             old_y = str(y)
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets scale values"""
+        return self._make_fieldvalues('linecol',
+                                      'linewidth',
+                                      'pointradius',
+                                      minx = float(self._minx),
+                                      maxx = float(self._maxx),
+                                      miny = float(self._miny),
+                                      maxy = float(self._maxy),
+                                      my = float(self._my),
+                                      cy = float(self._cy),
+                                      mx = float(self._mx),
+                                      cx = float(self._cx))
 
 
     @classmethod
