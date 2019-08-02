@@ -126,6 +126,45 @@ SKIPOLE.svggraphs.Points.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
+    var the_widg = this.widg;
+    // set the chart values
+    var values = this.fieldarg_in_result('values', result, fieldlist);
+    if (values == undefined) {
+        return;
+        }
+    var number_of_points = values.length;
+    if (!number_of_points) {
+        return;
+        }
+
+    var pointcol = this.fieldvalues['pointcol'];
+    var mx = this.fieldvalues['mx'];
+    var my = this.fieldvalues['my'];
+    var cx = this.fieldvalues['cx'];
+    var cy = this.fieldvalues['cy'];
+    var minx = this.fieldvalues['minx'];
+    var maxx = this.fieldvalues['maxx'];
+    var miny = this.fieldvalues['miny'];
+    var maxy = this.fieldvalues['maxy'];
+
+    var graphstring = "";
+
+    // delete existing points
+    the_widg.empty();
+    // draw new points
+    for (pt = 0; pt < number_of_points; pt++) {
+        var xpoint = parseFloat(values[pt][0]);
+        var ypoint = parseFloat(values[pt][1]);
+        var x = Math.floor(mx*xpoint + cx);
+        var y = Math.floor(my*ypoint + cy);
+        if (ypoint<miny) {continue;}
+        if (ypoint>maxy) {continue;}
+        if (xpoint<minx) {continue;}
+        if (xpoint>maxx) {continue;}
+        graphstring += "<line x1=\"" + x +"\" y1=\"" + (y-5) + "\" x2=\"" + x + "\" y2=\"" + (y+5) + "\" stroke=\"" + pointcol + "\" stroke-width=\"1\" />";
+        graphstring += "<line x1=\"" + (x-5) +"\" y1=\"" + y + "\" x2=\"" + (x+5) + "\" y2=\"" + y + "\" stroke=\"" + pointcol + "\" stroke-width=\"1\" />";
+        }
+    the_widg.html(graphstring);
     };
 
 
@@ -140,5 +179,55 @@ SKIPOLE.svggraphs.Lines.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
+    var the_widg = this.widg;
+    // set the chart values
+    var values = this.fieldarg_in_result('values', result, fieldlist);
+    if (values == undefined) {
+        return;
+        }
+    var number_of_points = values.length;
+    if (!number_of_points) {
+        return;
+        }
+
+    var linecol = this.fieldvalues['linecol'];
+    var linewidth = this.fieldvalues['linewidth'];
+    var pointradius = this.fieldvalues['pointradius'];
+    var mx = this.fieldvalues['mx'];
+    var my = this.fieldvalues['my'];
+    var cx = this.fieldvalues['cx'];
+    var cy = this.fieldvalues['cy'];
+    var minx = this.fieldvalues['minx'];
+    var maxx = this.fieldvalues['maxx'];
+    var miny = this.fieldvalues['miny'];
+    var maxy = this.fieldvalues['maxy'];
+
+    var graphstring = "";
+
+    // delete existing points
+    the_widg.empty();
+    // draw new points
+
+    var old_x = '';
+    var old_y = '';
+
+    for (pt = 0; pt < number_of_points; pt++) {
+        var xpoint = parseFloat(values[pt][0]);
+        var ypoint = parseFloat(values[pt][1]);
+        var x = Math.floor(mx*xpoint + cx);
+        var y = Math.floor(my*ypoint + cy);
+        if (ypoint<miny) {continue;}
+        if (ypoint>maxy) {continue;}
+        if (xpoint<minx) {continue;}
+        if (xpoint>maxx) {continue;}
+        graphstring += "<circle cx=\"" + x +"\" cy=\"" + y + "\" r=\"" + pointradius + "\" fill=\"" + linecol + "\" stroke=\"" + linecol + "\" />";
+        if (old_x && linewidth) {
+            graphstring += "<line x1=\"" + old_x +"\" y1=\"" + old_y + "\" x2=\"" + x + "\" y2=\"" + y + "\" stroke=\"" + linecol + "\" stroke-width=\"" + linewidth + "\" />";
+            }
+        old_x = x;
+        old_y = y;
+        }
+    the_widg.html(graphstring);
     };
+
 
