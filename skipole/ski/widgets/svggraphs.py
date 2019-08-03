@@ -865,7 +865,7 @@ class Axis1(Widget):
         # get line gradients and constants, note y starts from top and goes down the page
         # x = m*val + c
         # m = 960 / (xmax-xmin)
-        # c = m*xmin + leftspace
+        # c = leftspace - m*xmin
 
         # y = m*val + c
         # m = 960 / (ymin - ymax)   - note min-max to give negative gradient
@@ -875,7 +875,7 @@ class Axis1(Widget):
         cy = self._topspace - maxy*my
 
         mx = Decimal("960") / (maxx-minx)
-        cx = minx*mx + self._leftspace
+        cx = self._leftspace - minx*mx 
 
         # ensure all contained parts have these values
         AxisLimits = namedtuple('AxisLimits', ['miny','maxy','minx','maxx', 'my', 'cy', 'mx', 'cx'])
@@ -1243,7 +1243,8 @@ class Axis2(Widget):
                         'leftspace':FieldArg("text", "240"),
                         'topspace':FieldArg("text", "20"),
                         'axiswidth':FieldArg("text", "960"),
-                        'axisheight':FieldArg("text", "720")
+                        'axisheight':FieldArg("text", "720"),
+                        'xoffset':FieldArg("boolean", False)
                        }
 
 
@@ -1324,7 +1325,7 @@ class Axis2(Widget):
         # get line gradients and constants, note y starts from top and goes down the page
         # x = m*val + c
         # m = 960 / (xmax-xmin)
-        # c = m*xmin + leftspace
+        # c = leftspace - m*xmin
 
         # y = m*val + c
         # m = 960 / (ymin - ymax)   - note min-max to give negative gradient
@@ -1334,7 +1335,7 @@ class Axis2(Widget):
         cy = self._topspace - maxy*my
 
         mx = Decimal(str(self._axiswidth)) / (maxx-minx)
-        cx = minx*mx + self._leftspace
+        cx = self._leftspace - minx*mx
 
         # ensure all contained parts have these values
         AxisLimits = namedtuple('AxisLimits', ['miny','maxy','minx','maxx', 'my', 'cy', 'mx', 'cx'])
@@ -1406,23 +1407,65 @@ class Axis2(Widget):
         number_of_intervals = fraction_number_of_intervals.to_integral_value(rounding=ROUND_UP)
         maxv = minv + number_of_intervals*interval
 
+
+        xoffset = self.get_field_value("xoffset")
+        if xoffset:
+            maxv += interval/Decimal("2.0")
+            minv -= interval/Decimal("2.0")
+            # pixel_interval is the number of pixels in the interval - but in this case there is an extra interval
+            pixel_interval = int(self._axiswidth//(number_of_intervals+1))
+        else:
+            # pixel_interval is the number of pixels in the interval
+            pixel_interval = int(self._axiswidth//number_of_intervals)
+
         # xval is the axis value at the intervals, so starting from the left
         xval = minv
-        # pixel_interval is the number of pixels in the interval
-        pixel_interval = int(self._axiswidth//number_of_intervals)
+
         # with range limits so no line at right and left - so rectangle not overdrawn
-        x = self._leftspace
-        for n in range(int(number_of_intervals)-1):
-            x += pixel_interval
-            xval += interval
-            self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
-                                                                 "y1":str(self._axisheight+self._topspace+5),
-                                                                 "x2":str(x),
-                                                                 "y2":str(self._axisheight+self._topspace-20),
-                                                                 "stroke":self._axiscol,
-                                                                 "stroke-width":"1"}))
-            self[0].append(tag.Part(tag_name='text', text=str(xval), attribs={
-                                                                        'x':str(x+5),
+
+        if xoffset:
+            x = self._leftspace - pixel_interval//2
+            xval = minv - interval/Decimal("2.0")
+            for n in range(int(number_of_intervals)+1):
+                x += pixel_interval
+                xval += interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
+                                                                     "y1":str(self._axisheight+self._topspace+5),
+                                                                     "x2":str(x),
+                                                                     "y2":str(self._axisheight+self._topspace-20),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                self[0].append(tag.Part(tag_name='text', text=str(xval), attribs={
+                                                                            'x':str(x+5),
+                                                                            'y': str(self._axisheight+self._topspace+40),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+        else:
+            x = self._leftspace
+            for n in range(int(number_of_intervals)-1):
+                x += pixel_interval
+                xval += interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
+                                                                     "y1":str(self._axisheight+self._topspace+5),
+                                                                     "x2":str(x),
+                                                                     "y2":str(self._axisheight+self._topspace-20),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                self[0].append(tag.Part(tag_name='text', text=str(xval), attribs={
+                                                                            'x':str(x+5),
+                                                                            'y': str(self._axisheight+self._topspace+40),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+      
+            # put the maximum value at the right of the axis
+            self[0].append(tag.Part(tag_name='text', text=str(maxv), attribs={
+                                                                        'x':str(self._leftspace+self._axiswidth+5),
                                                                         'y': str(self._axisheight+self._topspace+40),
                                                                         'text-anchor':'end',
                                                                         'font-size': '20',
@@ -1430,25 +1473,15 @@ class Axis2(Widget):
                                                                         'fill':self._axiscol,
                                                                         'stroke-width':"0"  }))
 
-        # put the maximum value at the right of the axis
-        self[0].append(tag.Part(tag_name='text', text=str(maxv), attribs={
-                                                                    'x':str(self._leftspace+self._axiswidth+5),
+            # put the minimum value at the left of the axis
+            self[0].append(tag.Part(tag_name='text', text=str(minv), attribs={
+                                                                    'x':str(self._leftspace+5),
                                                                     'y': str(self._axisheight+self._topspace+40),
                                                                     'text-anchor':'end',
                                                                     'font-size': '20',
                                                                     'font-family': self._font_family,
                                                                     'fill':self._axiscol,
                                                                     'stroke-width':"0"  }))
-
-        # put the minimum value at the left of the axis
-        self[0].append(tag.Part(tag_name='text', text=str(minv), attribs={
-                                                                'x':str(self._leftspace+5),
-                                                                'y': str(self._axisheight+self._topspace+40),
-                                                                'text-anchor':'end',
-                                                                'font-size': '20',
-                                                                'font-family': self._font_family,
-                                                                'fill':self._axiscol,
-                                                                'stroke-width':"0"  }))
 
         return minv, maxv
 
