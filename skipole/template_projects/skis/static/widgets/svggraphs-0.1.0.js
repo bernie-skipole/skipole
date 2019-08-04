@@ -231,3 +231,18 @@ SKIPOLE.svggraphs.Lines.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svggraphs.XBars = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svggraphs.XBars.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svggraphs.XBars.prototype.constructor = SKIPOLE.svggraphs.XBars;
+SKIPOLE.svggraphs.XBars.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    };
+
+
+
