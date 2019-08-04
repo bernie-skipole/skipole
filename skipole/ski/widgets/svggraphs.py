@@ -1681,12 +1681,12 @@ class XBars(Widget):
         self._maxx = 960
         self._miny = 0
         self._maxy = 720
-
         self._my = -1
         self._cy = 720
         self._mx = 1
         self._cx = 0
         self._barwidth = 10
+        self._yaxis = 720
 
 
     def set_contained_values(self, values):
@@ -1765,7 +1765,12 @@ class XBars(Widget):
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets scale values"""
         return self._make_fieldvalues(
+                                     'fill',
+                                     'fill_opacity',
+                                     'stroke',
+                                     'stroke_width',
                                       barwidth = self._barwidth,
+                                      yaxis = self._yaxis,
                                       minx = float(self._minx),
                                       maxx = float(self._maxx),
                                       miny = float(self._miny),

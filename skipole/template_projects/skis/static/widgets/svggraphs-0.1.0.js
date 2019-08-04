@@ -242,7 +242,52 @@ SKIPOLE.svggraphs.XBars.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
+    var the_widg = this.widg;
+    // set the chart values
+    var values = this.fieldarg_in_result('values', result, fieldlist);
+    if (values == undefined) {
+        return;
+        }
+    var number_of_points = values.length;
+    if (!number_of_points) {
+        return;
+        }
+
+    var fill = this.fieldvalues['fill'];
+    var fill_opacity = this.fieldvalues['fill_opacity'];
+    var stroke = this.fieldvalues['stroke'];
+    var stroke_width = this.fieldvalues['stroke_width'];
+    var barwidth = this.fieldvalues['barwidth'];
+    var halfbar = Math.floor(barwidth/2);
+    var yaxis = this.fieldvalues['yaxis'];
+    var mx = this.fieldvalues['mx'];
+    var my = this.fieldvalues['my'];
+    var cx = this.fieldvalues['cx'];
+    var cy = this.fieldvalues['cy'];
+    var minx = this.fieldvalues['minx'];
+    var maxx = this.fieldvalues['maxx'];
+    var miny = this.fieldvalues['miny'];
+    var maxy = this.fieldvalues['maxy'];
+
+    var graphstring = "";
+
+    // delete existing points
+    the_widg.empty();
+    // draw rectangles
+    for (pt = 0; pt < number_of_points; pt++) {
+        var xpoint = parseFloat(values[pt][0]);
+        var ypoint = parseFloat(values[pt][1]);
+        var x = Math.floor(mx*xpoint + cx);
+        var y = Math.floor(my*ypoint + cy);
+        if (ypoint<miny) {continue;}
+        if (ypoint>maxy) {continue;}
+        if (xpoint<minx) {continue;}
+        if (xpoint>maxx) {continue;}
+        graphstring += "<rect x=\"" + (x-halfbar) + "\" y=\"" + y + "\" width=\"" + barwidth + "\" height=\"" + (yaxis-y) + "\" fill=\"" + fill + "\" fill-opacity=\"" + fill_opacity + "\" stroke=\"" + stroke + "\" stroke-width=\"" + stroke_width + "\" />";
+        }
+    the_widg.html(graphstring);
     };
+
 
 
 
