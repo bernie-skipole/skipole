@@ -1244,7 +1244,8 @@ class Axis2(Widget):
                         'topspace':FieldArg("text", "20"),
                         'axiswidth':FieldArg("text", "960"),
                         'axisheight':FieldArg("text", "720"),
-                        'xoffset':FieldArg("boolean", False)
+                        'xoffset':FieldArg("boolean", False),
+                        'yoffset':FieldArg("boolean", False)
                        }
 
 
@@ -1352,49 +1353,80 @@ class Axis2(Widget):
         number_of_intervals = fraction_number_of_intervals.to_integral_value(rounding=ROUND_UP)
         maxv = minv + number_of_intervals*interval
 
+
+        yoffset = self.get_field_value("yoffset")
+        if yoffset:
+            maxv += interval/Decimal("2.0")
+            minv -= interval/Decimal("2.0")
+            # pixel_interval is the number of pixels in the interval - but in this case there is an extra interval
+            pixel_interval = int(self._axisheight//(number_of_intervals+1))
+        else:
+            # pixel_interval is the number of pixels in the interval
+            pixel_interval = int(self._axisheight//number_of_intervals)
+
+
         # yval is the axis value at the intervals, so starting from the top
-        yval = maxv
-        # pixel_interval is the number of pixels in the interval
-        pixel_interval = int(self._axisheight//number_of_intervals)
-        # with range limits so no line at top and bottem - so rectangle not overdrawn
-        y = self._topspace
-        for n in range(int(number_of_intervals)-1):
-            y += pixel_interval
-            yval -= interval
-            self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
-                                                                 "y1":str(y),
-                                                                 "x2":str(self._leftspace+20),
-                                                                 "y2":str(y),
-                                                                 "stroke":self._axiscol,
-                                                                 "stroke-width":"1"}))
-            self[0].append(tag.Part(tag_name='text', text=str(yval), attribs={
+        # y is the pixel value to be plotted
+        if yoffset:
+            y = self._topspace - pixel_interval//2
+            yval = maxv + interval/Decimal("2.0")
+            for n in range(int(number_of_intervals)+1):
+                y += pixel_interval
+                yval -= interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
+                                                                     "y1":str(y),
+                                                                     "x2":str(self._leftspace+20),
+                                                                     "y2":str(y),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                self[0].append(tag.Part(tag_name='text', text=str(yval), attribs={
+                                                                            'x':str(self._leftspace-20),
+                                                                            'y': str(y+5),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+        else:
+            y = self._topspace
+            yval = maxv
+            for n in range(int(number_of_intervals)-1):
+                y += pixel_interval
+                yval -= interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
+                                                                     "y1":str(y),
+                                                                     "x2":str(self._leftspace+20),
+                                                                     "y2":str(y),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                self[0].append(tag.Part(tag_name='text', text=str(yval), attribs={
+                                                                            'x':str(self._leftspace-20),
+                                                                            'y': str(y+5),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+
+            # put the maximum value at the top of the axis
+            self[0].append(tag.Part(tag_name='text', text=str(maxv), attribs={
                                                                         'x':str(self._leftspace-20),
-                                                                        'y': str(y+5),
+                                                                        'y': str(self._topspace+5),
                                                                         'text-anchor':'end',
                                                                         'font-size': '20',
                                                                         'font-family': self._font_family,
                                                                         'fill':self._axiscol,
                                                                         'stroke-width':"0"  }))
 
-        # put the maximum value at the top of the axis
-        self[0].append(tag.Part(tag_name='text', text=str(maxv), attribs={
+            # put the minimum value at the bottom of the axis
+            self[0].append(tag.Part(tag_name='text', text=str(minv), attribs={
                                                                     'x':str(self._leftspace-20),
-                                                                    'y': str(self._topspace+5),
+                                                                    'y': str(self._axisheight+self._topspace+5),
                                                                     'text-anchor':'end',
                                                                     'font-size': '20',
                                                                     'font-family': self._font_family,
                                                                     'fill':self._axiscol,
                                                                     'stroke-width':"0"  }))
-
-        # put the minimum value at the bottom of the axis
-        self[0].append(tag.Part(tag_name='text', text=str(minv), attribs={
-                                                                'x':str(self._leftspace-20),
-                                                                'y': str(self._axisheight+self._topspace+5),
-                                                                'text-anchor':'end',
-                                                                'font-size': '20',
-                                                                'font-family': self._font_family,
-                                                                'fill':self._axiscol,
-                                                                'stroke-width':"0"  }))
 
         return minv,maxv
 
@@ -1419,10 +1451,7 @@ class Axis2(Widget):
             pixel_interval = int(self._axiswidth//number_of_intervals)
 
         # xval is the axis value at the intervals, so starting from the left
-        xval = minv
-
-        # with range limits so no line at right and left - so rectangle not overdrawn
-
+        # x is the pixel value to be plotted
         if xoffset:
             x = self._leftspace - pixel_interval//2
             xval = minv - interval/Decimal("2.0")
@@ -1445,6 +1474,7 @@ class Axis2(Widget):
                                                                             'stroke-width':"0"  }))
         else:
             x = self._leftspace
+            xval = minv
             for n in range(int(number_of_intervals)-1):
                 x += pixel_interval
                 xval += interval
