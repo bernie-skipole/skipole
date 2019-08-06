@@ -1673,7 +1673,7 @@ class XBars(Widget):
 
 
     def __init__(self, name=None, brief='', **field_args):
-        """A g element which holds a series of bars, intended to be included in the container 0
+        """A g element which holds a series of vertical bars, intended to be included in the container 0
            of an Axis widget. 
         """
         Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
@@ -1786,7 +1786,141 @@ class XBars(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
-    <!-- rectangle bars at each point, positioned on the axis of the containing Axis widget -->
+    <!-- vertical rectangle bars at each X point, positioned on the axis of the containing Axis widget -->
+</g>"""
+
+
+class YBars(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'values':FieldArgTable(('text', 'text'), jsonset=True),
+                        'bar_width':FieldArg("text", "10"),
+                        'fill':FieldArg("text", "green"),
+                        'fill_opacity':FieldArg("text", "1"),
+                        'stroke':FieldArg("text", "black"),
+                        'stroke_width':FieldArg("text", "1")
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a series of horizontal bars, intended to be included in the container 0
+           of an Axis widget. 
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self._minx = 0
+        self._maxx = 960
+        self._miny = 0
+        self._maxy = 720
+        self._my = -1
+        self._cy = 720
+        self._mx = 1
+        self._cx = 0
+        self._barwidth = 10
+        self._xaxis = 960
+
+
+    def set_contained_values(self, values):
+        "These values set by the containing widget"
+        self._minx = values.minx
+        self._maxx = values.maxx
+        self._miny = values.miny
+        self._maxy = values.maxy
+        self._my = values.my
+        self._cy = values.cy
+        self._mx = values.mx
+        self._cx = values.cx
+
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+        values = self.get_field_value("values")
+        if not values:
+            return
+
+        bar_width = self.get_field_value("bar_width")
+        if not bar_width:
+            return
+
+        # get bar in pixels, -1 multiplier as my is negative
+        self._barwidth = int(-1*self._my*Decimal(bar_width))
+        if not self._barwidth:
+            return
+
+        self._halfbar = self._barwidth//2
+        self._xaxis = int(self._mx*self._minx + self._cx)
+
+        self._fill = self.get_field_value("fill")
+        self._fill_opacity = self.get_field_value("fill_opacity")
+        self._stroke = self.get_field_value("stroke")
+        self._stroke_width = self.get_field_value("stroke_width")
+
+        # for each point, plot a bar on the graph
+        for valpair in values:
+            valx, valy = valpair
+            valx = Decimal(valx)
+            valy = Decimal(valy)
+            if valy < self._miny:
+                # low point outside plottable range
+                continue
+            if valy > self._maxy:
+                # high point outside plottable range
+                continue
+            if valx < self._minx:
+                # low point outside plottable range
+                continue
+            if valx > self._maxx:
+                # high point outside plottable range
+                continue
+            x = int(self._mx*valx + self._cx)
+            y = int(self._my*valy + self._cy)
+            self._plot_bar(x, y)
+
+
+    def _plot_bar(self, x, y):
+        "plot a bar on the graph at x, y"
+        self.append(tag.ClosedPart(tag_name='rect', attribs={"x":str(self._xaxis),
+                                                            "y":str(y-self._halfbar),
+                                                            "width":str(x-self._xaxis),
+                                                            "height":str(self._barwidth),
+                                                            "fill":self._fill,
+                                                            "fill-opacity":self._fill_opacity,
+                                                            "stroke":self._stroke,
+                                                            "stroke-width":self._stroke_width}))
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets scale values"""
+        return self._make_fieldvalues(
+                                     'fill',
+                                     'fill_opacity',
+                                     'stroke',
+                                     'stroke_width',
+                                      barwidth = self._barwidth,
+                                      xaxis = self._xaxis,
+                                      minx = float(self._minx),
+                                      maxx = float(self._maxx),
+                                      miny = float(self._miny),
+                                      maxy = float(self._maxy),
+                                      my = float(self._my),
+                                      cy = float(self._cy),
+                                      mx = float(self._mx),
+                                      cx = float(self._cx))
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+    <!-- horizontal rectangle bars at each Y point, positioned on the axis of the containing Axis widget -->
 </g>"""
 
 
