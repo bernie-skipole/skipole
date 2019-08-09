@@ -800,7 +800,7 @@ class Axis1(Widget):
 
         fill_opacity = self.get_field_value("fill_opacity")
         if not fill_opacity:
-            fill_opacity = "0"
+            fill_opacity = "1"
 
         self._font_family = self.get_field_value("font_family")
         if not self._font_family:
@@ -1922,5 +1922,389 @@ class YBars(Widget):
 <g>  <!-- with widget id and class widget_class, and transform attribute if given -->
     <!-- horizontal rectangle bars at each Y point, positioned on the axis of the containing Axis widget -->
 </g>"""
+
+
+class Axis3(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+    _container = ((1,),)
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'fill':FieldArg("text", "white"),
+                        'fill_opacity':FieldArg("text", "1"),
+                        'font_family':FieldArg("text", "arial"),
+                        'axiscol':FieldArg("text", "green"),
+                        'minxvalue':FieldArg("text", "0"),
+                        'maxxvalue':FieldArg("text", "100"),
+                        'xlabels':FieldArgList('text'),
+                        'ylabels':FieldArgList('text'),
+                        'minyvalue':FieldArg("text", "0"),
+                        'maxyvalue':FieldArg("text", "100"),
+                        'leftspace':FieldArg("text", "240"),
+                        'topspace':FieldArg("text", "20"),
+                        'axiswidth':FieldArg("text", "960"),
+                        'axisheight':FieldArg("text", "720"),
+                        'xoffset':FieldArg("boolean", False),
+                        'yoffset':FieldArg("boolean", False)
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a graph axis
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self._axiscol = "green"
+        self._font_family = "arial"
+        self[0] = tag.Part(tag_name="g")
+        # The location 1 is available as a container
+        self[1] = tag.Part(tag_name='g')
+        self[1][0] = ''
+        self._leftspace = 240
+        self._topspace = 20
+        self._axiswidth = 960
+        self._axisheight = 720
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+
+        fill = self.get_field_value("fill")
+        if not fill:
+            fill = "white"
+
+        fill_opacity = self.get_field_value("fill_opacity")
+        if not fill_opacity:
+            fill_opacity = "0"
+
+        self._font_family = self.get_field_value("font_family")
+        if not self._font_family:
+            self._font_family = "arial"
+
+        self._axiscol = self.get_field_value("axiscol")
+        if not self._axiscol:
+            self._axiscol = "green"
+
+        self._leftspace = int(self.get_field_value("leftspace"))
+        self._topspace = int(self.get_field_value("topspace"))
+        self._axiswidth = int(self.get_field_value("axiswidth"))
+        self._axisheight = int(self.get_field_value("axisheight"))
+
+
+        self[0][0] = tag.ClosedPart(tag_name='rect', attribs={"x":str(self._leftspace),
+                                                           "y":str(self._topspace),
+                                                           "width":str(self._axiswidth),
+                                                           "height":str(self._axisheight),
+                                                           "fill":fill,
+                                                           "fill-opacity":fill_opacity,
+                                                           "stroke":self._axiscol,
+                                                           "stroke-width":"1"})
+
+        xlabels = self.get_field_value(xlabels)
+        ylabels = self.get_field_value(ylabels)
+
+
+        # create Y axis
+        minv = Decimal(self.get_field_value("minyvalue"))
+        maxv = Decimal(self.get_field_value("maxyvalue"))
+        if (maxv <= minv):
+            return
+        if ylabels and (len(ylabels) > 1): 
+            interval = (maxv-minv)/(len(ylabels)-1)
+        else:
+            interval = (maxv-minv)/10
+ 
+        miny,maxy = self._y_axis(maxv, minv, interval, ylabels)
+
+
+        # create X axis
+        minv = Decimal(self.get_field_value("minxvalue"))
+        maxv = Decimal(self.get_field_value("maxxvalue"))
+        if (maxv <= minv):
+            return
+        if xlabels and (len(xlabels) > 1): 
+            interval = (maxv-minv)/(len(xlabels)-1)
+        else:
+            interval = (maxv-minv)/10
+
+        minx,maxx = self._x_axis(maxv, minv, interval, xlabels)
+
+        # get line gradients and constants, note y starts from top and goes down the page
+        # x = m*val + c
+        # m = 960 / (xmax-xmin)
+        # c = leftspace - m*xmin
+
+        # y = m*val + c
+        # m = 960 / (ymin - ymax)   - note min-max to give negative gradient
+        # c = topspace - m*ymax
+
+        my = Decimal(str(self._axisheight)) / (miny-maxy)
+        cy = self._topspace - maxy*my
+
+        mx = Decimal(str(self._axiswidth)) / (maxx-minx)
+        cx = self._leftspace - minx*mx
+
+        # ensure all contained parts have these values
+        AxisLimits = namedtuple('AxisLimits', ['miny','maxy','minx','maxx', 'my', 'cy', 'mx', 'cx'])
+
+        self.set_contained_values(AxisLimits(miny,maxy,minx,maxx,my,cy,mx,cx))
+
+
+
+
+    def _y_axis(self, maxv, minv, interval, labels):
+        "Draw a y axis, return decimal values of ymin,ymax"
+
+        fraction_number_of_intervals = (maxv-minv)/interval
+        number_of_intervals = fraction_number_of_intervals.to_integral_value(rounding=ROUND_UP)
+        maxv = minv + number_of_intervals*interval
+
+
+        yoffset = self.get_field_value("yoffset")
+        if yoffset:
+            maxv += interval/Decimal("2.0")
+            minv -= interval/Decimal("2.0")
+            # pixel_interval is the number of pixels in the interval - but in this case there is an extra interval
+            pixel_interval = int(self._axisheight//(number_of_intervals+1))
+        else:
+            # pixel_interval is the number of pixels in the interval
+            pixel_interval = int(self._axisheight//number_of_intervals)
+
+
+        # yval is the axis value at the intervals, so starting from the top
+        # y is the pixel value to be plotted
+        if yoffset:
+            y = self._topspace - pixel_interval//2
+            yval = maxv + interval/Decimal("2.0")
+            lbl = 0
+            for n in range(int(number_of_intervals)+1):
+                y += pixel_interval
+                yval -= interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
+                                                                     "y1":str(y),
+                                                                     "x2":str(self._leftspace+20),
+                                                                     "y2":str(y),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                if labels:
+                    try:
+                        ylabel = labels[lbl]
+                    except IndexError as e:
+                        ylabel = str(yval)
+                    lbl += 1
+                else:
+                    ylabel = str(yval)
+
+                self[0].append(tag.Part(tag_name='text', text=ylabel, attribs={
+                                                                            'x':str(self._leftspace-20),
+                                                                            'y': str(y+5),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+        else:
+            y = self._topspace
+            yval = maxv
+            lbl = 1
+            for n in range(int(number_of_intervals)-1):
+                y += pixel_interval
+                yval -= interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(self._leftspace-5),
+                                                                     "y1":str(y),
+                                                                     "x2":str(self._leftspace+20),
+                                                                     "y2":str(y),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                if labels:
+                    try:
+                        ylabel = labels[lbl]
+                    except IndexError as e:
+                        ylabel = str(yval)
+                    lbl += 1
+                else:
+                    ylabel = str(yval)
+                self[0].append(tag.Part(tag_name='text', text=ylabel, attribs={
+                                                                            'x':str(self._leftspace-20),
+                                                                            'y': str(y+5),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+
+            # put the maximum value at the top of the axis
+            if labels:
+                try:
+                    ylabel = labels[lbl]
+                except IndexError as e:
+                    ylabel = str(maxv)
+            else:
+                ylabel = str(maxv)
+            self[0].append(tag.Part(tag_name='text', text=ylabel, attribs={
+                                                                        'x':str(self._leftspace-20),
+                                                                        'y': str(self._topspace+5),
+                                                                        'text-anchor':'end',
+                                                                        'font-size': '20',
+                                                                        'font-family': self._font_family,
+                                                                        'fill':self._axiscol,
+                                                                        'stroke-width':"0"  }))
+
+            # put the minimum value at the bottom of the axis
+            if labels:
+                try:
+                    ylabel = labels[0]
+                except IndexError as e:
+                    ylabel = str(minv)
+            else:
+                ylabel = str(minv)
+            self[0].append(tag.Part(tag_name='text', text=ylabel, attribs={
+                                                                    'x':str(self._leftspace-20),
+                                                                    'y': str(self._axisheight+self._topspace+5),
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '20',
+                                                                    'font-family': self._font_family,
+                                                                    'fill':self._axiscol,
+                                                                    'stroke-width':"0"  }))
+
+        return minv,maxv
+
+
+
+    def _x_axis(self, maxv, minv, interval, labels):
+        "Draw a x axis, return decimal values of xmin,xmax"
+
+        fraction_number_of_intervals = (maxv-minv)/interval
+        number_of_intervals = fraction_number_of_intervals.to_integral_value(rounding=ROUND_UP)
+        maxv = minv + number_of_intervals*interval
+
+
+        xoffset = self.get_field_value("xoffset")
+        if xoffset:
+            maxv += interval/Decimal("2.0")
+            minv -= interval/Decimal("2.0")
+            # pixel_interval is the number of pixels in the interval - but in this case there is an extra interval
+            pixel_interval = int(self._axiswidth//(number_of_intervals+1))
+        else:
+            # pixel_interval is the number of pixels in the interval
+            pixel_interval = int(self._axiswidth//number_of_intervals)
+
+        # xval is the axis value at the intervals, so starting from the left
+        # x is the pixel value to be plotted
+        if xoffset:
+            x = self._leftspace - pixel_interval//2
+            xval = minv - interval/Decimal("2.0")
+            lbl = 0
+            for n in range(int(number_of_intervals)+1):
+                x += pixel_interval
+                xval += interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
+                                                                     "y1":str(self._axisheight+self._topspace+5),
+                                                                     "x2":str(x),
+                                                                     "y2":str(self._axisheight+self._topspace-20),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                if labels:
+                    try:
+                        xlabel = labels[lbl]
+                    except IndexError as e:
+                        xlabel = str(xval)
+                    lbl += 1
+                else:
+                    xlabel = str(xval)
+
+                self[0].append(tag.Part(tag_name='text', text=xlabel, attribs={
+                                                                            'x':str(x+5),
+                                                                            'y': str(self._axisheight+self._topspace+40),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+        else:
+            x = self._leftspace
+            xval = minv
+            lbl = 1
+            for n in range(int(number_of_intervals)-1):
+                x += pixel_interval
+                xval += interval
+                self[0].append(tag.ClosedPart(tag_name='line', attribs={"x1":str(x),
+                                                                     "y1":str(self._axisheight+self._topspace+5),
+                                                                     "x2":str(x),
+                                                                     "y2":str(self._axisheight+self._topspace-20),
+                                                                     "stroke":self._axiscol,
+                                                                     "stroke-width":"1"}))
+                if labels:
+                    try:
+                        xlabel = labels[lbl]
+                    except IndexError as e:
+                        xlabel = str(xval)
+                    lbl += 1
+                else:
+                    xlabel = str(xval)
+                self[0].append(tag.Part(tag_name='text', text=xlabel, attribs={
+                                                                            'x':str(x+5),
+                                                                            'y': str(self._axisheight+self._topspace+40),
+                                                                            'text-anchor':'end',
+                                                                            'font-size': '20',
+                                                                            'font-family': self._font_family,
+                                                                            'fill':self._axiscol,
+                                                                            'stroke-width':"0"  }))
+      
+            # put the maximum value at the right of the axis
+            if labels:
+                try:
+                    xlabel = labels[lbl]
+                except IndexError as e:
+                    xlabel = str(maxv)
+            else:
+                xlabel = str(maxv)
+            self[0].append(tag.Part(tag_name='text', text=xlabel, attribs={
+                                                                        'x':str(self._leftspace+self._axiswidth+5),
+                                                                        'y': str(self._axisheight+self._topspace+40),
+                                                                        'text-anchor':'end',
+                                                                        'font-size': '20',
+                                                                        'font-family': self._font_family,
+                                                                        'fill':self._axiscol,
+                                                                        'stroke-width':"0"  }))
+
+            # put the minimum value at the left of the axis
+            if labels:
+                try:
+                    xlabel = labels[0]
+                except IndexError as e:
+                    xlabel = str(minv)
+            else:
+                xlabel = str(minv)
+            self[0].append(tag.Part(tag_name='text', text=xlabel, attribs={
+                                                                    'x':str(self._leftspace+5),
+                                                                    'y': str(self._axisheight+self._topspace+40),
+                                                                    'text-anchor':'end',
+                                                                    'font-size': '20',
+                                                                    'font-family': self._font_family,
+                                                                    'fill':self._axiscol,
+                                                                    'stroke-width':"0"  }))
+
+        return minv, maxv
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <g>
+    <!-- rectangle with given position, height and width -->
+    <!-- lines and labels which draw the axis -->
+  </g>
+  <g>
+    <!-- Container 0 with further items, typically a widget displaying values -->
+  </g>
+</g>"""
+
 
 

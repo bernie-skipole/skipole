@@ -127,10 +127,6 @@ class ParentFieldArg(object):
                     return ''
                 return skiboot.make_widgfield(val)
             elif (valtype == 'text') or (valtype == 'cssclass') or (valtype == 'cssstyle'):
-                if val is 0:
-                    return '0'
-                if not val:
-                    return ''
                 return str(val)
             elif valtype =='date':
                 if isinstance(val, datetime.date):
