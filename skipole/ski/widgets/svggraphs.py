@@ -2004,8 +2004,8 @@ class Axis3(Widget):
                                                            "stroke":self._axiscol,
                                                            "stroke-width":"1"})
 
-        xlabels = self.get_field_value(xlabels)
-        ylabels = self.get_field_value(ylabels)
+        xlabels = self.get_field_value('xlabels')
+        ylabels = self.get_field_value('ylabels')
 
 
         # create Y axis
@@ -2080,7 +2080,7 @@ class Axis3(Widget):
         if yoffset:
             y = self._topspace - pixel_interval//2
             yval = maxv + interval/Decimal("2.0")
-            lbl = 0
+            lbl = int(number_of_intervals)
             for n in range(int(number_of_intervals)+1):
                 y += pixel_interval
                 yval -= interval
@@ -2095,7 +2095,7 @@ class Axis3(Widget):
                         ylabel = labels[lbl]
                     except IndexError as e:
                         ylabel = str(yval)
-                    lbl += 1
+                    lbl -= 1
                 else:
                     ylabel = str(yval)
 
@@ -2110,7 +2110,7 @@ class Axis3(Widget):
         else:
             y = self._topspace
             yval = maxv
-            lbl = 1
+            lbl = int(number_of_intervals)-1
             for n in range(int(number_of_intervals)-1):
                 y += pixel_interval
                 yval -= interval
@@ -2125,7 +2125,7 @@ class Axis3(Widget):
                         ylabel = labels[lbl]
                     except IndexError as e:
                         ylabel = str(yval)
-                    lbl += 1
+                    lbl -= 1
                 else:
                     ylabel = str(yval)
                 self[0].append(tag.Part(tag_name='text', text=ylabel, attribs={
@@ -2140,7 +2140,7 @@ class Axis3(Widget):
             # put the maximum value at the top of the axis
             if labels:
                 try:
-                    ylabel = labels[lbl]
+                    ylabel = labels[int(number_of_intervals)]
                 except IndexError as e:
                     ylabel = str(maxv)
             else:
