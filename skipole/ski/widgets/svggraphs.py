@@ -1131,6 +1131,8 @@ class Points(Widget):
 
     def set_contained_values(self, values):
         "These values set by the containing widget"
+        if values.__class__.__name__ != "AxisLimits":
+            return
         self._minx = values.minx
         self._maxx = values.maxx
         self._miny = values.miny
@@ -1563,6 +1565,8 @@ class Lines(Widget):
 
     def set_contained_values(self, values):
         "These values set by the containing widget"
+        if values.__class__.__name__ != "AxisLimits":
+            return
         self._minx = values.minx
         self._maxx = values.maxx
         self._miny = values.miny
@@ -1691,6 +1695,8 @@ class XBars(Widget):
 
     def set_contained_values(self, values):
         "These values set by the containing widget"
+        if values.__class__.__name__ != "AxisLimits":
+            return
         self._minx = values.minx
         self._maxx = values.maxx
         self._miny = values.miny
@@ -1826,6 +1832,8 @@ class YBars(Widget):
 
     def set_contained_values(self, values):
         "These values set by the containing widget"
+        if values.__class__.__name__ != "AxisLimits":
+            return
         self._minx = values.minx
         self._maxx = values.maxx
         self._miny = values.miny

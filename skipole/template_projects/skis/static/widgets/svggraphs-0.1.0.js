@@ -115,6 +115,20 @@ SKIPOLE.svggraphs.Axis2.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svggraphs.Axis3 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svggraphs.Axis3.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svggraphs.Axis3.prototype.constructor = SKIPOLE.svggraphs.Axis3;
+SKIPOLE.svggraphs.Axis3.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    };
+
+
 SKIPOLE.svggraphs.Points = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
