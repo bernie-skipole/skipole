@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.5.1",
-"skipole": "3.5.1",
+"version": "3.5.2",
+"skipole": "3.5.2",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -3118,6 +3118,15 @@ false,
 "restricted": true,
 "folders": {},
 "pages": {
+"defaults.json": {
+"ident": 85004,
+"brief": "link to edited project defaults json file",
+"FilePage": {
+"filepath": "skiadmin/data/defaults.json",
+"enable_cache": false,
+"mimetype": "application/octet-stream"
+}
+},
 "defaults_template": {
 "ident": 85001,
 "brief": "template for main defaults folder",
@@ -4174,11 +4183,21 @@ false
 },
 "defaults.json": {
 "ident": 85002,
-"brief": "download defaults.json",
-"FilePage": {
-"filepath": "skiadmin/data/defaults.json",
-"enable_cache": false,
-"mimetype": "application/octet-stream"
+"brief": "Responder to set edited project defaults json file",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [],
+"fail_ident": "admin_home",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"operations",
+"set_download"
+],
+"target_ident": 85004
+},
+"original_fields": {}
 }
 },
 "index": {
