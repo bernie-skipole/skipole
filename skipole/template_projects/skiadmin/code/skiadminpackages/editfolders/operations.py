@@ -1,6 +1,6 @@
 
 
-import re, json
+import re, json, os
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w_]')
 
@@ -101,6 +101,11 @@ def handle_upload(skicall):
     defaults_dict = json.loads(file_contents.decode())
     fromjson.save_defaults(editedprojname, defaults_dict)
     call_data['status'] = 'Defaults file installed'
+
+
+def set_download(skicall):
+    "Set the path to the file to be downloaded"
+    skicall.page_data['filepath'] = os.path.join(skicall.call_data['editedprojname'], "data", "defaults.json")
 
 
 def set_widgets_css(skicall):
