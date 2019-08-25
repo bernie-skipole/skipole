@@ -1,6 +1,6 @@
 
 
-import re
+import re, json
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w_]')
 
@@ -17,8 +17,9 @@ def retrieve_operations_data(skicall):
     call_data = skicall.call_data
     page_data = skicall.page_data
 
-    # clears any session data
-    utils.clear_call_data(call_data)
+    # clears any session data, but keep status
+    # so the status message is displayed after any operations
+    utils.clear_call_data(call_data, keep='status')
 
     editedprojname = call_data['editedprojname']
 
@@ -82,6 +83,24 @@ def retrieve_operations_data(skicall):
         contents[-1][2] = ''
         contents[-1][6] = False
         page_data[('js_links', 'contents')] = contents
+
+
+def handle_upload(skicall):
+    "handle uploaded defaults.json file"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+    editedprojname = call_data['editedprojname']
+
+    # get uploaded file contents
+    if "upload" not in call_data:
+        raise FailPage("upload missing from call data")
+    file_contents = call_data["upload"]
+    if not file_contents:
+        raise FailPage("No data found in file")
+    defaults_dict = json.loads(file_contents.decode())
+    fromjson.save_defaults(editedprojname, defaults_dict)
+    call_data['status'] = 'Defaults file installed'
 
 
 def set_widgets_css(skicall):
