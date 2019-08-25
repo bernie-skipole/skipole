@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.5.0",
-"skipole": "3.5.0",
+"version": "3.5.1",
+"skipole": "3.5.1",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -49,6 +49,8 @@
 "css_print": 8400,
 "debugtoggle": 70,
 "default_page": 2700,
+"defaults": 80001,
+"defaults_json": 85002,
 "delete_allowed_caller": 6090,
 "delete_item": 2006,
 "delete_language": 4040,
@@ -137,7 +139,6 @@
 "newparent_for_page": 3030,
 "newtext": 41020,
 "no_javascript": "skis,no_javascript",
-"operations": 80001,
 "page_body": 3340,
 "page_head": 3320,
 "page_svg": 3420,
@@ -234,6 +235,7 @@
 "submit_properties": 8500,
 "submit_text": 4100,
 "svg_file_cache": 3410,
+"upload_defaults": 85003,
 "upload_folder": 2480,
 "url_not_found": "skis,url_not_found",
 "validate_error": "skis,validate_error",
@@ -3103,605 +3105,9 @@ false,
 }
 }
 },
-"file": {
-"ident": 9000,
-"brief": "New Folder",
-"default_page_name": "index",
-"restricted": false,
-"folders": {},
-"pages": {
-"file_cache": {
-"ident": 9300,
-"brief": "Check the cache instruction",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-29009
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 29302,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"enable_cache:radio_checked": ""
-}
-}
-},
-"new_file_path": {
-"ident": 9100,
-"brief": "Check the new file path fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-29009
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 29102,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"p_file:button_text": "",
-"p_file:input_text": ""
-}
-}
-},
-"new_mimetype": {
-"ident": 9200,
-"brief": "Check the new mimetype fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-29009
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 29202,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"p_mime:button_text": "",
-"p_mime:input_text": ""
-}
-}
-}
-}
-},
-"folder": {
-"ident": 2000,
-"brief": "New Folder",
-"default_page_name": "index",
-"restricted": false,
-"folders": {},
-"pages": {
-"confirm_delete": {
-"ident": 2004,
-"brief": "Returns JSON request to confirm the page delete",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": "general_json",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"choose_remove_action"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"ftree:contents": ""
-}
-}
-},
-"default": {
-"ident": 2700,
-"brief": "Change default page",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22008,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"submit_default_page"
-],
-"submit_option": true,
-"target_ident": 22008,
-"validate_fail_ident": 22008,
-"validate_option": true
-},
-"original_fields": {
-"sdd1:selectvalue": "selectvalue"
-}
-}
-},
-"delete_item": {
-"ident": 2006,
-"brief": "Deletes the requested item",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22008,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"delete_item"
-],
-"submit_option": true,
-"target_ident": 22008,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"page_delete:get_field2_1": ""
-}
-}
-},
-"drop_item": {
-"ident": 2005,
-"brief": "Drops a page or folder into a folder",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": "general_json",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"move_to_folder"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"ftree:dragrows": "",
-"ftree:droprows": ""
-}
-}
-},
-"edit_action": {
-"ident": 2002,
-"brief": "Called from ftree to decide what to do",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"choose_edit_action"
-],
-"submit_option": true,
-"target_ident": "admin_home",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"ftree:contents": ""
-}
-}
-},
-"folder_brief": {
-"ident": 2650,
-"brief": "Check folder brief fields",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22008,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"submit_folder_brief"
-],
-"submit_option": true,
-"target_ident": 22008,
-"validate_fail_ident": 22008,
-"validate_option": true
-},
-"original_fields": {
-"st2:folder_brief": "brief"
-}
-}
-},
-"folder_definition.json": {
-"ident": 2250,
-"brief": "Download folder definition",
-"RespondPage": {
-"class": "SubmitIterator",
-"original_args": {
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"downloadfolder"
-]
-},
-"original_fields": {}
-}
-},
-"new_copypage": {
-"ident": 2460,
-"brief": "Creates a page copy",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-22461
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22460,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"addpage",
-"submit_copy_page"
-],
-"submit_option": true,
-"target_ident": 22006,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"copyident:input_text": "copyident",
-"copyident:pagebrief": "page_brief",
-"copyident:pageident": "page_ident_number",
-"copyident:pagename": "new_page",
-"copyident:parent": "edited_folder"
-}
-}
-},
-"new_filepage": {
-"ident": 2450,
-"brief": "Check createfile_page fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-22451
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22453,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"setfilepath:input_text": "",
-"setfilepath:pagebrief": "",
-"setfilepath:pageident": "",
-"setfilepath:pagename": "",
-"setfilepath:parent": ""
-}
-}
-},
-"new_folder": {
-"ident": 2200,
-"brief": "Check add new folder fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-22109
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22201,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"cb1:checkbox": "",
-"foldername:new_folder": "",
-"it1:folder_brief": "",
-"it2:folder_ident_number": "",
-"newfolderform:parent": "",
-"staticpath:checkbox": "",
-"staticpath:input_text": ""
-}
-}
-},
-"new_page": {
-"ident": 2400,
-"brief": "Check add new page fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-22309
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22401,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"it2:page_brief": "",
-"it3:page_ident_number": "",
-"it4:new_page": "",
-"rb1:radio_checked": "",
-"st1:parent": ""
-}
-}
-},
-"new_responderpage": {
-"ident": 2420,
-"brief": "Check createresponder_page fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-22421
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22423,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"responderlinks:buttons": "",
-"responderlinks:hidden_field1": "",
-"responderlinks:hidden_field2": "",
-"responderlinks:hidden_field3": "",
-"responderlinks:hidden_field4": ""
-}
-}
-},
-"new_svgpage": {
-"ident": 2430,
-"brief": "Check createsvg_page fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-22431
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 22433,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"dimensions:button_text": "",
-"dimensions:hidden_field1": "",
-"dimensions:hidden_field2": "",
-"dimensions:hidden_field3": "",
-"dimensions:hidden_field4": "",
-"height:input_text": "",
-"width:input_text": ""
-}
-}
-},
-"new_uploadfolder": {
-"ident": 2480,
-"brief": "Adds a new folder from uploaded folder definition file",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-22109
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22107,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"addfolder",
-"submit_upload_folder"
-],
-"submit_option": true,
-"target_ident": 22006,
-"validate_fail_ident": 22107,
-"validate_option": true
-},
-"original_fields": {
-"addinteger:input_text": "addident",
-"importname:input_text": "importname",
-"uploadfile:inputname": "uploadfile"
-}
-}
-},
-"new_uploadpage": {
-"ident": 2470,
-"brief": "Creates a page copy from upload",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-22461
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22460,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"addpage",
-"submit_upload_page"
-],
-"submit_option": true,
-"target_ident": 22006,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"upload:action": "upload",
-"upload:pagebrief": "page_brief",
-"upload:pageident": "page_ident_number",
-"upload:pagename": "new_page",
-"upload:parent": "edited_folder"
-}
-}
-},
-"rename_folder": {
-"ident": 2600,
-"brief": "Rename folder",
-"RespondPage": {
-"class": "AllowStoreKeyed",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22008,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"submit_rename_folder"
-],
-"submit_option": true,
-"target_ident": 22008,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"rename_folder:input_text": "name"
-}
-}
-},
-"set_restricted": {
-"ident": 2900,
-"brief": "Check set restricted fields",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22008,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"submit_restricted"
-],
-"submit_option": true,
-"target_ident": 22008,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {}
-}
-},
-"set_unrestricted": {
-"ident": 2950,
-"brief": "Check set unrestricted fields",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-22009
-],
-"alternate_ident": "admin_home",
-"fail_ident": 22008,
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"editfolder",
-"submit_unrestricted"
-],
-"submit_option": true,
-"target_ident": 22008,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {}
-}
-}
-}
-},
-"images": {
-"ident": 30000,
-"brief": "New Folder",
-"default_page_name": "index",
-"restricted": false,
-"folders": {},
-"pages": {
-"logo.svg": {
-"ident": 30013,
-"brief": "SVG logo +-->",
-"FilePage": {
-"filepath": "skiadmin/static/logo.svg",
-"enable_cache": true,
-"mimetype": "image/svg+xml"
-}
-},
-"logo_icon16.png": {
-"ident": 30014,
-"brief": "favicon +>",
-"FilePage": {
-"filepath": "skiadmin/static/logo_icon16.png",
-"enable_cache": true,
-"mimetype": "image/png"
-}
-},
-"logo_icon16.svg": {
-"ident": 30015,
-"brief": "favicon +>",
-"FilePage": {
-"filepath": "skiadmin/static/logo_icon16.svg",
-"enable_cache": true,
-"mimetype": "image/svg+xml"
-}
-}
-}
-},
-"operations": {
+"defaults": {
 "ident": 80000,
-"brief": "Project special operations",
+"brief": "Project defaults",
 "default_page_name": "index",
 "restricted": false,
 "folders": {
@@ -3712,9 +3118,9 @@ false,
 "restricted": true,
 "folders": {},
 "pages": {
-"operations_template": {
+"defaults_template": {
 "ident": 85001,
-"brief": "template for main operations folder",
+"brief": "template for main defaults folder",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
@@ -3768,7 +3174,7 @@ false,
 "parts": [
 [
 "Text",
-"Operations"
+"Defaults"
 ]
 ]
 }
@@ -3898,20 +3304,151 @@ false,
 [
 "Part",
 {
+"tag_name": "h3",
+"brief": "widget style defaults",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_top_bot_marg_10px"
+},
+"parts": [
+[
+"Text",
+"Defaults"
+]
+]
+}
+],
+[
+"Part",
+{
 "tag_name": "p",
-"brief": "About operations",
+"brief": "About download default",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "TextBlock",
 {
-"textref": "operations",
+"textref": "downloaddefaults",
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
 "linebreaks": true
 }
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "holds download button",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "defaultdownload",
+"brief": "Downloads the defaults json file",
+"fields": {
+"button_text": "Download",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
+"hide": false,
+"link_ident": "defaults_json",
+"show": true,
+"show_error": "",
+"target": "",
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About uploading a default file",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "uploaddefaults",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "upload.SubmitUploadFile1",
+"name": "upload",
+"brief": "Upload a page definition file",
+"fields": {
+"action": "upload_defaults",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"filebutton_class": "w3-button w3-theme-d4",
+"filebutton_label": "File to upload:",
+"filebuttonlabel_class": "ski_left_label",
+"fileinputdiv_class": "w3-section",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"required": false,
+"show": true,
+"show_error": "",
+"submitbutton_class": "w3-button w3-theme-d4",
+"submitbutton_label": "Upload:",
+"submitbutton_text": "Submit",
+"submitbuttonlabel_class": "ski_left_label",
+"submitinputdiv_class": "w3-section",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"set_names": {
+"hidden_field1": "parent",
+"hidden_field2": "pagename",
+"hidden_field3": "pagebrief",
+"hidden_field4": "pageident"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About operations",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Warning: The operations defined below apply across multiple template pages."
 ]
 ]
 }
@@ -4635,6 +4172,15 @@ false
 }
 }
 },
+"defaults.json": {
+"ident": 85002,
+"brief": "download defaults.json",
+"FilePage": {
+"filepath": "skiadmin/data/defaults.json",
+"enable_cache": false,
+"mimetype": "application/octet-stream"
+}
+},
 "index": {
 "ident": 80001,
 "brief": "Responder to fill template page",
@@ -4839,6 +4385,629 @@ false
 "validate_option": false
 },
 "original_fields": {}
+}
+},
+"upload_defaults": {
+"ident": 85003,
+"brief": "Uploads a defaults.json file",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"alternate_ident": "admin_home",
+"fail_ident": 80001,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"operations",
+"handle_upload"
+],
+"submit_option": true,
+"target_ident": 80001,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"upload:action": "upload"
+}
+}
+}
+}
+},
+"file": {
+"ident": 9000,
+"brief": "New Folder",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"file_cache": {
+"ident": 9300,
+"brief": "Check the cache instruction",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+29009
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 29302,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"enable_cache:radio_checked": ""
+}
+}
+},
+"new_file_path": {
+"ident": 9100,
+"brief": "Check the new file path fields",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+29009
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 29102,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"p_file:button_text": "",
+"p_file:input_text": ""
+}
+}
+},
+"new_mimetype": {
+"ident": 9200,
+"brief": "Check the new mimetype fields",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+29009
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 29202,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"p_mime:button_text": "",
+"p_mime:input_text": ""
+}
+}
+}
+}
+},
+"folder": {
+"ident": 2000,
+"brief": "New Folder",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"confirm_delete": {
+"ident": 2004,
+"brief": "Returns JSON request to confirm the page delete",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"choose_remove_action"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"ftree:contents": ""
+}
+}
+},
+"default": {
+"ident": 2700,
+"brief": "Change default page",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"submit_default_page"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": 22008,
+"validate_option": true
+},
+"original_fields": {
+"sdd1:selectvalue": "selectvalue"
+}
+}
+},
+"delete_item": {
+"ident": 2006,
+"brief": "Deletes the requested item",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"delete_item"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"page_delete:get_field2_1": ""
+}
+}
+},
+"drop_item": {
+"ident": 2005,
+"brief": "Drops a page or folder into a folder",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"move_to_folder"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"ftree:dragrows": "",
+"ftree:droprows": ""
+}
+}
+},
+"edit_action": {
+"ident": 2002,
+"brief": "Called from ftree to decide what to do",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": "admin_home",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"choose_edit_action"
+],
+"submit_option": true,
+"target_ident": "admin_home",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"ftree:contents": ""
+}
+}
+},
+"folder_brief": {
+"ident": 2650,
+"brief": "Check folder brief fields",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"submit_folder_brief"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": 22008,
+"validate_option": true
+},
+"original_fields": {
+"st2:folder_brief": "brief"
+}
+}
+},
+"folder_definition.json": {
+"ident": 2250,
+"brief": "Download folder definition",
+"RespondPage": {
+"class": "SubmitIterator",
+"original_args": {
+"fail_ident": "admin_home",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"downloadfolder"
+]
+},
+"original_fields": {}
+}
+},
+"new_copypage": {
+"ident": 2460,
+"brief": "Creates a page copy",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+22461
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22460,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"addpage",
+"submit_copy_page"
+],
+"submit_option": true,
+"target_ident": 22006,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"copyident:input_text": "copyident",
+"copyident:pagebrief": "page_brief",
+"copyident:pageident": "page_ident_number",
+"copyident:pagename": "new_page",
+"copyident:parent": "edited_folder"
+}
+}
+},
+"new_filepage": {
+"ident": 2450,
+"brief": "Check createfile_page fields",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+22451
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 22453,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"setfilepath:input_text": "",
+"setfilepath:pagebrief": "",
+"setfilepath:pageident": "",
+"setfilepath:pagename": "",
+"setfilepath:parent": ""
+}
+}
+},
+"new_folder": {
+"ident": 2200,
+"brief": "Check add new folder fields",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+22109
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 22201,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"cb1:checkbox": "",
+"foldername:new_folder": "",
+"it1:folder_brief": "",
+"it2:folder_ident_number": "",
+"newfolderform:parent": "",
+"staticpath:checkbox": "",
+"staticpath:input_text": ""
+}
+}
+},
+"new_page": {
+"ident": 2400,
+"brief": "Check add new page fields",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+22309
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 22401,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"it2:page_brief": "",
+"it3:page_ident_number": "",
+"it4:new_page": "",
+"rb1:radio_checked": "",
+"st1:parent": ""
+}
+}
+},
+"new_responderpage": {
+"ident": 2420,
+"brief": "Check createresponder_page fields",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+22421
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 22423,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"responderlinks:buttons": "",
+"responderlinks:hidden_field1": "",
+"responderlinks:hidden_field2": "",
+"responderlinks:hidden_field3": "",
+"responderlinks:hidden_field4": ""
+}
+}
+},
+"new_svgpage": {
+"ident": 2430,
+"brief": "Check createsvg_page fields",
+"RespondPage": {
+"class": "AllowedFields",
+"original_args": {
+"allowed_callers": [
+22431
+],
+"alternate_ident": "",
+"fail_ident": null,
+"submit_option": false,
+"target_ident": 22433,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"dimensions:button_text": "",
+"dimensions:hidden_field1": "",
+"dimensions:hidden_field2": "",
+"dimensions:hidden_field3": "",
+"dimensions:hidden_field4": "",
+"height:input_text": "",
+"width:input_text": ""
+}
+}
+},
+"new_uploadfolder": {
+"ident": 2480,
+"brief": "Adds a new folder from uploaded folder definition file",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+22109
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22107,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"addfolder",
+"submit_upload_folder"
+],
+"submit_option": true,
+"target_ident": 22006,
+"validate_fail_ident": 22107,
+"validate_option": true
+},
+"original_fields": {
+"addinteger:input_text": "addident",
+"importname:input_text": "importname",
+"uploadfile:inputname": "uploadfile"
+}
+}
+},
+"new_uploadpage": {
+"ident": 2470,
+"brief": "Creates a page copy from upload",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+22461
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22460,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"addpage",
+"submit_upload_page"
+],
+"submit_option": true,
+"target_ident": 22006,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"upload:action": "upload",
+"upload:pagebrief": "page_brief",
+"upload:pageident": "page_ident_number",
+"upload:pagename": "new_page",
+"upload:parent": "edited_folder"
+}
+}
+},
+"rename_folder": {
+"ident": 2600,
+"brief": "Rename folder",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"submit_rename_folder"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"rename_folder:input_text": "name"
+}
+}
+},
+"set_restricted": {
+"ident": 2900,
+"brief": "Check set restricted fields",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"submit_restricted"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {}
+}
+},
+"set_unrestricted": {
+"ident": 2950,
+"brief": "Check set unrestricted fields",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 22008,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"submit_unrestricted"
+],
+"submit_option": true,
+"target_ident": 22008,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {}
+}
+}
+}
+},
+"images": {
+"ident": 30000,
+"brief": "New Folder",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"logo.svg": {
+"ident": 30013,
+"brief": "SVG logo +-->",
+"FilePage": {
+"filepath": "skiadmin/static/logo.svg",
+"enable_cache": true,
+"mimetype": "image/svg+xml"
+}
+},
+"logo_icon16.png": {
+"ident": 30014,
+"brief": "favicon +>",
+"FilePage": {
+"filepath": "skiadmin/static/logo_icon16.png",
+"enable_cache": true,
+"mimetype": "image/png"
+}
+},
+"logo_icon16.svg": {
+"ident": 30015,
+"brief": "favicon +>",
+"FilePage": {
+"filepath": "skiadmin/static/logo_icon16.svg",
+"enable_cache": true,
+"mimetype": "image/svg+xml"
 }
 }
 }
@@ -31879,7 +32048,7 @@ false
 "parts": [
 [
 "Text",
-"These admin pages use CSS from the w3.css library. Your own project could use this or any other library - under the 'Page Labels' section, create labels to the CSS files of your choice, and within the 'Operations' section, ensure they are included in each new page created.\r\n\r\nIf you do use another CSS library you will have to choose different widget CSS classes. When you add widgets with new CSS class fields, you can set your CSS classes to be defaults, and your project will be tailored to use your preferred CSS files.\r\n\r\nFurther information about w3.css can be found here:"
+"These admin pages use CSS from the w3.css library. Your own project could use this or any other library - under the 'Page Labels' section, create labels to the CSS files of your choice, and within the 'Defaults' section, ensure they are included in each new page created.\r\n\r\nIf you do use another CSS library you will have to choose different widget CSS classes. When you add widgets with new CSS class fields, you can set your CSS classes to be defaults, and your project will be tailored to use your preferred CSS files.\r\n\r\nFurther information about w3.css can be found here:"
 ]
 ]
 }
