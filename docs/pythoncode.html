@@ -54,15 +54,15 @@
 </pre>
 <p>Where 'PROJECTFILES' is the path to your projectfiles directory - this informs the object where the project JSON files can be found.</p>
 <p>start_call, submit_data and end_call are three functions that you will provide. Minimum versions are available in myproj.py which you will develop further. They are called during the progress of a call:</p>
-<p><a href="/startcall.html">start_call(called_ident, skicall)</a></p>
+<p><a href="/skipole/startcall.html">start_call(called_ident, skicall)</a></p>
 <p>start_call is called when the server initially receives an incoming call.</p>
-<p><a href="/submitdata.html">submit_data(skicall)</a></p>
+<p><a href="/skipole/submitdata.html">submit_data(skicall)</a></p>
 <p>submit_data is called by Responder pages.</p>
-<p><a href="/endcall.html">end_call(page_ident, page_type, skicall)</a></p>
+<p><a href="/skipole/endcall.html">end_call(page_ident, page_type, skicall)</a></p>
 <p>end_call is called after any Responders have handled the call and prior to returning the page.</p>
 <p>These functions can in turn call on any further modules you wish to include within the package - hence you can access your own databases and functionality.</p>
-<p>You will notice the framework passes the skicall object to your functions which contains a good deal of information you will need, more about it is given here:<a href="/skicall.html">skicall</a></p>
-<p>In particular your functions will modify the skicall.page_data attribute which will set field values in the page finally returned to the client. For further details:<a href="/pagedata.html">skicall.page_data</a></p>
+<p>You will notice the framework passes the skicall object to your functions which contains a good deal of information you will need, more about it is given here:<a href="/skipole/skicall.html">skicall</a></p>
+<p>In particular your functions will modify the skicall.page_data attribute which will set field values in the page finally returned to the client. For further details:<a href="/skipole/pagedata.html">skicall.page_data</a></p>
 <p>Before the application is ready, it needs to have the application from the 'skis' project added to it. Within myproj.py you will see this is done with:</p>
 <pre>
 
