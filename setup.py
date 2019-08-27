@@ -13,7 +13,7 @@ setuptools.setup(
     description="A WSGI Application generator",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://skipole.bitbucket.io/",
+    url="https://bernie-skipole.github.io/skipole/",
     packages=['skipole', 'skipole.skilift', 'skipole.ski', 'skipole.ski.responders', 'skipole.ski.validators', 'skipole.ski.widgets'],
     include_package_data=True,
     classifiers=[

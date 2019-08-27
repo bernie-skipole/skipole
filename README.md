@@ -62,5 +62,5 @@ This will cause the skiadmin and skis projects under projectfiles to be replaced
 
 ### Further information ###
 
-The web admin pages have extensive documentation and help features, and the wiki at https://bitbucket.org/skipole/skipole has further documentation.
+The web admin pages have extensive documentation and help features, and go to https://bernie-skipole.github.io/skipole for further information.
 
