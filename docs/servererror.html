@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button w3-blu">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>ServerError</h3>
+<p>This exception can be imported using:</p>
+<p>from skipole import ServerError</p>
+<p>It has arguments:</p>
+<p>ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</p>
+<p>Within the Admin session pages the section on 'labels' lists a number of special pre-defined pages. One of these has label 'server_error'. Raising a ServerError exception will return the page with this label.</p>
+<p>This gives the developer the option of using the pre-defined page, or by setting the label to point to another page, a different server error page could be defined.</p>
+<p>The code argument is an error code number, internally the system uses codes 9000 to 9999. If the widget displaying the error message has a field called 'code', it will be set to this code number.</p>
+<p>Normally leave section and widget empty to allow the message to be displayed in the page default error widget.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>

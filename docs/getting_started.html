@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button w3-blue">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>Skipole - Getting Started</h3>
+<p>Assuming you have installed skipole, the package can be imported into your code like any Python package, using 'import skipole'.</p>
+<p>However, it also provides a useful feature when run directly. In which case it creates a skeleton project, together with needed support files.</p>
+<p>To test this, run:</p>
+<p><strong>python3 -m skipole --version</strong></p>
+<p>Which should result in a string such as "3.0.0" being displayed.</p>
+<p>You can now create a directory where projects will be developed, and a new project 'myproj'.</p>
+<p><strong>python3 -m skipole myproj /path/to/my/projectfiles</strong></p>
+<p>You should replace 'myproj' with your preferred name for a new project.</p>
+<p>The /path/to/my/projectfiles should be to a directory where you will be developing your new project.</p>
+<p>The projectfiles directory will be created with your new project 'myproj' within it:</p>
+<p>...projectfiles/myproj/code/myproj.py</p>
+<p>...projectfiles/myproj/data/....</p>
+<p>...projectfiles/myproj/static/....</p>
+<p>As well as myproj, you will see two other projects automatically created:</p>
+<p>skis - a project serving needed javascript files, necessary for all projects</p>
+<p>skiadmin - a project used to help develop 'myproj'</p>
+<p>'myproj' is an optional argument. If not given then only the skis and skiadmin projects will be created.</p>
+<p>The path "/path/to/my/projectfiles" must be given, and is the path to a directory of your choice where you will develop your project. Multiple projects can be created in one 'projectfiles' directory, or you could have multiple such directories holding different projects.</p>
+<p>If the directory already exists, any existing skiadmin and skis projects will be overwritten, this facility is used to upgrade skis and skiadmin if a new version of skipole is installed.</p>
+<p>If myproj already exists in the directory, it will not be changed.</p>
+<p>The python file myproj.py contains code which imports skipole, and generates the wsgi application, and functions which you will develop further yourself. It also adds the skiadmin and skis 'sub-projects' to your new project. It is strongly commented so you should inspect it. You would then run:</p>
+<p><strong>python3 /path/to/my/projectfiles/myproj/code/myproj.py</strong></p>
+<p>Then connect with a browser to localhost:8000 to view the project, and call localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.</p>
+<p>To stop the project from serving, in the terminal press ctrl-c</p>
+<h3>Upgrading</h3>
+<p>Assuming you have installed skipole using pip, to upgrade to the latest version:</p>
+<p>pip install --upgrade skipole</p>
+<p>Check you have the latest with:</p>
+<p>python3 -m skipole --version</p>
+<p>Then, for each of the locations where you are developing projects:</p>
+<p>python3 -m skipole /path/to/projectfiles</p>
+<p>This will cause the skiadmin and skis projects under projectfiles to be replaced with the latest versions.</p>
+
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>

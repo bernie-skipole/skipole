@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button w3-blue">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>skicall</h3>
+<p>The skicall object passed to your functions has several attributes, most provide you with information - some you can alter:</p>
+<p>skicall.accesstextblocks is the project instance of the AccessTextBlocks class, most users will not need this, but it may be required for certain applications.</p>
+<p>skicall.call_data is a dictionary which could contain data you set into it or could contain submitted form data (depending on the Responder handling the call).</p>
+<p>skicall.caller_ident is the ident of the page making the call, a tuple ('projname', pagenumber), generally sent with any submitted data, this value could be an empty tuple if the page ident is not known - which will happen if the calling page is external or if no data is submitted.</p>
+<p>skicall.environ is the wsgi environ dictionary.</p>
+<p>skicall.ident_data is a string which was previously saved onto the page making the call by setting skicall.page_data['ident_data'], and has now been sent back together with any submitted data.<br />
+This facility can therefore be used to pass a reference identifier between calls. You need to validate this string here as it can be altered by a malicious caller. ident_data will be None if not present.</p>
+<p>skicall.ident_list is initially an empty list but will have the ident ('projname', pagenumber) of each responder handling the call appended to it. Typically a call will be handled by a single responder, but it is possible for one responder to pass the call on to another, and so several may be involved in a call.</p>
+<p>skicall.lang is a read-only tuple of two strings containing the preferred language required by the client in the format (language, default_language).<br />
+This attribute is used when requesting TextBlocks.</p>
+<p>skicall.language is a string such as 'en' being the preferred language required by the client, initially taken from the client browser's language setting, or from a received language cookie. If changed it will cause a language cookie to be set. It may be that the client browser preferred language is not available, hence this is independent of the skicall.page_data['lang'] setting - which, if used, sets the page html tag 'lang' attribute.</p>
+<p>skicall.page_data is a dictionary to be populated by your functions during the progress of this call.<br />
+It consists of a dictionary of {widgfields:values,...} which will be set in the final template page.</p>
+<p>Note: a widgfield is a tuple ('widgetname', 'fieldname'), or a tuple ('sectionalias','widgetname', 'fieldname') if the widget is part of a section. </p>
+<p>skicall.path is the URL path to the page called.</p>
+<p>skicall.proj_data is a project attribute, a dictionary set when creating the skipole.WSGIApplication object. It could be used for your own purpose - for example to input a database password when the program is started.</p>
+<p>skicall.project is the project name.</p>
+<p>skicall.projectfiles is the string path to the 'projectfiles' directory of data and static files. Each project's specific directory can be found beneath it - that is, in the '..projectfiles/myproject/' directory.</p>
+<p>skicall.received_cookies is a dictionary of cookie name:values received from the client. Note, that if skicall.language is set, a cookie value received will appear in this dictionary with key 'language'.</p>
+<p>skicall.rootproject will be True if this is the root project, False if it is a sub project.</p>
+<p>skicall.submit_list is a list set by a responder.</p>
+<p>skicall.submit_dict is a dictionary set by a responder.</p>
+<h3>METHODS</h3>
+<p>skicall.label_value(label, project=None) is a method which given a label, returns the associated ident or URL.<br />If project is not given assumes the current project, if given, project must exist as either the root, or a sub project of the root. If no label is found, returns None.</p>
+<p>skicall.textblock(textref, project=None) is a method which given a reference string returns the text of the associated TextBlock.<br />If project is None, it assumes the TextBlock is defined in the current project, if project is given it must be the root or a sub project. If no TextBlock is found, it returns None.</p>
+<p>skicall.projectpaths() returns a dictionary of project names as keys with the project paths as values.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>

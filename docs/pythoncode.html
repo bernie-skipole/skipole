@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button w3-blue">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>Your project Python code</h3>
+<p>The projectfiles directory containing project myproj should have been created as previously described. Within it you will be developing ...projectfiles/myproj/code/myproj.py</p>
+<p>myproj.py will already be set up to do most of the following work, but in summary, it needs to import the WSGIApplication class.</p>
+<p>Creating an instance of this WSGISpplication object creates an 'application' which can be used by any WSGI web server.</p>
+<p>An instance is created within myproj.py with the lines:</p>
+<pre>
+
+    from skipole import WSGIApplication
+    application = WSGIApplication(project='myproj',
+                                  projectfiles=PROJECTFILES,
+                                  proj_data={},
+                                  start_call=start_call,
+                                  submit_data=submit_data,
+                                  end_call=end_call,
+                                  url="/")
+
+</pre>
+<p>Where 'PROJECTFILES' is the path to your projectfiles directory - this informs the object where the project JSON files can be found.</p>
+<p>start_call, submit_data and end_call are three functions that you will provide. Minimum versions are available in myproj.py which you will develop further. They are called during the progress of a call:</p>
+<p><a href="/startcall.html">start_call(called_ident, skicall)</a></p>
+<p>start_call is called when the server initially receives an incoming call.</p>
+<p><a href="/submitdata.html">submit_data(skicall)</a></p>
+<p>submit_data is called by Responder pages.</p>
+<p><a href="/endcall.html">end_call(page_ident, page_type, skicall)</a></p>
+<p>end_call is called after any Responders have handled the call and prior to returning the page.</p>
+<p>These functions can in turn call on any further modules you wish to include within the package - hence you can access your own databases and functionality.</p>
+<p>You will notice the framework passes the skicall object to your functions which contains a good deal of information you will need, more about it is given here:<a href="/skicall.html">skicall</a></p>
+<p>In particular your functions will modify the skicall.page_data attribute which will set field values in the page finally returned to the client. For further details:<a href="/pagedata.html">skicall.page_data</a></p>
+<p>Before the application is ready, it needs to have the application from the 'skis' project added to it. Within myproj.py you will see this is done with:</p>
+<pre>
+
+    skis_code = os.path.join(PROJECTFILES, 'skis', 'code')
+    if skis_code not in sys.path:
+        sys.path.append(skis_code)
+    import skis
+    skis_application = skis.makeapp(PROJECTFILES)
+    application.add_project(skis_application, url='/lib')
+
+</pre>
+<p>This 'skis' application serves javascript files used by the framework, so it is always needed.</p>
+<h3>Exceptions</h3>
+<p>Your myproj.py module also imports four exceptions which you can use in your functions:</p>
+<p><strong>from skipole import FailPage, GoTo, ValidateError, ServerError</strong></p>
+<p>Further information about the exceptions and their arguments can be found at:</p>
+<p><a href="/failpage.html">FailPage(message = '', section='', widget='')</a></p>
+<p><a href="/goto.html">GoTo(target, clear_submitted=False, clear_page_data=False)</a></p>
+<p><a href="/validateerror.html">ValidateError(message = '', section='', widget='', status='400 Bad Request')</a></p>
+<p><a href="/servererror.html">ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</a></p>
+<p>Further information is available within the skiadmin pages, and the Documentation link to the left.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>

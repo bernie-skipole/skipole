@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button w3-blue">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>end_call(page_ident, page_type, skicall)</h3>
+<p>The minimum version is:</p>
+
+<pre>
+
+    def end_call(page_ident, page_type, skicall):
+        return
+    
+</pre>
+<p>This function is called at the end of a call prior to filling the template (or other type of returned page) with data, and gives you the opportunity to set any further fields in skicall.page_data, and to optionally set a session cookie string.</p>
+
+<p>page_ident is the ident of the page being returned. A tuple ('projname', pagenumber), this is usually the ident of the template, css etc., page but can also be the ident of one of the responders which create a dynamic page (see page_type).</p>
+
+<p>page_type is a string giving the type of the page returned, typically 'TemplatePage', 'CSS', 'SVG', 'FilePage' or 'JSON'. Certain responders create their own pages and for these the page_type will be the responder type, one of 'SubmitJSON', 'SubmitPlainText', 'SubmitCSS', 'SubmitIterator'.</p>
+
+<p>This function should return either None, or optionally a session cookie string. This string will be returned with the next call to this web site in the skicall.received_cookies dictionary with key being the project name.</p>
+
+<p>Do not raise a GoTo exception here. Unlike the 'submit_data' function, the results of this function are passed directly to the page given by page_ident.</p>
+
+<p>If a FailPage exception is raised, the error will be shown on the page given by page_ident.</p>
+
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>

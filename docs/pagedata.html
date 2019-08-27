@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button w3-blue">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>skicall.page_data</h3>
+
+<p>Your 'start_call', 'submit_data' and 'end_call' functions are used to populate the attribute 'skicall.page_data' which is a dictionary. This dictionary contents are used to set the widget fields of the final template page returned.</p>
+<p>The keys of page_data are of the form:</p>
+<p>If a widget is in a section:</p>
+<p>skicall.page_data[sectionalias,widgetname,fieldname] = value</p>
+<p>If a widget is not in a section:</p>
+<p>skicall.page_data[widgetname,fieldname] = value</p>
+<p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
+<p>Most of the skicall.page_data fields will be of the above form, however there are keys which set certain parameters, optionally overriding parameters set when the page is created:</p>
+<p>skicall.page_data[sectionalias, 'hide'] - Set True to hide the section</p>
+<p>skicall.page_data[sectionalias, 'multiplier'] - A section can be displayed multiple times - this sets the number of times this section to be shown</p>
+<p>skicall.page_data[sectionalias, 'multiplier_tag'] - Set the section tag containing each section when multiplied</p>
+<p>skicall.page_data[sectionalias, 'section_class'] - Set CSS class on the section</p>
+<p>skicall.page_data[sectionalias, 'show'] - Set False to remove the section</p>
+<p>These literal string keys set page parameters:</p>
+<p>skicall.page_data['add_jscript'] - Set to a string containing javascript code. This will be set within the pages automatically generated "$(document).ready(function(){})" and will be run when the page is loaded.</p>
+<p>skicall.page_data['backcol'] - Set the 'HTML' tag background color</p>
+<p>skicall.page_data['body_class'] - The CSS class of the 'BODY' tag</p>
+<p>skicall.page_data['headers'] - Sets the returned page headers</p>
+<p>skicall.page_data['ident_data'] - Set to a string, which will be returned as the 'skicall.ident_data' attribute if this page submits any data.</p>
+<p>skicall.page_data['lang'] - Set the language, such as 'en' in the page 'HTML' tag. This is independent of the skicall lang and language attributes, though it would generally be set the same as skicall.language.</p>
+<p>skicall.page_data['last_scroll'] - Set True to display the page at its last scroll position</p>
+<p>skicall.page_data['localStorage'] - A dictionary of string keys and values to set in the browser storage</p>
+<p>skicall.page_data['sessionStorage'] - A dictionary of string keys and values to set in the browser storage</p>
+<p>skicall.page_data['show_backcol'] - Set True to enable the 'HTML' tag background color</p>
+<p>skicall.page_data['show_error'] - Error message to be shown on the page default error widget</p>
+<p>skicall.page_data['status'] - Sets the returned page status</p>
+<p>For File pages:</p>
+<p>skicall.page_data['filepath'] - The path (relative to projectfiles) to the linked static file.</p>
+<p>skicall.page_data['mimetype'] - The mime type of the file.</p>
+<p>skicall.page_data['enable_cache'] - If True instructs the client to cache the file.</p>
+<p>For SVG pages (dynamic created pages, not static files):</p>
+<p>skicall.page_data['height'] - Set the height</p>
+<p>skicall.page_data['width'] - Set the width</p>
+<p>skicall.page_data['enable_cache'] - Enables client cache of this page.</p>
+<p>For CSS pages (dynamic created pages, not static files):</p>
+<p>skicall.page_data['@import'] - A string or a list</p>
+<p>skicall.page_data['enable_cache'] - Enables client cache of this page.</p>
+<p>For JSON pages:</p>
+<p>Those Widgets which submit data, or link to another page, are generally set with the page to call, and an HTML template page is returned. However some widgets can request a JSON page (requires javascript to be enabled in the client browser).</p>
+<p>In this case an alternative HTML page such as 'no_javascript' can be set in the HTML link field, which will be shown if the JSON call fails.</p>
+<p>When a JSON request is made - you would typically call a Responder which sets the skicall.page_data widgfield/values into the target page 'general_json'. This being an empty JSON file which is then populated with the dictionary.</p>
+<p>On being received by the client the page widget fields will be updated, this will be quick, as a whole page is not sent, and looks very dynamic. Only certain widgfields are 'JSON enabled' and can be updated - this is shown in the widget documentation for each field.</p>
+<p>As well as widgets, on setting up a Template Page you will see that the page can be set to make a JSON call at set intervals. Again this can be useful to continuously update required fields on the page.</p>
+<p>As well as widgfields, the JSONtoHTML value can be set when returning a JSON page:</p>
+<p>skicall.page_data['JSONtoHTML'] - A url to divert to.</p>
+<p>This causes the client to call this target url.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>

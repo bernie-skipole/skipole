@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button w3-blue">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>start_call(called_ident, skicall)</h3>
+
+<p>The minimum version is:</p>
+<pre>
+
+    def start_call(called_ident, skicall):
+        return called_ident
+
+</pre>
+<p>When a call is received by the server, this function is called.</p>
+<p>called_ident is normally the ident of the page being called, it is a tuple ('myprojname', pagenumber) - with 'myprojname' being the project name, and pagenumber being the unique integer page number.</p>
+<p>skicall is the call object described <a href="/skicall.html">here.</a></p>
+<p>This function should normally return the called_ident value.</p>
+<p>If any tests you set here, which could include testing received cookie values, are ok, then the returned called_ident would normally be the called_ident given in the argument which is that of the page being called.</p>
+<p>If None is returned, the 'URL NOT FOUND' page will be automatically returned to the client.</p>
+<p>If you wish to handle the call via another page, return an ident, label or url of a page to jump to. You could, for example use this feature to direct the call to a log in page.</p>
+<p>An ident is a tuple of (projectname, pagenumber) - each page is given a unique pagenumber as it is created in the admin session.</p>
+<p>A label is a string, optionally set in the admin session, which references a page or URL, a convenient label which can be used instead of page idents.</p>
+<p>A url would not normally be used for a page within the project, but could be used to direct to an external site.</p>
+<p>If the called_ident returned is that of a responder page, then depending on the responder, (or sequence of responders) further function calls may be made to the submit_data function. If called_ident is not a responder (for example a template page) then the function end_call will be called next.</p>
+<p>No un-caught exception should be raised in this function - if any are, the Server error page will be displayed.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>

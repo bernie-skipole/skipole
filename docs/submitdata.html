@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<a href="/index.html"><img src="/images/logo.svg" height="28" width="56" align="bottom" /></a>
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/submitdata.html" class="w3-bar-item w3-button w3-blue">submit_data</a>
+  <a href="/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Tests at PythonAnywhere:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bernieskipole.pythonanywhere.com/" class="w3-bar-item w3-button">Widgets</a>
+</div>
+<p>Development at Bitbucket:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://bitbucket.org/skipole/skipole" class="w3-bar-item w3-button">Skipole Project</a>
+  <a href="https://bitbucket.org/skipole/skipole/wiki/Home" class="w3-bar-item w3-button">Documentation</a>
+  <a href="https://bitbucket.org/skipole/skipole/downloads/" class="w3-bar-item w3-button">Downloads</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>submit_data(skicall)</h3>
+
+<p>The minimum version is:</p>
+
+<pre>
+
+    def submit_data(skicall):
+        return
+
+</pre>
+<p>This function is called when a responder wishes to submit data for processing in some manner. This function typically should populate the skicall.page_data dictionary, usually with widgfields as keys, and values to insert into the fields.</p>
+<p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
+
+<p>Using the skiadmin facility a responder is chosen from a list of responders by yourself, and added to this site like any other page. Each responder has a different functionality. Certain responders call this submit_data function. Typically a client web browser would make a call to a responder, which (after start_call is called) would set any received form data into the skicall.call_data dictionary, and then call your submit_data function. Responders generally are set with a target ident - generally the ident of a template page, which will have its widgets populated by any data you set in the skicall.page_data dictionary.</p>
+
+<p>The responder calling this function will specify what it wants returned from submit_data in its documentation.</p>
+<p>Most responders require 'None' to be returned, but, for example, the LogIn responder requires a session string.</p>
+
+<p>It is possible for one responder to pass the call to another, therefore submit_data could be called multiple times within a single call. Your function can inspect skicall.ident_list which is the list of such responder idents called - the first item being the responder ident called by the user, the last entry being the responder ident that called submit_data.</p>
+
+<p>Each ident in the list is a tuple of the form ('projname', pagenumber).</p>
+
+<p>skicall.submit_list is a list of strings which may be submitted by the responder calling this function.</p>
+<p>They are optionally used for your convenience, and set when you add a responder to the project.</p>
+
+<p>skicall.submit_dict is a dictionary which may be submitted by the responder calling this function.</p>
+<p>The submit_dict contents depends on the responder, and are documented for each responder type in the skiadmin pages.</p>
+
+<p>skicall.call_data is a dictionary which you can populate with your own data during the progress of the call. If you wish to clear it, use skicall.call_data.clear().</p>
+
+<p>Typically a responder would be used to pass submitted form data into this call_data dictionary prior to this function being called.</p>
+
+<p>On returning from this function the call will be passed to the responder's target page, which could typically be a template page (in which case your end_call function will be called next) or it could be another responder. If required a GoTo exception could be raised to jump elsewhere, or a FailPage exception could be raised to jump to the responders failure page with an error message.</p>
+
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>
