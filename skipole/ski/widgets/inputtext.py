@@ -626,15 +626,21 @@ class TextInput4(Widget):
                         'set_input_accepted':FieldArg("boolean", False, jsonset=True),
                         'set_input_errored':FieldArg("boolean", False, jsonset=True),
                         'labeldiv_class':FieldArg("cssclass", ''),
+                        'labeldiv_style':FieldArg("cssstyle", ''),
                         'label':FieldArg("text", ''),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
+                        'inputdiv_style':FieldArg("cssstyle", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'input_class':FieldArg("cssclass", ''),
+                        'input_style':FieldArg("cssstyle", ''),
                         'input_disabled_class':FieldArg("cssclass", ''),
                         'size':FieldArg("text", ''),
                         'maxlength':FieldArg("text", ''),
                         'redstar':FieldArg("boolean", False),
+                        'redstar_class':FieldArg("cssclass", ''),
+                        'redstar_style':FieldArg("cssstyle", ''),
                         'disabled':FieldArg("boolean", False, jsonset=True),
                         'required':FieldArg("boolean", False),
                         'type':FieldArg("text", 'text'),
@@ -679,13 +685,19 @@ class TextInput4(Widget):
         # label
         if self.get_field_value('labeldiv_class'):
             self[0].update_attribs({"class": self.get_field_value('labeldiv_class')})
+        if self.get_field_value('labeldiv_style'):
+            self[0].update_attribs({"style": self.get_field_value('labeldiv_style')})
         if self.get_field_value('label_class'):
             self[0][0].update_attribs({"class": self.get_field_value('label_class')})
+        if self.get_field_value('label_style'):
+            self[0][0].update_attribs({"style": self.get_field_value('label_style')})
         if self.get_field_value("label"):
             self[0][0][0] = self.get_field_value("label")
         # input div
         if self.get_field_value('inputdiv_class'):
             self[1].update_attribs({"class": self.get_field_value('inputdiv_class')})
+        if self.get_field_value('inputdiv_style'):
+            self[1].update_attribs({"style": self.get_field_value('inputdiv_style')})
         # set an id in the input field for the 'label for' tag
         self[1][0].insert_id()
         self[0][0].update_attribs({'for':self[1][0].get_id()})
@@ -703,6 +715,8 @@ class TextInput4(Widget):
             self[1][0].update_attribs({"pattern":self.get_field_value('pattern')})
         if self.get_field_value('title'):
             self[1][0].update_attribs({"title":self.get_field_value('title')})
+        if self.get_field_value('input_style'):
+            self[1][0].update_attribs({"style":self.get_field_value('input_style')})
         if self.get_field_value('input_class'):
             input_class = self.get_field_value('input_class')
         else:
@@ -726,8 +740,11 @@ class TextInput4(Widget):
         # redstar
         if self.get_field_value('redstar'):
             self[1][1] = tag.Part(tag_name="span",  attribs ={"style":"color:red;"})
-            self[1][1][0] = tag.HTMLSymbol(text="&nbsp;")
-            self[1][1][1] = '*'
+            self[1][1][0] = '*'
+            if self.get_field_value('redstar_style'):
+                self[1][1].update_attribs({"style":self.get_field_value('redstar_style')})
+            if self.get_field_value('redstar_class'):
+                self[1][1].update_attribs({"class":self.get_field_value('redstar_class')})
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets input classes into fieldvalues"""
@@ -756,7 +773,7 @@ class TextInput4(Widget):
   </div>
   <div> <!-- with class set to inputdiv_class -->
     <input type='text' /> <!-- with attributes set appropriately -->
-    <span style="color:red;">&nbsp;*</span> <!-- shown if redstar is True -->
+    <span>*</span> <!-- shown if redstar is True -->
   </div>
 </div>"""
 
