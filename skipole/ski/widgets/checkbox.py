@@ -15,12 +15,16 @@ class CheckBox1(Widget):
     arg_descriptions = {
                        'checkbox':FieldArg("text", '', valdt=True),
                        'checkbox_class':FieldArg("cssclass", ''),
-                       'left_label':FieldArg("text", ''),
+                       'checkbox_style':FieldArg("cssstyle", ''),
+                       'left_label':FieldArg("text", 'Left Label'),
                        'left_class':FieldArg("cssclass", ''),
+                       'left_style':FieldArg("cssstyle", ''),
                        'error_class':FieldArg("cssclass", ""),
                        'div_class':FieldArg("cssclass", ""),
+                       'div_style':FieldArg("cssstyle", ''),
                        'right_label':FieldArg("text", ''),
                        'right_class':FieldArg("cssclass", ''),
+                       'right_style':FieldArg("cssstyle", ''),
                        'checked':FieldArg("boolean", False, jsonset=True)
                        }
     def __init__(self, name=None, brief='', **field_args):
@@ -52,20 +56,28 @@ class CheckBox1(Widget):
             self[0].del_one_attrib("style")
         if self.get_field_value('div_class'):
             self[1].update_attribs({"class":self.get_field_value('div_class')})
+        if self.get_field_value('div_style'):
+            self[1].update_attribs({"style":self.get_field_value('div_style')})
         if self.get_field_value('left_label'):
             self[1][0][0] = self.get_field_value('left_label')
         if self.get_field_value('left_class'):
             self[1][0].attribs = {"class": self.get_field_value('left_class')}
+        if self.get_field_value('left_style'):
+            self[1][0].attribs = {"style": self.get_field_value('left_style')}
         if self.get_field_value('checked'):
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "value":self.get_field_value('checkbox'), "checked":"checked"})
         else:
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "value":self.get_field_value('checkbox')})
         if self.get_field_value('checkbox_class'):
             self[1][1].update_attribs({"class": self.get_field_value('checkbox_class')})
+        if self.get_field_value('checkbox_style'):
+            self[1][1].update_attribs({"style": self.get_field_value('checkbox_style')})
         if self.get_field_value('right_label'):
             self[1][2][0] = self.get_field_value('right_label')
         if self.get_field_value('right_class'):
             self[1][2].attribs = {"class": self.get_field_value('right_class')}
+        if self.get_field_value('right_style'):
+            self[1][2].attribs = {"style": self.get_field_value('right_style')}
         # set an id in the checkbox for the 'label for' tag
         self[1][1].insert_id()
         # set the label 'for' attribute
@@ -101,10 +113,13 @@ class CheckBox2(Widget):
     arg_descriptions = {
                        'checkbox':FieldArg("text", '', valdt=True),
                        'checkbox_class':FieldArg("cssclass", ''),
+                       'checkbox_style':FieldArg("cssstyle", ''),
                        'left_label':FieldArg("text", ''),
                        'left_class':FieldArg("cssclass", ''),
+                       'left_style':FieldArg("cssstyle", ''),
                        'right_label':FieldArg("text", ''),
                        'right_class':FieldArg("cssclass", ''),
+                       'right_style':FieldArg("cssstyle", ''),
                        'checked':FieldArg("boolean", False, jsonset=True)
                        }
     def __init__(self, name=None, brief='', **field_args):
@@ -129,16 +144,22 @@ class CheckBox2(Widget):
             self[0][0] = self.get_field_value('left_label')
         if self.get_field_value('left_class'):
             self[0].attribs = {"class": self.get_field_value('left_class')}
+        if self.get_field_value('left_style'):
+            self[0].attribs = {"style": self.get_field_value('left_style')}
         if self.get_field_value('checked'):
             self[1].update_attribs({"name":self.get_formname('checkbox'), "value":self.get_field_value('checkbox'), "checked":"checked"})
         else:
             self[1].update_attribs({"name":self.get_formname('checkbox'), "value":self.get_field_value('checkbox')})
         if self.get_field_value('checkbox_class'):
             self[1].update_attribs({"class": self.get_field_value('checkbox_class')})
+        if self.get_field_value('checkbox_style'):
+            self[1].update_attribs({"style": self.get_field_value('checkbox_style')})
         if self.get_field_value('right_label'):
             self[2][0] = self.get_field_value('right_label')
         if self.get_field_value('right_class'):
             self[2].attribs = {"class": self.get_field_value('right_class')}
+        if self.get_field_value('right_style'):
+            self[2].attribs = {"style": self.get_field_value('right_style')}
         # set an id in the checkbox for the 'label for' tag
         self[1].insert_id()
         # set the label 'for' attribute
@@ -374,8 +395,9 @@ class SubmitCheckBox1(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'label':FieldArg("text", ''),
+    arg_descriptions = {'label':FieldArg("text", 'Left Label'),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'action_json':FieldArg("url", ''),
                         'action':FieldArg("url", ''),
                         'hidden_field1':FieldArg("text", '', valdt=True),
@@ -460,6 +482,8 @@ class SubmitCheckBox1(Widget):
             self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
         if self.get_field_value('label_class'):
             self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label_style'):
+            self[1][0][0].attribs = {"style": self.get_field_value('label_style')}
         if self.get_field_value('label'):
             self[1][0][0][0] = self.get_field_value('label')
 
