@@ -15,13 +15,16 @@ class DropDown1(Widget):
 
     arg_descriptions = {
                        'selectvalue':FieldArg("text", '', valdt=True),
-                       'left_label':FieldArg("text", ''),
+                       'left_label':FieldArg("text", 'Choose:'),
                        'left_class':FieldArg("cssclass", ''),
+                       'left_style':FieldArg("cssstyle", ''),
                        'error_class':FieldArg("cssclass", ""),
                        'select_class':FieldArg("cssclass", ""),
+                       'select_style':FieldArg("cssstyle", ""),
                        'div_class':FieldArg("cssclass", ""),
                        'right_label':FieldArg("text", ''),
                        'right_class':FieldArg("cssclass", ''),
+                       'right_style':FieldArg("cssstyle", ''),
                        'option_list':FieldArgList("text")
                        }
     def __init__(self, name=None, brief='', **field_args):
@@ -58,8 +61,12 @@ class DropDown1(Widget):
             self[1][0][0] = self.get_field_value('left_label')
         if self.get_field_value('left_class'):
             self[1][0].attribs = {"class": self.get_field_value('left_class')}
+        if self.get_field_value('left_style'):
+            self[1][0].attribs = {"style": self.get_field_value('left_style')}
         if self.get_field_value('select_class'):
             self[1][1].attribs = {"class": self.get_field_value('select_class')}
+        if self.get_field_value('select_style'):
+            self[1][1].attribs = {"style": self.get_field_value('select_style')}
         self[1][1].update_attribs({"name":self.get_formname('selectvalue')})
         selected_option = self.get_field_value('selectvalue')
         for index, opt in enumerate(self.get_field_value('option_list')):
@@ -71,6 +78,8 @@ class DropDown1(Widget):
             self[1][2][0] = self.get_field_value('right_label')
         if self.get_field_value('right_class'):
             self[1][2].attribs = {"class": self.get_field_value('right_class')}
+        if self.get_field_value('right_style'):
+            self[1][2].attribs = {"style": self.get_field_value('right_style')}
         # set an id in the select for the 'label for' tag
         self[1][1].insert_id()
         # set the label 'for' attribute
@@ -103,8 +112,9 @@ class SubmitDropDown1(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'label':FieldArg("text", ''),
+    arg_descriptions = {'label':FieldArg("text", 'Choose:'),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'action_json':FieldArg("url", ''),
                         'action':FieldArg("url", ''),
                         'hidden_field1':FieldArg("text", '', valdt=True),
@@ -116,6 +126,7 @@ class SubmitDropDown1(Widget):
                         'error_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ""),
                         'select_class':FieldArg("cssclass", ""),
+                        'select_style':FieldArg("cssstyle", ""),
                         'selectvalue':FieldArg("text", '', valdt=True),
                         'option_list':FieldArgList("text"),
                         'hide':FieldArg("boolean", False, jsonset=True),
@@ -190,9 +201,12 @@ class SubmitDropDown1(Widget):
             self[1][0][0][0] = self.get_field_value('label')
         if self.get_field_value('label_class'):
             self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
-
+        if self.get_field_value('label_style'):
+            self[1][0][0].attribs = {"style": self.get_field_value('label_style')}
         if self.get_field_value('select_class'):
             self[1][0][1].attribs = {"class": self.get_field_value('select_class')}
+        if self.get_field_value('select_style'):
+            self[1][0][1].attribs = {"style": self.get_field_value('select_style')}
         self[1][0][1].update_attribs({"name":self.get_formname('selectvalue')})
 
         if self.get_field_value('disabled'):
