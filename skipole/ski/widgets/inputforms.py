@@ -281,10 +281,12 @@ class SubmitForm1(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'left_label':FieldArg("text", ''),
+    arg_descriptions = {'left_label':FieldArg("text", 'Please Submit:'),
                         'left_class':FieldArg("cssclass", ''),
+                        'left_style':FieldArg("cssstyle", ''),
                         'right_label':FieldArg("text", ''),
                         'right_class':FieldArg("cssclass", ''),
+                        'right_style':FieldArg("cssstyle", ''),
                         'action_json':FieldArg("url", ''),
                         'action':FieldArg("url", ''),
                         'enctype':FieldArg("text", ''),
@@ -373,6 +375,8 @@ class SubmitForm1(Widget):
             self[1][1][0][0] = self.get_field_value('left_label')
         if self.get_field_value('left_class'):
             self[1][1][0].attribs = {"class": self.get_field_value('left_class')}
+        if self.get_field_value('left_style'):
+            self[1][1][0].attribs = {"style": self.get_field_value('left_style')}
 
         # submit button
         if self.get_field_value('button_class'):
@@ -387,6 +391,8 @@ class SubmitForm1(Widget):
             self[1][1][2][0] = self.get_field_value('right_label')
         if self.get_field_value('right_class'):
             self[1][1][2].attribs = {"class": self.get_field_value('right_class')}
+        if self.get_field_value('right_style'):
+            self[1][1][2].attribs = {"style": self.get_field_value('right_style')}
 
         # set the label 'for' attribute
         self[1][1][0].update_attribs({'for':self[1][1][1].get_id()})

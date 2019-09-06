@@ -352,15 +352,19 @@ class Password2(Widget):
                         'inputdiv_class':FieldArg("cssclass", ''),
                         'set_input_accepted':FieldArg("boolean", False, jsonset=True),
                         'set_input_errored':FieldArg("boolean", False, jsonset=True),
-                        'label':FieldArg("text", ''),
+                        'label':FieldArg("text", 'Password:'),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'error_class':FieldArg("cssclass", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'input_class':FieldArg("cssclass", ''),
+                        'input_style':FieldArg("cssstyle", ''),
                         'size':FieldArg("text", ''),
                         'maxlength':FieldArg("text", ''),
                         'disabled':FieldArg("boolean", False, jsonset=True),
                         'redstar':FieldArg("boolean", False),
+                        'redstar_class':FieldArg("cssclass", ''),
+                        'redstar_style':FieldArg("cssstyle", ''),
                         'required':FieldArg("boolean", False)
                        }
     def __init__(self, name=None, brief='', **field_args):
@@ -405,6 +409,8 @@ class Password2(Widget):
             self[1].update_attribs({"class": self.get_field_value('inputdiv_class')})
         if self.get_field_value('label_class'):
             self[1][0].update_attribs({"class": self.get_field_value('label_class')})
+        if self.get_field_value('label_style'):
+            self[1][0].update_attribs({"style": self.get_field_value('label_style')})
         if self.get_field_value("label"):
             self[1][0][0] = self.get_field_value("label")
         # set an id in the input field for the 'label for' tag
@@ -417,6 +423,8 @@ class Password2(Widget):
             self[1][1].update_attribs({"maxlength":self.get_field_value('maxlength')})
         if self.get_field_value('required'):
             self[1][1].update_attribs({"required":"required"})
+        if self.get_field_value('input_style'):
+            self[1][1].update_attribs({"style":self.get_field_value('input_style')})
         if self.get_field_value('input_class'):
             input_class = self.get_field_value('input_class')
         else:
@@ -442,10 +450,16 @@ class Password2(Widget):
                 input_class = self.get_field_value('input_accepted_class')
         if input_class:
             self[1][1].update_attribs({"class":input_class})
+        # redstar
         if self.get_field_value('redstar'):
-            self[1][2] = tag.Part(tag_name="span",  attribs ={"style":"color:red;"})
-            self[1][2][0] = tag.HTMLSymbol(text="&nbsp;")
-            self[1][2][1] = '*'
+            self[1][2] = tag.Part(tag_name="span")
+            if self.get_field_value('redstar_style'):
+                self[1][2].update_attribs({"style":self.get_field_value('redstar_style')})
+            if self.get_field_value('redstar_class'):
+                self[1][2].update_attribs({"class":self.get_field_value('redstar_class')})
+            self[1][2][0] = '*'
+
+
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets input classes into fieldvalues"""
@@ -627,7 +641,7 @@ class TextInput4(Widget):
                         'set_input_errored':FieldArg("boolean", False, jsonset=True),
                         'labeldiv_class':FieldArg("cssclass", ''),
                         'labeldiv_style':FieldArg("cssstyle", ''),
-                        'label':FieldArg("text", ''),
+                        'label':FieldArg("text", 'Your input:'),
                         'label_class':FieldArg("cssclass", ''),
                         'label_style':FieldArg("cssstyle", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
@@ -739,7 +753,7 @@ class TextInput4(Widget):
             self[1][0].update_attribs({"class":input_class})
         # redstar
         if self.get_field_value('redstar'):
-            self[1][1] = tag.Part(tag_name="span",  attribs ={"style":"color:red;"})
+            self[1][1] = tag.Part(tag_name="span")
             self[1][1][0] = '*'
             if self.get_field_value('redstar_style'):
                 self[1][1].update_attribs({"style":self.get_field_value('redstar_style')})
@@ -787,8 +801,9 @@ class SubmitTextInput1(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'label':FieldArg("text", ''),
+    arg_descriptions = {'label':FieldArg("text", 'Your input:'),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'action_json':FieldArg("url", ''),
                         'action':FieldArg("url", ''),
                         'hidden_field1':FieldArg("text", '', valdt=True),
@@ -800,6 +815,7 @@ class SubmitTextInput1(Widget):
                         'button_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
                         'inputandbutton_class':FieldArg("cssclass", ''),
+                        'inputandbutton_style':FieldArg("cssstyle", ''),
                         'error_class':FieldArg("cssclass", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'size':FieldArg("text", ''),
@@ -896,12 +912,16 @@ class SubmitTextInput1(Widget):
 
         if self.get_field_value('label_class'):
             self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label_style'):
+            self[1][0][0].attribs = {"style": self.get_field_value('label_style')}
         if self.get_field_value('label'):
             self[1][0][0][0] = self.get_field_value('label')
 
         # the span holding input text and button
         if self.get_field_value('inputandbutton_class'):
             self[1][0][1].attribs = {"class": self.get_field_value('inputandbutton_class')}
+        if self.get_field_value('inputandbutton_style'):
+            self[1][0][1].attribs = {"style": self.get_field_value('inputandbutton_style')}
 
         # set an id in the input field for the 'label for' tag
         self[1][0][1][0].insert_id()
@@ -1008,10 +1028,12 @@ class SubmitTextInput3(Widget):
                         'para_text':FieldArg("text", '', jsonset=True),
                         'show_para2':FieldArg("boolean", True, jsonset=True),
                         'textblock_ref':FieldArg("textblock_ref", ""),
-                        'label':FieldArg("text", ''),
+                        'label':FieldArg("text", 'Your input:'),
                         'label_class':FieldArg("cssclass", ''),
-                        'button_label':FieldArg("text", ''),
+                        'label_style':FieldArg("cssstyle", ''),
+                        'button_label':FieldArg("text", 'Please submit:'),
                         'button_label_class':FieldArg("cssclass", ''),
+                        'button_label_style':FieldArg("cssstyle", ''),
                         'action':FieldArg("url", ''),
                         'action_json':FieldArg("url", ''),
                         'hidden_field1':FieldArg("text", '', valdt=True),
@@ -1157,6 +1179,8 @@ class SubmitTextInput3(Widget):
             self[2][0][0][0] = self.get_field_value('label')
         if self.get_field_value('label_class'):
             self[2][0][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label_style'):
+            self[2][0][0].attribs = {"style": self.get_field_value('label_style')}
 
         # set an id in the input field for the 'label for' tag
         self[2][0][1].insert_id()
@@ -1209,6 +1233,9 @@ class SubmitTextInput3(Widget):
             self[2][1][0][0] = self.get_field_value('button_label')
         if self.get_field_value('button_label_class'):
             self[2][1][0].attribs = {"class": self.get_field_value('button_label_class')}
+        if self.get_field_value('button_label_style'):
+            self[2][1][0].attribs = {"style": self.get_field_value('button_label_style')}
+
 
         # submit button
         self[2][1][1].update_attribs({"value":self.get_field_value('button_text')})

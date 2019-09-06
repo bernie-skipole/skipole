@@ -32,6 +32,7 @@ class InputTable5(Widget):
                         'button2_class':FieldArg("cssclass", ""),
                         'col_label':FieldArgList('text'),
                         'label_class':FieldArg("cssclass", ""),
+                        'label_style':FieldArg("cssstyle", ""),
                         'col_input':FieldArgList('text', valdt=True),
                         'hidden_field1':FieldArgList("text", valdt=True),
                         'hidden_field2':FieldArgList("text", valdt=True),
@@ -39,6 +40,7 @@ class InputTable5(Widget):
                         'hidden_field4':FieldArgList("text", valdt=True),
                         'input_accepted_class':FieldArg("cssclass", ''),
                         'input_class':FieldArg("cssclass", ''),
+                        'input_style':FieldArg("cssstyle", ''),
                         'input_errored_class':FieldArg("cssclass", ''),
                         'set_input_accepted':FieldArgDict("boolean", jsonset=True),
                         'set_input_errored':FieldArgDict("boolean", jsonset=True)
@@ -108,6 +110,7 @@ class InputTable5(Widget):
         hidden_field4_name = self.get_formname("hidden_field4")
 
         label_class = self.get_field_value('label_class')
+        label_style = self.get_field_value('label_style')
 
         form_id = self.get_id() + '_'
 
@@ -121,10 +124,8 @@ class InputTable5(Widget):
         else:
             set_input_errored = {}
 
-        if self.get_field_value('input_class'):
-            input_class = self.get_field_value('input_class')
-        else:
-            input_class = ''
+        input_class = self.get_field_value('input_class')
+        input_style = self.get_field_value('input_style')
 
 
         for rownumber in range(rows):
@@ -161,6 +162,8 @@ class InputTable5(Widget):
                 formrow[0] = tag.Part(tag_name="label", attribs={'class':label_class})
             else:
                 formrow[0] = tag.Part(tag_name="label")
+            if label_style:
+                formrow[0].update_attribs({"style":label_style})
             formrow[0][0] = col_label
 
             # 2nd column is a text input field
@@ -191,6 +194,9 @@ class InputTable5(Widget):
                     formrow[1].update_attribs({"class":self.get_field_value('input_accepted_class')})
             elif input_class:
                 formrow[1].update_attribs({"class":input_class})
+
+            if input_style:
+                formrow[1].update_attribs({"style":input_style})
 
             # 3rd column is a submit button
             if button_value1:
