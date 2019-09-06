@@ -675,7 +675,7 @@ class ButtonLink2(Widget):
     arg_descriptions = {'json_ident':FieldArg("url", ''),
                         'link_ident':FieldArg("url", 'no_javascript'),
                         'hide':FieldArg("boolean", False, jsonset=True),
-                        'button_text':FieldArg("text", "", jsonset=True),
+                        'button_text':FieldArg("text", "Submit", jsonset=True),
                         'button_wait_text':FieldArg("text", "Please wait..."),
                         'button_class':FieldArg("cssclass", ""),
                         'get_field1':FieldArg("text", "", valdt=True),

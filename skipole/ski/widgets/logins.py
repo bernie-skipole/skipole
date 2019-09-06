@@ -265,6 +265,7 @@ class NamePasswd1(Widget):
                         'div1_class':FieldArg("cssclass", ''),
                         'label1':FieldArg("text", 'Username:'),
                         'label_class1':FieldArg("cssclass", ''),
+                        'label_style1':FieldArg("cssstyle", ''),
                         'input_text1':FieldArg("text", '', valdt=True, jsonset=True),
                         'size1':FieldArg("text", ''),
                         'maxlength1':FieldArg("text", ''),
@@ -277,6 +278,7 @@ class NamePasswd1(Widget):
                         'div2_class':FieldArg("cssclass", ''),
                         'label2':FieldArg("text", 'Password:'),
                         'label_class2':FieldArg("cssclass", ''),
+                        'label_style2':FieldArg("cssstyle", ''),
                         'input_text2':FieldArg("text", '', valdt=True, jsonset=True),
                         'size2':FieldArg("text", ''),
                         'maxlength2':FieldArg("text", ''),
@@ -392,6 +394,8 @@ class NamePasswd1(Widget):
             self[1][0][0][0][0] = self.get_field_value('label1')
         if self.get_field_value('label_class1'):
             self[1][0][0][0].attribs = {"class": self.get_field_value('label_class1')}
+        if self.get_field_value('label_style1'):
+            self[1][0][0][0].attribs = {"style": self.get_field_value('label_style1')}
 
         # first input field
         self[1][0][0][1].update_attribs({"name":self.get_formname('input_text1'), "value":self.get_field_value('input_text1')})
@@ -437,6 +441,8 @@ class NamePasswd1(Widget):
             self[1][0][1][0][0] = self.get_field_value('label2')
         if self.get_field_value('label_class2'):
             self[1][0][1][0].attribs = {"class": self.get_field_value('label_class2')}
+        if self.get_field_value('label_style2'):
+            self[1][0][1][0].attribs = {"style": self.get_field_value('label_style2')}
 
         # password field
         self[1][0][1][1].update_attribs({"name":self.get_formname('input_text2'), "value":self.get_field_value('input_text2')})
