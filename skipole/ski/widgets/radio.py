@@ -347,13 +347,17 @@ class BooleanRadio(Widget):
     arg_descriptions = {'div_class1':FieldArg("cssclass", ''),
                         'left_label1':FieldArg("text", 'True'),
                         'left_class1':FieldArg("cssclass", ''),
+                        'left_style1':FieldArg("cssstyle", ''),
                         'right_label1':FieldArg("text", ''),
                         'right_class1':FieldArg("cssclass", ''),
+                        'right_style1':FieldArg("cssstyle", ''),
                         'div_class2':FieldArg("cssclass", ''),
                         'left_label2':FieldArg("text", 'False'),
                         'left_class2':FieldArg("cssclass", ''),
+                        'left_style2':FieldArg("cssstyle", ''),
                         'right_label2':FieldArg("text", ''),
                         'right_class2':FieldArg("cssclass", ''),
+                        'right_style2':FieldArg("cssstyle", ''),
                         'radio_checked':FieldArg("boolean", True, valdt=True)
                        }
 
@@ -395,19 +399,27 @@ class BooleanRadio(Widget):
         # labels of first div
         if self.get_field_value('left_class1'):
             div1[0].attribs = {"class": self.get_field_value('left_class1')}
+        if self.get_field_value('left_style1'):
+            div1[0].attribs = {"style": self.get_field_value('left_style1')}
         div1[0][0] = self.get_field_value('left_label1')
 
         if self.get_field_value('right_class1'):
             div1[2].attribs = {"class": self.get_field_value('right_class1')}
+        if self.get_field_value('right_style1'):
+            div1[2].attribs = {"style": self.get_field_value('right_style1')}
         div1[2][0] = self.get_field_value('right_label1')
 
         # labels of second div
         if self.get_field_value('left_class2'):
             div2[0].attribs = {"class": self.get_field_value('left_class2')}
+        if self.get_field_value('left_style2'):
+            div2[0].attribs = {"style": self.get_field_value('left_style2')}
         div2[0][0] = self.get_field_value('left_label2')
 
         if self.get_field_value('right_class2'):
             div2[2].attribs = {"class": self.get_field_value('right_class2')}
+        if self.get_field_value('right_style2'):
+            div2[2].attribs = {"style": self.get_field_value('right_style2')}
         div2[2][0] = self.get_field_value('right_label2')
 
         name = self.get_formname('radio_checked')
