@@ -203,9 +203,9 @@
 "inputtext": {
 "Password2": {
 "error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "label_class": "ski_left_label",
 "widget_class": "w3-section"
 },
@@ -219,9 +219,9 @@
 "SubmitTextInput1": {
 "button_class": "w3-button w3-theme-d4 w3-margin-left",
 "error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "inputandbutton_class": "ski_nowrap",
 "inputdiv_class": "w3-section",
 "label_class": "ski_left_label",
@@ -232,9 +232,9 @@
 "button_label_class": "ski_left_label",
 "buttondiv_class": "w3-section",
 "error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "inputdiv_class": "w3-section",
 "label_class": "ski_left_label",
 "outer_class": "w3-section",
@@ -245,33 +245,39 @@
 },
 "TextInput2": {
 "error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "inputdiv_class": "",
 "label_class": "ski_left_label",
 "widget_class": "w3-section"
 },
 "TextInput3": {
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "input_style": "margin-right:1em;",
 "left_class": "ski_left_label"
 },
 "TextInput4": {
-"input_class": "ski_input",
-"inputdiv_class": "ski_left_marg_35_percent",
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:80%",
+"inputdiv_class": "w3-container",
 "label_class": "",
-"labeldiv_class": "ski_left_marg_35_percent"
+"labeldiv_class": "w3-container",
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"widget_class": ""
 },
 "TwoInputsSubmit1": {
 "button_class": "w3-button w3-theme-d4 w3-margin-left",
 "error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class1": "ski_input",
 "input_class2": "ski_input  w3-margin-left",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "label_class": "ski_left_label",
 "widget_class": "w3-section"
 }
@@ -344,10 +350,10 @@
 "div2_class": "w3-section",
 "div3_class": "ski_left_40_10",
 "error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class1": "ski_input w3-margin-left",
 "input_class2": "ski_input  w3-margin-left",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "inputdiv_class": "w3-container",
 "label_class1": "ski_left_label",
 "label_class2": "ski_left_label",

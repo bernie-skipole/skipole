@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "3.0.3",
+"skipole": "3.5.4",
 "specialpages": {
 "favicon": 3002,
 "general_json": 2002,
@@ -15,7 +15,6 @@
 "ski_basic": "skis,ski_basic",
 "ski_checkbox": "skis,ski_checkbox",
 "ski_confirm": "skis,ski_confirm",
-"ski_css": 1004,
 "ski_debug_tools": "skis,ski_debug_tools",
 "ski_dropdown": "skis,ski_dropdown",
 "ski_error_messages": "skis,ski_error_messages",
@@ -56,15 +55,6 @@
 "restricted": false,
 "folders": {},
 "pages": {
-"ski.css": {
-"ident": 1004,
-"brief": "Links to .../static/css/ski.css",
-"FilePage": {
-"filepath": "newproj/static/css/ski.css",
-"enable_cache": true,
-"mimetype": "text/css"
-}
-},
 "w3-theme-ski.css": {
 "ident": 1008,
 "brief": "Links to .../static/css/w3-theme-ski.css",
@@ -219,19 +209,6 @@
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski.css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -272,6 +249,17 @@
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "containing div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
 "Widget",
 {
 "class": "error_messages.ErrorPara",
@@ -291,11 +279,11 @@
 "Part",
 {
 "tag_name": "p",
-"brief": "Paragraph of text",
+"brief": "Paragraph with w3-content class",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"style": "margin-top:60px;margin-left: auto;margin-right: auto;width: 50em"
+"class": "w3-content"
 },
 "parts": [
 [
@@ -306,6 +294,9 @@
 "show": true,
 "escape": true,
 "linebreaks": true
+}
+]
+]
 }
 ]
 ]
