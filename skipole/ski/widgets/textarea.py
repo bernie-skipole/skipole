@@ -192,13 +192,16 @@ class TextArea2(Widget):
     error_location = (0,0,0)
 
     arg_descriptions = {
-                        'label':FieldArg("text", ''),
+                        'label':FieldArg("text", 'Your input:'),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'error_class':FieldArg("cssclass", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'textarea_class':FieldArg("cssclass", ''),
                         'textarea_style':FieldArg("cssstyle", ''),
                         'redstar':FieldArg("boolean", False),
+                        'redstar_class':FieldArg("cssclass", ''),
+                        'redstar_style':FieldArg("cssstyle", ''),
                         'rows':FieldArg("text", '4'),
                         'cols':FieldArg("text", '40')
                        }
@@ -234,6 +237,8 @@ class TextArea2(Widget):
             self[0].del_one_attrib("style")
         if self.get_field_value('label_class'):
             self[1].update_attribs({"class": self.get_field_value('label_class')})
+        if self.get_field_value('label_style'):
+            self[1].update_attribs({"style": self.get_field_value('label_style')})
         if self.get_field_value("label"):
             self[1][0] = self.get_field_value("label")
         # set an id in the textarea for the 'label for' tag
@@ -251,10 +256,16 @@ class TextArea2(Widget):
             self[2].update_attribs({"cols": self.get_field_value('cols')})
         if self.get_field_value('input_text'):
             self[2][0] = self.get_field_value('input_text')
+        # redstar
         if self.get_field_value('redstar'):
-            self[3] = tag.Part(tag_name="span",  attribs ={"style":"color:red;"})
-            self[3][0] = tag.HTMLSymbol(text="&nbsp;")
-            self[3][1] = '*'
+            self[3] = tag.Part(tag_name="span")
+            if self.get_field_value('redstar_style'):
+                self[3].update_attribs({"style":self.get_field_value('redstar_style')})
+            if self.get_field_value('redstar_class'):
+                self[3].update_attribs({"class":self.get_field_value('redstar_class')})
+            self[3][0] = '*'
+
+
 
 
     @classmethod
@@ -271,5 +282,5 @@ class TextArea2(Widget):
   <textarea> <!-- class attribute set to textarea_class. Rows, cols set to the given rows and columns -->
     <!-- textarea content set to input_text -->
   </textarea>
-  <span style="color:red;">&nbsp;*</span> <!-- shown if redstar is True -->
+  <span>*</span> <!-- shown if redstar is True -->
 </div>"""

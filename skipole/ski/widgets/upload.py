@@ -171,9 +171,10 @@ class UploadFile1(Widget):
 
     error_location = (0,0,0)
 
-    arg_descriptions = {'label':FieldArg("text", ''),
+    arg_descriptions = {'label':FieldArg("text", 'Pick a file to upload:'),
                         'inputname':FieldArg("text", '', valdt=True),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'filebutton_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
                         'error_class':FieldArg("cssclass", '')
@@ -216,6 +217,8 @@ class UploadFile1(Widget):
             self[1][0][0] = self.get_field_value('label')
         if self.get_field_value('label_class'):
             self[1][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label_style'):
+            self[1][0].attribs = {"style": self.get_field_value('label_style')}
 
         # set an id in the file button for the 'label for' tag
         self[1][1].insert_id()
