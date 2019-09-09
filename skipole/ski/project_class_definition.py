@@ -130,16 +130,6 @@ class WSGIApplication(object):
         s.sort()
         return s
 
-    def widget_from_section(self, section_name, widget_name):
-        "Returns the widget from the project section"
-        # get the section part with the given name
-        section = self._get_section(section_name)
-        if section is None:
-            return None
-        # find widget in the section with the given name
-        if widget_name in section.widgets:
-            return section.widgets[widget_name]
-
     def section(self, section_name, makecopy=True):
         "Returns a section, or a deep copy of a section, or None if the section name is not found"
         if section_name not in self.sections:
