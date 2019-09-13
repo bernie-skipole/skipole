@@ -191,10 +191,12 @@ class CheckedText(Widget):
                         'checked':FieldArg("boolean", False, jsonset=True),
                         'label_text':FieldArg("text", ''),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'error_class':FieldArg("cssclass", ""),
                         'input_text':FieldArg("text", '', valdt=True),
                         'input_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
+                        'inputdiv_style':FieldArg("cssstyle", ''),
                         'size':FieldArg("text", ''),
                         'maxlength':FieldArg("text", '')
                        }
@@ -233,12 +235,15 @@ class CheckedText(Widget):
         # the div holding label, input fields
         if self.get_field_value('inputdiv_class'):
             self[1].attribs = {"class": self.get_field_value('inputdiv_class')}
-
-
+        if self.get_field_value('inputdiv_style'):
+            self[1].attribs = {"style": self.get_field_value('inputdiv_style')}
+        # the label
         if self.get_field_value('label_text'):
             self[1][0][0] = self.get_field_value('label_text')
         if self.get_field_value('label_class'):
             self[1][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label_style'):
+            self[1][0].attribs = {"style": self.get_field_value('label_style')}
         if self.get_field_value('checked'):
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "checked":"checked"})
         else:
@@ -303,6 +308,7 @@ class CheckInputs(Widget):
                         'checkbox_class':FieldArg("cssclass", ''),
                         'label_text':FieldArg("text", ''),
                         'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
                         'container_class':FieldArg("cssclass", ''),
                         'error_class':FieldArg("cssclass", ""),
                         'checked':FieldArg("boolean", False, jsonset=True)
@@ -342,6 +348,8 @@ class CheckInputs(Widget):
             self[1][0][0] = self.get_field_value('label_text')
         if self.get_field_value('label_class'):
             self[1][0].attribs = {"class": self.get_field_value('label_class')}
+        if self.get_field_value('label_style'):
+            self[1][0].attribs = {"style": self.get_field_value('label_style')}
         # Create the checkbox
         if self.get_field_value('checked'):
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "checked":"checked"})
