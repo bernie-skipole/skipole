@@ -2,7 +2,6 @@
 
 import os, sys, re, collections, uuid, random
 
-
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
 from skipole.skilift.fromjson import get_defaults_from_file
 
@@ -165,17 +164,15 @@ def makeapp(projectfiles, **proj_data):
     proj_data["colours"] = colours
     proj_data["adminbackcol"] = adminbackcol
 
-    # The WSGIApplication created here has a URL of "/", however when this
-    # application is added to another, it is generally given a URL of "/skiadmin"
-    # in the application.add_project method which overwrites the URL given here
+    # The WSGIApplication created here is generally given a URL of "/skiadmin"
+    # when added to the root project using application.add_project
 
     return WSGIApplication(project=PROJECT,
                            projectfiles=projectfiles,
                            proj_data=proj_data,
                            start_call=start_call,
                            submit_data=submit_data,
-                           end_call=end_call,
-                           url="/")
+                           end_call=end_call)
 
 
 def set_navigation(identnum, call_data, page_data):

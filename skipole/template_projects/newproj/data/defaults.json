@@ -18,7 +18,9 @@
 "widget_class": "w3-section"
 },
 "CheckBox2": {
-"checkbox_class": "w3-check"
+"checkbox_class": "w3-check",
+"left_style": "margin-right:1em",
+"right_style": "margin-left:1em"
 },
 "CheckInputs": {
 "checkbox_class": "w3-check",
@@ -151,6 +153,7 @@
 },
 "SubmitForm1": {
 "button_class": "w3-button w3-theme-d4",
+"container_class": "w3-section",
 "error_class": "w3-panel w3-red",
 "left_style": "display:inline-block;margin-right:1%;text-align:right;width:30%;",
 "widget_class": "w3-container"
@@ -166,6 +169,10 @@
 }
 },
 "inputtext": {
+"Password1": {
+"input_accepted_class": "w3-pale-green",
+"input_errored_class": "w3-pale-red"
+},
 "Password2": {
 "error_class": "w3-panel w3-red",
 "input_accepted_class": "w3-pale-green",
@@ -247,6 +254,7 @@
 "ButtonLink2": {
 "button_class": "w3-button w3-theme-l1 w3-border w3-round",
 "buttondiv_class": "w3-container w3-center",
+"buttondiv_style": "margin-left:20%;width:20em;",
 "error_class": "w3-panel w3-red",
 "widget_class": "w3-container"
 },

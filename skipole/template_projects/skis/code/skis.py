@@ -1,12 +1,11 @@
 
-
 # This skis project is added to other projects and consists of
 # javascript and css files. As it is essentially a 'library'
 # it is usually given a URL of /lib when added - but this is
 # not a necessity, just convention.
 
 
-from skipole import WSGIApplication, set_debug
+from skipole import WSGIApplication
 
 PROJECT = 'skis'
 
@@ -28,11 +27,10 @@ def end_call(page_ident, page_type, skicall):
 def makeapp(projectfiles, **proj_data):
     """This function returns the skis application."""
 
-    # The WSGIApplication created here has a URL of "/", however when this
-    # application is added to another, it is generally given a URL of "/lib"
-    # in the application.add_project method which overwrites the URL given here
+    # The WSGIApplication created here is generally given a URL of "/lib"
+    # when added to the root project using application.add_project
 
-    application = WSGIApplication(PROJECT, projectfiles, proj_data, start_call, submit_data, end_call, url="/")
+    application = WSGIApplication(PROJECT, projectfiles, proj_data, start_call, submit_data, end_call)
     return application
 
 
