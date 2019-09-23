@@ -66,10 +66,10 @@
 <p>As well as 'template' pages, JSON pages can be created and returned to the client browser. These can be used to update certain widget fields via javascript rather than refreshing entire pages.</p>
 <p>Multiple 'responder page' types are available, to handle cookies and incoming data.</p>
 <h4>Deploying your project</h4>
-<p>The script:</p>
+<p>You would normally copy the projectfiles directory to your server, and then the script:</p>
 <p>/path/to/projectfiles/myproj/code/myproj.py</p>
-<p>Both creates the 'application' object, and serves it using the python standard library wsgiref.simple_server. To deploy your final application on a web server of your choice, you would edit myproj.py to remove wsgiref.simple_server.</p>
-<p>Deploying a web server with the application depends on your server, usually the web server has some means of importing myproj.py, and running 'application'. The wiki gives a number of examples.</p>
+<p>Both creates the 'application' object, and serves it using the python standard library wsgiref.simple_server. To deploy your final application on a web server of your choice, you would edit myproj.py to remove wsgiref.simple_server, and also remove the the code which adds the skiadmin project.</p>
+<p>Deploying a web server with the application depends on your server, usually the web server has some means of importing myproj.py, and running 'application'. The wiki at the github site gives a number of examples.</p>
 </div>
 </div>
 <script>
