@@ -1,7 +1,13 @@
 
 
 """
-This module defines the WSGIApplication class and SkiCall class
+This module defines the SkipoleProject class and SkiCall class
+
+SkipoleProject being the core of the project which loads
+the project from JSON files and responds to incoming calls by calling the user functions
+
+SkiCall is the class of the skicall object which is created for each incoming
+call and is passed as an argument to the user functions 
 """
 
 
@@ -20,69 +26,11 @@ from .. import textblocks
 # ServerError raised in this module use codes 9000 to 9100
 
 
-
-
-class WSGIApplication(object):
-    """The WSGIApplication - an instance being a callable WSGI application"""
-
-    def __init__(self, project, projectfiles=None, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
-        self._skipoleproject = SkipoleProject(project, projectfiles, proj_data, start_call, submit_data, end_call, url)
-
-
-    @property
-    def project(self):
-        """The project name"""
-        return self._skipoleproject.proj_ident
-
-    @property
-    def projectfiles(self):
-        """The projectfiles path"""
-        return self._skipoleproject.projectfiles
-
-    @property
-    def proj_data(self):
-        """The proj_data dictionary"""
-        return self._skipoleproject.proj_data
-
-    @property
-    def start_call(self):
-        """The start_call function"""
-        return self._skipoleproject.start_call
-
-    @property
-    def submit_data(self):
-        """The submit_data function"""
-        return self._skipoleproject.submit_data
-
-    @property
-    def end_call(self):
-        """The end_call function"""
-        return self._skipoleproject.end_call
-
-    @property
-    def url(self):
-        """This project path"""
-        return self._skipoleproject.url
-
-
-    def __call__(self, environ, start_response):
-        "Defines this projects callable as the wsgi application"
-        return self._skipoleproject(environ, start_response)
-
-
-    def add_project(self, proj, url=None):
-        """Add a project to this root project, returns the sub project url
-           proj is the sub project WSGIApplication object."""
-        return self._skipoleproject.add_project(proj._skipoleproject, url)
-
-
-
-
 class SkipoleProject(object):
     """The SkipoleProject - an instance being a callable WSGI application"""
 
     def __init__(self, project, projectfiles=None, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
-        """Initiates a Project instance"""
+        """Loads the project from JSON files and responds to incoming calls by calling the user functions"""
         if _AN.search(project):
             raise ServerError(message="Error: Invalid project name, alphanumeric only")
         if '_' in project:
@@ -1227,10 +1175,13 @@ class SkipoleProject(object):
         return skiboot.Ident(self._proj_ident, self.max_ident_num+1)
 
     def __repr__(self):
-        return "WSGIApplication(\'%s\', \'%s\', \'%s\', start_call, submit_data, end_call, \'%s\')" % (self.proj_ident, self.projectfiles, self.proj_data, self.url)
+        return "SkipoleProject(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')" % (self.proj_ident, self.projectfiles, self.proj_data, self.start_call.__name__, self.submit_data.__name__, self.end_call.__name__, self.url)
+
 
 
 class SkiCall(object):
+    """SkiCall is the class of the skicall object which is created for each incoming
+       call and is passed as an argument to the user functions"""
 
     def __init__(self, environ, path, project, rootproject, caller_ident, received_cookies, ident_data, lang, proj_data):
 
