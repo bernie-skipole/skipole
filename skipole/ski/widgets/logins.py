@@ -39,8 +39,10 @@ class Pin4(Widget):
                         'error_class':FieldArg("cssclass", ""),
                         'left_label':FieldArg("text", ''),
                         'left_class':FieldArg("cssclass", ''),
+                        'left_style':FieldArg("cssstyle", ''),
                         'right_label':FieldArg("text", ''),
                         'right_class':FieldArg("cssclass", ''),
+                        'right_style':FieldArg("cssstyle", '')
                        }
 
 
@@ -176,6 +178,8 @@ class Pin4(Widget):
             self[0][2][1][0][0] = self.get_field_value('left_label')
         if self.get_field_value('left_class'):
             self[0][2][1][0].attribs = {"class": self.get_field_value('left_class')}
+        if self.get_field_value('left_style'):
+            self[0][2][1][0].update_attribs({"style": self.get_field_value('left_style')})
  
         # the submit button
         if self.get_field_value('button_class'):
@@ -191,6 +195,8 @@ class Pin4(Widget):
             self[0][2][1][2][0] = self.get_field_value('right_label')
         if self.get_field_value('right_class'):
             self[0][2][1][2].attribs = {"class": self.get_field_value('right_class')}
+        if self.get_field_value('right_style'):
+            self[0][2][1][2].update_attribs({"style": self.get_field_value('right_style')})
 
         # set the label 'for' attribute
         self[0][2][1][0].update_attribs({'for':self[0][2][1][1].get_id()})
@@ -395,7 +401,7 @@ class NamePasswd1(Widget):
         if self.get_field_value('label_class1'):
             self[1][0][0][0].attribs = {"class": self.get_field_value('label_class1')}
         if self.get_field_value('label_style1'):
-            self[1][0][0][0].attribs = {"style": self.get_field_value('label_style1')}
+            self[1][0][0][0].update_attribs({"style": self.get_field_value('label_style1')})
 
         # first input field
         self[1][0][0][1].update_attribs({"name":self.get_formname('input_text1'), "value":self.get_field_value('input_text1')})
@@ -442,7 +448,7 @@ class NamePasswd1(Widget):
         if self.get_field_value('label_class2'):
             self[1][0][1][0].attribs = {"class": self.get_field_value('label_class2')}
         if self.get_field_value('label_style2'):
-            self[1][0][1][0].attribs = {"style": self.get_field_value('label_style2')}
+            self[1][0][1][0].update_attribs({"style": self.get_field_value('label_style2')})
 
         # password field
         self[1][0][1][1].update_attribs({"name":self.get_formname('input_text2'), "value":self.get_field_value('input_text2')})
