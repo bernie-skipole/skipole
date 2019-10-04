@@ -1,4 +1,111 @@
 
+"""The skipole package provides the following:
+
+version - a version string of the form a.b.c
+
+WSGIApplication - an instance of this class is a callable WSGI application (see below)
+
+set_debug(mode) - a function to turn on debugging (if mode is True), or off (if mode is False)
+
+use_submit_list - is available to optionally wrap the user defined submit_data function
+                  Enables a responder 'submit list' to define package,module,function to
+                  be called as the responder's submit_data function.
+
+
+Exceptions
+----------
+
+These are also provided, and can be raised within the users code:
+
+ValidateError - returns the project validation error page
+
+ServerError - returns the project server error page
+
+GoTo - diverts the call to another page
+
+FailPage - diverts the call to the calling Responder's 'Fail page'
+
+
+WSGIApplication
+---------------
+
+An instance of this class should be created, and is a callable WSGI application.
+
+The WSGIApplication has the following areguments which should be provided to create
+an instance:
+
+project - the project name
+
+projectfiles - the directory containing your projects
+
+proj_data - an optional dictionary, passed as an attribute of skicall,
+            which is an object passed to your functions during the progress of a call
+
+start_call - a function you should create, see further documentation
+
+submit_data - a function you should create, see further documentation
+
+end_call - a function you should create, see further documentation
+
+url - path where this project will be served, typically '/'
+
+The WSGIApplication class has the methods:
+
+__call__(self, environ, start_response) - which sets the instance as callable
+
+add_project(self, proj, url) - adds other projects to the 'root' project.
+
+Where proj is another instance of a WSGIApplication and will be served at the path
+given by argument url. At the minimum, your project should add the 'skis' sub project
+which provides needed javascript files. For example:
+
+my_application.add_project(skis_application, url='/lib')
+
+Which causes the skis project to be served at /lib.
+
+Sub-projects (such as skis above) cannot have further sub projects added - all
+sub-projects can only be added to the 'root' project.
+
+
+python3 -m skipole
+------------------
+
+skipole can also be run from the command line with the python -m option
+
+Usage is
+
+python3 -m skipole mynewproj /path/to/projectfiles
+
+Which creates a directory /path/to/projectfiles
+containing three sub directories:
+
+mynewproj - a subdirectory containing a new project
+skis - a project serving needed javascript files, necessary for all projects
+skiadmin - a project used to help develop 'mynewproj'
+
+You should replace 'mynewproj' with your preferred name for a new project.
+This is an optional argument. If not given then only the skis and skiadmin
+projects will be created.
+
+The path "/path/to/projectfiles" must be given, and is the path to a directory
+where you will develop your project. Multiple projects can be created in one
+'projectfiles' directory, or you could have multiple such directories holding
+different projects.
+
+If the directory already exists, any existing skiadmin and skis projects will
+be overwritten, this facility is used to upgrade skis and skiadmin if a new
+version of skipole is installed.
+
+If mynewproj already exists in the directory, it will not be changed.
+
+You should then inspect the file
+
+/path/to/projectfiles/mynewproj/code/mynewproj.py
+
+where your code will be developed.
+
+"""
+
 import sys, traceback
 
 from functools import wraps

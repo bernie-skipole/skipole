@@ -26,6 +26,20 @@ from .. import textblocks
 # ServerError raised in this module use codes 9000 to 9100
 
 
+# These three are 'default' functions, used if the
+# user functions are not given 
+
+def _start_call(called_ident, skicall):
+    return called_ident
+
+def _submit_data(skicall):
+    return
+
+def _end_call(page_ident, page_type, skicall):
+    return
+
+
+
 class SkipoleProject(object):
     """The SkipoleProject - an instance being a callable WSGI application"""
 
@@ -38,9 +52,18 @@ class SkipoleProject(object):
         self._proj_ident = project
         self.projectfiles = projectfiles
         self.proj_data = proj_data
-        self.start_call = start_call
-        self.submit_data = submit_data
-        self.end_call = end_call
+        if start_call is None:
+            self.start_call = _start_call
+        else:
+            self.start_call = start_call
+        if submit_data is None:
+            self.submit_data = _submit_data
+        else:
+            self.submit_data = submit_data
+        if end_call is None:
+            self.end_call = _end_call
+        else:
+            self.end_call = end_call
 
         # initially, sub projects can be added
         self.rootproject = True
