@@ -1,5 +1,7 @@
 
-"""The skipole package provides the following:
+"""A WSGI application generator
+
+The package makes the following available:
 
 version - a version string of the form a.b.c
 
@@ -31,7 +33,7 @@ WSGIApplication
 
 An instance of this class should be created, and is a callable WSGI application.
 
-The WSGIApplication has the following areguments which should be provided to create
+The WSGIApplication has the following arguments which should be provided to create
 an instance:
 
 project - the project name
@@ -41,11 +43,11 @@ projectfiles - the directory containing your projects
 proj_data - an optional dictionary, passed as an attribute of skicall,
             which is an object passed to your functions during the progress of a call
 
-start_call - a function you should create, see further documentation
+start_call - a function you should create, called at the start of a call
 
-submit_data - a function you should create, see further documentation
+submit_data - a function you should create, called by responders
 
-end_call - a function you should create, see further documentation
+end_call - a function you should create, called at the end of the call, prior to returning the page
 
 url - path where this project will be served, typically '/'
 
@@ -125,7 +127,26 @@ __all__ = ['WSGIApplication', 'ValidateError', 'ServerError', 'GoTo', 'FailPage'
 class WSGIApplication(object):
     """The WSGIApplication - an instance being a callable WSGI application"""
 
-    def __init__(self, project, projectfiles=None, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
+    def __init__(self, project, projectfiles, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
+        """An instance of this class is a callable WSGI application.
+
+Arguments are:
+
+project - the project name
+
+projectfiles - the directory containing your projects
+
+proj_data - an optional dictionary, passed as an attribute of skicall,
+            which is an object passed to your functions during the progress of a call
+
+start_call - a function you should create, called at the start of a call
+
+submit_data - a function you should create, called by responders
+
+end_call - a function you should create, called at the end of the call, prior to returning the page
+
+url - path where this project will be served, typically '/'
+"""
         self._skipoleproject = SkipoleProject(project, projectfiles, proj_data, start_call, submit_data, end_call, url)
 
 
@@ -166,7 +187,7 @@ class WSGIApplication(object):
 
 
     def __call__(self, environ, start_response):
-        "Defines this projects callable as the wsgi application"
+        "The instance is callable"
         return self._skipoleproject(environ, start_response)
 
 

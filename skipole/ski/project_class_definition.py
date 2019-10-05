@@ -43,7 +43,7 @@ def _end_call(page_ident, page_type, skicall):
 class SkipoleProject(object):
     """The SkipoleProject - an instance being a callable WSGI application"""
 
-    def __init__(self, project, projectfiles=None, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
+    def __init__(self, project, projectfiles, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
         """Loads the project from JSON files and responds to incoming calls by calling the user functions"""
         if _AN.search(project):
             raise ServerError(message="Error: Invalid project name, alphanumeric only")
@@ -1187,7 +1187,6 @@ class SkipoleProject(object):
         self.subprojects[proj_id] = proj
         return url
 
-
     @property
     def root_ident(self):
         'provides a root_ident attribute'
@@ -1196,10 +1195,6 @@ class SkipoleProject(object):
     def next_ident(self):
         "Returns next Ident available by incrementing the maximum existing ident number"
         return skiboot.Ident(self._proj_ident, self.max_ident_num+1)
-
-    def __repr__(self):
-        return "SkipoleProject(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')" % (self.proj_ident, self.projectfiles, self.proj_data, self.start_call.__name__, self.submit_data.__name__, self.end_call.__name__, self.url)
-
 
 
 class SkiCall(object):

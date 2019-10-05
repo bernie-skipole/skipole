@@ -7,16 +7,13 @@ by any other module as it has no dependencies
 """
 
 class ErrorMessage(object):
-    """Acts as a store for attributes message, section, widget
+    """Acts as a store for attributes message, section, widget"""
 
-       The message can be either a string, or an empty string
-
-       The following are all optional
-
-       section is the section name (if it is in a section) of the widget where the message is to be displayed
-       widget is the widget name where the message is to be displayed
-"""
     def __init__(self, message='', section='', widget=''):
+        """message can be either a string, or an empty string
+section is the section name (if it is in a section) of the widget where the message is to be displayed
+widget is the widget name where the message is to be displayed
+"""
         self.message = message
         self.section = section
         self.widget = widget
@@ -36,6 +33,10 @@ class SkiError(Exception):
     """
 
     def __init__(self, message = '', section='', widget=''):
+        """message can be either a string, or an empty string
+section is the section name (if it is in a section) of the widget where the message is to be displayed
+widget is the widget name where the message is to be displayed
+"""
         if message:
             Exception.__init__(self, message)
         self.errormessage = ErrorMessage(message, section, widget)
@@ -69,13 +70,20 @@ class SkiError(Exception):
 
 
 class FailPage(SkiError):
-    """Call a responder fail ident page
-    """
+    """Causes the Responder Fail page to be returned."""
 
 
 class ServerError(SkiError):
-    """Flag a server problem"""
+    """Causes the Server Error page to be returned."""
+
     def __init__(self, message = '', section='', widget='', status='500 Internal Server Error', code=0):
+        """message can be either a string, or an empty string
+section is the section name (if it is in a section) of the widget where the message is to be displayed
+widget is the widget name where the message is to be displayed
+status is the html return status
+code is an optional error number you can use to be displayed on the Server Error page, avoid numbers
+9000 to 9999 which are reserved for system use
+"""
         SkiError.__init__(self, message, section, widget)
         self.status = status
         # code 0 is default
@@ -84,8 +92,14 @@ class ServerError(SkiError):
 
 
 class ValidateError(SkiError):
-    """Flag a validation error."""
+    """Causes the Validation Error page to be returned."""
+
     def __init__(self, message = '', section='', widget='', status='400 Bad Request'):
+        """message can be either a string, or an empty string
+section is the section name (if it is in a section) of the widget where the message is to be displayed
+widget is the widget name where the message is to be displayed
+status is the html return status
+"""
         SkiError.__init__(self, message, section, widget)
         self.status = status
 
@@ -100,23 +114,24 @@ class PageError(Exception):
 
 
 class GoTo(Exception):
-    """Exception used to force a jump to another page
+    """Exception used to force a jump to another page"""
 
-       target being the ident, label or external
-                      url of the page to jump to. If a url is given it should start
-                      with 'http://' or 'https://' or '//'
-
-       clear_submitted - if True, any submitted data widgets/fields will be cleared,
-       clear_page_data - if True, page_data dictionary will be cleared,
-       clear_errors - if a FailPage raises an error and the failpage calls
-                      a submit function with a GoTo, then setting clear_errors True
-                      will remove the error condition from the call, which will therefore
-                      not be displayed on the final template page returned
-
-       Note, 'call_data' will not be changed.
-"""
 
     def __init__(self, target, clear_submitted=False, clear_page_data=False, clear_errors=False):
+        """target being the ident, label or external
+    url of the page to jump to. If a url is given it should start
+    with 'http://' or 'https://' or '//'
+
+clear_submitted - if True, any submitted data widgets/fields will be cleared,
+clear_page_data - if True, skicall.page_data dictionary will be cleared,
+clear_errors - if a FailPage raises an error and the failpage calls
+    a submit function with a GoTo, then setting clear_errors True
+    will remove the error condition from the call, which will therefore
+    not be displayed on the final template page returned
+
+Note, skicall.call_data will not be changed.
+"""
+
         Exception.__init__(self, "GoTo jump to page " + str(target))
         self.clear_submitted = clear_submitted
         self.clear_page_data = clear_page_data
