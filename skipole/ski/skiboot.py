@@ -122,10 +122,6 @@ def project_defaults(proj_ident=None):
     "Returns projectfiles/proj_ident/data/defaults.json"
     return os.path.join(projectdata(proj_ident), "defaults.json")
 
-def project_main(proj_ident=None):
-    "Returns projectfiles/proj_ident/data/__main__.py"
-    return os.path.join(projectdata(proj_ident), "__main__.py")
-
 def default_language():
     "Returns the default language"
     return _CFG["default_language"]

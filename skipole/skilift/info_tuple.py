@@ -8,7 +8,7 @@ from collections import namedtuple
 
 VersionInfo = namedtuple('VersionInfo', ['skipole', 'project'])
 
-ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_path', 'main_path', 'static_path', 'data_path'])
+ProjectInfo = namedtuple('ProjectInfo', ['project', 'version', 'brief', 'path', 'default_language', 'subprojects', 'json_path', 'static_path', 'data_path'])
 
 ItemInfo = namedtuple('ItemInfo', ['project', 'project_version', 'itemnumber', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_number', 'restricted'])
 

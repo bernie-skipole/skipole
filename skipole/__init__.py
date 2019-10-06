@@ -185,11 +185,19 @@ url - path where this project will be served, typically '/'
         """This project path"""
         return self._skipoleproject.url
 
+    @property
+    def brief(self):
+        """This project brief description"""
+        return self._skipoleproject.brief
+
+    @property
+    def version(self):
+        """This project version string"""
+        return self._skipoleproject.version
 
     def __call__(self, environ, start_response):
         "The instance is callable"
         return self._skipoleproject(environ, start_response)
-
 
     def add_project(self, proj, url=None):
         """Add a sub project to this root project, returns the sub project url
