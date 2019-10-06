@@ -325,6 +325,7 @@
 "butt_div_class": "w3-section",
 "button_class": "w3-button w3-theme-d4",
 "error_class": "w3-panel w3-red",
+"left_style": "display:inline-block;margin-right:1%;text-align:right;width:30%;",
 "widget_class": "w3-section"
 }
 },
