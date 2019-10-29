@@ -4,11 +4,46 @@
 
 import os
 
+from wsgiref.simple_server import make_server,  WSGIRequestHandler
+
 from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError
 
 from ..ski import skiboot, tag
 
 from .info_tuple import ProjectInfo, ItemInfo, PartInfo, PageInfo, FolderInfo, WidgetInfo, VersionInfo
+
+
+
+###### create a development server, which is wsgiref.simple_server with errors suppressed
+
+class _Hide_Error:
+
+    def write(self,errorstring):
+        "Discards error messages"
+        pass
+
+
+class _DevHandler(WSGIRequestHandler):
+
+    def handle(self):
+        "Uses WSGIRequestHandler.handle but ignores exceptions"
+        try:
+            WSGIRequestHandler.handle(self)
+        except Exception as e:
+            pass
+
+    def get_stderr(self):
+        "returns an instance of _Hide_Error which dumps the error"
+        return _Hide_Error()
+
+def development_server(host, port, application):
+    "Serves the wsgi application"
+    httpd = make_server(host, port, application, handler_class=_DevHandler)
+    httpd.serve_forever()
+
+##### The above is used because wsgiref.simple_server reports brokenpipe error
+##### due (I believe) to clients dropping the connection
+
 
 
 def project_loaded(project, error_if_not=True):
