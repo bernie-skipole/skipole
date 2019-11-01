@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.5.6",
-"skipole": "3.5.6",
+"version": "3.5.7",
+"skipole": "3.5.7",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -2886,7 +2886,7 @@ false,
 "parts": [
 [
 "Text",
-"Within the 'skipole' package there is a 'skilift' sub-package, which contains further modules and functions providing project information and editing capability.\r\n\r\nPlease view the skilift source for further information.\r\n\r\nThese functions are normally only used by the 'skiadmin' project.  You could import the package and use the functions within your own code. However any function which alters a project should only be used if only one user is accessing the web site. Multiple access while changes are being implemented could cause problems.\r\n\r\nTo import skilift\r\n\r\nfrom skipole import skilift\r\n\r\nAnd a typical function would be:\r\n\r\nskilift.get_textblock_text(textref, lang, project=None)\r\n\r\nwith docstring:\r\n\r\nThis function returns the textblock text, given a textblock reference string,\r\n\r\nlang is the language tuple of (preferred language, default language).\r\nIf text for a given language is not found, the function makes an effort to get text by trying the default language.\r\n\r\nIf project is not given assumes the root project, if given, project must exist as either the root, or a sub project of the root.\r\nIf no textblock is found, returns None."
+"Within the 'skipole' package there is a 'skilift' sub-package, which contains further modules and functions providing project information and editing capability.\r\n\r\nTo import skilift\r\n\r\nfrom skipole import skilift\r\n\r\nskilift contains a development web server, called using:\r\n\r\nskilift.development_server(host, port, application)\r\n\r\nWhen you first create a project, this function is used within your code to serve your WSGI application. This may be useful for project devices used within a LAN, but should not be used in production.\r\n\r\nskilift contains further functions normally only used by the 'skiadmin' project.  You could import the package and use the functions within your own code. However any function which alters a project should only be used if only one user is accessing the web site. Multiple access while changes are being implemented could cause problems.\r\n\r\nA typical function within skilift is, for example:\r\n\r\nskilift.get_textblock_text(textref, lang, project=None)\r\n\r\nwith docstring:\r\n\r\nThis function returns the textblock text, given a textblock reference string,\r\n\r\nlang is the language tuple of (preferred language, default language).\r\nIf text for a given language is not found, the function makes an effort to get text by trying the default language.\r\n\r\nIf project is not given assumes the root project, if given, project must exist as either the root, or a sub project of the root.\r\nIf no textblock is found, returns None."
 ]
 ]
 }
