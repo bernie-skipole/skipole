@@ -68,7 +68,7 @@
 <h4>Deploying your project</h4>
 <p>You would normally copy the projectfiles directory to your server, and then the script:</p>
 <p>/path/to/projectfiles/myproj/code/myproj.py</p>
-<p>Both creates the 'application' object, and serves it using the python standard library wsgiref.simple_server. To deploy your final application on a web server of your choice, you would edit myproj.py to remove wsgiref.simple_server, and also remove the the code which adds the skiadmin project.</p>
+<p>Both creates the 'application' object, and serves it using a development server. To deploy your final application on a web server of your choice, you would edit myproj.py to remove the development server, and also remove the the code which adds the skiadmin project.</p>
 <p>Deploying a web server with the application depends on your server, usually the web server has some means of importing myproj.py, and running 'application'. The wiki at the github site gives a number of examples.</p>
 </div>
 </div>
