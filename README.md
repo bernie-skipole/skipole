@@ -42,7 +42,7 @@ The widgets created have a look and feel set by CSS classes, you have the facili
 
 ### Final output ###
 
-When you have fully developed your application, and wish to deploy it, you would remove the lines in myproj.py which run the library wsgiref.simple_server, and which add the skiadmin sub project, and you will be left with your final WSGI 'application' - which can be served by any wsgi compatable web server.
+When you have fully developed your application, and wish to deploy it, you would remove the lines in myproj.py which run the development_server, and which add the skiadmin sub project, and you will be left with your final WSGI 'application' - which can be served by any wsgi compatable web server.
 
 ### Upgrading ###
 
