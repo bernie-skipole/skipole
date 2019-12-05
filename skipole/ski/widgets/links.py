@@ -102,6 +102,137 @@ class IconLink(Widget):
 
 
 
+class ContainerLink1(Widget):
+    """A link to the page with the given ident, label or url, and two optional get fields.
+       The link a tag is the parent of a container into which further html can be inserted"""
+
+    _container = ((),)
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'link_ident':FieldArg("url", ''),
+                        'get_field1':FieldArg("text", "", valdt=True),
+                        'get_field2':FieldArg("text","", valdt=True),
+                        'target':FieldArg("text", ""),
+                        'force_ident':FieldArg("boolean", False)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        link_ident: The url, ident or label to link with
+        get_field1: Optional 'get' string set in the target url
+        get_field2: Optional second 'get' string set in the target url
+         target: if given, the target attribute will be set
+        force_ident: If True then the page ident will be included, even if no get fields set
+                     If False, the page ident will only be included if a get field is set
+        """
+        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        # where content can be placed
+        self[0] = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the link"
+        # self[0] is initially set as the empty string ''
+        if not self.get_field_value("link_ident"):
+            self._error = "Warning: broken link"
+            return
+        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        if not url:
+            self._error = "Warning: broken link"
+            return
+        # create a url for the href
+        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
+                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+        # add get fields and page ident_data to the url (defined in tag.ParentPart)
+        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+        self.update_attribs({"href": url})
+        if self.get_field_value("target"):
+            self.update_attribs({"target":self.get_field_value("target")})
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<a href="#">  <!-- with widget id and class widget_class and href the url -->
+      <!-- container 0 for further html -->
+</a>"""
+
+
+class ContainerLink2(Widget):
+    """A link to the page with the given ident, label or url, and two optional get fields.
+       Can request a json return if json_ident set
+       The link a tag is the parent of a container into which further html can be inserted"""
+
+    _container = ((),)
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'json_ident':FieldArg("url", ''),
+                        'link_ident':FieldArg("url", 'no_javascript'),
+                        'get_field1':FieldArg("text", "", valdt=True),
+                        'get_field2':FieldArg("text","", valdt=True),
+                        'force_ident':FieldArg("boolean", False)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        json_ident: The url, ident or label to link, expecting a json file to be returned
+        link_ident: The url, ident or label to link with if the client does not have javascript, or json_ident left blank
+        get_field1: Optional 'get' string set in the target url
+        get_field2: Optional second 'get' string set in the target url
+        force_ident: If True then the page ident will be included, even if no get fields set
+                     If False, the page ident will only be included if a get field is set
+        """
+        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        # where content can be placed
+        self[0] = ''
+        self._jsonurl = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the link"
+
+        if self.get_field_value("json_ident"):
+            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
+        if not self.get_field_value("link_ident"):
+            # setting self._error replaces the entire tag
+            self._error = "Warning: No link ident"
+            return
+
+        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        if not url:
+            self._error = "Warning: broken link"
+            return
+        # create a url for the href
+        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
+                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+
+        # add get fields and page ident_data to the url (defined in tag.ParentPart)
+        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+        self.update_attribs({"href": url})
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        jscript = """  $("#{ident}").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        if self._jsonurl:
+            return jscript + self._make_fieldvalues(url=self._jsonurl)
+        else:
+            return jscript
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<a href="#">  <!-- with widget id and class widget_class and href the url -->
+      <!-- container 0 for further html -->
+</a>"""
+
+
 
 class Link(Widget):
     """A link to the page with the given ident, label or url, with a text string as the
@@ -664,6 +795,7 @@ class ButtonLink1(Widget):
  <!-- with widget id and class widget_class, and the href link will be the url of the link_ident with the get_fields -->
  <!-- the button will show the button_text, on error this will be replaced by the error message -->
 </a>"""
+
 
 
 class ButtonLink2(Widget):
