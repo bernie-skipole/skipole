@@ -20,6 +20,62 @@ SKIPOLE.links.Link.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.links.ContainerLink1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.ContainerLink1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.ContainerLink1.prototype.constructor = SKIPOLE.links.ContainerLink1;
+
+
+SKIPOLE.links.ContainerLink2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.ContainerLink2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.ContainerLink2.prototype.constructor = SKIPOLE.links.ContainerLink2;
+SKIPOLE.links.ContainerLink2.prototype.eventfunc = function (e) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    if (!fieldvalues["url"]) {
+        // no json url, return and call html link
+        return;
+        }
+    var href = this.widg.attr('href');
+    var senddata = href.substring(href.indexOf('?')+1);
+    e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: fieldvalues["url"],
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          alert(errorThrown);
+                           }
+              });
+    };
+
+
+
 SKIPOLE.links.LinkToWidget = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
