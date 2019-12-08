@@ -161,8 +161,10 @@ class ContainerLink1(Widget):
 
 class ContainerLink2(Widget):
     """A link to the page with the given ident, label or url, and two optional get fields.
+       get_fields are JSON settable
        Can request a json return if json_ident set
-       The link a tag is the parent of a container into which further html can be inserted"""
+       The link a tag is the parent of a container into which further html can be inserted
+       Always sends page ident"""
 
     _container = ((),)
 
@@ -171,9 +173,8 @@ class ContainerLink2(Widget):
 
     arg_descriptions = {'json_ident':FieldArg("url", ''),
                         'link_ident':FieldArg("url", 'no_javascript'),
-                        'get_field1':FieldArg("text", "", valdt=True),
-                        'get_field2':FieldArg("text","", valdt=True),
-                        'force_ident':FieldArg("boolean", False)
+                        'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
+                        'get_field2':FieldArg("text","", valdt=True, jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -182,8 +183,6 @@ class ContainerLink2(Widget):
         link_ident: The url, ident or label to link with if the client does not have javascript, or json_ident left blank
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
-        force_ident: If True then the page ident will be included, even if no get fields set
-                     If False, the page ident will only be included if a get field is set
         """
         Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
         # where content can be placed
@@ -209,7 +208,7 @@ class ContainerLink2(Widget):
                       self.get_formname("get_field2"):self.get_field_value("get_field2")}
 
         # add get fields and page ident_data to the url (defined in tag.ParentPart)
-        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+        url = self.make_get_url(page, url, get_fields, True)
         self.update_attribs({"href": url})
 
 

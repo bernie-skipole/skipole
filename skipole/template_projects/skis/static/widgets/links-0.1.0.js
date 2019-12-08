@@ -34,6 +34,26 @@ SKIPOLE.links.ContainerLink2 = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.links.ContainerLink2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.links.ContainerLink2.prototype.constructor = SKIPOLE.links.ContainerLink2;
+SKIPOLE.links.ContainerLink2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    /* get_field1 */
+    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    if (get_field1 != undefined) {
+        var href = the_widg.attr('href');
+        var url = this.setgetfield(href, 'get_field1', get_field1);
+        the_widg.attr('href', url);
+        }
+    /* get_field2 */
+    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    if (get_field2 != undefined) {
+        var href = the_widg.attr('href');
+        var url = this.setgetfield(href, 'get_field2', get_field2);
+        the_widg.attr('href', url);
+        }
+    };
 SKIPOLE.links.ContainerLink2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
