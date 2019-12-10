@@ -112,8 +112,8 @@ class ContainerLink1(Widget):
     display_errors = False
 
     arg_descriptions = {'link_ident':FieldArg("url", ''),
-                        'get_field1':FieldArg("text", "", valdt=True),
-                        'get_field2':FieldArg("text","", valdt=True),
+                        'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
+                        'get_field2':FieldArg("text","", valdt=True, jsonset=True),
                         'target':FieldArg("text", ""),
                         'force_ident':FieldArg("boolean", False)
                        }
@@ -242,8 +242,8 @@ class Link(Widget):
     display_errors = False
 
     arg_descriptions = {'link_ident':FieldArg("url", ''),
-                        'get_field1':FieldArg("text", "", valdt=True),
-                        'get_field2':FieldArg("text","", valdt=True),
+                        'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
+                        'get_field2':FieldArg("text","", valdt=True, jsonset=True),
                         'content':FieldArg("text", "", jsonset=True),
                         'target':FieldArg("text", ""),
                         'force_ident':FieldArg("boolean", False)
