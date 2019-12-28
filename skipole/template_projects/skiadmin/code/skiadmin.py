@@ -1,6 +1,6 @@
 
 
-import re, collections, random
+import os, sys, re, collections, random
 
 
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
@@ -346,5 +346,7 @@ def display_parent(widget_info, page_data):
     # display links to the parent widget
     page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', parent_name, True, parent_name])
     page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', parent_name + " " + str(location[1]), True, parent_name + "-" + str(location[1])])
+
+
 
 

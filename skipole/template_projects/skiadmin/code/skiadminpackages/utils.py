@@ -46,7 +46,7 @@ def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
     # parts is a list of items
     last_index = len(parts)-1
 
-    #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #remove
+    #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #cut #delete
 
     for index, part in enumerate(parts):
         part_location_string = part_loc + '-' + str(index)
@@ -185,16 +185,19 @@ def domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
         # PASTE
         contents.append(['Paste', 'width : 1%;', True, part_location_string])
 
-        # REMOVE
-        contents.append(['Remove', 'width : 1%;', True, part_location_string])
+        # CUT
+        contents.append(['Cut', 'width : 1%;', True, part_location_string])
+
+        # DELETE
+        contents.append(['Delete', 'width : 1%;', True, part_location_string])
 
         u_r_flag = False
         if part_type == 'Part':
             if last_row_at_this_level and (part_dict['tag_name'] != 'script') and (part_dict['tag_name'] != 'pre'):
                 # add down right arrow in previous row at this level, get loc_string from adjacent edit cell
-                editcell = contents[last_row_at_this_level *11-5]
+                editcell = contents[last_row_at_this_level *12-6]
                 loc_string = editcell[3]
-                contents[last_row_at_this_level *11-6] = ['&searr;', 'width : 1%;', True, loc_string]
+                contents[last_row_at_this_level *12-7] = ['&searr;', 'width : 1%;', True, loc_string]
             last_row_at_this_level = rows
             rows = domtree(part_dict, part_location_string, contents, part_string_list, rows, indent)
             # set u_r_flag for next item below this one

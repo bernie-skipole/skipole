@@ -2,7 +2,7 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.5.8",
+"version": "3.5.9",
 "skipole": "3.5.8",
 "specialpages": {
 "about_code": 70001,
@@ -47,14 +47,20 @@
 "create_textblockref_insert": 42601,
 "css_file_cache": 8360,
 "css_print": 8400,
+"cut_container_dom": 44520,
+"cut_page_dom": 3620,
+"cut_section_dom": 7520,
 "debugtoggle": 70,
 "default_page": 2700,
 "defaults": 80001,
 "defaults_json": 85002,
 "delete_allowed_caller": 6090,
+"delete_container_dom": 44522,
 "delete_item": 2006,
 "delete_language": 4040,
+"delete_page_dom": 3621,
 "delete_section": 7020,
+"delete_section_dom": 7521,
 "delete_submit_list_string": 6400,
 "delete_textbox": 4050,
 "displaywidget": 46031,
@@ -146,13 +152,10 @@
 "placeholder_insert": 45501,
 "redirector": "skis,redirector",
 "remove_allowed_value": 46051,
-"remove_container_dom": 44520,
 "remove_field": 6110,
 "remove_field_value": 6100,
 "remove_item": 43104,
-"remove_page_dom": 3620,
 "remove_project": 110,
-"remove_section_dom": 7520,
 "remove_selector": 8200,
 "remove_textblock": 4052,
 "remove_validator": 46221,
@@ -5147,6 +5150,56 @@ false
 }
 }
 },
+"cut_page_dom": {
+"ident": 3620,
+"brief": "Remove an item from a page and copies for later pasting.",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editpages",
+"editpage",
+"cut_page_dom"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"delete_page_dom": {
+"ident": 3621,
+"brief": "Deletes an item from a page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editpages",
+"editpage",
+"delete_page_dom"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
 "move_down_in_page_dom": {
 "ident": 3660,
 "brief": "moves a dom item down in a page",
@@ -5295,31 +5348,6 @@ false
 },
 "original_fields": {
 "editdom-domtable:cols": "",
-"editdom-domtable:contents": ""
-}
-}
-},
-"remove_page_dom": {
-"ident": 3620,
-"brief": "Remove an item from a page",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "general_json",
-"submit_list": [
-"skiadminpackages",
-"editpages",
-"editpage",
-"remove_page_dom"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
 "editdom-domtable:contents": ""
 }
 }
@@ -16568,6 +16596,56 @@ false
 }
 }
 },
+"cut_container_dom": {
+"ident": 44520,
+"brief": "Remove an item from a container, saves copy for pasting",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editwidgets",
+"editwidget",
+"cut_container_dom"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"delete_container_dom": {
+"ident": 44522,
+"brief": "Deletes a container part",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editwidgets",
+"editwidget",
+"delete_container_dom"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
 "move_down_in_container_dom": {
 "ident": 44560,
 "brief": "moves a dom item down in a container",
@@ -16716,31 +16794,6 @@ false
 },
 "original_fields": {
 "editdom-domtable:cols": "",
-"editdom-domtable:contents": ""
-}
-}
-},
-"remove_container_dom": {
-"ident": 44520,
-"brief": "Remove an item from a container",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "general_json",
-"submit_list": [
-"skiadminpackages",
-"editwidgets",
-"editwidget",
-"remove_container_dom"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
 "editdom-domtable:contents": ""
 }
 }
@@ -34872,6 +34925,56 @@ false
 }
 }
 },
+"cut_section_dom": {
+"ident": 7520,
+"brief": "cut an item from a section, and copy for later pasting",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editsections",
+"managesections",
+"cut_section_dom"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
+"delete_section_dom": {
+"ident": 7521,
+"brief": "Deletes a section part",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editsections",
+"managesections",
+"delete_section_dom"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"editdom-domtable:contents": ""
+}
+}
+},
 "move_down_in_section_dom": {
 "ident": 7560,
 "brief": "moves a dom item down in a section",
@@ -35020,31 +35123,6 @@ false
 },
 "original_fields": {
 "editdom-domtable:cols": "",
-"editdom-domtable:contents": ""
-}
-}
-},
-"remove_section_dom": {
-"ident": 7520,
-"brief": "Remove an item from a section",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"fail_ident": "general_json",
-"submit_list": [
-"skiadminpackages",
-"editsections",
-"managesections",
-"remove_section_dom"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
 "editdom-domtable:contents": ""
 }
 }

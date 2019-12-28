@@ -128,7 +128,8 @@ def retrieve_section_dom(skicall):
                                                       ['add_to_section_dom','',''],                           # insert/append, html only
                                                       ['no_javascript',7580,''],                              # copy
                                                       ['no_javascript',7590,'ski_part'],                      # paste
-                                                      ['no_javascript','remove_section_dom','']               # remove
+                                                      ['no_javascript','cut_section_dom',''],                 # cut
+                                                      ['no_javascript','delete_section_dom','']               # delete
                                                    ]
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
@@ -161,7 +162,8 @@ def _section_domcontents(project, section_name):
                    ['Insert','width : 1%;text-align: center;', True, section_name],  # insert
                    ['Copy','width : 1%;text-align: center;', True, section_name],  # copy image for top line
                    ['Paste','width : 1%;text-align: center;', True, section_name],  # paste image for top line
-                   ['', '', False, '' ]                                              # no remove image for top line
+                   ['', '', False, '' ],                                             # no cut image for top line
+                   ['', '', False, '' ]                                              # no delete image for top line
                   ]
     # add further items to domcontents
     part_string_list = []
@@ -549,8 +551,8 @@ def add_to_section_dom(skicall):
         raise GoTo(target = '23509', clear_submitted=True)
 
 
-def remove_section_dom(skicall):
-    "Called by domtable to remove an item in a section"
+def cut_section_dom(skicall):
+    "Called by domtable to cut an item in a section, and copy for later pasting"
 
     call_data = skicall.call_data
     page_data = skicall.page_data
@@ -613,6 +615,64 @@ def remove_section_dom(skicall):
         del call_data['part_loc']
 
     call_data['status'] = 'Item copied and then deleted. Use paste to recover or move it.'
+
+
+def delete_section_dom(skicall):
+    "Called by domtable to delete an item in a section"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is section name with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of section name
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers
+        raise FailPage("Item to remove has not been recognised")
+
+    location_integers = tuple( int(i) for i in location_list[1:] )
+    section_name = location_list[0]
+
+    # location is a tuple of section_name, None for no container, tuple of location integers
+    location = (section_name, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = part_info(editedprojname, None, section_name, location)
+    if part_tuple is None:
+        raise FailPage("Item to remove has not been recognised")
+
+    # remove the item
+    try:
+        call_data['schange'] = editsection.del_location(editedprojname, section_name, call_data['schange'], location)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    # and re-draw the table
+    domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    # once item is deleted, no info on the item should be
+    # left in call_data - this may not be required in future
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['status'] = 'Item deleted.'
+
 
 
 def move_up_in_section_dom(skicall):

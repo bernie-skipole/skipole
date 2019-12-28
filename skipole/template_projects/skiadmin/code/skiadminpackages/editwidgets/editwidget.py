@@ -772,7 +772,8 @@ def retrieve_container_dom(skicall):
                                                       ['add_to_container_dom','',''],                             # insert/append, html only
                                                       ['no_javascript',44580,''],                                 # copy
                                                       ['no_javascript',44590,'ski_part'],                         # paste
-                                                      ['no_javascript','remove_container_dom','']                 # remove
+                                                      ['no_javascript','cut_container_dom',''],                   # cut
+                                                      ['no_javascript','delete_container_dom','']                 # delete
                                                    ]
 
     page_data['editdom', 'domtable', 'dropident'] = 'move_in_container_dom'
@@ -792,6 +793,7 @@ def _container_domcontents(project, pagenumber, section_name, location_string, c
     domcontents = [
                    [top_row_widget, '', False, '' ],
                    [top_row_container, '', False, '' ],
+                   ['', '', False, '' ],
                    ['', '', False, '' ],
                    ['', '', False, '' ],
                    ['', '', False, '' ],
@@ -1179,8 +1181,8 @@ def add_to_container_dom(skicall):
         raise GoTo(target = '23509', clear_submitted=True)
 
 
-def remove_container_dom(skicall):
-    "Called by domtable to remove an item in a container"
+def cut_container_dom(skicall):
+    "Called by domtable to cut an item in a container"
 
     call_data = skicall.call_data
     page_data = skicall.page_data
@@ -1273,6 +1275,94 @@ def remove_container_dom(skicall):
     page_data['editdom', 'domtable', 'dragrows']  = dragrows
     page_data['editdom', 'domtable', 'droprows']  = droprows
     page_data['editdom', 'domtable', 'contents']  = domcontents
+
+
+def delete_container_dom(skicall):
+    "Called by domtable to delete an item in a container"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    project = call_data['editedprojname']
+    pagenumber = None
+    section_name = None
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    elif "section_name" in call_data:
+        section_name = call_data["section_name"]
+    else:
+        raise FailPage(message = "No page or section given")
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to remove missing")
+
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is widget_name, container with location string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a string of widget name
+    # a container integer
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) < 3:
+        raise FailPage("Item to remove has not been recognised")
+
+    try:
+        widget_name = location_list[0]
+        container = int(location_list[1])
+        location_integers = [ int(i) for i in location_list[2:]]
+    except Exception:
+        raise FailPage("Item to remove has not been recognised")
+
+    # location is a tuple of widget_name, container, tuple of location integers
+    location = (widget_name, container, location_integers)
+
+    part_tuple = skilift.part_info(project, pagenumber, section_name, location)
+    if part_tuple is None:
+        raise FailPage("Item to remove has not been recognised")
+
+    # remove the item using functions from skilift.editsection and skilift.editpage
+    if pagenumber is None:
+        # remove the item from a section
+        try:
+            call_data['schange'] = editsection.del_location(project, section_name, call_data['schange'], location)
+        except ServerError as e:
+            raise FailPage(message = e.message)
+    else:
+        # remove the item from a page
+        try:
+            call_data['pchange'] = editpage.del_location(project, pagenumber, call_data['pchange'], location)
+        except ServerError as e:
+            raise FailPage(message = e.message)
+
+    # and get info to re-draw the table
+    domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, widget_name, container)
+
+    # once item is deleted, no info on the item should be
+    # left in call_data - this may not be required in future
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['container'] = container
+    call_data['widget_name'] = widget_name
+    call_data['status'] = 'Item deleted.'
+
+    # If deleting item has left container empty, return a full retrieve of the container page
+    if len(domcontents) == 11:
+        # 11 items indicates the top title row only, with no further contents
+        raise GoTo("back_to_container")
+
+    # otherwise just redraw the table
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
 
 
 

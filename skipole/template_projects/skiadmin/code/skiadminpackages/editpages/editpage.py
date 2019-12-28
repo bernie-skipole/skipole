@@ -190,7 +190,8 @@ def retrieve_page_dom(skicall):
                                                       ['add_to_page_dom','',''],                           # insert/append, html only
                                                       ['no_javascript',3680,''],                           # copy
                                                       ['no_javascript',3690,'ski_part'],                   # paste
-                                                      ['no_javascript','remove_page_dom','']               # remove
+                                                      ['no_javascript','cut_page_dom',''],                 # cut
+                                                      ['no_javascript','delete_page_dom','']               # delete
                                                    ]
 
     page_data['editdom', 'domtable', 'dropident']  = 'move_in_page_dom'
@@ -242,7 +243,8 @@ def _page_domcontents(project, pagenumber, location_string):
                    ['Insert','width : 1%;text-align: center;', True, location_string],  # insert
                    ['Copy','width : 1%;text-align: center;', True, location_string],    # copy image for top line
                    ['Paste','width : 1%;text-align: center;', True, location_string],   # paste image for top line
-                   ['', '', False, '' ],                                                # no remove image for top line
+                   ['', '', False, '' ],                                                # no cut image for top line
+                   ['', '', False, '' ]                                                 # no delete image for top line
                 ]
 
     # add further items to domcontents
@@ -1444,7 +1446,7 @@ def add_to_page_dom(skicall):
         raise GoTo(target = '23509', clear_submitted=True)
 
 
-def remove_page_dom(skicall):
+def cut_page_dom(skicall):
     "Called by domtable to remove an item in a page"
 
     call_data = skicall.call_data
@@ -1518,6 +1520,74 @@ def remove_page_dom(skicall):
     call_data['location_string'] = location_string
 
     call_data['status'] = 'Item copied and then deleted. Use paste to recover or move it.'
+
+
+
+def delete_page_dom(skicall):
+    "Called by domtable to delete an item in a page"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if "page_number" in call_data:
+        pagenumber = call_data["page_number"]
+    else:
+        raise FailPage(message = "Page number missing")
+
+    if pagenumber is None:
+        raise FailPage(message = "Page number missing")
+
+    if ('editdom', 'domtable', 'contents') not in call_data:
+        raise FailPage(message = "item to edit missing")
+    editedprojname = call_data['editedprojname']
+    part = call_data['editdom', 'domtable', 'contents']
+
+    # so part is location_string with string of integers
+
+    # create location which is a tuple or list consisting of three items:
+    # a location_string
+    # a container integer, in this case always None
+    # a tuple or list of location integers
+    location_list = part.split('-')
+    # first item should be a string, rest integers
+    if len(location_list) == 1:
+        # no location integers
+        raise FailPage("Item to delete has not been recognised")
+
+    location_integers = tuple( int(i) for i in location_list[1:] )
+    location_string = location_list[0]
+
+    # location is a tuple of location_string, None for no container, tuple of location integers
+    location = (location_string, None, location_integers)
+    # get part_tuple from project, pagenumber, section_name, location
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
+    if part_tuple is None:
+        raise FailPage("Item to delete has not been recognised")
+
+    # delete the item
+    try:
+        call_data['pchange'] = editpage.del_location(editedprojname, pagenumber, call_data['pchange'], location)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+
+    # and re-draw the table
+    domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
+    page_data['editdom', 'domtable', 'dragrows']  = dragrows
+    page_data['editdom', 'domtable', 'droprows']  = droprows
+    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    # once item is deleted, no info on the item should be
+    # left in call_data - this may not be required in future
+    if 'location' in call_data:
+        del call_data['location']
+    if 'part' in call_data:
+        del call_data['part']
+    if 'part_loc' in call_data:
+        del call_data['part_loc']
+
+    call_data['location_string'] = location_string
+
+    call_data['status'] = 'Item deleted.'
 
 
 
