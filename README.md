@@ -48,7 +48,11 @@ When you have fully developed your application, and wish to deploy it, you would
 
 To upgrade to the latest version:
 
-pip install --upgrade skipole
+python3 -m pip install --upgrade skipole
+
+or
+
+python3 -m pip install --user --upgrade skipole
 
 Check you have the latest with:
 
