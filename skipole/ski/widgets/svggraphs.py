@@ -574,6 +574,7 @@ class StarChart(Widget):
                         'stroke_width':FieldArg("integer", 1),
                         'stroke':FieldArg("text", "black"),
                         'stars':FieldArgTable(('text', 'text', 'text')),   # star diameter, ra, dec
+                        'lines':FieldArgTable(('text', 'text', 'text', 'text')),   # line start ra, dec to line end ra, dec
                         'ra':FieldArg("text", "0"),      # right ascension 0 to 360
                         'dec':FieldArg("text", "90"),    # declination 90 to -90
                         'view':FieldArg("text", "180"),  # the field of view
@@ -715,29 +716,121 @@ class StarChart(Widget):
                                                                    "stroke":stroke}))
 
 
-            if self.get_field_value("square"):
-                # plot a square on the chart centre
-                self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"240",
-                                                                     "y":"240",
-                                                                     "width":"20",
-                                                                     "height":"20",
-                                                                     "style":"stroke:%s;stroke-width:1;fill-opacity:0;" % (stroke,)}))
+        if self.get_field_value("square"):
+            # plot a square on the chart centre
+            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"240",
+                                                                 "y":"240",
+                                                                 "width":"20",
+                                                                 "height":"20",
+                                                                 "style":"stroke:%s;stroke-width:1;fill-opacity:0;" % (stroke,)}))
 
-            if self.get_field_value("cross"):
-                # plot a + on the chart centre
-                self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
-                                                                     "y1":"250",
-                                                                     "x2":"260",
-                                                                     "y2":"250",
-                                                                     "stroke":stroke,
-                                                                     "stroke-width":"1"}))
-                self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"250",
-                                                                     "y1":"240",
-                                                                     "x2":"250",
-                                                                     "y2":"260",
-                                                                     "stroke":stroke,
-                                                                     "stroke-width":"1"}))
+        if self.get_field_value("cross"):
+            # plot a + on the chart centre
+            self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
+                                                                 "y1":"250",
+                                                                 "x2":"260",
+                                                                 "y2":"250",
+                                                                 "stroke":stroke,
+                                                                 "stroke-width":"1"}))
+            self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"250",
+                                                                 "y1":"240",
+                                                                 "x2":"250",
+                                                                 "y2":"260",
+                                                                 "stroke":stroke,
+                                                                 "stroke-width":"1"}))
 
+        for line in self.get_field_value("lines"):
+
+            start_ra_deg = float(line[0])
+            start_dec_deg = float(line[1])
+            end_ra_deg = float(line[2])
+            end_dec_deg = float(line[3])
+
+            if (start_ra_deg < 0.0) or (start_ra_deg > 360.0) or (end_ra_deg < 0.0) or (end_ra_deg > 360.0):
+                # something wrong, do not plot this line
+                continue
+
+            # don't draw line if either start or end declination is outside required view
+            # unfortunately ra is more complicated
+            if start_dec_deg > max_dec:
+                continue
+            if start_dec_deg < min_dec:
+                continue
+            if end_dec_deg > max_dec:
+                continue
+            if end_dec_deg < min_dec:
+                continue
+
+            # start of line
+            ra = math.radians(start_ra_deg)
+            dec = math.radians(start_dec_deg)
+            delta_ra = ra - ra0
+            sindec = math.sin(dec)
+            cosdec = math.cos(dec)
+            cosdelta_ra = math.cos(delta_ra)
+
+            x1 = cosdec * math.sin(delta_ra);
+            y1 = sindec * cosdec0 - cosdec * cosdelta_ra * sindec0
+            z1 = sindec * sindec0 + cosdec * cosdec0 * cosdelta_ra
+            if z1 < -0.9:
+               d = 20.0 * math.sqrt(( 1.0 - 0.81) / ( 1.00001 - z1 * z1))
+            else:
+               d = 2.0 / (z1 + 1.0)
+            x = x1 * d * scale
+            y = y1 * d * scale
+
+            if x*x + y*y > 62500:
+                # line start position is outside the circle
+                continue
+
+            # move origin to circle centre (250,250)
+            if self.get_field_value("flip_horizontal"):
+                startx = 250 + x
+            else:
+                startx = 250 - x
+            if self.get_field_value("flip_vertical"):
+                starty = 250 + y
+            else:
+                starty = 250 - y
+
+            # end of line
+            ra = math.radians(end_ra_deg)
+            dec = math.radians(end_dec_deg)
+            delta_ra = ra - ra0
+            sindec = math.sin(dec)
+            cosdec = math.cos(dec)
+            cosdelta_ra = math.cos(delta_ra)
+
+            x1 = cosdec * math.sin(delta_ra);
+            y1 = sindec * cosdec0 - cosdec * cosdelta_ra * sindec0
+            z1 = sindec * sindec0 + cosdec * cosdec0 * cosdelta_ra
+            if z1 < -0.9:
+               d = 20.0 * math.sqrt(( 1.0 - 0.81) / ( 1.00001 - z1 * z1))
+            else:
+               d = 2.0 / (z1 + 1.0)
+            x = x1 * d * scale
+            y = y1 * d * scale
+
+            if x*x + y*y > 62500:
+                # line end position is outside the circle
+                continue
+
+            # move origin to circle centre (250,250)
+            if self.get_field_value("flip_horizontal"):
+                endx = 250 + x
+            else:
+                endx = 250 - x
+            if self.get_field_value("flip_vertical"):
+                endy = 250 + y
+            else:
+                endy = 250 - y
+
+            self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(startx),
+                                                                 "y1":str(starty),
+                                                                 "x2":str(endx),
+                                                                 "y2":str(endy),
+                                                                 "stroke":stroke,
+                                                                 "stroke-width":"1"}))
 
  
     @classmethod

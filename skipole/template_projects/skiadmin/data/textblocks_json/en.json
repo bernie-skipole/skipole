@@ -1818,6 +1818,8 @@
   "widgets.svggraphs.StarChart.fill": "Background colour within the chart circle, normally white.",
   "widgets.svggraphs.StarChart.flip_horizontal": "Flips the chart about an horizontal axis.",
   "widgets.svggraphs.StarChart.flip_vertical": "Flips the chart about a vertical axis.",
+  "widgets.svggraphs.StarChart.lines": "A list of lists, each inner list defining a line.",
+  "widgets.svggraphs.StarChart.lines.full": "A list of lists, each inner list being [start_ra, start_dec, end_ra, end_dec] with coordinates as strings of the ra and dec degree values which define the start and end of the line.",
   "widgets.svggraphs.StarChart.ra": "The Right Ascension (in degrees) of the centre of the chart.",
   "widgets.svggraphs.StarChart.ra.full": "The Right Ascension (in degrees), which, together with the dec field, defines the point in the sky which this chart will be centred upon.",
   "widgets.svggraphs.StarChart.square": "If True a square will be drawn in the chart centre.",
