@@ -578,8 +578,6 @@ class StarChart(Widget):
                         'ra':FieldArg("text", "0"),      # right ascension 0 to 360
                         'dec':FieldArg("text", "90"),    # declination 90 to -90
                         'view':FieldArg("text", "180"),  # the field of view
-                        'flip_horizontal':FieldArg("boolean", False),
-                        'flip_vertical':FieldArg("boolean", False),
                         'cross':FieldArg("boolean", False),
                         'square':FieldArg("boolean", False)
                        }
@@ -699,14 +697,8 @@ class StarChart(Widget):
                 continue
 
             # move origin to circle centre (250,250)
-            if self.get_field_value("flip_horizontal"):
-                cx = 250 + x
-            else:
-                cx = 250 - x
-            if self.get_field_value("flip_vertical"):
-                cy = 250 + y
-            else:
-                cy = 250 - y
+            cx = 250 - x
+            cy = 250 - y
             self.append(tag.ClosedPart(tag_name='circle', attribs={"cx":str(cx),
                                                                    "cy":str(cy),
                                                                    "r":str(radius),
@@ -782,14 +774,8 @@ class StarChart(Widget):
                 continue
 
             # move origin to circle centre (250,250)
-            if self.get_field_value("flip_horizontal"):
-                startx = 250 + x
-            else:
-                startx = 250 - x
-            if self.get_field_value("flip_vertical"):
-                starty = 250 + y
-            else:
-                starty = 250 - y
+            startx = 250 - x
+            starty = 250 - y
 
             # end of line
             ra = math.radians(end_ra_deg)
@@ -814,14 +800,8 @@ class StarChart(Widget):
                 continue
 
             # move origin to circle centre (250,250)
-            if self.get_field_value("flip_horizontal"):
-                endx = 250 + x
-            else:
-                endx = 250 - x
-            if self.get_field_value("flip_vertical"):
-                endy = 250 + y
-            else:
-                endy = 250 - y
+            endx = 250 - x
+            endy = 250 - y
 
             self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(startx),
                                                                  "y1":str(starty),
@@ -857,8 +837,6 @@ class StarChartXY(Widget):
                         'stroke':FieldArg("text", "black"),
                         'stars':FieldArgTable(('text', 'text', 'text')),   # star diameter, x, y positions on the chart
                         'lines':FieldArgTable(('text', 'text', 'text', 'text')),   # line start x, y to line end x, y
-                        'flip_horizontal':FieldArg("boolean", False),
-                        'flip_vertical':FieldArg("boolean", False),
                         'cross':FieldArg("boolean", False),
                         'square':FieldArg("boolean", False)
                        }
@@ -909,14 +887,8 @@ class StarChartXY(Widget):
             y = float(star[2])
 
             # move origin to circle centre (250,250)
-            if self.get_field_value("flip_horizontal"):
-                cx = 250 + x
-            else:
-                cx = 250 - x
-            if self.get_field_value("flip_vertical"):
-                cy = 250 + y
-            else:
-                cy = 250 - y
+            cx = 250 - x
+            cy = 250 - y
             self.append(tag.ClosedPart(tag_name='circle', attribs={"cx":str(cx),
                                                                    "cy":str(cy),
                                                                    "r":str(radius),
@@ -950,23 +922,11 @@ class StarChartXY(Widget):
         for line in self.get_field_value("lines"):
 
             # move origin to circle centre (250,250)
-            if self.get_field_value("flip_horizontal"):
-                startx = 250 + float(line[0])
-            else:
-                startx = 250 - float(line[0])
-            if self.get_field_value("flip_vertical"):
-                starty = 250 + float(line[1])
-            else:
-                starty = 250 - float(line[1])
+            startx = 250 - float(line[0])
+            starty = 250 - float(line[1])
 
-            if self.get_field_value("flip_horizontal"):
-                endx = 250 + float(line[2])
-            else:
-                endx = 250 - float(line[2])
-            if self.get_field_value("flip_vertical"):
-                endy = 250 + float(line[3])
-            else:
-                endy = 250 - float(line[3])
+            endx = 250 - float(line[2])
+            endy = 250 - float(line[3])
 
             self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(startx),
                                                                  "y1":str(starty),
