@@ -597,7 +597,6 @@ class StarChart(Widget):
                                                              "stroke-width":"1"})
 
 
-
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.get_field_value("transform"):
             self.update_attribs({"transform":self.get_field_value("transform")})
@@ -606,9 +605,8 @@ class StarChart(Widget):
             self[0].update_attribs({"stroke-width":str(stroke_width)})
         # stroke will be the star colour
         stroke = self.get_field_value("stroke")
-        if not stroke:
-            stroke = 'black'
-        self[0].update_attribs({"stroke":stroke})
+        if stroke:
+            self[0].update_attribs({"stroke":stroke})
         fill = self.get_field_value("fill")
         if fill:
             self[0].update_attribs({"fill":fill})
@@ -844,6 +842,150 @@ class StarChart(Widget):
   <!-- centre cross drawn if cross is True -->
 </g>"""
 
+
+
+class StarChartXY(Widget):
+
+    # This class does not display any error messages
+    display_errors = False
+
+
+    arg_descriptions = {
+                        'transform':FieldArg("text", "", jsonset=True),
+                        'fill':FieldArg("text", "white"),
+                        'stroke_width':FieldArg("integer", 1),
+                        'stroke':FieldArg("text", "black"),
+                        'stars':FieldArgTable(('text', 'text', 'text')),   # star diameter, x, y positions on the chart
+                        'lines':FieldArgTable(('text', 'text', 'text', 'text')),   # line start x, y to line end x, y
+                        'flip_horizontal':FieldArg("boolean", False),
+                        'flip_vertical':FieldArg("boolean", False),
+                        'cross':FieldArg("boolean", False),
+                        'square':FieldArg("boolean", False)
+                       }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """A g element which holds a circular star chart, held in a 500 high x 500 wide space
+        """
+        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        self[0] = tag.ClosedPart(tag_name='circle', attribs={"cx":"250",
+                                                             "cy":"250",
+                                                             "r":"250",
+                                                             "fill":"white",
+                                                             "stroke":"black",
+                                                             "stroke-width":"1"})
+
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        if self.get_field_value("transform"):
+            self.update_attribs({"transform":self.get_field_value("transform")})
+        stroke_width = self.get_field_value("stroke_width")
+        if stroke_width:
+            self[0].update_attribs({"stroke-width":str(stroke_width)})
+        # stroke will be the star colour
+        stroke = self.get_field_value("stroke")
+        if stroke:
+            self[0].update_attribs({"stroke":stroke})
+        fill = self.get_field_value("fill")
+        if fill:
+            self[0].update_attribs({"fill":fill})
+        if not self.get_field_value("stars"):
+            return
+
+        for star in self.get_field_value("stars"):
+
+            # get the radius of a star circle to plot
+            if star[0]:
+                radius = float(star[0])/2.0
+            else:
+                radius = 0.5
+            if radius < 0.1:
+                radius = 0.1
+
+            # get the position x, y with origin (0,0) in the centre of the chart
+
+            x = float(star[1])
+            y = float(star[2])
+
+            # move origin to circle centre (250,250)
+            if self.get_field_value("flip_horizontal"):
+                cx = 250 + x
+            else:
+                cx = 250 - x
+            if self.get_field_value("flip_vertical"):
+                cy = 250 + y
+            else:
+                cy = 250 - y
+            self.append(tag.ClosedPart(tag_name='circle', attribs={"cx":str(cx),
+                                                                   "cy":str(cy),
+                                                                   "r":str(radius),
+                                                                   "fill":stroke,
+                                                                   "stroke":stroke}))
+
+
+        if self.get_field_value("square"):
+            # plot a square on the chart centre
+            self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"240",
+                                                                 "y":"240",
+                                                                 "width":"20",
+                                                                 "height":"20",
+                                                                 "style":"stroke:%s;stroke-width:1;fill-opacity:0;" % (stroke,)}))
+
+        if self.get_field_value("cross"):
+            # plot a + on the chart centre
+            self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
+                                                                 "y1":"250",
+                                                                 "x2":"260",
+                                                                 "y2":"250",
+                                                                 "stroke":stroke,
+                                                                 "stroke-width":"1"}))
+            self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"250",
+                                                                 "y1":"240",
+                                                                 "x2":"250",
+                                                                 "y2":"260",
+                                                                 "stroke":stroke,
+                                                                 "stroke-width":"1"}))
+
+        for line in self.get_field_value("lines"):
+
+            # move origin to circle centre (250,250)
+            if self.get_field_value("flip_horizontal"):
+                startx = 250 + float(line[0])
+            else:
+                startx = 250 - float(line[0])
+            if self.get_field_value("flip_vertical"):
+                starty = 250 + float(line[1])
+            else:
+                starty = 250 - float(line[1])
+
+            if self.get_field_value("flip_horizontal"):
+                endx = 250 + float(line[2])
+            else:
+                endx = 250 - float(line[2])
+            if self.get_field_value("flip_vertical"):
+                endy = 250 + float(line[3])
+            else:
+                endy = 250 - float(line[3])
+
+            self.append(tag.ClosedPart(tag_name='line', attribs={"x1":str(startx),
+                                                                 "y1":str(starty),
+                                                                 "x2":str(endx),
+                                                                 "y2":str(endy),
+                                                                 "stroke":stroke,
+                                                                 "stroke-width":"1"}))
+ 
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<g>  <!-- with widget id and class widget_class, and transform attribute if given -->
+  <circle /> <!-- A circle with fill, stroke and stroke width, and diameter 500 -->
+  <!-- with multiple 'star' spots, positioned according to the given x,y values -->
+  <!-- as pixel distances with x,y origin on the chart centre --> 
+  <!-- and each with a drawn diameter given per star -->
+  <!-- centre cross drawn if cross is True -->
+</g>"""
 
 
 
