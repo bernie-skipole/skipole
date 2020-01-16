@@ -835,8 +835,8 @@ class StarChartXY(Widget):
                         'fill':FieldArg("text", "white"),
                         'stroke_width':FieldArg("integer", 1),
                         'stroke':FieldArg("text", "black"),
-                        'stars':FieldArgTable(('text', 'text', 'text')),   # star diameter, x, y positions on the chart
-                        'lines':FieldArgTable(('text', 'text', 'text', 'text')),   # line start x, y to line end x, y
+                        'stars':FieldArgTable(('text', 'text', 'text'), jsonset=True),   # star diameter, x, y positions on the chart
+                        'lines':FieldArgTable(('text', 'text', 'text', 'text'), jsonset=True),   # line start x, y to line end x, y
                         'cross':FieldArg("boolean", False),
                         'square':FieldArg("boolean", False)
                        }
@@ -934,6 +934,11 @@ class StarChartXY(Widget):
                                                                  "y2":str(endy),
                                                                  "stroke":stroke,
                                                                  "stroke-width":"1"}))
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets scale values"""
+        return self._make_fieldvalues('stroke', 'stroke_width', 'fill', 'cross', 'square')
  
     @classmethod
     def description(cls):

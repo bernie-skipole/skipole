@@ -1,6 +1,7 @@
 
 import os, sys
 
+
 # This project needs to import the skipole package, which should normally be immediately
 # available if skipole has been installed on your system.
 
@@ -13,7 +14,7 @@ from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError,
 # pages, and also stops javascript validation of input data on the client - this ensures that
 # server validation can be tested
 
-# You may also wish to import 'use_submit_list' whch can act as a decorator around your
+# You may also wish to import 'use_submit_list' which can act as a decorator around your
 # submit_data function. See the skipole documentation for details.
 
 # the framework needs to know the location of the projectfiles directory holding this and

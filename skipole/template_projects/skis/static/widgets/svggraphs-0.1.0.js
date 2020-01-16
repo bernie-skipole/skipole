@@ -74,6 +74,90 @@ SKIPOLE.svggraphs.StarChart.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.svggraphs.StarChartXY = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.svggraphs.StarChartXY.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.svggraphs.StarChartXY.prototype.constructor = SKIPOLE.svggraphs.StarChartXY;
+SKIPOLE.svggraphs.StarChartXY.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    this.set_attribute('transform', 'transform', result, fieldlist);
+    var the_widg = this.widg;
+
+    var stroke = this.fieldvalues['stroke'];
+    var stroke_width = this.fieldvalues['stroke_width'];
+    var fill = this.fieldvalues['fill'];
+    var cross = this.fieldvalues['cross'];
+    var square = this.fieldvalues['square'];
+
+    var stars = this.fieldarg_in_result('stars', result, fieldlist);
+    var lines = this.fieldarg_in_result('lines', result, fieldlist);
+
+    // if only transform has been set, and stars and lines are not included
+    if (stars == undefined && lines == undefined) {
+        return;
+        }
+
+    // delete existing starchart
+    the_widg.empty();
+    // Draw the circle
+    var graphstring = "<circle cx=\"250\" cy=\"250\" r=\"250\" fill=\"" + fill + "\" stroke=\"" + stroke + "\" stroke-width=\"" + stroke_width + "\" />";
+
+    // set the chart stars
+    if (stars != undefined) {
+        var number_of_stars = stars.length;
+        if (number_of_stars) {
+            // draw new stars
+            for (st = 0; st < number_of_stars; st++) {
+                var radius = parseFloat(stars[st][0]) / 2.0;
+                if (radius < 0.1) {
+                     radius = 0.1;
+                     }
+                var xpoint = 250.0 - parseFloat(stars[st][1]);
+                var ypoint = 250.0 - parseFloat(stars[st][2]);
+                graphstring += "<circle cx=\"" + xpoint + "\" cy=\"" + ypoint + "\" r=\"" + radius + "\" fill=\"" + stroke + "\" stroke=\"" + stroke + "\" />";
+                }
+            }
+        }
+
+    if (square) {
+        // plot a square on the chart centre
+        graphstring += "<rect x=\"240\" y=\"240\" width=\"20\" height=\"20\" style=\"stroke:" + stroke + ";stroke-width:1;fill-opacity:0;\" />";
+        }
+
+    if (cross) {
+        // plot a cross on the chart centre
+        graphstring += "<line x1=\"240\" y1=\"250\" x2=\"260\" y2=\"250\" stroke=\"" + stroke + "\" stroke-width=\"1\" />";
+        graphstring += "<line x1=\"250\" y1=\"240\" x2=\"250\" y2=\"260\" stroke=\"" + stroke + "\" stroke-width=\"1\" />";
+        }
+
+    // get the lines
+    if (lines == undefined) {
+        the_widg.html(graphstring);
+        return;
+        }
+    var number_of_lines = lines.length;
+    if (!number_of_lines) {
+        the_widg.html(graphstring);
+        return;
+        }
+
+    // draw lines
+    for (ln = 0; ln < number_of_lines; ln++) {
+        var x1point = 250.0 - parseFloat(lines[ln][0]);
+        var y1point = 250.0 - parseFloat(lines[ln][1]);
+        var x2point = 250.0 - parseFloat(lines[ln][2]);
+        var y2point = 250.0 - parseFloat(lines[ln][3]);
+        graphstring += "<line x1=\"" + x1point + "\" y1=\"" + y1point + "\" x2=\"" + x2point + "\" y2=\"" + y2point + "\"  stroke=\"" + stroke + "\" stroke-width=\"" + stroke_width + "\" />";
+        }
+    the_widg.html(graphstring);
+    };
+
+
+
 SKIPOLE.svggraphs.Graph48Hr = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
