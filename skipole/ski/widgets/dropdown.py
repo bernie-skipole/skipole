@@ -272,3 +272,112 @@ class SubmitDropDown1(Widget):
   </form>
 </div>"""
 
+
+class HiddenContainer(Widget):
+    """A div - normally used for modal background containing a div with a container
+       and an X button with three optional get fields.
+       The 'clear' button hides the widget without making a call if javascript is available
+       if not, then the link is called."""
+
+    _container = ((0,1),)
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'hide':FieldArg("boolean", True, jsonset=True),
+                        'boxdiv_class':FieldArg("cssclass", ""),
+                        'boxdiv_style':FieldArg("cssstyle", ""),
+                        'inner_class':FieldArg("cssclass", ""),
+                        'inner_style':FieldArg("cssstyle", ""),
+                        'buttondiv_class':FieldArg("cssclass", ""),
+                        'buttondiv_style':FieldArg("cssstyle", ""),
+                        'button_class':FieldArg("cssclass", ""),
+                        'link_ident':FieldArg("url", 'no_javascript'),
+                        'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
+                        'get_field2':FieldArg("text","", valdt=True, jsonset=True),
+                        'get_field3':FieldArg("text","", valdt=True, jsonset=True)
+            }
+
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        hide: If True, sets display: none; on the widget, can be set/unset via JSON file
+              If False, or error sets display:block
+        boxdiv_class: class of the box holding container and button
+        inner_class: The CSS class of the div holding the paragraph
+        buttondiv_class: The class of the div holding the button
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self[0] = tag.Part(tag_name="div")
+        # div holding X button
+        self[0][0] = tag.Part(tag_name="div")
+        self[0][0][0] = tag.Part(tag_name="a", attribs={"role":"button"})
+        self[0][0][0][0] = tag.HTMLSymbol("&times;")
+        # The location 0,1 is the div holding the container
+        self[0][1] = tag.Part(tag_name="div")
+        self[0][1][0] = ''
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the box"
+        # Hides widget if no error and hide is True
+        self.widget_hide(self.get_field_value("hide"))
+        if self.get_field_value("boxdiv_class"):
+            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+        if self.get_field_value('boxdiv_style'):
+            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
+        # buttondiv
+        if self.get_field_value("buttondiv_class"):
+            self[0][0].update_attribs({"class":self.get_field_value('buttondiv_class')})
+        if self.get_field_value("buttondiv_style"):
+            self[0][0].update_attribs({'style':self.get_field_value("buttondiv_style")})
+        # inner div
+        if self.get_field_value("inner_class"):
+            self[0][1].update_attribs({"class":self.get_field_value('inner_class')})
+        if self.get_field_value("inner_style"):
+            self[0][1].update_attribs({'style':self.get_field_value("inner_style")})
+        # button
+        if self.get_field_value('button_class'):
+            self[0][0][0].update_attribs({"class":self.get_field_value('button_class')})
+        if not self.get_field_value("link_ident"):
+            self[0][0][0][0] = "Warning: broken link"
+        else:
+            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            if url:
+                # create a url for the href
+                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
+                              self.get_formname("get_field2"):self.get_field_value("get_field2"),
+                              self.get_formname("get_field3"):self.get_field_value("get_field3")}
+                url = self.make_get_url(page, url, get_fields, True)
+                self[0][0][0].update_attribs({"href": url})
+            else:
+                self[0][0][0][0] = "Warning: broken link"
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler on the a button"""
+        return """  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div> <!-- with widget id and class widget_class -->
+  <div> <!-- With boxdiv_class -->
+    <div>    <!-- with class set by buttondiv_class and style by buttondiv_style -->
+      <a role="button" href="#">
+        <!-- With class set by button_class, and the href link will be the url of the link_ident with the three get_fields -->
+        <!-- the button will show the &times; symbol -->
+      </a>
+    </div>
+    <div> <!-- With class set by inner_class-->
+         <!-- container 0 for further elements -->
+    </div>
+  </div>
+</div>"""
+
+

@@ -17,9 +17,11 @@ class ConfirmBox1(Widget):
 
     arg_descriptions = {'hide':FieldArg("boolean", False, jsonset=True),
                         'boxdiv_class':FieldArg("cssclass", ""),
+                        'boxdiv_style':FieldArg("cssstyle", ""),
                         'paradiv_class':FieldArg("cssclass", ""),
                         'para_class':FieldArg("cssclass", ""),
                         'buttondiv_class':FieldArg("cssclass", ""),
+                        'buttondiv_style':FieldArg("cssstyle", ""),
                         'para_text':FieldArg("text", "", jsonset=True),
 
                         'button1_class':FieldArg("cssclass", ""),
@@ -73,8 +75,12 @@ class ConfirmBox1(Widget):
         self.widget_hide(self.get_field_value("hide"))
         if self.get_field_value("boxdiv_class"):
             self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+        if self.get_field_value('boxdiv_style'):
+            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
         if self.get_field_value("buttondiv_class"):
             self[0][1].update_attribs({"class":self.get_field_value('buttondiv_class')})
+        if self.get_field_value("buttondiv_style"):
+            self[0][1].update_attribs({'style':self.get_field_value("buttondiv_style")})
         if self.get_field_value("paradiv_class"):
             self[0][0].update_attribs({"class":self.get_field_value('paradiv_class')})
         if self.get_field_value("para_class"):
@@ -158,7 +164,7 @@ class ConfirmBox1(Widget):
           <!-- para_text shown here -->
       </p>
     </div>
-    <div>    <!-- with class set by buttondiv_class -->
+    <div>    <!-- with class set by buttondiv_class and style by buttondiv_style -->
       <a role="button" href="#">
         <!-- With class set by button1_class, and the href link will be the url of the link_ident1 with the three get_fields -->
         <!-- the button will show the button_text1 -->
@@ -183,9 +189,11 @@ class ConfirmBox2(Widget):
 
     arg_descriptions = {'hide':FieldArg("boolean", False, jsonset=True),
                         'boxdiv_class':FieldArg("cssclass", ""),
+                        'boxdiv_style':FieldArg("cssstyle", ""),
                         'paradiv_class':FieldArg("cssclass", ""),
                         'para_class':FieldArg("cssclass", ""),
                         'buttondiv_class':FieldArg("cssclass", ""),
+                        'buttondiv_style':FieldArg("cssstyle", ""),
                         'para_text':FieldArg("text", "", jsonset=True),
 
                         'button1_class':FieldArg("cssclass", ""),
@@ -232,8 +240,12 @@ class ConfirmBox2(Widget):
         self.widget_hide(self.get_field_value("hide"))
         if self.get_field_value("boxdiv_class"):
             self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+        if self.get_field_value('boxdiv_style'):
+            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
         if self.get_field_value("buttondiv_class"):
             self[0][1].update_attribs({"class":self.get_field_value('buttondiv_class')})
+        if self.get_field_value("buttondiv_style"):
+            self[0][1].update_attribs({'style':self.get_field_value("buttondiv_style")})
         if self.get_field_value("paradiv_class"):
             self[0][0].update_attribs({"class":self.get_field_value('paradiv_class')})
         if self.get_field_value("para_class"):
@@ -306,7 +318,7 @@ class ConfirmBox2(Widget):
         <!-- para_text shown here -->
       </p>
     </div>
-    <div>    <!-- with class set by buttondiv_class -->
+    <div>    <!-- with class set by buttondiv_class and style by buttondiv_style -->
       <a role="button" href="#">
         <!-- With class set by button1_class, and the href link will be the url of the link_ident1 with the three get_fields -->
         <!-- the button will show the button_text1 -->
@@ -332,6 +344,7 @@ class AlertClear1(Widget):
                         'para_text':FieldArg("text", "", jsonset=True),
                         'pre_line':FieldArg("boolean", True),
                         'boxdiv_class':FieldArg("cssclass", ""),
+                        'boxdiv_style':FieldArg("cssstyle", ""),
                         'error_class':FieldArg("cssclass", ""),
                         'inner_class':FieldArg("cssclass", ""),
                         'inner_style':FieldArg("cssstyle", ""),
@@ -378,6 +391,8 @@ class AlertClear1(Widget):
         self.widget_hide(self.get_field_value("hide"))
         if self.get_field_value("boxdiv_class"):
             self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+        if self.get_field_value('boxdiv_style'):
+            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
         # buttondiv
         if self.get_field_value("buttondiv_class"):
             self[0][0].update_attribs({"class":self.get_field_value('buttondiv_class')})
