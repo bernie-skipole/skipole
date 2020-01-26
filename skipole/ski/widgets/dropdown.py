@@ -356,7 +356,7 @@ class HiddenContainer(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a button"""
-        return """  $("#{ident} a").click(function (e) {{
+        return """  $("#{ident} a").first().click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """.format(ident = self.get_id())
