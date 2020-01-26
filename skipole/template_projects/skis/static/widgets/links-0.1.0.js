@@ -466,6 +466,20 @@ SKIPOLE.links.ButtonLink2.prototype.setvalues = function (fieldlist, result) {
     if (button_text) {
         a_link.text(button_text);
         }
+    /* get_field1 */
+    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    if (get_field1 != undefined) {
+        var href = a_link.attr('href');
+        var url = this.setgetfield(href, 'get_field1', get_field1);
+        a_link.attr('href', url);
+        }
+    /* get_field2 */
+    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    if (get_field2 != undefined) {
+        var href = a_link.attr('href');
+        var url = this.setgetfield(href, 'get_field2', get_field2);
+        a_link.attr('href', url);
+        }
     /* check if an error message or clear_error is given */
     if (this.check_error(fieldlist, result)) {
         return;

@@ -809,8 +809,8 @@ class ButtonLink2(Widget):
                         'button_text':FieldArg("text", "Submit", jsonset=True),
                         'button_wait_text':FieldArg("text", "Please wait..."),
                         'button_class':FieldArg("cssclass", ""),
-                        'get_field1':FieldArg("text", "", valdt=True),
-                        'get_field2':FieldArg("text","", valdt=True),
+                        'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
+                        'get_field2':FieldArg("text","", valdt=True, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'buttondiv_class':FieldArg("cssclass", ""),
                         'buttondiv_style':FieldArg("cssstyle", "")

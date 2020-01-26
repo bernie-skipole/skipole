@@ -81,3 +81,67 @@ SKIPOLE.dropdown.SubmitDropDown1.prototype.setvalues = function (fieldlist, resu
         }
     };
 
+
+
+
+
+SKIPOLE.dropdown.HiddenContainer = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.dropdown.HiddenContainer.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.dropdown.HiddenContainer.prototype.constructor = SKIPOLE.dropdown.HiddenContainer;
+SKIPOLE.dropdown.HiddenContainer.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    // check if hide
+    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    if (hidebox != undefined) {
+        if (hidebox) {
+            if (the_widg.is(":visible")) {
+                the_widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(the_widg.is(":visible"))) {
+                the_widg.fadeIn('slow');
+                }
+            }
+        }
+    var button = the_widg.find("a");
+    // get_field1
+    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    if (get_field1 != undefined) {
+        var href = button.attr('href');
+        var url = this.setgetfield(href, "get_field1", get_field1);
+        button.attr('href', url);
+        }
+    // get_field2
+    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    if (get_field2 != undefined) {
+        var href = button.attr('href');
+        var url = this.setgetfield(href, "get_field2", get_field2);
+        button.attr('href', url);
+        }
+    // get_field3
+    var get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
+    if (get_field3 != undefined) {
+        var href = button.attr('href');
+        var url = this.setgetfield(href, "get_field3", get_field3);
+        button.attr('href', url);
+        }
+    };
+SKIPOLE.dropdown.HiddenContainer.prototype.eventfunc = function (e) {
+    // pressing close fades out the widget and prevents the link send
+    var the_widg = this.widg;
+    if (the_widg.is(":visible")) {
+        the_widg.fadeOut('slow');
+        }
+    e.preventDefault();
+    };
+
+
+
+
