@@ -140,40 +140,6 @@ def set_placeholder(skicall):
     call_data['status'] = message
 
 
-def retrieve_insert(skicall):
-    "Fills in the insert a placeholder page"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    project = call_data['editedprojname']
-
-    if 'page_number' not in call_data:
-        raise FailPage("Page to edit not identified")
-
-    pagenumber = call_data['page_number']
-    page_info = item_info(project, pagenumber)
-    if page_info is None:
-        raise FailPage("Page to edit not identified")
-
-    if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
-        raise FailPage("Page not identified")
-
-    # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Insert Section place holder"
-
-    # get current sections
-    section_list = editsection.list_section_names(project)
-    if not section_list:
-        page_data[("nosection", "show")] = True
-        page_data[("descript", "show")] = False
-        page_data[("placename","show")] = False
-        return
-
-    page_data[('sectionname','option_list')] = section_list[:]
-    page_data[('sectionname','selectvalue')] = section_list[0]
-
-
 def create_insert(skicall):
     "Creates the section placeholder"
 

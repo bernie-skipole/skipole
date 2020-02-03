@@ -4,8 +4,9 @@
 import json
 
 from skipole import skilift
-from skipole.skilift import fromjson, editpage, editsection
+from skipole.skilift import fromjson, editpage, editsection, item_info
 from skipole import FailPage, ValidateError, GoTo, ServerError
+
 
 
 def retrieve_editpart(skicall):
@@ -282,3 +283,77 @@ def downloadpart(skicall):
         line_list.append(binline)
     page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
     return line_list
+
+
+def create_insert(skicall):
+    "Creates the html element"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    project = call_data['editedprojname']
+
+    try:
+        part_top, container, location_integers = call_data['location']
+        if call_data['newopenclosed'] == 'open':
+            opentag = True
+        else:
+            opentag = False
+
+        if 'page_number' in call_data:
+            pagenumber = call_data['page_number']
+            page_info = item_info(project, pagenumber)
+            if page_info is None:
+                raise FailPage("Page to edit not identified")
+
+            if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
+                raise FailPage("Page not identified")
+
+            # page to go back to
+            target = None
+            if part_top == 'head':
+                target = "page_head"
+            elif part_top == 'body':
+                target = "page_body"
+            elif part_top == 'svg':
+                target = "page_svg"
+
+            if container is not None:
+                target = "back_to_container"
+
+            if target is None:
+                raise FailPage("Invalid location")
+
+            call_data['pchange'] = editpage.create_html_element_in_page(project,
+                                                                        pagenumber,
+                                                                        call_data['pchange'],
+                                                                        call_data['location'],
+                                                                        call_data['newpartname'],
+                                                                        call_data['newbrief'],
+                                                                        opentag)
+
+        elif 'section_name' in call_data:
+            section_name = call_data['section_name']
+
+            if container is not None:
+                target = "back_to_container"
+            else:
+                target = "back_to_section"
+
+            call_data['schange'] = editsection.create_html_element_in_section(project,
+                                                                              section_name,
+                                                                              call_data['schange'],
+                                                                              call_data['location'],
+                                                                              call_data['newpartname'],
+                                                                              call_data['newbrief'],
+                                                                              opentag)
+
+        else:
+            raise FailPage("Either a page or section must be specified")
+
+    except ServerError as e:
+        raise FailPage(e.message)
+    call_data['status'] = 'New tag inserted'
+    raise GoTo(target = target, clear_submitted=True)
+
+

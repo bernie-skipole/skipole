@@ -82,69 +82,6 @@ def edit_text(skicall):
     call_data['status'] = "Text changed"
 
 
-def create_insert(skicall):
-    "Creates new text"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    project = call_data['editedprojname']
-
-    try:
-
-        if 'page_number' in call_data:
-            pagenumber = call_data['page_number']
-            page_info = skilift.item_info(project, pagenumber)
-            if page_info is None:
-                raise FailPage("Page to edit not identified")
-            if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
-                raise FailPage("Page not identified")
-
-            call_data['pchange'], new_location = skilift.insert_item_in_page(project, pagenumber, call_data['pchange'], call_data['location'], 'Set text here')
-
-        elif 'section_name' in call_data:
-            section_name = call_data['section_name']
-            call_data['schange'], new_location = skilift.insert_item_in_section(project, section_name, call_data['schange'], call_data['location'], 'Set text here')
-
-        else:
-            raise FailPage("Either a page or section must be specified")
-
-    except ServerError as e:
-        raise FailPage(e.message)
-    call_data['location'] = new_location
-
-
-def create_insert_symbol(skicall):
-    "Creates new html symbol"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    project = call_data['editedprojname']
-
-    try:
-
-        if 'page_number' in call_data:
-            pagenumber = call_data['page_number']
-            page_info = skilift.item_info(project, pagenumber)
-            if page_info is None:
-                raise FailPage("Page to edit not identified")
-            if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
-                raise FailPage("Page not identified")
-
-            call_data['pchange'], new_location = editpage.create_html_symbol_in_page(project, pagenumber, call_data['pchange'], call_data['location'])
-
-        elif 'section_name' in call_data:
-            section_name = call_data['section_name']
-            call_data['schange'], new_location = editsection.create_html_symbol_in_section(project, section_name, call_data['schange'], call_data['location'])
-
-        else:
-            raise FailPage("Either a page or section must be specified")
-
-    except ServerError as e:
-        raise FailPage(e.message)
-    call_data['location'] = new_location
-
 
 def retrieve_edit_symbol(skicall):
     "Fills in the edit html symbol page"
@@ -274,7 +211,6 @@ def retrieve_edit_comment(skicall):
     page_data[("comment_input","input_text")] = com
 
 
-
 def set_edit_comment(skicall):
     "Submits new comment after editing"
 
@@ -302,36 +238,4 @@ def set_edit_comment(skicall):
         raise FailPage(e.message)
     call_data['status'] = "Comment changed"
 
-
-
-def create_insert_comment(skicall):
-    "Creates new html comment"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    project = call_data['editedprojname']
-
-    try:
-
-        if 'page_number' in call_data:
-            pagenumber = call_data['page_number']
-            page_info = skilift.item_info(project, pagenumber)
-            if page_info is None:
-                raise FailPage("Page to edit not identified")
-            if (page_info.item_type != "TemplatePage") and (page_info.item_type != "SVG"):
-                raise FailPage("Page not identified")
-
-            call_data['pchange'], new_location = editpage.create_html_comment_in_page(project, pagenumber, call_data['pchange'], call_data['location'])
-
-        elif 'section_name' in call_data:
-            section_name = call_data['section_name']
-            call_data['schange'], new_location = editsection.create_html_comment_in_section(project, section_name, call_data['schange'], call_data['location'])
-
-        else:
-            raise FailPage("Either a page or section must be specified")
-
-    except ServerError as e:
-        raise FailPage(e.message)
-    call_data['location'] = new_location
 

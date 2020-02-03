@@ -187,7 +187,7 @@ def retrieve_page_dom(skicall):
                                                       ['no_javascript','move_down_in_page_dom',''],        # down
                                                       ['no_javascript','move_down_right_in_page_dom',''],  # down right
                                                       ['edit_page_dom','',''],                             # edit, html only
-                                                      ['add_to_page_dom','',''],                           # insert/append, html only
+                                                      ['no_javascript','insert_in_page',''],               # insert/append
                                                       ['no_javascript',3680,''],                           # copy
                                                       ['no_javascript',3690,'ski_part'],                   # paste
                                                       ['no_javascript','cut_page_dom',''],                 # cut
@@ -211,65 +211,6 @@ def retrieve_page_dom(skicall):
         del call_data['container']
     if 'widgetclass' in call_data:
         del call_data['widgetclass']
-
-
-def _page_domcontents(project, pagenumber, location_string):
-    "Return the info for domtable contents, location_string is head', body or svg"
-
-    page_location = (location_string, None, ())
-    parttext,partdict = fromjson.item_outline(project, pagenumber, None, page_location)
-
-    # create first row of the table
-    if "attribs" in partdict:
-        part_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
-    else:
-        part_tag = '&lt;' + partdict['tag_name'] + '&gt;'
-
-    part_brief = html.escape(partdict['brief'])
-
-    if len(part_brief)>40:
-        part_brief =  part_brief[:35] + '...'
-    if not part_brief:
-         part_brief = '-'
-
-    domcontents = [
-                   [part_tag, '', False, '' ],
-                   [part_brief, '', False, '' ],
-                   ['', '', False, '' ],                                                # no up arrow for top line
-                   ['', '', False, '' ],                                                # no up_right arrow for top line
-                   ['', '', False, '' ],                                                # no down arrow for top line
-                   ['', '', False, '' ],                                                # no down_right arrow for top line
-                   ['Edit',  'width : 1%;', True, location_string],                     # edit
-                   ['Insert','width : 1%;text-align: center;', True, location_string],  # insert
-                   ['Copy','width : 1%;text-align: center;', True, location_string],    # copy image for top line
-                   ['Paste','width : 1%;text-align: center;', True, location_string],   # paste image for top line
-                   ['', '', False, '' ],                                                # no cut image for top line
-                   ['', '', False, '' ]                                                 # no delete image for top line
-                ]
-
-    # add further items to domcontents
-    part_string_list = []
-
-    if 'parts' not in partdict:
-        rows = 1
-    else:
-        rows = utils.domtree(partdict, location_string, domcontents, part_string_list)
-    
-    # for every row in the table
-    dragrows = [ [ False, '']]
-    droprows = [ [ True, location_string ]]
-
-    # send project and page number with dragrow info to avoid items being dragged across web screens showing different pages
-    proj_page = project+"_"+str(pagenumber)+"_"
-
-    # for each row (minus 1 as the first row is done)
-    for row in range(0, rows-1):
-        row_string = proj_page + part_string_list[row]
-        dragrows.append( [ True, row_string] )
-        droprows.append( [ True, part_string_list[row]] )
-    
-    return domcontents, dragrows, droprows
-
 
 
 def retrieve_page_body(skicall):
@@ -1167,19 +1108,27 @@ def after_dom_edit(skicall):
 
     call_data = skicall.call_data
     page_data = skicall.page_data
-
-    if 'location_string' not in call_data:
-        raise FailPage("Cannot return to item")
-    if call_data['location_string'] == 'head':
-        del call_data['location_string']
-        raise GoTo(target = 23321, clear_submitted=True)
-    if call_data['location_string'] == 'body':
-        del call_data['location_string']
-        raise GoTo(target = 23341, clear_submitted=True)
-    if call_data['location_string'] == 'svg':
-        del call_data['location_string']
-        raise GoTo(target = 23421, clear_submitted=True)
-
+    print(call_data)
+    if 'location_string' in call_data:
+        if call_data['location_string'] == 'head':
+            del call_data['location_string']
+            raise GoTo(target = 23321, clear_submitted=True)
+        elif call_data['location_string'] == 'body':
+            del call_data['location_string']
+            raise GoTo(target = 23341, clear_submitted=True)
+        elif call_data['location_string'] == 'svg':
+            del call_data['location_string']
+            raise GoTo(target = 23421, clear_submitted=True)
+    elif 'location' in call_data:
+        location_string = call_data['location'][0]
+        if location_string == 'head':
+            raise GoTo(target = 23321, clear_submitted=True)
+        elif location_string == 'body':
+            raise GoTo(target = 23341, clear_submitted=True)
+        elif call_data['location_string'] == 'svg':
+            raise GoTo(target = 23421, clear_submitted=True)
+    # if nothing matches
+    raise FailPage(message = "Cannot return to correct page")
 
 
 def move_in_page_dom(skicall):
@@ -1376,76 +1325,6 @@ def edit_page_dom(skicall):
     raise FailPage("Item to edit has not been recognised")
 
 
-def add_to_page_dom(skicall):
-    """Called by domtable to either insert or append an item in a page
-       sets page_data to populate the insert or append page and then go to appropriate template page"""
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    if "page_number" in call_data:
-        pagenumber = call_data["page_number"]
-    else:
-        raise FailPage(message = "Page number missing")
-
-    if pagenumber is None:
-        raise FailPage(message = "Page number missing")
-
-    if ('editdom', 'domtable', 'contents') not in call_data:
-        raise FailPage(message = "item to edit missing")
-    editedprojname = call_data['editedprojname']
-    part = call_data['editdom', 'domtable', 'contents']
-    location_list = part.split('-')
-    # first item should be a string, rest integers
-    if len(location_list) == 1:
-        # no location integers, so location_list[0] is the location_string
-        location_integers = ()
-    else:
-        location_integers = tuple( int(i) for i in location_list[1:] )
-    location_string = location_list[0]
-
-    # location is a tuple of location_string, None for no container, tuple of location integers
-    location = (location_string, None, location_integers)
-    # get part_tuple from project, pagenumber, section_name, location
-    part_tuple = skilift.part_info(editedprojname, pagenumber, None, location)
-    if part_tuple is None:
-        raise FailPage("Item to append to has not been recognised")
-
-    # goto either the install or append page, to add an item at this location
-    call_data['location'] = location
-
-    # Fill in menu of items, Part items have insert, others have append
-    # as this is to be input into a section, a further section is not present in this list
-
-
-    if part_tuple.part_type == "Part":
-        # insert
-        page_data[("adminhead","page_head","large_text")] = "Choose an item to insert"
-        page_data[("insertlist","links")] = [
-                                                ["Insert text", "inserttext", ""],
-                                                ["Insert a TextBlock", "insert_textblockref", ""],
-                                                ["Insert html symbol", "insertsymbol", ""],
-                                                ["Insert comment", "insertcomment", ""],
-                                                ["Insert an html element", "part_insert", ""],
-                                                ["Insert a Widget", "list_widget_modules", ""],
-                                                ["Insert a Section", "placeholder_insert", ""]
-                                            ]
-        raise GoTo(target = '23609', clear_submitted=True)
-    else:
-        # append
-        page_data[("adminhead","page_head","large_text")] = "Choose an item to append"
-        page_data[("appendlist","links")] = [
-                                                ["Append text", "inserttext", ""],
-                                                ["Append a TextBlock", "insert_textblockref", ""],
-                                                ["Append html symbol", "insertsymbol", ""],
-                                                ["Append comment", "insertcomment", ""],
-                                                ["Append an html element", "part_insert", ""],
-                                                ["Append a Widget", "list_widget_modules", ""],
-                                                ["Append a Section", "placeholder_insert", ""]
-                                            ]
-        raise GoTo(target = '23509', clear_submitted=True)
-
-
 def cut_page_dom(skicall):
     "Called by domtable to remove an item in a page"
 
@@ -1588,6 +1467,242 @@ def delete_page_dom(skicall):
     call_data['location_string'] = location_string
 
     call_data['status'] = 'Item deleted.'
+
+
+def _page_domcontents(project, pagenumber, location_string):
+    "Return the info for domtable contents, location_string is head', body or svg"
+
+    page_location = (location_string, None, ())
+    parttext,partdict = fromjson.item_outline(project, pagenumber, None, page_location)
+
+    # create first row of the table
+    if "attribs" in partdict:
+        part_tag = '&lt;' + partdict['tag_name'] + ' ... &gt;'
+    else:
+        part_tag = '&lt;' + partdict['tag_name'] + '&gt;'
+
+    part_brief = html.escape(partdict['brief'])
+
+    if len(part_brief)>40:
+        part_brief =  part_brief[:35] + '...'
+    if not part_brief:
+         part_brief = '-'
+
+    domcontents = [
+                   [part_tag, '', False, '' ],
+                   [part_brief, '', False, '' ],
+                   ['', '', False, '' ],                                                # no up arrow for top line
+                   ['', '', False, '' ],                                                # no up_right arrow for top line
+                   ['', '', False, '' ],                                                # no down arrow for top line
+                   ['', '', False, '' ],                                                # no down_right arrow for top line
+                   ['Edit',  'width : 1%;', True, location_string],                     # edit
+                   ['Insert','width : 1%;text-align: center;', True, location_string],  # insert
+                   ['Copy','width : 1%;text-align: center;', True, location_string],    # copy image for top line
+                   ['Paste','width : 1%;text-align: center;', True, location_string],   # paste image for top line
+                   ['', '', False, '' ],                                                # no cut image for top line
+                   ['', '', False, '' ]                                                 # no delete image for top line
+                ]
+
+    # add further items to domcontents
+    part_string_list = []
+
+    if 'parts' not in partdict:
+        rows = 1
+    else:
+        rows = _domtree(partdict, location_string, domcontents, part_string_list)
+    
+    # for every row in the table
+    dragrows = [ [ False, '']]
+    droprows = [ [ True, location_string ]]
+
+    # send project and page number with dragrow info to avoid items being dragged across web screens showing different pages
+    proj_page = project+"_"+str(pagenumber)+"_"
+
+    # for each row (minus 1 as the first row is done)
+    for row in range(0, rows-1):
+        row_string = proj_page + part_string_list[row]
+        dragrows.append( [ True, row_string] )
+        droprows.append( [ True, part_string_list[row]] )
+    
+    return domcontents, dragrows, droprows
+
+
+def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
+    "Creates the contents of the domtable"
+
+    # note part_loc = body, head or svg
+
+    indent += 1
+    padding = "padding-left : %sem;" % (indent,)
+    u_r_flag = False
+    last_row_at_this_level = 0
+
+    parts = partdict['parts']
+
+    # parts is a list of items
+    last_index = len(parts)-1
+
+    #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #cut #delete
+
+    for index, part in enumerate(parts):
+        part_location_string = part_loc + '-' + str(index)
+        part_string_list.append(part_location_string)
+        rows += 1
+        part_type, part_dict = part
+        # the row text
+        if part_type == 'Widget' or part_type == 'ClosedWidget':
+            part_name = 'Widget ' + part_dict['name']
+            if len(part_name)>40:
+                part_name = part_name[:35] + '...'
+            contents.append([part_name, padding, False, ''])
+            part_brief = html.escape(part_dict.get('brief',''))
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        elif part_type == 'TextBlock':
+            contents.append(['TextBlock', padding, False, ''])
+            part_ref = part_dict['textref']
+            if len(part_ref)>40:
+                part_ref = part_ref[:35] + '...'
+            if not part_ref:
+                part_ref = '-'
+            contents.append([part_ref, '', False, ''])
+        elif part_type == 'SectionPlaceHolder':
+            section_name = part_dict['placename']
+            if section_name:
+                section_name = "Section " + section_name
+            else:
+                section_name = "Section -None-"
+            if len(section_name)>40:
+                section_name = section_name[:35] + '...'
+            contents.append([section_name, padding, False, ''])
+            part_brief = html.escape(part_dict.get('brief',''))
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        elif part_type == 'Text':
+            contents.append(['Text', padding, False, ''])
+            # in this case part_dict is the text string rather than a dictionary
+            if len(part_dict)<40:
+                part_str = html.escape(part_dict)
+            else:
+                part_str = html.escape(part_dict[:35] + '...')
+            if not part_str:
+                part_str = '-'
+            contents.append([part_str, '', False, ''])
+        elif part_type == 'HTMLSymbol':
+            contents.append(['Symbol', padding, False, ''])
+            part_text = part_dict['text']
+            if len(part_text)<40:
+                part_str = html.escape(part_text)
+            else:
+                part_str = html.escape(part_text[:35] + '...')
+            if not part_str:
+                part_str = '-'
+            contents.append([part_str, '', False, ''])
+        elif part_type == 'Comment':
+            contents.append(['Comment', padding, False, ''])
+            part_text = part_dict['text']
+            if len(part_text)<33:
+                part_str =  "&lt;!--" + part_text + '--&gt;'
+            else:
+                part_str = "&lt;!--" + part_text[:31] + '...'
+            if not part_str:
+                part_str = '&lt;!----&gt;'
+            contents.append([part_str, '', False, ''])
+        elif part_type == 'ClosedPart':
+            if 'attribs' in part_dict:
+                tag_name = "&lt;%s ... /&gt;" % part_dict['tag_name']
+            else:
+                tag_name = "&lt;%s /&gt;" % part_dict['tag_name']
+            contents.append([tag_name, padding, False, ''])
+            part_brief = html.escape(part_dict.get('brief',''))
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        elif part_type == 'Part':
+            if 'attribs' in part_dict:
+                tag_name = "&lt;%s ... &gt;" % part_dict['tag_name']
+            else:
+                tag_name = "&lt;%s&gt;" % part_dict['tag_name']
+            contents.append([tag_name, padding, False, ''])
+            part_brief = html.escape(part_dict.get('brief',''))
+            if len(part_brief)>40:
+                part_brief = part_brief[:35] + '...'
+            if not part_brief:
+                part_brief = '-'
+            contents.append([part_brief, '', False, ''])
+        else:
+            contents.append(['UNKNOWN', padding, False, ''])
+            contents.append(['ERROR', '', False, ''])
+
+        # UP ARROW
+        if rows == 2:
+            # second line in table cannot move upwards
+            contents.append(['', '', False, '' ])
+        else:
+            contents.append(['&uarr;', 'width : 1%;', True, part_location_string])
+
+        # UP RIGHT ARROW
+        if u_r_flag:
+            contents.append(['&nearr;', 'width : 1%;', True, part_location_string])
+        else:
+            contents.append(['', '', False, '' ])
+
+        # DOWN ARROW
+        if (indent == 2) and (index == last_index):
+            # the last line at this top indent has been added, no down arrow
+            contents.append(['', '', False, '' ])
+        else:
+            contents.append(['&darr;', 'width : 1%;', True, part_location_string])
+
+        # DOWN RIGHT ARROW
+        # set to empty, when next line is created if down-right not applicable
+        contents.append(['', '', False, '' ])
+
+        # EDIT
+        contents.append(['Edit', 'width : 1%;', True, part_location_string])
+
+        # INSERT or APPEND
+        if part_type == 'Part':
+            contents.append(['Insert', 'width : 1%;text-align: center;', True, part_location_string])
+        else:
+            contents.append(['Append', 'width : 1%;text-align: center;', True, part_location_string])
+
+        # COPY
+        contents.append(['Copy', 'width : 1%;', True, part_location_string])
+
+        # PASTE
+        contents.append(['Paste', 'width : 1%;', True, part_location_string])
+
+        # CUT
+        contents.append(['Cut', 'width : 1%;', True, part_location_string])
+
+        # DELETE
+        contents.append(['Delete', 'width : 1%;', True, part_location_string])
+
+        u_r_flag = False
+        if part_type == 'Part':
+            if last_row_at_this_level and (part_dict['tag_name'] != 'script') and (part_dict['tag_name'] != 'pre'):
+                # add down right arrow in previous row at this level, get loc_string from adjacent edit cell
+                editcell = contents[last_row_at_this_level *12-6]
+                loc_string = editcell[3]
+                contents[last_row_at_this_level *12-7] = ['&searr;', 'width : 1%;', True, loc_string]
+            last_row_at_this_level = rows
+            rows = _domtree(part_dict, part_location_string, contents, part_string_list, rows, indent)
+            # set u_r_flag for next item below this one
+            if  (part_dict['tag_name'] != 'script') and (part_dict['tag_name'] != 'pre'):
+                u_r_flag = True
+        else:
+            last_row_at_this_level =rows
+
+    return rows
 
 
 

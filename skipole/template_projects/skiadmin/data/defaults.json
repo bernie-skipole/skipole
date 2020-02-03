@@ -121,6 +121,15 @@
 "select_class": "ski_input",
 "widget_class": "w3-section"
 },
+"HiddenContainer": {
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d2 w3-border",
+"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"buttondiv_class": "w3-bar",
+"buttondiv_style": "",
+"inner_class": "w3-panel",
+"widget_class": "w3-modal",
+"widget_style": ""
+},
 "SubmitDropDown1": {
 "button_class": "w3-button w3-theme-d4 w3-margin-left",
 "error_class": "w3-panel w3-red",
@@ -289,9 +298,10 @@
 },
 "ButtonLink2": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"buttondiv_class": "ski_mid_button",
+"buttondiv_class": "",
 "error_class": "w3-panel w3-red",
-"widget_class": "w3-section"
+"widget_class": "w3-section",
+"widget_style": ""
 },
 "GeneralButtonTable2": {
 "button_class": "w3-button w3-padding-small w3-small w3-theme-dark",

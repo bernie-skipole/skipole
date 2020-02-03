@@ -35,3 +35,25 @@ def makeapp(projectfiles, **proj_data):
     return application
 
 
+############
+#
+#  To use this module - in your own code you would normally create your own 'application' object
+#  and then call this module's makeapp function to produce a 'skis_application'
+#  You would then add skis_application to your application using
+#  application.add_project(skis_application, url='/lib')
+#
+#  The only difficulty is importing this module, however as skis.py should normally be in
+#  PROJECTFILES/skis/code/skis.py
+#  this directory can be added to the python path. So you would include
+#  the following in your own code:
+#
+#  skis_code = os.path.join(PROJECTFILES, 'skis', 'code')
+#  if skis_code not in sys.path:
+#      sys.path.append(skis_code)
+#  import skis
+#  skis_application = skis.makeapp(PROJECTFILES)
+#  application.add_project(skis_application, url='/lib')
+#
+############
+
+

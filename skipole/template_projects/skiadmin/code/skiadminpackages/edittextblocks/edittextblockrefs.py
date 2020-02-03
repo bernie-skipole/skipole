@@ -171,29 +171,6 @@ def set_textblock(skicall):
     call_data['status'] = message
 
 
-def retrieve_insert(skicall):
-    "Fills in the insert a textblock ref page"
-
-    call_data = skicall.call_data
-    page_data = skicall.page_data
-
-    # Fill in header
-    if 'page_number' in call_data:
-        page_data[("adminhead","page_head","large_text")] = "Insert TextBlock in page %s" % (call_data['page_number'],)
-    elif 'section_name' in call_data:
-        page_data[("adminhead","page_head","large_text")] = "Insert TextBlock in section %s" % (call_data['section_name'],)
-    else:
-        raise FailPage("Page/section not identified")
-
-    page_data[("linebreaks","radio_values")]=['ON', 'OFF']
-    page_data[("linebreaks","radio_text")]=['On', 'Off']
-    page_data[("linebreaks","radio_checked")] = 'ON'
-
-    page_data[("setescape","radio_values")]=['ON', 'OFF']
-    page_data[("setescape","radio_text")]=['On', 'Off']
-    page_data[("setescape","radio_checked")] = 'ON'
-
-
 def create_insert(skicall):
     "Creates the textblock ref"
 

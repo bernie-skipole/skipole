@@ -791,16 +791,21 @@ def map(skicall):
                 allowed.append([0,n,"INVALID ident: " + allowedident])
                 n += 20
             elif isinstance(allowedident, tuple) and (len(allowedident) == 2):
-                allowedinfo = skilift.page_info(*allowedident)
-                if allowedident[0] == project:
-                    allowed.append([0,n,str(allowedident[1]) + ": " + allowedinfo.brief])
+                try:
+                    allowedinfo = skilift.page_info(*allowedident)
+                except ServerError:
+                    allowed.append([0,n,"UNKNOWN page: " + allowedident[0] + ", " + str(allowedident[1])])
                 else:
-                    allowed.append([0,n,allowedident[0] + ", " + str(allowedident[1]) + ": " + allowedinfo.brief])
+                    if allowedident[0] == project:
+                        allowed.append([0,n,str(allowedident[1]) + ": " + allowedinfo.brief])
+                    else:
+                        allowed.append([0,n,allowedident[0] + ", " + str(allowedident[1]) + ": " + allowedinfo.brief])
                 n += 20
 
         page_data['allowed', 'callers', 'lines'] = allowed
     else:
         page_data['allowed','show'] = False
+
 
 
     # If the responder has a target, draw a target line on the page
@@ -931,24 +936,28 @@ def _show_target(project, page_data, r_info):
             elif isinstance(targetident, str):
                 page_data['target', 'responderid', 'text'] = targetident
             elif isinstance(targetident, tuple) and (len(targetident) == 2):
-                targetinfo = skilift.page_info(*targetident)
-                if targetident[0] == project:
-                    page_data['target', 'responderid', 'text'] = "Ident: " + str(targetident[1])
+                try:
+                    targetinfo = skilift.page_info(*targetident)
+                except ServerError:
+                    page_data['target', 'responderid', 'text'] = "Unknown Ident: " + targetident[0] + ", " + str(targetident[1])
                 else:
-                    page_data['target', 'responderid', 'text'] = "Ident: " + targetident[0] + ", " + str(targetident[1])
-                if targetinfo.restricted:
-                    page_data['target', 'responderaccess', 'text'] = "Restricted access"
-                else:
-                    page_data['target', 'responderaccess', 'text'] = "Open access"
-                if isinstance(r_info.target_ident, str):
-                    page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident
-                else:
-                    page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident[0] + ", " + str(r_info.target_ident[1])
-                page_data['target', 'responderbrief', 'text'] = targetinfo.brief
-                if targetinfo.item_type == "RespondPage":
-                    page_data['target', 'respondertype', 'text'] = "Responder: " + targetinfo.responder
-                else:
-                    page_data['target', 'respondertype', 'text'] = targetinfo.item_type
+                    if targetident[0] == project:
+                        page_data['target', 'responderid', 'text'] = "Ident: " + str(targetident[1])
+                    else:
+                        page_data['target', 'responderid', 'text'] = "Ident: " + targetident[0] + ", " + str(targetident[1])
+                    if targetinfo.restricted:
+                        page_data['target', 'responderaccess', 'text'] = "Restricted access"
+                    else:
+                        page_data['target', 'responderaccess', 'text'] = "Open access"
+                    if isinstance(r_info.target_ident, str):
+                        page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident
+                    else:
+                        page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident[0] + ", " + str(r_info.target_ident[1])
+                    page_data['target', 'responderbrief', 'text'] = targetinfo.brief
+                    if targetinfo.item_type == "RespondPage":
+                        page_data['target', 'respondertype', 'text'] = "Responder: " + targetinfo.responder
+                    else:
+                        page_data['target', 'respondertype', 'text'] = targetinfo.item_type
     else:
         page_data['target','show'] = False
 
@@ -965,24 +974,28 @@ def _show_submit_data_failpage(project, page_data, r_info):
         elif isinstance(failident, str):
             page_data['submitdata_failpage', 'responderid', 'text'] = failident
         elif isinstance(failident, tuple) and (len(failident) == 2):
-            failinfo = skilift.page_info(*failident)
-            if failident[0] == project:
-                page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + str(failident[1])
+            try:
+                failinfo = skilift.page_info(*failident)
+            except ServerError:
+                page_data['submitdata_failpage', 'responderid', 'text'] = "Unknown Ident: " + failident[0] + ", " + str(failident[1])
             else:
-                page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
-            if failinfo.restricted:
-                page_data['submitdata_failpage', 'responderaccess', 'text'] = "Restricted access"
-            else:
-                page_data['submitdata_failpage', 'responderaccess', 'text'] = "Open access"
-            if isinstance(r_info.fail_ident, str):
-                page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
-            else:
-                page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
-            page_data['submitdata_failpage', 'responderbrief', 'text'] = failinfo.brief
-            if failinfo.item_type == "RespondPage":
-                page_data['submitdata_failpage', 'respondertype', 'text'] = "Responder: " + failinfo.responder
-            else:
-                page_data['submitdata_failpage', 'respondertype', 'text'] = failinfo.item_type
+                if failident[0] == project:
+                    page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + str(failident[1])
+                else:
+                    page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
+                if failinfo.restricted:
+                    page_data['submitdata_failpage', 'responderaccess', 'text'] = "Restricted access"
+                else:
+                    page_data['submitdata_failpage', 'responderaccess', 'text'] = "Open access"
+                if isinstance(r_info.fail_ident, str):
+                    page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
+                else:
+                    page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
+                page_data['submitdata_failpage', 'responderbrief', 'text'] = failinfo.brief
+                if failinfo.item_type == "RespondPage":
+                    page_data['submitdata_failpage', 'respondertype', 'text'] = "Responder: " + failinfo.responder
+                else:
+                    page_data['submitdata_failpage', 'respondertype', 'text'] = failinfo.item_type
     else:
         page_data['submitdata_failpage','show'] = False
 
@@ -1003,24 +1016,28 @@ def _show_validate_fail(project, page_data, r_info):
         if isinstance(failident, str):
             page_data['validate', 'responderid', 'text'] = failident
         elif isinstance(failident, tuple) and (len(failident) == 2):
-            failinfo = skilift.page_info(*failident)
-            if failident[0] == project:
-                page_data['validate', 'responderid', 'text'] = "Ident: " + str(failident[1])
+            try:
+                failinfo = skilift.page_info(*failident)
+            except ServerError:
+                page_data['validate', 'responderid', 'text'] = "Unknown Ident: " + failident[0] + ", " + str(failident[1])
             else:
-                page_data['validate', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
-            if failinfo.restricted:
-                page_data['validate', 'responderaccess', 'text'] = "Restricted access"
-            else:
-                page_data['validate', 'responderaccess', 'text'] = "Open access"
-            if isinstance(r_info.fail_ident, str):
-                page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
-            else:
-                page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
-            page_data['validate', 'responderbrief', 'text'] = failinfo.brief
-            if failinfo.item_type == "RespondPage":
-                page_data['validate', 'respondertype', 'text'] = "Responder: " + failinfo.responder
-            else:
-                page_data['validate', 'respondertype', 'text'] = failinfo.item_type
+                if failident[0] == project:
+                    page_data['validate', 'responderid', 'text'] = "Ident: " + str(failident[1])
+                else:
+                    page_data['validate', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
+                if failinfo.restricted:
+                    page_data['validate', 'responderaccess', 'text'] = "Restricted access"
+                else:
+                    page_data['validate', 'responderaccess', 'text'] = "Open access"
+                if isinstance(r_info.fail_ident, str):
+                    page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
+                else:
+                    page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
+                page_data['validate', 'responderbrief', 'text'] = failinfo.brief
+                if failinfo.item_type == "RespondPage":
+                    page_data['validate', 'respondertype', 'text'] = "Responder: " + failinfo.responder
+                else:
+                    page_data['validate', 'respondertype', 'text'] = failinfo.item_type
 
 
 def _show_alternate(project, page_data, r_info):
@@ -1039,24 +1056,28 @@ def _show_alternate(project, page_data, r_info):
         if isinstance(altident, str):
             page_data['alternatebox', 'responderid', 'text'] = altident
         elif isinstance(altident, tuple) and (len(altident) == 2):
-            altinfo = skilift.page_info(*altident)
-            if altident[0] == project:
-                page_data['alternatebox', 'responderid', 'text'] = "Ident: " + str(altident[1])
+            try:
+                altinfo = skilift.page_info(*altident)
+            except ServerError:
+                page_data['alternatebox', 'responderid', 'text'] = "Unknown Ident: " + altident[0] + ", " + str(altident[1])
             else:
-                page_data['alternatebox', 'responderid', 'text'] = "Ident: " + altident[0] + ", " + str(altident[1])
-            if altinfo.restricted:
-                page_data['alternatebox', 'responderaccess', 'text'] = "Restricted access"
-            else:
-                page_data['alternatebox', 'responderaccess', 'text'] = "Open access"
-            if isinstance(r_info.alternate_ident, str):
-                page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident
-            else:
-                page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident[0] + ", " + str(r_info.alternate_ident[1])
-            page_data['alternatebox', 'responderbrief', 'text'] = altinfo.brief
-            if altinfo.item_type == "RespondPage":
-                page_data['alternatebox', 'respondertype', 'text'] = "Responder: " + altinfo.responder
-            else:
-                page_data['alternatebox', 'respondertype', 'text'] = altinfo.item_type
+                if altident[0] == project:
+                    page_data['alternatebox', 'responderid', 'text'] = "Ident: " + str(altident[1])
+                else:
+                    page_data['alternatebox', 'responderid', 'text'] = "Ident: " + altident[0] + ", " + str(altident[1])
+                if altinfo.restricted:
+                    page_data['alternatebox', 'responderaccess', 'text'] = "Restricted access"
+                else:
+                    page_data['alternatebox', 'responderaccess', 'text'] = "Open access"
+                if isinstance(r_info.alternate_ident, str):
+                    page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident
+                else:
+                    page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident[0] + ", " + str(r_info.alternate_ident[1])
+                page_data['alternatebox', 'responderbrief', 'text'] = altinfo.brief
+                if altinfo.item_type == "RespondPage":
+                    page_data['alternatebox', 'respondertype', 'text'] = "Responder: " + altinfo.responder
+                else:
+                    page_data['alternatebox', 'respondertype', 'text'] = altinfo.item_type
 
     if r_info.responder == 'CaseSwitch':
         page_data['alternatebox', 'alttext', 'text'] = "Called if no match found"
