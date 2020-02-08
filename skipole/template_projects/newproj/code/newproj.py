@@ -1,7 +1,6 @@
 
 import os, sys
 
-
 # This project needs to import the skipole package, which should normally be immediately
 # available if skipole has been installed on your system.
 

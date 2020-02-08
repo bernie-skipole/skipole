@@ -221,10 +221,10 @@ def set_navigation(identnum, call_data, page_data):
                                                             ["manage_sections", "Sections", False, ''],
                                                             [300, "Colours", False, ''],
                                                             ['defaults', "Defaults", False, ''],
-                                                            ["about_code", "Python Code", False, '']
+                                                            ["about_code", "Getting Started", False, '']
                                                            ]
-    elif (identnum == 510) or (identnum == 70105):
-        # about_skis page, about skilift
+    elif identnum == 510:
+        # about_skis page
         page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
                                                             ['admin_home', "Admin", False, ''],
                                                             [3, "Root Folder", False, ''],
@@ -233,7 +233,7 @@ def set_navigation(identnum, call_data, page_data):
                                                             ["manage_sections", "Sections", False, ''],
                                                             [300, "Colours", False, ''],
                                                             ['defaults', "Defaults", False, ''],
-                                                            ["about_code", "Python Code", False, '']
+                                                            ["about_code", "Getting Started", False, '']
                                                            ]
     elif identnum == 85001:
         # operations index page
@@ -244,7 +244,7 @@ def set_navigation(identnum, call_data, page_data):
                                                             ["manage_textblocks", "TextBlocks", False, ''],
                                                             ["manage_sections", "Sections", False, ''],
                                                             [300, "Colours", False, ''],
-                                                            ["about_code", "Python Code", False, '']
+                                                            ["about_code", "Getting Started", False, '']
                                                            ]
     elif identnum == 20300:
         # colours index page
@@ -255,7 +255,7 @@ def set_navigation(identnum, call_data, page_data):
                                                             ["manage_textblocks", "TextBlocks", False, ''],
                                                             ["manage_sections", "Sections", False, ''],
                                                             ['defaults', "Defaults", False, ''],
-                                                            ["about_code", "Python Code", False, '']
+                                                            ["about_code", "Getting Started", False, '']
                                                            ]
 
     elif identnum == 70101:
@@ -345,6 +345,7 @@ def display_parent(widget_info, page_data):
     # display links to the parent widget
     page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', parent_name, True, parent_name])
     page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', parent_name + " " + str(location[1]), True, parent_name + "-" + str(location[1])])
+
 
 
 

@@ -2,7 +2,7 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.6.2",
+"version": "3.6.3",
 "skipole": "3.6.2",
 "specialpages": {
 "about_code": 70001,
@@ -223,7 +223,6 @@
 "ski_tables": "skis,ski_tables",
 "ski_textarea": "skis,ski_textarea",
 "ski_upload": "skis,ski_upload",
-"skilift": 70005,
 "skipole_js": "skis,skipole_js",
 "skipolelogo": 30013,
 "submit_language": 4020,
@@ -2969,7 +2968,7 @@ false,
 "parts": [
 [
 "Text",
-"Your Python code"
+"Getting Started"
 ]
 ]
 }
@@ -3100,13 +3099,13 @@ false,
 "Part",
 {
 "tag_name": "h3",
-"brief": "Title three functions",
+"brief": "Top page heading text",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"This framework requires you to provide three functions."
+"Getting Started"
 ]
 ]
 }
@@ -3128,6 +3127,21 @@ false,
 "escape": true,
 "linebreaks": true
 }
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "Title three functions",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This framework requires you to provide three functions."
 ]
 ]
 }
@@ -3182,12 +3196,37 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
+"name": "responders",
+"brief": "About Responders",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "Responders, what they are -",
+"button_show_text": "Responders, what they are +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.responders",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
 "name": "skicall",
 "brief": "About the skicall object",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "skicall -",
-"button_show_text": "skicall +",
+"button_hide_text": "The skicall object -",
+"button_show_text": "The skicall object +",
 "clear_error": false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
@@ -3211,8 +3250,8 @@ false,
 "brief": "About the skicall.page_data dictionary",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "skicall.page_data -",
-"button_show_text": "skicall.page_data +",
+"button_hide_text": "The skicall.page_data attribute -",
+"button_show_text": "The skicall.page_data attribute +",
 "clear_error": false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
@@ -3236,8 +3275,8 @@ false,
 "brief": "About the start_call function",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "start_call -",
-"button_show_text": "start_call +",
+"button_hide_text": "The start_call(called_ident, skicall) function -",
+"button_show_text": "The start_call(called_ident, skicall) function +",
 "clear_error": false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
@@ -3261,8 +3300,8 @@ false,
 "brief": "Describes the submit_data function",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "submit_data -",
-"button_show_text": "submit_data +",
+"button_hide_text": "The submit_data(skicall) function -",
+"button_show_text": "The submit_data(skicall) function +",
 "clear_error": false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
@@ -3286,12 +3325,37 @@ false,
 "brief": "end_call",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "end_call -",
-"button_show_text": "end_call +",
+"button_hide_text": "The end_call(page_ident, page_type, skicall) function -",
+"button_show_text": "The end_call(page_ident, page_type, skicall) function +",
 "clear_error": false,
 "div_class": "w3-card w3-theme-light w3-padding",
 "div_content": "",
 "get_field": "aboutcode.end",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "subprojects",
+"brief": "about sub projects",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "Sub projects -",
+"button_show_text": "Sub projects +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.subprojects",
 "hide": true,
 "htmlescaped": false,
 "json_ident": 70050,
@@ -3434,14 +3498,6 @@ false,
 }
 ],
 [
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
 "Widget",
 {
 "class": "paras.JSONDivLink",
@@ -3465,8 +3521,45 @@ false,
 "widget_style": ""
 }
 }
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "What is not provided",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"There are some things you may expect of a Framework which Skipole does not provide:"
 ]
 ]
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "notprovided",
+"brief": "Describes what Skipole does not provide",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "What is not provided -",
+"button_show_text": "What is not provided +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.notprovided",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
 }
 ],
 [
@@ -3485,32 +3578,28 @@ false,
 }
 ],
 [
-"Part",
+"Widget",
 {
-"tag_name": "div",
-"brief": "Holds skilift link",
+"class": "paras.JSONDivLink",
+"name": "aboutskilift",
+"brief": "Describes the skilift sub package",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "skilift -",
+"button_show_text": "skilift +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.skilift",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
 "show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to skilift description",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"href": "{skilift}"
-},
-"parts": [
-[
-"Text",
-"About skilift"
-]
-]
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
 }
-]
-]
 }
 ],
 [
@@ -3575,224 +3664,6 @@ false,
 },
 "original_fields": {}
 }
-},
-"skilift": {
-"ident": 70005,
-"brief": "About skilift",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#e5d29f",
-"default_error_widget": [
-"adminhead",
-"show_status"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Your Python code"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"SectionPlaceHolder",
-{
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav",
-"multiplier": 0,
-"mtag": "div"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead",
-"multiplier": 0,
-"mtag": "div"
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Main content page div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container",
-"style": "margin-left:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About skilift",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Within the 'skipole' package there is a 'skilift' sub-package, which contains further modules and functions providing project information and editing capability.\r\n\r\nTo import skilift\r\n\r\nfrom skipole import skilift\r\n\r\nskilift contains a development web server, called using:\r\n\r\nskilift.development_server(host, port, application)\r\n\r\nWhen you first create a project, this function is used within your code to serve your WSGI application. This may be useful for project devices used within a LAN, but should not be used in production.\r\n\r\nskilift contains further functions normally only used by the 'skiadmin' project.  You could import the package and use the functions within your own code. However any function which alters a project should only be used if only one user is accessing the web site. Multiple access while changes are being implemented could cause problems.\r\n\r\nA typical function within skilift is, for example:\r\n\r\nskilift.get_textblock_text(textref, lang, project=None)\r\n\r\nwith docstring:\r\n\r\nThis function returns the textblock text, given a textblock reference string,\r\n\r\nlang is the language tuple of (preferred language, default language).\r\nIf text for a given language is not found, the function makes an effort to get text by trying the default language.\r\n\r\nIf project is not given assumes the root project, if given, project must exist as either the root, or a sub project of the root.\r\nIf no textblock is found, returns None."
-]
-]
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section admin_footer with alias foot",
-"section_name": "admin_footer",
-"placename": "foot",
-"multiplier": 0,
-"mtag": "div"
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
 }
 }
 },
