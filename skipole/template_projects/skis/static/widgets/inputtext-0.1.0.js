@@ -15,7 +15,7 @@ SKIPOLE.inputtext.TextInput1.prototype.setvalues = function (fieldlist, result) 
     this.set_accepted_errored(this.widg, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         this.widg.val(input_text);
         }
     };
@@ -34,7 +34,7 @@ SKIPOLE.inputtext.Password1.prototype.setvalues = function (fieldlist, result) {
     this.set_accepted_errored(this.widg, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         this.widg.val(input_text);
         }
     };
@@ -57,7 +57,7 @@ SKIPOLE.inputtext.TextInput2.prototype.setvalues = function (fieldlist, result) 
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         text_input.val(input_text);
         }
     };
@@ -80,7 +80,7 @@ SKIPOLE.inputtext.Password2.prototype.setvalues = function (fieldlist, result) {
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         text_input.val(input_text);
         }
     };
@@ -100,7 +100,7 @@ SKIPOLE.inputtext.TextInput3.prototype.setvalues = function (fieldlist, result) 
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         text_input.val(input_text);
         }
     };
@@ -122,7 +122,7 @@ SKIPOLE.inputtext.TextInput4.prototype.setvalues = function (fieldlist, result) 
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         text_input.val(input_text);
         }
     };
@@ -144,12 +144,12 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.setvalues = function (fieldlist, re
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         text_input.val(input_text);
         }
     // hide
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (set_hide != undefined) {
+    if (set_hide !== undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
                 this.widg.fadeOut('slow');
@@ -259,7 +259,7 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
     var para1 = div2.find(':first');
     // para_text
     var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
-    if (para_text) {
+    if (para_text !== undefined) {
         para1.text(para_text);
         }
     // show_para1
@@ -293,12 +293,12 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
         }
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
-    if (input_text) {
+    if (input_text !== undefined) {
         text_input.val(input_text);
         }
     // hide
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (set_hide != undefined) {
+    if (set_hide !== undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
                 this.widg.fadeOut('slow');
@@ -408,7 +408,7 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.setvalues = function (fieldlist, re
     this.set_errored(text1, input_errored1);
     // input_text1
     var input_text1 = this.fieldarg_in_result('input_text1', result, fieldlist);
-    if (input_text1) {
+    if (input_text1 !== undefined) {
         text1.val(input_text1);
         }
     var text2 = this.widg.find('input:eq(1)');
@@ -419,7 +419,7 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.setvalues = function (fieldlist, re
     this.set_errored(text2, input_errored2);
     // input_text2
     var input_text2 = this.fieldarg_in_result('input_text2', result, fieldlist);
-    if (input_text2) {
+    if (input_text2 !== undefined) {
         text2.val(input_text2);
         }
     };
