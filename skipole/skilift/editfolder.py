@@ -293,6 +293,8 @@ def copy_page(project, pagenumber, foldernumber, new_page_number, new_name, brie
     if not isinstance(new_page_number, int):
         raise ServerError(message = "The new page ident number must be an integer")
     orig_page = skiboot.from_ident(pagenumber, project)
+    if orig_page is None:
+        raise ServerError(message = "The ident to be copied is not recognised")
     if orig_page.page_type == "Folder":
         raise ServerError("Invalid item to be copied")
     parentinfo = _check_parent_number(project, foldernumber)
