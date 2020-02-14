@@ -123,9 +123,12 @@ SKIPOLE.links.ContainerLink2.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0 ) {
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 
@@ -348,15 +351,24 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0) {
+                          if (the_widg.text() == button_wait_text) {
+                              the_widg.text(buttontext);
+                              }
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
                           if (the_widg.text() == button_wait_text) {
                               the_widg.text(buttontext);
                               }
-                          alert(errorThrown);
+                          alert(textStatus);
                           }
               });
 
     };
+
+
+
 
 
 SKIPOLE.links.ButtonLink1 = function (widg_id, error_message, fieldmap) {
@@ -543,12 +555,18 @@ SKIPOLE.links.ButtonLink2.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0) {
+                          if (a_link.text() == button_wait_text) {
+                              a_link.text(buttontext);
+                              }
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
                           if (a_link.text() == button_wait_text) {
                               a_link.text(buttontext);
                               }
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 
@@ -800,9 +818,12 @@ SKIPOLE.links.MessageButton.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0 ) {
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
 
     };
@@ -916,9 +937,12 @@ SKIPOLE.links.Table1_Button.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0 ) {
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 
@@ -982,9 +1006,12 @@ SKIPOLE.links.Table2_Button.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0 ) {
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 
@@ -1046,12 +1073,18 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
                               document.write(jqXHR.responseText);
                               document.close();
                               }
-                          else {
-                              if (button.text() == button_wait_text) {
-                                  button.text(buttontext);
-                                  }
-                              alert(errorThrown);
-                               }
+                      else if (jqXHR.status == 0) {
+                          if (button.text() == button_wait_text) {
+                              button.text(buttontext);
+                              }
+                          alert("Connection failure: Possible network problem");
+                          }
+                      else {
+                          if (button.text() == button_wait_text) {
+                              button.text(buttontext);
+                              }
+                          alert(textStatus);
+                          }
                   });
         } else if (myCol === 4) {
 
@@ -1090,12 +1123,18 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
                                   document.write(jqXHR.responseText);
                                   document.close();
                                   }
-                              else {
-                                  if (button.text() == button_wait_text) {
-                                      button.text(buttontext);
-                                      }
-                                  alert(errorThrown);
-                                   }
+                      else if (jqXHR.status == 0) {
+                          if (button.text() == button_wait_text) {
+                              button.text(buttontext);
+                              }
+                          alert("Connection failure: Possible network problem");
+                          }
+                      else {
+                          if (button.text() == button_wait_text) {
+                              button.text(buttontext);
+                              }
+                          alert(textStatus);
+                          }
                       });
         } else {
             return;
@@ -1161,9 +1200,12 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0 ) {
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 
@@ -1216,10 +1258,14 @@ SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0) {
+                          $("body").css('cursor','auto');
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
                           $("body").css('cursor','auto');
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 SKIPOLE.links.GeneralButtonTable2.prototype.allowdropfunc = function (e) {
@@ -1497,9 +1543,12 @@ SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0 ) {
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 
@@ -1552,10 +1601,14 @@ SKIPOLE.links.GeneralButtonTable1.prototype.dropfunc = function (e, data) {
                           document.write(jqXHR.responseText);
                           document.close();
                           }
+                      else if (jqXHR.status == 0 ) {
+                          $("body").css('cursor','auto');
+                          alert("Connection failure: Possible network problem");
+                          }
                       else {
                           $("body").css('cursor','auto');
-                          alert(errorThrown);
-                           }
+                          alert(textStatus);
+                          }
               });
     };
 SKIPOLE.links.GeneralButtonTable1.prototype.allowdropfunc = function (e) {
