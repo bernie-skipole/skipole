@@ -174,7 +174,7 @@ SKIPOLE.checkbox.SubmitCheckBox1.prototype.eventfunc = function (e) {
                                       document.close();
                                       }
                                   else {
-                                      alert(errorThrown);
+                                      SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                                       }
                           });
                 }

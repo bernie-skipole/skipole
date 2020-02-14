@@ -361,6 +361,37 @@ SKIPOLE.textbr = function(string) {
   };
 
 
+// Used when a request for a json file fails
+SKIPOLE.json_failed = function( jqXHR, textStatus, errorThrown ) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+            msg = 'Connection failure: Possible network problem.';
+        } else if (jqXHR.status == 404) {
+            msg = '404 : Requested page not found.';
+        } else if (jqXHR.status == 500) {
+            msg = '500 : Internal Server Error.';
+        } else if (textStatus === 'parsererror') {
+            msg = 'Unable to parse requested JSON file.';
+        } else if (textStatus === 'timeout') {
+            msg = 'Request timed out.';
+        } else if (textStatus === 'abort') {
+            msg = 'Request aborted.';
+        } else {
+            msg = 'Error: ' + jqXHR.responseText;
+        }
+        // display the message in the page default_error_widget
+       if (SKIPOLE.default_error_widget) {
+           // create dictionary result, to be used instead of received json file
+           // and flags an error message in the page default error widget
+           var result = {};
+           result[SKIPOLE.default_error_widget + ":show_error"] = msg;
+           SKIPOLE.setfields( result );
+       } else {
+           alert(msg);
+       }
+    };
+
+
 /* base class for widgets */
 
 
@@ -640,3 +671,6 @@ SKIPOLE.BaseWidget.prototype.clear_error = function() {
         error_div.hide();
         }
     };
+
+
+

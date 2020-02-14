@@ -211,7 +211,7 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
                                   if (btn.attr("value") == button_wait_text) {
                                       btn.attr("value", buttontext);
                                       }
-                                  alert(errorThrown);
+                                  SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                                   }
                       });
             }

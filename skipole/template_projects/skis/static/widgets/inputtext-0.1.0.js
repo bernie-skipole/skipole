@@ -210,7 +210,7 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.eventfunc = function (e) {
                                       document.close();
                                       }
                                   else {
-                                      alert(errorThrown);
+                                      SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                                       }
                           });
                 }
@@ -359,7 +359,7 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.eventfunc = function (e) {
                                       document.close();
                                       }
                                   else {
-                                      alert(errorThrown);
+                                      SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                                       }
                           });
                 }
@@ -471,7 +471,7 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.eventfunc = function (e) {
                                       document.close();
                                       }
                                   else {
-                                      alert(errorThrown);
+                                      SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                                       }
                           });
                 }

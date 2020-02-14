@@ -55,7 +55,7 @@ SKIPOLE.paras.TagBlock.prototype.dropfunc = function (e, data) {
                           }
                       else {
                           $("body").css('cursor','auto');
-                          alert(errorThrown);
+                          SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                            }
               });
     };
@@ -181,7 +181,7 @@ SKIPOLE.paras.DivHTML.prototype.dropfunc = function (e, data) {
                           }
                       else {
                           $("body").css('cursor','auto');
-                          alert(errorThrown);
+                          SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                            }
               });
     };
@@ -196,12 +196,12 @@ SKIPOLE.paras.DivHTML.prototype.setvalues = function (fieldlist, result) {
     var widg_id = this.widg_id
     var the_widg = this.widg;
     var set_html = this.fieldarg_in_result('set_html', result, fieldlist);
-    if (set_html) {
+    if (set_html !== undefined) {
         the_widg.html(set_html);
         }
     // hide the widget
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (set_hide != undefined) {
+    if (set_hide !== undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
                 the_widg.fadeOut('slow');
@@ -252,7 +252,7 @@ SKIPOLE.paras.SpanText.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
-    if (span_text) {
+    if (span_text !== undefined) {
         this.widg.text(span_text);
         }
     };
@@ -272,12 +272,12 @@ SKIPOLE.paras.TagText.prototype.setvalues = function (fieldlist, result) {
     var the_widg = this.widg;
     /* tag_text */
     var tag_text = this.fieldarg_in_result('tag_text', result, fieldlist);
-    if (tag_text) {
+    if (tag_text !== undefined) {
         the_widg.text(tag_text);
         }
     /* hide */
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (set_hide != undefined) {
+    if (set_hide !== undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
                 the_widg.fadeOut('slow');
@@ -305,7 +305,7 @@ SKIPOLE.paras.ParaText.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
-    if (para_text) {
+    if (para_text !== undefined) {
         this.widg.text(para_text);
         }
     };
@@ -326,7 +326,7 @@ SKIPOLE.paras.PreText.prototype.setvalues = function (fieldlist, result) {
         }
     // pre_text
     var pre_text = this.fieldarg_in_result('pre_text', result, fieldlist);
-    if (pre_text) {
+    if (pre_text !== undefined) {
         this.widg.text(pre_text);
         }
     };
@@ -370,7 +370,7 @@ SKIPOLE.paras.DivPara.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
-    if (para_text) {
+    if (para_text !== undefined) {
         var paragraph = this.widg.children().filter(":first");
         paragraph.text(para_text);
         }
@@ -482,7 +482,7 @@ SKIPOLE.paras.JSONTextLink.prototype.setvalues = function (fieldlist, result) {
         }
     // para_text
     var textbox = the_widg.children().filter(":last");
-    if (para_text) {
+    if (para_text !== undefined) {
         textbox.text(para_text);
         }
     // hide
@@ -547,7 +547,7 @@ SKIPOLE.paras.JSONTextLink.prototype.eventfunc = function (e) {
                               document.close();
                               }
                           else {
-                              alert(errorThrown);
+                              SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                               }
                   });
         }
@@ -712,7 +712,7 @@ SKIPOLE.paras.JSONDivLink.prototype.eventfunc = function (e) {
                               document.close();
                               }
                           else {
-                              alert(errorThrown);
+                              SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
                               }
                   });
         }
@@ -815,11 +815,11 @@ SKIPOLE.paras.ShowPara1.prototype.setvalues = function (fieldlist, result) {
     var the_widg = this.widg;
     var paragraph = the_widg.children().filter(":first");
     var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
-    if (para_text) {
+    if (para_text !== undefined) {
         paragraph.text(para_text);
         }
     var show_para = this.fieldarg_in_result('show_para', result, fieldlist);
-    if (show_para != undefined) {
+    if (show_para !== undefined) {
         if (show_para) {
             if (!(paragraph.is(":visible"))) {
                 paragraph.fadeIn('slow');
@@ -873,11 +873,11 @@ SKIPOLE.paras.ShowPara2.prototype.setvalues = function (fieldlist, result) {
     var the_widg = this.widg;
     var paragraph = the_widg.find("p");
     var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
-    if (para_text) {
+    if (para_text !== undefined) {
         paragraph.text(para_text);
         }
     var hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (hide != undefined) {
+    if (hide !== undefined) {
         if (hide) {
             if (the_widg.is(":visible")) {
                 the_widg.hide();
