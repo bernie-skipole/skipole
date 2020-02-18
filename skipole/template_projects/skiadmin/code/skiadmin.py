@@ -347,5 +347,3 @@ def display_parent(widget_info, page_data):
     page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', parent_name + " " + str(location[1]), True, parent_name + "-" + str(location[1])])
 
 
-
-

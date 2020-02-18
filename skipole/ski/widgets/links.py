@@ -809,6 +809,7 @@ class ButtonLink2(Widget):
                         'button_text':FieldArg("text", "Submit", jsonset=True),
                         'button_wait_text':FieldArg("text", "Please wait..."),
                         'button_class':FieldArg("cssclass", ""),
+                        'button_style':FieldArg("cssstyle", ""),
                         'get_field1':FieldArg("text", "", valdt=True, jsonset=True),
                         'get_field2':FieldArg("text","", valdt=True, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
@@ -824,6 +825,7 @@ class ButtonLink2(Widget):
         button_text: The text to be placed within the link, if none given, the page url will be used
         button_wait_text: A 'please wait' message shown on the button
         button_class: A CSS class applied to the button
+        button_style: A CSS style applied to the button
         buttondiv_class: A CSS class applied to the div containing the button
         buttondiv_style: A CSS style applied to the div containing the button
         get_field1: Optional 'get' string set in the target url
@@ -865,6 +867,9 @@ class ButtonLink2(Widget):
         # set button class
         if self.get_field_value('button_class'):
             self[1][0].update_attribs({"class":self.get_field_value('button_class')})
+        # set button style
+        if self.get_field_value('button_style'):
+            self[1][0].update_attribs({"style":self.get_field_value('button_style')})
         # get url and button text
         url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
         if not url:

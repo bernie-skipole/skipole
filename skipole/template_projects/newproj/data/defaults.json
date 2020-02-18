@@ -263,7 +263,7 @@
 "ButtonLink2": {
 "button_class": "w3-button w3-theme-l1 w3-border w3-round",
 "buttondiv_class": "w3-container w3-center",
-"buttondiv_style": "margin-left:20%;width:20em;",
+"buttondiv_style": "",
 "error_class": "w3-panel w3-red",
 "widget_class": "w3-container"
 },
