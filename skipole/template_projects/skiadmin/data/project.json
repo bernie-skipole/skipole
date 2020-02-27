@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
 "version": "3.6.3",
-"skipole": "3.6.2",
+"skipole": "3.6.3",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -1359,6 +1359,7 @@ false,
 "brief": "Link to insert text",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A text string",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1385,6 +1386,7 @@ false,
 "brief": "Link to insert textblock",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A reference to a TextBlock",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1411,6 +1413,7 @@ false,
 "brief": "Link to insert html symbol",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "An HTML symbol - such as &nbsp;",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1437,6 +1440,7 @@ false,
 "brief": "Link to insert a comment",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A comment which will be set within <!-- and --> tags",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1463,6 +1467,7 @@ false,
 "brief": "Link to insert html element",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "An HTML element, such as div, p etc.,",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1489,6 +1494,7 @@ false,
 "brief": "Link to insert a widget",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A Widget",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1515,6 +1521,7 @@ false,
 "brief": "Link to insert a section",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A Section",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1661,6 +1668,7 @@ false,
 "brief": "Link to insert text",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A text string",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1687,6 +1695,7 @@ false,
 "brief": "Link to insert textblock",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A reference to a TextBlock",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1713,6 +1722,7 @@ false,
 "brief": "Link to insert html symbol",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "An HTML symbol - such as &nbsp;",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1739,6 +1749,7 @@ false,
 "brief": "Link to insert a comment",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A comment which will be set within <!-- and --> tags",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1765,6 +1776,7 @@ false,
 "brief": "Link to insert html element",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "An HTML element, such as div, p etc.,",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -1791,6 +1803,7 @@ false,
 "brief": "Link to insert a widget",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A Widget",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -2645,6 +2658,7 @@ false,
 "brief": "Link to insert text",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A text string",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -2671,6 +2685,7 @@ false,
 "brief": "Link to insert textblock",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A reference to a TextBlock",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -2697,6 +2712,7 @@ false,
 "brief": "Link to insert html symbol",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "An HTML symbol - such as &nbsp;",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -2723,6 +2739,7 @@ false,
 "brief": "Link to insert a comment",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A comment which will be set within <!-- and --> tags",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -2749,6 +2766,7 @@ false,
 "brief": "Link to insert html element",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "An HTML element, such as div, p etc.,",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -2775,6 +2793,7 @@ false,
 "brief": "Link to insert a widget",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A Widget",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -2801,6 +2820,7 @@ false,
 "brief": "Link to insert a section",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "A Section",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -19425,6 +19445,7 @@ false
 "brief": "Shows the modal insert box",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "Insert items",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "",
@@ -21152,8 +21173,6 @@ false
 "class": "AllowedFields",
 "original_args": {
 "allowed_callers": [
-23509,
-23609,
 54519,
 54529,
 54709
@@ -37727,149 +37746,6 @@ false
 }
 },
 "pages": {
-"aaa": {
-"ident": 85005,
-"brief": "aaa",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#e5d29f",
-"default_error_widget": [
-"",
-"top_error"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The viewport meta declaration",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Page 85005"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": []
-}
-]
-},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",

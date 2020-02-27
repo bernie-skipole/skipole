@@ -262,7 +262,7 @@ main purpose is to act as a parent class for all other respond objects.
             if ident:
                 allowed_idents.append(ident)
             else:
-                raise ValidateError(message="ident not recognised in responder allowed_callers list")
+                raise ValidateError(message="Invalid allowed_callers list, contains unrecognised idents.")
         if not allowed_idents:
             raise ValidateError(message="No recognised idents given in responder allowed_callers list")
         if len(ident_list) > 1:

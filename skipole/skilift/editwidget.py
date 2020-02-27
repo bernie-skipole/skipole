@@ -5,7 +5,7 @@
 import pkgutil, importlib, inspect, re
 
 from ..ski import widgets, dump_project
-from ..ski.excepts import ServerError
+from ..ski.excepts import ServerError, ValidateError
 
 from . import widget_info, fromjson, insert_item_in_page, insert_item_in_section, get_proj_page, get_proj_section
 
