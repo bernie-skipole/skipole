@@ -89,9 +89,6 @@ class UList2(Widget):
         Widget.__init__(self, name=name, tag_name="ul", brief=brief, **field_args)
         self._even = ''
         self._odd = ''
-        self.htmlescaped = False
-        self.linebreaks=False
-
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list"
@@ -110,6 +107,8 @@ class UList2(Widget):
                 self[index] = tag.Part(tag_name='li', attribs={"class":self._odd}, text=item)
             else:
                 self[index] = tag.Part(tag_name='li', text=item)
+            self[index].htmlescaped = False
+            self[index].linebreaks=False
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
