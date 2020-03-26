@@ -45,6 +45,9 @@ args = sys.argv
 
 if len(args) == 3:
     project_name = args[1]
+    if args[2].startswith('-'):
+        print("Invalid filepath. " + DESCRIPTION)
+        sys.exit(3)
     projectfiles = os.path.abspath(os.path.expanduser(args[2]))
     if _AN.search(project_name):
         print( "Error: Invalid project name, alphanumeric only")
@@ -59,6 +62,12 @@ elif len(args) == 2:
     if args[1] == "--version":
         print(version)
         sys.exit(0)
+    if (args[1] == "-h") or (args[1] == "--help"):
+        print(DESCRIPTION)
+        sys.exit(0)
+    if args[1].startswith('-'):
+        print("Unrecognised option. " + DESCRIPTION)
+        sys.exit(3)
     project_name = None
     projectfiles = os.path.abspath(os.path.expanduser(args[1]))
 else:
