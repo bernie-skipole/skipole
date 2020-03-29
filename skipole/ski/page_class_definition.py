@@ -1449,8 +1449,9 @@ class JSON(ParentPage):
             self.content["sessionStorage"] = page_data['sessionStorage']
             del page_data['sessionStorage']
         if "JSONtoHTML" in page_data:
-            url = skiboot.find_ident_or_url(page_data["JSONtoHTML"], proj_ident=self.proj_ident)
+            url = skiboot.get_url(page_data["JSONtoHTML"], proj_ident=self.proj_ident)
             if url:
+                print(url)
                 self.content["JSONtoHTML"] = url
                 return
             del page_data["JSONtoHTML"]
