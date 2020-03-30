@@ -2712,3 +2712,49 @@ class GeneralButtonTable1(Widget):
         return jscript
 
 
+#<audio controls="controls">
+#  <source src="horse.ogg" type="audio/ogg">
+#  <source src="horse.mp3" type="audio/mpeg">
+#  Your browser does not support the audio element.
+#</audio>
+
+# MP3, WAV, and OGG
+
+
+class Audio1(Widget):
+    """An audio, can be set to play via JSON call"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'src_mp3':FieldArg("text", '', jsonset=True),
+                        'src_wav':FieldArg("text", '', jsonset=True),
+                        'src_ogg':FieldArg("text", '', jsonset=True),
+                        'controls':FieldArg("boolean", False),
+                        'play':FieldArg("boolean", False, jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        src_mp3: The src url string (not ident) of the image page
+        src_wav: The width of the image
+        src_ogg: The height of the image
+        controls: If True sets the controls attribute
+        play: If True, sets autplay attribute, if set True by JSON, causes the file to play 
+        """
+        Widget.__init__(self, name=name, tag_name="audio", brief=brief, **field_args)
+        self._src_mp3 = ''
+        self._src_wav = ''
+        self._src_ogg = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the audio"
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<img src="#" />   <!-- with src set to img_url -->
+"""
+

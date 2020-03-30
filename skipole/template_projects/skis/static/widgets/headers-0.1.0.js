@@ -98,7 +98,7 @@ SKIPOLE.headers.HeaderText1.prototype.setvalues = function (fieldlist, result) {
     // large_text
     var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h2');
+        var h1_text = the_widg.find('h1');
         h1_text.text(large_text);
         }
     // small_text
@@ -216,7 +216,7 @@ SKIPOLE.headers.HeaderText3.prototype.setvalues = function (fieldlist, result) {
     // large_text
     var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h2');
+        var h1_text = the_widg.find('h3');
         h1_text.text(large_text);
         }
     // small_text
@@ -275,7 +275,7 @@ SKIPOLE.headers.HeaderText4.prototype.setvalues = function (fieldlist, result) {
     // large_text
     var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h2');
+        var h1_text = the_widg.find('h4');
         h1_text.text(large_text);
         }
     // small_text
@@ -333,7 +333,7 @@ SKIPOLE.headers.HeaderText5.prototype.setvalues = function (fieldlist, result) {
     // large_text
     var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h2');
+        var h1_text = the_widg.find('h5');
         h1_text.text(large_text);
         }
     // small_text
@@ -392,7 +392,7 @@ SKIPOLE.headers.HeaderText6.prototype.setvalues = function (fieldlist, result) {
     // large_text
     var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h2');
+        var h1_text = the_widg.find('h6');
         h1_text.text(large_text);
         }
     // small_text
