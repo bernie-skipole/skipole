@@ -128,12 +128,12 @@ def submit_addfolder(skicall):
 
 
     if 'folderpath' in call_data and call_data['folderpath']:
-        folderpath = call_data['folderpath']
-        folderpath = folderpath.rstrip('/')
-        folderpath = folderpath.rstrip('\\')
+        folderpath = call_data['folderpath'].strip()
+        folderpath = folderpath.strip('/')
+        folderpath = folderpath.strip('\\')
         if not folderpath:
             raise FailPage("Sorry, the given static folder is invalid.")
-        fullpath = os.path.join(skilift.get_projectdir(project), folderpath)
+        fullpath = os.path.join(skilift.get_projectfiles_dir(project), folderpath)
         if not os.path.isdir(fullpath):
             raise FailPage("Sorry, the given static folder location cannot be found.")
         if not call_data['folder_brief']:
@@ -141,6 +141,9 @@ def submit_addfolder(skicall):
     else:
         folderpath = None
         fullpath = None
+
+    # folderpath is the server folder path relative to projectfiles
+    # fullpath is the absolute server folder path
 
     try:
         # create the folder
@@ -158,8 +161,11 @@ def submit_addfolder(skicall):
 
 
 def _make_static_folder(project, folder_dict, fullpath, folderpath):
-    """Creates containing sub folders and Filepages pointing to static files within a directory
-       of the server"""
+    """Creates containing sub folders and Filepages pointing to static server files
+
+    folderpath is the server folder path relative to projectfiles
+    fullpath is the absolute server folder path
+"""
     try:
         # loads everything under folderpath as Folders and FilePages
         # ident_dict maps folderpath to newly created folder ident numbers
@@ -168,7 +174,8 @@ def _make_static_folder(project, folder_dict, fullpath, folderpath):
         ident = folder_dict["ident"]
         ident_number_list = skilift.ident_numbers(project)
         for root, dirs, files in os.walk(fullpath):
-            fpath = root[len(skilift.get_projectdir(project))+1:]
+            #fpath = root[len(skilift.get_projectdir(project))+1:]
+            fpath = root[len(skilift.get_projectfiles_dir(project))+1:]
             parent_ident = ident_dict[fpath]
             if files:
                 # create files
