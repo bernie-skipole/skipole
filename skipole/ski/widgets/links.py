@@ -1217,7 +1217,6 @@ class Image1(ClosedWidget):
         alt: The alt attribute
         """
         ClosedWidget.__init__(self, name=name, tag_name="img", brief=brief, **field_args)
-        self._img_url = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
@@ -2712,16 +2711,62 @@ class GeneralButtonTable1(Widget):
         return jscript
 
 
-#<audio controls="controls">
-#  <source src="horse.ogg" type="audio/ogg">
-#  <source src="horse.mp3" type="audio/mpeg">
-#  Your browser does not support the audio element.
-#</audio>
-
-# MP3, WAV, and OGG
-
 
 class Audio1(Widget):
+    """An audio, can be set to play via JSON call"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'mp3_ident':FieldArg("url", ''),
+                        'wav_ident':FieldArg("url", ''),
+                        'ogg_ident':FieldArg("url", ''),
+                        'controls':FieldArg("boolean", False),
+                        'play':FieldArg("boolean", False, jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        mp3_ident: The src ident of an mp3 file
+        wav_ident: The src ident of an wav file
+        ogg_ident: The src ident of an ogg file
+        controls: If True sets the controls attribute
+        play: If True, sets autoplay attribute, if set True by JSON, causes the file to play 
+        """
+        Widget.__init__(self, name=name, tag_name="audio", brief=brief, **field_args)
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the audio"
+
+        if self.get_field_value('controls'):
+            self.update_attribs({'controls':'controls'})
+        if self.get_field_value('play'):
+            self.update_attribs({'autoplay':'autoplay'})
+        if self.get_field_value("mp3_ident"):
+            mp3url = skiboot.get_url(self.get_field_value("mp3_ident"), proj_ident=page.proj_ident)
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": mp3url, "type":"audio/mpeg"}) )
+        if self.get_field_value("wav_ident"):
+            wavurl = skiboot.get_url(self.get_field_value("wav_ident"), proj_ident=page.proj_ident)
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": wavurl, "type":"audio/wav"}) )
+        if self.get_field_value("ogg_ident"):
+            oggurl = skiboot.get_url(self.get_field_value("ogg_ident"), proj_ident=page.proj_ident)
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": oggurl, "type":"audio/ogg"}) )
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+ <audio>  <!-- with controls and autoplay attributes if they are set True -->
+  <source src="#" type="audio/mpeg" />  <!-- with src set to url of ident/label mp3_ident -->
+  <source src="#" type="audio/wav" />   <!-- with src set to url of ident/label wav_ident -->
+  <source src="#" type="audio/ogg" />    <!-- with src set to url of ident/label ogg_ident -->
+</audio> 
+"""
+
+
+class Audio2(Widget):
     """An audio, can be set to play via JSON call"""
 
     # This class does not display any error messages
@@ -2736,25 +2781,38 @@ class Audio1(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """
-        src_mp3: The src url string (not ident) of the image page
-        src_wav: The width of the image
-        src_ogg: The height of the image
+        src_mp3: The src url string (not ident) of an mp3 file
+        src_wav: The src url string (not ident) of a wav file
+        src_ogg: The src url string (not ident) of an ogg file
         controls: If True sets the controls attribute
-        play: If True, sets autplay attribute, if set True by JSON, causes the file to play 
+        play: If True, sets autoplay attribute, if set True by JSON, causes the file to play 
         """
         Widget.__init__(self, name=name, tag_name="audio", brief=brief, **field_args)
-        self._src_mp3 = ''
-        self._src_wav = ''
-        self._src_ogg = ''
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the audio"
+
+        if self.get_field_value('controls'):
+            self.update_attribs({'controls':'controls'})
+        if self.get_field_value('play'):
+            self.update_attribs({'autoplay':'autoplay'})
+        if self.get_field_value("src_mp3"):
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.get_field_value("src_mp3"), safe='/:'), "type":"audio/mpeg"}) )
+        if self.get_field_value("src_wav"):
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.get_field_value("src_wav"), safe='/:'), "type":"audio/wav"}) )
+        if self.get_field_value("src_ogg"):
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.get_field_value("src_ogg"), safe='/:'), "type":"audio/ogg"}) )
 
 
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
         return """
-<img src="#" />   <!-- with src set to img_url -->
+ <audio>  <!-- with controls and autoplay attributes if they are set True -->
+  <source src="#" type="audio/mpeg" />  <!-- with src set to src_mp3 -->
+  <source src="#" type="audio/wav" />   <!-- with src set to src_wav -->
+  <source src="#" type="audio/ogg" />    <!-- with src set to src_ogg -->
+</audio> 
 """
 

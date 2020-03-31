@@ -1755,3 +1755,42 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
     };
 
 
+SKIPOLE.links.Audio1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.Audio1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.Audio1.prototype.constructor = SKIPOLE.links.Audio1;
+SKIPOLE.links.Audio1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    var fieldvalues = this.fieldvalues;
+    var play_audio = this.fieldarg_in_result("play", result, fieldlist);
+    if (play_audio) {
+        the_widg.play();
+        }
+    };
+
+
+
+SKIPOLE.links.Audio2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.Audio2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.Audio2.prototype.constructor = SKIPOLE.links.Audio2;
+SKIPOLE.links.Audio2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    var fieldvalues = this.fieldvalues;
+    var play_audio = this.fieldarg_in_result("play", result, fieldlist);
+    if (play_audio) {
+        the_widg.play();
+        }
+    };
+
+

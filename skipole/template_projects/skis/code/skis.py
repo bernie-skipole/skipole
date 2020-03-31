@@ -1,4 +1,5 @@
 
+
 # This skis project is added to other projects and consists of
 # javascript and css files. As it is essentially a 'library'
 # it is usually given a URL of /lib when added - but this is
@@ -54,6 +55,5 @@ def makeapp(projectfiles, **proj_data):
 #  application.add_project(skis_application, url='/lib')
 #
 ############
-
 
 
