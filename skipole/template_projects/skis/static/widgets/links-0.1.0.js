@@ -1774,7 +1774,6 @@ SKIPOLE.links.Audio1.prototype.setvalues = function (fieldlist, result) {
     };
 
 
-
 SKIPOLE.links.Audio2 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
@@ -1786,10 +1785,30 @@ SKIPOLE.links.Audio2.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     var the_widg = this.widg;
-    var fieldvalues = this.fieldvalues;
+
+    var src_mp3 = this.fieldarg_in_result("src_mp3", result, fieldlist);
+    var src_wav = this.fieldarg_in_result("src_wav", result, fieldlist);
+    var src_ogg = this.fieldarg_in_result("src_ogg", result, fieldlist);
+    if (src_mp3 || src_wav || src_ogg) {
+        // empty the widget audio src links
+        the_widg.empty();
+        var htmlcontent = "";
+        if (src_mp3) {
+            htmlcontent +=  "<source src=\"" + src_mp3 + "\" type=\"audio/mpeg\" />";
+            }
+        if (src_wav) {
+            htmlcontent +=  "<source src=\"" + src_wav + "\" type=\"audio/wav\" />";
+            }
+        if (src_ogg) {
+            htmlcontent +=  "<source src=\"" + src_ogg + "\" type=\"audio/ogg\" />";
+            }
+        the_widg.html(htmlcontent);
+        document.getElementById(this.widg_id).load();
+        }
+
     var play_audio = this.fieldarg_in_result("play", result, fieldlist);
     if (play_audio) {
-        the_widg.play();
+        document.getElementById(this.widg_id).play();
         }
     };
 
