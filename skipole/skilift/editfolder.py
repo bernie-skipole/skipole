@@ -93,6 +93,25 @@ def delete_folder(project, foldernumber):
         return e.message
 
 
+def delete_folder_recursively(project, foldernumber, fchange):
+    "delete this folder, raise ServerError on failure, returns parentfolder number and change when done"
+    folder, error_message = _get_folder(project, foldernumber)
+    if folder is None:
+        raise ServerError(message=error_message)
+    editedproj = skiboot.getproject(project)
+    if editedproj is None:
+        raise ServerError(message="Project not loaded")
+    if folder.page_type != "Folder":
+        raise ServerError(message="Invalid folder")
+    if folder.ident.num == 0:
+        raise ServerError(message="Cannot delete the root folder")
+    if folder.change != fchange:
+        raise ServerError(message="The folder has been changed prior to this submission, someone else may be editing this project")
+    # delete the folder from the project
+    return editedproj.delete_folder_recursively(folder.ident)
+
+
+
 def folder_description(project, foldernumber, fchange, brief):
     "Set a folder brief description, return folder change uuid on success, raises ServerError on failure"
     if not brief:

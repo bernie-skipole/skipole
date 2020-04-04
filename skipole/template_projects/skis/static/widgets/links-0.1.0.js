@@ -1769,7 +1769,7 @@ SKIPOLE.links.Audio1.prototype.setvalues = function (fieldlist, result) {
     var fieldvalues = this.fieldvalues;
     var play_audio = this.fieldarg_in_result("play", result, fieldlist);
     if (play_audio) {
-        the_widg.play();
+        document.getElementById(this.widg_id).play();
         }
     };
 

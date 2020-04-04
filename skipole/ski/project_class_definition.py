@@ -288,7 +288,6 @@ class SkipoleProject(object):
 
     def delete_item(self, itemident):
         """Deletes the page or folder with the given ident from the database."""
-        #############  TO DO - if folder has contents, recursivly delete contents ########
         if itemident.num == 0:
             # cannot delete the root folder
             raise ServerError(message="Cannot delete the root folder", code=9009)
@@ -309,6 +308,60 @@ class SkipoleProject(object):
         # del the item
         del self.identitems[itemident]
         self.clear_cache()
+
+    def delete_folder_recursively(self, itemident):
+        """Deletes the folder and contents with the given ident from the database.
+           returns parentfolder number and change when done, raises ServerError on failure"""
+        if itemident.num == 0:
+            # cannot delete the root folder
+            raise ServerError(message="Cannot delete the root folder", code=9009)
+        if itemident.proj != self._proj_ident:
+            # Must belong to this project
+            raise ServerError(message="Cannot delete this item (does not belong to this project)", code=9010)
+        if itemident not in self.identitems:
+            raise ServerError(message="Item not found", code=9011)
+        # get the item
+        item = self.identitems[itemident]
+        # get the items parent folder
+        parentfolder = item.parentfolder
+        if item.name in parentfolder.pages:
+            raise ServerError(message="The item is not a Folder")
+        if item.name not in parentfolder.folders:
+            raise ServerError(message="The item to delete has not been found")
+        # recursive delete this item and all contents
+        self._do_delete_folder_recursively(itemident)
+        # create change uuid for parentfolder
+        change = uuid.uuid4().hex
+        num = parentfolder.ident.num
+        parentfolder.change = change
+        self.clear_cache()
+        return num, change
+
+
+    def _do_delete_folder_recursively(self, folderident):
+        "Used by delete_folder_recursively to rcursively delete"
+        # get the folder
+        folder = self.identitems[folderident]
+        page_idents = folder.page_idents()
+        folder_idents = folder.folder_idents()
+
+        # get the parent folder
+        parentfolder = folder.parentfolder
+
+        # delete all subfolders
+        for folder_ident in folder_idents:
+            self._do_delete_folder_recursively(folder_ident)
+
+        # delete all pages in the folder
+        for page_ident in page_idents:
+            page = self.identitems[page_ident]
+            del folder.pages[page.name]
+            del self.identitems[page_ident]
+
+        # and finally delete itself
+        del parentfolder.folders[folder.name]
+        # del this item from identitems
+        del self.identitems[folderident]
 
 
     def save_item(self, item, new_parent_ident=None):

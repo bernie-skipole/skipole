@@ -92,10 +92,6 @@ def retrieve_edited_folder(skicall):
                                    ["edit_action", ""],
                                    ["no_javascript", "2004"]  ]
 
-    if call_data['folder_number'] == 0:
-        page_data[("adminhead","page_head","large_text")] = "Edit Root Folder : %s" % (info.path,)
-    else:
-        page_data[("adminhead","page_head","large_text")] = "Edit Folder : %s" % (info.path,)
 
     # set edited folder in the required dictionary
     page_data['ie1:page_ident'] = (info.project, info.itemnumber)
@@ -103,14 +99,19 @@ def retrieve_edited_folder(skicall):
         page_data['st2:folder_brief'] = call_data['brief']
     else:
         page_data['st2:folder_brief'] = info.brief
+
     # check if this is rootfolder
     if info.itemnumber == 0:
+        page_data[("adminhead","page_head","large_text")] = "Edit Root Folder : %s" % (info.path,)
         # hide certain items if this is the root folder
         page_data['rename_folder','show'] = False
         page_data['sp1:show_parent_restricted'] = False
         page_data['sb1:show_set_restricted'] = False
         page_data['sb2:show_set_unrestricted'] = False
+        page_data['aboutdeletefolder','show'] = False
+        page_data['deletefolder','show'] = False
     else:
+        page_data[("adminhead","page_head","large_text")] = "Edit Folder : %s" % (info.path,)
         # The folder can be given a name
         if 'name' in call_data:
             page_data['rename_folder','input_text'] = call_data['name']
@@ -461,6 +462,45 @@ def downloadfolder(skicall):
         line_list.append(binline)
     page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
     return line_list
+
+
+def confirmrecursive(skicall):
+    "Displays the confirm recursive modal box"
+    skicall.page_data['recursive_delete', 'hide'] = False
+
+
+def recursivedelete(skicall):
+    "Delete the folder and contents"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if 'folder_number' not in call_data:
+        raise FailPage(message = "Folder missing")
+
+    folder_number = call_data['folder_number']
+    editedprojname = call_data['editedprojname']
+    fchange = call_data['fchange']
+
+    folderinfo = skilift.folder_info(editedprojname, folder_number)
+
+    if fchange != folderinfo.change:
+        call_data['fchange'] = folderinfo.change
+        raise FailPage("The folder has been changed prior to this submission, someone else may be editing this project")
+
+    # As the current folder is to be deleted, clear out session data from call_data
+    utils.clear_call_data(call_data)
+
+    # Delete the folder, get num and change of parentfolder
+    try:
+        num, change = editfolder.delete_folder_recursively(editedprojname, folder_number, fchange)
+    except ServerError as e:
+        raise FailPage(e.message)
+
+    # replace folder_number and fchange in call_data for session values
+    call_data['folder_number'] = num
+    call_data['fchange'] = change
+    call_data['status'] = 'Folder %s, number:%s and contents deleted' % (folderinfo.name, folder_number)
+
 
 
 

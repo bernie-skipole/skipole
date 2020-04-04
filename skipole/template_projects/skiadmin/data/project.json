@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.6.4",
-"skipole": "3.6.4",
+"version": "3.6.5",
+"skipole": "3.6.5",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -53,6 +53,7 @@
 "defaults_json": 85002,
 "delete_allowed_caller": 6090,
 "delete_container_dom": 44522,
+"delete_folder": 2007,
 "delete_item": 2006,
 "delete_language": 4040,
 "delete_page_dom": 3621,
@@ -5310,7 +5311,7 @@ false
 "pages": {
 "confirm_delete": {
 "ident": 2004,
-"brief": "Returns JSON request to confirm the page delete",
+"brief": "Returns JSON request to confirm the item delete",
 "RespondPage": {
 "class": "AllowStore",
 "original_args": {
@@ -5333,6 +5334,27 @@ false
 "original_fields": {
 "ftree:contents": ""
 }
+}
+},
+"confirmdeletefolder": {
+"ident": 2007,
+"brief": "Displays modal confirm box for recursive delete",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"confirmrecursive"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
 }
 },
 "default": {
@@ -5706,6 +5728,27 @@ false
 "upload:pagename": "new_page",
 "upload:parent": "edited_folder"
 }
+}
+},
+"recursive_delete": {
+"ident": 2008,
+"brief": "Delete folder and contents",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"fail_ident": 22008,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"recursivedelete"
+],
+"target_ident": 22008
+},
+"original_fields": {}
 }
 },
 "rename_folder": {
@@ -27086,7 +27129,7 @@ false
 {
 "class": "confirm.ConfirmBox2",
 "name": "page_delete",
-"brief": "Modal confirm box to confirm page delete",
+"brief": "Modal confirm box to confirm item delete",
 "fields": {
 "boxdiv_class": "w3-modal-content w3-panel w3-theme-l1",
 "boxdiv_style": "",
@@ -27109,6 +27152,41 @@ false
 "link_ident2": "delete_item",
 "para_class": "",
 "para_text": "Please confirm page delete",
+"paradiv_class": "w3-panel",
+"show": true,
+"widget_class": "w3-modal",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "confirm.ConfirmBox2",
+"name": "recursive_delete",
+"brief": "Modal confirm box to confirm recursive folder delete",
+"fields": {
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-l1",
+"boxdiv_style": "",
+"button1_class": "w3-button w3-round w3-theme-d4",
+"button1_style": "margin-left:20%",
+"button2_class": "w3-button w3-round w3-theme-d4 w3-right",
+"button2_style": "margin-right:20%",
+"button_text1": "Cancel",
+"button_text2": "Confirm",
+"buttondiv_class": "w3-bar",
+"buttondiv_style": "",
+"get_field1_1": "",
+"get_field1_2": "",
+"get_field1_3": "",
+"get_field2_1": "",
+"get_field2_2": "",
+"get_field2_3": "",
+"hide": true,
+"link_ident1": "admin_home",
+"link_ident2": "2008",
+"para_class": "",
+"para_text": "Warning: This deletes the Folder and all contents, are you sure?",
 "paradiv_class": "w3-panel",
 "show": true,
 "widget_class": "w3-modal",
@@ -27441,6 +27519,59 @@ false
 "show": true,
 "show_error": "",
 "target": "",
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "aboutdeletefolder",
+"brief": "Text about deleting the folder",
+"fields": {
+"para_text": "This option deletes the folder and its contents.",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "holds delete button",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
+"name": "deletefolder",
+"brief": "Requests confirmation to delete",
+"fields": {
+"button_text": "Recursive Delete",
+"button_wait_text": "Please wait...",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "delete_folder",
+"link_ident": "no_javascript",
+"local_storage": "",
+"session_storage": "",
+"show": true,
+"show_error": "",
 "widget_class": "w3-button w3-block w3-theme-d4",
 "widget_style": ""
 }

@@ -48,7 +48,7 @@ def retrieve_add_page(skicall):
                                            'SVG Image page',
                                            'CSS page',
                                            'JSON page',
-                                           'File Link page',
+                                           'File page',
                                            'Copy an existing page']
 
     # st1: new page name
@@ -461,7 +461,7 @@ def submit_new_file(skicall):
     call_data['fchange'] = fchange
     call_data['page_number'] = pagenumber
     call_data['pchange'] = pchange
-    call_data['status'] = 'File link page %s added' % (new_name,)
+    call_data['status'] = 'File page %s added' % (new_name,)
 
 
 def retrieve_new_file(skicall):
@@ -475,7 +475,7 @@ def retrieve_new_file(skicall):
 
     parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add File Link page to : %s" % (parent_url,)
+    page_data[("adminhead","page_head","large_text")] = "Add FilePage to : %s" % (parent_url,)
 
     # information paragraphs
     page_data['page_name_text:para_text'] = "New page name : " + new_name
