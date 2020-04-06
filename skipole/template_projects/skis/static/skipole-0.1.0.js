@@ -254,7 +254,16 @@ SKIPOLE.setfields = function(result) {
                     }
                 }
             // now call widget method to set any other values
-            thiswidget.setvalues(fieldlist, result);
+            try {
+                thiswidget.setvalues(fieldlist, result);
+                }
+            catch(err) {
+                     if ("CatchToHTML" in result) {
+                         // Calls the URL given by "CatchToHTML"
+                         window.location.href = result["CatchToHTML"] + "?ident=" + SKIPOLE.identdata;
+                         return;
+                         }
+                  }
             }
     };
 // for an input text widgfield, call its validators
