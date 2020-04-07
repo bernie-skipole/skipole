@@ -261,7 +261,9 @@ SKIPOLE.setfields = function(result) {
                      if ("CatchToHTML" in result) {
                          // Calls the URL given by "CatchToHTML"
                          window.location.href = result["CatchToHTML"] + "?ident=" + SKIPOLE.identdata;
-                         return;
+                         }
+                     else {
+                         alert("A javascript error has occurred:" + err.message);
                          }
                   }
             }
