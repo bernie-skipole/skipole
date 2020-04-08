@@ -342,3 +342,74 @@ class Redirector(Widget):
 </div>
 """
 
+
+class ProgressBar1(Widget):
+    """A div containing a progress bar"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'label':FieldArg("text", "Progress:"),
+                        'label_class':FieldArg("cssclass", ''),
+                        'label_style':FieldArg("cssstyle", ''),
+                        'text':FieldArg("text", "0%", jsonset=True),
+                        'value':FieldArg("text", "0", jsonset=True),
+                        'max':FieldArg("text", "100"),
+                        'progress_class':FieldArg("cssclass", ''),
+                        'progress_style':FieldArg("cssstyle", ''),
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        text shown in place of the bar if the client browser does not support the progress tag
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+
+        self[0] = tag.Part(tag_name="label", hide_if_empty=True)
+        self[1] = tag.Part(tag_name='progress')
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the widget"
+        if self.get_field_value('label_class'):
+            self[0].update_attribs({"class": self.get_field_value('label_class')})
+        if self.get_field_value('label_style'):
+            self[0].update_attribs({"style": self.get_field_value('label_style')})
+        if self.get_field_value("label"):
+            self[0][0] = self.get_field_value("label")
+        # set an id in the progress tag for the 'label for' tag
+        self[1].insert_id()
+        self[0].update_attribs({'for':self[1].get_id()})
+        if self.get_field_value('progress_class'):
+            self[1].update_attribs({"class": self.get_field_value('progress_class')})
+        if self.get_field_value('progress_style'):
+            self[1].update_attribs({"style": self.get_field_value('progress_style')})
+        if self.get_field_value("text"):
+            self[1][0] = self.get_field_value("text")
+        if self.get_field_value('max'):
+            self[1].update_attribs({"max": self.get_field_value('max')})
+        if self.get_field_value('value'):
+            self[1].update_attribs({"value": self.get_field_value('value')})
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets progress bar id into jscript"""
+        return self._make_fieldvalues(progressident = self[1].get_id())
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id and class widget_class -->
+ <label> <!-- with class label_class and style label_style -->
+         <!-- with contents label -->
+ </label>
+ <progress> <!-- with attributes value and max -->
+            <!-- with contents text -->
+ </progress> 
+</div>
+"""
+
+
+
+
+
+

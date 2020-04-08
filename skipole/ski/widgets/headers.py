@@ -446,7 +446,9 @@ class HeaderText1(Widget):
                         'show_error':FieldArg("text", default="", valdt=False, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'h_style':FieldArg("cssstyle", ""),
-                        'p_style':FieldArg("cssstyle", "")
+                        'p_style':FieldArg("cssstyle", ""),
+                        'h_class':FieldArg("cssclass", ""),
+                        'p_class':FieldArg("cssclass", "")
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -456,6 +458,8 @@ class HeaderText1(Widget):
         error_class: The class applied to the paragraph containing the error message on error.
         h_style: CSS style applied to the h tag
         p_style: CSS style applied to the p tag
+        h_class: CSS class applied to the h tag
+        p_class: CSS class applied to the p tag
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name="h1")
@@ -469,6 +473,10 @@ class HeaderText1(Widget):
         "Build the header"
         self[0].text=self.get_field_value("large_text")
         self[1].text=self.get_field_value("small_text")
+        if self.get_field_value("h_class"):
+            self[0].update_attribs({"class":self.get_field_value("h_class")})
+        if self.get_field_value("p_class"):
+            self[1].update_attribs({"class":self.get_field_value("p_class")})
         if self.get_field_value("h_style"):
             self[0].update_attribs({"style":self.get_field_value("h_style")})
         if self.get_field_value("p_style"):
@@ -504,7 +512,9 @@ class HeaderText2(Widget):
                         'show_error':FieldArg("text", default="", valdt=False, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'h_style':FieldArg("cssstyle", ""),
-                        'p_style':FieldArg("cssstyle", "")
+                        'p_style':FieldArg("cssstyle", ""),
+                        'h_class':FieldArg("cssclass", ""),
+                        'p_class':FieldArg("cssclass", "")
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -514,6 +524,8 @@ class HeaderText2(Widget):
         error_class: The class applied to the paragraph containing the error message on error.
         h_style: CSS style applied to the h tag
         p_style: CSS style applied to the p tag
+        h_class: CSS class applied to the h tag
+        p_class: CSS class applied to the p tag
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name="h2")
@@ -528,6 +540,10 @@ class HeaderText2(Widget):
         "Build the header"
         self[0].text=self.get_field_value("large_text")
         self[1].text=self.get_field_value("small_text")
+        if self.get_field_value("h_class"):
+            self[0].update_attribs({"class":self.get_field_value("h_class")})
+        if self.get_field_value("p_class"):
+            self[1].update_attribs({"class":self.get_field_value("p_class")})
         if self.get_field_value("h_style"):
             self[0].update_attribs({"style":self.get_field_value("h_style")})
         if self.get_field_value("p_style"):
@@ -563,7 +579,9 @@ class HeaderText3(Widget):
                         'show_error':FieldArg("text", default="", valdt=False, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'h_style':FieldArg("cssstyle", ""),
-                        'p_style':FieldArg("cssstyle", "")
+                        'p_style':FieldArg("cssstyle", ""),
+                        'h_class':FieldArg("cssclass", ""),
+                        'p_class':FieldArg("cssclass", "")
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -573,6 +591,8 @@ class HeaderText3(Widget):
         error_class: The class applied to the paragraph containing the error message on error.
         h_style: CSS style applied to the h tag
         p_style: CSS style applied to the p tag
+        h_class: CSS class applied to the h tag
+        p_class: CSS class applied to the p tag
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name="h3")
@@ -587,6 +607,10 @@ class HeaderText3(Widget):
         "Build the header"
         self[0].text=self.get_field_value("large_text")
         self[1].text=self.get_field_value("small_text")
+        if self.get_field_value("h_class"):
+            self[0].update_attribs({"class":self.get_field_value("h_class")})
+        if self.get_field_value("p_class"):
+            self[1].update_attribs({"class":self.get_field_value("p_class")})
         if self.get_field_value("h_style"):
             self[0].update_attribs({"style":self.get_field_value("h_style")})
         if self.get_field_value("p_style"):
@@ -622,7 +646,9 @@ class HeaderText4(Widget):
                         'show_error':FieldArg("text", default="", valdt=False, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'h_style':FieldArg("cssstyle", ""),
-                        'p_style':FieldArg("cssstyle", "")
+                        'p_style':FieldArg("cssstyle", ""),
+                        'h_class':FieldArg("cssclass", ""),
+                        'p_class':FieldArg("cssclass", "")
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -632,6 +658,8 @@ class HeaderText4(Widget):
         error_class: The class applied to the paragraph containing the error message on error.
         h_style: CSS style applied to the h tag
         p_style: CSS style applied to the p tag
+        h_class: CSS class applied to the h tag
+        p_class: CSS class applied to the p tag
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name="h4")
@@ -646,6 +674,10 @@ class HeaderText4(Widget):
         "Build the header"
         self[0].text=self.get_field_value("large_text")
         self[1].text=self.get_field_value("small_text")
+        if self.get_field_value("h_class"):
+            self[0].update_attribs({"class":self.get_field_value("h_class")})
+        if self.get_field_value("p_class"):
+            self[1].update_attribs({"class":self.get_field_value("p_class")})
         if self.get_field_value("h_style"):
             self[0].update_attribs({"style":self.get_field_value("h_style")})
         if self.get_field_value("p_style"):
@@ -681,7 +713,9 @@ class HeaderText5(Widget):
                         'show_error':FieldArg("text", default="", valdt=False, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'h_style':FieldArg("cssstyle", ""),
-                        'p_style':FieldArg("cssstyle", "")
+                        'p_style':FieldArg("cssstyle", ""),
+                        'h_class':FieldArg("cssclass", ""),
+                        'p_class':FieldArg("cssclass", "")
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -691,6 +725,8 @@ class HeaderText5(Widget):
         error_class: The class applied to the paragraph containing the error message on error.
         h_style: CSS style applied to the h tag
         p_style: CSS style applied to the p tag
+        h_class: CSS class applied to the h tag
+        p_class: CSS class applied to the p tag
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name="h5")
@@ -705,6 +741,10 @@ class HeaderText5(Widget):
         "Build the header"
         self[0].text=self.get_field_value("large_text")
         self[1].text=self.get_field_value("small_text")
+        if self.get_field_value("h_class"):
+            self[0].update_attribs({"class":self.get_field_value("h_class")})
+        if self.get_field_value("p_class"):
+            self[1].update_attribs({"class":self.get_field_value("p_class")})
         if self.get_field_value("h_style"):
             self[0].update_attribs({"style":self.get_field_value("h_style")})
         if self.get_field_value("p_style"):
@@ -740,7 +780,9 @@ class HeaderText6(Widget):
                         'show_error':FieldArg("text", default="", valdt=False, jsonset=True),
                         'error_class':FieldArg("cssclass", ""),
                         'h_style':FieldArg("cssstyle", ""),
-                        'p_style':FieldArg("cssstyle", "")
+                        'p_style':FieldArg("cssstyle", ""),
+                        'h_class':FieldArg("cssclass", ""),
+                        'p_class':FieldArg("cssclass", "")
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -750,6 +792,8 @@ class HeaderText6(Widget):
         error_class: The class applied to the paragraph containing the error message on error.
         h_style: CSS style applied to the h tag
         p_style: CSS style applied to the p tag
+        h_class: CSS class applied to the h tag
+        p_class: CSS class applied to the p tag
         """
         Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
         self[0] = tag.Part(tag_name="h6")
@@ -764,6 +808,10 @@ class HeaderText6(Widget):
         "Build the header"
         self[0].text=self.get_field_value("large_text")
         self[1].text=self.get_field_value("small_text")
+        if self.get_field_value("h_class"):
+            self[0].update_attribs({"class":self.get_field_value("h_class")})
+        if self.get_field_value("p_class"):
+            self[1].update_attribs({"class":self.get_field_value("p_class")})
         if self.get_field_value("h_style"):
             self[0].update_attribs({"style":self.get_field_value("h_style")})
         if self.get_field_value("p_style"):
@@ -772,8 +820,6 @@ class HeaderText6(Widget):
             self[2].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
             self[2].del_one_attrib("style")
-
-
 
     @classmethod
     def description(cls):

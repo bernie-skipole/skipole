@@ -104,6 +104,28 @@ SKIPOLE.info.SkipoleVersion.prototype = Object.create(SKIPOLE.BaseWidget.prototy
 SKIPOLE.info.SkipoleVersion.prototype.constructor = SKIPOLE.info.SkipoleVersion;
 
 
+SKIPOLE.info.ProgressBar1 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.info.ProgressBar1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.info.ProgressBar1.prototype.constructor = SKIPOLE.info.ProgressBar1;
+SKIPOLE.info.ProgressBar1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var progress = $("#" + this.fieldvalues["progressident"]);
+    var valuetext = this.fieldarg_in_result('text', result, fieldlist);
+    if (valuetext) {
+        progress.text(valuetext);
+        }
+    var value = this.fieldarg_in_result('value', result, fieldlist);
+    if (value) {
+        progress.attr("value", value);
+        }
+    };
+
+
 
 
 
