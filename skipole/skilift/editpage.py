@@ -114,6 +114,23 @@ def page_last_scroll(project, pagenumber, pchange, last_scroll):
     return proj.save_page(page)
 
 
+def catch_to_html(project, pagenumber, pchange, catch_to_html):
+    "Sets catch_to_html in the page"
+    # get a copy of the page, which can be edited
+    # and then saved to the project
+    proj, page = get_proj_page(project, pagenumber, pchange)
+    if page.page_type != "TemplatePage":
+        raise ServerError(message = "Invalid page type")
+    catch_to_html_target = skiboot.make_ident_or_label(catch_to_html, project)
+    if not catch_to_html_target:
+        page.catch_to_html = None
+    else:
+        # Set the page catch_to_html
+        page.catch_to_html = catch_to_html_target
+    # save the altered page, and return the page.change uuid
+    return proj.save_page(page)
+
+
 def get_page_interval(project, pagenumber, pchange):
     """Returns tuple, first element is the refresh interval, or 0 if target does not exist
                       second element being the interval target, or None if not set"""

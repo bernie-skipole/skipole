@@ -52,6 +52,7 @@ SKIPOLE.inallowedlist =  function (item, allowed_values) {
 
 
 SKIPOLE.setfields = function(result) {
+    try {
        // result is the contents of a json page listing widgfields and values
        if ("CatchToHTML" in result) {
            // Set the SKIPOLE.CatchToHTML variable to the given URL
@@ -260,7 +261,18 @@ SKIPOLE.setfields = function(result) {
             // now call widget method to set any other values
             thiswidget.setvalues(fieldlist, result);
             }
+        }
+    catch(err) {
+         if (SKIPOLE.CatchToHTML) {
+             // Calls the URL given by "CatchToHTML"
+             window.location.href = SKIPOLE.CatchToHTML + "?ident=" + SKIPOLE.identdata;
+             }
+         else {
+             alert("A javascript error has occurred:" + err.message);
+             }
+        }
     };
+
 // for an input text widgfield, call its validators
 // this is called by widgets that submit a text input field
 SKIPOLE.validate = function(widgfield_name, widgfield_value) {
