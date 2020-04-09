@@ -350,6 +350,19 @@ def _create_templatepage(page_dict, page, ident, proj_ident):
         # interval_target is label or None
         page_args["interval_target"] = interval_target
 
+
+    # convert page.catch_to_html to ident, label or None
+    catch_to_html = skiboot.make_ident_or_label(page.catch_to_html, proj_ident)
+    if isinstance(catch_to_html, skiboot.Ident):
+        if catch_to_html.proj == proj_ident:
+            page_args["catch_to_html"] = catch_to_html.num
+        else:
+            # ident is another project, put the full ident
+            page_args["catch_to_html"] = catch_to_html.to_comma_str()
+    else:
+        # catch_to_html is label or None
+        page_args["catch_to_html"] = catch_to_html
+
     page_args["lang"] = page.lang
     if page.backcol:
         page_args["backcol"] = page.backcol

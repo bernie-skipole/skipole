@@ -699,6 +699,8 @@ def _create_templatepage(page_name, brief, page_args):
         args["lang"] = page_args["lang"]
     if 'backcol' in page_args:
         args["backcol"] = page_args["backcol"]
+    if 'catch_to_html' in page_args:
+        args["catch_to_html"] = page_args["catch_to_html"]
     if "default_error_widget" in page_args:
         s = page_args["default_error_widget"][0]
         w = page_args["default_error_widget"][1]

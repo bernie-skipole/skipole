@@ -478,7 +478,8 @@ class TemplatePage(TemplatePageAndSVG):
                        default_error_widget=None,
                        lang=None,
                        interval = 0,
-                       interval_target=None):
+                       interval_target=None,
+                       catch_to_html=None):
         """Initiates a Page instance
 
         name: a url friendly page name
@@ -489,7 +490,8 @@ class TemplatePage(TemplatePageAndSVG):
         default_error_widget: widget name to display errors, if no other widget specified in the error call
         lang: language string to place in the html tag
         interval: Time interval in integer seconds for repeated call for JSON update, 0 if not used.
-        interval_target: ident or label (not URL) to call for the JSON update 
+        interval_target: ident or label (not URL) to call for the JSON update
+        catch_to_html: ident or label (not URL) to call when a javascript error is thrown
         """
 
         TemplatePageAndSVG.__init__(self, name=name, brief=brief)
@@ -521,6 +523,7 @@ class TemplatePage(TemplatePageAndSVG):
 
         self.show_backcol = show_backcol
         self.backcol = backcol
+        self.catch_to_html = catch_to_html
 
         # A list of appended script links in head
         self._headlinks = []
@@ -652,6 +655,7 @@ class TemplatePage(TemplatePageAndSVG):
         scriptmiddle = """
 // Widget functions
 $(document).ready(function(){
+ try {
 """
         if self._add_storage:
             scriptmiddle += self._add_storage
@@ -678,8 +682,18 @@ $(document).ready(function(){
       // on unloading, store the x and y position of the window
       sessionStorage.setItem('%s_y', $(window).scrollTop().toString());
       sessionStorage.setItem('%s_x', $(window).scrollLeft().toString());
-    });
-  }
+      });
+    }
+ }
+catch(err) {
+ if (SKIPOLE.CatchToHTML) {
+     // Calls the URL given by "CatchToHTML"
+     window.location.href = SKIPOLE.CatchToHTML + "?ident=" + SKIPOLE.identdata;
+     }
+ else {
+     alert("A javascript error has occurred:" + err.message);
+     }
+ }
 });
 """ % (self.ident, self.ident)
         self._js = scriptmiddle + self._scriptcontents + scriptend
@@ -811,6 +825,9 @@ $(document).ready(function(){
 
     def set_values(self, page_data):
         """Checks for special page template values, then passes on to parent set_values to set the widgets"""
+        if 'CatchToHTML' in page_data:
+            self.catch_to_html = page_data['CatchToHTML']
+            del page_data['CatchToHTML']                      # delete to stop parent object from testing this item is a widgfiels
         if 'last_scroll' in page_data:
             self.last_scroll = bool(page_data['last_scroll'])
             del page_data['last_scroll']
@@ -863,6 +880,11 @@ SKIPOLE.identdata = '%s';
 SKIPOLE.default_error_widget = '%s';
 SKIPOLE.widget_register = {};
 """  % (self.ident.proj, self.ident.num, self.ident_data_string, self.default_error_widget)
+
+        if self.catch_to_html:
+            catchurl = skiboot.get_url(self.catch_to_html, self.proj_ident)
+            if catchurl:
+                page_javascript += "SKIPOLE.CatchToHTML = \'" + quote(catchurl, safe='/:?&=') + "\';\n"
 
         # set a list of section alias names, to include section alias, and multiplied section alias
         section_alias_list = list(self.sections.keys())

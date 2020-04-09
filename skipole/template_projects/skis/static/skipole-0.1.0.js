@@ -53,6 +53,10 @@ SKIPOLE.inallowedlist =  function (item, allowed_values) {
 
 SKIPOLE.setfields = function(result) {
        // result is the contents of a json page listing widgfields and values
+       if ("CatchToHTML" in result) {
+           // Set the SKIPOLE.CatchToHTML variable to the given URL
+           SKIPOLE.CatchToHTML = result["CatchToHTML"];
+           }
        if ("ident_data" in result) {
            // set the value of SKIPOLE.identdata
            var oldidentdata = SKIPOLE.identdata;
@@ -254,18 +258,7 @@ SKIPOLE.setfields = function(result) {
                     }
                 }
             // now call widget method to set any other values
-            try {
-                thiswidget.setvalues(fieldlist, result);
-                }
-            catch(err) {
-                     if ("CatchToHTML" in result) {
-                         // Calls the URL given by "CatchToHTML"
-                         window.location.href = result["CatchToHTML"] + "?ident=" + SKIPOLE.identdata;
-                         }
-                     else {
-                         alert("A javascript error has occurred:" + err.message);
-                         }
-                  }
+            thiswidget.setvalues(fieldlist, result);
             }
     };
 // for an input text widgfield, call its validators
