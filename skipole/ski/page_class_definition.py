@@ -691,7 +691,7 @@ catch(err) {
      window.location.href = SKIPOLE.CatchToHTML + "?ident=" + SKIPOLE.identdata;
      }
  else {
-     alert("A javascript error has occurred:" + err.message);
+     alert(err.message);
      }
  }
 });
@@ -1470,6 +1470,9 @@ class JSON(ParentPage):
         if 'sessionStorage' in page_data:
             self.content["sessionStorage"] = page_data['sessionStorage']
             del page_data['sessionStorage']
+        if 'throw' in page_data:
+            self.content["throw"] = page_data['throw']
+            del page_data['throw']
         if "CatchToHTML" in page_data:
             url = skiboot.get_url(page_data["CatchToHTML"], proj_ident=self.proj_ident)
             if url:

@@ -74,6 +74,10 @@ SKIPOLE.setfields = function(result) {
                $(this).attr('href',$(this).attr('href').replace(old_string,new_string));
                }); 
            }
+       if ("throw" in result) {
+           // create a throw with the given message
+           throw new Error(result["throw"]);
+           }
 
        if ("sessionStorage" in result) {
            // set the session storage data
