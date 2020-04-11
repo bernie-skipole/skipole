@@ -2941,6 +2941,7 @@ false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -3920,6 +3921,7 @@ false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -6556,6 +6558,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -7040,6 +7043,73 @@ false
 "Part",
 {
 "tag_name": "p",
+"brief": "Paragraph about catch to HTML target",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This Template page can be updated by a JSON call. If during such an update, a javascript error is thrown, and if a 'CatchToHTML' target label, or ident is set here - a call will be made and the page replaced. The target should be a Template page, or Responder leading to a Template page.\r\n\r\nThe CatchToHTML target can also be set by skicall.page_data['CatchToHTML'] being set to the label or ident."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.SubmitTextInput1",
+"name": "set_catch_to_html",
+"brief": "Sets the target label or ident for javascript catch to HTML call",
+"fields": {
+"action": "no_javascript",
+"action_json": "3240",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Submit",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "",
+"inputdiv_class": "",
+"label": "Set the catch target ident or label:",
+"label_class": "ski_left_label",
+"label_style": "",
+"maxlength": "",
+"pattern": "",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"target": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"validators": {
+"input_text": [
+{
+"class": "basic.NotEmpty",
+"message": "An error widget must be provided"
+}
+]
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
 "brief": "About JSON interval refresh",
 "show": true,
 "hide_if_empty": false,
@@ -7315,6 +7385,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -7717,6 +7788,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -7992,6 +8064,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -8267,6 +8340,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -8893,6 +8967,29 @@ false
 }
 }
 },
+"set_catch_to_html": {
+"ident": 3240,
+"brief": "Sets CatchToHTML target ident",
+"RespondPage": {
+"class": "StoreData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editpages",
+"editpage",
+"set_catch_to_html"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"set_catch_to_html:input_text": ""
+}
+}
+},
 "set_default_error_widget": {
 "ident": 3250,
 "brief": "Check the default error widget",
@@ -9108,6 +9205,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -9770,6 +9868,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -10530,6 +10629,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -11034,6 +11134,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -11695,6 +11796,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -12246,6 +12348,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -13047,6 +13150,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -13316,6 +13420,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -13588,6 +13693,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -14090,6 +14196,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -14494,6 +14601,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -15179,6 +15287,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -16004,6 +16113,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -17312,6 +17422,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -17672,6 +17783,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -18546,6 +18658,7 @@ false
 "last_scroll": false,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -19253,6 +19366,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -19545,6 +19659,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -19819,6 +19934,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -20677,6 +20793,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -22157,6 +22274,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -22388,6 +22506,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -22759,6 +22878,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -23485,6 +23605,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -23969,6 +24090,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -24675,6 +24797,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -25259,6 +25382,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -25629,6 +25753,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -25971,6 +26096,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -26278,6 +26404,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -26949,6 +27076,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -27898,6 +28026,7 @@ false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -28609,6 +28738,7 @@ false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -30423,6 +30553,7 @@ false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -31215,6 +31346,7 @@ false,
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -31650,6 +31782,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -32150,6 +32283,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -32896,6 +33030,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -33616,6 +33751,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -34247,6 +34383,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -34534,6 +34671,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -36062,6 +36200,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -36485,6 +36624,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -36950,6 +37090,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [
@@ -37885,6 +38026,7 @@ false
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#e5d29f",
 "default_error_widget": [

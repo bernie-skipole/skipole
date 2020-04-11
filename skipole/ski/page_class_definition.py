@@ -655,7 +655,6 @@ class TemplatePage(TemplatePageAndSVG):
         scriptmiddle = """
 // Widget functions
 $(document).ready(function(){
- try {
 """
         if self._add_storage:
             scriptmiddle += self._add_storage
@@ -683,17 +682,7 @@ $(document).ready(function(){
       sessionStorage.setItem('%s_y', $(window).scrollTop().toString());
       sessionStorage.setItem('%s_x', $(window).scrollLeft().toString());
       });
-    }
- }
-catch(err) {
- if (SKIPOLE.CatchToHTML) {
-     // Calls the URL given by "CatchToHTML"
-     window.location.href = SKIPOLE.CatchToHTML + "?ident=" + SKIPOLE.identdata;
-     }
- else {
-     alert(err.message);
-     }
- }
+   }
 });
 """ % (self.ident, self.ident)
         self._js = scriptmiddle + self._scriptcontents + scriptend

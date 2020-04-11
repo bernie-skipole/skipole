@@ -76,6 +76,11 @@ def retrieve_page_edit(skicall):
         page_data[('setbackcolor', 'hide')] = True
     page_data[('setbackcolor', 'input_text')] = pagedict["backcol"]
 
+    # Sets CatchToHTML
+    if pagedict["catch_to_html"] is None:
+        page_data["set_catch_to_html", "input_text"] = ''
+    else:
+        page_data["set_catch_to_html", "input_text"] = str(pagedict["catch_to_html"])
 
     # fills in the JSON refresh checkbox
     if pagedict["interval"] and pagedict["interval_target"]:
@@ -502,6 +507,31 @@ def set_last_scroll(skicall):
     except ServerError as e:
         raise FailPage(message=e.message)
     call_data['status'] = text
+
+
+
+def set_catch_to_html(skicall):
+    """Sets the CatchToHTML target"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+
+    try:
+        if ('set_catch_to_html', 'input_text') not in call_data:
+            catch_to_html = None
+        else:
+            catch_to_html = call_data['set_catch_to_html', 'input_text']
+
+        call_data['pchange'] = editpage.catch_to_html(project, pagenumber, pchange, catch_to_html)
+
+    except ServerError as e:
+        raise FailPage(message=e.message)
+    call_data['status'] = 'CatchToHTML target set'
+
 
 
 def submit_refresh(skicall):

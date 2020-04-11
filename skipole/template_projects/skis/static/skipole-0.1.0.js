@@ -272,7 +272,7 @@ SKIPOLE.setfields = function(result) {
              window.location.href = SKIPOLE.CatchToHTML + "?ident=" + SKIPOLE.identdata;
              }
          else {
-             alert("A javascript error has occurred:" + err.message);
+             alert(err.message);
              }
         }
     };
