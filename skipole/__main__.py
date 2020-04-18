@@ -76,7 +76,7 @@ else:
 
 
 # get the location of the directories to be copied
-template_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'template_projects')
+template_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates')
 
 if not os.path.isdir(template_directory):
     print("Error: Cannot find the template data for the skis and skiadmin projects")
