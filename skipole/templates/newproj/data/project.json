@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "New Project",
 "version": "0.0.1",
-"skipole": "3.6.6",
+"skipole": "3.7.1",
 "specialpages": {
 "favicon": 3002,
 "general_json": 2002,
@@ -116,6 +116,7 @@
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
