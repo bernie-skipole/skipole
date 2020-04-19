@@ -6,7 +6,10 @@
 # not a necessity, just convention.
 
 
-from skipole import WSGIApplication
+from skipole import WSGIApplication, version
+
+# version is the version numbers of skipole
+
 
 PROJECT = 'skis'
 
@@ -32,6 +35,16 @@ def makeapp(projectfiles, **proj_data):
     # when added to the root project using application.add_project
 
     application = WSGIApplication(PROJECT, projectfiles, proj_data, start_call, submit_data, end_call)
+
+    if version != application.version:
+        print("""
+WARNING: Skipole and skis versions do not match, try:
+
+python3 -m skipole %s
+
+To create the correct version of skis
+""" % (projectfiles,))
+
     return application
 
 

@@ -4,11 +4,10 @@ import re, json, os
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w_]')
 
-from skipole.skilift import fromjson, off_piste
+from skipole.skilift import fromjson, off_piste, set_label, versions, lib_list
 from skipole import FailPage, ValidateError, ServerError, GoTo
 
 from .. import utils, css_styles
-
 
 
 def retrieve_operations_data(skicall):
@@ -375,5 +374,48 @@ def js_down(skicall):
             raise FailPage(message = "Unable to save defaults.json")
 
 
+def set_javascript_to_skis(skicall):
+    "Sets javascript labels to skis"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    editedprojname = call_data['editedprojname']
+    labels = lib_list()
+    try:
+        for label in labels:
+            # label is a widget or validator javascript label, of the format "ski_basic" etc
+            # which needs to be given a value of the format "skis,ski_basic"
+            set_label(editedprojname, label, "skis," + label)
+    except ServerError as e:
+        raise FailPage(message = e.message)
+    call_data['status'] = 'Javascript special file labels now point to the skis sub project'
+
+
+def set_javascript_to_cdn(skicall):
+    "Sets javascript labels to cdn"
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    editedprojname = call_data['editedprojname']
+
+    skipole_version, project_version = versions(editedprojname)
+    starthttp =  "https://cdn.jsdelivr.net/gh/bernie-skipole/skipole@" + skipole_version + "/skipole/templates/skis/static/js/"
+    labels = lib_list()
+    try:
+        for label in labels:
+            if label == "jquery_core":
+                # do not alter this value
+                continue
+            if label == "skipole_js":
+                set_label(editedprojname, "skipole_js", starthttp +"skipole.min.js")
+                continue
+            # so label is a widget or validator javascript label, of the format "ski_basic" etc
+            # which needs to be given a value of the format "basic.min.js"
+            set_label(editedprojname, label, label[4:]+".min.js")
+    except ServerError as e:
+        raise FailPage(message = e.message)
+    call_data['status'] = 'Javascript special file labels now point to cdn.jsdelivr.net'
 
 

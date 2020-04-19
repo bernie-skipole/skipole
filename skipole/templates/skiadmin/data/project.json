@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.7.1",
-"skipole": "3.7.1",
+"version": "3.7.2",
+"skipole": "3.7.2",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -4250,15 +4250,31 @@ false,
 }
 ],
 [
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
+"show": true
+}
+],
+[
 "Part",
 {
-"tag_name": "h3",
-"brief": "widget style defaults",
+"tag_name": "div",
+"brief": "widget default classes",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_top_bot_marg_10px"
+"class": "w3-section"
 },
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "widget class defaults",
+"show": true,
+"hide_if_empty": false,
 "parts": [
 [
 "Text",
@@ -4322,6 +4338,9 @@ false,
 "widget_class": "w3-button w3-block w3-theme-d4",
 "widget_style": ""
 }
+}
+]
+]
 }
 ]
 ]
@@ -4444,6 +4463,108 @@ false,
 {
 "tag_name": "hr",
 "brief": "Horizontal line",
+"show": true
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Body class",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "Body class heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Set CSS class in <body> tags."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "text about bodyclass",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "index_bodyclass",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.SubmitTextInput1",
+"name": "bodyclass",
+"brief": "Set the body css class",
+"fields": {
+"action": "setbodyclass",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Submit",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "",
+"inputdiv_class": "w3-section",
+"label": "Set body CSS class:",
+"label_class": "ski_left_label",
+"label_style": "",
+"maxlength": "",
+"pattern": "",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"target": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
 "show": true
 }
 ],
@@ -4751,7 +4872,7 @@ false
 "Part",
 {
 "tag_name": "div",
-"brief": "Body class",
+"brief": "javascript system special files",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -4762,13 +4883,13 @@ false
 "Part",
 {
 "tag_name": "h3",
-"brief": "Body class heading",
+"brief": "Javascript system special files:",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"Set CSS class in <body> tags."
+"System special javascript files:"
 ]
 ]
 }
@@ -4777,14 +4898,14 @@ false
 "Part",
 {
 "tag_name": "p",
-"brief": "text about bodyclass",
+"brief": "About system special files:",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "TextBlock",
 {
-"textref": "index_bodyclass",
+"textref": "system_javascript_files",
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
@@ -4795,47 +4916,67 @@ false
 }
 ],
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "button width",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button"
+},
+"parts": [
+[
 "Widget",
 {
-"class": "inputtext.SubmitTextInput1",
-"name": "bodyclass",
-"brief": "Set the body css class",
+"class": "links.ButtonLink1",
+"name": "linktocdn",
+"brief": "Sets special file labels to CDN",
 "fields": {
-"action": "setbodyclass",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
+"button_text": "Link special files to CDN",
 "clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
 "hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "w3-section",
-"label": "Set body CSS class:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
+"link_ident": "80035",
 "show": true,
 "show_error": "",
-"size": "",
 "target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
+"widget_class": "w3-button w3-block w3-theme-d4 w3-section",
 "widget_style": ""
 }
+}
+],
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "linktoskis",
+"brief": "Sets special file labels to skis",
+"fields": {
+"button_text": "Link special files to skis",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
+"hide": false,
+"link_ident": "80030",
+"show": true,
+"show_error": "",
+"target": "",
+"widget_class": "w3-button w3-block w3-theme-d4 w3-section",
+"widget_style": ""
+}
+}
+]
+]
 }
 ]
 ]
@@ -5147,6 +5288,48 @@ false
 "original_fields": {
 "htmlbackcol:input_text": ""
 }
+}
+},
+"set_javascript_to_cdn": {
+"ident": 80035,
+"brief": "Sets special javascript labels to cdn",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"fail_ident": "admin_home",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"operations",
+"set_javascript_to_cdn"
+],
+"target_ident": 80001
+},
+"original_fields": {}
+}
+},
+"set_javascript_to_skis": {
+"ident": 80030,
+"brief": "Sets special javascript labels to skis",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+85001
+],
+"fail_ident": "admin_home",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"operations",
+"set_javascript_to_skis"
+],
+"target_ident": 80001
+},
+"original_fields": {}
 }
 },
 "setbodyclass": {
@@ -30852,7 +31035,7 @@ false,
 "parts": [
 [
 "Text",
-"System special files:"
+"System special javascript files:"
 ]
 ]
 }
