@@ -413,7 +413,7 @@ def set_javascript_to_cdn(skicall):
                 continue
             # so label is a widget or validator javascript label, of the format "ski_basic" etc
             # which needs to be given a value of the format "basic.min.js"
-            set_label(editedprojname, label, label[4:]+".min.js")
+            set_label(editedprojname, label, starthttp +label[4:]+".min.js")
     except ServerError as e:
         raise FailPage(message = e.message)
     call_data['status'] = 'Javascript special file labels now point to cdn.jsdelivr.net'
