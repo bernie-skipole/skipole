@@ -352,7 +352,7 @@ class ParentPart(object):
         if label:
             url = skiboot.get_url(label, proj_ident)
             if url:
-                return quote(url, safe='/:?&=')+valstring[end+1:]
+                return quote(url, safe='/:?&=@')+valstring[end+1:]
         return valstring
 
     def has_attrib(self, name):

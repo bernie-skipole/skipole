@@ -113,9 +113,9 @@
 "pages": {
 "jquery-3.4.1.min.js": {
 "ident": 20,
-"brief": "Link to static/jq/jquery-3.4.1.min.js",
+"brief": "Link to static/js/jquery-3.4.1.min.js",
 "FilePage": {
-"filepath": "skis/static/jq/jquery-3.4.1.min.js",
+"filepath": "skis/static/js/jquery-3.4.1.min.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
@@ -1229,7 +1229,7 @@
 "ident": 101,
 "brief": "Link to basic.js",
 "FilePage": {
-"filepath": "skis/static/validators/basic.js",
+"filepath": "skis/static/js/basic.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
@@ -1238,7 +1238,7 @@
 "ident": 102,
 "brief": "Link to paths.js",
 "FilePage": {
-"filepath": "skis/static/validators/paths.js",
+"filepath": "skis/static/js/paths.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
@@ -1254,198 +1254,198 @@
 "pages": {
 "checkbox.js": {
 "ident": 601,
-"brief": "Link to lib/static/widgets/checkbox.js",
+"brief": "Link to lib/static/js/checkbox.js",
 "FilePage": {
-"filepath": "skis/static/widgets/checkbox.js",
+"filepath": "skis/static/js/checkbox.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "confirm.js": {
 "ident": 603,
-"brief": "Link to lib/static/widgets/confirm.js",
+"brief": "Link to lib/static/js/confirm.js",
 "FilePage": {
-"filepath": "skis/static/widgets/confirm.js",
+"filepath": "skis/static/js/confirm.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "debug_tools.js": {
 "ident": 614,
-"brief": "Link to lib/static/widgets/debug_tools.js",
+"brief": "Link to lib/static/js/debug_tools.js",
 "FilePage": {
-"filepath": "skis/static/widgets/debug_tools.js",
+"filepath": "skis/static/js/debug_tools.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "dropdown.js": {
 "ident": 607,
-"brief": "Link to lib/static/widgets/dropdown.js",
+"brief": "Link to lib/static/js/dropdown.js",
 "FilePage": {
-"filepath": "skis/static/widgets/dropdown.js",
+"filepath": "skis/static/js/dropdown.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "error_messages.js": {
 "ident": 611,
-"brief": "Link to lib/static/widgets/error_messages.js",
+"brief": "Link to lib/static/js/error_messages.js",
 "FilePage": {
-"filepath": "skis/static/widgets/error_messages.js",
+"filepath": "skis/static/js/error_messages.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "footers.js": {
 "ident": 616,
-"brief": "Link to lib/static/widgets/footers.js",
+"brief": "Link to lib/static/js/footers.js",
 "FilePage": {
-"filepath": "skis/static/widgets/footers.js",
+"filepath": "skis/static/js/footers.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "headers.js": {
 "ident": 629,
-"brief": "Link to lib/static/widgets/headers.js",
+"brief": "Link to lib/static/js/headers.js",
 "FilePage": {
-"filepath": "skis/static/widgets/headers.js",
+"filepath": "skis/static/js/headers.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "info.js": {
 "ident": 618,
-"brief": "Link to lib/static/widgets/info.js",
+"brief": "Link to lib/static/js/info.js",
 "FilePage": {
-"filepath": "skis/static/widgets/info.js",
+"filepath": "skis/static/js/info.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "inputforms.js": {
 "ident": 622,
-"brief": "Link to lib/static/widgets/inputforms.js",
+"brief": "Link to lib/static/js/inputforms.js",
 "FilePage": {
-"filepath": "skis/static/widgets/inputforms.js",
+"filepath": "skis/static/js/inputforms.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "inputtables.js": {
 "ident": 621,
-"brief": "Link to lib/static/widgets/inputtables.js",
+"brief": "Link to lib/static/js/inputtables.js",
 "FilePage": {
-"filepath": "skis/static/widgets/inputtables.js",
+"filepath": "skis/static/js/inputtables.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "inputtext.js": {
 "ident": 613,
-"brief": "Link to lib/static/widgets/inputtext.js",
+"brief": "Link to lib/static/js/inputtext.js",
 "FilePage": {
-"filepath": "skis/static/widgets/inputtext.js",
+"filepath": "skis/static/js/inputtext.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "links.js": {
 "ident": 602,
-"brief": "Link to lib/static/widgets/links.js",
+"brief": "Link to lib/static/js/links.js",
 "FilePage": {
-"filepath": "skis/static/widgets/links.js",
+"filepath": "skis/static/js/links.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "lists.js": {
 "ident": 625,
-"brief": "Link to lib/static/widgets/lists.js",
+"brief": "Link to lib/static/js/lists.js",
 "FilePage": {
-"filepath": "skis/static/widgets/lists.js",
+"filepath": "skis/static/js/lists.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "logins.js": {
 "ident": 609,
-"brief": "Link to lib/static/widgets/logins.js",
+"brief": "Link to lib/static/js/logins.js",
 "FilePage": {
-"filepath": "skis/static/widgets/logins.js",
+"filepath": "skis/static/js/logins.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "paras.js": {
 "ident": 623,
-"brief": "Link to lib/static/widgets/paras.js",
+"brief": "Link to lib/static/js/paras.js",
 "FilePage": {
-"filepath": "skis/static/widgets/paras.js",
+"filepath": "skis/static/js/paras.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "radio.js": {
 "ident": 624,
-"brief": "Link to lib/static/widgets/radio.js",
+"brief": "Link to lib/static/js/radio.js",
 "FilePage": {
-"filepath": "skis/static/widgets/radio.js",
+"filepath": "skis/static/js/radio.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "svgbasics.js": {
 "ident": 620,
-"brief": "Link to lib/static/widgets/svgbasics.js",
+"brief": "Link to lib/static/js/svgbasics.js",
 "FilePage": {
-"filepath": "skis/static/widgets/svgbasics.js",
+"filepath": "skis/static/js/svgbasics.js",
 "enable_cache": false,
 "mimetype": "application/javascript"
 }
 },
 "svggraphs.js": {
 "ident": 626,
-"brief": "Link to lib/static/widgets/svggraphs.js",
+"brief": "Link to lib/static/js/svggraphs.js",
 "FilePage": {
-"filepath": "skis/static/widgets/svggraphs.js",
+"filepath": "skis/static/js/svggraphs.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "svgmeters.js": {
 "ident": 606,
-"brief": "Link to lib/static/widgets/svgmeters.js",
+"brief": "Link to lib/static/js/svgmeters.js",
 "FilePage": {
-"filepath": "skis/static/widgets/svgmeters.js",
+"filepath": "skis/static/js/svgmeters.js",
 "enable_cache": false,
 "mimetype": "application/javascript"
 }
 },
 "tables.js": {
 "ident": 604,
-"brief": "Link to lib/static/widgets/tables.js",
+"brief": "Link to lib/static/js/tables.js",
 "FilePage": {
-"filepath": "skis/static/widgets/tables.js",
+"filepath": "skis/static/js/tables.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "textarea.js": {
 "ident": 605,
-"brief": "Link to lib/static/widgets/textarea.js",
+"brief": "Link to lib/static/js/textarea.js",
 "FilePage": {
-"filepath": "skis/static/widgets/textarea.js",
+"filepath": "skis/static/js/textarea.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
 },
 "upload.js": {
 "ident": 608,
-"brief": "Link to lib/static/widgets/upload.js",
+"brief": "Link to lib/static/js/upload.js",
 "FilePage": {
-"filepath": "skis/static/widgets/upload.js",
+"filepath": "skis/static/js/upload.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
@@ -1627,9 +1627,9 @@
 },
 "skipole.js": {
 "ident": 10,
-"brief": "Link to static/skipole.js",
+"brief": "Link to static/js/skipole.js",
 "FilePage": {
-"filepath": "skis/static/skipole.js",
+"filepath": "skis/static/js/skipole.js",
 "enable_cache": true,
 "mimetype": "application/javascript"
 }
