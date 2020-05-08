@@ -120,7 +120,7 @@ SKIPOLE.info.ProgressBar1.prototype.setvalues = function (fieldlist, result) {
         progress.text(valuetext);
         }
     var value = this.fieldarg_in_result('value', result, fieldlist);
-    if (value) {
+    if (value || value === 0) {
         progress.attr("value", value);
         }
     };
