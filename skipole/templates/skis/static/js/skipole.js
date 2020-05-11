@@ -58,6 +58,37 @@ SKIPOLE.setfields = function(result) {
            // Set the SKIPOLE.CatchToHTML variable to the given URL
            SKIPOLE.CatchToHTML = result["CatchToHTML"];
            }
+       if ("throw" in result) {
+           // create a throw with the given message
+           throw new Error(result["throw"]);
+           }
+       if ("JSONtoHTML" in result) {
+           // Calls the URL given by "JSONtoHTML"
+           window.location.href = result["JSONtoHTML"] + "?ident=" + SKIPOLE.identdata;
+           return;
+           }
+       if ("IntervalTarget" in result) {
+           // Set the SKIPOLE.IntervalTarget variable to the given URL
+           if (SKIPOLE.interval_id) {
+               clearInterval(SKIPOLE.interval_id);
+               SKIPOLE.interval_id=null;
+               }
+           SKIPOLE.IntervalTarget = result["IntervalTarget"];
+           if(SKIPOLE.interval && SKIPOLE.IntervalTarget) {
+              SKIPOLE.interval_id = setInterval(SKIPOLE.refreshjson, SKIPOLE.interval*1000, SKIPOLE.IntervalTarget);
+              }
+           }
+       if ("interval" in result) {
+           // Set the SKIPOLE.interval variable
+           if (SKIPOLE.interval_id) {
+               clearInterval(SKIPOLE.interval_id);
+               SKIPOLE.interval_id=null;
+               }
+           SKIPOLE.interval = result["interval"];
+           if(SKIPOLE.interval && SKIPOLE.IntervalTarget) {
+              SKIPOLE.interval_id = setInterval(SKIPOLE.refreshjson, SKIPOLE.interval*1000, SKIPOLE.IntervalTarget);
+              }
+           }
        if ("ident_data" in result) {
            // set the value of SKIPOLE.identdata
            var oldidentdata = SKIPOLE.identdata;
@@ -74,11 +105,6 @@ SKIPOLE.setfields = function(result) {
                $(this).attr('href',$(this).attr('href').replace(old_string,new_string));
                }); 
            }
-       if ("throw" in result) {
-           // create a throw with the given message
-           throw new Error(result["throw"]);
-           }
-
        if ("sessionStorage" in result) {
            // set the session storage data
             if (typeof(Storage) !== "undefined") {
@@ -96,7 +122,6 @@ SKIPOLE.setfields = function(result) {
                     }
                 }
            }
-
        if ("localStorage" in result) {
            // set the local storage data
             if (typeof(Storage) !== "undefined") {
@@ -113,12 +138,6 @@ SKIPOLE.setfields = function(result) {
                         }
                     }
                 }
-           }
-
-       if ("JSONtoHTML" in result) {
-           // Calls the URL given by "JSONtoHTML"
-           window.location.href = result["JSONtoHTML"] + "?ident=" + SKIPOLE.identdata;
-           return;
            }
        if ("environ" in result) {
            // displays the environ in any debug_tools.ShowEnviron widget
@@ -158,50 +177,37 @@ SKIPOLE.setfields = function(result) {
                result[SKIPOLE.default_error_widget + ":show_error"] = result["show_error"];
                }
            }
+       if ("backcol" in result) {
+         if (result["backcol"]) {
+             $("html").attr("style", "background-color: "+result["backcol"]);
+             }
+         else {
+             $("html").removeAttr("style");
+             }
+         }
+       if ("lang" in result) {
+         if (result["lang"]) {
+             $("html").attr("lang", result["lang"]);
+             }
+         else {
+             $("html").removeAttr("lang");
+             }
+         }
+       if ("body_class" in result) {
+         if (result["body_class"]) {
+             $("body").attr("class", result["body_class"]);
+             }
+         else {
+             $("body").removeAttr("class");
+             }
+         }
        var widg_fields = {};
        // widg_fields will be a dictionary of widget id: list of json set fields
        for (widgfield in result) {
-           // special page parameters
-           if (widgfield == "show_error") {
-               // already dealt with
-               continue;
-               }
-           if (widgfield == "ident_data") {
-               // already dealt with
-               continue;
-               }
-           if (widgfield == "ident_list") {
-               // already dealt with
-               continue;
-               }
-           if (widgfield == "backcol") {
-             if (result["backcol"]) {
-                 $("html").attr("style", "background-color: "+result["backcol"]);
-                 }
-             else {
-                 $("html").removeAttr("style");
-                 }
-             continue;
-             }
-           if (widgfield == "lang") {
-             if (result["lang"]) {
-                 $("html").attr("lang", result["lang"]);
-                 }
-             else {
-                 $("html").removeAttr("lang");
-                 }
-             continue;
-             }
-           if (widgfield == "body_class") {
-             if (result["body_class"]) {
-                 $("body").attr("class", result["body_class"]);
-                 }
-             else {
-                 $("body").removeAttr("class");
-                 }
-             continue;
-             }
            // widgfield parameters
+           if (!widgfield.includes(":")) {
+               continue;
+               }
            var splitwidgfield = widgfield.split(":");
            var widg_id = splitwidgfield[0];
 
