@@ -658,22 +658,20 @@ $(document).ready(function(){
 """
         if self._add_storage:
             scriptmiddle += self._add_storage
-        scriptend = self._add_jscript
+
+        # and create the script end
+        scriptend = self._add_jscript + """
+  if(SKIPOLE.interval && SKIPOLE.IntervalTarget) {
+    SKIPOLE.interval_id = setInterval(SKIPOLE.refreshjson, SKIPOLE.interval*1000, SKIPOLE.IntervalTarget);
+    }
+"""
+        # SKIPOLE.interval_id is needed so clearInterval(SKIPOLE.interval_id) can be called
+        # if the interval changes
         if self.last_scroll:
             # restore to last store position
             scriptend += """
   SKIPOLE.restorepagepos();
 """
-        # and if a regular refresh is required
-        if self.interval:
-            interval = self.interval * 1000
-            intervalurl = ''
-            intervalurl = skiboot.get_url(self.interval_target, self.proj_ident)
-            if intervalurl:
-                intervalurl = quote(intervalurl, safe='/:?&=')
-                scriptend += """
-  setInterval( SKIPOLE.refreshjson, %s, "%s");
-""" % (interval, intervalurl)
         # and set an event to store window position on unload
         scriptend += """
   if(typeof(Storage) !== "undefined") {
@@ -817,6 +815,19 @@ $(document).ready(function(){
         if 'CatchToHTML' in page_data:
             self.catch_to_html = page_data['CatchToHTML']
             del page_data['CatchToHTML']                      # delete to stop parent object from testing this item is a widgfiels
+        if 'interval' in page_data:
+            interval = 0
+            try:
+                interval = page_data['interval']
+                del page_data['interval']
+                interval = int(interval)
+            except:
+                pass
+            else:
+                self.interval=interval
+        if 'IntervalTarget' in page_data:
+            self.interval_target = page_data['IntervalTarget']
+            del page_data['IntervalTarget']
         if 'last_scroll' in page_data:
             self.last_scroll = bool(page_data['last_scroll'])
             del page_data['last_scroll']
@@ -868,8 +879,12 @@ $(document).ready(function(){
 SKIPOLE.identdata = '%s';
 SKIPOLE.default_error_widget = '%s';
 SKIPOLE.widget_register = {};
-"""  % (self.ident.proj, self.ident.num, self.ident_data_string, self.default_error_widget)
-
+SKIPOLE.interval = %s;
+"""  % (self.ident.proj, self.ident.num, self.ident_data_string, self.default_error_widget, self.interval)
+        if self.interval_target:
+            intervalurl = skiboot.get_url(self.interval_target, self.proj_ident)
+            if intervalurl:
+                page_javascript += "SKIPOLE.IntervalTarget = \'" + quote(intervalurl, safe='/:?&=') + "\';\n"
         if self.catch_to_html:
             catchurl = skiboot.get_url(self.catch_to_html, self.proj_ident)
             if catchurl:
@@ -1462,6 +1477,21 @@ class JSON(ParentPage):
         if 'throw' in page_data:
             self.content["throw"] = page_data['throw']
             del page_data['throw']
+        if "IntervalTarget" in page_data:
+            url = skiboot.get_url(page_data["IntervalTarget"], proj_ident=self.proj_ident)
+            if url:
+                self.content["IntervalTarget"] = url
+            del page_data["IntervalTarget"]
+        if 'interval' in page_data:
+            interval=0
+            try:
+                interval = page_data['interval']
+                del page_data['interval']
+                interval = int(interval)
+            except:
+                pass
+            else:
+                self.content["interval"]=interval
         if "CatchToHTML" in page_data:
             url = skiboot.get_url(page_data["CatchToHTML"], proj_ident=self.proj_ident)
             if url:
