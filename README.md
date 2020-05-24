@@ -4,11 +4,7 @@ skipole is a framework for creating wsgi applications. A web admin interface, to
 
 Skipole requires python 3.2 or later, and can be installed with:
 
-python3 -m pip install skipole
-
-or, if you are installing at a user level:
-
-python3 -m pip install --user skipole
+pip install skipole
  
 ### Starting a new project ###
 
@@ -48,11 +44,7 @@ When you have fully developed your application, and wish to deploy it, you would
 
 To upgrade to the latest version:
 
-python3 -m pip install --upgrade skipole
-
-or
-
-python3 -m pip install --user --upgrade skipole
+pip install --upgrade skipole
 
 Check you have the latest with:
 
