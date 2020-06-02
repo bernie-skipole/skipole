@@ -332,8 +332,13 @@ def insert_upload(skicall):
     # get file contents
     file_contents = call_data["sectioninserts","uploadpart", "action"]
     json_string = file_contents.decode(encoding='utf-8')
-
-    call_data['schange'] = editsection.create_part_in_section(editedprojname, section_name, call_data['schange'], location, json_string)
+    try:
+        call_data['schange'] = editsection.create_part_in_section(editedprojname, section_name, call_data['schange'], location, json_string)
+    except ServerError as e:
+        if e.message:
+            raise FailPage(e.message)
+        else:
+            raise FailPage("An error has occurred in creating the item")
 
     call_data['status'] = 'New block created'
 

@@ -964,13 +964,13 @@ def _show_target(project, page_data, r_info):
 
 def _show_submit_data_failpage(project, page_data, r_info):
     "The responder calls submit data, which, if it raises a FailPage, calls this"
+    page_data['submitdata_failpage','show'] = True
     if r_info.fail_ident:
-        page_data['submitdata_failpage','show'] = True
         failident = r_info.fail_ident
         if isinstance(failident, str):
             failident = skilift.ident_from_label(project, failident)
         if failident is None:
-            page_data['submitdata_failpage','show'] = False
+            page_data['submitdata_failpage', 'responderid', 'text'] = "Ident not recognised"
         elif isinstance(failident, str):
             page_data['submitdata_failpage', 'responderid', 'text'] = failident
         elif isinstance(failident, tuple) and (len(failident) == 2):
@@ -997,7 +997,7 @@ def _show_submit_data_failpage(project, page_data, r_info):
                 else:
                     page_data['submitdata_failpage', 'respondertype', 'text'] = failinfo.item_type
     else:
-        page_data['submitdata_failpage','show'] = False
+        page_data['submitdata_failpage', 'responderid', 'text'] = "Ident not set"
 
 
 def _show_validate_fail(project, page_data, r_info):

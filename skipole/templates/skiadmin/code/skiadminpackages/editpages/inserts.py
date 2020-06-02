@@ -497,8 +497,13 @@ def insert_upload(skicall):
     # get file contents
     file_contents = call_data["pageinserts","uploadpart", "action"]
     json_string = file_contents.decode(encoding='utf-8')
-
-    call_data['pchange'] = editpage.create_part_in_page(editedprojname, pagenumber, call_data['pchange'], location, json_string)
+    try:
+        call_data['pchange'] = editpage.create_part_in_page(editedprojname, pagenumber, call_data['pchange'], location, json_string)
+    except ServerError as e:
+        if e.message:
+            raise FailPage(e.message)
+        else:
+            raise FailPage("An error has occurred in creating the item")
 
     # this is necessary to go back to the right page
     call_data['location_string'] = location_string
