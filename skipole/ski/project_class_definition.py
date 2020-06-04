@@ -30,12 +30,15 @@ from .. import textblocks
 # user functions are not given 
 
 def _start_call(called_ident, skicall):
+    "Default start_call function"
     return called_ident
 
 def _submit_data(skicall):
+    "Default submit_data function"
     return
 
 def _end_call(page_ident, page_type, skicall):
+    "Default end_call function"
     return
 
 
@@ -44,7 +47,7 @@ class SkipoleProject(object):
     """The SkipoleProject - an instance being a callable WSGI application"""
 
     def __init__(self, project, projectfiles, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
-        """Loads the project from JSON files and responds to incoming calls by calling the user functions"""
+        """Loads the project from JSON files and records the user functions"""
         if _AN.search(project):
             raise ServerError(message="Error: Invalid project name, alphanumeric only")
         if '_' in project:
@@ -65,9 +68,10 @@ class SkipoleProject(object):
         else:
             self.end_call = end_call
 
-        # initially, sub projects can be added
+        # initially, assume this is the root projcet, and sub projects can be added
         self.rootproject = True
 
+        # initial values, will be set from the json file
         self.brief = "Project %s" % project
         self.version = "0.0.0"
         # The url of the root folder
@@ -105,12 +109,6 @@ class SkipoleProject(object):
         skiboot.add_to_project_register(self)
 
 
-    def __call__(self, environ, start_response):
-        "Defines this projects callable as the wsgi application"
-        status, headers, data = self.respond(environ)
-        start_response(status, headers)
-        return data
-
     def set_default_language(self, language):
         "Sets the project default language"
         self.textblocks.default_language = language
@@ -120,6 +118,119 @@ class SkipoleProject(object):
         return self.textblocks.default_language
 
     default_language = property(get_default_language, set_default_language)
+
+
+
+
+
+    def __call__(self, environ, start_response):
+        "Defines this projects callable as the wsgi application"
+        # get received cookies, and lang which is a tuple of (preferred language, default language)
+        lang, received_cookies = self.get_cookies(environ)
+        status, headers, data = self.respond(environ, lang, received_cookies)
+        start_response(status, headers)
+        return data
+
+
+    def get_cookies(self, environ):
+        """Gets cookies from environ. and places them in 'received_cookies' dictionary.
+           Checks presence of language in received cookie, or environ and creates a 'lang' tuple
+           consisting of (preferred language, default language)
+           returns lang, received_cookies"""
+        try:
+            cookiemorsals = cookies.SimpleCookie(environ["HTTP_COOKIE"])
+        except Exception:
+            cookiemorsals = None
+        if cookiemorsals:
+            received_cookies = {item:m.value for item,m in cookiemorsals.items()}
+        else:
+            received_cookies = {}
+        if 'language' in received_cookies:
+            language = received_cookies["language"]
+        else:
+            if "HTTP_ACCEPT_LANGUAGE" in environ:
+                language_list = environ["HTTP_ACCEPT_LANGUAGE"].split(',')
+                language = language_list[0]
+            else:
+                language = self.default_language
+        lang = (language, self.default_language)
+        return lang, received_cookies
+
+
+    def respond(self, environ, lang, received_cookies):
+        """After cookies obtained, this is called by __call__, and returns status, headers, data
+           Finds the path called, and passes the path to self.proj_respond()
+           or to subproj.proj_respond() if the path indicates the call is to a sub project.
+           Detects if a ServerError occurs, and if so returns status, headers, data
+           for the system server_error page."""
+        # The tuple s_h_data is the tuple to return, start with it as None
+        s_h_data = None
+        try:
+            if 'PATH_INFO' in environ:
+                path = environ['PATH_INFO'].lower()
+            else:
+                raise ServerError(message="Invalid path", code=9034)
+
+            # the path must start with this root project url
+            if (path.find(self.url) != 0) and (path + "/" != self.url):
+                # path does not start with the root, so send URL NOT FOUND
+                return self._url_not_found(environ, path, lang)
+
+            # This is the root project, check if the call is for a page in any sub project
+            for proj, projurl in self._subproject_paths.items():
+                if (path.find(projurl) == 0) or (path + "/" == projurl):
+                    # this url is within a sub project
+                    subproj = self.subprojects[proj]
+                    s_h_data = subproj.proj_respond(environ, projurl, path, lang, received_cookies)
+                    break
+            else:
+                # the call is for a page in this root project
+                s_h_data = self.proj_respond(environ, self.url, path, lang, received_cookies)
+
+            if s_h_data is None:
+                # No page to return has been found, 
+                return self._url_not_found(environ, path, lang)
+
+            if s_h_data[2] is None:
+                # No page data has been given
+                return self._url_not_found(environ, path, lang)
+
+        except ServerError as e:
+            # ServerError has occurred, return the server error page
+            page = self._system_page("server_error")
+            if (not page) or (page.page_type != "TemplatePage"):
+                # return the default server error page
+                return self.default_server_error_page(e)
+            # import any sections
+            page.import_sections()
+            # show message passed by the exception
+            page.show_error([e.errormessage])
+            # if ServerError code, set it into the widget
+            if e.code:
+                if e.section:
+                    page_data = {(e.section, e.widget, 'code'):str(e.code)}
+                elif e.widget:
+                    page_data = {(e.widget, 'code'):str(e.code)}
+                elif page.default_error_widget.s:
+                    page_data = {(page.default_error_widget.s, page.default_error_widget.w, 'code'):str(e.code)}
+                elif page.default_error_widget.w:
+                    page_data = {(page.default_error_widget.w, 'code'):str(e.code)}
+                else:
+                    page_data = None
+                if page_data:
+                    page.set_values(page_data)
+            # update head and body parts
+            page.update(environ, {}, lang, e.ident_list)
+            status, headers = page.get_status()
+            data = page.data()
+            if not data:
+                return self.default_server_error_page(e)
+            # return page data
+            s_h_data = e.status, headers, data
+
+        return s_h_data
+
+
 
     def clear_cache(self):
         "clear the cache of paths"
@@ -708,94 +819,6 @@ class SkipoleProject(object):
         return '404 Not Found', [('content-type', 'text/html')], [page_content]
 
 
-    def respond(self, environ):
-        "called from the project top script"
-        # get cookies
-        try:
-            cookiemorsals = cookies.SimpleCookie(environ["HTTP_COOKIE"])
-        except Exception:
-            cookiemorsals = None
-        if cookiemorsals:
-            received_cookies = {item:m.value for item,m in cookiemorsals.items()}
-        else:
-            received_cookies = {}
-        if 'language' in received_cookies:
-            language = received_cookies["language"]
-        else:
-            if "HTTP_ACCEPT_LANGUAGE" in environ:
-                language_list = environ["HTTP_ACCEPT_LANGUAGE"].split(',')
-                language = language_list[0]
-            else:
-                language = self.default_language
-        lang = (language, self.default_language)
-        try:
-            # The tuple s_h_data is the tuple to return, start with it as None
-            s_h_data = None
-
-            if 'PATH_INFO' in environ:
-                path = environ['PATH_INFO'].lower()
-            else:
-                raise ServerError(message="Invalid path", code=9034)
-
-            # the path must start with this root project url
-            if (path.find(self.url) != 0) and (path + "/" != self.url):
-                # path does not start with the root, so send URL NOT FOUND
-                return self._url_not_found(environ, path, lang)
-
-            # This is the root project, check if the call is for a page in any sub project
-            for proj, projurl in self._subproject_paths.items():
-                if (path.find(projurl) == 0) or (path + "/" == projurl):
-                    # this url is within a sub project
-                    subproj = self.subprojects[proj]
-                    s_h_data = subproj.proj_respond(environ, projurl, path, lang, received_cookies)
-                    break
-            else:
-                # the call is for a page in this root project
-                s_h_data = self.proj_respond(environ, self.url, path, lang, received_cookies)
-
-            if s_h_data is None:
-                # No page to return has been found, 
-                return self._url_not_found(environ, path, lang)
-
-            if s_h_data[2] is None:
-                # No page data has been given
-                return self._url_not_found(environ, path, lang)
-
-            return s_h_data
-
-        except ServerError as e:
-            page = self._system_page("server_error")
-            if (not page) or (page.page_type != "TemplatePage"):
-                # return the default server error page
-                return self.default_server_error_page(e)
-            # import any sections
-            page.import_sections()
-            # show message passed by the exception
-            page.show_error([e.errormessage])
-            # if ServerError code, set it into the widget
-            if e.code:
-                if e.section:
-                    page_data = {(e.section, e.widget, 'code'):str(e.code)}
-                elif e.widget:
-                    page_data = {(e.widget, 'code'):str(e.code)}
-                elif page.default_error_widget.s:
-                    page_data = {(page.default_error_widget.s, page.default_error_widget.w, 'code'):str(e.code)}
-                elif page.default_error_widget.w:
-                    page_data = {(page.default_error_widget.w, 'code'):str(e.code)}
-                else:
-                    page_data = None
-                if page_data:
-                    page.set_values(page_data)
-            # update head and body parts
-            page.update(environ, {}, lang, e.ident_list)
-            status, headers = page.get_status()
-            data = page.data()
-            if not data:
-                return self.default_server_error_page(e)
-            # return page data
-            return e.status, headers, data
-
-
     def default_server_error_page(self, e):
         "Given a ServerError exception, return a default status,headers,data"
         text_start = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>Error code : %s</p>\n" % (e.code,)
@@ -878,28 +901,18 @@ class SkipoleProject(object):
         ident = self.page_ident_from_path(projurl, path)
 
         # now call the project start_call function
-        try:
-            if caller_page:
-                caller_page_ident = caller_page.ident
-            else:
-                caller_page_ident = None
-            # start_call could return a different page ident, or None
-            pident, skicall = self.proj_start_call(environ,
-                                                   path,
-                                                   ident,
-                                                   caller_page_ident,
-                                                   received_cookies,
-                                                   ident_data,
-                                                   lang)
-        except Exception:
-            message = "Invalid exception in start_call function."
-            if skiboot.get_debug():
-                message += "\n"
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                for item in str_list:
-                    message += item
-            raise ServerError(message, code=9035)
+        if caller_page:
+            caller_page_ident = caller_page.ident
+        else:
+            caller_page_ident = None
+        # start_call could return a different page ident, or None
+        pident, skicall = self.proj_start_call(environ,
+                                               path,
+                                               ident,
+                                               caller_page_ident,
+                                               received_cookies,
+                                               ident_data,
+                                               lang)
 
         if pident is None:
             # URL NOT FOUND and start_call does not divert
@@ -1026,14 +1039,14 @@ class SkipoleProject(object):
         except ServerError as e:
             raise e
         except Exception:
+            message = "Invalid exception in start_call function."
             if skiboot.get_debug():
+                message += "\n"
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                message = ''
                 for item in str_list:
                     message += item
-                raise ServerError(message, code=9040)
-            raise ServerError("Error in start_call", code=9041)
+            raise ServerError(message, code=9040)
         return new_called_ident, skicall
 
 
