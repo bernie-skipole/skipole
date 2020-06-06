@@ -72,6 +72,15 @@ widget is the widget name where the message is to be displayed
 class FailPage(SkiError):
     """Causes the Responder Fail page to be returned."""
 
+    def __init__(self, message = '', section='', widget='', failpage=None):
+        """message can be either a string, or an empty string
+section is the section name (if it is in a section) of the widget where the message is to be displayed
+widget is the widget name where the message is to be displayed
+failpage, if given, is the failure page, otherwise it will be the responders set Fail Page
+"""
+        SkiError.__init__(self, message, section, widget)
+        self.failpage = failpage
+
 
 class ServerError(SkiError):
     """Causes the Server Error page to be returned."""

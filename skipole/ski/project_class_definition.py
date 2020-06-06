@@ -120,6 +120,25 @@ class SkipoleProject(object):
     default_language = property(get_default_language, set_default_language)
 
 
+    # The __call__ method makes the instance callable, as required by a wsgi application
+
+    # This method first gets cookies from method self.get_cookies()
+    # it then gets status, headers and data from method self.respond()
+
+    # self.respond() parses the requested path, and calls self.proj_respond() if the page
+    # requested is part of this project, or it calls subproj.proj_respond() if the page
+    # requested is part of a sub project.
+    # It returns a page not found if the path does not match any page.
+    # It checks for a ServerError, and returns the server error page if one is raised.
+
+    # self.proj_respond(), parses caller ident and called ident and calls
+    # self.proj_start_call() which creates the skicall object and calls the users start_call function
+    # self.proj_respond() checks the ident returned from self.proj_start_call(), it then calls
+    # self.read_form_data() to read any any form data submitted in the raw data, and finally calls
+    # self.status_headers_data() or subproj.status_headers_data() if the page returned from start_call
+    # is a page of a subproject. It checks for a ValidateError, and returns the validate error page if one is raised.
+
+    # self.status_headers_data() calls responders, and finally calls end_call, returning the wanted status, headers and data
 
 
 
@@ -229,6 +248,391 @@ class SkipoleProject(object):
             s_h_data = e.status, headers, data
 
         return s_h_data
+
+
+
+    def proj_respond(self, environ, projurl, path, lang, received_cookies):
+        """Gets any received form data, and parses the ident field if present to find the caller page and ident_data
+           Calls start call, and depending on the returned page, calls the project status_headers_data method"""
+
+        caller_page = None
+        ident_data = None
+
+        rawformdata = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
+
+        # if ident present in the rawformdata it should consist of project_pagenumber_identdata
+        # and so the caller page can be found from the project_pagenumber
+        # identdata may not exist
+
+        try:
+            # get the caller_page, from the ident field of submitted data
+            # which could be None if no ident received
+
+            if rawformdata and ('ident' in rawformdata):
+                if not hasattr(rawformdata['ident'], 'value'):
+                    raise ValidateError(message="Form data not accepted, caller page ident not recognised")
+                else:
+                    # rawformdata has 'ident' with attribute 'value'
+                    # get the caller page ident, and the ident_data received from the 'ident' field
+
+                   # Note: caller_page could belong to another project, so get it using ident.item() method
+                   # which will query the right project
+
+                    ident_parts = rawformdata['ident'].value.split('_', 2)
+                    ident_items = len(ident_parts)
+                    try:
+                        if ident_items == 2:
+                            caller_page = skiboot.Ident(ident_parts[0], int(ident_parts[1])).item()
+                        elif ident_items == 3:
+                            caller_page = skiboot.Ident(ident_parts[0], int(ident_parts[1])).item()
+                            ident_data = ident_parts[2]
+                    except Exception:
+                        caller_page = None
+                    if caller_page is None:
+                       raise ValidateError(message="Form data not accepted, (received ident is not valid)")
+                    if caller_page.page_type != 'TemplatePage':
+                        raise ValidateError(message="Form data not accepted, (caller page ident is not a template page)")
+
+        except ValidateError as e:
+            page = self._system_page("validate_error")
+            if (not page) or (page.page_type != "TemplatePage"):
+                return self.default_validate_error_page(e)
+            # import any sections
+            page.import_sections()
+            # show message passed by the exception
+            page.show_error([e.errormessage])
+            # update head and body parts
+            page.update(environ, {}, lang, e.ident_list)
+            status, headers = page.get_status()
+            data = page.data()
+            if not data:
+                return self.default_validate_error_page(e)
+            # return page data
+            return e.status, headers, data
+
+
+        # so caller_page could be either given, or could be None
+
+        # get the called ident, could be None
+        ident = self.page_ident_from_path(projurl, path)
+
+        if caller_page:
+            caller_page_ident = caller_page.ident
+        else:
+            caller_page_ident = None
+
+        # now call the proj_start_call function which creates a skicall object and
+        # calls the users start_call function, which could return a different page ident, or None
+
+        pident, skicall = self.proj_start_call(environ,
+                                               path,
+                                               ident,
+                                               caller_page_ident,
+                                               received_cookies,
+                                               ident_data,
+                                               lang)
+
+        # parse the page ident returned
+
+        if pident is None:
+            # URL NOT FOUND and start_call does not divert
+            return None
+
+        # pident is the ident of the diverted page or a label or url string
+
+        # get the page from pident
+        if isinstance(pident, str):
+            # either a label, or url
+            if '/' in pident:
+                # get redirector page
+                return self._redirect_to_url(pident, environ, skicall.call_data, skicall.page_data, skicall.lang)
+            else:
+                # no '/' in pident so must be a label
+                pident = skiboot.find_ident_or_url(pident, self._proj_ident)
+                if not pident:
+                    raise ServerError(message="Returned page ident from start_call not recognised", code=9036)
+                if isinstance(pident, str):
+                    # must be a url, get redirector page
+                    return self._redirect_to_url(pident, environ, skicall.call_data, skicall.page_data, skicall.lang)
+
+        # so pident must be an ident
+        if not isinstance(pident, skiboot.Ident):
+            raise ServerError(message="Invalid ident returned from start_call", code=9037)
+
+        # pident is the ident returned from start_call, may be in a different project
+        page = pident.item()
+        if page is None:
+            raise ServerError(message="Invalid ident returned from start_call", code=9038)
+        if page.page_type == 'Folder':
+            page = page.default_page
+            if not page:
+                raise ServerError(message="Invalid ident returned from start_call", code=9039)
+
+        # read any submitted data from rawformdata, and place in form_data
+        try:
+            form_data = {}
+            if rawformdata and (caller_page is not None) and (page.page_type == "RespondPage"):
+                form_data = self.read_form_data(rawformdata, caller_page)
+
+            # so form_data only available if
+                # rawformdata has been submitted
+                # and caller_page is known, so widgets can be extracted
+                # and the destination is a RespondPage
+
+                # otherwise form_data is empty (though rawformdata is retained)
+        
+
+            # dependent on wether the requested page is in this project or a sub project,
+            # call status_headers_data() to find the final page to return to the client
+
+            # ident_list retains list of idents called during a call to ensure no circulating calls
+            ident_list = []
+            # initially no errors, e_list is a list of errors to be shown
+            e_list = []
+
+            if page.ident.proj != self._proj_ident:
+                # page returned from start_call is in another project
+                subproj = self.subprojects.get(page.ident.proj)
+                return subproj.status_headers_data(skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
+                
+            # call status_headers_data to return status, headers and data to the top script
+            return self.status_headers_data(skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
+
+        except ValidateError as e:
+            page = self._system_page("validate_error")
+            if (not page) or (page.page_type != "TemplatePage"):
+                return self.default_validate_error_page(e)
+            # import any sections
+            page.import_sections()
+            # show message passed by the exception
+            page.show_error([e.errormessage])
+            # update head and body parts
+            page.update(environ, skicall.call_data, skicall.lang, e.ident_list)
+            status, headers = page.get_status()
+            data = page.data()
+            if not data:
+                return self.default_validate_error_page(e)
+            # return page data
+            return e.status, headers, page.data()
+
+
+
+    def proj_start_call(self, environ, path, ident, caller_ident, received_cookies, ident_data, lang):
+        """Creates a skicall object and calls the users start_call function
+           ident is the ident of the page being called, could be None if not recognised
+           Returns new called_ident, and the skicall object"""
+
+        if not caller_ident:
+            tuple_caller_ident = ()
+        else:
+            tuple_caller_ident = caller_ident.to_tuple()
+
+        if ident is None:
+            called_ident = None
+        else:
+            called_ident = ident.to_tuple()
+
+        if (ident_data is not None) and _AN.search(ident_data):
+            ident_data = None
+
+        try:
+            # create the SkiCall object
+            skicall = SkiCall(environ = environ,
+                              path = path,
+                              project = self._proj_ident,
+                              rootproject = self.rootproject,
+                              caller_ident = tuple_caller_ident,
+                              received_cookies = received_cookies,
+                              ident_data = ident_data,
+                              lang = lang,
+                              proj_data = self.proj_data)
+
+            # the skicall object is changed in place, with call_data and page_data
+            # being set by the users own start_call function
+            new_called_ident = self.start_call(called_ident, skicall)
+
+            # convert returned tuple to an Ident object
+            if isinstance(new_called_ident, int):
+                new_called_ident = (self._proj_ident, new_called_ident)
+            if isinstance(new_called_ident, tuple):
+                new_called_ident = skiboot.make_ident(new_called_ident, self._proj_ident)
+            # could be a label
+        except ServerError as e:
+            raise e
+        except Exception:
+            message = "Invalid exception in start_call function."
+            if skiboot.get_debug():
+                message += "\n"
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                for item in str_list:
+                    message += item
+            raise ServerError(message, code=9040)
+        return new_called_ident, skicall
+
+
+    def read_form_data(self, rawformdata, caller_page):
+        """Reads raw form data from the environ and returns a dictionary with keys as skiboot.WidgField objects and values as
+           the form values.  Where input fields have indexed names, the skiboot.WidgField object still
+           has i set to empty string, but the value is given as a dictionary with indexes as keys"""
+        # rawformdata is the data obtained from environ
+        # form_data is a dictionary of data returned, without the caller ident
+        # and after a set of checks
+        if not rawformdata:
+            return {}
+        if not caller_page:
+            return {}
+        form_data = {}
+        for field in rawformdata.keys():
+            # get fields and values from the rawformdata and store them in form_data
+            # with keys as skiboot.WidgField objects, and values as field values
+            # in the case of indexed fields, the values are dictionaries
+            if field == 'ident':
+                continue
+            if ':' not in field:
+                # All widgfields have a : in them to separate widget name from field name
+                raise ValidateError(message="Form data not accepted, (invalid field %s)" % (field,))
+            widgfield = skiboot.make_widgfield(field)
+            # get fields and values from the rawformdata and store them in form_data
+            widget = caller_page.copy_widget_from_name(widgfield.s, widgfield.w)
+            if widget is None:
+                raise ValidateError(message="Form data not accepted, (unexpected field %s)" % (field,))
+            if isinstance(rawformdata[field], list):
+                # fieldvalue is a list of items
+                fieldvalue = [ item.value.strip() for item in rawformdata[field] ]
+            else:
+                fieldvalue = rawformdata[field].value.strip()
+            if widget.is_senddict(widgfield.f):
+                # field sends a dictionary, must have an index appended to the name
+                # this part removes the index from the field name, and creates a form value of a dictionary with the index as keys
+                fieldindex = widgfield.i
+                if not fieldindex:
+                    raise ValidateError(message="Form data not accepted, (invalid dictionary field %s)" % (field,))
+                widgfieldnoindex = widgfield._replace(i='')
+                if widgfieldnoindex in form_data:
+                    form_data[widgfieldnoindex][fieldindex] = fieldvalue
+                else:
+                    form_data[widgfieldnoindex] = {fieldindex:fieldvalue}
+            else:
+                if widgfield.i:
+                    raise ValidateError(message="Form data not accepted, (unexpected dictionary field %s)" % (field,))
+                form_data[widgfield] = fieldvalue
+        return form_data
+
+
+
+    def status_headers_data(self, skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data):
+        """calls responders until it can return status, headers, page.data()"""
+
+        try:
+            while page.page_type == 'RespondPage':
+                ident = page.ident
+                if page.responder is None:
+                    raise ServerError(message="Respond page %s does not have any responder set" % (page.url,), code=9042)
+                try: 
+                    page = page.call_responder(skicall, form_data, caller_page, ident_list, rawformdata)
+                    if isinstance(page, str):
+                        # must be a url
+                        skicall.call_data.clear()
+                        skicall.page_data.clear()
+                        # get redirector page
+                        return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, skicall.lang)
+                except PageError as ex:
+                    # a jump to a page has occurred, with a list of errors
+                    page = ex.page
+                    if isinstance(page, str):
+                        # must be a url
+                        skicall.call_data.clear()
+                        skicall.page_data.clear()
+                        # get redirector page
+                        return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, skicall.lang)
+                    if page.ident == ident:
+                        raise ServerError(message="Invalid Failure page: can cause circulating call", code=9045)
+                    if page.ident in ident_list:
+                        raise ServerError(message="Invalid Failure page: can cause circulating call", code=9043)
+                    # show the list of errors on the page
+                    e_list = ex.e_list
+                except GoTo as ex:
+                    if ex.clear_submitted:
+                        form_data.clear()
+                    if ex.clear_page_data:
+                        skicall.page_data.clear()
+                    if ex.clear_errors:
+                        ex.e_list = []
+                    target = skiboot.find_ident_or_url(ex.target, ex.proj_ident)
+                    # target is either an Ident, a URL or None
+                    if not target:
+                        raise ServerError(message="GoTo exception target not recognised", code=9044)
+                    if isinstance(target, skiboot.Ident):
+                        if target == ident:
+                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,), code=9045)
+                        if target in ident_list:
+                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,), code=9046)
+                        page = target.item()
+                        if not page:
+                            raise ServerError(message="GoTo exception page ident %s not recognised" % (target,), code=9047)
+                        if page.page_type == 'Folder':
+                            raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,), code=9048)
+                    else:
+                        # target is a URL
+                        skicall.call_data.clear()
+                        return self._redirect_to_url(target, environ, skicall.call_data, skicall.page_data, skicall.lang)
+                    
+                    # A divert to a fail page may lead to a GoTo exception which can therefore
+                    # have an e_list
+                    # show the list of errors on the page
+                    e_list = ex.e_list
+
+                # it is possible that a jump to a page in another project has been made
+                if page.ident.proj != self._proj_ident:
+                    subproj = skiboot.getproject(proj_ident=page.ident.proj)
+                    return subproj.status_headers_data(skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
+                
+        except (ServerError, ValidateError) as e:
+            e.ident_list = ident_list
+            raise e
+
+        # the page to be returned to the client is now 'page'
+        # and 'e_list' is a list of errors to be shown on it
+
+        # call the user function end_call
+        try:
+            skicall.project = self._proj_ident
+            skicall.proj_data = self.proj_data
+            skicall.rootproject = self.rootproject
+            try:
+                session_string = self.end_call(page.ident.to_tuple(), page.page_type, skicall)
+                if session_string:
+                    # set cookie in target_page
+                    page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root_project().url)
+            except FailPage as e:
+                page.show_error([e.errormessage])
+            finally:
+                if skicall._lang_cookie:
+                    page.language_cookie = skicall._lang_cookie
+        except GoTo as e:
+            raise ServerError("Invalid GoTo exception in end_call", code=9049)
+        except Exception:
+            message = "Invalid exception in end_call function."
+            if skiboot.get_debug():
+                message += "\n"
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                for item in str_list:
+                    message += item
+            raise ServerError(message, code=9050)
+
+        # import any sections
+        page.import_sections(skicall.page_data)
+        if e_list:
+            # show the list of errors on the page
+            page.show_error(e_list)
+        # now set the widget fields
+        if skicall.page_data:
+            page.set_values(skicall.page_data)
+        page.update(environ, skicall.call_data, skicall.lang, ident_list)
+        status, headers = page.get_status()
+        return status, headers, page.data()
 
 
 
@@ -747,53 +1151,6 @@ class SkipoleProject(object):
 
 
 
-    def read_form_data(self, rawformdata, caller_page):
-        """Reads raw form data from the environ and returns a dictionary with keys as skiboot.WidgField objects and values as
-           the form values.  Where input fields have indexed names, the skiboot.WidgField object still
-           has i set to empty string, but the value is given as a dictionary with indexes as keys"""
-        # rawformdata is the data obtained from environ
-        # form_data is a dictionary of data returned, without the caller ident
-        # and after a set of checks
-        if not rawformdata:
-            return {}
-        if not caller_page:
-            return {}
-        form_data = {}
-        for field in rawformdata.keys():
-            # get fields and values from the rawformdata and store them in form_data
-            # with keys as skiboot.WidgField objects, and values as field values
-            # in the case of indexed fields, the values are dictionaries
-            if field == 'ident':
-                continue
-            if ':' not in field:
-                # All widgfields have a : in them to separate widget name from field name
-                raise ValidateError(message="Form data not accepted, (invalid field %s)" % (field,))
-            widgfield = skiboot.make_widgfield(field)
-            # get fields and values from the rawformdata and store them in form_data
-            widget = caller_page.copy_widget_from_name(widgfield.s, widgfield.w)
-            if widget is None:
-                raise ValidateError(message="Form data not accepted, (unexpected field %s)" % (field,))
-            if isinstance(rawformdata[field], list):
-                # fieldvalue is a list of items
-                fieldvalue = [ item.value.strip() for item in rawformdata[field] ]
-            else:
-                fieldvalue = rawformdata[field].value.strip()
-            if widget.is_senddict(widgfield.f):
-                # field sends a dictionary, must have an index appended to the name
-                # this part removes the index from the field name, and creates a form value of a dictionary with the index as keys
-                fieldindex = widgfield.i
-                if not fieldindex:
-                    raise ValidateError(message="Form data not accepted, (invalid dictionary field %s)" % (field,))
-                widgfieldnoindex = widgfield._replace(i='')
-                if widgfieldnoindex in form_data:
-                    form_data[widgfieldnoindex][fieldindex] = fieldvalue
-                else:
-                    form_data[widgfieldnoindex] = {fieldindex:fieldvalue}
-            else:
-                if widgfield.i:
-                    raise ValidateError(message="Form data not accepted, (unexpected dictionary field %s)" % (field,))
-                form_data[widgfield] = fieldvalue
-        return form_data
 
 
     def _url_not_found(self, environ, path, lang):
@@ -838,328 +1195,7 @@ class SkipoleProject(object):
         return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
 
 
-    def proj_respond(self, environ, projurl, path, lang, received_cookies):
-        """projurl is the url of this project
-           path is the url called
-           Calls start call, and depending on the returned page, calls the project status_headers_data method"""
 
-        # ident_data is a data string returned with the page ident, which consists of "project_pagenumber_identdata"
-        # where project,pagenumber is the caller page ident
-
-        caller_page = None
-        ident_data = None
-
-        try:
-            # get the caller_page, from the ident field of submitted data
-            # which could be None if no ident received
-            rawformdata = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
-            if rawformdata and ('ident' in rawformdata):
-                # form data has been submitted - so get the ident field
-                if not hasattr(rawformdata['ident'], 'value'):
-                    raise ValidateError(message="Form data not accepted, caller page ident not recognised")
-                else:
-                    # rawformdata has 'ident' with attribute 'value'
-                    # get the caller page ident, and the ident_data received from the 'ident' field
-
-                   # Note: caller_page could belong to another project, so get it using ident.item() method
-                   # which will query the right project
-
-                    ident_parts = rawformdata['ident'].value.split('_', 2)
-                    ident_items = len(ident_parts)
-                    try:
-                        if ident_items == 2:
-                            caller_page = skiboot.Ident(ident_parts[0], int(ident_parts[1])).item()
-                        elif ident_items == 3:
-                            caller_page = skiboot.Ident(ident_parts[0], int(ident_parts[1])).item()
-                            ident_data = ident_parts[2]
-                    except Exception:
-                        caller_page = None
-                    if caller_page is None:
-                       raise ValidateError(message="Form data not accepted, (received ident is not valid)")
-                    if caller_page.page_type != 'TemplatePage':
-                        raise ValidateError(message="Form data not accepted, (caller page ident is not a template page)")
-        except ValidateError as e:
-            page = self._system_page("validate_error")
-            if (not page) or (page.page_type != "TemplatePage"):
-                return self.default_validate_error_page(e)
-            # import any sections
-            page.import_sections()
-            # show message passed by the exception
-            page.show_error([e.errormessage])
-            # update head and body parts
-            page.update(environ, {}, lang, e.ident_list)
-            status, headers = page.get_status()
-            data = page.data()
-            if not data:
-                return self.default_validate_error_page(e)
-            # return page data
-            return e.status, headers, data
-
-        # so caller_page could be either given, or could be None
-
-        # get the called ident, could be None
-        ident = self.page_ident_from_path(projurl, path)
-
-        # now call the project start_call function
-        if caller_page:
-            caller_page_ident = caller_page.ident
-        else:
-            caller_page_ident = None
-        # start_call could return a different page ident, or None
-        pident, skicall = self.proj_start_call(environ,
-                                               path,
-                                               ident,
-                                               caller_page_ident,
-                                               received_cookies,
-                                               ident_data,
-                                               lang)
-
-        if pident is None:
-            # URL NOT FOUND and start_call does not divert
-            return None
-
-        # pident is the ident of the diverted page or a label or url string
-
-        # get the page from pident
-        if isinstance(pident, str):
-            # either a label, or url
-            if '/' in pident:
-                # get redirector page
-                return self._redirect_to_url(pident, environ, skicall.call_data, skicall.page_data, skicall.lang)
-            else:
-                # no '/' in pident so must be a label
-                pident = skiboot.find_ident_or_url(pident, self._proj_ident)
-                if not pident:
-                    raise ServerError(message="Returned page ident from start_call not recognised", code=9036)
-                if isinstance(pident, str):
-                    # must be a url, get redirector page
-                    return self._redirect_to_url(pident, environ, skicall.call_data, skicall.page_data, skicall.lang)
-
-        # so pident must be an ident
-        if not isinstance(pident, skiboot.Ident):
-            raise ServerError(message="Invalid ident returned from start_call", code=9037)
-
-        # pident is the ident returned from start_call, may be in a different project
-        page = pident.item()
-        if page is None:
-            raise ServerError(message="Invalid ident returned from start_call", code=9038)
-        if page.page_type == 'Folder':
-            page = page.default_page
-            if not page:
-                raise ServerError(message="Invalid ident returned from start_call", code=9039)
-
-        # read any submitted data from rawformdata, and place in form_data
-        try:
-            form_data = {}
-            if rawformdata and (caller_page is not None) and (page.page_type == "RespondPage"):
-                form_data = self.read_form_data(rawformdata, caller_page)
-
-            # so form_data only available if
-                # rawformdata has been submitted
-                # and caller_page is known, so widgets can be extracted
-                # and the destination is a RespondPage
-
-                # otherwise form_data is empty (though rawformdata is retained)
-        
-
-            # dependent on wether the requested page is in this project or a sub project,
-            # call status_headers_data() to find the final page to return to the client
-
-            # ident_list retains list of idents called during a call to ensure no circulating calls
-            ident_list = []
-            # initially no errors, e_list is a list of errors to be shown
-            e_list = []
-
-            if page.ident.proj != self._proj_ident:
-                # page returned from start_call is in another project
-                subproj = self.subprojects.get(page.ident.proj)
-                return subproj.status_headers_data(skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
-                
-            # call status_headers_data to return status, headers and data to the top script
-            return self.status_headers_data(skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
-
-        except ValidateError as e:
-            page = self._system_page("validate_error")
-            if (not page) or (page.page_type != "TemplatePage"):
-                return self.default_validate_error_page(e)
-            # import any sections
-            page.import_sections()
-            # show message passed by the exception
-            page.show_error([e.errormessage])
-            # update head and body parts
-            page.update(environ, skicall.call_data, skicall.lang, e.ident_list)
-            status, headers = page.get_status()
-            data = page.data()
-            if not data:
-                return self.default_validate_error_page(e)
-            # return page data
-            return e.status, headers, page.data()
-
-
-    def proj_start_call(self, environ, path, ident, caller_ident, received_cookies, ident_data, lang):
-        """Calls the appropriate project start_call function
-           ident is the ident of the page being called, could be None if not recognised
-           Returns new called_ident, dictionaries 'call_data', 'page_data' and new tuple lang"""
-
-        if not caller_ident:
-            tuple_caller_ident = ()
-        else:
-            tuple_caller_ident = caller_ident.to_tuple()
-
-        if ident is None:
-            called_ident = None
-        else:
-            called_ident = ident.to_tuple()
-
-        if (ident_data is not None) and _AN.search(ident_data):
-            ident_data = None
-
-        try:
-            # create the SkiCall object
-            skicall = SkiCall(environ = environ,
-                              path = path,
-                              project = self._proj_ident,
-                              rootproject = self.rootproject,
-                              caller_ident = tuple_caller_ident,
-                              received_cookies = received_cookies,
-                              ident_data = ident_data,
-                              lang = lang,
-                              proj_data = self.proj_data)
-
-            # the skicall object is changed in place, with call_data and page_data
-            # being set by the users own start_call function
-            new_called_ident = self.start_call(called_ident, skicall)
-
-            # convert returned tuple to an Ident object
-            if isinstance(new_called_ident, int):
-                new_called_ident = (self._proj_ident, new_called_ident)
-            if isinstance(new_called_ident, tuple):
-                new_called_ident = skiboot.make_ident(new_called_ident, self._proj_ident)
-            # could be a label
-        except ServerError as e:
-            raise e
-        except Exception:
-            message = "Invalid exception in start_call function."
-            if skiboot.get_debug():
-                message += "\n"
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                for item in str_list:
-                    message += item
-            raise ServerError(message, code=9040)
-        return new_called_ident, skicall
-
-
-    def status_headers_data(self, skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data):
-        """calls responders until it can return status, headers, page.data()"""
-
-        try:
-            while page.page_type == 'RespondPage':
-                ident = page.ident
-                if page.responder is None:
-                    raise ServerError(message="Respond page %s does not have any responder set" % (page.url,), code=9042)
-                try: 
-                    page = page.call_responder(skicall, form_data, caller_page, ident_list, rawformdata)
-                    if isinstance(page, str):
-                        # must be a url
-                        skicall.call_data.clear()
-                        skicall.page_data.clear()
-                        # get redirector page
-                        return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, skicall.lang)
-                except PageError as ex:
-                    # a jump to a page has occurred, with a list of errors
-                    page = ex.page
-                    if isinstance(page, str):
-                        # must be a url
-                        skicall.call_data.clear()
-                        skicall.page_data.clear()
-                        # get redirector page
-                        return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, skicall.lang)
-                    if page.ident in ident_list:
-                        raise ServerError(message="Invalid Failure page: can cause circulating call", code=9043)
-                    # show the list of errors on the page
-                    e_list = ex.e_list
-                except GoTo as ex:
-                    if ex.clear_submitted:
-                        form_data.clear()
-                    if ex.clear_page_data:
-                        skicall.page_data.clear()
-                    if ex.clear_errors:
-                        ex.e_list = []
-                    target = skiboot.find_ident_or_url(ex.target, ex.proj_ident)
-                    # target is either an Ident, a URL or None
-                    if not target:
-                        raise ServerError(message="GoTo exception target not recognised", code=9044)
-                    if isinstance(target, skiboot.Ident):
-                        if target == ident:
-                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,), code=9045)
-                        if target in ident_list:
-                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,), code=9046)
-                        page = target.item()
-                        if not page:
-                            raise ServerError(message="GoTo exception page ident %s not recognised" % (target,), code=9047)
-                        if page.page_type == 'Folder':
-                            raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,), code=9048)
-                    else:
-                        # target is a URL
-                        skicall.call_data.clear()
-                        return self._redirect_to_url(target, environ, skicall.call_data, skicall.page_data, skicall.lang)
-                    
-                    # A divert to a fail page may lead to a GoTo exception which can therefore
-                    # have an e_list
-                    # show the list of errors on the page
-                    e_list = ex.e_list
-
-                # it is possible that a jump to a page in another project has been made
-                if page.ident.proj != self._proj_ident:
-                    subproj = skiboot.getproject(proj_ident=page.ident.proj)
-                    return subproj.status_headers_data(skicall, environ, received_cookies, rawformdata, caller_page, page, ident_list, e_list, form_data)
-                
-        except (ServerError, ValidateError) as e:
-            e.ident_list = ident_list
-            raise e
-
-        # the page to be returned to the client is now 'page'
-        # and 'e_list' is a list of errors to be shown on it
-
-        # call the user function end_call
-        try:
-            skicall.project = self._proj_ident
-            skicall.proj_data = self.proj_data
-            skicall.rootproject = self.rootproject
-            try:
-                session_string = self.end_call(page.ident.to_tuple(), page.page_type, skicall)
-                if session_string:
-                    # set cookie in target_page
-                    page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root_project().url)
-            except FailPage as e:
-                page.show_error([e.errormessage])
-            finally:
-                if skicall._lang_cookie:
-                    page.language_cookie = skicall._lang_cookie
-        except GoTo as e:
-            raise ServerError("Invalid GoTo exception in end_call", code=9049)
-        except Exception:
-            message = "Invalid exception in end_call function."
-            if skiboot.get_debug():
-                message += "\n"
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                for item in str_list:
-                    message += item
-            raise ServerError(message, code=9050)
-
-        # import any sections
-        page.import_sections(skicall.page_data)
-        if e_list:
-            # show the list of errors on the page
-            page.show_error(e_list)
-        # now set the widget fields
-        if skicall.page_data:
-            page.set_values(skicall.page_data)
-        page.update(environ, skicall.call_data, skicall.lang, ident_list)
-        status, headers = page.get_status()
-        return status, headers, page.data()
 
 
     def page_ident_from_path(self, projurl, path):
@@ -1284,7 +1320,7 @@ class SkiCall(object):
 
         self.ident_list = []
         self.submit_list = []
-        self.submit_dict = {}
+        self.submit_dict = {'error_dict':{}}
         self.call_data = {}
         self.page_data = {}
 

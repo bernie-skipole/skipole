@@ -44,8 +44,10 @@ This is not considered an error, and no error message will be raised
         if self.widgfield in form_data:
             value = form_data[self.widgfield]
             if value in self.fields:
-                return self.get_page_from_ident(self.fields[value], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return self.get_alternate_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+                page = self.get_page_from_ident(self.fields[value], proj_ident)
+                if page is not None:
+                    return page
+        return self.get_alternate_page(proj_ident)
 
  
 class EmptyGoto(Respond):
@@ -84,10 +86,10 @@ empty, any page can call it - on failure, calls the project validate error page.
         "Matches the field values against the data"
         if caller_page is None:
             raise ValidateError()
-        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(caller_page, ident_list, proj_ident)
         if (self.widgfield not in form_data) or (form_data[self.widgfield] == ''):
-            return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return self.get_alternate_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            return self.get_target_page(proj_ident)
+        return self.get_alternate_page(proj_ident)
 
 
 class EmptyCallDataGoto(Respond):
@@ -118,8 +120,8 @@ to alternate_ident.
         call_data = skicall.call_data
         for field in self.fields:
             if (field not in call_data) or (call_data[field] == ''):
-                return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        return self.get_alternate_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+                return self.get_target_page(proj_ident)
+        return self.get_alternate_page(proj_ident)
 
 
 
@@ -150,7 +152,7 @@ For a single given key in call data, if present, that key:value will be deleted 
                 del call_data[field]
                 # there should only be one field
                 break
-        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(proj_ident)
 
 
 class NoOperation(Respond):
@@ -173,7 +175,7 @@ Goes to Target page, can be used as a temporary place holder
 
     def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "Goes to target page"
-        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(proj_ident)
 
 
 

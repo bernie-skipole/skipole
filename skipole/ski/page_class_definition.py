@@ -812,9 +812,17 @@ $(document).ready(function(){
 
     def set_values(self, page_data):
         """Checks for special page template values, then passes on to parent set_values to set the widgets"""
+
+        if 'set_cookie' in page_data:
+            # sets the cookies in the page headers
+            sendcookies = page_data['set_cookie']
+            if sendcookies:
+                for morsel in sendcookies.values():
+                    self.headers.append(("Set-Cookie", morsel.OutputString()))
+            del page_data['set_cookie']                      # delete to stop parent object from testing this item is a widgfield
         if 'CatchToHTML' in page_data:
             self.catch_to_html = page_data['CatchToHTML']
-            del page_data['CatchToHTML']                      # delete to stop parent object from testing this item is a widgfiels
+            del page_data['CatchToHTML']                      # delete to stop parent object from testing this item is a widgfield
         if 'interval' in page_data:
             interval = 0
             try:
@@ -943,23 +951,21 @@ class RespondPage(ParentPage):
         # - or more usually, an instance of a child of the Respond class
         self.responder = responder
 
-    def call_responder(self, skicall, form_data, caller_ident, ident_list, rawformdata, error_dict=None):
+    def call_responder(self, skicall, form_data, caller_ident, ident_list, rawformdata):
         """Checks for circulating calls, then updates ident_list with this pages ident,
            then calls the respond objects call method, note rawformdata is a cgi.FieldStorage object"""
         if self.responder is None:
             raise ServerError(message = "No responder has been assigned to this page")
         if self.ident in ident_list:
-            raise ServerError(message="Circulating call to Respond page: ident %s in %s" % (self.ident, ident_list))
+            raise ServerError(message="Circulating call to Respond page: ident %s" % (self.ident,))
         ident_list.append(self.ident)
         proj = self.ident.proj
 
         # create submit_dict
-        if error_dict:
-            skicall.submit_dict = {"responder_brief":self.brief, "number":self.ident.num, 'error_dict':error_dict}
-        else:
-            skicall.submit_dict = {"responder_brief":self.brief, "number":self.ident.num, 'error_dict':{}}
+        skicall.submit_dict["responder_brief"] = self.brief
+        skicall.submit_dict["number"] = self.ident.num
 
-        page = self.responder(skicall, form_data, caller_ident, ident_list, proj, rawformdata, error_dict)
+        page = self.responder(skicall, form_data, caller_ident, ident_list, proj, rawformdata)
         return page
 
     def set_values(self, page_data):
@@ -1316,6 +1322,9 @@ class CSS(ParentPage):
         if 'enable_cache' in page_data:
             self.enable_cache = bool(page_data['enable_cache'])
             del page_data['enable_cache']
+        if 'colour_substitution' in page_data:
+            self.colour_substitution = page_data['colour_substitution']
+            del page_data['colour_substitution']
         if '@import' in page_data:
             if isinstance(page_data['@import'], list):
                 self.imports = page_data['@import']

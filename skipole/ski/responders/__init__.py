@@ -248,7 +248,7 @@ main purpose is to act as a parent class for all other respond objects.
 
 
 
-    def _check_allowed_callers(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def _check_allowed_callers(self, caller_page, ident_list, proj_ident):
         """Method to check allowed callers, raises a ValidateError if caller not in list of allowed callers
            Only useful for responders that have 'allowed_callers_required'"""
         if not self.allowed_callers_required:
@@ -292,9 +292,8 @@ main purpose is to act as a parent class for all other respond objects.
         # If any value fails, then place any errors into e_list
         # e_list is a list of ErrorMessage exceptions with message to be displayed, and where to display them
         e_list = []
-        # error_dict is a dictionary of errored widgfields: original value
-        error_dict = {}
-
+        # skicall.submit_dict["error_dict"] is a dictionary of errored widgfields: original value
+ 
         for field in self.fields:
             # validate each field
             if field not in form_data:
@@ -304,22 +303,19 @@ main purpose is to act as a parent class for all other respond objects.
             if errors:
                 e_list.extend(errors)
                 if field.s:
-                    error_dict[field.s, field.w, field.f] = value
+                    skicall.submit_dict["error_dict"][field.s, field.w, field.f] = value
                 else:
-                    error_dict[field.w, field.f] = value
+                    skicall.submit_dict["error_dict"][field.w, field.f] = value
 
         # validated_form_data now holds new values
         # e_list holds errors occurred
         if e_list:
-            # on validation errors, call the validate_fail_ident page, get final target template, and show the errors
-            page = self.get_page_from_ident(self.validate_fail_ident, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata, error_dict)
-            raise PageError(page, e_list)
+            self.raise_validate_error_page(proj_ident, e_list, None)
         # so all ok, no error, but some values may be substituted, so return the validated form data
         return validated_form_data
 
-    def get_page_from_ident(self, ident, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata, error_dict=None):
-        """Calls the next responder or template page given by ident (which can be an ident, label or url)
-           - and if a responder, calls its respond object to finally return a final target page."""
+    def get_page_from_ident(self, ident, proj_ident):
+        """Gets the page, or string given by ident, if not found, returns None"""
         if isinstance(ident, str) and ('/' in ident):
             # this is a URL
             return ident
@@ -327,50 +323,64 @@ main purpose is to act as a parent class for all other respond objects.
         thisident = skiboot.find_ident_or_url(ident, proj_ident)
         # thisident is either None, an Ident object or a url
         if thisident is None:
-            raise ValidateError()
+            return
         if isinstance(thisident, str):
             # this is a URL
             return thisident
         # so thisident is an Ident object
         page = thisident.item()
         if not page:
-            raise ValidateError()
+            return
         # could be a folder
         if page.page_type == 'Folder':
             page = page.default_page
             if not page:
-                raise ValidateError()
-        if hasattr(page, 'page_type') and page.page_type == 'RespondPage':
-            # must call the pages respond object
-            page = page.call_responder(skicall, form_data, caller_page, ident_list, rawformdata, error_dict)
+                return
         return page
 
  
-    def get_target_page(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
-        return self.get_page_from_ident(self.target_ident, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+    def get_target_page(self, proj_ident):
+        page = self.get_page_from_ident(self.target_ident, proj_ident)
+        if page is None:
+            raise ServerError("Invalid responder target page")
+        return page
 
 
-    def get_fail_page(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
-        return self.get_page_from_ident(self.fail_ident, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+    def get_fail_page(self, proj_ident):
+        return self.get_page_from_ident(self.fail_ident, proj_ident)
 
 
-    def get_alternate_page(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
+    def get_alternate_page(self, proj_ident):
         "Gets the alternate page, if the alternate page has an ident, if it is an external url, get the redirector page with this url"
-        return self.get_page_from_ident(self.alternate_ident, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        page = self.get_page_from_ident(self.alternate_ident, proj_ident)
+        if page is None:
+            raise ServerError("Invalid responder alternate page")
+        return page
 
 
-    def raise_error_page(self, e_list, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
-        """Gets the page with fail_ident, sets error_messages and raises a PageError holding the page
+    def raise_error_page(self, proj_ident, e_list, failpage):
+        """Gets the given fail page, or if not given, the self.fail_ident, sets error_messages and raises a PageError holding the page
            e_list is a list of ErrorMessage instances"""
-        try:
-            page = self.get_page_from_ident(self.fail_ident, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        except GoTo as e:
-            e.e_list = e_list
-            raise e  
+        if failpage is None:
+            failpage = self.fail_ident
+        page = self.get_page_from_ident(failpage, proj_ident)
+        if page is None:
+            raise ServerError("Invalid responder fail page")
         raise PageError(page, e_list)
 
 
-    def __call__(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata, error_dict=None):
+    def raise_validate_error_page(self, proj_ident, e_list, failpage):
+        """Gets the given fail page, or if not given, the self.validate_fail_ident, sets error_messages and raises a PageError holding the page
+           e_list is a list of ErrorMessage instances"""
+        if failpage is None:
+            failpage = self.validate_fail_ident
+        page = self.get_page_from_ident(failpage, proj_ident)
+        if page is None:
+            raise ServerError("Invalid validator fail page")
+        raise PageError(page, e_list)
+
+
+    def __call__(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         "gets the project ident, and page messages and calls self._respond"
 
         if self.target_ident_required:
@@ -411,10 +421,10 @@ main purpose is to act as a parent class for all other respond objects.
         form_data is a dictionary"""
         # return the target page
         try:
-            return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            return self.get_target_page(proj_ident)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
 
 
 

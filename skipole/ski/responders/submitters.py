@@ -45,15 +45,15 @@ If submit_data raises a FailPage then the fail_ident page will be called.
     def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
         """Calls submit_data"""
 
-        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(caller_page, ident_list, proj_ident)
 
         try:
             self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         # so all ok, get the target page
-        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(proj_ident)
 
 
 class ColourSubstitute(Respond):
@@ -87,20 +87,28 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
         try:
             colours = self._submit_data(ident_list, skicall)
         except FailPage as e:
-            # return fail page unchanged
-            return self.get_fail_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            # return fail page unchanged, without an error
+            if e.failpage:
+                page = self.get_page_from_ident(e.failpage, proj_ident)
+            else:
+                page = self.get_fail_page(proj_ident)
+            if page is None:
+                raise ServerError("Invalid responder fail page")
+            return page
         # so all ok, get the target page
-        csspage = self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        if colours and isinstance(colours, dict):
-            csspage.colour_substitution = colours
-        return csspage
+        if not colours:
+            return self.get_target_page(proj_ident)
+        if not isinstance(colours, dict):
+            raise ServerError("Invalid response, the ColourSubstitute responder requires submit_data to return a dictionary.")
+        skicall.page_data['colour_substitution'] = colours
+        return self.get_target_page(proj_ident)
 
 
 
 class SetCookies(Respond):
-    """
-Sets cookies, submit_data should return an instance of http.cookies.BaseCookie
-"""
+    """Calls submit_data to get a http.cookies.BaseCookie object or alternatively a list of lists [[key, value, max-age],...]
+       with max-age as integer seconds. If the list form is used, cookies will be created with a path equal to the project path
+       and with the httponly and secure flags set"""
 
     # This indicates a target page ident is required
     target_ident_required = True
@@ -122,24 +130,41 @@ Sets cookies, submit_data should return an instance of http.cookies.BaseCookie
 
 
     def _respond(self, skicall, form_data, caller_page, ident_list, proj_ident, rawformdata):
-        """Calls submit_data to get a http.cookies.BaseCookie object"""
+        """Sets cookies, submit_data should return an instance of http.cookies.BaseCookie or a list of lists.
+           This sets the cookie returned into skicall.page_data['set_cookie']"""
 
-        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-
+        self._check_allowed_callers(caller_page, ident_list, proj_ident)
         try:
             sendcookies = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-             self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
-        page = self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+             self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         # sets the cookies in the page headers
         if sendcookies:
-            if not isinstance(sendcookies, cookies.BaseCookie):
+            if isinstance(sendcookies, cookies.BaseCookie):
+                skicall.page_data['set_cookie'] = sendcookies
+            elif isinstance(sendcookies, list) or isinstance(sendcookies, tuple):
+                # assume sendcookies is a list of the form [[key, value, max-age],...]
+                try:
+                    cki = cookies.SimpleCookie()
+                    # set project path
+                    ck_path = skicall.projectpaths()[skicall.project]
+                    # however this path ends with a /, remove the last /
+                    if len(ck_path)>1 and ck_path.endswith('/'):
+                        ck_path = ck_path.rstrip('/')
+                    for ckitem in sendcookies:
+                        ck_key, ck_string, max_age = ckitem
+                        cki[ck_key] = ck_string
+                        cki[ck_key]['max-age'] = int(max_age)
+                        cki[ck_key]['path'] = ck_path
+                        cki[ck_key]['secure'] = True
+                        cki[ck_key]['httponly'] = True
+                except:
+                    raise ServerError(message = "cookie list not valid, should be [[key, value, max-age],...] with max-age as integer seconds") 
+                skicall.page_data['set_cookie'] = cki
+            else:
                 raise ServerError(message = "Returned cookies from submit_data not valid") 
-            # set cookies in target_page
-            for morsel in sendcookies.values():
-                page.headers.append(("Set-Cookie", morsel.OutputString()))
-        return page
+        return self.get_target_page(proj_ident)
 
 
 class GetDictionaryDefaults(Respond):
@@ -177,7 +202,7 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
         "Gets the target page, filling in the form data"
         if caller_page is None:
             raise ValidateError()
-        self._check_allowed_callers(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        self._check_allowed_callers(caller_page, ident_list, proj_ident)
         # previous caller is allowed
 
         skicall.submit_dict['widgfield']=self.widgfield.to_tuple_no_i()
@@ -186,14 +211,14 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
             defaultdict = self._submit_data( ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         if not isinstance(defaultdict, dict):
             raise ServerError(message = "Returned value from submit_data not valid")
 
         # if widgfield empty
         if (self.widgfield not in form_data) or (not form_data[self.widgfield]):
             form_data[self.widgfield] = defaultdict
-            return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            return self.get_target_page(proj_ident)
 
         formdict = form_data[self.widgfield]
         if not isinstance(formdict, dict):
@@ -210,7 +235,7 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
                 formdict[field] = val
 
         # so all ok, get the target page
-        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(proj_ident)
 
 
 class FieldStoreSubmit(Respond):
@@ -261,9 +286,9 @@ class FieldStoreSubmit(Respond):
             self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         # so all ok, get the target page
-        return self.get_target_page(skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+        return self.get_target_page(proj_ident)
 
 
 class _JSON(object):
@@ -347,7 +372,7 @@ Only page_data['status'] and page_data['headers'] will be used if given.
             jsondict = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         # so all ok, return JSON file
         return _JSON(ident_list[-1], jsondict)
 
@@ -428,7 +453,7 @@ Only page_data['status'] and page_data['headers'] will be used if given
             text = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         # so all ok, return a _PlainText instance
         return _PlainText(ident_list[-1], text)
 
@@ -578,7 +603,7 @@ list of two element lists acting as css declaration blocks.
             styledict = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         # so all ok, return a _CSS instance
         return _CSS(ident_list[-1], styledict)
 
@@ -615,7 +640,7 @@ Given media queries and CSS page targets, wraps the targets with the media queri
                     media_target.update(mediadict)
             except FailPage as e:
                 # raises a PageError exception
-                self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+                self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
 
         if not media_target:
             raise ServerError(message = "No media queries found")
@@ -623,7 +648,9 @@ Given media queries and CSS page targets, wraps the targets with the media queri
         style_binary = ["@charset \"UTF-8\";\n".encode('UTF-8')]
         
         for media_query, target_ident in media_target.items():
-            target = self.get_page_from_ident(target_ident, skicall, form_data, caller_page, ident_list.copy(), proj_ident, rawformdata)
+            target = self.get_page_from_ident(target_ident, proj_ident)
+            if target is None:
+                continue
             if hasattr(target, 'style'):
                 target_style = target.style
             else:
@@ -726,7 +753,7 @@ submit_data should return a binary file iterator
             biniterator = self._submit_data(ident_list, skicall)
         except FailPage as e:
             # raises a PageError exception
-            self.raise_error_page([e.errormessage], skicall, form_data, caller_page, ident_list, proj_ident, rawformdata)
+            self.raise_error_page(proj_ident, [e.errormessage], e.failpage)
         # so all ok, return a _Iterator instance
         return _Iterator(ident_list[-1], biniterator)
 
