@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "3.7.4",
-"skipole": "3.7.4",
+"version": "3.8.0",
+"skipole": "3.8.0",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -39512,7 +39512,7 @@ false
 "original_fields": {}
 }
 },
-"w3-theme-ski-17586.css": {
+"w3-theme-ski-94684.css": {
 "ident": 220,
 "brief": "sets colour in w3-theme-ski.css",
 "RespondPage": {
