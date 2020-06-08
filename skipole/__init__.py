@@ -55,6 +55,12 @@ The WSGIApplication class has the methods:
 
 __call__(self, environ, start_response) - which sets the instance as callable
 
+set_accesstextblocks(self, accesstextblocks) - Set an instance of a class which reads and writes TextBlocks.
+
+Normally not used, as a default class (defined in the skipole.textblocks module) is used. If required, your
+own object could be created and set into the WSGIApplication with this method. If you do this, your object
+should support the same methods of the default class.
+
 add_project(self, proj, url) - adds other projects to the 'root' project.
 
 Where proj is another instance of a WSGIApplication and will be served at the path
@@ -203,6 +209,14 @@ url - path where this project will be served, typically '/'
         """Add a sub project to this root project, returns the sub project url
            proj is the sub project WSGIApplication object."""
         return self._skipoleproject.add_project(proj._skipoleproject, url)
+
+    def set_accesstextblocks(self, accesstextblocks):
+        """Set an instance of a class which reads and writes TextBlocks. The default class is defined in the skipole.textblocks module,
+           which simply stores TextBlocks in memory after reading them from a JSON file, and is not suitable for the dynamic creation
+           of TextBlocks. It is sufficient for the single user of Skiadmin, but is essentially read only when serving your pages.
+           If required, your own object could be created which should support the methods of the default class, and could read and write
+           from your own database. This opens the possibility of dynamic creation and alteration of TextBlocks."""
+        self._skipoleproject.textblocks = accesstextblocks
 
 
 def set_debug(mode):
