@@ -177,10 +177,18 @@ SKIPOLE.logins.Pin4.prototype.clear_error = function() {
     };
 
 SKIPOLE.logins.Pin4.prototype.eventfunc = function (e) {
+    // prevent any key being input
+    e.preventDefault();
     // ignore backspace key
     if(e.which === 8) {
         return;
         }
+    if (e.which>32 && e.which<127) {
+        // set the key into the target, only valid for ascii characters
+        var characterpressed = String.fromCharCode(e.which);
+        $(e.target).val(characterpressed);
+        }
+    // focus on the next target
     var tgt = $(e.target).next();
     if (!tgt) {
         return;
