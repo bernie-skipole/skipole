@@ -2,10 +2,10 @@
 
 import os, sys, re, collections, random
 
-from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
-from skipole.skilift.fromjson import get_defaults_from_file
+from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
+from ..skilift.fromjson import get_defaults_from_file
 
-import skiadminpackages
+from . import skiadminpackages
 
 PROJECT = 'skiadmin'
 

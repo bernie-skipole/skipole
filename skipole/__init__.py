@@ -11,7 +11,8 @@ set_debug(mode) - a function to turn on debugging (if mode is True), or off (if 
 
 use_submit_list - is available to optionally wrap the user defined submit_data function
                   Enables a responder 'submit list' to define package,module,function to
-                  be called as the responder's submit_data function.
+                  be called as the responder's submit_data function, where package,module
+                  is relative to the users code.
 
 
 Exceptions
@@ -108,13 +109,13 @@ If mynewproj already exists in the directory, it will not be changed.
 
 You should then inspect the file
 
-/path/to/projectfiles/mynewproj/code/mynewproj.py
+/path/to/projectfiles/mynewproj.py
 
 where your code will be developed.
 
 """
 
-import sys, traceback
+import sys, traceback, inspect
 
 from functools import wraps
 from importlib import import_module
@@ -239,9 +240,18 @@ def use_submit_list(submit_data):
         if len(skicall.submit_list) < 2:
             # do nothing, simply return the original submit_data
             return submit_data(skicall)
-        submitpath = ".".join(skicall.submit_list[:-1])
+        # get the module where submit_data is defined
+        sdmodule = inspect.getmodule(submit_data)
+        if sdmodule.__name__ == "__main__":
+            # absolute path
+            submitpath = ".".join(skicall.submit_list[:-1])
+            sdpackage = None
+        else:
+            # relative path
+            submitpath = "." + ".".join(skicall.submit_list[:-1])
+            sdpackage = sdmodule.__name__
         try:
-            submitmodule = import_module(submitpath)
+            submitmodule = import_module(submitpath, sdpackage)
         except Exception:
             if skiboot.get_debug():
                 exc_type, exc_value, exc_traceback = sys.exc_info()
