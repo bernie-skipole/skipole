@@ -1,20 +1,22 @@
 
-import os
-
-
 # from skipole import the WSGIApplication class which will be used to create a wsgi
 # application, and exception classes which you will need in your functions
 
-from skipole import WSGIApplication, skis, FailPage, GoTo, ValidateError, ServerError, use_submit_list
+from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list
+
+# Also import the skis package, containing the function makeapp(PROJECTFILES) - which returns a
+# WSGIApplication object serving javascript files and is normally appended to your own project
+
+from skipole import skis
 
 
 # the framework needs to know the location of the projectfiles directory holding the project data
 # and static files.
 
-PROJECTFILES = os.path.dirname(os.path.realpath(__file__))
-PROJECT = 'newproj'
+PROJECTFILES = "-----"
+PROJECT = "newproj"
 
-# This file newproj.py is initially also created under the projectfiles directory, however it does not
+# This file newproj.py is initially created under the projectfiles directory, however it does not
 # need to be sited there, and can be moved and your code developed elsewhere. The above PROJECTFILES
 # path is only needed to set the location of the support files used by the project, not code. 
 
@@ -24,7 +26,8 @@ PROJECT = 'newproj'
 PROJ_DATA={}
 
 
-# Your code needs to provide your own version of the following three functions
+# Your code needs to provide your own version of the following three functions which will
+# be used to set values into the widgets of returned pages.
 
 # Minimal versions are provided below, you could either develop them here,
 # or more usually, create further modules and packages and import them.
@@ -38,7 +41,6 @@ def start_call(called_ident, skicall):
 # You may wish to apply the decorator '@use_submit_list' to the submit_data
 # function below. See the skipole documentation for details.
 
-@use_submit_list
 def submit_data(skicall):
     "This function is called when a Responder wishes to submit data for processing in some manner"
     return
@@ -48,7 +50,6 @@ def end_call(page_ident, page_type, skicall):
     """This function is called at the end of a call prior to filling the returned page with skicall.page_data,
        it can also return an optional session cookie string."""
     return
-
 
 
 # The above functions are required as arguments to the skipole.WSGIApplication object
@@ -63,11 +64,10 @@ application = WSGIApplication(project=PROJECT,
                               end_call=end_call,
                               url="/")
 
-# The application uses the projectfiles location to find and load json files
-# which define the project, and also uses your functions to populate returned pages.
 
-# The skis application must always be added, without skis you're going nowhere!
-# The skis sub project serves javascript files required by the framework widgets.
+# The skis application should usually be added, it serves javascript files required
+# by the framework widgets. It may not be needed if you are serving javascript
+# files by some other method, such as a CDN server.
 
 skis_application = skis.makeapp(PROJECTFILES)
 application.add_project(skis_application, url='/lib')
@@ -111,4 +111,5 @@ if __name__ == "__main__":
     print("Serving %s on port %s. Call http://localhost:%s/skiadmin to edit." % (PROJECT, port, port))
     skilift.development_server(host, port, application)
  
+
 

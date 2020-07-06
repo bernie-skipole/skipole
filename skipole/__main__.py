@@ -148,7 +148,7 @@ else:
         sys.exit(0)
 
     if os.path.isdir(project_directory) or os.path.isfile(project_pyfile):
-        print("skis and skiadmin have been replaced, however project % already exists, and has not been altered." % (project_name,))
+        print("skis and skiadmin have been replaced, however project %s already exists, and has not been altered." % (project_name,))
         sys.exit(0)
 
     # create a new project
@@ -170,6 +170,8 @@ with open(newproj_pyfile, "r") as tnf:
 os.remove(newproj_pyfile)
 ## REPLACE newproj with the new project name
 newcontents = templatecontents.replace("newproj", project_name)
+## REPLACE ----- with the new projectfiles
+newcontents = newcontents.replace("-----", projectfiles)
 ## WRITE the new file
 with open(project_pyfile, "w") as pf:
     pf.write(newcontents)
