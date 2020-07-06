@@ -69,13 +69,13 @@ class ParentFieldArg(object):
                         return False
                 return bool(val)
             elif valtype == 'ident':
-                if val is 0:
+                if val == 0:
                     return skiboot.make_ident(val)
                 if not val:
                     return None
                 return skiboot.make_ident(val)
             elif valtype == 'url':
-                if val is 0:
+                if val == 0:
                     sval = '0'
                 else:
                     if not val:
@@ -334,7 +334,7 @@ class FieldArgTable(ParentFieldArg):
         # val should be a list of row lists
         # ie [[r1c1, r1c2, r1c3], [r2c1, r2c2, r2c3], [r3c1, r3c2, r3c3]]
         self._value = []
-        if val is 0:
+        if val == 0:
              val = [[0]]
         elif not val:
             return
