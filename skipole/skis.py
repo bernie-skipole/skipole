@@ -54,15 +54,7 @@ To create the correct version of skis
 #  You would then add skis_application to your application using
 #  application.add_project(skis_application, url='/lib')
 #
-#  The only difficulty is importing this module, however as skis.py should normally be in
-#  PROJECTFILES/skis/code/skis.py
-#  this directory can be added to the python path. So you would include
-#  the following in your own code:
-#
-#  skis_code = os.path.join(PROJECTFILES, 'skis', 'code')
-#  if skis_code not in sys.path:
-#      sys.path.append(skis_code)
-#  import skis
+#  from skipole import skis
 #  skis_application = skis.makeapp(PROJECTFILES)
 #  application.add_project(skis_application, url='/lib')
 #
