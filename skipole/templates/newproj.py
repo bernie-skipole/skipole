@@ -1,4 +1,8 @@
 
+
+import os
+
+
 # from skipole import the WSGIApplication class which will be used to create a wsgi
 # application, and exception classes which you will need in your functions
 
@@ -13,7 +17,7 @@ from skipole import skis
 # the framework needs to know the location of the projectfiles directory holding the project data
 # and static files.
 
-PROJECTFILES = "-----"
+PROJECTFILES = os.path.dirname(os.path.realpath(__file__))
 PROJECT = "newproj"
 
 # This file newproj.py is initially created under the projectfiles directory, however it does not
