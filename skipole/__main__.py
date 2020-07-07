@@ -170,8 +170,8 @@ with open(newproj_pyfile, "r") as tnf:
 os.remove(newproj_pyfile)
 ## REPLACE newproj with the new project name
 newcontents = templatecontents.replace("newproj", project_name)
-## REPLACE ----- with the new projectfiles
-newcontents = newcontents.replace("-----", projectfiles)
+## REPLACE the 'os.path.dirname(os.path.realpath(__file__))' call with the new projectfiles
+newcontents = newcontents.replace("os.path.dirname(os.path.realpath(__file__))", "\"" + projectfiles + "\"")
 ## WRITE the new file
 with open(project_pyfile, "w") as pf:
     pf.write(newcontents)
