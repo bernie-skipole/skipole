@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/skipole/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/skipole/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" />
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/skipole/index.html" class="w3-bar-item w3-button w3-blue">Introduction</a>
+  <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+</div>
+<p>Development at GitHub:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://github.com/bernie-skipole/skipole/" class="w3-bar-item w3-button">github.com/bernie-skipole/skipole</a>
+</div>
+<p>Tests at webparametrics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="http://webparametrics.co.uk/" class="w3-bar-item w3-button">Tests</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>nginx and uwsgi</h3>
+<h4>Serving your application</h4>
+<p>skipole is used to create a project which results in a wsgi application. Once you have produced such an application you will want to serve it via a web server. The instructions here describe how nginx and uwsgi can be used to serve your application whenever your debian-based server is powered up.</p>
+<p>These instructions assume you have no other web server running (so port 80 is free), and you are familiar with shell commands, changing directories, creating text files and setting permissions. You should also have used skipole to create an application (best start with something simple!).</p>
+<p>In this example nginx acts as the web server, and proxies calls to the uwsgi application server which is running your wsgi python application.  The settings here use default values provided by the operating system to keep the setup simple.</p>
+<h4>Install skipole</h4>
+<p>skipole must be installed and available on the Python path.</p>
+<h4>Install nginx and uwsgi</h4>
+<p>Using apt-get (you may have to use 'sudo' an awful lot with every command), install the package nginx which includes nginx-common and ngix-full, (ngix-core on Linux Mint) and then install the packages uwsgi and uwsgi-plugin-python3</p>
+<p>Use your browser to connect to 'localhost' and you should see the nginx web service running:</p>
+<pre>
+
+        Welcome to nginx!
+        
+        If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+        
+        For online documentation and support please refer to nginx.org.
+        Commercial support is available at nginx.com.
+        
+        Thank you for using nginx.
+
+</pre>
+<p>So nginx is running and serving a default web page.</p>
+<h4>Place your wsgi application</h4>
+<p>Assuming you have created an application and have the 'projectfiles' directory. For the purpose of these instructions we will use the project 'skitest', <strong>so wherever skitest appears in the text below, substitute the name of your own project.</strong></p>
+<p>I assume you have edited skitest.py to remove skiadmin and the Python web service.</p> 
+<p>You will need to use sudo or to be superuser to use most of these commands. Please only continue if you are confident of your capability, as superuser you can damage your system.</p>
+<p>Copy projectfiles into the /opt directory.</p>
+<p>uwsgi will be running your project with user www-data, therefore to allow uwsgi to have access to these files, give them user and group of www-data. So from within /opt</p>
+<p>chown -R www-data:www-data projectfiles</p>
+<h4>Setup uwsgi</h4>
+<p>The debian installation of uwsgi very conveniently creates two directories:</p>
+<p>/etc/uwsgi/apps-available</p>
+<p>and</p>
+<p>/etc/uwsgi/apps-enabled</p>
+<p>The first apps-available directory acts as a storage area, and can contain a uwsgi ini file, if however the ini file appears in the second apps-enabled directory, then on server boot up uwsgi is started using that ini file.</p>
+<p>Rather than place the ini file under apps-enabled you should create it in apps-available, and then make a link from apps-enabled to the ini file in apps-available, so the service can be enabled, or deleted by removing the link, without losing the ini file.</p>
+<p>So create the following skitest.ini file under /etc/uwsgi/apps-available</p>
+<pre>
+
+    [uwsgi]
+    plugin = python3
+    wsgi-file = /opt/projectfiles/skitest.py
+    chdir = /opt/projectfiles/
+    
+</pre>
+<p>This may seem to be a very short ini file, however it actually extends the default ini file provided by the operating system. If you are interested, the defaults can be found at /etc/default/uwsgi and /usr/share/uwsgi/conf/default.ini</p>
+<p>The ini file above contains three instructions:</p>
+<p>plugin = python3, enables uwsgi to call skitest.py with python3</p>
+<p>wsgi-file informs uwsgi of the location of skitest.py</p>
+<p>chdir changes the working directory, so any local packages imported by skitest.py can be found.</p>
+<p>Then once this file is created, make a link from the apps-enabled directory:</p>
+<p>ln -s /etc/uwsgi/apps-available/skitest.ini /etc/uwsgi/apps-enabled/</p>
+<p>Now, when the server is rebooted wsgi will run and open a unix socket at:</p>
+<p>/run/uwsgi/app/skitest/socket</p>
+<p>If you reboot, (or restart the service with command "service uwsgi restart") and list the above directory you should see 'socket' listed.</p>
+<h4>Setup nginx</h4>
+<p>As default nginx is serving a simple html page, we now need it to proxy requests to the above socket. In a similar manner to the uwsgi setup, the debian system has two directories:</p>
+<p>/etc/nginx/sites-available</p>
+<p>/etc/nginx/sites-enabled</p>
+<p>You will see under sites-available a default configuration file, and under sites-enabled a link to that file, which is the current enabled default site.</p>
+<p>Under /etc/nginx/sites-available create another configuration file skitest.conf:</p>
+<pre>
+
+    upstream skitest {
+        server unix:///run/uwsgi/app/skitest/socket;
+    
+    }
+    
+    server {
+   
+    	server_name _;
+    
+    	location / {
+          include uwsgi_params;
+          uwsgi_pass skitest;
+      }
+    }
+
+</pre>
+<p>The server_name _; directive above is a none-match with any valid name, in the case of a none-match nginx will use the first server block, and since there is only one, this catches everything without having to put in a name, domain name or ip address.</p>
+<p>Then, within directory /etc/nginx/sites-enabled delete the default link, and create a new link to skitest.conf:</p>
+<p>rm default</p>
+<p>ln -s /etc/nginx/sites-available/skitest.conf /etc/nginx/sites-enabled/</p>
+<p>Now reboot the server or restart nginx with command "service nginx restart", keep your fingers crossed, open a browser, and call the ip address of your web server. If you are very lucky you will see your application served in all its glory!</p>
+<p>An alternative nginx configuration could be used if static CSS files and images are held under css and images directories beneath the project static folder:</p>
+<pre>
+
+    upstream skitest {
+        server unix:///run/uwsgi/app/skitest/socket;
+    
+    }
+    
+    server {
+   
+    	server_name _;
+        root /opt/projectfiles/skitest/static;
+    
+    	location / {
+          include uwsgi_params;
+          uwsgi_pass skitest;
+      }
+
+    	location /css/ {
+          try_files $uri $uri/ =404;
+      }
+
+    	location /images/ {
+          try_files $uri $uri/ =404;
+      }
+
+    }
+
+</pre>
+<p>This causes nginx to serve the static files directly, without using uwsgi or the Python application.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>
