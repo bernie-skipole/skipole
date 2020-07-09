@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/skipole/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/skipole/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" />
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/skipole/index.html" class="w3-bar-item w3-button w3-blue">Introduction</a>
+  <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
+  <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
+</div>
+<p>Development at GitHub:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://github.com/bernie-skipole/skipole/" class="w3-bar-item w3-button">github.com/bernie-skipole/skipole</a>
+</div>
+<p>Tests at webparametrics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="http://webparametrics.co.uk/" class="w3-bar-item w3-button">Tests</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>Serving with the NGINX reverse proxy and with multiple Waitress WSGI web servers behind it</h3>
+<p>NOTE: This was tested using a Linux mint server, and with multiple LXC Debian servers running within it to simulate a network of servers</p>
+<p>In this example NGINX proxies calls to the Waitress web servers which are each running your wsgi python application. The settings here use default values provided by the operating system to keep the setup simple.</p>
+<p>NGINX is installed on the Linux mint server, and the backend servers have Waitress, skipole and your application (assuming it is called 'skitest' - replace this with your own project name) installed on them.</p>
+<h4>Install nginx</h4>
+<p>Using apt-get (you may have to use 'sudo' an awful lot with every command), install the package nginx which includes nginx-common and ngix-full, (ngix-core on Linux Mint).</p>
+<p>Use your browser to connect to 'localhost' and you should see the nginx web service running:</p>
+<pre>
+        Welcome to nginx!
+        
+        If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+        
+        For online documentation and support please refer to nginx.org.
+        Commercial support is available at nginx.com.
+        
+        Thank you for using nginx.
+</pre>
+<p>So nginx is running and serving a default web page. We now need it to proxy requests to the backend servers. The Mint (debian) system has two directories:</p>
+<p>/etc/nginx/sites-available</p>
+<p>/etc/nginx/sites-enabled</p>
+<p>You will see under sites-available a default configuration file, and under sites-enabled a link to that file, which is the current enabled default site.</p>
+<p>Under /etc/nginx/sites-available create another configuration file skitest.conf:</p>
+<pre>
+
+  upstream server_group   {
+    server 10.239.52.58:8000;
+    server 10.239.52.126:8000;
+    }
+
+  server  {
+    listen 80;
+    location / {
+      proxy_pass http://server_group;
+      }
+  }
+
+</pre>
+<p>The two ip addresses above direct calls to the two backend servers - replace these with your own ip addresses.</p>
+<p>Then, within directory /etc/nginx/sites-enabled delete the default link, and create a new link to skitest.conf:</p>
+<p>rm default</p>
+<p>ln -s /etc/nginx/sites-available/skitest.conf /etc/nginx/sites-enabled/</p>
+<p>Now reboot the server or restart nginx with command "service nginx restart"</p>
+<h4>Install waitress</h4>
+<p>On each of your backend servers, you now need skipole, your application, and the Waitress web server.</p>
+<p>Install the package 'python3-waitress'</p>
+<p>apt-get install python3-waitress</p>
+<p>Copy your projectfiles directory into /opt, creating directory:</p>
+<p>/opt/projectfiles/</p>
+<p>Ensure skiadmin is removed and skitest.py is edited with the following:</p>
+<pre>
+
+    from waitress import serve
+    serve(application, host='10.239.52.58', port=8000)
+
+</pre>
+<p>Note: The host ip address matches the ip address of each server. Normally I would put '0.0.0.0' here but found this did not work on lxc servers.</p>
+<p>Give the directory and contents www-data:www-data ownership</p>
+<p>sudo chown -R www-data:www-data /opt/projectfiles</p>
+<p>Then create a file :</p>
+<p>/lib/systemd/system/skitest.service</p>
+<p>containing the following:</p>
+<pre>
+
+    [Unit]
+    Description=My project description
+    After=multi-user.target
+
+    [Service]
+    Type=idle
+    ExecStart=/usr/bin/python3 /opt/projectfiles/skitest.py
+
+    User=www-data
+
+    Restart=on-failure
+
+    # Connects standard output to /dev/null
+    StandardOutput=null
+
+    # Connects standard error to journal
+    StandardError=journal
+
+    [Install]
+    WantedBy=multi-user.target
+
+</pre>
+<p>Then set permissions of the file</p>
+<p>sudo chown root:root /lib/systemd/system/skitest.service</p>
+<p>sudo chmod 644 /lib/systemd/system/skitest.service</p>
+<p>Enable the service</p>
+<p>sudo systemctl daemon-reload</p>
+<p>sudo systemctl enable skitest.service</p>
+<p>This starts /opt/projectfiles/skitest.py on boot up.</p>
+<p>Finally reboot - and calling your nginx server should result in your application being served.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>
