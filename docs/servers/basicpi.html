@@ -40,21 +40,68 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>Serving your application</h3>
-<p>Your deployment web server should have skipole installed.</p>
-<p>Once you have developed a project inside a 'projectfiles' directory, copy projectfiles to your target web server. Delete the skiadmin project - you will not be serving that. Edit 'myproj.py' so it creates the application, and adds the 'skis' application, but does not create the Python web server or adds skiadmin.</p>
-<p>For test purposes, this could be served by some web servers straight from the command line. Though you would have to put your ../projectfiles onto the Python path - something like:</p>
-<p>export PYTHONPATH=${PYTHONPATH}:$HOME/projectfiles</p>
-<p>And then the application created in myproj could be served, for example using gunicorn:</p>
-<p>gunicorn3 -w 4 myproj:application</p>
-<p>Where gunicorn3 is the python3 version of gunicorn</p>
-<p>Or similarly using Waitress (python3-waitress on Debian based distro's)</p>
-<p>waitress-serve --port=8000 myproj:application</p>
-<p>In general however, you are likely to want the application to start on boot up, examples of running the wsgi app with a debian based server are given below:</p>
-<p><a href = "/skipole/servers/nginxuwsgi.html">nginx and uwsgi</a></p>
-<p><a href = "/skipole/servers/basicpi.html">Simple serving for a Raspberry Pi</a></p>
-<p>Pound reverse proxy and Waitress</p>
-<p><a href = "/skipole/servers/nginxwaitress.html">nginx load balancing and Waitress</a></p>
+<h3>Simple serving for a Raspberry Pi</h3>
+<p>This method uses the 'Waitress' Python web server running as root.  Operating as root is not secure enough for Internet connection, but for a simple control project it may be suitable.</p>
+<p>Waitress is not available in the Python standard library, you need to install it first:</p>
+<p>apt-get install python3-waitress</p>
+<p>As always skipole must be installed:</p>
+<p>pip install skipole</p>
+<p>Assuming your project is called 'myproj'.</p>  
+<p>Copy the projectfiles directory into /opt, creating directory:</p>
+<p>/opt/projectfiles/</p>
+<p>Ensure skiadmin is removed and myproj.py is edited with the following:</p>
+<pre>
+
+    from waitress import serve
+    serve(application, host='0.0.0.0', port=80)
+
+</pre>
+<p>(So 'application' is served on all interfaces with port 80)</p>
+<p>Give the directory and contents root ownership</p>
+<p>sudo chown -R root:root /opt/projectfiles</p>
+<p>Then create a file :</p>
+<p>/lib/systemd/system/myproj.service</p>
+<p>containing the following:</p>
+<pre>
+
+    [Unit]
+    Description=My project description
+    After=multi-user.target
+
+    [Service]
+    Type=idle
+    ExecStart=/usr/bin/python3 /opt/projectfiles/myproj.py
+
+    Restart=on-failure
+
+    # Connects standard output to /dev/null
+    StandardOutput=null
+
+    # Connects standard error to journal
+    StandardError=journal
+
+    [Install]
+    WantedBy=multi-user.target
+
+</pre>
+<p>Then set permissions of the file</p>
+<p>sudo chown root:root /lib/systemd/system/myproj.service</p>
+<p>sudo chmod 644 /lib/systemd/system/myproj.service</p>
+<p>Enable the service</p>
+<p>sudo systemctl daemon-reload</p>
+<p>sudo systemctl enable myproj.service</p>
+<p>This starts /opt/projectfiles/myproj.py on boot up.</p>
+<p>Useful functions to test the service:</p>
+<p>sudo systemctl start myproj</p>
+<p>sudo systemctl stop myproj</p>
+<p>sudo systemctl restart myproj</p>
+<p>sudo systemctl status myproj</p>
+<p>sudo systemctl disable myproj</p>
+<p>Display last lines of the journal</p>
+<p>sudo journalctl -n</p>
+<p>Display and continuously print the latest journal entries</p>
+<p>sudo journalctl -f</p>
+<p>The myproj web service is running in the background, with all logging output going to /dev/null.</p>
 </div>
 </div>
 <script>
