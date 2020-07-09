@@ -40,7 +40,7 @@
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
 <h3>Your project Python code</h3>
-<p>The projectfiles directory containing project myproj should have been created as previously described. Within it you will be developing ...projectfiles/myproj/code/myproj.py</p>
+<p>The projectfiles directory containing project myproj should have been created as previously described. Within it you will be developing ...projectfiles/myproj.py</p>
 <p>myproj.py will already be set up to do most of the following work, but in summary, it needs to import the WSGIApplication class.</p>
 <p>Creating an instance of this WSGISpplication object creates an 'application' which can be used by any WSGI web server.</p>
 <p>An instance is created within myproj.py with the lines:</p>
@@ -70,10 +70,7 @@
 <p>Before the application is ready, it needs to have the application from the 'skis' project added to it. Within myproj.py you will see this is done with:</p>
 <pre>
 
-    skis_code = os.path.join(PROJECTFILES, 'skis', 'code')
-    if skis_code not in sys.path:
-        sys.path.append(skis_code)
-    import skis
+    from skipole import skis
     skis_application = skis.makeapp(PROJECTFILES)
     application.add_project(skis_application, url='/lib')
 

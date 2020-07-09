@@ -50,7 +50,7 @@
 <p>You should replace 'myproj' with your preferred name for a new project.</p>
 <p>The /path/to/my/projectfiles should be to a directory where you will be developing your new project.</p>
 <p>The projectfiles directory will be created with your new project 'myproj' within it:</p>
-<p>...projectfiles/myproj/code/myproj.py</p>
+<p>...projectfiles/myproj.py</p>
 <p>...projectfiles/myproj/data/....</p>
 <p>...projectfiles/myproj/static/....</p>
 <p>As well as myproj, you will see two other projects automatically created:</p>
@@ -61,7 +61,7 @@
 <p>If the directory already exists, any existing skiadmin and skis projects will be overwritten, this facility is used to upgrade skis and skiadmin if a new version of skipole is installed.</p>
 <p>If myproj already exists in the directory, it will not be changed.</p>
 <p>The python file myproj.py contains code which imports skipole, and generates the wsgi application, and functions which you will develop further yourself. It also adds the skiadmin and skis 'sub-projects' to your new project. It is strongly commented so you should inspect it. You would then run:</p>
-<p><strong>python3 /path/to/my/projectfiles/myproj/code/myproj.py</strong></p>
+<p><strong>python3 /path/to/my/projectfiles/myproj.py</strong></p>
 <p>Then connect with a browser to localhost:8000 to view the project, and call localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.</p>
 <p>To stop the project from serving, in the terminal press ctrl-c</p>
 <h3>Upgrading</h3>

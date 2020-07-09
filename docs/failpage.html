@@ -43,14 +43,15 @@
 <p>This exception can be imported using:</p>
 <p>from skipole import FailPage</p>
 <p>It has arguments:</p>
-<p>FailPage(message = '', section='', widget='')</p>
+<p>FailPage(message = '', section='', widget='', failpage=None)</p>
 <p>When a responder is created in the admin session, it is set with a number of parameters. If it is a responder which calls your submit_data function, then it will also require the ident of a failure page.</p>
 <p>FailPage is an Exception class that, being raised, makes the Responder call its failure page with an error message rather than passing the call on to the responder's target page.</p>
-<p>It takes arguments - message, section and widget.</p>
-<p>Their default values are empty strings, leave as empty if you do not wish to pass any information. However if possible:</p>
+<p>It takes arguments - message, section, widget and failpage.</p>
+<p>Their default values are empty, leave as empty if you do not wish to pass any information. However if possible:</p>
 <p><strong>message</strong> - An error message string. If missing, the display widget's default 'show_error' text will be shown.</p>
 <p><strong>section</strong> - If the display widget is in a section this should be the section alias, if it is not, leave as an empty string.</p>
 <p><strong>widget</strong> - The name of the widget in the failure page where this message will be displayed. How the message is displayed will depend on the widget. If not given the message will be shown in the page's default error widget.</p>
+<p><strong>failpage</strong> - Normally this is left as None, and the fail page set in the Responder is automatically called, however a fail page can be set here if required.</p>
 </div>
 </div>
 <script>
