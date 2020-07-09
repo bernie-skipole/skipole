@@ -906,7 +906,7 @@ class SkipoleProject(object):
         old_name = self.identitems[item_ident].name
         if new_parent_ident is not None:
             # So its a parent folder change
-            if new_parent_ident.num is 0:
+            if new_parent_ident.num == 0:
                 # new parent is root
                 new_parent = self.root
             else:
@@ -1056,7 +1056,7 @@ class SkipoleProject(object):
             ident = skiboot.Ident.to_ident(item, self._proj_ident)
         if ident in self.identitems:
             return True
-        if (ident.proj == self._proj_ident) and (ident.num is 0):
+        if (ident.proj == self._proj_ident) and (ident.num == 0):
             return True
         return False
 

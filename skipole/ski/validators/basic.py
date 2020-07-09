@@ -105,7 +105,7 @@ class NotEmpty(Validator):
         if item is False:
             # False is not an empty field
             return item, True
-        if item is 0:
+        if item == 0:
             # 0 is not an empty field
             return item, True
         if not item:

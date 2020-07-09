@@ -67,7 +67,7 @@ class IdentExists(Validator):
         self._val_args[arg_name] = bool(value)
 
     def _check(self, widgfield, item, environ, lang, form_data, call_data, caller_page_ident):
-        if (not item) and (item is not 0) and self["can_be_empty"]:
+        if (not item) and (item != 0) and self["can_be_empty"]:
             # ident item is empty, and this is allowed
             return '', True
         page = skiboot.from_ident(item)

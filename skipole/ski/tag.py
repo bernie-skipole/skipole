@@ -51,7 +51,7 @@ def make_dictionary(input_dict, proj_ident):
     for key, val in input_dict.items():
         if val is None:
             output_dict[key] = None
-        elif val is '':
+        elif val == '':
             output_dict[key] = ""
         elif isinstance(val, list):
             output_dict[key] = make_list(val, proj_ident)
@@ -82,7 +82,7 @@ def make_list(input_list, proj_ident):
     for item in input_list:
         if item is None:
             output_list.append(None)
-        elif item is '':
+        elif item == '':
             output_list.append('')
         elif isinstance(item, list):
             output_list.append(make_list(item, proj_ident))

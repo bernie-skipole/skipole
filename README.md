@@ -16,7 +16,7 @@ You should replace 'myproj' with your preferred name for a new project. A projec
 
 You would then run:
 
-python3 /path/to/projectfiles/myproj/code/myproj.py
+python3 /path/to/projectfiles/myproj.py
 
 then connect with a browser to localhost:8000 to view the project, and call localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.
 

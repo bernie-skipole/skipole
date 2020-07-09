@@ -10,7 +10,7 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"version"         : "4.0.0",             # The skipole version
+"version"         : "4.0.1",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
@@ -196,8 +196,6 @@ def get_item(ident):
 
 def get_url(label_url_ident, proj_ident=None):
     "Returns a url given a page ident, url or label, if not found, return None"
-    if (label_url_ident is not 0) and (not label_url_ident):
-        return
     result = find_ident_or_url(label_url_ident, proj_ident)
     if isinstance(result, Ident):
         return result.url()
@@ -314,7 +312,7 @@ def find_ident_or_url(item, proj_ident=None):
        or label, or tuple of form (project,ident) or (project,label).
        If no existing ident or url found, returns None"""
 
-    if item is 0:
+    if item == 0:
         return ident_exists_strict(Ident.to_ident(item, proj_ident))
 
     if not item:
@@ -459,8 +457,8 @@ class Ident(collections.namedtuple('Ident', ['proj','num'])):
     def name(self):
         """Returns the name of the page or folder with this ident
            If item is root, or item not found, returns None"""
-        if self.num is 0:
-            return None
+        if self.num == 0:
+            return
         item = get_item(self)
         if item is None:
             return
