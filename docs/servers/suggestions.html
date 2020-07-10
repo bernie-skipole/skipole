@@ -40,29 +40,37 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>Simple serving for a Raspberry Pi</h3>
-<h4>Serving your application</h4>
-<p>skipole is used to create a project which results in a wsgi application. Once you have produced such an application you will want to serve it via a web server. The instructions here describe how the Python web server 'Waitress' can be used to serve your application whenever your Pi is powered up.</p>
-<p>These instructions assume you have no other web server running (so port 80 is free), and you are familiar with shell commands, changing directories, creating text files and setting permissions. You should also have used skipole to create an application (best start with something simple!).</p>
-<p>This method uses Waitress running as root.  Operating as root is not secure enough for Internet connection, but for a simple control project it may be suitable.</p>
-<p>Waitress is not available in the Python standard library, you need to install it first:</p>
-<p>apt-get install python3-waitress</p>
-<p>As always skipole must be installed:</p>
+<h3>Further suggestions for serving with a Raspberry Pi</h3>
+<p>Following the previous article "Simple serving for a Raspberry Pi" - this page suggests some variations.</p>
+<p>You may not want to use root to run the web server, particularly in a teaching situation, however root is generally needed to serve on ports less than 1024. If you don't mind serving, on say port 8000, then you could run Waitress as a normal user.</p>
+<p>It is also convenient to load Python software from Pypi into a virtual environment rather than using apt-get. This allows the latest software to be used, and by deleting a user directory you can remove all the software installed.</p>
+<p>The following example assumes a user 'student' and a project called 'myproj.py' held within '/home/student/projectfiles'</p>
+<p>In his home directory (/home/student) the user creates the virtual environment 'myenv'.</p>
+<p>python3 -m venv myenv</p>
+<p>Then activate the environment, and install skipole and waitress:</p>
+<p>source myenv/bin/activate</p>
+<p>pip install waitress</p>
 <p>pip install skipole</p>
-<p>Assuming your project is called 'myproj'.</p>  
-<p>Copy the projectfiles directory into /opt, creating directory:</p>
-<p>/opt/projectfiles/</p>
-<p>Ensure skiadmin is removed and myproj.py is edited with the following:</p>
+<p>deactivate</p>
+<p>If not already done, copy the skipole project to /home/student/projectfiles</p>
+<p>The project Python file myproj.py needs to be edited, remove skiadmin and the development server and add the lines:</p>
 <pre>
 
     from waitress import serve
-    serve(application, host='0.0.0.0', port=80)
+    serve(application, host='0.0.0.0', port=8000)
 
 </pre>
-<p>(So 'application' is served on all interfaces with port 80)</p>
-<p>Give the directory and contents root ownership</p>
-<p>sudo chown -R root:root /opt/projectfiles</p>
-<p>Then create a file :</p>
+<p>So 'application' is served on all interfaces with port 8000. The owner of all files remains 'student'.</p>
+<p>myproj.py needs to know where to find skipole and waitress, so alter the very first line of the file to the shebang:</p>
+<p>#!/home/student/myenv/bin/python3</p>
+<p>and make the file executable with:</p>
+<p>chmod 744 ~/projectfiles/myproj.py</p>
+<p>This allows the user to run myproj.py directly, and it will call on the correct version of Python, skipole and waitress.</p>
+<p>From the users home, he only needs to type:</p>
+<p>projectfiles/myproj.py</p>
+<p>And his web service should be served on port 8000</p>
+<p>To run on startup, the pi root user needs to create a service for the student, this is shown below:</p>
+<p>As root, or using sudo a lot, create a file:</p>
 <p>/lib/systemd/system/myproj.service</p>
 <p>containing the following:</p>
 <pre>
@@ -73,9 +81,11 @@
 
     [Service]
     Type=idle
-    ExecStart=/usr/bin/python3 /opt/projectfiles/myproj.py
+    ExecStart=/home/student/projectfiles/myproj.py
 
-    WorkingDirectory=/opt/projectfiles
+    User=student
+
+    WorkingDirectory=/home/student/projectfiles
     Restart=on-failure
 
     # Connects standard output to /dev/null
@@ -88,24 +98,11 @@
     WantedBy=multi-user.target
 
 </pre>
-<p>Then set permissions of the file</p>
-<p>sudo chown root:root /lib/systemd/system/myproj.service</p>
-<p>sudo chmod 644 /lib/systemd/system/myproj.service</p>
 <p>Enable the service</p>
-<p>sudo systemctl daemon-reload</p>
-<p>sudo systemctl enable myproj.service</p>
-<p>This starts /opt/projectfiles/myproj.py on boot up.</p>
-<p>Useful functions to test the service:</p>
-<p>sudo systemctl start myproj</p>
-<p>sudo systemctl stop myproj</p>
-<p>sudo systemctl restart myproj</p>
-<p>sudo systemctl status myproj</p>
-<p>sudo systemctl disable myproj</p>
-<p>Display last lines of the journal</p>
-<p>sudo journalctl -n</p>
-<p>Display and continuously print the latest journal entries</p>
-<p>sudo journalctl -f</p>
-<p>The myproj web service is running in the background, with all logging output going to /dev/null.</p>
+<p>systemctl daemon-reload</p>
+<p>systemctl enable myproj.service</p>
+<p>systemctl start myproj</p>
+<p>This starts /home/student/projectfiles/myproj.py, and it will also start on boot up.</p>
 </div>
 </div>
 <script>
