@@ -58,8 +58,8 @@ This will cause the skiadmin and skis projects under projectfiles to be replaced
 
 ### Further information ###
 
-The web admin pages have extensive documentation and help features, and go to https://bernie-skipole.github.io/skipole for further information or the wiki pages at:
+The web admin pages have extensive documentation and help features, and for further information go to:
 
-https://github.com/bernie-skipole/skipole/wiki
+https://bernie-skipole.github.io/skipole
 
 
