@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "4.0.1",
-"skipole": "4.0.1",
+"version": "4.0.2",
+"skipole": "4.0.2",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -25114,17 +25114,6 @@ false
 },
 "parts": [
 [
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
 "SectionPlaceHolder",
 {
 "brief": "Left navigation box",
@@ -25431,9 +25420,6 @@ false
 "placename": "foot",
 "multiplier": 0,
 "mtag": "div"
-}
-]
-]
 }
 ]
 ]
@@ -28033,8 +28019,14 @@ false,
 "RespondPage": {
 "class": "StoreDataKeyed",
 "original_args": {
-"fail_ident": null,
-"submit_option": false,
+"fail_ident": 22307,
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"addpage",
+"check_new_ident"
+],
+"submit_option": true,
 "target_ident": 22403,
 "validate_fail_ident": 22307,
 "validate_option": true

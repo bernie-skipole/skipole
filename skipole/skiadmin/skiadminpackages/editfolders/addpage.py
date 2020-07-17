@@ -667,4 +667,26 @@ def submit_upload_page(skicall):
     call_data['status'] = 'Page %s added' % (new_name,)
 
 
+def check_new_ident(skicall):
+    "Check ident given with key page_ident_number is not already used"
+    call_data = skicall.call_data
+    project = call_data['editedprojname']
+    # Get the new page number
+    try:
+        # pagenumber could be number or "project,number" or "project_number"
+        page_ident = call_data['page_ident_number']
+        if page_ident.startswith(project):
+            if ',' in page_ident:
+                page_ident = page_ident.split(',')[-1]
+            elif '_' in page_ident:
+                page_ident = page_ident.split('_')[-1]
+        pagenumber = int(page_ident)
+    except Exception:
+        raise FailPage(message = "The page number is invalid")
+    if pagenumber < 1:
+        raise FailPage(message = "The page number is invalid")
+    # check if an item with this page number already exists
+    item = skilift.item_info(project, pagenumber)
+    if item is not None:
+        raise FailPage(message = "This page number is already used (%s)" % (item.path,))
 
