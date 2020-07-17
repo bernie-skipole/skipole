@@ -44,6 +44,7 @@ main purpose is to act as a parent class for all other respond objects.
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': True,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # False if any number of fields, True if only a single field is required
 

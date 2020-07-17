@@ -38,6 +38,7 @@ If submit_data raises a FailPage then the fail_ident page will be called.
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': True,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -77,6 +78,7 @@ If submit_data raises a FailPage then the fail page will be called unchanged.
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -125,6 +127,7 @@ class SetCookies(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -193,6 +196,7 @@ The call to submit data will have the 'widgfield':widgfield tuple in the submit 
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': True,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -256,6 +260,7 @@ class FieldStoreSubmit(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,           # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': True}            # A single field is accepted
 
@@ -362,6 +367,7 @@ Only page_data['status'] and page_data['headers'] will be used if given.
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -443,6 +449,7 @@ Only page_data['status'] and page_data['headers'] will be used if given
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -592,6 +599,7 @@ list of two element lists acting as css declaration blocks.
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -622,6 +630,7 @@ Given media queries and CSS page targets, wraps the targets with the media queri
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': True,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':False,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -743,6 +752,7 @@ submit_data should return a binary file iterator
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,         # if fields is True, then False here means fields must be supplied
                      'field_values':False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 

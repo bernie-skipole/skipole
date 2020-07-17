@@ -47,9 +47,10 @@ under key 'received_data' which contains a dictionary of widgfield tuples:values
     # Options for the fields argument
     field_options = {'fields': True,                  # If False, no fields are expected
                      'widgfields':True,               # If True, fields are widgfields, if False, can be other constants
-                     'fields_optional': True,        # if fields is True, then False here means fields must be supplied
+                     'fields_optional': True,         # if fields is True, then False here means fields must be supplied
                      'widgfield_values':False,        # If True the field values are widgfields
-                     'field_values': False,            # if True, field values are used
+                     'field_values': False,           # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -154,6 +155,7 @@ class StoreData(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,           # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -211,6 +213,7 @@ class StoreDataKeyed(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': True,            # if True, field values are used
+                     'field_keys': True,              # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':False,    # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -285,6 +288,7 @@ with keys equal to the field values set here.
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'widgfield_values':False,        # If True the field values are widgfields
                      'field_values': True,            # if True, field values are used
+                     'field_keys': True,              # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':False,    # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -373,6 +377,7 @@ class AllowStore(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,           # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -470,6 +475,7 @@ class PrettyFormData(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': True,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -524,6 +530,7 @@ class Accept(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': True,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -578,6 +585,7 @@ class AllowedAccept(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': True,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 
@@ -627,6 +635,7 @@ class PageData(Respond):
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': True,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 

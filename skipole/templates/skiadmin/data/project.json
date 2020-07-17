@@ -29764,25 +29764,6 @@ false,
 [
 "Widget",
 {
-"class": "paras.DivPara",
-"name": "add_field_value_para",
-"brief": "text prior to add_field_value widget",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"para_class": "",
-"para_text": "Text not available",
-"pre_line": true,
-"show": false,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
 "class": "inputtext.TwoInputsSubmit1",
 "name": "add_field_value",
 "brief": "TwoInputsSubmit1",

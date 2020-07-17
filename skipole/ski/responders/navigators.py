@@ -33,6 +33,7 @@ This is not considered an error, and no error message will be raised
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': True,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':False,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}            # Multiple fields accepted
 
@@ -78,6 +79,7 @@ empty, any page can call it - on failure, calls the project validate error page.
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':False,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}            # Multiple fields accepted
 
@@ -111,6 +113,7 @@ to alternate_ident.
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': True}            # Only a single field is accepted
 
@@ -140,6 +143,7 @@ For a single given key in call data, if present, that key:value will be deleted 
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': True}            # Only a single field is accepted
 
@@ -169,6 +173,7 @@ Goes to Target page, can be used as a temporary place holder
                      'widgfield_values':False,        # If True the field values are widgfields
                      'fields_optional': False,        # if fields is True, then False here means fields must be supplied
                      'field_values': False,            # if True, field values are used
+                     'field_keys': False,             # if field_values is True, and this field_keys is True, the values supplied are dictionary keys
                      'empty_values_allowed':True,     # If True, '' is a valid value, if False, some data must be provided
                      'single_field': False}           # Multiple fields accepted
 

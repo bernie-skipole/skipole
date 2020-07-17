@@ -284,7 +284,6 @@ def retrieve_edit_respondpage(skicall):
     if f_options['field_values'] and ( not f_options['single_field'] ):
         page_data['field_values_list:show'] = True
         page_data['add_field_value:show'] = True
-        page_data['add_field_value_para:show'] = True
         # populate field_values_list
         contents = []
         field_vals = r_info.field_values_list
@@ -300,19 +299,15 @@ def retrieve_edit_respondpage(skicall):
             page_data['field_values_list:contents'] = contents
         else:
             page_data['field_values_list:show'] = False
-        # populate add_field_value
+        # set the add_field_value label to be descriptive
         if f_options['widgfields']:
-            if f_options['widgfield_values']:
-                 page_data['add_field_value_para:para_text'] = "Add widgfields in both the field area and in the value area"
+            if f_options['field_keys']:
+                page_data['add_field_value','label'] = "Widgfields and keys:"
             else:
-                page_data['add_field_value_para:para_text'] = "Add widgfield and value"
+                page_data['add_field_value','label'] = "Widgfields and values:"
         else:
-            page_data['add_field_value_para:para_text'] = "Add items"
             page_data['add_field_value','label'] = "Items:"
-        if f_options['empty_values_allowed']:
-           page_data['add_field_value_para:para_text'] += ", empty values are allowed:"
-        else:
-           page_data['add_field_value_para:para_text'] += ", empty values are not allowed:"
+
         return
        
 
