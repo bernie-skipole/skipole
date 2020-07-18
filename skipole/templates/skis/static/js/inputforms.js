@@ -188,7 +188,7 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
                               }
                           else {
                               // If no error received, clear any previous error
-                              self.clear_error();
+                              SKIPOLE.clear_all_errors();
                               SKIPOLE.setfields(result);
                               if (btn.attr("value") == button_wait_text) {
                                    btn.attr("value", buttontext);
@@ -216,6 +216,96 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
                       });
             }
         }
+    };
+
+
+
+SKIPOLE.inputforms.SubmitForm2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputforms.SubmitForm2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputforms.SubmitForm2.prototype.constructor = SKIPOLE.inputforms.SubmitForm2;
+SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
+    var selected_form = $(e.target);
+    if (!SKIPOLE.form_validate(selected_form)) {
+        // prevent the submission if validation failure
+        e.preventDefault();
+        return;
+        }
+
+    // form validated, set please wait message on button
+    var btn = $("#" + this.fieldvalues["buttonident"]);
+    var buttontext = btn.attr("value");
+    // set button_wait_text
+    var button_wait_text = this.fieldvalues["button_wait_text"]
+    if (button_wait_text) {
+        btn.attr("value", button_wait_text);
+        }
+
+    // Get the url to call
+    var url = this.fieldvalues["url"];
+    if (!url) {
+        url = selected_form.attr('action');
+        }
+    if (!url) {
+        e.preventDefault();
+        return;
+        }
+
+    // url set, send data
+    var self = this
+    var senddata = new FormData(selected_form[0]);
+    // Display the key/value pairs
+    // for (var pair of senddata.entries()) {
+    //    console.log(pair[0]+ ', ' + pair[1]); 
+    // }
+    e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: url,
+          data: senddata,
+          processData: false,
+          contentType: false,
+          type: 'POST',
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  if (self.get_error(result)) {
+                      // if error, set any results received from the json call
+                      SKIPOLE.setfields(result);
+                      if (btn.attr("value") == button_wait_text) {
+                           btn.attr("value", buttontext);
+                           }
+                      }
+                  else {
+                      // If no error received, clear any previous error
+                      SKIPOLE.clear_all_errors();
+                      SKIPOLE.setfields(result);
+                      if (btn.attr("value") == button_wait_text) {
+                           btn.attr("value", buttontext);
+                           }
+                      }
+                   } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          if (btn.attr("value") == button_wait_text) {
+                              btn.attr("value", buttontext);
+                              }
+                          SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
+                          }
+              });
     };
 
 

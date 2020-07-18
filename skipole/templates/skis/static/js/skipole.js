@@ -699,4 +699,16 @@ SKIPOLE.BaseWidget.prototype.clear_error = function() {
     };
 
 
-
+// clear errors on the page
+SKIPOLE.clear_all_errors = function() {
+    $('[data-status="error"]').each(function() {
+        // for each widget
+        var thiselement = $(this);
+        // get the widget of this thiselement
+        var widg_id = thiselement.prop('id');
+        if (widg_id in SKIPOLE.widgets) {
+            var this_widg = SKIPOLE.widgets[widg_id];
+            this_widg.clear_error();
+            }
+    })
+}

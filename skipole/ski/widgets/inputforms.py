@@ -439,4 +439,176 @@ class SubmitForm1(Widget):
 
 
 
+class SubmitForm2(Widget):
+    """A form taking contents with submit button, left or right labels and four hidden fields.
+       Used with further input fields set within it. On error - the error message is displayed
+       below the form tag, before any of the contents
+       Can send session or local storage values."""
+
+    _container = ((1,0),)
+
+    error_location = (0,0,0)
+
+    arg_descriptions = {'left_label':FieldArg("text", 'Please Submit:'),
+                        'left_class':FieldArg("cssclass", ''),
+                        'left_style':FieldArg("cssstyle", ''),
+                        'right_label':FieldArg("text", ''),
+                        'right_class':FieldArg("cssclass", ''),
+                        'right_style':FieldArg("cssstyle", ''),
+                        'action_json':FieldArg("url", ''),
+                        'action':FieldArg("url", ''),
+                        'enctype':FieldArg("text", ''),
+                        'hidden_field1':FieldArg("text", '', valdt=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'session_storage':FieldArg("text", "", valdt=True),
+                        'local_storage':FieldArg("text","", valdt=True),
+                        'button_text':FieldArg("text",'Submit'),
+                        'button_wait_text':FieldArg("text", ''),
+                        'button_class':FieldArg("cssclass", ''),
+                        'div_class':FieldArg("cssclass", ''),
+                        'container_class':FieldArg("cssclass", ''),
+                        'error_class':FieldArg("cssclass", ''),
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        left_label: The text displayed to the left of the button
+        left_class: The css class of the label to the left of the button
+        right_label: The text displayed to the right of the button
+        right_class: The css class of the label to the right of the button
+        action_json:  if a value set, and client has jscript enabled, this is the page ident, label, url this button links to, expects a json page back
+        action: The page ident, label, url this button links to
+        enctype: Sets the enctype attribute if given
+        hidden_field1: A hidden field value, leave blank if unused, name used as the get field name
+        hidden_field2: A second hidden field value, leave blank if unused, name used as the get field name
+        hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
+        hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
+        session_storage: A session storage key, this widgfield returns the stored value if anything
+        local_storage: A local storage key, this widgfield returns the stored value if anything
+        button_text: The text on the button
+        button_wait_text: A 'please wait' message shown on the button
+        button_class: The css class of the button
+        div_class: the class attribute of the div tag which contains the label and button
+        container_class: the class attribute of the div holding the container
+        error_class: The class applied to the paragraph containing the error message on error.
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        # error div at 0
+        self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
+        self[0][0] = tag.Part(tag_name="p")
+        self[0][0][0] = ''
+        # The form
+        self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
+        # The location 1,0 is available as a container
+        self[1][0] = tag.Part(tag_name='div')
+        self[1][0][0] = ''
+        # tag containing label and button
+        self[1][1] = tag.Part(tag_name='div')
+        # the left label
+        self[1][1][0] = tag.Part(tag_name="label", hide_if_empty=True)
+        # the submit button
+        self[1][1][1] = tag.ClosedPart(tag_name="input")
+        # the right label
+        self[1][1][2] = tag.Part(tag_name="label", hide_if_empty=True)
+        self._jsonurl = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the form"
+        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        if self.get_field_value('error_class'):
+            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.error_status:
+            self[0].del_one_attrib("style")
+        if not self.get_field_value("action"):
+            # setting self._error replaces the entire tag
+            self._error = "Warning: No form action"
+            return
+        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        if not actionurl:
+            # setting self._error replaces the entire tag
+            self._error = "Warning: broken link"
+            return
+        # update the action of the form
+        self[1].update_attribs({"action": actionurl})
+        if self.get_field_value('enctype'):
+            self[1].update_attribs({"enctype": self.get_field_value('enctype')})
+
+        # the div holding the container
+        if self.get_field_value('container_class'):
+            self[1][0].attribs = {"class": self.get_field_value('container_class')}
+
+        # the div holding label and button
+        if self.get_field_value('div_class'):
+            self[1][1].attribs = {"class": self.get_field_value('div_class')}
+
+        if self.get_field_value('left_label'):
+            self[1][1][0][0] = self.get_field_value('left_label')
+        if self.get_field_value('left_class'):
+            self[1][1][0].attribs = {"class": self.get_field_value('left_class')}
+        if self.get_field_value('left_style'):
+            self[1][1][0].attribs = {"style": self.get_field_value('left_style')}
+
+        # submit button
+        if self.get_field_value('button_class'):
+            self[1][1][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit", "class": self.get_field_value('button_class')}
+        else:
+            self[1][1][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit"}
+
+        # set an id in the submit button for the 'label for' tag
+        self[1][1][1].insert_id()
+
+        if self.get_field_value('right_label'):
+            self[1][1][2][0] = self.get_field_value('right_label')
+        if self.get_field_value('right_class'):
+            self[1][1][2].attribs = {"class": self.get_field_value('right_class')}
+        if self.get_field_value('right_style'):
+            self[1][1][2].attribs = {"style": self.get_field_value('right_style')}
+
+        # set the label 'for' attribute
+        self[1][1][0].update_attribs({'for':self[1][1][1].get_id()})
+        self[1][1][2].update_attribs({'for':self[1][1][1].get_id()})
+
+        # add ident and four hidden fields
+        self.add_hiddens(self[1], page)
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a submit event handler"""
+        jscript = """$('#{ident} form').on("submit", function(e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident=self.get_id())
+        if self._jsonurl:
+            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id(), url=self._jsonurl)
+        else:
+            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id())
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div> <!-- with widget id and class widget_class -->
+  <div> <!-- normally hidden div, with class error_class -->
+    <p> <!-- Any error text appears here --> </p>
+  </div>
+  <form method="post"> <!-- action attribute set to action field -->
+    <div>  <!-- this div has the class attribute set to container_class -->
+      <!-- container 0 for further html -->
+    </div>
+    <div>  <!-- this div has the class attribute set to div_class -->
+      <label> <!-- with class set to left_class and content to left_label -->
+      </label>
+      <input type=\"submit\" /> <!-- button value set to button_text -->
+      <label> <!-- with class set to right_class and content to right_label -->
+      </label>
+    </div>
+    <!-- hidden input fields -->                              
+  </form>
+</div>"""
+
+
+
 
