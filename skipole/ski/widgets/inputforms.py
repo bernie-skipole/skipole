@@ -581,9 +581,16 @@ class SubmitForm2(Widget):
     }});
 """.format(ident=self.get_id())
         if self._jsonurl:
-            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id(), url=self._jsonurl)
+            return jscript + self._make_fieldvalues('button_wait_text',
+                                                    'session_storage',
+                                                    'local_storage',
+                                                    buttonident = self[1][1][1].get_id(),
+                                                    url=self._jsonurl)
         else:
-            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id())
+            return jscript + self._make_fieldvalues('button_wait_text',
+                                                    'session_storage',
+                                                    'local_storage',
+                                                    buttonident = self[1][1][1].get_id())
 
 
     @classmethod
