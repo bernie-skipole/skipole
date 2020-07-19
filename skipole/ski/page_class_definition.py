@@ -1477,6 +1477,9 @@ class JSON(ParentPage):
         """Sets json content"""
         if not page_data:
             return
+        if 'ClearAllErrors' in page_data:
+            self.content["ClearAllErrors"] = bool(page_data['ClearAllErrors'])
+            del page_data['ClearAllErrors']
         if 'localStorage' in page_data:
             self.content["localStorage"] = page_data['localStorage']
             del page_data['localStorage']

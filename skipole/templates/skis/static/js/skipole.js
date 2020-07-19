@@ -54,6 +54,10 @@ SKIPOLE.inallowedlist =  function (item, allowed_values) {
 SKIPOLE.setfields = function(result) {
     try {
        // result is the contents of a json page listing widgfields and values
+       if ("ClearAllErrors" in result) {
+           // Clear errors in the page
+           SKIPOLE.clear_all_errors();
+           }
        if ("CatchToHTML" in result) {
            // Set the SKIPOLE.CatchToHTML variable to the given URL
            SKIPOLE.CatchToHTML = result["CatchToHTML"];
