@@ -1489,9 +1489,13 @@ class JSON(ParentPage):
             self.content["ClearAllErrors"] = bool(page_data['ClearAllErrors'])
             del page_data['ClearAllErrors']
         if 'localStorage' in page_data:
+            if not isinstance(page_data['localStorage'], dict):
+                raise ServerError("localStorage must be a dictionary")
             self.content["localStorage"] = page_data['localStorage']
             del page_data['localStorage']
         if 'sessionStorage' in page_data:
+            if not isinstance(page_data['sessionStorage'], dict):
+                raise ServerError("sessionStorage must be a dictionary")
             self.content["sessionStorage"] = page_data['sessionStorage']
             del page_data['sessionStorage']
         if 'throw' in page_data:
