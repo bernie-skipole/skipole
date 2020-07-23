@@ -812,71 +812,79 @@ $(document).ready(function(){
 
     def set_values(self, page_data):
         """Checks for special page template values, then passes on to parent set_values to set the widgets"""
-
-        if 'set_cookie' in page_data:
-            # sets the cookies in the page headers
-            sendcookies = page_data['set_cookie']
-            if sendcookies:
-                for morsel in sendcookies.values():
-                    self.headers.append(("Set-Cookie", morsel.OutputString()))
-            del page_data['set_cookie']                      # delete to stop parent object from testing this item is a widgfield
-        if 'CatchToHTML' in page_data:
-            self.catch_to_html = page_data['CatchToHTML']
-            del page_data['CatchToHTML']                      # delete to stop parent object from testing this item is a widgfield
-        if 'interval' in page_data:
-            interval = 0
-            try:
-                interval = page_data['interval']
-                del page_data['interval']
-                interval = int(interval)
-            except:
-                pass
-            else:
-                self.interval=interval
-        if 'IntervalTarget' in page_data:
-            self.interval_target = page_data['IntervalTarget']
-            del page_data['IntervalTarget']
-        if 'last_scroll' in page_data:
-            self.last_scroll = bool(page_data['last_scroll'])
-            del page_data['last_scroll']
-        if 'lang' in page_data:
-            if isinstance(page_data['lang'], 'tuple') or isinstance(page_data['lang'], 'list'):
-                self.lang = page_data['lang'][0]
-            else:
-                self.lang = page_data['lang']
-            del page_data['lang']
-        if 'show_backcol' in page_data:
-            self.show_backcol = bool(page_data['show_backcol'])
-            del page_data['show_backcol']
-        if 'backcol' in page_data:
-            self.backcol = page_data['backcol']
-            del page_data['backcol']
-        if 'body_class' in page_data:
-            self.body.update_attribs({'class':page_data['body_class']})
-            del page_data['body_class']
-        if 'show_error' in page_data:
-            page_data[self._default_error_widget.set_field(f='show_error')] = page_data['show_error']
-            del page_data['show_error']
-        if 'add_jscript' in page_data:
-            self._add_jscript = page_data['add_jscript']
-            del page_data['add_jscript']
-        if ('localStorage' in page_data) or ('sessionStorage' in page_data):
-            self._add_storage += """  if (typeof(Storage) !== "undefined") {
+        try:
+            if 'set_cookie' in page_data:
+                # sets the cookies in the page headers
+                sendcookies = page_data['set_cookie']
+                if sendcookies:
+                    for morsel in sendcookies.values():
+                        self.headers.append(("Set-Cookie", morsel.OutputString()))
+                del page_data['set_cookie']                      # delete to stop parent object from testing this item is a widgfield
+            if 'CatchToHTML' in page_data:
+                self.catch_to_html = page_data['CatchToHTML']
+                del page_data['CatchToHTML']                      # delete to stop parent object from testing this item is a widgfield
+            if 'interval' in page_data:
+                interval = 0
+                try:
+                    interval = page_data['interval']
+                    del page_data['interval']
+                    interval = int(interval)
+                except:
+                    pass
+                else:
+                    self.interval=interval
+            if 'IntervalTarget' in page_data:
+                self.interval_target = page_data['IntervalTarget']
+                del page_data['IntervalTarget']
+            if 'last_scroll' in page_data:
+                self.last_scroll = bool(page_data['last_scroll'])
+                del page_data['last_scroll']
+            if 'lang' in page_data:
+                if isinstance(page_data['lang'], 'tuple') or isinstance(page_data['lang'], 'list'):
+                    self.lang = page_data['lang'][0]
+                else:
+                    self.lang = page_data['lang']
+                del page_data['lang']
+            if 'show_backcol' in page_data:
+                self.show_backcol = bool(page_data['show_backcol'])
+                del page_data['show_backcol']
+            if 'backcol' in page_data:
+                self.backcol = page_data['backcol']
+                del page_data['backcol']
+            if 'body_class' in page_data:
+                self.body.update_attribs({'class':page_data['body_class']})
+                del page_data['body_class']
+            if 'show_error' in page_data:
+                page_data[self._default_error_widget.set_field(f='show_error')] = page_data['show_error']
+                del page_data['show_error']
+            if 'add_jscript' in page_data:
+                self._add_jscript = page_data['add_jscript']
+                del page_data['add_jscript']
+            if ('localStorage' in page_data) or ('sessionStorage' in page_data):
+                self._add_storage += """  if (typeof(Storage) !== "undefined") {
 """
-            if 'localStorage' in page_data:
-                for key,val in page_data['localStorage'].items():
-                    escapedval = json.dumps(val)
-                    self._add_storage += """    localStorage.setItem("%s", %s);
+                if 'localStorage' in page_data:
+                    if not isinstance(page_data['localStorage'], dict):
+                        raise ServerError("localStorage must be a dictionary")
+                    for key,val in page_data['localStorage'].items():
+                        escapedval = json.dumps(val)
+                        self._add_storage += """    localStorage.setItem("%s", %s);
 """ % (key,escapedval)
-                del page_data['localStorage']
-            if 'sessionStorage' in page_data:
-                for key,val in page_data['sessionStorage'].items():
-                    escapedval = json.dumps(val)
-                    self._add_storage += """    sessionStorage.setItem("%s", %s);
+                    del page_data['localStorage']
+                if 'sessionStorage' in page_data:
+                    if not isinstance(page_data['sessionStorage'], dict):
+                        raise ServerError("sessionStorage must be a dictionary")
+                    for key,val in page_data['sessionStorage'].items():
+                        escapedval = json.dumps(val)
+                        self._add_storage += """    sessionStorage.setItem("%s", %s);
 """ % (key,escapedval)
-                del page_data['sessionStorage']
-            self._add_storage += """    }
+                    del page_data['sessionStorage']
+                self._add_storage += """    }
 """
+        except ServerError:
+            raise
+        except:
+            raise ServerError("Error while setting values into Template page")
         TemplatePageAndSVG.set_values(self, page_data)
 
     def data(self):

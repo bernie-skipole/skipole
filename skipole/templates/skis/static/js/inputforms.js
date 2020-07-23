@@ -255,10 +255,38 @@ SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
     // url set, send data
     var self = this
     var senddata = new FormData(selected_form[0]);
-    // Display the key/value pairs
+
+    var sessionkey = this.fieldvalues["session_storage"];
+    var localkey = this.fieldvalues["local_storage"];
+
+    if (sessionkey || localkey) {
+        // set stored data into senddata
+        if (typeof(Storage) !== "undefined") {
+
+            if (sessionkey) {
+                // get the key value from storage
+                let s_keyvalue = sessionStorage.getItem(sessionkey);
+                if (s_keyvalue != null) {
+                    senddata.append(this.formname("session_storage"), s_keyvalue);
+                    }
+                }
+            if (localkey) {
+                // get the key value from storage
+                let l_keyvalue = localStorage.getItem(localkey);
+                if (l_keyvalue != null) {
+                    senddata.append(this.formname("local_storage"), l_keyvalue);
+                    }
+                }
+
+            }
+        }
+
+    // Display the key/value pairs in senddata
     // for (var pair of senddata.entries()) {
     //    console.log(pair[0]+ ', ' + pair[1]); 
     // }
+
+
     e.preventDefault();
     // respond to json or html
     $.ajax({
