@@ -503,3 +503,165 @@ SKIPOLE.inputtext.SubmitDict1.prototype = Object.create(SKIPOLE.BaseWidget.proto
 SKIPOLE.inputtext.SubmitDict1.prototype.constructor = SKIPOLE.inputtext.SubmitDict1;
 
 
+
+SKIPOLE.inputtext.SubmitTextInput2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputtext.SubmitTextInput2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.SubmitTextInput2.prototype.constructor = SKIPOLE.inputtext.SubmitTextInput2;
+SKIPOLE.inputtext.SubmitTextInput2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    this.check_error(fieldlist, result);
+    // session_storage
+    var sessionkey = this.fieldarg_in_result('session_storage', result, fieldlist);
+    if (sessionkey) {
+        this.fieldvalues["session_storage"] = sessionkey;
+        }
+    // local_storage
+    var localkey = this.fieldarg_in_result('local_storage', result, fieldlist);
+    if (localkey) {
+        this.fieldvalues["local_storage"] = localkey;
+        }
+    var text_input = this.widg.find('input[type="text"]');
+    // Check for set_input_accepted or set_input_errored
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text !== undefined) {
+        text_input.val(input_text);
+        }
+    // hide
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide !== undefined) {
+        if (set_hide) {
+            if (this.widg.is(":visible")) {
+                this.widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(this.widg.is(":visible"))) {
+                this.widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput2.prototype.eventfunc = function (e) {
+    if (e.type == 'submit') {
+        // form submitted
+        e.preventDefault();
+        var selected_form = $(e.target);
+        if (!SKIPOLE.form_validate(selected_form)) {
+            return;
+            }
+
+        // Get the url to call
+        var url = this.fieldvalues["url"];
+        if (!url) {
+            url = selected_form.attr('action');
+            }
+        if (!url) {
+            return;
+            }
+
+
+        // url set, send data
+        var self = this
+        var senddata = new FormData(selected_form[0]);
+
+        var sessionkey = this.fieldvalues["session_storage"];
+        var localkey = this.fieldvalues["local_storage"];
+
+        if (sessionkey || localkey) {
+            // set stored data into senddata
+            if (typeof(Storage) !== "undefined") {
+
+                if (sessionkey) {
+                    // get the key value from storage
+                    let s_keyvalue = sessionStorage.getItem(sessionkey);
+                    if (s_keyvalue != null) {
+                        senddata.append(this.formname("session_storage"), s_keyvalue);
+                        }
+                    }
+                if (localkey) {
+                    // get the key value from storage
+                    let l_keyvalue = localStorage.getItem(localkey);
+                    if (l_keyvalue != null) {
+                        senddata.append(this.formname("local_storage"), l_keyvalue);
+                        }
+                    }
+
+                }
+            }
+
+        // Display the key/value pairs in senddata
+        // for (var pair of senddata.entries()) {
+        //    console.log(pair[0]+ ', ' + pair[1]); 
+        // }
+
+
+        // respond to json or html
+        $.ajax({
+              url: url,
+              data: senddata,
+              processData: false,
+              contentType: false,
+              type: 'POST'
+                  })
+              .done(function(result, textStatus, jqXHR) {
+                 if (jqXHR.responseJSON) {
+                      // JSON response
+                      if (self.get_error(result)) {
+                          // if error, set any results received from the json call
+                          SKIPOLE.setfields(result);
+                          }
+                      else {
+                          // If no error received, clear any previous error
+                          self.clear_error();
+                          SKIPOLE.setfields(result);
+                          // enable input event, which is used to clear set_accepted class on input
+                          self.widg.on('input', function(e) {self.eventfunc(e)});
+                          }
+                       } else {
+                          // html response
+                          document.open();
+                          document.write(result);
+                          document.close();
+                          }
+                  })
+              .fail(function( jqXHR, textStatus, errorThrown ) {
+                          if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                              document.open();
+                              document.write(jqXHR.responseText);
+                              document.close();
+                              }
+                          else {
+                              SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
+                              }
+                  });
+        }
+    else if (e.type == 'input'){
+        // text changed in input field
+        this.widg.off(e);
+        this.set_accepted($(e.target),false);
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput2.prototype.show_error = function (error_message) {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
+    var input_field = this.widg.find('input[type="text"]');
+    this.set_errored(input_field, true);
+    };
+SKIPOLE.inputtext.SubmitTextInput2.prototype.clear_error = function() {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.clear_error.call(this);
+    var input_field = this.widg.find('input[type="text"]');
+    this.set_errored(input_field, false);
+    };
+

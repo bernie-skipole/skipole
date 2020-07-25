@@ -236,6 +236,16 @@
 "label_class": "ski_left_label",
 "widget_class": "w3-section"
 },
+"SubmitTextInput2": {
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "w3-pale-green",
+"input_errored_class": "w3-pale-red",
+"inputandbutton_style": "white-space: nowrap;",
+"inputdiv_class": "w3-section",
+"label_style": "display:inline-block;margin-right:1%;text-align:right;width:30%;",
+"widget_class": "w3-container"
+},
 "SubmitTextInput3": {
 "button_class": "w3-button w3-theme-d4",
 "button_label_class": "ski_left_label",

@@ -188,7 +188,7 @@ SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
                               }
                           else {
                               // If no error received, clear any previous error
-                              SKIPOLE.clear_all_errors();
+                              self.clear_error();
                               SKIPOLE.setfields(result);
                               if (btn.attr("value") == button_wait_text) {
                                    btn.attr("value", buttontext);
@@ -225,6 +225,26 @@ SKIPOLE.inputforms.SubmitForm2 = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.inputforms.SubmitForm2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.inputforms.SubmitForm2.prototype.constructor = SKIPOLE.inputforms.SubmitForm2;
+
+
+SKIPOLE.inputforms.SubmitForm2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    // session_storage
+    var sessionkey = this.fieldarg_in_result('session_storage', result, fieldlist);
+    if (sessionkey) {
+        this.fieldvalues["session_storage"] = sessionkey;
+        }
+    // local_storage
+    var localkey = this.fieldarg_in_result('local_storage', result, fieldlist);
+    if (localkey) {
+        this.fieldvalues["local_storage"] = localkey;
+        }
+    };
+
+
+
 SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
     var selected_form = $(e.target);
     if (!SKIPOLE.form_validate(selected_form)) {
@@ -308,7 +328,7 @@ SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
                       }
                   else {
                       // If no error received, clear any previous error
-                      SKIPOLE.clear_all_errors();
+                      self.clear_error();
                       SKIPOLE.setfields(result);
                       if (btn.attr("value") == button_wait_text) {
                            btn.attr("value", buttontext);
