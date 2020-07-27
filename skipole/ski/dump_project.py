@@ -6,9 +6,8 @@ from collections import OrderedDict
 from . import skiboot, excepts, tag
 
 
-
-def templatepage_to_OD(proj_ident, page):
-    """Returns an OrderedDictionary of the template page"""
+def page_to_OD(proj_ident, page):
+    """Returns an OrderedDictionary of the page"""
     proj = skiboot.getproject(proj_ident)
     ident = page.ident
     page_dict = OrderedDict()
@@ -19,22 +18,20 @@ def templatepage_to_OD(proj_ident, page):
     page_dict["ident"] = ident.num
     if page.brief:
         page_dict["brief"] = page.brief
-    return _create_templatepage(page_dict, page, ident, proj_ident)
-
-
-def svg_to_OD(proj_ident, page):
-    """Returns an OrderedDictionary of the svg page"""
-    proj = skiboot.getproject(proj_ident)
-    ident = page.ident
-    page_dict = OrderedDict()
-    page_dict["name"] = page.name
-    page_dict["version"] = proj.version
-    # stores the version of this skipole
-    page_dict["skipole"] = skiboot.version()
-    page_dict["ident"] = ident.num
-    if page.brief:
-        page_dict["brief"] = page.brief
-    return _create_svgpage(page_dict, page, ident, proj_ident)
+    if page.page_type == 'FilePage':
+        return _create_filepage(page_dict, page, ident, proj_ident)
+    elif page.page_type == 'RespondPage':
+        return _create_respondpage(page_dict, page, ident, proj_ident)
+    elif page.page_type == 'CSS':
+        return _create_csspage(page_dict, page, ident, proj_ident)
+    elif page.page_type == 'JSON':
+        return _create_jsonpage(page_dict, page, ident, proj_ident)
+    elif page.page_type == 'SVG':
+        return _create_svgpage(page_dict, page, ident, proj_ident)
+    elif page.page_type == 'TemplatePage':
+        return _create_templatepage(page_dict, page, ident, proj_ident)
+    else:
+        return OrderedDict()
 
 
 def folder_to_OD(proj_ident, folder):

@@ -133,11 +133,12 @@ def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_d
     raise ServerError(message = "Invalid JSON file")
 
 
-def page_to_OD(project, pagenumber):
+def page_to_OD(project, pagenumber, template_svg_only=True):
     """Given a project name, and a page number, returns an Ordered Dictionary defining the page.
 
        The project must be currently loaded as either the root project or a sub-project,
-       and the page must exist in the project."""
+       and the page must exist in the project. As default the page must be a Template or SVG page, if
+       template_svg_only is set False, then any page will be accepted."""
     # raise error if invalid project
     project_loaded(project)
     if not isinstance(pagenumber, int):
@@ -145,22 +146,22 @@ def page_to_OD(project, pagenumber):
     page = skiboot.from_ident(pagenumber, project)
     if page is None:
         raise ServerError(message="Page not found")
-    if page.page_type == 'SVG':
-        page_dict = dump_project.svg_to_OD(project, page)
-    elif page.page_type == 'TemplatePage':
-        page_dict = dump_project.templatepage_to_OD(project, page)
-    else:
-        raise ServerError(message="The given pagenumber is not that of an svg or template page")
-    return page_dict
+    if page.page_type == 'Folder':
+        raise ServerError(message="The requested item is a Folder")
+    if template_svg_only:
+        if (page.page_type != 'SVG') and (page.page_type != 'TemplatePage'):
+            raise ServerError(message="The requested item is not a Template or SVG page")
+    return dump_project.page_to_OD(project, page)
 
 
-def page_to_json(project, pagenumber, indent=0):
+def page_to_json(project, pagenumber, indent=0, template_svg_only=True):
     """Given a project name, and a page number, returns a json string defining the page.
 
        The project must be currently loaded as either the root project or a sub-project,
        and the page must exist in the project.
-       The indent parameter should be the number of indentation spaces to use when formatting the string."""
-    page_dict = page_to_OD(project, pagenumber)
+       The indent parameter should be the number of indentation spaces to use when formatting the string.
+       As default the page must be a Template or SVG page, if template_svg_only is set False, then any page will be accepted."""
+    page_dict = page_to_OD(project, pagenumber, template_svg_only)
     return json.dumps(page_dict, indent=indent, separators=(',', ':'))
 
 

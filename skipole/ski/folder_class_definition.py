@@ -55,10 +55,6 @@ class Folder(object):
 
     """
 
-    # though this is not a page_type, it has a page_type class attribute so this
-    # can be checked for any item
-    page_type = "Folder"
-
 
     def __init__(self, name=None, brief = "New Folder", default_page_name = "", restricted=False):
         """Initiates a Folder instance
@@ -84,6 +80,12 @@ class Folder(object):
         self.brief = brief
         # the change is a uuid which alters whenever the page changes
         self.change = uuid.uuid4().hex
+
+    @property
+    def page_type(self):
+        """"Though this is not a page, it has a page_type class attribute so this
+            can be checked for any item"""
+        return self.__class__.__name__
 
     @property
     def proj_ident(self):
@@ -349,8 +351,6 @@ class Folder(object):
             return "Folder name %s" % (self._name,)
 
 
-
-
 class RootFolder(Folder):
     """Represents the site root - inherits from Folder with some methods
        overwritten"""
@@ -360,6 +360,12 @@ class RootFolder(Folder):
         Folder.__init__(self, name=None, brief=brief, default_page_name = default_page_name, restricted=False)
         self.ident = skiboot.Ident(proj_ident, 0)  # rootfolder always has Ident.num of zero
         self._restricted = False
+
+    @property
+    def page_type(self):
+        """"Though this is not a page, it has a page_type class attribute so this
+            can be checked for any item. In this case, the page_type needs to be Folder rather than the class name"""
+        return "Folder"
 
     @property
     def restricted(self):
