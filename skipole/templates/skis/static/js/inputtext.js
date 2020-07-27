@@ -533,6 +533,27 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.setvalues = function (fieldlist, re
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
+    // hidden_fields
+    var hf1 = this.fieldarg_in_result('hidden_field1', result, fieldlist);
+    if (hf1 !== undefined) {
+        var find_field_name1 = "input:hidden[name=\"" + this.formname('hidden_field1') + "\"]";
+        this.widg.find(find_field_name1).first().val(hf1)
+        }
+    var hf2 = this.fieldarg_in_result('hidden_field2', result, fieldlist);
+    if (hf2 !== undefined) {
+        var find_field_name2 = "input:hidden[name=\"" + this.formname('hidden_field2') + "\"]";
+        this.widg.find(find_field_name2).first().val(hf2)
+        }
+    var hf3 = this.fieldarg_in_result('hidden_field3', result, fieldlist);
+    if (hf3 !== undefined) {
+        var find_field_name3 = "input:hidden[name=\"" + this.formname('hidden_field3') + "\"]";
+        this.widg.find(find_field_name3).first().val(hf3)
+        }
+    var hf4 = this.fieldarg_in_result('hidden_field4', result, fieldlist);
+    if (hf4 !== undefined) {
+        var find_field_name4 = "input:hidden[name=\"" + this.formname('hidden_field4') + "\"]";
+        this.widg.find(find_field_name4).first().val(hf4)
+        }
     // hide
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
@@ -570,6 +591,20 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.eventfunc = function (e) {
         // url set, send data
         var self = this
         var senddata = new FormData(selected_form[0]);
+
+        // remove hidden keys if empty values 
+        if (senddata.get(this.formname('hidden_field1')) === '') {
+            senddata.delete(this.formname('hidden_field1'));
+            }
+        if (senddata.get(this.formname('hidden_field2')) === '') {
+            senddata.delete(this.formname('hidden_field2'));
+            }
+        if (senddata.get(this.formname('hidden_field3')) === '') {
+            senddata.delete(this.formname('hidden_field3'));
+            }
+        if (senddata.get(this.formname('hidden_field4')) === '') {
+            senddata.delete(this.formname('hidden_field4'));
+            }
 
         var sessionkey = this.fieldvalues["session_storage"];
         var localkey = this.fieldvalues["local_storage"];

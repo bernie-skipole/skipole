@@ -1739,10 +1739,10 @@ class SubmitTextInput2(Widget):
                         'label_style':FieldArg("cssstyle", ''),
                         'action_json':FieldArg("url", ''),
                         'action':FieldArg("url", ''),
-                        'hidden_field1':FieldArg("text", '', valdt=True),
-                        'hidden_field2':FieldArg("text", '', valdt=True),
-                        'hidden_field3':FieldArg("text", '', valdt=True),
-                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'hidden_field1':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True, jsonset=True),
                         'session_storage':FieldArg("text", "", valdt=True, jsonset=True),
                         'local_storage':FieldArg("text","", valdt=True, jsonset=True),
                         'target':FieldArg("text",''),
@@ -1910,8 +1910,8 @@ class SubmitTextInput2(Widget):
             self[1][0][1][1][0] = self.get_field_value('button_text')
 
 
-        # add ident and four hidden fields
-        self.add_hiddens(self[1], page)
+        # add ident and four hidden fields, always add is True so javascript can update fields
+        self.add_hiddens(self[1], page, always_add=True)
 
 
 
