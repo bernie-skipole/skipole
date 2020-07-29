@@ -83,6 +83,11 @@ def retrieve_edited_folder(skicall):
     page_data['ftree', 'droprows'] = droprows
     page_data['ftree', 'dropident'] = 'drop_rows' # label of responder
 
+    # cols
+    # A list of two element lists for every column in the table:
+    # 0 The target HTML ident or label of buttons in the column, if the second element of this list is empty string or the client has javascript disabled.
+    # 1 The target JSON ident or label of buttons in the column.
+
     page_data['ftree', 'cols'] = [ ["", ""],
                                    ["", ""],
                                    ["", ""],
@@ -90,6 +95,7 @@ def retrieve_edited_folder(skicall):
                                    ["edit_action", ""],
                                    ["edit_action", ""],
                                    ["edit_action", ""],
+                                   ["no_javascript", "2003"],           # calls responder which calls copy_page
                                    ["no_javascript", "2004"]  ]
 
 
@@ -281,6 +287,165 @@ def choose_remove_action(skicall):
     page_data['page_delete', 'para_text'] = "Delete %s with ident %s and name %s" % (info.item_type, info.itemnumber, info.name)
     page_data['page_delete', 'get_field2_1'] = project + '_' + str(itemnumber)
 
+
+def copy_page(skicall):
+    """If chosen from a page row, copies a page, stores into localStorage
+       If chosen from a folder row, pastes the copied page"""
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    if ('ftree', 'contents') not in call_data:
+        raise FailPage(message = "Requested action not recognised")
+    action = call_data['ftree', 'contents']
+    try:
+        get_field_list = action.split('_')
+        project = get_field_list[-2]
+        itemnumber = int(get_field_list[-1])
+        info = skilift.item_info(project, itemnumber)
+    except Exception:
+        raise FailPage(message = "Item to copy not recognised")
+    if not info:
+        raise FailPage(message = "Item to copy not recognised")
+    if info.item_type != "Folder":
+        # Its a page
+        try:
+            jsonstring = fromjson.page_to_json(project, itemnumber, template_svg_only=False)
+        except ServerError as e:
+            raise FailPage(message=e.message)
+        page_data['localStorage'] = {'ski_page':jsonstring}
+        call_data['status'] = "Page %s is copied, choose Paste Page on a Folder." % itemnumber
+        return
+    # So item_type is Folder, the paste button has been pressed, display modal box requesting a new id number
+    page_data['pastediv', 'hide'] = False
+    # set next available ident number in pastepage
+    page_data['pastepage', 'input_text'] = str(skilift.next_ident_number(project))
+    page_data['pastepage', 'hidden_field1'] = action
+
+
+def paste_page(skicall):
+    "Called to paste a page into the folder"
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    editedprojname = call_data['editedprojname']
+
+    if ('pastepage', 'hidden_field1') not in call_data:
+        raise FailPage(message = "Requested action not recognised", widget='pastepage')
+    action = call_data['pastepage', 'hidden_field1']
+    try:
+        get_field_list = action.split('_')
+        project = get_field_list[-2]
+        if project != editedprojname:
+            raise FailPage(message = "Folder not recognised", widget='pastepage')
+        itemnumber = int(get_field_list[-1])
+        info = skilift.item_info(project, itemnumber)
+    except Exception:
+        raise FailPage(message = "Folder not recognised", widget='pastepage')
+    if not info:
+        raise FailPage(message = "Folder not recognised", widget='pastepage')
+    if info.item_type != "Folder":
+        raise FailPage(message = "Can only paste into a Folder!", widget='pastepage')
+    if ('pastepage', 'input_text') not in call_data:
+        pagenumber = skilift.next_ident_number(project)
+    else:
+        try:
+            pagenumber = int(call_data['pastepage', 'input_text'])
+        except:
+            raise FailPage(message = "New page number must be an integer", widget='pastepage')
+    # check pagenumber is valid
+    if pagenumber < 1:
+        raise FailPage(message = "The page number is invalid", widget='pastepage')
+    # check if an item with this page number already exists
+    item = skilift.item_info(project, pagenumber)
+    if item is not None:
+        raise FailPage(message = "This page number is already used (%s)" % (item.path,), widget='pastepage')
+    # get pages in the folder
+    default_page_name, page_names = skilift.folder_page_names(project, itemnumber)
+    base_page_name = "newpage"
+    new_page_name = "newpage"
+    new_page_count = 1
+    while True:
+        if new_page_name in page_names:
+            new_page_count += 1
+            new_page_name = base_page_name + str(new_page_count)
+        else:
+            break
+    call_data['NewName'] = new_page_name
+    call_data['NewBrief'] = "New page %s" % pagenumber
+    if ('pastepage', 'local_storage') not in call_data:
+        # divert to page to input ident number of page to be copied - 22461
+        call_data['InFolder'] = itemnumber
+        call_data['NewPage'] = pagenumber
+        _retrieve_new_copypage(skicall)
+        raise GoTo(target=(call_data['adminproj'], 22461))
+    else:
+        # we have the page data
+        # Get the page to be copied
+        json_string = call_data['pastepage', 'local_storage']
+        # create the page
+        try:
+            fromjson.create_page(project, itemnumber, pagenumber, new_page_name, call_data['NewBrief'], json_string)
+            fchange = editfolder.folderchange(project, itemnumber)
+        except ServerError as e:
+            raise FailPage(message = e.message, widget='pastepage')
+        # folder_number and fchange are held in session data, if these have been changed, set into session data
+        if "folder_number" in call_data:
+            folder_number = call_data["folder_number"]
+            if folder_number == itemnumber:
+                call_data["fchange"] = fchange
+        else:
+            folder_number = itemnumber
+            call_data["folder_number"] = folder_number
+            call_data["fchange"] = fchange
+
+        # This data sent in general_json 
+        contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
+        page_data['ftree', 'contents'] = contents
+        page_data['ftree', 'dragrows'] = dragrows
+        page_data['ftree', 'droprows'] = droprows
+        # hide the pastediv and show status
+        call_data['status'] = 'Page %s added' % (new_page_name,)
+        page_data['pastediv', 'hide'] = True
+        page_data['ClearAllErrors'] = True
+
+
+def _retrieve_new_copypage(skicall):
+    """Gets data for a create a page copy - variation of similar function in addpage.py
+       Fills in the details for the page requesting the ident, or upload of a page to be copied"""
+
+    call_data = skicall.call_data
+    page_data = skicall.page_data
+
+    editedprojname = call_data['editedprojname']
+
+    new_name = call_data['NewName']
+    new_brief = call_data['NewBrief']
+    
+    parent_url = skilift.page_path(editedprojname, call_data['InFolder'])
+
+    page_data[("adminhead","page_head","large_text")] = "Add a page copy to : %s" % (parent_url,)
+
+    # information paragraphs
+    page_data['page_name_text:para_text'] = "New page name : " + new_name
+    page_data['page_brief_text:para_text'] = "Description   : " + new_brief
+
+    # information hidden fields
+    page_data['copyident','pagename'] = new_name
+    page_data['copyident','pagebrief'] = new_brief
+    page_data['copyident','pageident'] = str(call_data['NewPage'])
+    page_data['copyident','parent'] = str(call_data['InFolder'])
+
+    page_data['upload','pagename'] = new_name
+    page_data['upload','pagebrief'] = new_brief
+    page_data['upload','pageident'] = str(call_data['NewPage'])
+    page_data['upload','parent'] = str(call_data['InFolder'])
+
+    # top descriptive text
+    page_data['top_text:para_text'] = """To copy a page, either the ident number of an existing page to be copied is required, alternatively - a previously downloaded page definition file can be uploaded."""
+
+    # the submit ident text input
+    if 'copyident' in call_data:
+        page_data['copyident','input_text'] = call_data['copyident']
 
 
 def delete_item(skicall):
@@ -548,10 +713,13 @@ def _foldertree(projectname, foldernumber):
     # sixth cell is add folder
     contents.append( ('Add Folder', 'width : 1%;text-align: center;', True, 'add_folder_' + folder_ident)    )
 
-    # seventh cell is add page
-    contents.append( ('Add Page', 'width : 1%;text-align: center;', True, 'add_page_' + folder_ident) )
+    # seventh cell is add a new page
+    contents.append( ('New Page', 'width : 1%;text-align: center;', True, 'add_page_' + folder_ident) )
 
-    # eighth cell is remove line - but no remove link for the top line
+    # eighth cell is paste page
+    contents.append( ('Paste Page', 'width : 1%;text-align: center;', True, 'paste_page_' + folder_ident) )
+
+    # ninth cell is remove line - but no remove link for the top line
     contents.append( ('', '', False, '') )
 
     dragrows.append([False, ""])
@@ -624,7 +792,10 @@ def _show_pages(contents, projectname, foldernumber, dragrows, droprows, indent)
         else:
             raise ServerError(message="An unknown page type")
 
-        # eighth column is remove page
+        # eighth column is copy page
+        contents.append( ('Copy', 'width : 1%;text-align: center;', True, page_ident) )
+
+        # ninth column is remove page
         contents.append( ('Remove', 'width : 1%;text-align: center;', True, page_ident) )
 
     return
@@ -668,10 +839,13 @@ def _show_folders(contents, projectname, foldernumber, dragrows, droprows, inden
         # sixth column is add folder
         contents.append( ('Add Folder', 'width : 1%;text-align: center;', True, 'add_folder_' + folder_ident) )
 
-        # seventh column is add page
-        contents.append( ('Add Page', 'width : 1%;text-align: center;', True, 'add_page_' + folder_ident) )
+        # seventh column is add a new page
+        contents.append( ('New Page', 'width : 1%;text-align: center;', True, 'add_page_' + folder_ident) )
 
-        # eighth column is remove line - but no remove if folder has contents
+        # eighth cell is paste page
+        contents.append( ('Paste Page', 'width : 1%;text-align: center;', True, 'paste_page_' + folder_ident) )
+
+        # ninth column is remove line - but no remove if folder has contents
         if finfo.contains_pages or finfo.contains_folders:
             contents.append( ('', '', False, '') )
         else:

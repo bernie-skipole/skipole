@@ -5542,6 +5542,33 @@ false
 "original_fields": {}
 }
 },
+"copy_page": {
+"ident": 2003,
+"brief": "Places page copy into session storage",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"copy_page"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"ftree:contents": ""
+}
+}
+},
 "default": {
 "ident": 2700,
 "brief": "Change default page",
@@ -5912,6 +5939,35 @@ false
 "upload:pageident": "page_ident_number",
 "upload:pagename": "new_page",
 "upload:parent": "edited_folder"
+}
+}
+},
+"paste_page": {
+"ident": 2001,
+"brief": "Accepts the stored page data and pastes the page into the folder",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+22009
+],
+"alternate_ident": "admin_home",
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editfolder",
+"paste_page"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"pastepage:hidden_field1": "",
+"pastepage:input_text": "",
+"pastepage:local_storage": ""
 }
 }
 },
@@ -27489,6 +27545,105 @@ false
 "widget_class": "w3-modal",
 "widget_style": ""
 }
+}
+],
+[
+"Widget",
+{
+"class": "dropdown.HiddenContainer",
+"name": "pastediv",
+"brief": "Modal container for pasting a page",
+"fields": {
+"boxdiv_class": "w3-modal-content w3-panel w3-theme-d2 w3-border",
+"boxdiv_style": "",
+"button_class": "w3-bar-item w3-button w3-right w3-theme-l2",
+"buttondiv_class": "w3-bar",
+"buttondiv_style": "",
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"hide": true,
+"inner_class": "w3-panel",
+"inner_style": "",
+"link_ident": "no_javascript",
+"show": true,
+"widget_class": "w3-modal",
+"widget_style": ""
+},
+"container_0": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "The form",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About setting a new ident",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The page you are inserting requires a new unique ident number, you can accept the number given here, or input a new one of your choice."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.SubmitTextInput2",
+"name": "pastepage",
+"brief": "Form to set new ident of the page to be pasted",
+"fields": {
+"action": "no_javascript",
+"action_json": "2001",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Submit",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"hide": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_errored_class": "w3-pale-red",
+"input_text": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
+"inputdiv_class": "w3-section",
+"label": "Page ident :",
+"label_class": "",
+"label_style": "display:inline-block;margin-right:1%;text-align:right;width:30%;",
+"local_storage": "ski_page",
+"maxlength": "",
+"pattern": "",
+"required": false,
+"session_storage": "",
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "",
+"target": "",
+"title": "",
+"type": "text",
+"widget_class": "w3-container",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
 }
 ],
 [

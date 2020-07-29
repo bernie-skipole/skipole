@@ -130,7 +130,19 @@ def create_page(project, parentnumber, pagenumber, page_name, page_brief, json_d
     elif "TemplatePage" in page_dict:
         read_json.create_templatepage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
         return
-    raise ServerError(message = "Invalid JSON file")
+    elif "FilePage" in page_dict:
+        read_json.create_filepage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
+        return
+    elif "CSS" in page_dict:
+        read_json.create_csspage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
+        return
+    elif "JSON" in page_dict:
+        read_json.create_jsonpage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
+        return
+    elif "RespondPage" in page_dict:
+        read_json.create_respondpage(project, parentnumber, pagenumber, page_name, page_brief, page_dict)
+        return
+    raise ServerError(message = "Invalid JSON data")
 
 
 def page_to_OD(project, pagenumber, template_svg_only=True):
