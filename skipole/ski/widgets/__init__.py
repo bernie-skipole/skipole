@@ -1271,8 +1271,8 @@ class Widget(tag.Part):
         return fieldname
 
 
-    def add_hiddens(self, form, page=None, always_add=False):
-        "Used to add ident and four hidden fields to a form, requires this widget to have these hidden fields"
+    def add_hiddens(self, form, page=None):
+        "Used to add ident and four hidden fields to a form"
         # all submissions always have an 'ident' hidden field to provide the ident of the calling page
         if page is not None:
             form.append(tag.ClosedPart(tag_name="input",
@@ -1285,23 +1285,12 @@ class Widget(tag.Part):
                                        attribs ={"name":self.get_formname('hidden_field1'),
                                                  "value":self.get_field_value('hidden_field1'),
                                                  "type":"hidden"}))
-        elif always_add:
-            form.append(tag.ClosedPart(tag_name="input",
-                                       attribs ={"name":self.get_formname('hidden_field1'),
-                                                 "value":"",
-                                                 "type":"hidden"}))
-
 
         # Second hidden field on the form
         if self.get_field_value('hidden_field2'):
             form.append(tag.ClosedPart(tag_name="input",
                                        attribs ={"name":self.get_formname('hidden_field2'),
                                                  "value":self.get_field_value('hidden_field2'),
-                                                 "type":"hidden"}))
-        elif always_add:
-            form.append(tag.ClosedPart(tag_name="input",
-                                       attribs ={"name":self.get_formname('hidden_field2'),
-                                                 "value":"",
                                                  "type":"hidden"}))
 
         # third hidden field on the form
@@ -1310,23 +1299,12 @@ class Widget(tag.Part):
                                        attribs ={"name":self.get_formname('hidden_field3'),
                                                  "value":self.get_field_value('hidden_field3'),
                                                  "type":"hidden"}))
-        elif always_add:
-            form.append(tag.ClosedPart(tag_name="input",
-                                       attribs ={"name":self.get_formname('hidden_field3'),
-                                                 "value":"",
-                                                 "type":"hidden"}))
-
 
         # fourth hidden field on the form
         if self.get_field_value('hidden_field4'):
             form.append(tag.ClosedPart(tag_name="input",
                                        attribs ={"name":self.get_formname('hidden_field4'),
                                                  "value":self.get_field_value('hidden_field4'),
-                                                 "type":"hidden"}))
-        elif always_add:
-            form.append(tag.ClosedPart(tag_name="input",
-                                       attribs ={"name":self.get_formname('hidden_field4'),
-                                                 "value":"",
                                                  "type":"hidden"}))
 
 

@@ -1910,8 +1910,8 @@ class SubmitTextInput2(Widget):
             self[1][0][1][1][0] = self.get_field_value('button_text')
 
 
-        # add ident and four hidden fields, always add is True so javascript can update fields
-        self.add_hiddens(self[1], page, always_add=True)
+        # add ident and four hidden fields
+        self.add_hiddens(self[1], page)
 
 
 

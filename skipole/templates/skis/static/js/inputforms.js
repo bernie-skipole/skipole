@@ -231,6 +231,67 @@ SKIPOLE.inputforms.SubmitForm2.prototype.setvalues = function (fieldlist, result
     if (!this.widg_id) {
         return;
         }
+
+    // alter hidden_fields in the form, or append new ones if they dont exist
+    var hf1 = this.fieldarg_in_result('hidden_field1', result, fieldlist);
+    if (hf1 !== undefined) {
+        let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field1') + "\"]";
+        let isfield = this.widg.find(find_field_name);
+        if (isfield.length){
+            isfield.first().val(hf1);
+            }
+        else {
+            let formtag = this.widg.find("form");
+            let hftagstring = "<input type='hidden' name=\"" + this.formname('hidden_field1') + "\" value=\"" + hf1 +"\">";
+            formtag.append(hftagstring);
+            }
+        }
+
+    // hidden_field2
+    var hf2 = this.fieldarg_in_result('hidden_field2', result, fieldlist);
+    if (hf2 !== undefined) {
+        let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field2') + "\"]";
+        let isfield = this.widg.find(find_field_name);
+        if (isfield.length){
+            isfield.first().val(hf2);
+            }
+        else {
+            let formtag = this.widg.find("form");
+            let hftagstring = "<input type='hidden' name=\"" + this.formname('hidden_field2') + "\" value=\"" + hf2 +"\">";
+            formtag.append(hftagstring);
+            }
+        }
+
+    // hidden_field3
+    var hf3 = this.fieldarg_in_result('hidden_field3', result, fieldlist);
+    if (hf3 !== undefined) {
+        let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field3') + "\"]";
+        let isfield = this.widg.find(find_field_name);
+        if (isfield.length){
+            isfield.first().val(hf3);
+            }
+        else {
+            let formtag = this.widg.find("form");
+            let hftagstring = "<input type='hidden' name=\"" + this.formname('hidden_field3') + "\" value=\"" + hf3 +"\">";
+            formtag.append(hftagstring);
+            }
+        }
+
+    // hidden_field4
+    var hf4 = this.fieldarg_in_result('hidden_field4', result, fieldlist);
+    if (hf4 !== undefined) {
+        let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field4') + "\"]";
+        let isfield = this.widg.find(find_field_name);
+        if (isfield.length){
+            isfield.first().val(hf4);
+            }
+        else {
+            let formtag = this.widg.find("form");
+            let hftagstring = "<input type='hidden' name=\"" + this.formname('hidden_field4') + "\" value=\"" + hf4 +"\">";
+            formtag.append(hftagstring);
+            }
+        }
+
     // session_storage
     var sessionkey = this.fieldarg_in_result('session_storage', result, fieldlist);
     if (sessionkey) {
