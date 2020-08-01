@@ -189,10 +189,10 @@ class Form1(Widget):
 
     arg_descriptions = {'action':FieldArg("url", ''),
                         'enctype':FieldArg("text", ''),
-                        'hidden_field1':FieldArg("text", '', valdt=True),
-                        'hidden_field2':FieldArg("text", '', valdt=True),
-                        'hidden_field3':FieldArg("text", '', valdt=True),
-                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'hidden_field1':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True, jsonset=True),
                         'container_class':FieldArg("cssclass", ''),
                         'error_class':FieldArg("cssclass", '')
                        }
