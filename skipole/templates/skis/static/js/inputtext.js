@@ -139,6 +139,9 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.setvalues = function (fieldlist, re
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
+    // sent input text
     var text_input = this.widg.find('input[type="text"]');
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
@@ -251,6 +254,9 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
+    // set text input
     var text_input = this.widg.find('input[type="text"]');
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
@@ -400,6 +406,9 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.setvalues = function (fieldlist, re
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
+    // input 1
     var text1 = this.widg.find('input:first');
     // Check for set_input_accepted1 or set_input_errored1
     var input_accepted1 = this.fieldarg_in_result('set_input_accepted1', result, fieldlist);
@@ -411,6 +420,7 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.setvalues = function (fieldlist, re
     if (input_text1 !== undefined) {
         text1.val(input_text1);
         }
+    // input 2
     var text2 = this.widg.find('input:eq(1)');
     // Check for set_input_accepted2 or set_input_errored2
     var input_accepted2 = this.fieldarg_in_result('set_input_accepted2', result, fieldlist);
@@ -501,6 +511,13 @@ SKIPOLE.inputtext.SubmitDict1 = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.inputtext.SubmitDict1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.inputtext.SubmitDict1.prototype.constructor = SKIPOLE.inputtext.SubmitDict1;
+SKIPOLE.inputtext.SubmitDict1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
+    };
 
 
 

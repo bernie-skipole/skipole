@@ -113,6 +113,8 @@ SKIPOLE.checkbox.SubmitCheckBox1.prototype.setvalues = function (fieldlist, resu
     if (checked_value === false) {
         this.widg.find('input[type="checkbox"]').prop('checked', false);
         }
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
     // hide
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {

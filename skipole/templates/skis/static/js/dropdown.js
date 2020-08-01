@@ -61,11 +61,13 @@ SKIPOLE.dropdown.SubmitDropDown1.prototype.eventfunc = function(e) {
         }
     };
 SKIPOLE.dropdown.SubmitDropDown1.prototype.setvalues = function (fieldlist, result) {
-    /* This widget accepts fields - hide */
    if (!this.widg_id) {
         return;
         }
     var the_widg = this.widg;
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
+    // sets hide
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {

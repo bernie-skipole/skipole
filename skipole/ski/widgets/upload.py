@@ -59,8 +59,6 @@ class SubmitUploadFile1(Widget):
         self[0][0][0] = ''
         # The form
         self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post", "enctype":"multipart/form-data"})
-
-
         # div containing file label and button
         self[1][0] = tag.Part(tag_name='div')
         # the label
@@ -73,12 +71,6 @@ class SubmitUploadFile1(Widget):
         self[1][1][0] = tag.Part(tag_name="label", hide_if_empty=True)
         # the submit button
         self[1][1][1] = tag.ClosedPart(tag_name="input", attribs ={"type":"submit"})
-        # five divs, for the hidden ident field and four hidden fields
-        self[1][2] = tag.Part(tag_name='div')
-        self[1][3] = tag.Part(tag_name='div')
-        self[1][4] = tag.Part(tag_name='div')
-        self[1][5] = tag.Part(tag_name='div')
-        self[1][6] = tag.Part(tag_name='div')
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -145,51 +137,7 @@ class SubmitUploadFile1(Widget):
         self[1][1][0].update_attribs({'for':self[1][1][1].get_id()})
 
         # add ident and four hidden fields
-        #self.add_hiddens(self[1], page)
-
-        self[1][2][0] = tag.ClosedPart(tag_name="input",
-                                       attribs ={"name":'ident',
-                                                 "value":page.ident_data_string,
-                                                 "type":"hidden"})
-        # hidden field on the form
-        if self.get_field_value('hidden_field1'):
-            self[1][3][0] = tag.ClosedPart(tag_name="input",
-                                           attribs ={"name":self.get_formname('hidden_field1'),
-                                                     "value":self.get_field_value('hidden_field1'),
-                                                     "type":"hidden"})
-
-        # Second hidden field on the form
-        if self.get_field_value('hidden_field2'):
-            self[1][4][0] = tag.ClosedPart(tag_name="input",
-                                           attribs ={"name":self.get_formname('hidden_field2'),
-                                                     "value":self.get_field_value('hidden_field2'),
-                                                     "type":"hidden"})
-
-        # third hidden field on the form
-        if self.get_field_value('hidden_field3'):
-            self[1][5][0] = tag.ClosedPart(tag_name="input",
-                                           attribs ={"name":self.get_formname('hidden_field3'),
-                                                     "value":self.get_field_value('hidden_field3'),
-                                                     "type":"hidden"})
-        # fourth hidden field on the form
-        if self.get_field_value('hidden_field4'):
-            self[1][6][0] = tag.ClosedPart(tag_name="input",
-                                           attribs ={"name":self.get_formname('hidden_field4'),
-                                                     "value":self.get_field_value('hidden_field4'),
-                                                     "type":"hidden"})
-        # insert id's into the four divs that contain each hidden field
-        self[1][3].insert_id()
-        self[1][4].insert_id()
-        self[1][5].insert_id()
-        self[1][6].insert_id()
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Gives the div id's of hidden fields, so they can be found via json"""
-        return self._make_fieldvalues(ident1 = self[1][3].get_id(),
-                                      ident2 = self[1][4].get_id(),
-                                      ident3 = self[1][5].get_id(),
-                                      ident4 = self[1][6].get_id() )
+        self.add_hiddens(self[1], page)
 
 
 
@@ -212,7 +160,7 @@ class SubmitUploadFile1(Widget):
       </label>
       <input type="submit" /> <!-- button value set to submitbutton_text and class to submitbutton_class-->
     </div>
-    <!-- four hidden input fields, each within a div -->
+    <!-- hidden fields -->
   </form>
 </div>"""
 

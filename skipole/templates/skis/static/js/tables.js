@@ -104,6 +104,13 @@ SKIPOLE.tables.ButtonTextBlockTable1 = function (widg_id, error_message, fieldma
     };
 SKIPOLE.tables.ButtonTextBlockTable1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.tables.ButtonTextBlockTable1.prototype.constructor = SKIPOLE.tables.ButtonTextBlockTable1;
+SKIPOLE.tables.ButtonTextBlockTable1.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
+    };
 
 
 

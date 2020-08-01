@@ -14,6 +14,8 @@ SKIPOLE.logins.NamePasswd1.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
     var text1 = this.widg.find('input:first');
     // Check for set_input_accepted1 or set_input_errored1
     var input_accepted1 = this.fieldarg_in_result('set_input_accepted1', result, fieldlist);
@@ -124,6 +126,8 @@ SKIPOLE.logins.Pin4.prototype.setvalues = function (fieldlist, result) {
     if (this.check_error(fieldlist, result)) {
         return;
         }
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
     var the_widg = this.widg;
     var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {

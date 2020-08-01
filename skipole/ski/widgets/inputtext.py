@@ -823,10 +823,10 @@ class SubmitTextInput1(Widget):
                         'label_style':FieldArg("cssstyle", ''),
                         'action_json':FieldArg("url", ''),
                         'action':FieldArg("url", ''),
-                        'hidden_field1':FieldArg("text", '', valdt=True),
-                        'hidden_field2':FieldArg("text", '', valdt=True),
-                        'hidden_field3':FieldArg("text", '', valdt=True),
-                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'hidden_field1':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True, jsonset=True),
                         'target':FieldArg("text",''),
                         'button_text':FieldArg("text",'Submit'),
                         'button_class':FieldArg("cssclass", ''),
@@ -1053,10 +1053,10 @@ class SubmitTextInput3(Widget):
                         'button_label_style':FieldArg("cssstyle", ''),
                         'action':FieldArg("url", ''),
                         'action_json':FieldArg("url", ''),
-                        'hidden_field1':FieldArg("text", '', valdt=True),
-                        'hidden_field2':FieldArg("text", '', valdt=True),
-                        'hidden_field3':FieldArg("text", '', valdt=True),
-                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'hidden_field1':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True, jsonset=True),
                         'target':FieldArg("text",''),
                         'button_text':FieldArg("text",'Submit'),
                         'button_class':FieldArg("cssclass", ''),
@@ -1328,10 +1328,10 @@ class TwoInputsSubmit1(Widget):
                         'label':FieldArg("text", 'Your input:'),
                         'label_class':FieldArg("cssclass", ''),
                         'label_style':FieldArg("cssstyle", ''),
-                        'hidden_field1':FieldArg("text", '', valdt=True),
-                        'hidden_field2':FieldArg("text", '', valdt=True),
-                        'hidden_field3':FieldArg("text", '', valdt=True),
-                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'hidden_field1':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True, jsonset=True),
                         'button_text':FieldArg("text", 'Submit'),
                         'button_class':FieldArg("cssclass", ''),
                         'input_text1':FieldArg("text", '', valdt=True, jsonset=True),
@@ -1594,10 +1594,10 @@ class SubmitDict1(Widget):
                         'ul_style':FieldArg("cssstyle", ""),
                         'li_class':FieldArg("cssclass", ""),
                         'li_style':FieldArg("cssstyle", ""),
-                        'hidden_field1':FieldArg("text", '', valdt=True),
-                        'hidden_field2':FieldArg("text", '', valdt=True),
-                        'hidden_field3':FieldArg("text", '', valdt=True),
-                        'hidden_field4':FieldArg("text", '', valdt=True)
+                        'hidden_field1':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True, jsonset=True)
                        }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -1719,7 +1719,7 @@ class SubmitDict1(Widget):
     <div> <!-- class attribute set to inputdiv_class, style to inputdiv_style -->
       <input type="submit" /> <!-- with value button_text, and CSS class button_class -->
     </div>
-    <!-- hidden fields -->                              
+    <!-- hidden fields -->
   </form>
 </div>"""
 

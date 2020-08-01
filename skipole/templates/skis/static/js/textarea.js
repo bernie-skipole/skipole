@@ -13,6 +13,8 @@ SKIPOLE.textarea.SubmitTextArea.prototype.setvalues = function (fieldlist, resul
         }
      /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     textarea = this.widg.find('textarea').filter(":first")
