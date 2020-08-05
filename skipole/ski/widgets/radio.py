@@ -462,3 +462,106 @@ class BooleanRadio(Widget):
 </div>"""
 
 
+
+class RadioTable2(Widget):
+    """A table of three columns, two being text strings, the third radio buttons
+       The first row is three header titles. Typically inserted into a form
+       does not display errors"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'header_class':FieldArg("cssclass",""),
+                        'title1':FieldArg('text', ''),
+                        'title2':FieldArg('text', ''),
+                        'title3':FieldArg('text', ''),
+                        'row_classes':FieldArgList('text', jsonset=True),
+                        'col1':FieldArgList('text', jsonset=True),
+                        'col2':FieldArgList('text', jsonset=True),
+                        'radiocol':FieldArgList('text'),
+                        'radio_checked':FieldArg("text", valdt=True, jsonset=True)
+                        }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        header_class: class of the header row, if empty string, then no class will be applied
+        title1: The header title over the first text column
+        title2: The header title over the second text column
+        title3: The header title over the second text column
+        row_classes: A list of CSS classes to apply to each row (not including the header)
+        col1: A list of text strings to place in the first column
+        col2: A list of text strings to place in the second column
+        radiocol: A list of value strings for the radio buttons to place in the third column
+        radio_checked: value to be checked, this is the field returned
+        """
+        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the table"
+        rowc = self.get_field_value("row_classes")
+        col1 = self.get_field_value("col1")
+        col2 = self.get_field_value("col2")
+        col3 = self.get_field_value("radiocol")
+        checked = self.get_field_value('radio_checked')
+        name = self.get_formname('radio_checked')
+        header = 0
+        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):
+            header = 1
+            if self.get_field_value('header_class'):
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            else:
+                self[0] = tag.Part(tag_name='tr')
+            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
+            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
+
+        # create rows
+        rows = max( len(col1), len(col2), len(col3) )
+        if not rowc:
+            rowc = ['']*rows
+        if rows > len(rowc):
+            rowc.extend(['']*(rows - len(rowc)))
+        if rows > len(col1):
+            col1.extend(['']*(rows - len(col1)))
+        if rows > len(col2):
+            col2.extend(['']*(rows - len(col2)))
+        if rows > len(col3):
+            col3.extend([None]*(rows - len(col3)))
+        
+        for index in range(rows):
+            rownumber = index+header
+            if rowc[index]:
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":rowc[index]})
+            else:
+                self[rownumber] = tag.Part(tag_name='tr')
+            self[rownumber][0] = tag.Part(tag_name='td', text = col1[index])
+            self[rownumber][1] = tag.Part(tag_name='td', text = col2[index])
+            self[rownumber][2] = tag.Part(tag_name='td')
+            if col3[index]:  # this is the value
+                self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":name, "type":"radio"})
+                if checked and (checked == col3[index]):
+                    self[rownumber][2][0].update_attribs({"value":col3[index], "checked":"checked"})
+                    # ensure only one item checked
+                    checked = ''
+                else:
+                    self[rownumber][2][0].update_attribs({"value":col3[index]})
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<table>  <!-- with widget id and class widget_class -->
+  <tr> <!-- with header class -->
+    <th> <!-- title1 --> </th>
+    <th> <!-- title2 --> </th>
+    <th> <!-- title3 --> </th>
+  </tr>
+  <tr> <!-- with class from row_classes -->
+    <td> <!-- col1 text string --> </td>
+    <td> <!-- col2 text string --> </td>
+    <td><input type='radio' /> <!-- with name from 'radio_checked' widgfield and value from radiocol -->
+    </td>
+  </tr>
+  <!-- rows repeated -->
+</table>"""
+
