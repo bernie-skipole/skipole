@@ -527,7 +527,7 @@ class RadioTable2(Widget):
             col2.extend(['']*(rows - len(col2)))
         if rows > len(col3):
             col3.extend([None]*(rows - len(col3)))
-        
+
         for index in range(rows):
             rownumber = index+header
             if rowc[index]:
