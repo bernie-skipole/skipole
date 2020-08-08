@@ -45,10 +45,9 @@ SKIPOLE.radio.RadioTable2.prototype.setvalues = function (fieldlist, result) {
     var col2 = this.fieldarg_in_result('col2', result, fieldlist);
     var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
     var itemchecked = this.fieldarg_in_result('radio_checked', result, fieldlist);
-    var self = this;
     var index = 0;
     var header = false;
-    if (the_widg.find('th')) {
+    if (the_widg.find('th').length) {
         header = true;
         }
     the_widg.find('tr').each(function() {

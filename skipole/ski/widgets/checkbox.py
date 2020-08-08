@@ -575,9 +575,10 @@ class CheckBoxTable1(Widget):
                         'row_classes':FieldArgList('text', jsonset=True),
                         'col1':FieldArgList('text', jsonset=True),
                         'col2':FieldArgList('text', jsonset=True),
-                        'checkbox_dict':FieldArgDict('text', valdt=False, senddict=True),   # dictionary of keyname:value, the field submitted
-                        'checked':FieldArgList("text", jsonset=True)                        # will have 'widgetname:checkbox_dict-keyname'
-                        }
+                        'checkbox_dict':FieldArgDict('text'),                                     # dictionary of keyname:value
+                        'checked':FieldArgList("text", valdt=True, jsonset=True, senddict=True)  # the field submitted as a dictionary
+                        }                                                                         # each key will have 'keyname'
+                                                                                                  # and value will be the values ticked
 
 
     def __init__(self, name=None, brief='', **field_args):
@@ -589,11 +590,10 @@ class CheckBoxTable1(Widget):
         row_classes: A list of CSS classes to apply to each row (not including the header)
         col1: A list of text strings to place in the first column
         col2: A list of text strings to place in the second column
-        checkbox_dict: A dictionary of keyname:value, the fields submitted will have name 'widgetname:checkbox_dict-keyname'
-                       and the user will receive a widgfield ('widgetname','checkbox_dict') containing a dictionary of keyname:values ticked
-                       should be Ordered Dict unless python >= 3.6
-        checked: a list of keynames which will be checked
-        """
+        checkbox_dict: A dictionary of keyname:value, should be Ordered Dict unless python >= 3.6
+        checked: a list of keynames which will be checked,  the fields submitted will have name 'widgetname:checked-keyname'
+                       and the user will receive a widgfield ('widgetname','checked') containing a dictionary of keyname:values ticked
+         """
         Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
 
 
@@ -606,7 +606,7 @@ class CheckBoxTable1(Widget):
         checked = self.get_field_value('checked')
         if not checked:
             checked = []
-        input_name = self.get_formname("checkbox_dict") + '-'
+        input_name = self.get_formname("checked") + '-'
 
         header = 0
         if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):

@@ -422,12 +422,7 @@ class FieldArgDict(ParentFieldArg):
             return
         if not isinstance(val, dict):
             raise ValidateError("Invalid value")
-        if isinstance(val, collections.OrderedDict):
-            value_list = list(val.items())
-        else:
-            value_list = sorted(val.items(), key=lambda t: t[0])
-        # value_list is a list of tuples [(key, value), ... ]
-        typed_list = [ (key, self._typematch(value, self.field_type)) for key,value in value_list ]
+        typed_list = [ (key, self._typematch(value, self.field_type)) for key,value in val.items() ]
         self._value = collections.OrderedDict(typed_list)
 
     value = property(get_value, set_value)
