@@ -22,7 +22,10 @@ setuptools.setup(
               'skipole.skiadmin.skiadminpackages.editvalidators', 'skipole.skiadmin.skiadminpackages.editwidgets'],
     include_package_data=True,
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application"
