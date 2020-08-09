@@ -2,7 +2,7 @@
 
 skipole is a framework for creating wsgi applications. A web admin interface, together with your own code, allows the developer to create dynamic web pages.
 
-Skipole requires python 3.2 or later, and can be installed with:
+Skipole requires python 3.6 or later, and can be installed with:
 
 pip install skipole
  
