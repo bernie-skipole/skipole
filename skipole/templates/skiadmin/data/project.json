@@ -38537,8 +38537,14 @@ false
 "hide_if_empty": false,
 "parts": [
 [
-"Text",
-"The skis sub project is a part of the skipole framework and should always be added to your project.\r\nIt includes a number of pages - particularly javascript files used by widgets, and special pages such as the 'URL Not found' page.\r\nFor  example, your project will contain the special label 'url_not_found' which will point to 'skis,url_not_found'.\r\nWhen your project returns a URL Not found message to a client, it calls this label which pulls in the page from the skis sub-project.\r\nSimilarly, when widgets are used in a page, and when the page is dynamically created, special javascript files will be inserted into the page head. Again these come from the skis sub project and are defined by their labels (which can be seen under the left navigation 'Page Labels' button)."
+"TextBlock",
+{
+"textref": "about_skis",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
 ]
 ]
 }
