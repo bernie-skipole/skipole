@@ -2,17 +2,10 @@
 
 import os
 
-
 # from skipole import the WSGIApplication class which will be used to create a wsgi
 # application, and exception classes which you will need in your functions
 
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list
-
-# Also import the skis package, containing the function makeapp(PROJECTFILES) - which returns a
-# WSGIApplication object serving javascript files and is normally appended to your own project
-
-from skipole import skis
-
 
 # the framework needs to know the location of the projectfiles directory holding the project data
 # and static files.
@@ -31,10 +24,7 @@ PROJ_DATA={}
 
 
 # Your code needs to provide your own version of the following three functions which will
-# be used to set values into the widgets of returned pages.
-
-# Minimal versions are provided below, you could either develop them here,
-# or more usually, create further modules and packages and import them.
+# be used to set values into the widgets of returned pages. Minimal versions are provided below.
 
 
 def start_call(called_ident, skicall):
@@ -69,9 +59,20 @@ application = WSGIApplication(project=PROJECT,
                               url="/")
 
 
-# The skis application should usually be added, it serves javascript files required
-# by the framework widgets. It may not be needed if you are serving javascript
-# files by some other method, such as a CDN server.
+                 ### add the 'skis' sub project ###
+
+# The 'skis' application should always be added during development, as it is
+# needed by skiadmin. It serves javascript and the w3.css files required by
+# the framework widgets.
+# It is not needed when you deploy your final application, if you are serving
+# these files by some other method, such as a CDN server. However it may still
+# be useful, on an isolated intranet for example, where the one web server serves
+# your project and the javascript files.
+
+# The skis package, contains the function makeapp(PROJECTFILES) - which returns a
+# WSGIApplication object which is then appended to your own project
+
+from skipole import skis
 
 skis_application = skis.makeapp(PROJECTFILES)
 application.add_project(skis_application, url='/lib')
@@ -100,8 +101,9 @@ application.add_project(skis_application, url='/lib')
 if __name__ == "__main__":
 
 
-    ############### THESE LINES ADD THE SKIADMIN SUB-PROJECT FOR DEVELOPMENT ONLY #
-    ###################### AND SHOULD BE REMOVED WHEN YOU DEPLOY YOUR APPLICATION #
+    ############### THESE LINES ADD THE SKIADMIN SUB-PROJECT FOR DEVELOPMENT #
+    ################# AND SHOULD BE REMOVED WHEN YOU DEPLOY YOUR APPLICATION #
+
 
     from skipole import skiadmin, set_debug, skilift
     set_debug(True)

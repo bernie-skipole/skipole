@@ -4,7 +4,7 @@ import re, json, os
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w_]')
 
-from skipole.skilift import fromjson, off_piste, set_label, versions, lib_list
+from skipole.skilift import fromjson, off_piste, set_label, versions, lib_list, labels
 from skipole import FailPage, ValidateError, ServerError, GoTo
 
 from .. import utils, css_styles
@@ -381,15 +381,19 @@ def set_javascript_to_skis(skicall):
     page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
-    labels = lib_list()
+    liblabels = lib_list()
+    projlabels = labels(editedprojname)
     try:
-        for label in labels:
+        for label in liblabels:
             # label is a widget or validator javascript label, of the format "ski_basic" etc
             # which needs to be given a value of the format "skis,ski_basic"
             set_label(editedprojname, label, "skis," + label)
+        if "w3_css" in projlabels:
+            if projlabels["w3_css"] == "https://www.w3schools.com/w3css/4/w3.css":
+                set_label(editedprojname, "w3_css", "skis,w3_css")
     except ServerError as e:
         raise FailPage(message = e.message)
-    call_data['status'] = 'Javascript special file labels now point to the skis sub project'
+    call_data['status'] = 'Special file labels now point to the skis sub project'
 
 
 def set_javascript_to_cdn(skicall):
@@ -401,12 +405,17 @@ def set_javascript_to_cdn(skicall):
     editedprojname = call_data['editedprojname']
 
     skipole_version, project_version = versions(editedprojname)
-    starthttp =  "https://cdn.jsdelivr.net/gh/bernie-skipole/skipole@" + skipole_version + "/skipole/templates/skis/static/js/"
-    labels = lib_list()
+    # get this to point to https://cdn.jsdelivr.net/gh/bernie-skipole/skipole@4/skipole/templates/skis/static/js/
+    # so primary version number is used
+    version_numbers = skipole_version.split(".")
+    starthttp =  "https://cdn.jsdelivr.net/gh/bernie-skipole/skipole@" + version_numbers[0] + "/skipole/templates/skis/static/js/"
+    liblabels = lib_list()
+    projlabels = labels(editedprojname)
     try:
-        for label in labels:
+        for label in liblabels:
             if label == "jquery_core":
-                # do not alter this value
+                if projlabels[label] == "skis,jquery_core":
+                    set_label(editedprojname, label, "https://cdn.jsdelivr.net/gh/jquery/jquery@3/dist/jquery.min.js")
                 continue
             if label == "skipole_js":
                 set_label(editedprojname, "skipole_js", starthttp +"skipole.min.js")
@@ -414,8 +423,11 @@ def set_javascript_to_cdn(skicall):
             # so label is a widget or validator javascript label, of the format "ski_basic" etc
             # which needs to be given a value of the format "basic.min.js"
             set_label(editedprojname, label, starthttp +label[4:]+".min.js")
+        if "w3_css" in projlabels:
+            if projlabels["w3_css"] == "skis,w3_css":
+                set_label(editedprojname, "w3_css", "https://www.w3schools.com/w3css/4/w3.css")
     except ServerError as e:
         raise FailPage(message = e.message)
-    call_data['status'] = 'Javascript special file labels now point to cdn.jsdelivr.net'
+    call_data['status'] = "Special file labels now point to CDN's"
 
 
