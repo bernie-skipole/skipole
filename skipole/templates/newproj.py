@@ -61,13 +61,8 @@ application = WSGIApplication(project=PROJECT,
 
                  ### add the 'skis' sub project ###
 
-# The 'skis' application should always be added during development, as it is
-# needed by skiadmin. It serves javascript and the w3.css files required by
+# The 'skis' application serves javascript and the w3.css files required by
 # the framework widgets.
-# It is not needed when you deploy your final application, if you are serving
-# these files by some other method, such as a CDN server. However it may still
-# be useful, on an isolated intranet for example, where the one web server serves
-# your project and the javascript files.
 
 # The skis package, contains the function makeapp(PROJECTFILES) - which returns a
 # WSGIApplication object which is then appended to your own project

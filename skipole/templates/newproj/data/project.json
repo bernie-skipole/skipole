@@ -6,12 +6,12 @@
 "skipole": "4.0.7",
 "specialpages": {
 "favicon": 3002,
-"general_json": 2002,
+"general_json": 2070,
 "home": 1,
 "jquery_core": "skis,jquery_core",
-"no_javascript": "skis,no_javascript",
-"redirector": "skis,redirector",
-"server_error": "skis,server_error",
+"no_javascript": 2,
+"redirector": 2030,
+"server_error": 2020,
 "ski_basic": "skis,ski_basic",
 "ski_checkbox": "skis,ski_checkbox",
 "ski_confirm": "skis,ski_confirm",
@@ -37,8 +37,8 @@
 "ski_textarea": "skis,ski_textarea",
 "ski_upload": "skis,ski_upload",
 "skipole_js": "skis,skipole_js",
-"url_not_found": "skis,url_not_found",
-"validate_error": "skis,validate_error",
+"url_not_found": 2080,
+"validate_error": 2010,
 "w3_css": "skis,w3_css",
 "w3_theme_ski_css": 1008
 },
@@ -93,24 +93,907 @@
 }
 }
 },
-"restricted": {
+"special": {
 "ident": 2000,
-"brief": "Holds pages not accessable directly via URL",
+"brief": "Folder of system pages",
 "default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
 "general_json": {
-"ident": 2002,
-"brief": "Empty JSON file for general use",
+"ident": 2070,
+"brief": "General purpose JSON file",
 "JSON": {
 "enable_cache": false,
 "content": {}
 }
 },
-"index_template": {
-"ident": 2001,
-"brief": "The template for the index page",
+"no_javascript": {
+"ident": 2050,
+"brief": "Displayed on javascript failure",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 0,
+"interval_target": null,
+"catch_to_html": null,
+"lang": "en",
+"backcol": "#FFFFFF",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"No Javascript"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "ErrorDiv",
+"fields": {
+"clear_error": false,
+"container_class": "",
+"error_class": "w3-panel w3-red",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+[
+"Text",
+""
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "Display error icon and heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"JAVASCRIPT FAILURE"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "No javascript",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "no_javascript_text",
+"failmessage": "Javascript not enabled, or a Javascript error has ocurred.",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"redirector": {
+"ident": 2030,
+"brief": "Page used to redirect to an external url.",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"interval": 0,
+"interval_target": null,
+"catch_to_html": null,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"redirect_to"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Redirector"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "info.Redirector",
+"name": "redirect_to",
+"brief": "Redirector",
+"fields": {
+"clear_error": false,
+"linebreaks": true,
+"show": true,
+"show_error": "https://bernie-skipole.github.io/skipole",
+"text_refnotfound": "If this page does not redirect automatically, follow this link:",
+"text_replaceblock": "If this page does not redirect automatically, follow this link:",
+"textblock_ref": "",
+"url": "https://bernie-skipole.github.io/skipole",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+},
+"server_error": {
+"ident": 2020,
+"brief": "Server error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"interval": 0,
+"interval_target": null,
+"catch_to_html": null,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"message1"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Server Error"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "500 Internal Server Error",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"500 Internal Server Error"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Introduce diagnostic message",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorCode",
+"name": "message1",
+"brief": "A widget displaying an error message",
+"fields": {
+"clear_error": false,
+"code": "0",
+"code_class": "w3-text-red",
+"error_class": "w3-text-red",
+"para_class": "w3-text-red",
+"para_text": "A server error has occurred.",
+"pre_line": true,
+"show": true,
+"show_error": "A server error has occurred.",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowResponders",
+"name": "showresponders",
+"brief": "Shows responders",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"paradiv_class": "",
+"show": true,
+"show_error": "",
+"table_class": "",
+"toptext": "DEBUG MODE IS ON",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"url_not_found": {
+"ident": 2080,
+"brief": "URL not found error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"interval": 0,
+"interval_target": null,
+"catch_to_html": null,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"url"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"URL not found"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "404 Not Found",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"404 Not Found"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph introducing the URL",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The page:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "url",
+"brief": "path of the url not found",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"para_text": "UNKNOWN",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Final text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Has not been found at this site"
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"validate_error": {
+"ident": 2010,
+"brief": "Validation error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"interval": 0,
+"interval_target": null,
+"catch_to_html": null,
+"lang": "en",
+"backcol": "#000000",
+"default_error_widget": [
+"",
+"message1"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Validation Error"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "Link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "400 Bad Request",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"400 Bad Request"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Introduce diagnostic message",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "message1",
+"brief": "Shows validation diagnostic",
+"fields": {
+"clear_error": false,
+"error_class": "w3-text-red",
+"para_class": "w3-text-red",
+"para_text": "A validation error has occurred.",
+"pre_line": true,
+"show": true,
+"show_error": "A validation error has occurred.",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+}
+}
+},
+"templates": {
+"ident": 4000,
+"brief": "Holds template pages",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"index": {
+"ident": 4001,
+"brief": "Template for the index page",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
@@ -313,11 +1196,22 @@
 "pages": {
 "index": {
 "ident": 1,
-"brief": "Forward call to index_template",
+"brief": "Forward call to the index template",
 "RespondPage": {
 "class": "NoOperation",
 "original_args": {
-"target_ident": 2001
+"target_ident": 4001
+},
+"original_fields": {}
+}
+},
+"no_javascript": {
+"ident": 2,
+"brief": "Forward call to the no_javascript template",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": 2050
 },
 "original_fields": {}
 }
