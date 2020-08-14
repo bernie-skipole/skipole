@@ -403,14 +403,23 @@ class FieldArgDict(ParentFieldArg):
         ParentFieldArg.__init__(self, field_type, valdt=valdt, jsonset=jsonset, senddict=senddict)
         self._value = collections.OrderedDict()
 
+    def _check_key(self, index):
+        "Converts index keys to strings and checks alphanumeric underscore only"
+        key = str(index)
+        if _AN.search(key):
+            raise ValidateError(message="Invalid key used in dictionary - letters, numbers, underscore only.")
+        return key
+
     def __getitem__(self, index):
-        return self._value[index]
+        key = self. _check_key(index)
+        return self._value[key]
 
     def __setitem__(self, index, val):
-        self._value[index] = val
+        key = self. _check_key(index)
+        self._value[key] = self._typematch(val, self.field_type)
 
     def __delitem__(self, index):
-        del self._value[index]
+        del self._value[str(index)]
 
     def get_value(self):
         return self._value
@@ -422,7 +431,7 @@ class FieldArgDict(ParentFieldArg):
             return
         if not isinstance(val, dict):
             raise ValidateError("Invalid value")
-        typed_list = [ (key, self._typematch(value, self.field_type)) for key,value in val.items() ]
+        typed_list = [ (self. _check_key(key), self._typematch(value, self.field_type)) for key,value in val.items() ]
         self._value = collections.OrderedDict(typed_list)
 
     value = property(get_value, set_value)
