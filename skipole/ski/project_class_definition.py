@@ -13,10 +13,17 @@ call and is passed as an argument to the user functions
 
 import copy, os, cgi, collections, html, pprint, json, shutil, uuid, sys, traceback, re
 
+from base64 import urlsafe_b64decode
+
 from http import cookies
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
+
+# a search for anything none-alphanumeric, not an underscore, not -, not =
+# to allow any character in base64.urlsafe_b64encode/base64.urlsafe_b64decode
+
+_AN64 = re.compile('[^\w\-=]')
 
 from . import skiboot, read_json
 from .excepts import ValidateError, ServerError, FailPage, ErrorMessage, GoTo, PageError
@@ -274,9 +281,14 @@ class SkipoleProject(object):
                 else:
                     # rawformdata has 'ident' with attribute 'value'
                     # get the caller page ident, and the ident_data received from the 'ident' field
+                    # which will be project_pagenumber_b64encodeddata
 
-                   # Note: caller_page could belong to another project, so get it using ident.item() method
-                   # which will query the right project
+                    # Note: caller_page could belong to another project, so get it using ident.item() method
+                    # which will query the right project
+
+                    # project name, number and b64 encoded data should all be ascii characters passing this test
+                    if _AN64.search(rawformdata['ident'].value):
+                        raise ValidateError(message="Form data not accepted, caller page ident not recognised")
 
                     ident_parts = rawformdata['ident'].value.split('_', 2)
                     ident_items = len(ident_parts)
@@ -285,7 +297,8 @@ class SkipoleProject(object):
                             caller_page = skiboot.Ident(ident_parts[0], int(ident_parts[1])).item()
                         elif ident_items == 3:
                             caller_page = skiboot.Ident(ident_parts[0], int(ident_parts[1])).item()
-                            ident_data = ident_parts[2]
+                            b64binarydata = ident_parts[2].encode('ascii') # get the submitted data and convert to binary
+                            ident_data = urlsafe_b64decode(b64binarydata).decode('ascii') # b64 decode, and convert to string
                     except Exception:
                         caller_page = None
                     if caller_page is None:
@@ -431,9 +444,6 @@ class SkipoleProject(object):
             called_ident = None
         else:
             called_ident = ident.to_tuple()
-
-        if (ident_data is not None) and _AN.search(ident_data):
-            ident_data = None
 
         try:
             # create the SkiCall object

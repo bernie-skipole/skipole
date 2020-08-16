@@ -9,6 +9,7 @@ This module defines the page objects
 import os, mimetypes, copy, collections, json, re, uuid, pprint
 from string import Template
 from urllib.parse import quote
+from base64 import urlsafe_b64encode
 
 from . import skiboot
 from .tag import Part, ClosedPart, TextBlock, Section
@@ -59,11 +60,15 @@ class ParentPage(object):
 
     @property
     def ident_data_string(self):
+        "Encode ident_data as a base64 string"
         if not self.ident:
             return
         if self.ident_data:
-            return str(self.ident) + '_' + self.ident_data
-        return str(self.ident)
+            # encode the ident data as base64, and append it as a string to the page ident
+            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii'))
+            return str(self.ident) + '_' + b64binarydata.decode('ascii')
+        else:
+            return str(self.ident)        
 
     @property
     def proj_ident(self):
@@ -171,8 +176,6 @@ class ParentPage(object):
                 ident_data = page_data['ident_data']
                 if not isinstance(ident_data, str):
                     ident_data = str(ident_data)
-                if _AN.search(ident_data):
-                    raise ServerError("ERROR - Invalid ident_data in page_data")
                 # set ident_data in page
                 self.ident_data = ident_data
             del page_data['ident_data']
@@ -1580,7 +1583,9 @@ class JSON(ParentPage):
         if self.jsondict is not None:
             return [json.dumps(self.jsondict).encode('UTF-8')]
         if self.ident_data:
-            self.content['ident_data'] = self.ident_data
+            # encode the ident data as base64
+            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii'))
+            self.content['ident_data'] = b64binarydata.decode('ascii')
         elif 'ident_data' in self.content:
             del self.content['ident_data']
         return [json.dumps(self.content).encode('UTF-8')]
@@ -1590,7 +1595,9 @@ class JSON(ParentPage):
         if self.jsondict is not None:
             return json.dumps(self.jsondict)
         if self.ident_data:
-            self.content['ident_data'] = self.ident_data
+            # encode the ident data as base64
+            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii'))
+            self.content['ident_data'] = b64binarydata.decode('ascii')
         elif 'ident_data' in self.content:
             del self.content['ident_data']
         return json.dumps(self.content)
