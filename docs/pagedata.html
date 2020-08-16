@@ -60,7 +60,7 @@
 <p>skicall.page_data['backcol'] - Set the 'HTML' tag background color</p>
 <p>skicall.page_data['body_class'] - The CSS class of the 'BODY' tag</p>
 <p>skicall.page_data['headers'] - Sets the returned page headers</p>
-<p>skicall.page_data['ident_data'] - Set to a string, which will be returned as the 'skicall.ident_data' attribute if this page submits any data.</p>
+<p>skicall.page_data['ident_data'] - Set to a string, which will be returned as the 'skicall.ident_data' attribute if this page submits any data. The data is base64 encoded and added to hidden fields on each form and link widget.</p>
 <p>skicall.page_data['lang'] - Set the language, such as 'en' in the page 'HTML' tag. This is independent of the skicall lang and language attributes, though it would generally be set the same as skicall.language.</p>
 <p>skicall.page_data['last_scroll'] - Set True to display the page at its last scroll position</p>
 <p>skicall.page_data['localStorage'] - A dictionary of string keys and values to set in the browser storage</p>
@@ -86,6 +86,7 @@
 <p>On being received by the client the page widget fields will be updated, this will be quick, as a whole page is not sent, and looks very dynamic. Only certain widgfields are 'JSON enabled' and can be updated - this is shown in the widget documentation for each field.</p>
 <p>As well as widgets, on setting up a Template Page you will see that the page can be set to make a JSON call at set intervals. Again this can be useful to continuously update required fields on the page.</p>
 <p>As well as widgfields, some specific fields can be set and returned in the JSON response, which have a particular effect, these are:</p>
+<p>skicall.page_data['ident_data'] - Set to a string, which will be returned as the 'skicall.ident_data' attribute with any submitted data.</p>
 <p>skicall.page_data['ClearAllErrors'] - If True, any widget displaying an Error will be cleared.</p>
 <p>skicall.page_data['localStorage'] - A dictionary of string keys and values to set in the browser storage</p>
 <p>skicall.page_data['sessionStorage'] - A dictionary of string keys and values to set in the browser storage</p>
