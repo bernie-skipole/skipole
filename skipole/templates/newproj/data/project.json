@@ -9,6 +9,7 @@
 "general_json": 2070,
 "home": 1,
 "jquery_core": "skis,jquery_core",
+"json_failed": 3,
 "no_javascript": 2,
 "redirector": 2030,
 "server_error": 2020,
@@ -999,7 +1000,7 @@
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
-"catch_to_html": null,
+"catch_to_html": "json_failed",
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1203,6 +1204,19 @@
 "target_ident": 4001
 },
 "original_fields": {}
+}
+},
+"json_failed": {
+"ident": 3,
+"brief": "Called if a javascript error occurs when handling a JSON file",
+"RespondPage": {
+"class": "PageData",
+"original_args": {
+"target_ident": "server_error"
+},
+"original_fields": {
+"show_error": "An error has occurred when calling a JSON file"
+}
 }
 },
 "no_javascript": {
