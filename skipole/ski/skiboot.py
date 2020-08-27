@@ -10,7 +10,7 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"version"         : "4.0.8",             # The skipole version
+"version"         : "4.0.9",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
