@@ -5,6 +5,7 @@ SKIPOLE.inputtables = {};
 
 SKIPOLE.inputtables.InputTable1 = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
     };
 SKIPOLE.inputtables.InputTable1.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.inputtables.InputTable1.prototype.constructor = SKIPOLE.inputtables.InputTable1;
@@ -105,5 +106,162 @@ SKIPOLE.inputtables.InputTable5.prototype.setvalues = function (fieldlist, resul
                 }
             }
         })
+    };
+
+
+
+SKIPOLE.inputtables.InputTable4 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputtables.InputTable4.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtables.InputTable4.prototype.constructor = SKIPOLE.inputtables.InputTable4;
+SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    // columns
+    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    var col3 = this.fieldarg_in_result('col3', result, fieldlist);
+    var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
+    var keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
+    if (keysvals && Object.keys(keysvals).length) {
+        var keysonly = Object.keys(keysvals);
+        }
+    var self = this;
+    var index = 0;
+    var header = false;
+    if (the_widg.find('th').length) {
+        header = true;
+        }
+    the_widg.find('tr').each(function() {
+        if (header) {
+            // the header line
+            header = false;
+            }
+        else {
+            // for each row
+            // set its class
+            if (row_classes && row_classes.length) {
+                $(this).attr("class", row_classes[index]);
+                }
+            var cells = $(this).children();
+            if (col1 && col1.length) {
+                $(cells[0]).text(col1[index]);
+                 }
+            if (col2 && col2.length) {
+                $(cells[1]).text(col2[index]);
+                 }
+            if (col3 && col3.length) {
+                $(cells[2]).text(col3[index]);
+                 }
+
+            let a_link = $(cells[3]).find("a");
+            let up_link = $(a_link[0]);
+            // up_getfield1
+            let up_getfield1 = self.fieldarg_in_result('up_getfield1', result, fieldlist);
+            if (up_getfield1 && up_getfield1.length) {
+                let href = up_link.attr('href');
+                let url = self.setgetfield(href, 'up_getfield1',up_getfield1[index]);
+                up_link.attr('href', url);
+                }
+            // up_getfield2
+            let up_getfield2 = self.fieldarg_in_result('up_getfield2', result, fieldlist);
+            if (up_getfield2 && up_getfield2.length) {
+                let href = up_link.attr('href');
+                let url = self.setgetfield(href, 'up_getfield2', up_getfield2[index]);
+                up_link.attr('href', url);
+                }
+
+            let down_link = $(a_link[1]);
+            // down_getfield1
+            let down_getfield1 = self.fieldarg_in_result('down_getfield1', result, fieldlist);
+            if (down_getfield1 && down_getfield1.length) {
+                let href = down_link.attr('href');
+                let url = self.setgetfield(href, 'down_getfield1',down_getfield1[index]);
+                down_link.attr('href', url);
+                }
+            // down_getfield2
+            let down_getfield2 = self.fieldarg_in_result('down_getfield2', result, fieldlist);
+            if (down_getfield2 && down_getfield2.length) {
+                let href = down_link.attr('href');
+                let url = self.setgetfield(href, 'down_getfield2', down_getfield2[index]);
+                down_link.attr('href', url);
+                }
+
+            if (keysonly && keysonly.length) {
+                let rowkey = keysonly[index];
+                if (rowkey) {
+                    // set name attribute and val attribute for each input field
+                    let inputtag = $(cells[3]).find('input');
+                    inputtag.prop('name', self.formname('inputdict') + "-" + rowkey);
+                    inputtag.val(keysvals[rowkey]);
+                    }
+                 }
+             index=index+1;
+            }
+        })
+    };
+SKIPOLE.inputtables.InputTable4.prototype.eventfunc = function (e) {
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var the_widg = this.widg;
+    var button_pressed = $(e.target);
+
+    if (button_pressed.text() == "\u2191") {
+        // up arrow button
+        if (!fieldvalues["upurl"]) {
+            // no json url, return and call html link
+            return;
+            }
+        var url = fieldvalues["upurl"];
+      }
+    else if (button_pressed.text() == "\u2193") {
+        // down arrow button
+        if (!fieldvalues["downurl"]) {
+            // no json url, return and call html link
+            return;
+            }
+        var url = fieldvalues["downurl"];
+      }
+    else {
+      // not known
+      return;
+      }
+
+    var href = button_pressed.attr('href');
+    var senddata = href.substring(href.indexOf('?')+1);
+    e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: url,
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
+                          }
+              });
+
     };
 
