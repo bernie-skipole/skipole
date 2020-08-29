@@ -437,6 +437,8 @@ class InputTable4(Widget):
                         'down_style':FieldArg("cssstyle", ""),
                         'up_class':FieldArg("cssclass", ""),
                         'down_class':FieldArg("cssclass", ""),
+                        'up_hide':FieldArgList("boolean", jsonset=True),
+                        'down_hide':FieldArgList("boolean", jsonset=True),
                         'up_getfield1':FieldArgList('text', valdt=True, jsonset=True),
                         'up_getfield2':FieldArgList('text', valdt=True, jsonset=True),
                         'down_getfield1':FieldArgList('text', valdt=True, jsonset=True),
@@ -448,11 +450,6 @@ class InputTable4(Widget):
                         }                                                                                         # the field submitted as a dictionary
                                                                                                                   # each key will have 'keyname'
                                                                                                                   # and value will be the hidden field values
-
-## w3-button.w3-padding-small.w3-small.w3-theme-dark
-
-#"header_class": "w3-theme-d3",
-#"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered"
 
     def __init__(self, name=None, brief='', **field_args):
         """
@@ -475,6 +472,8 @@ class InputTable4(Widget):
         down_style: CSS style applied to the down arrows
         up_class: CSS class applied to the up arrows
         down_class: CSS class applied to the down arrows
+        up_hide: List of True/False to hide or not hide the up arrow
+        down_hide: List of True/False to hide or not hide the down arrow
         up_getfield1: list of get fields, one for each up arrow link
         up_getfield2: list of second get fields, one for each up arrow link
         down_getfield1: list of get fields, one for each down arrow link
@@ -498,6 +497,10 @@ class InputTable4(Widget):
         col1 = self.get_field_value("col1")
         col2 = self.get_field_value("col2")
         col3 = self.get_field_value("col3")
+        up_hide = self.get_field_value("up_hide")
+        down_hide = self.get_field_value("down_hide")
+
+
         input_name = self.get_formname("inputdict") + '-'
 
         col1_class = self.get_field_value("col1_class")
@@ -612,6 +615,11 @@ class InputTable4(Widget):
             if up_class:
                 self[rownumber][3][0].update_attribs({"class": up_class})
 
+            if up_hide:
+                hide = up_hide[index] if index < len(up_hide) else False
+                if hide:
+                    self[rownumber][3][0].set_hide(True)
+
             self[rownumber][3][0][0] = tag.HTMLSymbol("&uarr;")
 
             # create a url for the up arrow link
@@ -629,6 +637,11 @@ class InputTable4(Widget):
 
             if down_class:
                 self[rownumber][3][1].update_attribs({"class": down_class})
+
+            if down_hide:
+                hide = down_hide[index] if index < len(down_hide) else False
+                if hide:
+                    self[rownumber][3][1].set_hide(True)
 
             self[rownumber][3][1][0] = tag.HTMLSymbol("&darr;")
 

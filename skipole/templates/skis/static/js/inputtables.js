@@ -37,22 +37,30 @@ SKIPOLE.inputtables.InputTable1.prototype.setvalues = function (fieldlist, resul
             // for each row
             // set its class
             if (row_classes && row_classes.length) {
-                $(this).attr("class", row_classes[index]);
+                if (row_classes[index] !== null) {
+                    $(this).attr("class", row_classes[index]);
+                    }
                 }
             var cells = $(this).children();
             if (col1 && col1.length) {
-                $(cells[0]).text(col1[index]);
+                if (col1[index] !== null) {
+                    $(cells[0]).text(col1[index]);
+                    }
                  }
             if (col2 && col2.length) {
-                $(cells[1]).text(col2[index]);
+                if (col2[index] !== null) {
+                    $(cells[1]).text(col2[index]);
+                    }
                  }
             if (keysonly && keysonly.length) {
                 let rowkey = keysonly[index];
                 if (rowkey) {
-                    // set name attribute and val attribute for each input field
-                    let inputtag = $(cells[2]).find('input');
-                    inputtag.prop('name', self.formname('inputdict') + "-" + rowkey);
-                    inputtag.val(keysvals[rowkey]);
+                    if (keysvals[rowkey] !== null) {
+                        // set name attribute and val attribute for each input field
+                        let inputtag = $(cells[2]).find('input');
+                        inputtag.prop('name', self.formname('inputdict') + "-" + rowkey);
+                        inputtag.val(keysvals[rowkey]);
+                        }
                     }
                  }
              index=index+1;
@@ -126,6 +134,8 @@ SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, resul
     var col2 = this.fieldarg_in_result('col2', result, fieldlist);
     var col3 = this.fieldarg_in_result('col3', result, fieldlist);
     var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
+    var up_hide = this.fieldarg_in_result('up_hide', result, fieldlist);
+    var down_hide = this.fieldarg_in_result('down_hide', result, fieldlist);
     var keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
     if (keysvals && Object.keys(keysvals).length) {
         var keysonly = Object.keys(keysvals);
@@ -145,17 +155,25 @@ SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, resul
             // for each row
             // set its class
             if (row_classes && row_classes.length) {
-                $(this).attr("class", row_classes[index]);
+                if (row_classes[index] !== null) {
+                    $(this).attr("class", row_classes[index]);
+                    }
                 }
             var cells = $(this).children();
             if (col1 && col1.length) {
-                $(cells[0]).text(col1[index]);
+                if (col1[index] !== null) {
+                    $(cells[0]).text(col1[index]);
+                    }
                  }
             if (col2 && col2.length) {
-                $(cells[1]).text(col2[index]);
+                if (col2[index] !== null) {
+                    $(cells[1]).text(col2[index]);
+                    }
                  }
             if (col3 && col3.length) {
-                $(cells[2]).text(col3[index]);
+                if (col3[index] !== null) {
+                    $(cells[2]).text(col3[index]);
+                    }
                  }
 
             let a_link = $(cells[3]).find("a");
@@ -163,41 +181,69 @@ SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, resul
             // up_getfield1
             let up_getfield1 = self.fieldarg_in_result('up_getfield1', result, fieldlist);
             if (up_getfield1 && up_getfield1.length) {
-                let href = up_link.attr('href');
-                let url = self.setgetfield(href, 'up_getfield1',up_getfield1[index]);
-                up_link.attr('href', url);
+                if (up_getfield1[index] !== null) {
+                    let href = up_link.attr('href');
+                    let url = self.setgetfield(href, 'up_getfield1',up_getfield1[index]);
+                    up_link.attr('href', url);
+                    }
                 }
             // up_getfield2
             let up_getfield2 = self.fieldarg_in_result('up_getfield2', result, fieldlist);
             if (up_getfield2 && up_getfield2.length) {
-                let href = up_link.attr('href');
-                let url = self.setgetfield(href, 'up_getfield2', up_getfield2[index]);
-                up_link.attr('href', url);
+                if (up_getfield2[index] !== null) {
+                    let href = up_link.attr('href');
+                    let url = self.setgetfield(href, 'up_getfield2', up_getfield2[index]);
+                    up_link.attr('href', url);
+                    }
+                }
+            // up_hide
+            if (up_hide && up_hide.length) {
+                if (up_hide[index] === true) {
+                    up_link.hide();
+                    }
+                else {
+                    up_link.show();
+                    }
                 }
 
             let down_link = $(a_link[1]);
             // down_getfield1
             let down_getfield1 = self.fieldarg_in_result('down_getfield1', result, fieldlist);
             if (down_getfield1 && down_getfield1.length) {
-                let href = down_link.attr('href');
-                let url = self.setgetfield(href, 'down_getfield1',down_getfield1[index]);
-                down_link.attr('href', url);
+                if (down_getfield1[index] !== null) {
+                    let href = down_link.attr('href');
+                    let url = self.setgetfield(href, 'down_getfield1',down_getfield1[index]);
+                    down_link.attr('href', url);
+                    }
                 }
             // down_getfield2
             let down_getfield2 = self.fieldarg_in_result('down_getfield2', result, fieldlist);
             if (down_getfield2 && down_getfield2.length) {
-                let href = down_link.attr('href');
-                let url = self.setgetfield(href, 'down_getfield2', down_getfield2[index]);
-                down_link.attr('href', url);
+                if (down_getfield2[index] !== null) {
+                    let href = down_link.attr('href');
+                    let url = self.setgetfield(href, 'down_getfield2', down_getfield2[index]);
+                    down_link.attr('href', url);
+                    }
+                }
+            // down_hide
+            if (down_hide && down_hide.length) {
+                if (down_hide[index] === true) {
+                    down_link.hide();
+                    }
+                else {
+                    down_link.show();
+                    }
                 }
 
             if (keysonly && keysonly.length) {
                 let rowkey = keysonly[index];
                 if (rowkey) {
                     // set name attribute and val attribute for each input field
-                    let inputtag = $(cells[3]).find('input');
-                    inputtag.prop('name', self.formname('inputdict') + "-" + rowkey);
-                    inputtag.val(keysvals[rowkey]);
+                    if (keysvals[rowkey] !== null) {
+                        let inputtag = $(cells[3]).find('input');
+                        inputtag.prop('name', self.formname('inputdict') + "-" + rowkey);
+                        inputtag.val(keysvals[rowkey]);
+                        }
                     }
                  }
              index=index+1;
