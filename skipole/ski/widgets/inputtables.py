@@ -608,17 +608,27 @@ class InputTable4(Widget):
                 self[rownumber][3].update_attribs({"style": col4_style})
 
             if up_style:
-                self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button", "style":up_style})
+                up_button_style = up_style
+            else:
+                up_button_style = ''
+
+            if up_hide:
+                hide = up_hide[index] if index < len(up_hide) else False
+                if hide:
+                    if up_button_style:
+                        up_button_style = up_button_style.strip(";")
+                        up_button_style += ";visibility: hidden;"
+                    else:
+                        up_button_style = "visibility: hidden;"
+
+
+            if up_button_style:
+                self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button", "style":up_button_style})
             else:
                 self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if up_class:
                 self[rownumber][3][0].update_attribs({"class": up_class})
-
-            if up_hide:
-                hide = up_hide[index] if index < len(up_hide) else False
-                if hide:
-                    self[rownumber][3][0].set_hide(True)
 
             self[rownumber][3][0][0] = tag.HTMLSymbol("&uarr;")
 
@@ -631,17 +641,26 @@ class InputTable4(Widget):
             self[rownumber][3][0].update_attribs({"href": url})
 
             if down_style:
-                self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button", "style":down_style})
+                down_button_style = down_style
+            else:
+                down_button_style = ''
+
+            if down_hide:
+                hide = down_hide[index] if index < len(down_hide) else False
+                if hide:
+                    if down_button_style:
+                        down_button_style = down_button_style.strip(";")
+                        down_button_style += ";visibility: hidden;"
+                    else:
+                        down_button_style = "visibility: hidden;"
+
+            if down_button_style:
+                self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button", "style":down_button_style})
             else:
                 self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if down_class:
                 self[rownumber][3][1].update_attribs({"class": down_class})
-
-            if down_hide:
-                hide = down_hide[index] if index < len(down_hide) else False
-                if hide:
-                    self[rownumber][3][1].set_hide(True)
 
             self[rownumber][3][1][0] = tag.HTMLSymbol("&darr;")
 

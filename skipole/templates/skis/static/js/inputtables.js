@@ -198,11 +198,13 @@ SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, resul
                 }
             // up_hide
             if (up_hide && up_hide.length) {
-                if (up_hide[index] === true) {
-                    up_link.hide();
-                    }
-                else {
-                    up_link.show();
+                if (up_hide[index] !== null) {
+                    if (up_hide[index] === true) {
+                        up_link.css("visibility", "hidden");
+                        }
+                    else {
+                        up_link.css("visibility", "visible");
+                        }
                     }
                 }
 
@@ -227,11 +229,13 @@ SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, resul
                 }
             // down_hide
             if (down_hide && down_hide.length) {
-                if (down_hide[index] === true) {
-                    down_link.hide();
-                    }
-                else {
-                    down_link.show();
+                if (down_hide[index] !== null) {
+                    if (down_hide[index] === true) {
+                        down_link.css("visibility", "hidden");
+                        }
+                    else {
+                        down_link.css("visibility", "visible");
+                        }
                     }
                 }
 
