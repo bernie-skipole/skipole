@@ -20,10 +20,12 @@ from http import cookies
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
-# a search for anything none-alphanumeric, not an underscore, not -, not =
+# a search for anything none-alphanumeric, not an underscore, not -
 # to allow any character in base64.urlsafe_b64encode/base64.urlsafe_b64decode
+# note the = sign is not allowed, though in b64encode it is used for padding
+# This is because padding is removed on sending, and added here on receiving
 
-_AN64 = re.compile('[^\w\-=]')
+_AN64 = re.compile('[^\w\-]')
 
 from . import skiboot, read_json
 from .excepts import ValidateError, ServerError, FailPage, ErrorMessage, GoTo, PageError
@@ -298,6 +300,8 @@ class SkipoleProject(object):
                         elif ident_items == 3:
                             caller_page = skiboot.Ident(ident_parts[0], int(ident_parts[1])).item()
                             b64binarydata = ident_parts[2].encode('ascii') # get the submitted data and convert to binary
+                            # add padding
+                            b64binarydata = b64binarydata + b"=" * (4-len(b64binarydata)%4)
                             ident_data = urlsafe_b64decode(b64binarydata).decode('ascii') # b64 decode, and convert to string
                     except Exception:
                         caller_page = None

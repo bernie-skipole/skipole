@@ -65,7 +65,7 @@ class ParentPage(object):
             return
         if self.ident_data:
             # encode the ident data as base64, and append it as a string to the page ident
-            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii'))
+            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii')).rstrip(b"=")  # removes final '=' padding
             return str(self.ident) + '_' + b64binarydata.decode('ascii')
         else:
             return str(self.ident)        
@@ -1584,7 +1584,7 @@ class JSON(ParentPage):
             return [json.dumps(self.jsondict).encode('UTF-8')]
         if self.ident_data:
             # encode the ident data as base64
-            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii'))
+            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii')).rstrip(b"=")  # removes final '=' padding
             self.content['ident_data'] = b64binarydata.decode('ascii')
         elif 'ident_data' in self.content:
             del self.content['ident_data']
@@ -1596,7 +1596,7 @@ class JSON(ParentPage):
             return json.dumps(self.jsondict)
         if self.ident_data:
             # encode the ident data as base64
-            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii'))
+            b64binarydata = urlsafe_b64encode(self.ident_data.encode('ascii')).rstrip(b"=")  # removes final '=' padding
             self.content['ident_data'] = b64binarydata.decode('ascii')
         elif 'ident_data' in self.content:
             del self.content['ident_data']
