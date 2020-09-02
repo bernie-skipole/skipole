@@ -405,7 +405,7 @@ def set_javascript_to_cdn(skicall):
     editedprojname = call_data['editedprojname']
 
     skipole_version, project_version = versions(editedprojname)
-    # get this to point to https://cdn.jsdelivr.net/gh/bernie-skipole/skipole@4/skipole/templates/skis/static/js/
+    # get this to point to https://cdn.jsdelivr.net/gh/bernie-skipole/skipole@5/skipole/templates/skis/static/js/
     # so primary version number is used
     version_numbers = skipole_version.split(".")
     starthttp =  "https://cdn.jsdelivr.net/gh/bernie-skipole/skipole@" + version_numbers[0] + "/skipole/templates/skis/static/js/"

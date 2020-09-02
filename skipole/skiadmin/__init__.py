@@ -1,6 +1,7 @@
 
 
-import os, sys, re, collections, random
+import os, sys, re, json
+
 
 from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
 from ..skilift.fromjson import get_defaults_from_file
@@ -11,13 +12,6 @@ PROJECT = 'skiadmin'
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
-
-# dictionary of session keys, and values being a dictionary of items to carry over as session data
-_SESSION_DATA = collections.OrderedDict()
-
-# A key will be created for _SESSION_DATA with a random number and an incrementing number stored in
-# this global variable 
-_IDENT_DATA = 0
 
 
 
@@ -45,14 +39,11 @@ def start_call(called_ident, skicall):
     if not skicall.caller_ident:
         return called_ident
 
-    # if ident_data is given, then session data can be found in _SESSION_DATA[ident_data]
-    # so this is added to call_data
-
-    ident_data = skicall.ident_data
-
-    if (ident_data) and (ident_data in _SESSION_DATA):
+    # session data is received from the client as a json dictionary via ident_data
+    if skicall.ident_data:
+        session_data = json.loads(skicall.ident_data)
         # update call_data with session_data
-        skicall.call_data.update(_SESSION_DATA[ident_data])
+        skicall.call_data.update(session_data)
 
     return called_ident
 
@@ -66,11 +57,7 @@ def submit_data(skicall):
 
 
 def end_call(page_ident, page_type, skicall):
-    """Sets navigation menus, and stores session data under a random generated key in _SESSION_DATA
-       and send the key as ident_data.
-       Also limits the length of _SESSION_DATA by popping the oldest member"""
-
-    global _SESSION_DATA, _IDENT_DATA
+    """Sets navigation menus, and sends session data as ident_data."""
 
     # do not include session data or navigation for these types of pages
     if page_type in ('FilePage', 'CSS'):
@@ -105,7 +92,8 @@ def end_call(page_ident, page_type, skicall):
         page_data[("adminhead","show_status","hide")] = False
 
 
-    # store any required session data which has been set into call_data
+    # get any required session data which has been set into call_data
+    # and pass it to the client as ident_data
 
     sent_session_data = {}
 
@@ -120,20 +108,8 @@ def end_call(page_ident, page_type, skicall):
     if not sent_session_data:
         return
 
-    # store as a key:value in _SESSION_DATA, and send the key as ident_data
-    # this key will be saved in the returned page, and then sent back in the next call to the server
-    # on being received by the start_call function, the key will be used to read the session values
-    # from _SESSION_DATA
-
-    # generate a key, being a combination of incrementing _IDENT_DATA and a random number
-    _IDENT_DATA += 1
-    ident_data_key = str(_IDENT_DATA) + "a" + str(random.randrange(1000, 9999))
-    _SESSION_DATA[ident_data_key] = sent_session_data
-    # if length of _SESSION_DATA is longer than 50, remove old values,
-    # this expires old sessions
-    if len(_SESSION_DATA)>50:
-        _SESSION_DATA.popitem(last=False)
-    page_data['ident_data'] = ident_data_key
+    # and this dictionary is inserted into ident_data as a json string
+    page_data['ident_data'] = json.dumps(sent_session_data)
 
 
 # As this project is not intended to run as a stand-alone service, a function

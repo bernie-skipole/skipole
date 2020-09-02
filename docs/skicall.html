@@ -46,8 +46,7 @@
 <p>skicall.call_data is a dictionary which could contain data you set into it or could contain submitted form data (depending on the Responder handling the call).</p>
 <p>skicall.caller_ident is the ident of the page making the call, a tuple ('projname', pagenumber), generally sent with any submitted data, this value could be an empty tuple if the page ident is not known - which will happen if the calling page is external or if no data is submitted.</p>
 <p>skicall.environ is the wsgi environ dictionary.</p>
-<p>skicall.ident_data is a string which was previously saved onto the page making the call by setting skicall.page_data['ident_data'], and has now been sent back together with any submitted data.<br />
-This facility can therefore be used to pass a reference identifier between calls. You need to validate this string here as it can be altered by a malicious caller. ident_data will be None if not present.</p>
+<p>skicall.ident_data is a string which was previously saved onto the page by setting skicall.page_data['ident_data'], and has now been sent back together with any submitted data. skicall.ident_data will be None if not present.<br />This facility can be used to pass data between calls. You need to validate this received string as it can be altered by a malicious caller.</p>
 <p>skicall.ident_list is initially an empty list but will have the ident ('projname', pagenumber) of each responder handling the call appended to it. Typically a call will be handled by a single responder, but it is possible for one responder to pass the call on to another, and so several may be involved in a call.</p>
 <p>skicall.lang is a read-only tuple of two strings containing the preferred language required by the client in the format (language, default_language).<br />
 This attribute is used when requesting TextBlocks.</p>

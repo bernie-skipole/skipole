@@ -82,8 +82,6 @@ def get_proj_page(project, pagenumber, pchange=None):
         raise ServerError(message="Invalid Page - pagenumber not found in project")
     if page.page_type == 'Folder':
         raise ServerError(message = "Invalid page - requested item is a Folder")
-    # if pchange is given, test it is equal to page.change
-    print(f"pchange = {pchange} page.change = {page.change}")
     if (pchange is not None) and (page.change != pchange):
         raise ServerError(message="The page has been changed prior to this submission, someone else may be editing this project")
     return proj, page
