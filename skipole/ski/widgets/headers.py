@@ -162,6 +162,101 @@ class NavButtons2(Widget):
 
 
 
+class NavButtons3(Widget):
+    """Defines a div, containing navigation button links."""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'link_ident':FieldArg("url", 'no_javascript'),
+                        'json_ident':FieldArg("url", ''),
+                        'button_text':FieldArgList('text', jsonset=True),
+                        'get_field1':FieldArgList('text', valdt=True, jsonset=True),
+                        'get_field2':FieldArgList('text', valdt=True, jsonset=True),
+                        'button_classes':FieldArgList('text', jsonset=True),
+                        'button_style':FieldArg("cssstyle", '')
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        json_ident: The url, ident or label to link, expecting a json file to be returned
+        link_ident: The link to an html page taken if the client does not have javascript
+        button_text: List of text strings to be placed within the links, defines the number of links
+        get_field1: list of 'get' strings for each link set in the target url
+        get_field2: list of second 'get' strings for each link set in the target url
+        button_classes: list of CSS classes, each list item set to button links
+        button_style: A style set on every button
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        self._jsonurl = ''
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the list of links"
+        button_classes = self.get_field_value('button_classes')
+        button_style = self.get_field_value('button_style')
+        button_text = self.get_field_value('button_text')
+        get_field1 = self.get_field_value('get_field1')
+        get_field2 = self.get_field_value('get_field2')
+
+        if not button_text:
+            return
+
+        link_ident = self.get_field_value("link_ident")
+        if not link_ident:
+            link_ident = 'no_javascript'
+        # get url
+        linkurl = skiboot.get_url(link_ident, proj_ident=page.proj_ident)
+
+        json_ident = self.get_field_value("json_ident") # ident of the up arrow link, expects a json file returned
+        if json_ident:
+            self._jsonurl = skiboot.get_url(json_ident, proj_ident=page.proj_ident)
+
+        # for each link - create a link and add it
+        for txt in button_text:
+            lnk = tag.Part(tag_name="a", text=txt, attribs={"role":"button"})
+            if button_style:
+                lnk.update_attribs({"style":button_style})
+
+            button_class = button_classes[index] if index < len(button_classes) else ''
+            if button_class:
+                lnk.update_attribs({"class":button_class})
+
+            get1 = get_field1[index] if index < len(get_field1) else ''
+            get2 = get_field2[index] if index < len(get_field2) else ''
+            get_fields = {self.get_formname("get_field1"):get1, self.get_formname("get_field2"):get2}
+            url = self.make_get_url(page, linkurl, get_fields, True)
+            lnk.update_attribs({"href": url})
+            self.append(lnk)
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        jscript = """  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        if self._jsonurl:
+            return jscript + self._make_fieldvalues(jsonurl=self._jsonurl)
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id and class widget_class -->
+  <a role=\"button\" href=\"#\">  <!-- with class set to button_class -->
+    <!-- The displayed button text of the link -->
+  </a>
+  <!-- further links -->
+</div>"""
+
+
+
+
+
+
+
 
 class TabButtons1(Widget):
     """Defines a div, containing tab buttons which can hide/display portions of the page.
