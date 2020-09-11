@@ -495,7 +495,7 @@ SKIPOLE.headers.NavButtons3.prototype.setvalues = function (fieldlist, result) {
             if (get_field2 && get_field2.length) {
                 if (get_field2[index] !== null) {
                     let href = $(this).attr('href');
-                    let url = self.setgetfield(href, 'get_field1',get_field1[index]);
+                    let url = self.setgetfield(href, 'get_field2',get_field2[index]);
                     $(this).attr('href', url);
                     }
                 }

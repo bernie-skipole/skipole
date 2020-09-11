@@ -209,19 +209,19 @@ class NavButtons3(Widget):
         # get url
         linkurl = skiboot.get_url(link_ident, proj_ident=page.proj_ident)
 
-        json_ident = self.get_field_value("json_ident") # ident of the up arrow link, expects a json file returned
+        json_ident = self.get_field_value("json_ident")
         if json_ident:
             self._jsonurl = skiboot.get_url(json_ident, proj_ident=page.proj_ident)
 
         # for each link - create a link and add it
-        for txt in button_text:
+        for index,txt in enumerate(button_text):
             lnk = tag.Part(tag_name="a", text=txt, attribs={"role":"button"})
             if button_style:
                 lnk.update_attribs({"style":button_style})
-
-            button_class = button_classes[index] if index < len(button_classes) else ''
-            if button_class:
-                lnk.update_attribs({"class":button_class})
+            if button_classes:
+                button_class = button_classes[index] if index < len(button_classes) else ''
+                if button_class:
+                    lnk.update_attribs({"class":button_class})
 
             get1 = get_field1[index] if index < len(get_field1) else ''
             get2 = get_field2[index] if index < len(get_field2) else ''
