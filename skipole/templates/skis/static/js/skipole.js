@@ -4,6 +4,7 @@ var SKIPOLE = {};
 SKIPOLE.widgets = {};
 SKIPOLE.validators = {};
 SKIPOLE.sections = [];
+SKIPOLE.skiprefresh = false;
 
 
 SKIPOLE.restorepagepos = function() {

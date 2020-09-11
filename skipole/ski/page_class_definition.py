@@ -664,7 +664,6 @@ $(document).ready(function(){
 
         # and create the script end
         scriptend = self._add_jscript + """
-  SKIPOLE.skiprefresh = false;
   if(SKIPOLE.interval && SKIPOLE.IntervalTarget) {
     SKIPOLE.interval_id = setInterval(SKIPOLE.refreshjson, SKIPOLE.interval*1000, SKIPOLE.IntervalTarget);
     }
