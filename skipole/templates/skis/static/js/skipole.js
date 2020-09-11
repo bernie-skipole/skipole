@@ -26,6 +26,10 @@ SKIPOLE.restorepagepos = function() {
 
 SKIPOLE.refreshjson = function( target ) {
      /* called by setInterval when a page needs regular updating */
+     if (SKIPOLE.skiprefresh) {
+         SKIPOLE.skiprefresh = false;
+         return;
+         }
      $.getJSON(target, "ident=" + SKIPOLE.identdata)
          .done(function(result){
                 SKIPOLE.setfields(result);
