@@ -245,8 +245,9 @@ class NavButtons3(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class -->
-  <a role=\"button\" href=\"#\">  <!-- with class set to button_class -->
-    <!-- The displayed button text of the link -->
+  <a role=\"button\" href=\"#\">  <!-- with class set to corresponding class in button_classes -->
+    <!-- and get fields set to corresponding element in get_field1 and get_field2 -->
+    <!-- with displayed button text set to corresponding text in button_text -->
   </a>
   <!-- further links -->
 </div>"""
