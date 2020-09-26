@@ -306,7 +306,7 @@ class SkipoleProject(object):
                     except Exception:
                         caller_page = None
                     if caller_page is None:
-                       raise ValidateError(message="Form data not accepted, (received ident is not valid)")
+                        raise ValidateError(message="Form data not accepted, (received ident is not valid)")
                     if caller_page.page_type != 'TemplatePage':
                         raise ValidateError(message="Form data not accepted, (caller page ident is not a template page)")
 
