@@ -224,11 +224,18 @@ class SkipoleProject(object):
                 return self._url_not_found(environ, path, lang)
 
         except ServerError as e:
+            # if debug is enabled, expand the exception message to include the exception trace
+            if skiboot.get_debug():
+                e.message += "\n"
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+                for item in str_list:
+                    e.message += item
             # ServerError has occurred, return the server error page
             page = self._system_page("server_error")
             if (not page) or (page.page_type != "TemplatePage"):
                 # return the default server error page
-                return self.default_server_error_page(e)
+                return self.default_server_error_page(e.message, e.code)
             # import any sections
             page.import_sections()
             # show message passed by the exception
@@ -252,7 +259,7 @@ class SkipoleProject(object):
             status, headers = page.get_status()
             data = page.data()
             if not data:
-                return self.default_server_error_page(e)
+                return self.default_server_error_page(e.message, e.code)
             # return page data
             s_h_data = e.status, headers, data
 
@@ -313,7 +320,7 @@ class SkipoleProject(object):
         except ValidateError as e:
             page = self._system_page("validate_error")
             if (not page) or (page.page_type != "TemplatePage"):
-                return self.default_validate_error_page(e)
+                return self.default_validate_error_page(e.message)
             # import any sections
             page.import_sections()
             # show message passed by the exception
@@ -323,7 +330,7 @@ class SkipoleProject(object):
             status, headers = page.get_status()
             data = page.data()
             if not data:
-                return self.default_validate_error_page(e)
+                return self.default_validate_error_page(e.message)
             # return page data
             return e.status, headers, data
 
@@ -418,7 +425,7 @@ class SkipoleProject(object):
         except ValidateError as e:
             page = self._system_page("validate_error")
             if (not page) or (page.page_type != "TemplatePage"):
-                return self.default_validate_error_page(e)
+                return self.default_validate_error_page(e.message)
             # import any sections
             page.import_sections()
             # show message passed by the exception
@@ -428,7 +435,7 @@ class SkipoleProject(object):
             status, headers = page.get_status()
             data = page.data()
             if not data:
-                return self.default_validate_error_page(e)
+                return self.default_validate_error_page(e.message)
             # return page data
             return e.status, headers, page.data()
 
@@ -473,15 +480,9 @@ class SkipoleProject(object):
             # could be a label
         except ServerError as e:
             raise e
-        except Exception:
+        except Exception as e:
             message = "Invalid exception in start_call function."
-            if skiboot.get_debug():
-                message += "\n"
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                for item in str_list:
-                    message += item
-            raise ServerError(message, code=9040)
+            raise ServerError(message, code=9040) from e
         return new_called_ident, skicall
 
 
@@ -625,16 +626,10 @@ class SkipoleProject(object):
                 if skicall._lang_cookie:
                     page.language_cookie = skicall._lang_cookie
         except GoTo as e:
-            raise ServerError("Invalid GoTo exception in end_call", code=9049)
-        except Exception:
+            raise ServerError("Invalid GoTo exception in end_call", code=9049) from e
+        except Exception as e:
             message = "Invalid exception in end_call function."
-            if skiboot.get_debug():
-                message += "\n"
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                for item in str_list:
-                    message += item
-            raise ServerError(message, code=9050)
+            raise ServerError(message, code=9050) from e
 
         # import any sections
         page.import_sections(skicall.page_data)
@@ -1164,9 +1159,6 @@ class SkipoleProject(object):
         return status, headers, page.data()
 
 
-
-
-
     def _url_not_found(self, environ, path, lang):
         "Used to return the url not found page"
         page = self._system_page("url_not_found")
@@ -1190,20 +1182,20 @@ class SkipoleProject(object):
         return '404 Not Found', [('content-type', 'text/html')], [page_content]
 
 
-    def default_server_error_page(self, e):
+    def default_server_error_page(self, message='', code=0):
         "Given a ServerError exception, return a default status,headers,data"
-        text_start = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>Error code : %s</p>\n" % (e.code,)
-        if e.message:
-            page_text = text_start + "<p>%s</p>\n</html>" % (html.escape(e.message),)
+        text_start = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>Error code : %s</p>\n" % (code,)
+        if message:
+            page_text = text_start + "<p>%s</p>\n</html>" % (html.escape(message),)
         else:
             page_text = text_start + "</html>"
         return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
 
 
-    def default_validate_error_page(self, e):
+    def default_validate_error_page(self, message):
         "Given a ValidateError exception, return a default status,headers,data"
-        if e.message:
-            page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(e.message),)
+        if message:
+            page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n<p>%s</p>\n</html>" % (html.escape(message),)
         else:
             page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n</html>"
         return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]

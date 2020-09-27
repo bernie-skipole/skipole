@@ -237,14 +237,9 @@ main purpose is to act as a parent class for all other respond objects.
             result = this_project.submit_data(skicall)
         except (GoTo, FailPage, ServerError, ValidateError) as e:
             raise e
-        except Exception:
+        except Exception as e:
             message = 'Error in submit_data called by responder ' + str(tuple_ident_list[-1]) + '\n'
-            if skiboot.get_debug():
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                for item in str_list:
-                    message += item
-            raise ServerError(message)
+            raise ServerError(message) from e
         return result
 
 
@@ -403,15 +398,9 @@ main purpose is to act as a parent class for all other respond objects.
         except PageError:
             raise
         # Any other error, raise ServerError
-        except Exception:
+        except Exception as e:
             message = "Uncaught exception in user code responder %s,%s" % ident_list[-1]
-            if skiboot.get_debug():
-                message += "\n"
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                for item in str_list:
-                    message += item
-            raise ServerError(message)
+            raise ServerError(message) from e
         return page
 
 

@@ -252,20 +252,13 @@ def use_submit_list(submit_data):
             sdpackage = sdmodule.__name__
         try:
             submitmodule = import_module(submitpath, sdpackage)
-        except Exception:
-            if skiboot.get_debug():
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                str_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-                message = ''
-                for item in str_list:
-                    message += item
-                raise ServerError(message)
-            raise ServerError("Unable to import project module defined as %s in submit list" % (submitpath,))
+        except Exception as e:
+            raise ServerError("Unable to import project module defined as %s in submit list" % (submitpath,)) from e
         # now obtain and run the specified function
         try:
             submitfunc = getattr(submitmodule, skicall.submit_list[-1])
-        except Exception:
-            raise ServerError("submit_list package %s found, but the required function %s is not recognised" % (submitpath, skicall.submit_list[-1]))
+        except Exception as e:
+            raise ServerError("submit_list package %s found, but the required function %s is not recognised" % (submitpath, skicall.submit_list[-1])) from e
         return submitfunc(skicall)
     return submit_function
 
