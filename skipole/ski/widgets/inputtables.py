@@ -723,4 +723,342 @@ class InputTable4(Widget):
 </table>"""
 
 
+class InputTable3(Widget):
+    """A table of four columns, two being text strings, one a text input field
+       the fourth being a cell with up and down arrow links
+       On the links being chosen a request for a json update is made, which
+       typically updates the text columns, and the values in the input field.
+       Each arrow has two get fields which can be set.
+       The first row is four header titles.
+       Typically inserted into a form, does not display errors"""
+
+    display_errors = False
+
+
+    arg_descriptions = {'header_class':FieldArg("cssclass",""),
+                        'col1_class':FieldArg("cssclass",""),          # class applied to every td in the first column
+                        'col2_class':FieldArg("cssclass",""),          # class applied to every td in the second column
+                        'col3_class':FieldArg("cssclass",""),          # class applied to every td in the third column
+                        'col4_class':FieldArg("cssclass",""),          # class applied to every td in the fourth column
+                        'col4_style':FieldArg("cssstyle", ""),
+                        'input_class':FieldArg("cssclass", ''),        # class applied to every input field in the third column
+                        'input_style':FieldArg("cssstyle", ''),        # style applied to every input field in the third column
+                        'size':FieldArg("text", ''),
+                        'maxlength':FieldArg("text", ''),
+                        'row_classes':FieldArgList('text', jsonset=True),
+                        'title1':FieldArg('text', ''),
+                        'title2':FieldArg('text', ''),
+                        'title3':FieldArg('text', ''),
+                        'title4':FieldArg('text', ''),
+                        'up_link_ident':FieldArg("url", 'no_javascript'),
+                        'up_json_ident':FieldArg("url", ''),
+                        'down_link_ident':FieldArg("url", 'no_javascript'),
+                        'down_json_ident':FieldArg("url", ''),
+                        'up_style':FieldArg("cssstyle", ""),
+                        'down_style':FieldArg("cssstyle", ""),
+                        'up_class':FieldArg("cssclass", ""),
+                        'down_class':FieldArg("cssclass", ""),
+                        'up_hide':FieldArgList("boolean", jsonset=True),
+                        'down_hide':FieldArgList("boolean", jsonset=True),
+                        'up_getfield1':FieldArgList('text', valdt=True, jsonset=True),
+                        'up_getfield2':FieldArgList('text', valdt=True, jsonset=True),
+                        'down_getfield1':FieldArgList('text', valdt=True, jsonset=True),
+                        'down_getfield2':FieldArgList('text', valdt=True, jsonset=True),
+                        'col1':FieldArgList('text', jsonset=True),
+                        'col2':FieldArgList('text', jsonset=True),
+                        'inputdict':FieldArgDict('text', valdt=True, jsonset=True, senddict=True)                 # dictionary of keyname:value
+                        }                                                                                         # the field submitted as a dictionary
+                                                                                                                  # each key will have 'keyname'
+                                                                                                                  # and value will be the input field values
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        header_class: class of the header row, if empty string, then no class will be applied
+        col1_class: class applied to every td in the first column
+        col2_class: class applied to every td in the second column
+        col3_class: class applied to every td in the third column
+        col4_class: class applied to every td in the fourth column
+        col4_style: style applied to every td in the fourth column
+        input_class: class applied to every input field in the third column
+        input_style: style applied to every input field in the third column
+        size: The number of characters appearing in each text input area
+        maxlength: The maximum number of characters accepted in each text area
+        row_classes: A list of CSS classes to apply to each row (not including the header)
+        title1: The header title over the first text column
+        title2: The header title over the second text column
+        title3: The header title over the third text column
+        title4: The header title over the fourth text column
+        up_link_ident: ident of the up arrow link if javascript disabled
+        up_json_ident: ident of the up arrow link, expects a json file returned
+        down_link_ident: ident of the down arrow link if javascript disabled
+        down_json_ident: ident of the down arrow link, expects a json file returned
+        up_style: CSS style applied to the up arrows
+        down_style: CSS style applied to the down arrows
+        up_class: CSS class applied to the up arrows
+        down_class: CSS class applied to the down arrows
+        up_hide: List of True/False to hide or not hide the up arrow
+        down_hide: List of True/False to hide or not hide the down arrow
+        up_getfield1: list of get fields, one for each up arrow link
+        up_getfield2: list of second get fields, one for each up arrow link
+        down_getfield1: list of get fields, one for each down arrow link
+        down_getfield2: list of get fields, one for each down arrow link
+        col1: A list of text strings to place in the first column
+        col2: A list of text strings to place in the second column
+        inputdict: A dictionary of keyname:value, should be Ordered Dict unless python >= 3.6
+                   the fields submitted will have name 'widgetname:inputdict-keyname'
+                   and the user will receive a widgfield ('widgetname','inputdict') containing a dictionary of keyname:values
+         """
+        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        self._up_jsonurl = ''
+        self._down_jsonurl = ''
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the table"
+        inputdict = self.get_field_value("inputdict")
+        rowc = self.get_field_value("row_classes")
+        col1 = self.get_field_value("col1")
+        col2 = self.get_field_value("col2")
+        up_hide = self.get_field_value("up_hide")
+        down_hide = self.get_field_value("down_hide")
+
+
+        input_name = self.get_formname("inputdict") + '-'
+
+        col1_class = self.get_field_value("col1_class")
+        col2_class = self.get_field_value("col2_class")
+        col3_class = self.get_field_value("col3_class")
+        col4_class = self.get_field_value("col4_class")
+        col4_style = self.get_field_value("col4_style")
+
+        input_class = self.get_field_value("input_class")
+        input_style = self.get_field_value("input_style")
+
+        size = self.get_field_value('size')
+        maxlength = self.get_field_value('maxlength')
+
+        up_link_ident = self.get_field_value("up_link_ident") # ident of the up arrow link if javascript disabled
+        if not up_link_ident:
+            up_link_ident = 'no_javascript'
+        up_json_ident = self.get_field_value("up_json_ident") # ident of the up arrow link, expects a json file returned
+
+        down_link_ident = self.get_field_value("down_link_ident") # ident of the down arrow link if javascript disabled
+        if not down_link_ident:
+            down_link_ident = 'no_javascript'
+        down_json_ident = self.get_field_value("down_json_ident") # ident of the down arrow link, expects a json file returned
+
+        up_style = self.get_field_value("up_style") # CSS style applied to the up arrows
+        down_style = self.get_field_value("down_style") # CSS style applied to the down arrows
+        up_class = self.get_field_value("up_class") # CSS class applied to the up arrows
+        down_class = self.get_field_value("down_class") # CSS class applied to the down arrows
+
+        up_getfield1 = self.get_field_value("up_getfield1") # list of get fields, one for each up arrow link
+        up_getfield2 = self.get_field_value("up_getfield2") # list of second get fields, one for each up arrow link
+        down_getfield1 = self.get_field_value("down_getfield1") # list of get fields, one for each down arrow link
+        down_getfield2 = self.get_field_value("down_getfield2") # list of get fields, one for each down arrow link
+
+        # up arrow link
+        # get json url
+        if up_json_ident:
+            self._up_jsonurl = skiboot.get_url(up_json_ident, proj_ident=page.proj_ident)
+        # get url
+        up_url = skiboot.get_url(up_link_ident, proj_ident=page.proj_ident)
+
+        # down arrow link
+        # get json url
+        if down_json_ident:
+            self._down_jsonurl = skiboot.get_url(down_json_ident, proj_ident=page.proj_ident)
+        # get url
+        down_url = skiboot.get_url(down_link_ident, proj_ident=page.proj_ident)
+
+
+        header = 0
+        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3') or self.get_field_value('title4'):
+            header = 1
+            if self.get_field_value('header_class'):
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            else:
+                self[0] = tag.Part(tag_name='tr')
+            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
+            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
+            self[0][3] = tag.Part(tag_name='th', text = self.get_field_value('title4'))
+
+        # create rows
+        rows = max( len(col1), len(col2), len(inputdict) )
+
+        if not rows:
+            return
+
+        if rows > len(col1):
+            col1.extend(['']*(rows - len(col1)))
+        if rows > len(col2):
+            col2.extend(['']*(rows - len(col2)))
+
+        keylist = list(inputdict.keys())
+        if rows > len(keylist):
+            keylist.extend([None]*(rows - len(keylist)))
+
+        # keylist is a list of the dictionary keys, extended by None keys, if the dictionary is smaller than the number of rows of the table
+
+        for index in range(rows):
+            rownumber = index+header
+
+            cssclass = rowc[index] if index < len(rowc) else ''
+            if cssclass:
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":cssclass})
+            else:
+                self[rownumber] = tag.Part(tag_name='tr')
+
+            if col1_class:
+                self[rownumber][0] = tag.Part(tag_name='td', text = col1[index], attribs={"class":col1_class})
+            else:
+                self[rownumber][0] = tag.Part(tag_name='td', text = col1[index])
+
+            if col2_class:
+                self[rownumber][1] = tag.Part(tag_name='td', text = col2[index], attribs={"class":col2_class})
+            else:
+                self[rownumber][1] = tag.Part(tag_name='td', text = col2[index])
+
+            if col3_class:
+                self[rownumber][2] = tag.Part(tag_name='td', attribs={"class":col3_class})
+            else:
+                self[rownumber][2] = tag.Part(tag_name='td')
+
+            key = keylist[index]
+            if key:  # this is the dictionary key
+                keyed_name = input_name + key
+                self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"text", "value":inputdict[key]})
+                if size:
+                    self[rownumber][2][0].update_attribs({"size":size})
+                if maxlength:
+                    self[rownumber][2][0].update_attribs({"maxlength":maxlength})
+                if input_class:
+                    self[rownumber][2][0].update_attribs({"class":input_class})
+                if input_style:
+                    self[rownumber][2][0].update_attribs({"style":input_style})
+
+            if col4_class:
+                self[rownumber][3] = tag.Part(tag_name='td', attribs={"class":col4_class})
+            else:
+                self[rownumber][3] = tag.Part(tag_name='td')
+
+            if col4_style:
+                self[rownumber][3].update_attribs({"style": col4_style})
+
+            if up_style:
+                up_button_style = up_style
+            else:
+                up_button_style = ''
+
+            if up_hide:
+                hide = up_hide[index] if index < len(up_hide) else False
+                if hide:
+                    if up_button_style:
+                        up_button_style = up_button_style.strip(";")
+                        up_button_style += ";visibility: hidden;"
+                    else:
+                        up_button_style = "visibility: hidden;"
+
+
+            if up_button_style:
+                self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button", "style":up_button_style})
+            else:
+                self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button"})
+
+            if up_class:
+                self[rownumber][3][0].update_attribs({"class": up_class})
+
+            self[rownumber][3][0][0] = tag.HTMLSymbol("&uarr;")
+
+            # create a url for the up arrow link
+            upget1 = up_getfield1[index] if index < len(up_getfield1) else ''
+            upget2 = up_getfield2[index] if index < len(up_getfield2) else ''
+            get_fields = {self.get_formname("up_getfield1"):upget1,
+                          self.get_formname("up_getfield2"):upget2}
+            url = self.make_get_url(page, up_url, get_fields, True)
+            self[rownumber][3][0].update_attribs({"href": url})
+
+            if down_style:
+                down_button_style = down_style
+            else:
+                down_button_style = ''
+
+            if down_hide:
+                hide = down_hide[index] if index < len(down_hide) else False
+                if hide:
+                    if down_button_style:
+                        down_button_style = down_button_style.strip(";")
+                        down_button_style += ";visibility: hidden;"
+                    else:
+                        down_button_style = "visibility: hidden;"
+
+            if down_button_style:
+                self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button", "style":down_button_style})
+            else:
+                self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button"})
+
+            if down_class:
+                self[rownumber][3][1].update_attribs({"class": down_class})
+
+            self[rownumber][3][1][0] = tag.HTMLSymbol("&darr;")
+
+            # create a url for the down arrow link
+            downget1 = down_getfield1[index] if index < len(down_getfield1) else ''
+            downget2 = down_getfield2[index] if index < len(down_getfield2) else ''
+            get_fields = {self.get_formname("down_getfield1"):downget1,
+                          self.get_formname("down_getfield2"):downget2}
+            url = self.make_get_url(page, down_url, get_fields, True)
+            self[rownumber][3][1].update_attribs({"href": url})
+
+
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        jscript = """  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        if self._up_jsonurl or self._down_jsonurl:
+            return jscript + self._make_fieldvalues(upurl=self._up_jsonurl, downurl=self._down_jsonurl)
+
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<table>  <!-- with widget id and class widget_class -->
+  <tr> <!-- with header class -->
+    <th> <!-- title1 --> </th>
+    <th> <!-- title2 --> </th>
+    <th> <!-- title3 --> </th>
+    <th> <!-- title4 --> </th>
+  </tr>
+  <tr>
+    <td> <!-- with class col1_class and col1 text string --> </td>
+    <td> <!-- with class col2_class and col2 text string --> </td>
+    <td> <!-- with class col3_class -->
+      <input type="text" />   <!-- class input_class, style input_style -->
+                              <!-- with name being 'widgetname:inputdict-keyname' and -->
+                              <!-- value from inputdict values  -->
+                              <!-- on form submission received data will be a widgfield -->
+                              <!-- ('widgetname','inputdict') containing a dictionary of keyname:values -->
+    </td>
+    <td> <!-- with class col4_class -->
+      <a role="button" href="#"> <!-- with style up_style -->
+      <!-- The href link will be the url of the up ident with up get fields -->
+      &uarr;
+      </a>
+      <a role="button" href="#"> <!-- with style down_style -->
+      <!-- The href link will be the url of the down ident with down get fields -->
+      &darr;
+      </a>
+    </td>
+  </tr>
+  <!-- rows repeated -->
+</table>"""
+
+
 

@@ -1186,7 +1186,7 @@ class SkipoleProject(object):
         "Given a ServerError exception, return a default status,headers,data"
         text_start = "<!DOCTYPE HTML>\n<html>\n<p>SERVER ERROR</p>\n<p>Error code : %s</p>\n" % (code,)
         if message:
-            page_text = text_start + "<p>%s</p>\n</html>" % (html.escape(message),)
+            page_text = text_start + "<pre>%s</pre>\n</html>" % (html.escape(message),)
         else:
             page_text = text_start + "</html>"
         return '500 Internal Server Error', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
@@ -1199,9 +1199,6 @@ class SkipoleProject(object):
         else:
             page_text = "<!DOCTYPE HTML>\n<html>\n<p>VALIDATION ERROR</p>\n</html>"
         return '400 Bad Request', [('content-type', 'text/html')], [page_text.encode('ascii', 'xmlcharrefreplace')]
-
-
-
 
 
     def page_ident_from_path(self, projurl, path):
