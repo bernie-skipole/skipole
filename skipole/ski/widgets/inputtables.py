@@ -728,7 +728,8 @@ class InputTable3(Widget):
        the fourth being a cell with up and down arrow links
        On the links being chosen a request for a json update is made, which
        typically updates the text columns, and the values in the input field.
-       Each arrow has two get fields which can be set.
+       Each arrow has two get fields which can be set. A third getfield is attached to both
+       arrows, and is automatically given the value set in the input field.
        The first row is four header titles.
        Typically inserted into a form, does not display errors"""
 
@@ -764,6 +765,7 @@ class InputTable3(Widget):
                         'up_getfield2':FieldArgList('text', valdt=True, jsonset=True),
                         'down_getfield1':FieldArgList('text', valdt=True, jsonset=True),
                         'down_getfield2':FieldArgList('text', valdt=True, jsonset=True),
+                        'getfield3':FieldArgList('text', valdt=True, jsonset=True),
                         'col1':FieldArgList('text', jsonset=True),
                         'col2':FieldArgList('text', jsonset=True),
                         'inputdict':FieldArgDict('text', valdt=True, jsonset=True, senddict=True)                 # dictionary of keyname:value
@@ -802,11 +804,15 @@ class InputTable3(Widget):
         up_getfield2: list of second get fields, one for each up arrow link
         down_getfield1: list of get fields, one for each down arrow link
         down_getfield2: list of get fields, one for each down arrow link
+        getfield3: list of values, which will be set on both arrows as getfield3 and will follow
+                   the values set on the input field, Initially leave as an empty list, but
+                   will be useful when doing a JSON update.
         col1: A list of text strings to place in the first column
         col2: A list of text strings to place in the second column
         inputdict: A dictionary of keyname:value, should be Ordered Dict unless python >= 3.6
                    the fields submitted will have name 'widgetname:inputdict-keyname'
                    and the user will receive a widgfield ('widgetname','inputdict') containing a dictionary of keyname:values
+                   If values are None, then the values listed in getfield3 will be used, otherwise values given here have priority
          """
         Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
         self._up_jsonurl = ''
@@ -856,6 +862,8 @@ class InputTable3(Widget):
         up_getfield2 = self.get_field_value("up_getfield2") # list of second get fields, one for each up arrow link
         down_getfield1 = self.get_field_value("down_getfield1") # list of get fields, one for each down arrow link
         down_getfield2 = self.get_field_value("down_getfield2") # list of get fields, one for each down arrow link
+
+        getfield3 = self.get_field_value("getfield3") # list of get fields, one for each row, sent with both arrows
 
         # up arrow link
         # get json url
@@ -925,9 +933,19 @@ class InputTable3(Widget):
             else:
                 self[rownumber][2] = tag.Part(tag_name='td')
 
+            # getfield3 is used for both arrows, and also for the input fields
+            get3 = getfield3[index] if index < len(getfield3) else ''
+
             key = keylist[index]
             if key:  # this is the dictionary key
                 keyed_name = input_name + key
+                if not inputdict[key]:
+                    # if no value given, and if get3 has a value, that is used
+                    if get3:
+                        inputdict[key] = get3
+                else:
+                    # inputdict overrides get3, but the two must match
+                    get3 = inputdict[key]
                 self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"text", "value":inputdict[key]})
                 if size:
                     self[rownumber][2][0].update_attribs({"size":size})
@@ -960,7 +978,6 @@ class InputTable3(Widget):
                     else:
                         up_button_style = "visibility: hidden;"
 
-
             if up_button_style:
                 self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button", "style":up_button_style})
             else:
@@ -975,7 +992,9 @@ class InputTable3(Widget):
             upget1 = up_getfield1[index] if index < len(up_getfield1) else ''
             upget2 = up_getfield2[index] if index < len(up_getfield2) else ''
             get_fields = {self.get_formname("up_getfield1"):upget1,
-                          self.get_formname("up_getfield2"):upget2}
+                          self.get_formname("up_getfield2"):upget2,
+                          self.get_formname("getfield3"):get3
+                          }
             url = self.make_get_url(page, up_url, get_fields, True)
             self[rownumber][3][0].update_attribs({"href": url})
 
@@ -1007,7 +1026,9 @@ class InputTable3(Widget):
             downget1 = down_getfield1[index] if index < len(down_getfield1) else ''
             downget2 = down_getfield2[index] if index < len(down_getfield2) else ''
             get_fields = {self.get_formname("down_getfield1"):downget1,
-                          self.get_formname("down_getfield2"):downget2}
+                          self.get_formname("down_getfield2"):downget2,
+                          self.get_formname("getfield3"):get3
+                          }
             url = self.make_get_url(page, down_url, get_fields, True)
             self[rownumber][3][1].update_attribs({"href": url})
 
@@ -1049,10 +1070,12 @@ class InputTable3(Widget):
     <td> <!-- with class col4_class -->
       <a role="button" href="#"> <!-- with style up_style -->
       <!-- The href link will be the url of the up ident with up get fields -->
+      <!-- and also getfield3 which reflect the value shown on the input field -->
       &uarr;
       </a>
       <a role="button" href="#"> <!-- with style down_style -->
       <!-- The href link will be the url of the down ident with down get fields -->
+      <!-- and also getfield3 which reflect the value shown on the input field -->
       &darr;
       </a>
     </td>
