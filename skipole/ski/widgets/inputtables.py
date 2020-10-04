@@ -946,7 +946,13 @@ class InputTable3(Widget):
                 else:
                     # inputdict overrides get3, but the two must match
                     get3 = inputdict[key]
-                self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"text", "value":inputdict[key]})
+
+                # set up the input field, including an onchange event which sets getfield3 when the input field changes
+                self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name,
+                                                                                  "type":"text",
+                                                                                   "value":inputdict[key],
+                "onchange":"SKIPOLE.widgets['{ident}'].setnewnumber(this.value, {data})".format(ident = self.get_id(), data=rownumber)
+                                                                                 })
                 if size:
                     self[rownumber][2][0].update_attribs({"size":size})
                 if maxlength:
