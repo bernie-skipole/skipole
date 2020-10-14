@@ -4,12 +4,12 @@
 # it is usually given a URL of /lib when added - but this is
 # not a necessity, just convention.
 
-
+import os
 from . import WSGIApplication, version
 
 # version is the version numbers of skipole
 
-
+PROJECTFILES = os.path.dirname(os.path.realpath(__file__))
 PROJECT = 'skis'
 
 def start_call(called_ident, skicall):
@@ -33,7 +33,8 @@ def makeapp(projectfiles, **proj_data):
     # The WSGIApplication created here is generally given a URL of "/lib"
     # when added to the root project using application.add_project
 
-    application = WSGIApplication(PROJECT, projectfiles, proj_data, start_call, submit_data, end_call)
+    #application = WSGIApplication(PROJECT, projectfiles, proj_data, start_call, submit_data, end_call)
+    application = WSGIApplication(PROJECT, PROJECTFILES, proj_data, start_call, submit_data, end_call)
 
     if version != application.version:
         print("""

@@ -8,6 +8,7 @@ from ..skilift.fromjson import get_defaults_from_file
 
 from . import skiadminpackages
 
+PROJECTFILES = os.path.dirname(os.path.realpath(__file__))
 PROJECT = 'skiadmin'
 
 # a search for anything none-alphanumeric and not an underscore
@@ -128,10 +129,10 @@ def makeapp(projectfiles, **proj_data):
     # get pallet of colours from defaults.json and place in proj_data
     # these will be used to populate w3-theme-ski.css and the Colours page
 
-    adminbackcol = get_defaults_from_file(projectfiles, PROJECT, key="backcol")
+    adminbackcol = get_defaults_from_file(PROJECTFILES, PROJECT, key="backcol")
     if not adminbackcol:
         adminbackcol = "#bfb786"
-    colours = get_defaults_from_file(projectfiles, PROJECT, key="colours")
+    colours = get_defaults_from_file(PROJECTFILES, PROJECT, key="colours")
     if not colours:
         adminbackcol_rgb = skiadminpackages.css_styles.hex_int(adminbackcol)
         colours = skiadminpackages.css_styles.get_colours(*adminbackcol_rgb)
@@ -144,7 +145,7 @@ def makeapp(projectfiles, **proj_data):
     # when added to the root project using application.add_project
 
     return WSGIApplication(project=PROJECT,
-                           projectfiles=projectfiles,
+                           projectfiles=PROJECTFILES,
                            proj_data=proj_data,
                            start_call=start_call,
                            submit_data=submit_data,

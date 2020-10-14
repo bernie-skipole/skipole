@@ -1,1 +1,3 @@
 recursive-include skipole/templates *
+recursive-include skipole/skis *
+recursive-include skipole/skiadmin/skiadmin *
