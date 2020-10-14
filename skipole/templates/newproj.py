@@ -64,12 +64,12 @@ application = WSGIApplication(project=PROJECT,
 # The 'skis' application serves javascript and the w3.css files required by
 # the framework widgets.
 
-# The skis package, contains the function makeapp(PROJECTFILES) - which returns a
+# The skis package, contains the function makeapp() - which returns a
 # WSGIApplication object which is then appended to your own project
 
 from skipole import skis
 
-skis_application = skis.makeapp(PROJECTFILES)
+skis_application = skis.makeapp()
 application.add_project(skis_application, url='/lib')
 
 # The add_project method of application, enables the added sub application
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
     from skipole import skiadmin, set_debug, skilift
     set_debug(True)
-    skiadmin_application = skiadmin.makeapp(PROJECTFILES, editedprojname=PROJECT)
+    skiadmin_application = skiadmin.makeapp(editedprojname=PROJECT)
     application.add_project(skiadmin_application, url='/skiadmin')
 
     # serve the application with the development server from skilift

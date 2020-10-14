@@ -117,13 +117,10 @@ def end_call(page_ident, page_type, skicall):
 # is provided rather than an application object being immediately created.
 
 
-def makeapp(projectfiles, **proj_data):
-    """This particular sub project does not know where its projectfiles are, so this function
-       is called to provide that info, and returns the application
-       skiadmin makes use of some color values, so these are set here and passed to the project
-       as proj_data"""
+def makeapp(editedprojname):
+    """This function returns the skis application."""
 
-    if 'editedprojname' not in proj_data:
+    if not editedprojname:
         raise ServerError("The project name being edited is required")
 
     # get pallet of colours from defaults.json and place in proj_data
@@ -138,8 +135,7 @@ def makeapp(projectfiles, **proj_data):
         colours = skiadminpackages.css_styles.get_colours(*adminbackcol_rgb)
 
 
-    proj_data["colours"] = colours
-    proj_data["adminbackcol"] = adminbackcol
+    proj_data = {"editedprojname":editedprojname, "colours":colours, "adminbackcol":adminbackcol}
 
     # The WSGIApplication created here is generally given a URL of "/skiadmin"
     # when added to the root project using application.add_project

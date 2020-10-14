@@ -4,7 +4,7 @@ skipole is a framework for creating wsgi applications. A web admin interface, to
 
 Skipole requires python 3.6 or later, and can be installed with:
 
-pip install skipole
+python3 -m pip install skipole
  
 ### Starting a new project ###
 
@@ -24,9 +24,7 @@ then connect with a browser to localhost:8000 to view the project, and call loca
 
 The file myproj.py contains code which generates the wsgi application, and functions which you will develop further yourself.
 
-Within /path/to/projectfiles/ you will see 'myproj' and you will also see two other projects: 'skiadmin' which provides the web admin functions, and 'skis' which provides required support files. These projects are automatically 'added' to your own project within myproj.py
-
-The skiadmin sub project provides the web based admin facility allowing you to create template and responder pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call, and then route data from the call to your own functions defined in myproj.py. Your code sets data into a Python dictionary, which is set into a template page and returned to the caller.
+The pages served at /skiadmin provide the web based admin facility allowing you to create template and responder pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call, and then route data from the call to your own functions defined in myproj.py. Your code sets data into a Python dictionary, which is set into a template page and returned to the caller.
 
 Your Python functions in myproj.py are described in greater detail within the skiadmin pages. These functions would typically call further code of your own, to serve whatever data you require.
 
@@ -44,17 +42,11 @@ When you have fully developed your application, and wish to deploy it, you would
 
 To upgrade to the latest version:
 
-pip install --upgrade skipole
+python3 -m pip install --upgrade skipole
 
 Check you have the latest with:
 
 python3 -m skipole --version
-
-Then, for each of the locations where you are developing projects:
-
-python3 -m skipole /path/to/projectfiles
-
-This will cause the skiadmin and skis projects under projectfiles to be replaced with the latest versions.
 
 ### Further information ###
 

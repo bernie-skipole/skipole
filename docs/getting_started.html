@@ -50,25 +50,17 @@
 <p>...projectfiles/myproj.py</p>
 <p>...projectfiles/myproj/data/....</p>
 <p>...projectfiles/myproj/static/....</p>
-<p>As well as myproj, you will see two other projects automatically created:</p>
-<p>skis - a project serving needed javascript files, necessary for all projects</p>
-<p>skiadmin - a project used to help develop 'myproj'</p>
-<p>'myproj' is an optional argument. If not given then only the skis and skiadmin projects will be created.</p>
-<p>The path "/path/to/my/projectfiles" must be given, and is the path to a directory of your choice where you will develop your project. Multiple projects can be created in one 'projectfiles' directory, or you could have multiple such directories holding different projects.</p>
-<p>If the directory already exists, any existing skiadmin and skis projects will be overwritten, this facility is used to upgrade skis and skiadmin if a new version of skipole is installed.</p>
-<p>If myproj already exists in the directory, it will not be changed.</p>
-<p>The python file myproj.py contains code which imports skipole, and generates the wsgi application, and functions which you will develop further yourself. It also adds the skiadmin and skis 'sub-projects' to your new project. It is strongly commented so you should inspect it. You would then run:</p>
+<p>The path "/path/to/my/projectfiles" is the path to a directory of your choice where you will develop your project. Multiple projects can be created in one 'projectfiles' directory, or you could have multiple such directories holding different projects.</p>
+<p>If the directory already exists, and if myproj already exists in the directory, it will not be changed.</p>
+<p>The python file myproj.py contains code which imports skipole, and generates the wsgi application, and functions which you will develop further yourself. It is strongly commented so you should inspect it. You would then run:</p>
 <p><strong>python3 /path/to/my/projectfiles/myproj.py</strong></p>
 <p>Then connect with a browser to localhost:8000 to view the project, and call localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.</p>
 <p>To stop the project from serving, in the terminal press ctrl-c</p>
 <h3>Upgrading</h3>
 <p>Assuming you have installed skipole using pip, to upgrade to the latest version:</p>
-<p>pip install --upgrade skipole</p>
+<p>python3 -m pip install --upgrade skipole</p>
 <p>Check you have the latest with:</p>
 <p>python3 -m skipole --version</p>
-<p>Then, for each of the locations where you are developing projects:</p>
-<p>python3 -m skipole /path/to/projectfiles</p>
-<p>This will cause the skiadmin and skis projects under projectfiles to be replaced with the latest versions.</p>
 
 </div>
 </div>

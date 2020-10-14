@@ -5,12 +5,9 @@
 # not a necessity, just convention.
 
 import os
-from . import WSGIApplication, version
-
-# version is the version numbers of skipole
+from . import WSGIApplication
 
 PROJECTFILES = os.path.dirname(os.path.realpath(__file__))
-PROJECT = 'skis'
 
 def start_call(called_ident, skicall):
     "This project has no start_call functionality"
@@ -27,25 +24,14 @@ def end_call(page_ident, page_type, skicall):
 # As this project is not intended to run as a stand-alone service, a function
 # is provided rather than an application object being immediately created.
 
-def makeapp(projectfiles, **proj_data):
+def makeapp():
     """This function returns the skis application."""
 
     # The WSGIApplication created here is generally given a URL of "/lib"
     # when added to the root project using application.add_project
 
-    #application = WSGIApplication(PROJECT, projectfiles, proj_data, start_call, submit_data, end_call)
-    application = WSGIApplication(PROJECT, PROJECTFILES, proj_data, start_call, submit_data, end_call)
+    return WSGIApplication('skis', PROJECTFILES, {}, start_call, submit_data, end_call)
 
-    if version != application.version:
-        print("""
-WARNING: Skipole and skis versions do not match, try:
-
-python3 -m skipole %s
-
-To create the correct version of skis
-""" % (projectfiles,))
-
-    return application
 
 
 ############
@@ -56,7 +42,7 @@ To create the correct version of skis
 #  application.add_project(skis_application, url='/lib')
 #
 #  from skipole import skis
-#  skis_application = skis.makeapp(PROJECTFILES)
+#  skis_application = skis.makeapp()
 #  application.add_project(skis_application, url='/lib')
 #
 ############
