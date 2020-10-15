@@ -3,9 +3,9 @@
 
 import json
 
-from skipole import skilift
-from skipole.skilift import fromjson, editpage, editsection, item_info
-from skipole import FailPage, ValidateError, GoTo, ServerError
+from ... import skilift
+from ....skilift import fromjson, editpage, editsection, item_info
+from ... import FailPage, ValidateError, GoTo, ServerError
 
 
 

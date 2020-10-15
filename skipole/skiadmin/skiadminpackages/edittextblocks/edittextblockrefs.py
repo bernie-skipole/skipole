@@ -7,9 +7,9 @@ import re
 _TB = re.compile('[^\w\.]')
 
 
-from skipole.skilift import item_info, editpage, editsection
+from ....skilift import item_info, editpage, editsection
 
-from skipole import FailPage, ValidateError, GoTo, ServerError
+from ... import FailPage, ValidateError, GoTo, ServerError
 
 
 def retrieve_textblockref(skicall):

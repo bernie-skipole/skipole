@@ -4,8 +4,8 @@
 import pkgutil, re, html, json
 
 from .. import utils
-from skipole import FailPage, ValidateError, GoTo, ServerError
-from skipole.skilift import fromjson, part_info, part_contents, editsection, versions
+from ... import FailPage, ValidateError, GoTo, ServerError
+from ....skilift import fromjson, part_info, part_contents, editsection, versions
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')

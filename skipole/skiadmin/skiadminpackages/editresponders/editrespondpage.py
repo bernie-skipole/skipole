@@ -5,10 +5,10 @@
 import collections
 
 
-from skipole import skilift
-from skipole.skilift import editresponder
+from ... import skilift
+from ....skilift import editresponder
 
-from skipole import ValidateError, FailPage, ServerError, GoTo
+from ... import ValidateError, FailPage, ServerError, GoTo
 
 from .. import utils
 

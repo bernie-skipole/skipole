@@ -4,8 +4,8 @@ import re, json, os
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w_]')
 
-from skipole.skilift import fromjson, off_piste, set_label, versions, lib_list, labels
-from skipole import FailPage, ValidateError, ServerError, GoTo
+from ....skilift import fromjson, off_piste, set_label, versions, lib_list, labels
+from ... import FailPage, ValidateError, ServerError, GoTo
 
 from .. import utils, css_styles
 

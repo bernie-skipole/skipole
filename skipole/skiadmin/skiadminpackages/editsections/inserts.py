@@ -1,8 +1,8 @@
 
 
-from skipole import FailPage, ValidateError, GoTo, ServerError, skilift
+from ... import FailPage, ValidateError, GoTo, ServerError, skilift
 
-from skipole.skilift import editsection
+from ....skilift import editsection
 
 
 def insert_in_section(skicall):

@@ -1,10 +1,10 @@
 
 import os, re
 
-from skipole import ValidateError, FailPage, ServerError
+from ... import ValidateError, FailPage, ServerError
 
-from skipole import skilift
-from skipole.skilift import editfolder, fromjson
+from ... import skilift
+from ....skilift import editfolder, fromjson
 
 
 

@@ -4,11 +4,11 @@
 
 import re, html, json
 
-from skipole import skilift
-from skipole.skilift import fromjson, editsection, editpage, editwidget, versions
+from ... import skilift
+from ....skilift import fromjson, editsection, editpage, editwidget, versions
 
 from .. import utils
-from skipole import FailPage, ValidateError, ServerError, GoTo
+from ... import FailPage, ValidateError, ServerError, GoTo
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')

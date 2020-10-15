@@ -1,9 +1,9 @@
 
 
-from skipole import ValidateError, FailPage, ServerError, GoTo
+from ... import ValidateError, FailPage, ServerError, GoTo
 
-from skipole.skilift import get_itemnumber
-from skipole.skilift.editpage import rename_page, page_description, new_parent
+from ....skilift import get_itemnumber
+from ....skilift.editpage import rename_page, page_description, new_parent
 
 
 

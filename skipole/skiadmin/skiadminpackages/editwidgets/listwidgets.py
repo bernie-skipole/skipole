@@ -5,10 +5,10 @@
 
 import re
 
-from skipole import skilift
-from skipole.skilift import editwidget
+from ... import skilift
+from ....skilift import editwidget
 
-from skipole import ServerError, FailPage, ValidateError, GoTo
+from ... import ServerError, FailPage, ValidateError, GoTo
 
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')

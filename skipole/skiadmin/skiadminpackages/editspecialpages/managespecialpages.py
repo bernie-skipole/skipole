@@ -5,10 +5,10 @@ import re
 _AN = re.compile('[^\w_]')
 
 
-from skipole import skilift
+from ... import skilift
 from .. import utils
 
-from skipole import FailPage, ValidateError, ServerError
+from ... import FailPage, ValidateError, ServerError
 
 
 def retrieve_managepage(skicall):

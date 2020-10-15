@@ -4,10 +4,10 @@
 
 import html, json
 
-from skipole import ValidateError, FailPage, ServerError, GoTo
+from ... import ValidateError, FailPage, ServerError, GoTo
 
-from skipole import skilift
-from skipole.skilift import fromjson, part_contents, editpage
+from ... import skilift
+from ....skilift import fromjson, part_contents, editpage
 
 from .. import utils
 

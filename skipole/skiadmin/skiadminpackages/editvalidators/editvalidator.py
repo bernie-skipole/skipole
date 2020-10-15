@@ -1,10 +1,10 @@
 
 "Functions implementing validator editing"
 
-from skipole import ServerError, FailPage, ValidateError, GoTo
+from ... import ServerError, FailPage, ValidateError, GoTo
 
-from skipole import skilift
-from skipole.skilift import editwidget, editvalidator
+from ... import skilift
+from ....skilift import editwidget, editvalidator
 
 
 def _field_name(widget, field_argument):

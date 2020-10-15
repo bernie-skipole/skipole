@@ -5,7 +5,7 @@ import re
 # a search for anything none-alphanumeric and not an underscore
 _TB = re.compile('[^\w\.]')
 
-from skipole import FailPage, GoTo, skilift
+from ... import FailPage, GoTo, skilift
 from .. import utils
 
 

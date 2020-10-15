@@ -1,8 +1,8 @@
 
 
-from skipole import FailPage, ValidateError, GoTo, ServerError, skilift
+from ... import FailPage, ValidateError, GoTo, ServerError, skilift
 
-from skipole.skilift import editpage, editsection
+from ....skilift import editpage, editsection
 
 
 def show_empty_modal_insert(skicall):

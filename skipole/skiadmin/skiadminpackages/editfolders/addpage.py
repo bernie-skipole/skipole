@@ -3,10 +3,10 @@
 
 import os, inspect, re
 
-from skipole import ValidateError, FailPage, ServerError
+from ... import ValidateError, FailPage, ServerError
 
-from skipole import skilift
-from skipole.skilift import fromjson, editfolder, editresponder, editpage
+from ... import skilift
+from ....skilift import fromjson, editfolder, editresponder, editpage
 
 from .. import utils, css_styles
 

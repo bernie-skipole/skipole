@@ -1,8 +1,8 @@
 
 
-from skipole import skilift
-from skipole.skilift import editpage, editsection
-from skipole import FailPage, ValidateError, GoTo, ServerError
+from ... import skilift
+from ....skilift import editpage, editsection
+from ... import FailPage, ValidateError, GoTo, ServerError
 
 
 

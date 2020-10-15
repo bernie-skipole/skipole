@@ -4,9 +4,9 @@ import html
 
 from collections import OrderedDict
 
-from skipole import ValidateError, FailPage, ServerError, GoTo
-from skipole import skilift
-from skipole.skilift import editpage, editfolder, fromjson
+from ... import ValidateError, FailPage, ServerError, GoTo
+from ... import skilift
+from ....skilift import editpage, editfolder, fromjson
 from .. import utils
 
 

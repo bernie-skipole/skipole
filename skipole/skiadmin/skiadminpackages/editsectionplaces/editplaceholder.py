@@ -7,8 +7,8 @@ import re
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w_]')
 
-from skipole import FailPage, ValidateError, GoTo, ServerError
-from skipole.skilift import part_info, editsection, item_info
+from ... import FailPage, ValidateError, GoTo, ServerError
+from ....skilift import part_info, editsection, item_info
 
 
 def retrieve_editplaceholder(skicall):
