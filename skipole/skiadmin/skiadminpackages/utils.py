@@ -1,10 +1,5 @@
 
 
-import html
-
-from skipole import FailPage, ServerError
-from skipole import skilift
-
 
 def clear_call_data(call_data, keep=None):
     "Clears call data apart from set of required values, and anything in the keep list"

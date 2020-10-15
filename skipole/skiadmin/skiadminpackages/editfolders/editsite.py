@@ -2,11 +2,11 @@
 
 import os, random, collections
 
-from skipole import skilift
-from skipole.skilift import off_piste, fromjson, editpage
+from ... import skilift
+from ....skilift import off_piste, fromjson, editpage
 
 from .. import utils, css_styles
-from skipole import FailPage, ValidateError, ServerError, GoTo
+from ... import FailPage, ValidateError, ServerError, GoTo
 
 
 def retrieve_index_data(skicall):
