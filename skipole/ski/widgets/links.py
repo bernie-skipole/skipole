@@ -1593,6 +1593,120 @@ class ListLinks(Widget):
 </ul>"""
 
 
+
+class Table1_Links(Widget):
+    """A table of two columns, the first column being text, the second links
+       The first row is two header titles
+       Note : there is no error display"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'header_class':FieldArg("cssclass",""),
+                        'even_class':FieldArg("cssclass", ""),
+                        'odd_class':FieldArg("cssclass", ""),
+                        'link_class':FieldArg("cssclass", ""),
+                        'link_style':FieldArg("cssstyle", ""),
+                        'title1':FieldArg('text', ''),
+                        'title2':FieldArg('text', ''),
+                        'col1':FieldArgList('text', valdt=False, jsonset=True),
+                        'col2':FieldArgList('text', valdt=False, jsonset=True),
+                        'col2_links':FieldArgList('url', valdt=False, jsonset=True),
+                        'col2_getfields':FieldArgList('text', valdt=True, jsonset=True),
+                        'col1_class':FieldArg("cssclass",""),          # class applied to every td in the first column
+                        'col2_class':FieldArg("cssclass","")           # class applied to every td in the second column
+                        }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        header_class: class of the header row, if empty string, then no class will be applied
+        even_class: class of even rows, if empty string, then no class will be applied
+        odd_class: class of odd rows, if empty string, then no class will be applied
+        link_class: class of the a tags
+        link_style: style of the a tags
+        title1: The header title over the first text column
+        title2: The header title over the second text column
+        col1 : A list of text strings to place in the first column
+        col2: A list of text strings to place in the second column, these will be the link text
+        col2_links: A list of links for the second column
+        col2_getfields: A list of get fields for the second column
+        col1_class: class applied to every td in the first column
+        col2_class: class applied to every td in the second column
+        """
+        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the table"
+        col_list1 = self.get_field_value("col1")
+        col_list2 = self.get_field_value("col2")
+        header = 0
+        if self.get_field_value('title1') or self.get_field_value('title2'):
+            header = 1
+            if self.get_field_value('header_class'):
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            else:
+                self[0] = tag.Part(tag_name='tr')
+            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
+            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+        # set even row colour
+        if self.get_field_value('even_class'):
+            even = self.get_field_value('even_class')
+        else:
+            even = ''
+        # set odd row colour
+        if self.get_field_value('odd_class'):
+            odd = self.get_field_value('odd_class')
+        else:
+            odd = ''
+        # create rows
+        if len(col_list1) == len(col_list2):
+            rows = len(col_list1)
+        elif len(col_list1) > len(col_list2):
+            rows = len(col_list1)
+            col_list2.extend(['']*(rows - len(col_list2)))
+        else:
+            rows = len(col_list2)
+            col_list1.extend(['']*(rows - len(col_list1)))
+        for index in range(rows):
+            rownumber = index+header
+            if even and (rownumber % 2) :
+                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":even})
+            elif odd and not (rownumber % 2):
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
+            else:
+                self[rownumber] = tag.Part(tag_name='tr')
+            self[rownumber][0] = tag.Part(tag_name='td', text = col_list1[index])
+            self[rownumber][1] = tag.Part(tag_name='td', text = col_list2[index])
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<table>  <!-- with widget id and class widget_class -->
+  <tr> <!-- with header class -->
+    <th> <!-- title1 --> </th>
+    <th> <!-- title2 --> </th>
+  </tr>
+  <tr> <!-- with class  from even or odd classes -->
+    <td> <!-- col1 text string --> </td>
+    <td> 
+      <a href="#">
+      <!-- With class set by link_class, and the href link will be from col2_links -->
+      <!-- and get field from col2_getfields
+      <!-- the link will show text from col2 -->
+    </td>
+  </tr>
+  <!-- rows repeated -->
+</table>"""
+
+
+
+
+
+
+
+
 class Table1_Button(Widget):
     """A table of a single text column, followed by a button link column
        There is a header and title over the text column,
