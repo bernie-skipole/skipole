@@ -1609,12 +1609,13 @@ class Table1_Links(Widget):
                         'link_style':FieldArg("cssstyle", ""),
                         'title1':FieldArg('text', ''),
                         'title2':FieldArg('text', ''),
-                        'col1':FieldArgList('text', valdt=False, jsonset=True),
-                        'col2':FieldArgList('text', valdt=False, jsonset=True),
-                        'col2_links':FieldArgList('url', valdt=False, jsonset=True),
-                        'col2_getfields':FieldArgList('text', valdt=True, jsonset=True),
+                        'col1':FieldArgList('text', valdt=False),
+                        'col2':FieldArgList('text', valdt=False),
+                        'col2_links':FieldArgList('url', valdt=False),
+                        'col2_getfields':FieldArgList('text', valdt=True),
                         'col1_class':FieldArg("cssclass",""),          # class applied to every td in the first column
-                        'col2_class':FieldArg("cssclass","")           # class applied to every td in the second column
+                        'col2_class':FieldArg("cssclass",""),          # class applied to every td in the second column
+                        'force_ident':FieldArg("boolean", False)
                         }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -1632,13 +1633,19 @@ class Table1_Links(Widget):
         col2_getfields: A list of get fields for the second column
         col1_class: class applied to every td in the first column
         col2_class: class applied to every td in the second column
+        force_ident: If True then the page ident will be included, even if no get field set
+                     If False, the page ident will only be included if a get field is set
         """
         Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        col_list1 = self.get_field_value("col1")
-        col_list2 = self.get_field_value("col2")
+        col1 = self.get_field_value("col1")
+        col2 = self.get_field_value("col2")
+        col2_links = self.get_field_value("col2_links")
+        col2_getfields = self.get_field_value("col2_getfields")
+        # create rows, same length as col2_links
+        rows = len(col2_links)
         header = 0
         if self.get_field_value('title1') or self.get_field_value('title2'):
             header = 1
@@ -1658,15 +1665,20 @@ class Table1_Links(Widget):
             odd = self.get_field_value('odd_class')
         else:
             odd = ''
-        # create rows
-        if len(col_list1) == len(col_list2):
-            rows = len(col_list1)
-        elif len(col_list1) > len(col_list2):
-            rows = len(col_list1)
-            col_list2.extend(['']*(rows - len(col_list2)))
-        else:
-            rows = len(col_list2)
-            col_list1.extend(['']*(rows - len(col_list1)))
+
+        if len(col1) < rows:
+            col1.extend(['']*(rows - len(col1)))
+        if len(col2_getfields) < rows:
+            col2_getfields.extend(['']*(rows - len(col2_getfields)))
+        # if col2 short, fill it with the links values
+        if len(col2) < rows:
+            col2.extend(col2_links[len(col2):])
+
+        col1_class = self.get_field_value("col1_class")
+        col2_class = self.get_field_value("col2_class")
+        link_class = self.get_field_value("link_class")
+        link_style = self.get_field_value("link_style")
+
         for index in range(rows):
             rownumber = index+header
             if even and (rownumber % 2) :
@@ -1675,8 +1687,45 @@ class Table1_Links(Widget):
                 self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
             else:
                 self[rownumber] = tag.Part(tag_name='tr')
-            self[rownumber][0] = tag.Part(tag_name='td', text = col_list1[index])
-            self[rownumber][1] = tag.Part(tag_name='td', text = col_list2[index])
+            if col1_class:
+                self[rownumber][0] = tag.Part(tag_name='td', text = col1[index], attribs={"class":col1_class})
+            else:
+                self[rownumber][0] = tag.Part(tag_name='td', text = col1[index])
+            if col2_class:
+                self[rownumber][1] = tag.Part(tag_name='td', attribs={"class":col2_class})
+            else:
+                self[rownumber][1] = tag.Part(tag_name='td')
+
+            # self[rownumber][1][0] must now be set with the link
+            if link_class and link_style:
+                attribs = {"link_class":link_class, "link_style":link_style}
+            elif link_class:
+                attribs = {"link_class":link_class}
+            elif link_style:
+                attribs = {"link_style":link_style}
+            else:
+                attribs = None
+
+            if attribs:
+                self[rownumber][1][0] = tag.Part(tag_name='a', attribs = attribs)
+            else:
+                self[rownumber][1][0] = tag.Part(tag_name='a')
+
+            if col2_links[index]:
+                url = skiboot.get_url(col2_links[index], proj_ident=page.proj_ident)
+                if url:
+                    self[rownumber][1][0][0] = col2[index]
+                    # create a url for the href
+                    if col2_getfields[index]:
+                        get_fields = {self.get_formname("col2_getfields"):col2_getfields[index]}
+                        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+                    else:
+                        url = self.make_get_url(page, url, {}, self.get_field_value("force_ident"))
+                    self[rownumber][1][0].update_attribs({"href": url})
+                else:
+                   self[rownumber][1][0] = "Warning: broken link"
+            else:
+                self[rownumber][1][0] = "Warning: broken link"
 
 
     @classmethod
@@ -1689,8 +1738,8 @@ class Table1_Links(Widget):
     <th> <!-- title2 --> </th>
   </tr>
   <tr> <!-- with class  from even or odd classes -->
-    <td> <!-- col1 text string --> </td>
-    <td> 
+    <td> <!-- with col1_class and col1 text string --> </td>
+    <td> <!-- with col2_class -->
       <a href="#">
       <!-- With class set by link_class, and the href link will be from col2_links -->
       <!-- and get field from col2_getfields
@@ -1699,12 +1748,6 @@ class Table1_Links(Widget):
   </tr>
   <!-- rows repeated -->
 </table>"""
-
-
-
-
-
-
 
 
 class Table1_Button(Widget):
