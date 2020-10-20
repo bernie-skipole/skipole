@@ -1415,7 +1415,7 @@ def _readfile(filepath, size):
             yield data
             data = f.read(size)
 
-def _read_server_file(environ, filepath, size=32768)
+def _read_server_file(environ, filepath, size=32768):
     "Returns an iterator of the file"   
     if 'wsgi.file_wrapper' in environ:
         f = filepath.open("rb")
@@ -1423,10 +1423,4 @@ def _read_server_file(environ, filepath, size=32768)
     else:
         return _readfile(filepath, size)
 
-
-
-def _read_server_file(environ, filepath):
-    "Return status, headers, data for file on the server"
-    status = '200 OK'
-    data = _read_server_file(environ, filepath, size = 32768)
 
