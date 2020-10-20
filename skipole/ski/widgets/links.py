@@ -1645,7 +1645,7 @@ class Table1_Links(Widget):
         col2_links = self.get_field_value("col2_links")
         col2_getfields = self.get_field_value("col2_getfields")
         # create rows, same length as col2_links
-        rows = len(col2_links)
+        rows = max( len(col1), len(col2), len(col2_links) )
         header = 0
         if self.get_field_value('title1') or self.get_field_value('title2'):
             header = 1
@@ -1667,12 +1667,14 @@ class Table1_Links(Widget):
             odd = ''
 
         if len(col1) < rows:
-            col1.extend(['']*(rows - len(col1)))
+            col1.extend(['']*(rows - len(col1)))    # pad col1 with ''
+        if len(col2_links) < rows:
+            col2_links.extend(['']*(rows - len(col2_links)))  # pad links with ''
         if len(col2_getfields) < rows:
-            col2_getfields.extend(['']*(rows - len(col2_getfields)))
+            col2_getfields.extend(['']*(rows - len(col2_getfields)))  # pad getfields with ''
         # if col2 short, fill it with the links values
         if len(col2) < rows:
-            col2.extend(col2_links[len(col2):])
+            col2.extend(col2_links[len(col2):])  # pad col2 text with the link values
 
         col1_class = self.get_field_value("col1_class")
         col2_class = self.get_field_value("col2_class")
@@ -1696,22 +1698,22 @@ class Table1_Links(Widget):
             else:
                 self[rownumber][1] = tag.Part(tag_name='td')
 
-            # self[rownumber][1][0] must now be set with the link
-            if link_class and link_style:
-                attribs = {"link_class":link_class, "link_style":link_style}
-            elif link_class:
-                attribs = {"link_class":link_class}
-            elif link_style:
-                attribs = {"link_style":link_style}
-            else:
-                attribs = None
-
-            if attribs:
-                self[rownumber][1][0] = tag.Part(tag_name='a', attribs = attribs)
-            else:
-                self[rownumber][1][0] = tag.Part(tag_name='a')
-
             if col2_links[index]:
+                # self[rownumber][1][0] must now be set with the link
+                if link_class and link_style:
+                    attribs = {"link_class":link_class, "link_style":link_style}
+                elif link_class:
+                    attribs = {"link_class":link_class}
+                elif link_style:
+                    attribs = {"link_style":link_style}
+                else:
+                    attribs = None
+
+                if attribs:
+                    self[rownumber][1][0] = tag.Part(tag_name='a', attribs = attribs)
+                else:
+                    self[rownumber][1][0] = tag.Part(tag_name='a')
+
                 url = skiboot.get_url(col2_links[index], proj_ident=page.proj_ident)
                 if url:
                     self[rownumber][1][0][0] = col2[index]
@@ -1725,7 +1727,8 @@ class Table1_Links(Widget):
                 else:
                    self[rownumber][1][0] = "Warning: broken link"
             else:
-                self[rownumber][1][0] = "Warning: broken link"
+                # self[rownumber][1][0] must now be set with text only
+                self[rownumber][1][0] = col2[index]
 
 
     @classmethod
