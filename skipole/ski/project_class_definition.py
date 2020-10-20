@@ -11,7 +11,7 @@ call and is passed as an argument to the user functions
 """
 
 
-import copy, os, cgi, collections, html, pprint, json, shutil, uuid, sys, traceback, re
+import copy, os, cgi, collections, html, pprint, json, shutil, uuid, sys, traceback, re, pathlib, mimetypes
 
 from base64 import urlsafe_b64decode
 
@@ -362,6 +362,21 @@ class SkipoleProject(object):
             # URL NOT FOUND and start_call does not divert
             return None
 
+        if isinstance(pident, pathlib.Path):
+            # pident is a path to a file on the server, so serve that file by returning status, headers, data
+            try:
+                headers = [('content-length', str(pident.stat().st_size))]
+                if 'mimetype' in skicall.page_data:
+                    headers.append(('content-type', skicall.page_data['mimetype']))
+                else:
+                    t, e = mimetypes.guess_type(pident.name, strict=False)
+                    if t:
+                        headers.append(('content-type', t))
+                data = _read_server_file(environ, pident)
+            except Exception as e:
+                raise ServerError(message=f"Failed to read file {pident}", code=9035) from e
+            return '200 OK', headers, data
+
         # pident is the ident of the diverted page or a label or url string
 
         # get the page from pident
@@ -472,6 +487,10 @@ class SkipoleProject(object):
             # being set by the users own start_call function
             new_called_ident = self.start_call(called_ident, skicall)
 
+            # if new_called_ident is a Path object, then check if a file exists
+            if isinstance(new_called_ident, pathlib.Path):
+                if not new_called_ident.is_file():
+                    new_called_ident = None
             # convert returned tuple to an Ident object
             if isinstance(new_called_ident, int):
                 new_called_ident = (self._proj_ident, new_called_ident)
@@ -481,8 +500,7 @@ class SkipoleProject(object):
         except ServerError as e:
             raise e
         except Exception as e:
-            message = "Invalid exception in start_call function."
-            raise ServerError(message, code=9040) from e
+            raise ServerError(message = "Invalid exception in start_call function.", code=9040) from e
         return new_called_ident, skicall
 
 
@@ -1388,4 +1406,27 @@ class SkiCall(object):
         all_projects = skiboot.project_register()
         return {proj_ident:proj.url for proj_ident, proj in all_projects.items()}
 
+
+def _readfile(filepath, size):
+    "Return a generator reading the file"
+    with filepath.open("rb") as f:
+        data = f.read(size)
+        while data:
+            yield data
+            data = f.read(size)
+
+def _read_server_file(environ, filepath, size=32768)
+    "Returns an iterator of the file"   
+    if 'wsgi.file_wrapper' in environ:
+        f = filepath.open("rb")
+        return environ['wsgi.file_wrapper'](f, size)
+    else:
+        return _readfile(filepath, size)
+
+
+
+def _read_server_file(environ, filepath):
+    "Return status, headers, data for file on the server"
+    status = '200 OK'
+    data = _read_server_file(environ, filepath, size = 32768)
 
