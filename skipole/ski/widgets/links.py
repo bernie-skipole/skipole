@@ -1672,9 +1672,9 @@ class Table1_Links(Widget):
             col2_links.extend(['']*(rows - len(col2_links)))  # pad links with ''
         if len(col2_getfields) < rows:
             col2_getfields.extend(['']*(rows - len(col2_getfields)))  # pad getfields with ''
-        # if col2 short, fill it with the links values
         if len(col2) < rows:
-            col2.extend(col2_links[len(col2):])  # pad col2 text with the link values
+            col2.extend(['']*(rows - len(col2)))    # pad col1 with ''
+            #col2.extend(col2_links[len(col2):])  # pad col2 text with the link values
 
         col1_class = self.get_field_value("col1_class")
         col2_class = self.get_field_value("col2_class")
@@ -1716,7 +1716,10 @@ class Table1_Links(Widget):
 
                 url = skiboot.get_url(col2_links[index], proj_ident=page.proj_ident)
                 if url:
-                    self[rownumber][1][0][0] = col2[index]
+                    if col2[index]:
+                        self[rownumber][1][0][0] = col2[index]
+                    else:
+                        self[rownumber][1][0][0] = url
                     # create a url for the href
                     if col2_getfields[index]:
                         get_fields = {self.get_formname("col2_getfields"):col2_getfields[index]}
