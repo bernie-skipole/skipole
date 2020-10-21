@@ -86,24 +86,15 @@ Usage is
 python3 -m skipole mynewproj /path/to/projectfiles
 
 Which creates a directory /path/to/projectfiles
-containing three sub directories:
-
-mynewproj - a subdirectory containing a new project
-skis - a project serving needed javascript files, necessary for all projects
-skiadmin - a project used to help develop 'mynewproj'
+containing sub directory mynewproj - containing project data, and file
+mynewproj.py where your code will be developed.
 
 You should replace 'mynewproj' with your preferred name for a new project.
-This is an optional argument. If not given then only the skis and skiadmin
-projects will be created.
 
-The path "/path/to/projectfiles" must be given, and is the path to a directory
-where you will develop your project. Multiple projects can be created in one
-'projectfiles' directory, or you could have multiple such directories holding
-different projects.
-
-If the directory already exists, any existing skiadmin and skis projects will
-be overwritten, this facility is used to upgrade skis and skiadmin if a new
-version of skipole is installed.
+The path "/path/to/projectfiles" is the path to a directory where you will
+develop your project. Multiple projects can be created in one 'projectfiles'
+directory, or you could have multiple such directories holding different
+projects.
 
 If mynewproj already exists in the directory, it will not be changed.
 

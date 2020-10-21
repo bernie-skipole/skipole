@@ -365,6 +365,10 @@ class SkipoleProject(object):
         if isinstance(pident, pathlib.Path):
             # pident is a path to a file on the server, so serve that file by returning status, headers, data
             try:
+                if ('status' in skicall.page_data) and skicall.page_data['status']:
+                    status = skicall.page_data['status']
+                else:
+                    status = "200 OK"
                 if ('headers' in skicall.page_data) and skicall.page_data['headers']:
                     headers = skicall.page_data['headers']
                 else:
@@ -377,10 +381,17 @@ class SkipoleProject(object):
                             headers.append(('content-type', t))
                         else:
                             headers.append(('content-type', "application/octet-stream"))
+                    if 'enable_cache' in skicall.page_data:
+                        if skicall.page_data['enable_cache']:
+                            headers.append(('cache-control', 'max-age=3600'))
+                        else:
+                            headers.append(('cache-control','no-cache, no-store, must-revalidate'))
+                            headers.append(('Pragma', 'no-cache'))
+                            headers.append(('Expires', '0'))
                 data = _read_server_file(environ, pident)
             except Exception as e:
                 raise ServerError(message=f"Failed to read file {pident}", code=9035) from e
-            return '200 OK', headers, data
+            return status, headers, data
 
         # pident is the ident of the diverted page or a label or url string
 
