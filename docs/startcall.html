@@ -49,12 +49,11 @@
 <p>called_ident is normally the ident of the page being called, it is a tuple ('myprojname', pagenumber) - with 'myprojname' being the project name, and pagenumber being the unique integer page number. If the ident of the called page cannot be determined (the path called does not relate to a page) then called_ident will be None.</p>
 <p>skicall is the call object described <a href="/skipole/skicall.html">here.</a></p>
 <p>This function should normally return the called_ident value.</p>
-<p>An ident is a tuple of (projectname, pagenumber) - each page is given a unique pagenumber as it is created in the admin session.</p>
-<p>If any tests you set here, which could include testing received cookie values, are ok, then the returned called_ident would normally be the called_ident given in the argument which is that of the page being called.</p>
+<p>If any tests you set here, which could include testing received cookie values, are ok, then the function would normally return the called_ident given in the argument which is that of the page being called.</p>
 <p>Possible return values which you may choose to use are:</p>
 <p>If you wish to handle the call via another page, return an ident, ident number or label of a page to jump to. You could, for example, use this feature to direct the call to a log in page. A label is a string, optionally set in the admin session, which references a page ident or URL, used instead of page idents.</p>
-<p>If the called_ident returned is that of a responder page, then depending on the responder, (or sequence of responders) further function calls may be made to the submit_data function. If called_ident is not a responder (for example a template page) then the function end_call will be called next.</p>
-<p>If None is returned, the 'URL NOT FOUND' page will be automatically returned to the client.</p>
+<p>If the ident returned is that of a responder page, then depending on the responder, (or sequence of responders) further function calls may be made to the submit_data function, if not a responder (for example a template page) then the function end_call will be called next, and then the template page will be sent to the client.</p>
+<p>If start_call returns None, the 'URL NOT FOUND' page will be automatically returned to the client.</p>
 <p>If a string url is returned, then a redirector page will be sent to the client. A url would not normally be used to redirect to a page within the project, but could be used to redirect to an external site.</p>
 <p>If a pathlib.Path object is returned, which contains the path to a local server file (not a url) - then that server file will be sent to the client. In this case, the submit_data and end_call functions will not be called. In this situation, your start_call function could optionally set values into skicall.page_data with keys 'status', 'headers' - or if headers is not set, 'mimetype' and 'enable_cache'. These are optional, if not set then the mimetype will be guessed from the filename extension.</p>
 <p>No un-caught exception should be raised in this function - if any are, the Server error page will be displayed.</p>
