@@ -365,13 +365,18 @@ class SkipoleProject(object):
         if isinstance(pident, pathlib.Path):
             # pident is a path to a file on the server, so serve that file by returning status, headers, data
             try:
-                headers = [('content-length', str(pident.stat().st_size))]
-                if 'mimetype' in skicall.page_data:
-                    headers.append(('content-type', skicall.page_data['mimetype']))
+                if ('headers' in skicall.page_data) and skicall.page_data['headers']:
+                    headers = skicall.page_data['headers']
                 else:
-                    t, e = mimetypes.guess_type(pident.name, strict=False)
-                    if t:
-                        headers.append(('content-type', t))
+                    headers = [('content-length', str(pident.stat().st_size))]
+                    if 'mimetype' in skicall.page_data:
+                        headers.append(('content-type', skicall.page_data['mimetype']))
+                    else:
+                        t, e = mimetypes.guess_type(pident.name, strict=False)
+                        if t:
+                            headers.append(('content-type', t))
+                        else:
+                            headers.append(('content-type', "application/octet-stream"))
                 data = _read_server_file(environ, pident)
             except Exception as e:
                 raise ServerError(message=f"Failed to read file {pident}", code=9035) from e

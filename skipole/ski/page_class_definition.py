@@ -1210,6 +1210,8 @@ class FilePage(ParentPage):
         t, e = mimetypes.guess_type(name, strict=False)
         if t:
             return t
+        else:
+            return "application/octet-stream"
 
     def set_mimetype(self, mt):
         self._mimetype = mt
