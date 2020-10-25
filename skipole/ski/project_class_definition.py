@@ -195,7 +195,7 @@ class SkipoleProject(object):
         s_h_data = None
         try:
             if 'PATH_INFO' in environ:
-                path = environ['PATH_INFO'].lower()
+                path = environ['PATH_INFO']
             else:
                 raise ServerError(message="Invalid path", code=9034)
 
