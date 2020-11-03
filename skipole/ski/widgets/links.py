@@ -1701,11 +1701,11 @@ class Table1_Links(Widget):
             if col2_links[index]:
                 # self[rownumber][1][0] must now be set with the link
                 if link_class and link_style:
-                    attribs = {"link_class":link_class, "link_style":link_style}
+                    attribs = {"class":link_class, "style":link_style}
                 elif link_class:
-                    attribs = {"link_class":link_class}
+                    attribs = {"class":link_class}
                 elif link_style:
-                    attribs = {"link_style":link_style}
+                    attribs = {"style":link_style}
                 else:
                     attribs = None
 
