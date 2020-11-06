@@ -309,7 +309,7 @@ class SkipoleProject(object):
                             b64binarydata = ident_parts[2].encode('ascii') # get the submitted data and convert to binary
                             # add padding
                             b64binarydata = b64binarydata + b"=" * (4-len(b64binarydata)%4)
-                            ident_data = urlsafe_b64decode(b64binarydata).decode('ascii') # b64 decode, and convert to string
+                            ident_data = urlsafe_b64decode(b64binarydata).decode('utf-8') # b64 decode, and convert to string
                     except Exception:
                         caller_page = None
                     if caller_page is None:
