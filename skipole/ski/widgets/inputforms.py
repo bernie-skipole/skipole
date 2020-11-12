@@ -249,6 +249,8 @@ class Form1(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
+        # this ensures any input text widgets added to the container, get local validation
+        # when the form is submitted
         jscript = """  $('#{ident} form').on("submit", function(e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
