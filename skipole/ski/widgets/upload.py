@@ -19,6 +19,7 @@ class SubmitUploadFile1(Widget):
                         'action':FieldArg("url", '', valdt=True),
                         'submitbutton_label':FieldArg("text", ''),
                         'submitbuttonlabel_class':FieldArg("cssclass", ''),
+                        'submitbuttonlabel_style':FieldArg("cssstyle", ''),
                         'submitbutton_text':FieldArg("text",'Submit'),
                         'submitbutton_class':FieldArg("cssclass", ''),
                         'fileinputdiv_class':FieldArg("cssclass", ''),
@@ -41,6 +42,7 @@ class SubmitUploadFile1(Widget):
         submitbutton_text: The text on the button
         submitbutton_label: The text displayed to the left of the submit button
         submitbuttonlabel_class: The css class of the label
+        submitbuttonlabel_style: The css style of the label
         submitbutton_class: The css class of the submit button
         fileinputdiv_class: the class attribute of the div which contains the file label and button
         submitinputdiv_class: the class attribute of the div which contains the submit label and button
@@ -124,6 +126,8 @@ class SubmitUploadFile1(Widget):
             self[1][1][0][0] = self.get_field_value('submitbutton_label')
         if self.get_field_value('submitbuttonlabel_class'):
             self[1][1][0].attribs = {"class": self.get_field_value('submitbuttonlabel_class')}
+        if self.get_field_value('submitbuttonlabel_style'):
+            self[1][1][0].update_attribs({"style": self.get_field_value('submitbuttonlabel_style')})
 
         # submit button
         self[1][1][1].update_attribs({"value":self.get_field_value('submitbutton_text')})
@@ -132,6 +136,7 @@ class SubmitUploadFile1(Widget):
 
         if self.get_field_value('submitbutton_class'):
             self[1][1][1].update_attribs({"class": self.get_field_value('submitbutton_class')})
+
 
         # set the label 'for' attribute
         self[1][1][0].update_attribs({'for':self[1][1][1].get_id()})
@@ -258,6 +263,7 @@ class SubmitUploadFile2(Widget):
                         'action':FieldArg("url", '', valdt=True),
                         'submitbutton_label':FieldArg("text", ''),
                         'submitbuttonlabel_class':FieldArg("cssclass", ''),
+                        'submitbuttonlabel_style':FieldArg("cssstyle", ''),
                         'submitbutton':FieldArg("text",'Submit', valdt=True),
                         'submitbutton_class':FieldArg("cssclass", ''),
                         'fileinputdiv_class':FieldArg("cssclass", ''),
@@ -281,6 +287,7 @@ class SubmitUploadFile2(Widget):
         submitbutton: Sets the text on the button. The name of this field is used as the widgfield fieldname for the filename
         submitbutton_label: The text displayed to the left of the submit button
         submitbuttonlabel_class: The css class of the label
+        submitbuttonlabel_style: The css style of the label
         submitbutton_class: The css class of the submit button
         fileinputdiv_class: the class attribute of the div which contains the file label and button
         submitinputdiv_class: the class attribute of the div which contains the submit label and button
@@ -375,6 +382,8 @@ class SubmitUploadFile2(Widget):
             self[1][2][0][0] = self.get_field_value('submitbutton_label')
         if self.get_field_value('submitbuttonlabel_class'):
             self[1][2][0].attribs = {"class": self.get_field_value('submitbuttonlabel_class')}
+        if self.get_field_value('submitbuttonlabel_style'):
+            self[1][2][0].update_attribs({"style": self.get_field_value('submitbuttonlabel_style')})
 
         # set an id in the submit button for the 'label for' tag
         self[1][2][1].insert_id()
