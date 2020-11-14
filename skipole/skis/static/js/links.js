@@ -876,6 +876,14 @@ SKIPOLE.links.Table1_Links.prototype = Object.create(SKIPOLE.BaseWidget.prototyp
 SKIPOLE.links.Table1_Links.prototype.constructor = SKIPOLE.links.Table1_Links;
 
 
+SKIPOLE.links.Table2_Links = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.links.Table2_Links.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.links.Table2_Links.prototype.constructor = SKIPOLE.links.Table2_Links;
+
+
 SKIPOLE.links.Table1_Button = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
     this.display_errors = false;
