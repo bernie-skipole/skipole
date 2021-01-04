@@ -1436,7 +1436,6 @@ class SkiCall(object):
                 servedfile = skicall.map_url_to_server("/special/css", "/home/user/thisproject/css")
                 if servedfile:
                     return servedfile
-                # further logic here if no file is found
                 return called_ident
         """
         server_folder = pathlib.Path(serverfolder).expanduser().resolve()

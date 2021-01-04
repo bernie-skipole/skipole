@@ -62,6 +62,17 @@ It consists of a dictionary of {widgfields:values,...} which will be set in the 
 <p>skicall.label_value(label, project=None) is a method which given a label, returns the associated ident or URL.<br />If project is not given assumes the current project, if given, project must exist as either the root, or a sub project of the root. If no label is found, returns None.</p>
 <p>skicall.textblock(textref, project=None) is a method which given a reference string returns the text of the associated TextBlock.<br />If project is None, it assumes the TextBlock is defined in the current project, if project is given it must be the root or a sub project. If no TextBlock is found, it returns None.</p>
 <p>skicall.projectpaths() returns a dictionary of project names as keys with the project paths as values.</p>
+<p>skicall.map_url_to_server(urlfolder, serverfolder, mimetype="") maps a url folder to a server folder.<br />
+Generally called in the start_call function. Maps a url folder such as "/special/css" to a server folder such as "/home/user/thisproject/css"<br />
+if a call is made to, say "/special/css/myfile.css" this function will return a pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file exists. If not then None is returned. If start_call returns such a pathlib.Path, then the framework will serve the file. A mimetype can be given, otherwise it will be guessed.<br />
+An example of usage is:</p>
+<pre>
+    def start_call(called_ident, skicall):
+        servedfile = skicall.map_url_to_server("/special/css", "/home/user/thisproject/css")
+        if servedfile:
+            return servedfile
+        return called_ident
+</pre>
 </div>
 </div>
 <script>
