@@ -1757,6 +1757,7 @@ class Table1_Links(Widget):
 
 class Table2_Links(Widget):
     """A table of two columns, the first column being text, the second links
+       with either html or json links
        with CSS class and style for each link
        The first row is two header titles
        Note : there is no error display"""
@@ -1773,7 +1774,8 @@ class Table2_Links(Widget):
                         'title2':FieldArg('text', ''),
                         'col1':FieldArgList('text', valdt=False),
                         'col2':FieldArgList('text', valdt=False),
-                        'col2_links':FieldArgList('url', valdt=False),
+                        'col2_link_idents':FieldArgList('url', valdt=False),
+                        'col2_json_idents':FieldArgList('url', valdt=False),
                         'col2_getfields':FieldArgList('text', valdt=True),
                         'col1_class':FieldArg("cssclass",""),          # class applied to every td in the first column
                         'col2_class':FieldArg("cssclass",""),          # class applied to every td in the second column
@@ -1791,7 +1793,9 @@ class Table2_Links(Widget):
         title2: The header title over the second text column
         col1 : A list of text strings to place in the first column
         col2: A list of text strings to place in the second column, these will be the link text
-        col2_links: A list of links for the second column
+        col2_link_idents: A list of links for the second column, called if the item in col2_json_idents is empty
+                          If a link item is empty, the table cell will have text only
+        col2_json_idents: A list of links for the second column, requests a json page to be returned
         col2_getfields: A list of get fields for the second column
         col1_class: class applied to every td in the first column
         col2_class: class applied to every td in the second column
@@ -1799,20 +1803,24 @@ class Table2_Links(Widget):
                      If False, the page ident will only be included if a get field is set
         """
         Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        self._col2_json_idents = []
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
         col1 = self.get_field_value("col1")
         col2 = self.get_field_value("col2")
-        col2_links = self.get_field_value("col2_links")
+        col2_link_idents = self.get_field_value("col2_link_idents")
+        col2_json_idents = self.get_field_value("col2_json_idents")
         col2_getfields = self.get_field_value("col2_getfields")
         link_classes = self.get_field_value("link_classes")
         link_styles = self.get_field_value("link_styles")
-        # create rows, same length as col2_links
-        rows = max( len(col1), len(col2), len(col2_links) )
+        # create rows, same length as col2_link_idents
+        rows = len(col2_link_idents)
         header = 0
         if self.get_field_value('title1') or self.get_field_value('title2'):
             header = 1
+            # and add an empty json link to self._col2_json_idents
+            self._col2_json_idents.append('')
             if self.get_field_value('header_class'):
                 self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
             else:
@@ -1832,12 +1840,18 @@ class Table2_Links(Widget):
 
         if len(col1) < rows:
             col1.extend(['']*(rows - len(col1)))    # pad col1 with ''
-        if len(col2_links) < rows:
-            col2_links.extend(['']*(rows - len(col2_links)))  # pad links with ''
+        if len(col2_json_idents) < rows:
+            col2_json_idents.extend(['']*(rows - len(col2_json_idents)))  # pad links with ''
         if len(col2_getfields) < rows:
             col2_getfields.extend(['']*(rows - len(col2_getfields)))  # pad getfields with ''
         if len(col2) < rows:
             col2.extend(['']*(rows - len(col2)))    # pad col2 with ''
+
+        for item in col2_json_idents:
+            if item:
+                self._col2_json_idents.append( skiboot.get_url(item, proj_ident=page.proj_ident) )
+            else:
+                self._col2_json_idents.append('')
 
         if len(link_classes) < rows:
             link_classes.extend(['']*(rows - len(link_classes)))    # pad link_classes with ''
@@ -1864,7 +1878,7 @@ class Table2_Links(Widget):
             else:
                 self[rownumber][1] = tag.Part(tag_name='td')
 
-            if col2_links[index]:
+            if col2_link_idents[index]:
                 # self[rownumber][1][0] must now be set with the link
                 if link_classes[index] and link_styles[index]:
                     attribs = {"class":link_classes[index], "style":link_styles[index]}
@@ -1880,7 +1894,7 @@ class Table2_Links(Widget):
                 else:
                     self[rownumber][1][0] = tag.Part(tag_name='a')
 
-                url = skiboot.get_url(col2_links[index], proj_ident=page.proj_ident)
+                url = skiboot.get_url(col2_link_idents[index], proj_ident=page.proj_ident)
                 if url:
                     if col2[index]:
                         self[rownumber][1][0][0] = col2[index]
@@ -1897,7 +1911,19 @@ class Table2_Links(Widget):
                    self[rownumber][1][0] = "Warning: broken link"
             else:
                 # self[rownumber][1][0] must now be set with text only
-                self[rownumber][1][0] = col2[index]
+                if col2[index]:
+                    self[rownumber][1][0] = col2[index]
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        jscript = """  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+""".format(ident = self.get_id())
+        return jscript + self._make_fieldvalues(jurls=self._col2_json_idents)
+
+
 
 
     @classmethod

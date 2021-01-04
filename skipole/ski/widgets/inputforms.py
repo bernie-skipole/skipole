@@ -4,7 +4,7 @@
       further input fields.  The module also has an Hidden Field and Submit Button widgets, which can be inserted into
      a form. """
 
-from .. import skiboot, tag, excepts
+from .. import skiboot, tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 

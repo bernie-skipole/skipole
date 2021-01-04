@@ -1423,6 +1423,48 @@ class SkiCall(object):
         return {proj_ident:proj.url for proj_ident, proj in all_projects.items()}
 
 
+    def map_url_to_server(self, urlfolder, serverfolder, mimetype=""):
+        """Generally called in the start_call function. Maps a url folder such as
+           "/special/css" to a server folder such as "/home/user/thisproject/css"
+           if a call is made to, say "/special/css/myfile.css" this function will return a 
+           pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file
+           exists. If not then None is returned.
+           If start_call returns such a pathlib.Path, then the framework will serve the file.
+           A mimetype can be given, otherwise it will be guessed.
+           An example of usage is:
+            def start_call(called_ident, skicall):
+                servedfile = skicall.map_url_to_server("/special/css", "/home/user/thisproject/css")
+                if servedfile:
+                    return servedfile
+                # further logic here if no file is found
+                return called_ident
+        """
+        server_folder = pathlib.Path(serverfolder).expanduser().resolve()
+        if not server_folder.is_dir():
+            return
+        if self.path.startswith(urlfolder):
+            url_folder = pathlib.Path(urlfolder)
+            # the path requested
+            path = pathlib.Path(self.path)
+            # path must have more elements than url_folder, as it should have at least the filename
+            if len(path.parts) <= len(url_folder.parts):
+                return
+            servedfileparts = server_folder.parts + path.parts[len(url_folder.parts):]
+            servedfile = pathlib.Path(*servedfileparts)
+            if not servedfile.is_file():
+                return
+            if mimetype:
+                self.page_data['mimetype'] = mimetype
+            else:
+                mimetypes.init()
+                t, e = mimetypes.guess_type(path.name, strict=False)
+                if t:
+                    self.page_data['mimetype'] = t
+                else:
+                    self.page_data['mimetype'] = "application/octet-stream"
+            return servedfile
+        return
+
 def _readfile(filepath, size):
     "Return a generator reading the file"
     with filepath.open("rb") as f:

@@ -3,7 +3,7 @@
 """Contains widgets for logging in to a service"""
 
 
-from .. import skiboot, tag, excepts
+from .. import skiboot, tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 

@@ -882,6 +882,64 @@ SKIPOLE.links.Table2_Links = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.links.Table2_Links.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.links.Table2_Links.prototype.constructor = SKIPOLE.links.Table2_Links;
+SKIPOLE.links.Table2_Links.prototype.eventfunc = function (e) {
+    SKIPOLE.skiprefresh = true;
+    if (!this.widg_id) {
+        return;
+        }
+    var fieldvalues = this.fieldvalues;
+    var button = $(e.target);
+    var href = button.attr('href');
+    if (!href) {
+        return;
+        }
+    // one link on the table has been pressed
+    /* fieldvalues["jurls"] is a list of json urls, one for each row
+       need to get the row index to find which of these
+       urls to send the call to */
+    var row = button.parent().parent().index();
+    // button.parent() is the td element
+    // button.parent().parent() is the tr element, and index is the row number
+
+    if (!fieldvalues["jurls"]) {
+        return;
+        }
+    else if (!fieldvalues["jurls"][row]) {
+        return;
+        }
+    else {
+        var sendurl = fieldvalues["jurls"][row];
+        }
+
+    var senddata = href.substring(href.indexOf('?')+1);
+    e.preventDefault();
+    // respond to json or html
+    $.ajax({
+          url: sendurl,
+          data: senddata
+              })
+          .done(function(result, textStatus, jqXHR) {
+             if (jqXHR.responseJSON) {
+                  // JSON response
+                  SKIPOLE.setfields(result);
+                  } else {
+                      // html response
+                      document.open();
+                      document.write(result);
+                      document.close();
+                      }
+              })
+          .fail(function( jqXHR, textStatus, errorThrown ) {
+                      if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                          document.open();
+                          document.write(jqXHR.responseText);
+                          document.close();
+                          }
+                      else {
+                          SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
+                          }
+              });
+    };
 
 
 SKIPOLE.links.Table1_Button = function (widg_id, error_message, fieldmap) {
