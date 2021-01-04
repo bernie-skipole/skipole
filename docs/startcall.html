@@ -56,7 +56,7 @@
 <p>If start_call returns None, the 'URL NOT FOUND' page will be automatically returned to the client.</p>
 <p>If a string url is returned, then a redirector page will be sent to the client. A url would not normally be used to redirect to a page within the project, but could be used to redirect to an external site.</p>
 <p>If a pathlib.Path object is returned, which contains the path to a local server file (not a url) - then that server file will be sent to the client. In this case, the submit_data and end_call functions will not be called. In this situation, your start_call function could optionally set values into skicall.page_data with keys 'status', 'headers' - or if headers is not set, 'mimetype' and 'enable_cache'. These are optional, if not set then the mimetype will be guessed from the filename extension.</p>
-<p>Also see the skicall.map_url_to_server() method, which can be used to map folders of static files to a url folder.</p>
+<p>Also see the skicall.map_url_to_server() method, which can be used to map a url folder to a folder of static files.</p>
 <p>No un-caught exception should be raised in this function - if any are, the Server error page will be displayed.</p>
 </div>
 </div>
