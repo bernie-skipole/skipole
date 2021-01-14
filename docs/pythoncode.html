@@ -73,6 +73,21 @@
 
 </pre>
 <p>This 'skis' application serves javascript files used by the framework, so it is always needed.</p>
+
+<h3>add_project</h3>
+<p>This is a method of the WSGIApplication.</p>
+<p>application.add_project(subapplication, url=None, check_cookies=None)</p>
+<p>Your main application, generally served at '/' can have another 'sub' application added at a given path, so if you want to add a subapplication you would typically:</p>
+<p>Place the sub project code location on your sys.path</p>
+<p>Import the sub project to obtain its wsgi application</p>
+<p>Call application.add_project with the sub project application and the url where it will be served.</p>
+<p>The optional check_cookies argument can be set to a function which you would create, with signature:</p>
+<p>def my_check_cookies_function(received_cookies, proj_data):</p>
+<p>When a call is received, with a url that routes it to the sub application, if this function is defined, and set in the add_project method:</p>
+<p>application.add_project(subapplication, url="/suburl", check_cookies=my_check_cookies_function)</p>
+<p>Then initially, before the call is routed to the subapplication, your my_check_cookies_function is called, with the received_cookies dictionary, and with your application's proj_data dictionary.  If your function returns None, the call proceeds unhindered to the subapplication. If however your function returns an ident tuple, of the form (projectname, pagenumber), then the call is routed to that page instead.</p>
+<p>This is typically used to limit access to the subproject. For example your my_check_cookies_function could check for a valid received cookie, and if present, would return None, allowing access, but if not present, it would return the ident of a login page.</p>
+<p>Besides an ident tuple, the function could just return a pagenumber, in which case the corresponding page of the root application would be called, or it could return a label, in which case the root application would check its label ident dictionary and find the target ident that way. The label should not point to a URL.</p>
 <h3>Exceptions</h3>
 <p>Your myproj.py module also imports four exceptions which you can use in your functions:</p>
 <p><strong>from skipole import FailPage, GoTo, ValidateError, ServerError</strong></p>
