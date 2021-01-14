@@ -80,6 +80,10 @@ class SkipoleProject(object):
         # initially, assume this is the root projcet, and sub projects can be added
         self.rootproject = True
 
+        # A check cookies function can be set in this project if it is added as a sub-project
+        # initially it is None
+        self.check_cookies = None
+
         # initial values, will be set from the json file
         self.brief = "Project %s" % project
         self.version = "0.0.0"
@@ -209,8 +213,34 @@ class SkipoleProject(object):
                 if (path.find(projurl) == 0) or (path + "/" == projurl):
                     # this url is within a sub project
                     subproj = self.subprojects[proj]
-                    s_h_data = subproj.proj_respond(environ, projurl, path, lang, received_cookies)
-                    break
+                    if subproj.check_cookies is None:
+                        # there is no check_cookies function, so no divertedcall. Call proj_respond of the sub project
+                        s_h_data = subproj.proj_respond(environ, projurl, path, lang, received_cookies)
+                        break
+                    # the subproj has a check_cookies function, call it. Call proj_respond of the sub project
+                    divertedcall = subproj.check_cookies(received_cookies, self.proj_data)
+                    if divertedcall is None:
+                        # check_cookies returns None, so no diversion
+                        s_h_data = subproj.proj_respond(environ, projurl, path, lang, received_cookies)
+                        break
+                    # a divertedcall has been returned, it can be integer/tuple/label. Convert to ident
+                    divertedcall = skiboot.find_ident(divertedcall, proj_ident=self._proj_ident)
+                    if divertedcall is None:
+                        # no ident found, so this is a ulr_not_found, leave s_h_data as None
+                        break
+                    # a divertedcall ident is given, but it could be to a page in this root project or any sub project
+                    if divertedcall[0] == self._proj_ident:
+                        # the diversion is to an ident of this root project
+                        s_h_data = self.proj_respond(environ, self.url, path, lang, received_cookies, divertedcall)
+                        break
+                    elif divertedcall[0] in self.subprojects:
+                        # the diversion is to an ident of a sub project, identify the sub project
+                        subproj = self.subprojects[divertedcall[0]]
+                        s_h_data = subproj.proj_respond(environ, self._subproject_paths[divertedcall[0]], path, lang, received_cookies, divertedcall)
+                        break
+                    else:
+                        # should never occur, but if it does, leave s_h_data as None
+                        break
             else:
                 # the call is for a page in this root project
                 s_h_data = self.proj_respond(environ, self.url, path, lang, received_cookies)
@@ -267,7 +297,7 @@ class SkipoleProject(object):
 
 
 
-    def proj_respond(self, environ, projurl, path, lang, received_cookies):
+    def proj_respond(self, environ, projurl, path, lang, received_cookies, divertedcall=None):
         """Gets any received form data, and parses the ident field if present to find the caller page and ident_data
            Calls start call, and depending on the returned page, calls the project status_headers_data method"""
 
@@ -338,7 +368,10 @@ class SkipoleProject(object):
         # so caller_page could be either given, or could be None
 
         # get the called ident, could be None
-        ident = self.page_ident_from_path(projurl, path)
+        if divertedcall is None:
+            ident = self.page_ident_from_path(projurl, path)
+        else:
+            ident = divertedcall
 
         if caller_page:
             caller_page_ident = caller_page.ident
@@ -1286,12 +1319,16 @@ class SkipoleProject(object):
         "Returns a list of subproject idents"
         return [i for i in self.subproject_paths]
 
-    def add_project(self, proj, url=None):
+    def add_project(self, proj, url=None, check_cookies=None):
         """Add a project to self, returns the url
            proj is the sub project application.
            This adds a reference to the project to the subproject_paths, returns the sub project path"""
         if not self.rootproject:
            raise ValidateError(message="Cannot add to a sub project")
+
+        if check_cookies is not None:
+            if not callable(check_cookies):
+                raise ValidateError(message="If given check_cookies must be callable as check_cookies(received_cookies, proj_data)")
         proj_id = proj.proj_ident
 
         # get a copy of the {proj_id:url} subproject_paths dictionary, and this projects url
@@ -1324,6 +1361,8 @@ class SkipoleProject(object):
         proj._subproject_paths = collections.OrderedDict()
         proj.subprojects = {}
         self.subprojects[proj_id] = proj
+        # set check_cookies function into the sub project - perhaps could 
+        proj.check_cookies = check_cookies
         return url
 
     @property
