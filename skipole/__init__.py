@@ -197,10 +197,10 @@ url - path where this project will be served, typically '/'
         "The instance is callable"
         return self._skipoleproject(environ, start_response)
 
-    def add_project(self, proj, url=None):
+    def add_project(self, proj, url=None, check_cookies=None):
         """Add a sub project to this root project, returns the sub project url
            proj is the sub project WSGIApplication object."""
-        return self._skipoleproject.add_project(proj._skipoleproject, url)
+        return self._skipoleproject.add_project(proj._skipoleproject, url, check_cookies)
 
     def set_accesstextblocks(self, accesstextblocks):
         """Set an instance of a class which reads and writes TextBlocks. The default class is defined in the skipole.textblocks module,
