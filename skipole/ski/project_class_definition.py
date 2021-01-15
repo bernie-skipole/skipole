@@ -1361,8 +1361,10 @@ class SkipoleProject(object):
         proj._subproject_paths = collections.OrderedDict()
         proj.subprojects = {}
         self.subprojects[proj_id] = proj
-        # set check_cookies function into the sub project - perhaps could 
+        # set check_cookies function into the sub project
         proj.check_cookies = check_cookies
+        # clear non root projects from the project register
+        skiboot.del_from_project_register()
         return url
 
     @property
@@ -1458,8 +1460,7 @@ class SkiCall(object):
         """Returns a dictionary of project name : project path
 
            This method returns a dictionary of project names as keys with the project paths as values."""
-        all_projects = skiboot.project_register()
-        return {proj_ident:proj.url for proj_ident, proj in all_projects.items()}
+        return skiboot.projectpaths()
 
 
     def map_url_to_server(self, urlfolder, serverfolder, mimetype=""):

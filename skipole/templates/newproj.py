@@ -5,7 +5,7 @@ import os
 # from skipole import the WSGIApplication class which will be used to create a wsgi
 # application, and exception classes which you will need in your functions
 
-from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list
+from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, skis
 
 # the framework needs to know the location of the projectfiles directory holding the project data
 # and static files.
@@ -29,6 +29,14 @@ PROJ_DATA={}
 
 def start_call(called_ident, skicall):
     "When a call is initially received this function is called."
+    # to serve static files, you can map a url to a server static directory
+    # servedfile = skicall.map_url_to_server("/specialfiles", "/home/user/thisproject/specialfiles")
+    # if servedfile:
+    #    return servedfile
+
+    # other tests are possible, such as checking attributes of the skicall object
+    # and finally, unless you want to divert to another page, return called_ident which
+    # would typicall be the ident of a Responder.
     return called_ident
 
 
@@ -37,12 +45,17 @@ def start_call(called_ident, skicall):
 
 def submit_data(skicall):
     "This function is called when a Responder wishes to submit data for processing in some manner"
+    # Depending on the Responder type, data submitted from forms could be set into the skicall.call_data dictionary,
+    # and you would populate skicall.page_data with fields and values to set in the returned page.
+    # The Responder typically passes the call to a template page, but first, the next end_call function
+    # is called
     return
 
 
 def end_call(page_ident, page_type, skicall):
     """This function is called at the end of a call prior to filling the returned page with skicall.page_data,
-       it can also return an optional session cookie string."""
+       it can also be used to return an optional session cookie string."""
+    # you could use this to populate skicall.page_data with values used by every page, such as a page header widget field.
     return
 
 
@@ -59,15 +72,11 @@ application = WSGIApplication(project=PROJECT,
                               url="/")
 
 
-                 ### add the 'skis' sub project ###
-
-# The 'skis' application serves javascript and the w3.css files required by
+# Then add the 'skis' application which serves javascript and css files required by
 # the framework widgets.
 
-# The skis package, contains the function makeapp() - which returns a
+# The skipole.skis package, contains the function makeapp() - which returns a
 # WSGIApplication object which is then appended to your own project
-
-from skipole import skis
 
 skis_application = skis.makeapp()
 application.add_project(skis_application, url='/lib')

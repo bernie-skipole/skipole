@@ -145,8 +145,7 @@ def projectURLpaths():
 
       You should expect to see the root project itself in the dictionary, and at least the 'skis' project which is normally attached as a sub-project.
 """
-    all_projects = skiboot.project_register()
-    return {proj_ident:proj.url for proj_ident, proj in all_projects.items()}
+    return skiboot.projectpaths()
 
 
 def get_root():

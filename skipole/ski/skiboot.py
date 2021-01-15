@@ -15,8 +15,9 @@ _CFG = {
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
 
-# create a dictionary of all projects, {proj_ident:project}
-PROJECT_REGISTER = {}
+# create a list of all root projects. As projects are created this gets them added, but as a single root project is decided and others
+# become sub-projects, this becomes a list of a single item
+PROJECT_REGISTER = []
 
 _LIB_LABELS = ["skipole_js", "jquery_core",
                "ski_basic", "ski_checkbox", "ski_confirm", "ski_debug_tools", "ski_dropdown", "ski_error_messages",
@@ -33,25 +34,30 @@ Info = collections.namedtuple('Info', ['project', 'project_version', 'ident', 'i
 def add_to_project_register(project):
     "Adds the project to a list of all projects"
     global PROJECT_REGISTER
-    PROJECT_REGISTER[project.proj_ident] = project
+    PROJECT_REGISTER.append(project)
 
 
-def project_register():
-    "Return a dictionary of all projects"
+def del_from_project_register():
+    "Deletes sub projects from the register of root projects - occurs when a project is added to another, and becomes non-root"
     global PROJECT_REGISTER
-    return PROJECT_REGISTER
+    new_list = list(project for project in PROJECT_REGISTER if project.rootproject)
+    PROJECT_REGISTER = new_list
 
-def project_ident_register():
-    "Return a list of all project idents"
-    global PROJECT_REGISTER
-    return list(PROJECT_REGISTER.keys())
 
 def root_project():
     "Return the root project"
     global PROJECT_REGISTER
-    for proj in PROJECT_REGISTER.values():
-        if proj.rootproject:
-            return proj
+    return PROJECT_REGISTER[0]
+
+
+def projectpaths():
+    """Returns a dictionary of project name : project path for all projects."""
+    rootproj = root_project()
+    # rootproj.subprojects is a dictionary of sub projects {proj_ident: Project instance,.....}
+    all_projects = {proj_ident:proj.url for proj_ident, proj in rootproj.subprojects.items()}
+    all_projects[rootproj.proj_ident] = rootproj.url
+    return all_projects
+
 
 def projectfiles(proj_ident=None):
     """Returns the directory entry where projectfiles can be found for a given project
@@ -71,7 +77,10 @@ def sys_list():
 
 def is_project(proj_ident):
     "Returns True if this project is in the site, False otherwise"
-    if proj_ident in PROJECT_REGISTER:
+    rootproj = root_project()
+    if proj_ident == rootproj.proj_ident:
+        return True
+    if proj_ident in rootproj.subprojects:
         return True
     return False
 
@@ -88,8 +97,12 @@ def set_debug(mode):
 def getproject(proj_ident):
     """Returns the project given by the proj_ident
        If the project does not exist, return None"""
-    if proj_ident in PROJECT_REGISTER:
-        return PROJECT_REGISTER[proj_ident]
+    rootproj = root_project()
+    if proj_ident == rootproj.proj_ident:
+        return rootproj
+    if proj_ident in rootproj.subprojects:
+        return rootproj.subprojects[proj_ident]
+
 
 def project_ident(proj_ident=None):
     "Returns the given project ident, if it is None, returns current site root project ident"
