@@ -15,8 +15,9 @@ _CFG = {
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
 
-# create a list of all root projects. As projects are created this gets them added, but as a single root project is decided and others
-# become sub-projects, this becomes a list of a single item
+# As projects are created they are added to this PROJECT_REGISTER list, but as projects
+# become sub-projects by being added to a root, they are removed from this register, so
+# it becomes a list of a single item, the final root project.
 PROJECT_REGISTER = []
 
 _LIB_LABELS = ["skipole_js", "jquery_core",
@@ -32,9 +33,10 @@ Info = collections.namedtuple('Info', ['project', 'project_version', 'ident', 'i
 
 
 def add_to_project_register(project):
-    "Adds the project to a list of all projects"
+    "Adds the project to a list of root projects"
     global PROJECT_REGISTER
-    PROJECT_REGISTER.append(project)
+    if project.rootproject:
+        PROJECT_REGISTER.append(project)
 
 
 def del_from_project_register():
@@ -47,6 +49,7 @@ def del_from_project_register():
 def root_project():
     "Return the root project"
     global PROJECT_REGISTER
+    assert len(PROJECT_REGISTER) == 1
     return PROJECT_REGISTER[0]
 
 
@@ -100,8 +103,7 @@ def getproject(proj_ident):
     rootproj = root_project()
     if proj_ident == rootproj.proj_ident:
         return rootproj
-    if proj_ident in rootproj.subprojects:
-        return rootproj.subprojects[proj_ident]
+    return rootproj.subprojects.get(proj_ident)
 
 
 def project_ident(proj_ident=None):

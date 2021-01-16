@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="skipole",
-    version="5.1.4",
+    version="5.2.0",
     author="Bernard Czenkusz",
     author_email="bernie@skipole.co.uk",
     description="A WSGI Application generator",
@@ -21,6 +21,7 @@ setuptools.setup(
               'skipole.skiadmin.skiadminpackages.editspecialpages', 'skipole.skiadmin.skiadminpackages.edittext', 'skipole.skiadmin.skiadminpackages.edittextblocks',
               'skipole.skiadmin.skiadminpackages.editvalidators', 'skipole.skiadmin.skiadminpackages.editwidgets'],
     include_package_data=True,
+    keywords='wsgi application web framework',
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
