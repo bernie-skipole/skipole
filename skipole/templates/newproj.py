@@ -30,7 +30,7 @@ PROJ_DATA={}
 def start_call(called_ident, skicall):
     "When a call is initially received this function is called."
     # to serve static files, you can map a url to a server static directory
-    # servedfile = skicall.map_url_to_server("/specialfiles", "/home/user/thisproject/specialfiles")
+    # servedfile = skicall.map_url_to_server("images", "/home/user/thisproject/imagefiles")
     # if servedfile:
     #    return servedfile
 

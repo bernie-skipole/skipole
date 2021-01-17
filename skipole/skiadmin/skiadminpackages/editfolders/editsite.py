@@ -107,7 +107,8 @@ def retrieve_help(skicall):
 
 def get_text(skicall):
     """Finds any widget submitting 'get_field' with value of a textblock ref, returns
-       page_data with key widget with field 'div_content' and value the textblock text"""
+       page_data with key widget with field 'div_content' and value the textblock text.
+       Introduces <br /> at newlines"""
 
     page_data = skicall.page_data
 
@@ -126,6 +127,30 @@ def get_text(skicall):
             elif len(key) == 2:
                 page_data[(key[0],'div_content')] = text
                 page_data[(key[0],'hide')] = False
+
+
+def get_html(skicall):
+    """Finds any widget submitting 'get_field' with value of a textblock ref, returns
+       page_data with key widget with field 'div_content' and value the textblock text
+       but does not introduce <br /> for new lines"""
+
+    page_data = skicall.page_data
+
+    if 'received' not in skicall.submit_dict:
+        return
+    received_widgfields = skicall.submit_dict['received']
+    for key, val in received_widgfields.items():
+        if isinstance(key, tuple) and (key[-1] == 'get_field'):
+            text = skicall.textblock(val)
+            if text is None:
+                continue
+            if len(key) == 3:
+                page_data[(key[0], key[1],'div_content')] = text
+                page_data[(key[0], key[1],'hide')] = False
+            elif len(key) == 2:
+                page_data[(key[0],'div_content')] = text
+                page_data[(key[0],'hide')] = False
+
 
 
 def retrieve_colour_data(skicall):

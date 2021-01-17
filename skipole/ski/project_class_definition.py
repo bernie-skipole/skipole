@@ -1462,18 +1462,31 @@ class SkiCall(object):
            This method returns a dictionary of project names as keys with the project paths as values."""
         return skiboot.projectpaths()
 
+    def makepath(self, *foldernames):
+        "Returns a url path string starting with the projects path, with the given foldernames joined"
+        projectpath = self.projectpaths()[self.project]
+        if not foldernames:
+            return projectpath
+        folderpath =  "/".join(foldernames)
+        if projectpath.endswith("/"):
+            fullpath = projectpath + folderpath
+        else:
+            fullpath = projectpath + "/" + folderpath
+        return fullpath
+
 
     def map_url_to_server(self, urlfolder, serverfolder, mimetype=""):
         """Generally called in the start_call function. Maps a url folder such as
-           "/special/css" to a server folder such as "/home/user/thisproject/css"
-           if a call is made to, say "/special/css/myfile.css" this function will return a 
+           "special/css" to a server folder such as "/home/user/thisproject/css"
+           If a call is made to, say "/projectpath/special/css/myfile.css" this function will return a 
            pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file
            exists. If not then None is returned.
+           If the given urlfolder starts with "/" then it is an absolute path and projectpath is not prepended.
            If start_call returns such a pathlib.Path, then the framework will serve the file.
            A mimetype can be given, otherwise it will be guessed.
            An example of usage is:
             def start_call(called_ident, skicall):
-                servedfile = skicall.map_url_to_server("/special/css", "/home/user/thisproject/css")
+                servedfile = skicall.map_url_to_server("special/css", "/home/user/thisproject/css")
                 if servedfile:
                     return servedfile
                 return called_ident
@@ -1481,6 +1494,13 @@ class SkiCall(object):
         server_folder = pathlib.Path(serverfolder).expanduser().resolve()
         if not server_folder.is_dir():
             return
+        if not urlfolder.startswith("/"):
+            # relative path, pre-pend the project url
+            projectpath = self.projectpaths()[self.project]
+            if projectpath.endswith("/"):
+                urlfolder = projectpath + urlfolder
+            else:
+                urlfolder = projectpath + "/" + urlfolder
         if self.path.startswith(urlfolder):
             url_folder = pathlib.Path(urlfolder)
             # the path requested

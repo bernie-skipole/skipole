@@ -118,7 +118,7 @@ def end_call(page_ident, page_type, skicall):
 
 
 def makeapp(editedprojname):
-    """This function returns the skis application."""
+    """This function returns the skiadmin application."""
 
     if not editedprojname:
         raise ServerError("The project name being edited is required")

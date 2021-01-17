@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "5.2.0",
-"skipole": "5.2.0",
+"version": "5.2.1",
+"skipole": "5.2.1",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -1601,6 +1601,7 @@ false,
 "submitbutton_label": "Upload:",
 "submitbutton_text": "Submit",
 "submitbuttonlabel_class": "ski_left_label",
+"submitbuttonlabel_style": "",
 "submitinputdiv_class": "",
 "widget_class": "w3-section",
 "widget_style": ""
@@ -1883,6 +1884,7 @@ false,
 "submitbutton_label": "Upload:",
 "submitbutton_text": "Submit",
 "submitbuttonlabel_class": "ski_left_label",
+"submitbuttonlabel_style": "",
 "submitinputdiv_class": "",
 "widget_class": "w3-section",
 "widget_style": ""
@@ -2900,6 +2902,7 @@ false,
 "submitbutton_label": "Upload:",
 "submitbutton_text": "Submit",
 "submitbuttonlabel_class": "ski_left_label",
+"submitbuttonlabel_style": "",
 "submitinputdiv_class": "",
 "widget_class": "w3-section",
 "widget_style": ""
@@ -3256,7 +3259,7 @@ false,
 "get_field": "aboutcode.skicall",
 "hide": true,
 "htmlescaped": false,
-"json_ident": 70050,
+"json_ident": "70051",
 "link_ident": "no_javascript",
 "show": true,
 "show_error": "",
@@ -3657,6 +3660,26 @@ false,
 }
 },
 "pages": {
+"get_html": {
+"ident": 70051,
+"brief": "Returns a textblock text from get field",
+"RespondPage": {
+"class": "FieldStoreSubmit",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editsite",
+"get_html"
+],
+"target_ident": "general_json"
+},
+"original_fields": {
+"get_field": ""
+}
+}
+},
 "get_text": {
 "ident": 70050,
 "brief": "Returns a textblock text from get field",
@@ -4223,6 +4246,7 @@ false,
 "submitbutton_label": "Upload:",
 "submitbutton_text": "Submit",
 "submitbuttonlabel_class": "ski_left_label",
+"submitbuttonlabel_style": "",
 "submitinputdiv_class": "w3-section",
 "widget_class": "w3-section",
 "widget_style": ""
@@ -25978,6 +26002,7 @@ false
 "submitbutton_label": "Upload:",
 "submitbutton_text": "Submit",
 "submitbuttonlabel_class": "ski_left_label",
+"submitbuttonlabel_style": "",
 "submitinputdiv_class": "w3-section",
 "widget_class": "w3-section",
 "widget_style": ""
@@ -37375,6 +37400,7 @@ false
 "submitbutton_label": "Upload:",
 "submitbutton_text": "Submit",
 "submitbuttonlabel_class": "ski_left_label",
+"submitbuttonlabel_style": "",
 "submitinputdiv_class": "w3-section",
 "widget_class": "w3-section",
 "widget_style": ""
