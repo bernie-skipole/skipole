@@ -137,7 +137,7 @@ class Folder(object):
     @property
     def default_page(self):
         "return a deep copy of the default page, or None if one not set"
-        default_ident = self.default_page_ident()
+        default_ident = self.default_page_ident
         if default_ident:
             return skiboot.from_ident(default_ident)
 

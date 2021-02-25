@@ -28,15 +28,14 @@ PROJ_DATA={}
 
 
 def start_call(called_ident, skicall):
-    "When a call is initially received this function is called."
-    # to serve static files, you can map a url to a server static directory
+    """When a call is initially received this function is called. Unless you want to divert to another page,
+       return called_ident which would typically be the ident of a Responder dealing with the call."""
+    # to serve static files, you can map a url to a server static directory with the skicall.map_url_to_server
+    # method, for example:
     # servedfile = skicall.map_url_to_server("images", "/home/user/thisproject/imagefiles")
     # if servedfile:
     #    return servedfile
 
-    # other tests are possible, such as checking attributes of the skicall object
-    # and finally, unless you want to divert to another page, return called_ident which
-    # would typicall be the ident of a Responder.
     return called_ident
 
 
@@ -45,17 +44,12 @@ def start_call(called_ident, skicall):
 
 def submit_data(skicall):
     "This function is called when a Responder wishes to submit data for processing in some manner"
-    # Depending on the Responder type, data submitted from forms could be set into the skicall.call_data dictionary,
-    # and you would populate skicall.page_data with fields and values to set in the returned page.
-    # The Responder typically passes the call to a template page, but first, the next end_call function
-    # is called
     return
 
 
 def end_call(page_ident, page_type, skicall):
     """This function is called at the end of a call prior to filling the returned page with skicall.page_data,
        it can also be used to return an optional session cookie string."""
-    # you could use this to populate skicall.page_data with values used by every page, such as a page header widget field.
     return
 
 
@@ -72,7 +66,7 @@ application = WSGIApplication(project=PROJECT,
                               url="/")
 
 
-# Then add the 'skis' application which serves javascript and css files required by
+# Add the 'skis' application which serves javascript and css files required by
 # the framework widgets.
 
 # The skipole.skis package, contains the function makeapp() - which returns a
@@ -81,10 +75,21 @@ application = WSGIApplication(project=PROJECT,
 skis_application = skis.makeapp()
 application.add_project(skis_application, url='/lib')
 
-# The add_project method of application, enables the added sub application
+# The add_project method of WSGIApplication enables the added sub application
 # to be served at a URL which should extend the URL of the main 'root' application.
 # The above shows the main application served at "/" and the skis library
 # project served at "/lib"
+
+# You can add further sub applications using the add_project method which has signature
+# application.add_project(subapplication, url=None, check_cookies=None)
+# The optional check_cookies argument can be set to a function which you would create, with signature:
+# def my_check_cookies_function(received_cookies, proj_data):
+# Before the call is routed to the subapplication, your my_check_cookies_function is called, with the
+# received_cookies dictionary, and with your application's proj_data dictionary. If your function
+# returns None, the call proceeds unhindered to the subapplication. If however your function returns
+# an ident tuple, of the form (projectname, pagenumber), then the call is routed to that page instead.
+
+
 
 
 #############################################################################
