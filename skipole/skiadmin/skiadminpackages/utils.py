@@ -9,7 +9,8 @@ def clear_call_data(call_data, keep=None):
                 'editedprojbrief',
                 'adminproj',
                 'extend_nav_buttons',
-                'caller_ident']
+                'caller_ident',
+                'pagedata']
     if keep:
         if isinstance(keep, str) and (keep not in required):
             required.append(keep)

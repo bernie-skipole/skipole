@@ -1331,19 +1331,19 @@ class CSS(ParentPage):
 
 
     def set_values(self, page_data):
-        """enable_cache, @import, status, headers and ident_data"""
+        """enable_cache, cssimport, status, headers and ident_data"""
         if 'enable_cache' in page_data:
             self.enable_cache = bool(page_data['enable_cache'])
             del page_data['enable_cache']
         if 'colour_substitution' in page_data:
             self.colour_substitution = page_data['colour_substitution']
             del page_data['colour_substitution']
-        if '@import' in page_data:
-            if isinstance(page_data['@import'], list):
-                self.imports = page_data['@import']
-            elif isinstance(page_data['@import'], str):
-                self.imports = [page_data['@import']]
-            del page_data['@import']
+        if 'cssimport' in page_data:
+            if isinstance(page_data['cssimport'], list):
+                self.imports = page_data['cssimport']
+            elif isinstance(page_data['cssimport'], str):
+                self.imports = [page_data['cssimport']]
+            del page_data['cssimport']
         ParentPage.set_values(self, page_data)
 
 

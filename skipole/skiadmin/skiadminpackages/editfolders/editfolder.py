@@ -9,12 +9,13 @@ from ... import skilift
 from ....skilift import editpage, editfolder, fromjson
 from .. import utils
 
+from .... import SectionData
+
 
 def edit_root(skicall):
     "Go to edit root folder, with no other call_data contents other than those set here"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # called by responder 3, edit_root link from Root Folder nav button
     # this responder then targets responder 22008 to fill in root folder fields
@@ -27,7 +28,7 @@ def goto_edited_folder(skicall):
        This responder passes the call to another responder which calls retrieve_edited_folder"""
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+
     submit_dict = skicall.submit_dict
 
     if 'received_data' not in submit_dict:
@@ -43,7 +44,7 @@ def retrieve_edited_folder(skicall):
     "Fills in the edit folder page, including the tree of folder contents"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     editedprojname = call_data['editedprojname']
 
@@ -75,94 +76,98 @@ def retrieve_edited_folder(skicall):
     call_data['fchange'] = info.change
 
     contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
-    page_data['ftree', 'contents'] = contents
+    pd['ftree', 'contents'] = contents
 
     # old code, was just rows 
 
-    page_data['ftree', 'dragrows'] = dragrows
-    page_data['ftree', 'droprows'] = droprows
-    page_data['ftree', 'dropident'] = 'drop_rows' # label of responder
+    pd['ftree', 'dragrows'] = dragrows
+    pd['ftree', 'droprows'] = droprows
+    pd['ftree', 'dropident'] = 'drop_rows' # label of responder
 
     # cols
     # A list of two element lists for every column in the table:
     # 0 The target HTML ident or label of buttons in the column, if the second element of this list is empty string or the client has javascript disabled.
     # 1 The target JSON ident or label of buttons in the column.
 
-    page_data['ftree', 'cols'] = [ ["", ""],
-                                   ["", ""],
-                                   ["", ""],
-                                   ["", ""],
-                                   ["edit_action", ""],
-                                   ["edit_action", ""],
-                                   ["edit_action", ""],
-                                   ["no_javascript", "2003"],           # calls responder which calls copy_page
-                                   ["no_javascript", "2004"]  ]
+    pd['ftree', 'cols'] = [["", ""],
+                           ["", ""],
+                           ["", ""],
+                           ["", ""],
+                           ["edit_action", ""],
+                           ["edit_action", ""],
+                           ["edit_action", ""],
+                           ["no_javascript", "2003"],           # calls responder which calls copy_page
+                           ["no_javascript", "2004"]  ]
 
 
     # set edited folder in the required dictionary
-    page_data['ie1:page_ident'] = (info.project, info.itemnumber)
+    pd['ie1','page_ident'] = (info.project, info.itemnumber)
     if 'brief' in call_data:
-        page_data['st2:folder_brief'] = call_data['brief']
+        pd['st2','folder_brief'] = call_data['brief']
     else:
-        page_data['st2:folder_brief'] = info.brief
+        pd['st2','folder_brief'] = info.brief
+
+    sd_adminhead = SectionData("adminhead")
 
     # check if this is rootfolder
     if info.itemnumber == 0:
-        page_data[("adminhead","page_head","large_text")] = "Edit Root Folder : %s" % (info.path,)
+        sd_adminhead["page_head","large_text"] = "Edit Root Folder : %s" % (info.path,)
+        pd.update(sd_adminhead)
         # hide certain items if this is the root folder
-        page_data['rename_folder','show'] = False
-        page_data['sp1:show_parent_restricted'] = False
-        page_data['sb1:show_set_restricted'] = False
-        page_data['sb2:show_set_unrestricted'] = False
-        page_data['aboutdeletefolder','show'] = False
-        page_data['deletefolder','show'] = False
+        pd['rename_folder','show'] = False
+        pd['sp1','show_parent_restricted'] = False
+        pd['sb1','show_set_restricted'] = False
+        pd['sb2','show_set_unrestricted'] = False
+        pd['aboutdeletefolder','show'] = False
+        pd['deletefolder','show'] = False
     else:
-        page_data[("adminhead","page_head","large_text")] = "Edit Folder : %s" % (info.path,)
+        sd_adminhead["page_head","large_text"] = "Edit Folder : %s" % (info.path,)
+        pd.update(sd_adminhead)
         # The folder can be given a name
         if 'name' in call_data:
-            page_data['rename_folder','input_text'] = call_data['name']
+            pd['rename_folder','input_text'] = call_data['name']
         else:
-            page_data['rename_folder', 'input_text'] = info.name
+            pd['rename_folder', 'input_text'] = info.name
         parent = skilift.item_info(info.project, info.parentfolder_number)
         if parent.restricted:
-            page_data['sp1:show_parent_restricted'] = True
-            page_data['sb1:show_set_restricted'] = False
-            page_data['sb2:show_set_unrestricted'] = False
+            pd['sp1','show_parent_restricted'] = True
+            pd['sb1','show_set_restricted'] = False
+            pd['sb2','show_set_unrestricted'] = False
         else:
             # parent is not restricted
-            page_data['sp1:show_parent_restricted'] = False
+            pd['sp1','show_parent_restricted'] = False
             if info.restricted:
                 # folder currently restricted
-                page_data['sb1:show_set_restricted'] = False
-                page_data['sb2:show_set_unrestricted'] = True
+                pd['sb1','show_set_restricted'] = False
+                pd['sb2','show_set_unrestricted'] = True
             else:
                 # folder currently unrestricted
-                page_data['sb1:show_set_restricted'] = True
-                page_data['sb2:show_set_unrestricted'] = False
+                pd['sb1','show_set_restricted'] = True
+                pd['sb2','show_set_unrestricted'] = False
     # get default page, and list of page names within the folder
     default_page_name, page_names = skilift.folder_page_names(info.project, info.itemnumber)
     if default_page_name:
-        page_data['sdd1:selectvalue'] = default_page_name
+        pd['sdd1','selectvalue'] = default_page_name
     else:
-        page_data['sdd1:selectvalue'] = "-None-"
-    page_data['sdd1:option_list'] = page_names
+        pd['sdd1','selectvalue'] = "-None-"
+    pd['sdd1','option_list'] = page_names
     if page_names:
         if info.restricted:
             # do not give a choose default page option if the folder has restricted access
-            page_data['sdd1:show'] = False
+            pd['sdd1','show'] = False
         else:
-            page_data['sdd1:option_list'].insert(0,"-None-")
-            page_data['sdd1:show'] = True
+            pd['sdd1','option_list'].insert(0,"-None-")
+            pd['sdd1','show'] = True
     else:
         # Only give a default page option if pages are present
-        page_data['sdd1:show'] = False
+        pd['sdd1','show'] = False
 
 
 def move_to_folder(skicall):
     "moves item defined by dragrows to folder defined by droprows and refreshes ftree via JSON call"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     editedprojname = call_data['editedprojname']
 
@@ -206,9 +211,9 @@ def move_to_folder(skicall):
     call_data['status'] = 'Item moved'
     # refresh ftree
     contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
-    page_data['ftree', 'contents'] = contents
-    page_data['ftree', 'dragrows'] = dragrows
-    page_data['ftree', 'droprows'] = droprows
+    pd['ftree', 'contents'] = contents
+    pd['ftree', 'dragrows'] = dragrows
+    pd['ftree', 'droprows'] = droprows
     # this is sent by json to the page
 
 
@@ -216,7 +221,6 @@ def choose_edit_action(skicall):
     "Choose which action to take when called from ftree"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if ('ftree', 'contents') not in call_data:
         raise FailPage(message = "Requested action not recognised")
@@ -266,7 +270,7 @@ def choose_remove_action(skicall):
     "Choose to remove a page or folder, fills in confirm box"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if ('ftree', 'contents') not in call_data:
         raise FailPage(message = "Requested action not recognised")
@@ -283,16 +287,16 @@ def choose_remove_action(skicall):
     if itemnumber == 0:
         raise FailPage(message = "Cannot delete the root folder")
     # display the modal confirm box
-    page_data['page_delete', 'hide'] = False
-    page_data['page_delete', 'para_text'] = "Delete %s with ident %s and name %s" % (info.item_type, info.itemnumber, info.name)
-    page_data['page_delete', 'get_field2_1'] = project + '_' + str(itemnumber)
+    pd['page_delete', 'hide'] = False
+    pd['page_delete', 'para_text'] = "Delete %s with ident %s and name %s" % (info.item_type, info.itemnumber, info.name)
+    pd['page_delete', 'get_field2_1'] = project + '_' + str(itemnumber)
 
 
 def copy_page(skicall):
     """If chosen from a page row, copies a page, stores into localStorage
        If chosen from a folder row, pastes the copied page"""
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if ('ftree', 'contents') not in call_data:
         raise FailPage(message = "Requested action not recognised")
@@ -312,20 +316,20 @@ def copy_page(skicall):
             jsonstring = fromjson.page_to_json(project, itemnumber, template_svg_only=False)
         except ServerError as e:
             raise FailPage(message=e.message)
-        page_data['localStorage'] = {'ski_page':jsonstring}
+        pd.localStorage = {'ski_page':jsonstring}
         call_data['status'] = "Page %s is copied, choose Paste Page on a Folder." % itemnumber
         return
     # So item_type is Folder, the paste button has been pressed, display modal box requesting a new id number
-    page_data['pastediv', 'hide'] = False
+    pd['pastediv', 'hide'] = False
     # set next available ident number in pastepage
-    page_data['pastepage', 'input_text'] = str(skilift.next_ident_number(project))
-    page_data['pastepage', 'hidden_field1'] = action
+    pd['pastepage', 'input_text'] = str(skilift.next_ident_number(project))
+    pd['pastepage', 'hidden_field1'] = action
 
 
 def paste_page(skicall):
     "Called to paste a page into the folder"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     editedprojname = call_data['editedprojname']
 
@@ -400,13 +404,13 @@ def paste_page(skicall):
 
         # This data sent in general_json 
         contents, dragrows, droprows = _foldertree(editedprojname, folder_number)
-        page_data['ftree', 'contents'] = contents
-        page_data['ftree', 'dragrows'] = dragrows
-        page_data['ftree', 'droprows'] = droprows
+        pd['ftree', 'contents'] = contents
+        pd['ftree', 'dragrows'] = dragrows
+        pd['ftree', 'droprows'] = droprows
         # hide the pastediv and show status
         call_data['status'] = 'Page %s added' % (new_page_name,)
-        page_data['pastediv', 'hide'] = True
-        page_data['ClearAllErrors'] = True
+        pd['pastediv', 'hide'] = True
+        pd.ClearAllErrors = True
 
 
 def _retrieve_new_copypage(skicall):
@@ -414,7 +418,7 @@ def _retrieve_new_copypage(skicall):
        Fills in the details for the page requesting the ident, or upload of a page to be copied"""
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     editedprojname = call_data['editedprojname']
 
@@ -423,36 +427,37 @@ def _retrieve_new_copypage(skicall):
     
     parent_url = skilift.page_path(editedprojname, call_data['InFolder'])
 
-    page_data[("adminhead","page_head","large_text")] = "Add a page copy to : %s" % (parent_url,)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Add a page copy to : %s" % (parent_url,)
+    pd.update(sd_adminhead)
 
     # information paragraphs
-    page_data['page_name_text:para_text'] = "New page name : " + new_name
-    page_data['page_brief_text:para_text'] = "Description   : " + new_brief
+    pd['page_name_text','para_text'] = "New page name : " + new_name
+    pd['page_brief_text','para_text'] = "Description   : " + new_brief
 
     # information hidden fields
-    page_data['copyident','pagename'] = new_name
-    page_data['copyident','pagebrief'] = new_brief
-    page_data['copyident','pageident'] = str(call_data['NewPage'])
-    page_data['copyident','parent'] = str(call_data['InFolder'])
+    pd['copyident','pagename'] = new_name
+    pd['copyident','pagebrief'] = new_brief
+    pd['copyident','pageident'] = str(call_data['NewPage'])
+    pd['copyident','parent'] = str(call_data['InFolder'])
 
-    page_data['upload','pagename'] = new_name
-    page_data['upload','pagebrief'] = new_brief
-    page_data['upload','pageident'] = str(call_data['NewPage'])
-    page_data['upload','parent'] = str(call_data['InFolder'])
+    pd['upload','pagename'] = new_name
+    pd['upload','pagebrief'] = new_brief
+    pd['upload','pageident'] = str(call_data['NewPage'])
+    pd['upload','parent'] = str(call_data['InFolder'])
 
     # top descriptive text
-    page_data['top_text:para_text'] = """To copy a page, either the ident number of an existing page to be copied is required, alternatively - a previously downloaded page definition file can be uploaded."""
+    pd['top_text','para_text'] = """To copy a page, either the ident number of an existing page to be copied is required, alternatively - a previously downloaded page definition file can be uploaded."""
 
     # the submit ident text input
     if 'copyident' in call_data:
-        page_data['copyident','input_text'] = call_data['copyident']
+        pd['copyident','input_text'] = call_data['copyident']
 
 
 def delete_item(skicall):
     "Deletes a folder or page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     try:
         ident = call_data['page_delete','get_field2_1'].split('_')
@@ -517,7 +522,6 @@ def submit_rename_folder(skicall):
     "rename this folder"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
@@ -536,7 +540,6 @@ def submit_folder_brief(skicall):
     "set this folders brief"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
@@ -560,7 +563,6 @@ def submit_default_page(skicall):
     "Set this folder's default page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
@@ -584,7 +586,6 @@ def submit_restricted(skicall):
     "set this folder as restricted"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
@@ -599,7 +600,6 @@ def submit_unrestricted(skicall):
     "set this folder as unrestricted"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
@@ -614,7 +614,7 @@ def downloadfolder(skicall):
     "Gets folder, and returns a json dictionary, this will be sent as an octet file to be downloaded"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")
@@ -625,19 +625,19 @@ def downloadfolder(skicall):
         binline = line.encode('utf-8')
         n += len(binline)
         line_list.append(binline)
-    page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
+    pd.headers = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
     return line_list
 
 
 def confirmrecursive(skicall):
     "Displays the confirm recursive modal box"
-    skicall.page_data['recursive_delete', 'hide'] = False
+    pd = skicall.call_data['pagedata']
+    pd['recursive_delete', 'hide'] = False
 
 
 def recursivedelete(skicall):
     "Delete the folder and contents"
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if 'folder_number' not in call_data:
         raise FailPage(message = "Folder missing")

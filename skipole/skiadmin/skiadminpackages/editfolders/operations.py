@@ -9,12 +9,14 @@ from ... import FailPage, ValidateError, ServerError, GoTo
 
 from .. import utils, css_styles
 
+from .... import SectionData
+
 
 def retrieve_operations_data(skicall):
     "Retrieves field data for operations page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data, but keep status
     # so the status message is displayed after any operations
@@ -25,12 +27,12 @@ def retrieve_operations_data(skicall):
     # project background color
     backcol = fromjson.get_defaults(editedprojname, key="backcol")
     if backcol:
-        page_data['htmlbackcol','input_text'] = backcol
+        pd['htmlbackcol','input_text'] = backcol
 
     # project body class
     body_class = fromjson.get_defaults(editedprojname, key="body_class")
     if body_class:
-        page_data['bodyclass','input_text'] = body_class
+        pd['bodyclass','input_text'] = body_class
 
     # get default css links for widget css_defaults
     css_list = fromjson.get_defaults(editedprojname, key='css_links')
@@ -51,7 +53,7 @@ def retrieve_operations_data(skicall):
         # remove down arrow in row -1
         contents[-1][2] = ''
         contents[-1][6] = False
-        page_data[('css_links', 'contents')] = contents
+        pd['css_links', 'contents'] = contents
 
 
   #      contents: col 0 is the text to place in the first column,
@@ -81,14 +83,13 @@ def retrieve_operations_data(skicall):
         # remove down arrow in row -1
         contents[-1][2] = ''
         contents[-1][6] = False
-        page_data[('js_links', 'contents')] = contents
+        pd['js_links', 'contents'] = contents
 
 
 def handle_upload(skicall):
     "handle uploaded defaults.json file"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
     editedprojname = call_data['editedprojname']
 
     # get uploaded file contents
@@ -104,14 +105,14 @@ def handle_upload(skicall):
 
 def set_download(skicall):
     "Set the path to the file to be downloaded"
-    skicall.page_data['filepath'] = os.path.join(skicall.call_data['editedprojname'], "data", "defaults.json")
+    pd = skicall.call_data['pagedata']
+    pd.filepath = os.path.join(skicall.call_data['editedprojname'], "data", "defaults.json")
 
 
 def set_widgets_css(skicall):
     "sets default css classes into widgets"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     off_piste.set_widget_css_to_default(editedprojname)
@@ -122,7 +123,6 @@ def submit_project_color(skicall):
     "set project default background color"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     try:
         backcol = call_data['htmlbackcol','input_text']
@@ -143,7 +143,6 @@ def set_bodyclass_in_pages(skicall):
     "sets css class into page body tags"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     try:
         bodyclass = call_data['bodyclass','input_text']
@@ -164,7 +163,6 @@ def add_default_css(skicall):
     "Add a label to the default css list"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 
@@ -201,7 +199,6 @@ def css_remove(skicall):
     "Removes css default label"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
@@ -223,7 +220,6 @@ def css_up(skicall):
     "Moves css default label up"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
@@ -247,7 +243,6 @@ def css_down(skicall):
     "Moves css default label down"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     if 'css_label' in call_data:
@@ -271,7 +266,6 @@ def add_default_js(skicall):
     "Add a label to the default javascript list"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 
@@ -308,7 +302,6 @@ def js_remove(skicall):
     "Removes js default label"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
@@ -330,7 +323,6 @@ def js_up(skicall):
     "Moves js default label up"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
@@ -354,7 +346,6 @@ def js_down(skicall):
     "Moves js default label down"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     if 'js_label' in call_data:
@@ -378,7 +369,6 @@ def set_javascript_to_skis(skicall):
     "Sets javascript labels to skis"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
     liblabels = lib_list()
@@ -400,7 +390,6 @@ def set_javascript_to_cdn(skicall):
     "Sets javascript labels to cdn"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 

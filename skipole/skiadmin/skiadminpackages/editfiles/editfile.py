@@ -5,6 +5,8 @@
 
 from ... import ValidateError, FailPage, ServerError
 
+from .... import SectionData
+
 from ... import skilift
 from ....skilift import editpage
 
@@ -15,7 +17,7 @@ def retrieve_edit_filepage(skicall):
     "Retrieves widget data for the edit file page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -42,24 +44,32 @@ def retrieve_edit_filepage(skicall):
     except ServerError as e:
         raise FailPage(message = e.message)
 
+    # fill in sections
+
+    sd_adminhead = SectionData("adminhead")
+    sd_page_edit = SectionData("page_edit")
+
    # fills in the data for editing page name, brief, parent, etc., 
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name
-    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
-    page_data['p_file:input_text'] = filepath
-    page_data['p_mime:input_text'] = mimetype
-    page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
+    sd_adminhead["page_head","large_text"] = pageinfo.name
+    sd_page_edit['p_ident','page_ident'] = (project,str_pagenumber)
+    sd_page_edit['p_name','page_ident'] = (project,str_pagenumber)
+    sd_page_edit['p_description','page_ident'] = (project,str_pagenumber)
+    sd_page_edit['p_rename','input_text'] = pageinfo.name
+    sd_page_edit['p_parent','input_text'] = "%s,%s" % (project, pageinfo.parentfolder_number)
+    sd_page_edit['p_brief','input_text'] = pageinfo.brief
+
+    pd.update(sd_adminhead)
+    pd.update(sd_page_edit)
+
+    pd['p_file','input_text'] = filepath
+    pd['p_mime','input_text'] = mimetype
+    pd['enable_cache','radio_checked'] = pageinfo.enable_cache
 
 
 def submit_new_filepath(skicall):
     "Sets new page filepath"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     if 'page_number' in call_data:
@@ -85,7 +95,6 @@ def submit_mimetype(skicall):
     "Sets mimetype"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     if 'page_number' in call_data:
@@ -109,7 +118,6 @@ def submit_cache(skicall):
     "Sets cache true or false"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # this function is duplicated in editpage, may be better to remove this file and transfer conetents to editpage
     project = call_data['editedprojname']

@@ -1402,6 +1402,27 @@ class SkiCall(object):
         self.call_data = {}
         self.page_data = {}
 
+    def update(self, itemdata):
+        "Updates page_data from a PageData, SectionData or Dictionary"
+        if hasattr(itemdata, "_page_data"):
+            self.page_data.update(itemdata._page_data)
+        elif hasattr(itemdata, "_section_data"):
+            sectionalias = itemdata.sectionalias
+            # add attributes from the section
+            for at, val in itemdata._section_data.items():
+                if isinstance(at, str):
+                    # A section attribute
+                    if val is None:
+                        continue
+                    self.page_data[sectionalias, at] = val
+            # add widgfields from section
+            for key,val in itemdata.items():
+                self.page_data[sectionalias, key[0], key[1]] = val
+        else:
+            self.page_data.update(itemdata)
+
+    def clear_page_data(self):
+        self.page_data = {}
 
     @property
     def projectfiles(self):

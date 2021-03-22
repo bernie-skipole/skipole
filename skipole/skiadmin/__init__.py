@@ -3,7 +3,7 @@
 import os, sys, re, json
 
 
-from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
+from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift, PageData
 from ..skilift.fromjson import get_defaults_from_file
 
 from . import skiadminpackages
@@ -30,7 +30,8 @@ def start_call(called_ident, skicall):
                          'editedprojbrief':projinfo.brief,
                          'adminproj':skicall.project,
                          'extend_nav_buttons':[],
-                         'caller_ident':skicall.caller_ident}
+                         'caller_ident':skicall.caller_ident,
+                         'pagedata': PageData()}
 
     if called_ident is None:
         # The call is to a url not found
@@ -59,6 +60,9 @@ def submit_data(skicall):
 
 def end_call(page_ident, page_type, skicall):
     """Sets navigation menus, and sends session data as ident_data."""
+
+    # skicall.call_data['pagedata'] is a PageData object
+    skicall.update(skicall.call_data['pagedata'])
 
     # do not include session data or navigation for these types of pages
     if page_type in ('FilePage', 'CSS'):

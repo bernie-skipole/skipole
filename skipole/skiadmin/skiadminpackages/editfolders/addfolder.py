@@ -6,6 +6,8 @@ from ... import ValidateError, FailPage, ServerError
 from ... import skilift
 from ....skilift import editfolder, fromjson
 
+from .... import SectionData
+
 
 
 # a search for anything none-alphanumeric, not a dot and not a underscore and not an hyphen
@@ -30,7 +32,7 @@ def retrieve_add_folder(skicall):
     "Fill in the add a folder page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 
@@ -44,36 +46,38 @@ def retrieve_add_folder(skicall):
     else:
         raise FailPage(message = "Parent folder missing")
 
-    page_data[("adminhead","page_head","large_text")] = "Add folder to : %s" % (parent_url,)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Add folder to : %s" % (parent_url,)
+    pd.update(sd_adminhead)
 
-    page_data[('staticpath','input_text')] = os.path.join(project, 'static')
+    pd['staticpath','input_text'] = os.path.join(project, 'static')
 
-    page_data[('newfolderform','parent')] = project+","+str(parent_info.number)
+    pd['newfolderform','parent'] = project+","+str(parent_info.number)
     call_data['add_to_foldernumber'] = parent_info.number
 
     # st1: new folder name
     if 'new_folder' in call_data:
-        page_data[('foldername','new_folder')] = call_data['new_folder']
+        pd['foldername','new_folder'] = call_data['new_folder']
 
     # cb1: restricted checkbox
     if ('checkbox' in call_data) and call_data['checkbox']:
-        page_data[('cb1','checked')] = True
+        pd['cb1','checked'] = True
     else:
-        page_data[('cb1','checked')] = False
+        pd['cb1','checked'] = False
     if parent_info.restricted:
-        page_data[('cb1','show_restricted')] = False
+        pd['cb1','show_restricted'] = False
     else:
-        page_data[('cb1','show_restricted')] = True
+        pd['cb1','show_restricted'] = True
 
     # it1: text input for folder brief
     if ('folder_brief' in call_data) and call_data['folder_brief']:
-        page_data[('it1','folder_brief')] = call_data['folder_brief']
+        pd['it1','folder_brief'] = call_data['folder_brief']
 
     # it2: folder ident number
     if 'folder_ident_number' in call_data:
-        page_data[('it2','folder_ident_number')] = str(call_data['folder_ident_number'])
+        pd['it2','folder_ident_number'] = str(call_data['folder_ident_number'])
     else:
-        page_data[('it2','folder_ident_number')] = str(skilift.next_ident_number(project))
+        pd['it2','folder_ident_number'] = str(skilift.next_ident_number(project))
 
 
 def submit_addfolder(skicall):
@@ -93,7 +97,6 @@ def submit_addfolder(skicall):
 """
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -214,7 +217,6 @@ def submit_upload_folder(skicall):
     "Copy a folder from uploaded file"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

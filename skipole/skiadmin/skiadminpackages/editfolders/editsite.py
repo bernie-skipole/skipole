@@ -8,12 +8,14 @@ from ....skilift import off_piste, fromjson, editpage
 from .. import utils, css_styles
 from ... import FailPage, ValidateError, ServerError, GoTo
 
+from .... import SectionData
+
 
 def retrieve_index_data(skicall):
     "Retrieves all field data for admin index page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data
     utils.clear_call_data(call_data)
@@ -22,25 +24,25 @@ def retrieve_index_data(skicall):
 
     projectinfo = skilift.project_info(project)
 
-    page_data["projversion", "input_text"] = projectinfo.version
-    page_data["brief:input_text"] = projectinfo.brief
-    page_data["brief:bottomtext"] = "Current value: " + projectinfo.brief
-    page_data["deflang:input_text"] = projectinfo.default_language
-    page_data["deflang:bottomtext"] = "Current value: " + projectinfo.default_language
+    pd["projversion", "input_text"] = projectinfo.version
+    pd["brief","input_text"] = projectinfo.brief
+    pd["brief","bottomtext"] = "Current value: " + projectinfo.brief
+    pd["deflang","input_text"] = projectinfo.default_language
+    pd["deflang","bottomtext"] = "Current value: " + projectinfo.default_language
 
     if "root_path" in call_data:
         # "root_path" is set in call_data, so return it
-        page_data["rtpath:input_text"] = call_data["root_path"]
+        pd["rtpath","input_text"] = call_data["root_path"]
     else:
         # "root_path" not in call_data, so return the current root_path
-        page_data["rtpath:input_text"] = projectinfo.path
+        pd["rtpath","input_text"] = projectinfo.path
 
     if skilift.get_debug():
-        page_data["debugstatus", "para_text"] = "Debug mode is ON"
-        page_data["debugtoggle", "button_text"] = "Set Debug OFF"
+        pd["debugstatus", "para_text"] = "Debug mode is ON"
+        pd["debugtoggle", "button_text"] = "Set Debug OFF"
     else:
-        page_data["debugstatus", "para_text"] = "Debug mode is OFF"
-        page_data["debugtoggle", "button_text"] = "Set Debug ON"
+        pd["debugstatus", "para_text"] = "Debug mode is OFF"
+        pd["debugtoggle", "button_text"] = "Set Debug ON"
 
     # create table of projects
     subprojects = projectinfo.subprojects
@@ -56,9 +58,9 @@ def retrieve_index_data(skicall):
     col1.append(project)
     col2.append(projectinfo.path)
     col3.append(projectinfo.brief)
-    page_data['subs','col1'] = col1
-    page_data['subs','col2'] = col2
-    page_data['subs','col3'] = col3
+    pd['subs','col1'] = col1
+    pd['subs','col2'] = col2
+    pd['subs','col3'] = col3
 
 
     ctable = []
@@ -67,33 +69,33 @@ def retrieve_index_data(skicall):
         ctable.append([proj, suburl, projinfo.brief, proj, '', proj, '', True, True])
     # append the final row showing this edited project
     ctable.append([project, projectinfo.path, projectinfo.brief, '', '', '', '', False, False])
-    page_data["projtable:contents"] = ctable
+    pd["projtable","contents"] = ctable
 
     # list directories under projects_dir()
-    page_data['sdd1:option_list'] = []
+    pd['sdd1','option_list'] = []
 
     # sdd1 must be deleted
-    page_data['sdd1:show_add_project'] = False
-    page_data['sdd1:selectvalue'] = ''
+    pd['sdd1','show_add_project'] = False
+    pd['sdd1','selectvalue'] = ''
 
 
-def _clear_index_input_accepted(page_data):
+def _clear_index_input_accepted(pd):
     "Used by JSON to remove set_input_accepted flags from input fields"
-    page_data['deflang','set_input_accepted'] = False
-    page_data['projversion','set_input_accepted'] = False
-    page_data['rtpath','set_input_accepted'] = False
-    page_data['brief','set_input_accepted'] = False
+    pd['deflang','set_input_accepted'] = False
+    pd['projversion','set_input_accepted'] = False
+    pd['rtpath','set_input_accepted'] = False
+    pd['brief','set_input_accepted'] = False
 
 
 def retrieve_help(skicall):
     "Uses skicall.textblock_text to get text help for the admin pages"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data
     utils.clear_call_data(call_data)
-    page_data.clear()
+    pd.clear()
     caller_ident = call_data['caller_ident']
     if not caller_ident:
         return
@@ -101,16 +103,19 @@ def retrieve_help(skicall):
     text = skicall.textblock(textref)
     if not text:
         text = "No help text for page %s has been found" % caller_ident[1]
-    page_data[("adminhead","show_help","para_text")] = "\n" + text
-    page_data[("adminhead","show_help","hide")] = False
+
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["show_help","para_text"] = "\n" + text
+    sd_adminhead["show_help","hide"] = False
+    pd.update(sd_adminhead)
 
 
 def get_text(skicall):
-    """Finds any widget submitting 'get_field' with value of a textblock ref, returns
-       page_data with key widget with field 'div_content' and value the textblock text.
+    """Finds any widget submitting 'get_field' with value of a textblock ref, sets
+       pd with key widget with field 'div_content' and value the textblock text.
        Introduces <br /> at newlines"""
 
-    page_data = skicall.page_data
+    pd = skicall.call_data['pagedata']
 
     if 'received' not in skicall.submit_dict:
         return
@@ -122,19 +127,21 @@ def get_text(skicall):
                 continue
             text = text.replace('\n', '\n<br />')
             if len(key) == 3:
-                page_data[(key[0], key[1],'div_content')] = text
-                page_data[(key[0], key[1],'hide')] = False
+                sd = SectionData(key[0])
+                sd[key[1],'div_content'] = text
+                sd[key[1],'hide'] = False
+                pd.update(sd)
             elif len(key) == 2:
-                page_data[(key[0],'div_content')] = text
-                page_data[(key[0],'hide')] = False
+                pd[key[0],'div_content'] = text
+                pd[key[0],'hide'] = False
 
 
 def get_html(skicall):
-    """Finds any widget submitting 'get_field' with value of a textblock ref, returns
-       page_data with key widget with field 'div_content' and value the textblock text
+    """Finds any widget submitting 'get_field' with value of a textblock ref, sets
+       pd with key widget with field 'div_content' and value the textblock text
        but does not introduce <br /> for new lines"""
 
-    page_data = skicall.page_data
+    pd = skicall.call_data['pagedata']
 
     if 'received' not in skicall.submit_dict:
         return
@@ -145,11 +152,13 @@ def get_html(skicall):
             if text is None:
                 continue
             if len(key) == 3:
-                page_data[(key[0], key[1],'div_content')] = text
-                page_data[(key[0], key[1],'hide')] = False
+                sd = SectionData(key[0])
+                sd[key[1],'div_content'] = text
+                sd[key[1],'hide'] = False
+                pd.update(sd)
             elif len(key) == 2:
-                page_data[(key[0],'div_content')] = text
-                page_data[(key[0],'hide')] = False
+                pd[key[0],'div_content'] = text
+                pd[key[0],'hide'] = False
 
 
 
@@ -157,24 +166,22 @@ def retrieve_colour_data(skicall):
     "Retrieves all field data for admin colour page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # get default admin background color from project data
     adminbackcol = skicall.proj_data['adminbackcol']
     # get individual admin colors from project data
     colours = skicall.proj_data['colours']
 
-    page_data["colhextest", "input_text"] = adminbackcol
+    pd["colhextest", "input_text"] = adminbackcol
     admincol = css_styles.hex_int(adminbackcol)
-    page_data["red","input_text"] = str(admincol[0])
-    page_data["green","input_text"] = str(admincol[1])
-    page_data["blue","input_text"] = str(admincol[2])
+    pd["red","input_text"] = str(admincol[0])
+    pd["green","input_text"] = str(admincol[1])
+    pd["blue","input_text"] = str(admincol[2])
     admin_h,admin_s,admin_l = css_styles.rgb_hsl(*admincol)
-    page_data["hue","input_text"] = str(int(admin_h*360))
-    page_data["saturation","input_text"] = str(int(admin_s*100))
-    page_data["lightness","input_text"] = str(int(admin_l*100))
-
-
+    pd["hue","input_text"] = str(int(admin_h*360))
+    pd["saturation","input_text"] = str(int(admin_s*100))
+    pd["lightness","input_text"] = str(int(admin_l*100))
 
     l5_color = colours['w3_theme_l5_color']
     l5_background_color = colours['w3_theme_l5_background_color']
@@ -211,218 +218,123 @@ def retrieve_colour_data(skicall):
     hover_text_color = colours['w3_hover_text_theme_color']
     hover_border_color = colours['w3_hover_border_theme_hover_color']
 
-
     # l5_color
-    page_data["l5_color","inputcol","label"] = "w3-theme-l5 color:"
-    page_data["l5_color","inputcol","input_text"] = l5_color
-    page_data["l5_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l5_color,l5_background_color)
-    page_data["l5_color", "boxcol","set_html"] = l5_color
+    _sectioncolor(pd, "l5_color", "w3-theme-l5 color:", l5_color, l5_background_color)
 
     # l5_background_color
-    page_data["l5_background_color","inputcol","label"] = "w3-theme-l5 background color:"
-    page_data["l5_background_color","inputcol","input_text"] = l5_background_color
-    page_data["l5_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l5_background_color, l5_color)
-    page_data["l5_background_color", "boxcol","set_html"] = l5_background_color
+    _sectioncolor(pd, "l5_background_color", "w3-theme-l5 background color:", l5_background_color, l5_color)
 
     # l4_color
-    page_data["l4_color","inputcol","label"] = "w3-theme-l4 color:"
-    page_data["l4_color","inputcol","input_text"] = l4_color
-    page_data["l4_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l4_color,l4_background_color)
-    page_data["l4_color", "boxcol","set_html"] = l4_color
+    _sectioncolor(pd, "l4_color", "w3-theme-l4 color:", l4_color, l4_background_color)
 
     # l4_background_color
-    page_data["l4_background_color","inputcol","label"] = "w3-theme-l4 background color:"
-    page_data["l4_background_color","inputcol","input_text"] = l4_background_color
-    page_data["l4_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l4_background_color,l4_color)
-    page_data["l4_background_color", "boxcol","set_html"] = l4_background_color
+    _sectioncolor(pd, "l4_background_color", "w3-theme-l4 background color:", l4_background_color, l4_color)
 
     # l3_color
-    page_data["l3_color","inputcol","label"] = "w3-theme-l3 color:"
-    page_data["l3_color","inputcol","input_text"] = l3_color
-    page_data["l3_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l3_color,l3_background_color)
-    page_data["l3_color", "boxcol","set_html"] = l3_color
+    _sectioncolor(pd, "l3_color", "w3-theme-l3 color:", l3_color, l3_background_color)
 
     # l3_background_color
-    page_data["l3_background_color","inputcol","label"] = "w3-theme-l3 background color:"
-    page_data["l3_background_color","inputcol","input_text"] = l3_background_color
-    page_data["l3_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l3_background_color,l3_color)
-    page_data["l3_background_color", "boxcol","set_html"] = l3_background_color
+    _sectioncolor(pd, "l3_background_color", "w3-theme-l3 background color:", l3_background_color, l3_color)
 
     # l2_color
-    page_data["l2_color","inputcol","label"] = "w3-theme-l2 color:"
-    page_data["l2_color","inputcol","input_text"] = l2_color
-    page_data["l2_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l2_color,l2_background_color)
-    page_data["l2_color", "boxcol","set_html"] = l2_color
+    _sectioncolor(pd, "l2_color", "w3-theme-l2 color:", l2_color, l2_background_color)
 
     # l2_background_color
-    page_data["l2_background_color","inputcol","label"] = "w3-theme-l2 background color:"
-    page_data["l2_background_color","inputcol","input_text"] = l2_background_color
-    page_data["l2_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l2_background_color,l2_color)
-    page_data["l2_background_color", "boxcol","set_html"] = l2_background_color
+    _sectioncolor(pd, "l2_background_color", "w3-theme-l2 background color:", l2_background_color, l2_color)
 
     # l1_color
-    page_data["l1_color","inputcol","label"] = "w3-theme-l1 color:"
-    page_data["l1_color","inputcol","input_text"] = l1_color
-    page_data["l1_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l1_color,l1_background_color)
-    page_data["l1_color", "boxcol","set_html"] = l1_color
+    _sectioncolor(pd, "l1_color", "w3-theme-l1 color:", l1_color, l1_background_color)
 
     # l1_background_color
-    page_data["l1_background_color","inputcol","label"] = "w3-theme-l1 background color:"
-    page_data["l1_background_color","inputcol","input_text"] = l1_background_color
-    page_data["l1_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (l1_background_color,l1_color)
-    page_data["l1_background_color", "boxcol","set_html"] = l1_background_color
+    _sectioncolor(pd, "l1_background_color", "w3-theme-l1 background color:", l1_background_color, l1_color)
 
     # d1_color
-    page_data["d1_color","inputcol","label"] = "w3-theme-d1 color:"
-    page_data["d1_color","inputcol","input_text"] = d1_color
-    page_data["d1_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d1_color,d1_background_color)
-    page_data["d1_color", "boxcol","set_html"] = d1_color
+    _sectioncolor(pd, "d1_color", "w3-theme-d1 color:", d1_color, d1_background_color)
 
     # d1_background_color
-    page_data["d1_background_color","inputcol","label"] = "w3-theme-d1 background color:"
-    page_data["d1_background_color","inputcol","input_text"] = d1_background_color
-    page_data["d1_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d1_background_color,d1_color)
-    page_data["d1_background_color", "boxcol","set_html"] = d1_background_color
+    _sectioncolor(pd, "d1_background_color", "w3-theme-d1 background color:", d1_background_color, d1_color)
 
     # d2_color
-    page_data["d2_color","inputcol","label"] = "w3-theme-d2 color:"
-    page_data["d2_color","inputcol","input_text"] = d2_color
-    page_data["d2_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d2_color,d2_background_color)
-    page_data["d2_color", "boxcol","set_html"] = d2_color
+    _sectioncolor(pd, "d2_color", "w3-theme-d2 color:", d2_color, d2_background_color)
 
     # d2_background_color
-    page_data["d2_background_color","inputcol","label"] = "w3-theme-d2 background color:"
-    page_data["d2_background_color","inputcol","input_text"] = d2_background_color
-    page_data["d2_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d2_background_color,d2_color)
-    page_data["d2_background_color", "boxcol","set_html"] = d2_background_color
+    _sectioncolor(pd, "d2_background_color", "w3-theme-d2 background color:", d2_background_color, d2_color)
 
     # d3_color
-    page_data["d3_color","inputcol","label"] = "w3-theme-d3 color:"
-    page_data["d3_color","inputcol","input_text"] = d3_color
-    page_data["d3_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d3_color,d3_background_color)
-    page_data["d3_color", "boxcol","set_html"] = d3_color
+    _sectioncolor(pd, "d3_color", "w3-theme-d3 color:", d3_color, d3_background_color)
 
     # d3_background_color
-    page_data["d3_background_color","inputcol","label"] = "w3-theme-d3 background color:"
-    page_data["d3_background_color","inputcol","input_text"] = d3_background_color
-    page_data["d3_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d3_background_color,d3_color)
-    page_data["d3_background_color", "boxcol","set_html"] = d3_background_color
+    _sectioncolor(pd, "d3_background_color", "w3-theme-d3 background color:", d3_background_color, d3_color)
 
     # d4_color
-    page_data["d4_color","inputcol","label"] = "w3-theme-d4 color:"
-    page_data["d4_color","inputcol","input_text"] = d4_color
-    page_data["d4_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d4_color,d4_background_color)
-    page_data["d4_color", "boxcol","set_html"] = d4_color
+    _sectioncolor(pd, "d4_color", "w3-theme-d4 color:", d4_color, d4_background_color)
 
     # d4_background_color
-    page_data["d4_background_color","inputcol","label"] = "w3-theme-d4 background color:"
-    page_data["d4_background_color","inputcol","input_text"] = d4_background_color
-    page_data["d4_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d4_background_color,d4_color)
-    page_data["d4_background_color", "boxcol","set_html"] = d4_background_color
+    _sectioncolor(pd, "d4_background_color", "w3-theme-d4 background color:", d4_background_color, d4_color)
 
     # d5_color
-    page_data["d5_color","inputcol","label"] = "w3-theme-d5 color:"
-    page_data["d5_color","inputcol","input_text"] = d5_color
-    page_data["d5_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d5_color,d5_background_color)
-    page_data["d5_color", "boxcol","set_html"] = d5_color
+    _sectioncolor(pd, "d5_color", "w3-theme-d5 color:", d5_color, d5_background_color)
 
     # d5_background_color
-    page_data["d5_background_color","inputcol","label"] = "w3-theme-d5 background color:"
-    page_data["d5_background_color","inputcol","input_text"] = d5_background_color
-    page_data["d5_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (d5_background_color,d5_color)
-    page_data["d5_background_color", "boxcol","set_html"] = d5_background_color
-
+    _sectioncolor(pd, "d5_background_color", "w3-theme-d5 background color:", d5_background_color, d5_color)
 
     # light_color
-    page_data["light_color","inputcol","label"] = "w3-theme-light color:"
-    page_data["light_color","inputcol","input_text"] = light_color
-    page_data["light_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (light_color,light_background_color)
-    page_data["light_color", "boxcol","set_html"] = light_color
+    _sectioncolor(pd, "light_color", "w3-theme-light color:", light_color, light_background_color)
 
     # light_background_color
-    page_data["light_background_color","inputcol","label"] = "w3-theme-light background color:"
-    page_data["light_background_color","inputcol","input_text"] = light_background_color
-    page_data["light_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (light_background_color,light_color)
-    page_data["light_background_color", "boxcol","set_html"] = light_background_color
+    _sectioncolor(pd, "light_background_color", "w3-theme-light background color:", light_background_color, light_color)
 
     # dark_color
-    page_data["dark_color","inputcol","label"] = "w3-theme-dark color:"
-    page_data["dark_color","inputcol","input_text"] = dark_color
-    page_data["dark_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (dark_color,dark_background_color)
-    page_data["dark_color", "boxcol","set_html"] = dark_color
+    _sectioncolor(pd, "dark_color", "w3-theme-dark color:", dark_color, dark_background_color)
 
     # dark_background_color
-    page_data["dark_background_color","inputcol","label"] = "w3-theme-dark background color:"
-    page_data["dark_background_color","inputcol","input_text"] = dark_background_color
-    page_data["dark_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (dark_background_color,dark_color)
-    page_data["dark_background_color", "boxcol","set_html"] = dark_background_color
+    _sectioncolor(pd, "dark_background_color", "w3-theme-dark background color:", dark_background_color, dark_color)
 
     # action_color
-    page_data["action_color","inputcol","label"] = "w3-theme-action color:"
-    page_data["action_color","inputcol","input_text"] = action_color
-    page_data["action_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (action_color,action_background_color)
-    page_data["action_color", "boxcol","set_html"] = action_color
+    _sectioncolor(pd, "action_color", "w3-theme-action color:", action_color, action_background_color)
 
     # action_background_color
-    page_data["action_background_color","inputcol","label"] = "w3-theme-action background color:"
-    page_data["action_background_color","inputcol","input_text"] = action_background_color
-    page_data["action_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (action_background_color,action_color)
-    page_data["action_background_color", "boxcol","set_html"] = action_background_color
+    _sectioncolor(pd, "action_background_color", "w3-theme-action background color:", action_background_color, action_color)
 
     # theme_color
-    page_data["theme_color","inputcol","label"] = "w3-theme color:"
-    page_data["theme_color","inputcol","input_text"] = theme_color
-    page_data["theme_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (theme_color,theme_background_color)
-    page_data["theme_color", "boxcol","set_html"] = theme_color
+    _sectioncolor(pd, "theme_color", "w3-theme color:", theme_color, theme_background_color)
 
     # theme_background_color
-    page_data["theme_background_color","inputcol","label"] = "w3-theme background color:"
-    page_data["theme_background_color","inputcol","input_text"] = theme_background_color
-    page_data["theme_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (theme_background_color,theme_color)
-    page_data["theme_background_color", "boxcol","set_html"] = theme_background_color
+    _sectioncolor(pd, "theme_background_color", "w3-theme background color:", theme_background_color, theme_color)
 
     # text_color
-    page_data["text_color","inputcol","label"] = "w3-text-theme color:"
-    page_data["text_color","inputcol","input_text"] = text_color
-    page_data["text_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (text_color,theme_background_color)
-    page_data["text_color", "boxcol","set_html"] = text_color
+    _sectioncolor(pd, "text_color", "w3-text-theme color:", text_color, theme_background_color)
 
     # border_color
-    page_data["border_color","inputcol","label"] = "w3-border-theme color:"
-    page_data["border_color","inputcol","input_text"] = border_color
-    page_data["border_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (border_color,theme_background_color)
-    page_data["border_color", "boxcol","set_html"] = border_color
+    _sectioncolor(pd, "border_color", "w3-border-theme color:", border_color, theme_background_color)
 
     # hover_color
-    page_data["hover_color","inputcol","label"] = "w3-hover-theme:hover color:"
-    page_data["hover_color","inputcol","input_text"] = hover_color
-    page_data["hover_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_color,hover_background_color)
-    page_data["hover_color", "boxcol","set_html"] = hover_color
+    _sectioncolor(pd, "hover_color", "w3-hover-theme:hover color:", hover_color, hover_background_color)
 
     # hover_background_color
-    page_data["hover_background_color","inputcol","label"] = "w3-hover-theme:hover background color:"
-    page_data["hover_background_color","inputcol","input_text"] = hover_background_color
-    page_data["hover_background_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_background_color,hover_color)
-    page_data["hover_background_color", "boxcol","set_html"] = hover_background_color
+    _sectioncolor(pd, "hover_background_color", "w3-hover-theme:hover background color:", hover_background_color, hover_color)
 
     # hover_text_color
-    page_data["hover_text_color","inputcol","label"] = "w3-hover-text-theme:hover color:"
-    page_data["hover_text_color","inputcol","input_text"] = hover_text_color
-    page_data["hover_text_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_text_color,hover_background_color)
-    page_data["hover_text_color", "boxcol","set_html"] = hover_text_color
+    _sectioncolor(pd, "hover_text_color", "w3-hover-text-theme:hover color:", hover_text_color, hover_background_color)
 
     # hover_border_color
-    page_data["hover_border_color","inputcol","label"] = "w3-hover-border-theme:hover color:"
-    page_data["hover_border_color","inputcol","input_text"] = hover_border_color
-    page_data["hover_border_color", "boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (hover_border_color,hover_background_color)
-    page_data["hover_border_color", "boxcol","set_html"] = hover_border_color
+    _sectioncolor(pd, "hover_border_color", "w3-hover-border-theme:hover color:", hover_border_color, hover_background_color)
+
+
+def _sectioncolor(pd, sectionalias, label, input_text, backcolor):
+    "Called by above function to set section data"
+    sd = SectionData(sectionalias)
+    sd["inputcol","label"] = label
+    sd["inputcol","input_text"] = input_text
+    sd["boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (input_text, backcolor)
+    sd["boxcol","set_html"] = input_text
+    pd.update(sd)
 
 
 def goto_edit_item(skicall):
     "Goes to the edit page, folder etc depending on the item submitted"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     edited_item = call_data["edited_item"]
     project = call_data['editedprojname']
@@ -468,7 +380,7 @@ def submit_language(skicall):
     "Sets the default language of the edited project"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     if "default_language" not in call_data:
@@ -477,8 +389,8 @@ def submit_language(skicall):
         skilift.set_proj_default_language(project, call_data["default_language"])
     except ServerError as e:
         raise FailPage(message = e.message)
-    _clear_index_input_accepted(page_data)
-    page_data['deflang','set_input_accepted'] = True
+    _clear_index_input_accepted(pd)
+    pd['deflang','set_input_accepted'] = True
     call_data['status'] = 'Language set'
 
 
@@ -486,7 +398,7 @@ def submit_brief(skicall):
     "Sets the brief description of the edited project"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     if ('brief','input_text') not in call_data:
@@ -496,7 +408,7 @@ def submit_brief(skicall):
     except ServerError as e:
         raise FailPage(message = e.message)
     call_data['editedprojbrief'] = call_data['brief','input_text']
-    page_data['brief','set_input_accepted'] = True
+    pd['brief','set_input_accepted'] = True
     call_data['status'] = 'Project brief set'
 
 
@@ -504,7 +416,7 @@ def set_version(skicall):
     "Sets the version of the edited project"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     if ('projversion','input_text') not in call_data:
@@ -513,25 +425,28 @@ def set_version(skicall):
         skilift.set_proj_version(project, call_data['projversion','input_text'])
     except ServerError as e:
         raise FailPage(message = e.message)
-    _clear_index_input_accepted(page_data)
+    _clear_index_input_accepted(pd)
     call_data['editedprojversion'] = call_data['projversion','input_text']
-    page_data['projversion','set_input_accepted'] = True
-    page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (project,call_data['projversion','input_text'])
+    pd['projversion','set_input_accepted'] = True
+
+    sd = SectionData("adminhead")
+    sd["page_head","large_text"] = "Project: %s version: %s" % (project,call_data['projversion','input_text'])
+    pd.update(sd)
     call_data['status'] = 'Project version set'
 
 
 def debugtoggle(skicall):
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if skilift.get_debug():
         skilift.set_debug(False)
-        page_data["debugtoggle", "button_text"] = "Set Debug ON"
+        pd["debugtoggle", "button_text"] = "Set Debug ON"
         call_data['status'] = 'Debug mode set OFF'
     else:
         skilift.set_debug(True)
-        page_data["debugtoggle", "button_text"] = "Set Debug OFF"
+        pd["debugtoggle", "button_text"] = "Set Debug OFF"
         call_data['status'] = 'Debug mode set ON'
 
 
@@ -539,7 +454,6 @@ def _submit_saveproject(skicall):
     "save the project textblock and project.json files"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     projinfo = skilift.project_info(project)
@@ -554,11 +468,11 @@ def json_submit_saveproject(skicall):
     "save the project textblock and project.json files"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     _submit_saveproject(skicall)
-    page_data[("saveresult","para_text")] = "Project data saved to JSON files"
-    page_data[("saveresult","show_para")] = True
+    pd["saveresult","para_text"] = "Project data saved to JSON files"
+    pd["saveresult","show_para"] = True
     # clears any session data
     utils.clear_call_data(call_data)
     call_data['status'] = "Project data saved to JSON files"
@@ -567,8 +481,6 @@ def json_submit_saveproject(skicall):
 def html_submit_saveproject(skicall):
     "save the project textblock and project.json files"
     call_data = skicall.call_data
-    page_data = skicall.page_data
-
     _submit_saveproject(skicall)
     # clears any session data
     utils.clear_call_data(call_data)
@@ -579,7 +491,6 @@ def submit_hex_color(skicall):
     "set palette background color - from hex"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     adminproj = call_data['adminproj']
     palette = css_styles.hex_int(call_data['hexcol'].lower())
@@ -605,7 +516,6 @@ def set_colour(skicall):
     "sets individual colour string"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     adminproj = call_data['adminproj']
     # get colors from project data
@@ -732,7 +642,6 @@ def ski_theme(skicall):
     "set colours into the w3-theme-ski.css page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     adminproject = call_data['adminproj']
     colours = skilift.get_proj_data(adminproject, 'colours')
@@ -745,7 +654,6 @@ def set_widgets_css(skicall):
     "sets default css classes into widgets"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data["editedprojname"]
     off_piste.set_widget_css_to_default(project)

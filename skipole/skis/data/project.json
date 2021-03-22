@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "Library project of static files",
-"version": "5.2.2",
-"skipole": "5.2.2",
+"version": "5.3.0",
+"skipole": "5.3.0",
 "specialpages": {
 "general_json": 870,
 "jquery_core": 20,

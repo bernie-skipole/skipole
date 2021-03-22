@@ -8,6 +8,8 @@ from ... import ValidateError, FailPage, ServerError
 from ... import skilift
 from ....skilift import fromjson, editfolder, editresponder, editpage
 
+from .... import SectionData
+
 from .. import utils, css_styles
 
 # a search for anything none-alphanumeric, not a dot and not an underscore
@@ -20,7 +22,7 @@ _ANDH = re.compile('[^\w\.\-]')
 def retrieve_add_page(skicall):
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     if 'edited_folder' not in call_data:
@@ -35,42 +37,45 @@ def retrieve_add_page(skicall):
     except ServerError as e:
         raise FailPage(message=e.message)
 
-    page_data[("adminhead","page_head","large_text")] = "Add page to : %s" % (folder_url,)
-    page_data['st1:parent'] = project + "_" + str(foldernumber)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Add page to : %s" % (folder_url,)
+    pd.update(sd_adminhead)
+
+
+    pd['st1','parent'] = project + "_" + str(foldernumber)
 
     # rb1: page type checked
     if 'radio_checked' in call_data:
-        page_data['rb1:radio_checked'] = call_data['radio_checked']
+        pd['rb1','radio_checked'] = call_data['radio_checked']
 
-    page_data[('rb1','radio_values')] = ['page', 'responder', 'svg', 'css', 'json', 'file', 'copy']
-    page_data[('rb1','radio_text')] = ['Template page',
-                                           'Responder',
-                                           'SVG Image page',
-                                           'CSS page',
-                                           'JSON page',
-                                           'File page',
-                                           'Copy an existing page']
+    pd['rb1','radio_values'] = ['page', 'responder', 'svg', 'css', 'json', 'file', 'copy']
+    pd['rb1','radio_text'] = ['Template page',
+                               'Responder',
+                               'SVG Image page',
+                               'CSS page',
+                               'JSON page',
+                               'File page',
+                               'Copy an existing page']
 
     # st1: new page name
     if 'new_page' in call_data:
-        page_data['it4:new_page'] = call_data['new_page']
+        pd['it4','new_page'] = call_data['new_page']
 
     # it2: text input for page brief
     if ('page_brief' in call_data) and call_data['page_brief']:
-        page_data['it2:page_brief'] = call_data['page_brief']
+        pd['it2','page_brief'] = call_data['page_brief']
 
     # it3: page ident number
     if 'page_ident_number' in call_data:
-        page_data['it3:page_ident_number'] = str(call_data['page_ident_number'])
+        pd['it3','page_ident_number'] = str(call_data['page_ident_number'])
     else:
-        page_data['it3:page_ident_number'] = str(skilift.next_ident_number(project))
+        pd['it3','page_ident_number'] = str(skilift.next_ident_number(project))
 
 
 def _common_page_items(skicall):
     "Returns project, parent foldernumber, new pagenumber, new_name, new_brief"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     if 'edited_folder' not in call_data:
@@ -117,7 +122,6 @@ def submit_new_template(skicall):
     "Create a new template page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
@@ -264,7 +268,6 @@ def submit_new_svg(skicall):
 """
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
@@ -307,24 +310,26 @@ def retrieve_new_svg(skicall):
     "Retrieve data for creating a new SVG page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
 
     parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add SVG image page to : %s" % (parent_url,)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Add SVG image page to : %s" % (parent_url,)
+    pd.update(sd_adminhead)
 
     # information paragraphs
-    page_data[('page_name_text','para_text')] = "New page name : " + new_name
-    page_data[('page_brief_text','para_text')] = "Description   : " + new_brief
+    pd['page_name_text','para_text'] = "New page name : " + new_name
+    pd['page_brief_text','para_text'] = "Description   : " + new_brief
 
     # information hidden fields
-    page_data[('dimensions','hidden_field1')] = str(foldernumber)
-    page_data[('dimensions','hidden_field2')] = new_name
-    page_data[('dimensions','hidden_field3')] = new_brief
-    page_data[('dimensions','hidden_field4')] = str(pagenumber)
+    pd['dimensions','hidden_field1'] = str(foldernumber)
+    pd['dimensions','hidden_field2'] = new_name
+    pd['dimensions','hidden_field3'] = new_brief
+    pd['dimensions','hidden_field4'] = str(pagenumber)
 
 
 def submit_new_css(skicall):
@@ -345,7 +350,6 @@ def submit_new_css(skicall):
 """
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
@@ -390,7 +394,6 @@ def submit_new_json(skicall):
 """
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
@@ -433,7 +436,6 @@ def submit_new_file(skicall):
 """
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
@@ -468,31 +470,33 @@ def retrieve_new_file(skicall):
     "Gets data for a create filepage"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
 
     parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add FilePage to : %s" % (parent_url,)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Add FilePage to : %s" % (parent_url,)
+    pd.update(sd_adminhead)
 
     # information paragraphs
-    page_data['page_name_text:para_text'] = "New page name : " + new_name
-    page_data['page_brief_text:para_text'] = "Description   : " + new_brief
+    pd['page_name_text','para_text'] = "New page name : " + new_name
+    pd['page_brief_text','para_text'] = "Description   : " + new_brief
 
     # information hidden fields
-    page_data['setfilepath','pagename'] = new_name
-    page_data['setfilepath','pagebrief'] = new_brief
-    page_data['setfilepath','pageident'] = str(pagenumber)
+    pd['setfilepath','pagename'] = new_name
+    pd['setfilepath','pagebrief'] = new_brief
+    pd['setfilepath','pageident'] = str(pagenumber)
 
     # top descriptive text
-    page_data['top_text:para_text'] = """The filepath set here should be relative to the projectfiles folder, so for a file
+    pd['top_text','para_text'] = """The filepath set here should be relative to the projectfiles folder, so for a file
 called myfile in the static directory, the path should be %s""" % (os.path.join(project, 'static', "myfile"),)
 
     # the submit filepath text input
-    page_data['setfilepath:input_text'] = os.path.join(project, 'static', new_name)
-    page_data['setfilepath:parent'] = str(foldernumber)
+    pd['setfilepath','input_text'] = os.path.join(project, 'static', new_name)
+    pd['setfilepath','parent'] = str(foldernumber)
 
 
 def submit_new_responder(skicall):
@@ -513,7 +517,6 @@ def submit_new_responder(skicall):
 """
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
@@ -550,18 +553,20 @@ def retrieve_new_responder(skicall):
     "Gets data for a create respondpage"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
 
     parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add a responder page to : %s" % (parent_url,)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Add a responder page to : %s" % (parent_url,)
+    pd.update(sd_adminhead)
 
     # information paragraphs
-    page_data['page_name_text:para_text'] = "New page name : " + new_name
-    page_data['page_brief_text:para_text'] = "Description   : " + new_brief
+    pd['page_name_text','para_text'] = "New page name : " + new_name
+    pd['page_brief_text','para_text'] = "Description   : " + new_brief
 
     # get a list of lists, each inner being [responder name, module name] from skilift.editresponder
     responderlist = editresponder.list_responders()
@@ -569,23 +574,22 @@ def retrieve_new_responder(skicall):
     # Create a list of 1) the responder class name, being the text to place on a button
     #                  2) the textblock reference describing the responder
 
-    page_data['responderlinks','buttons'] =[]
+    pd['responderlinks','buttons'] =[]
     for responder in responderlist:
         rbutton = [responder[0],   "responders." + responder[1] + "." + responder[0]]
-        page_data['responderlinks','buttons'].append(rbutton)
+        pd['responderlinks','buttons'].append(rbutton)
 
     # the hidden fields
-    page_data['responderlinks:hidden_field1'] = str(foldernumber)
-    page_data['responderlinks:hidden_field2'] = new_name
-    page_data['responderlinks:hidden_field3'] = new_brief
-    page_data['responderlinks:hidden_field4'] = str(pagenumber)
+    pd['responderlinks','hidden_field1'] = str(foldernumber)
+    pd['responderlinks','hidden_field2'] = new_name
+    pd['responderlinks','hidden_field3'] = new_brief
+    pd['responderlinks','hidden_field4'] = str(pagenumber)
 
 
 def submit_copy_page(skicall):
     "Copy a page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, new_page_number, new_name, new_brief = _common_page_items(skicall)
@@ -609,42 +613,43 @@ def retrieve_new_copypage(skicall):
     "Gets data for a create a page copy"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)
     parent_url = skilift.page_path(project, foldernumber)
 
-    page_data[("adminhead","page_head","large_text")] = "Add a page copy to : %s" % (parent_url,)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Add a page copy to : %s" % (parent_url,)
+    pd.update(sd_adminhead)
 
     # information paragraphs
-    page_data['page_name_text:para_text'] = "New page name : " + new_name
-    page_data['page_brief_text:para_text'] = "Description   : " + new_brief
+    pd['page_name_text','para_text'] = "New page name : " + new_name
+    pd['page_brief_text','para_text'] = "Description   : " + new_brief
 
     # information hidden fields
-    page_data['copyident','pagename'] = new_name
-    page_data['copyident','pagebrief'] = new_brief
-    page_data['copyident','pageident'] = str(pagenumber)
-    page_data['copyident','parent'] = str(foldernumber)
+    pd['copyident','pagename'] = new_name
+    pd['copyident','pagebrief'] = new_brief
+    pd['copyident','pageident'] = str(pagenumber)
+    pd['copyident','parent'] = str(foldernumber)
 
-    page_data['upload','pagename'] = new_name
-    page_data['upload','pagebrief'] = new_brief
-    page_data['upload','pageident'] = str(pagenumber)
-    page_data['upload','parent'] = str(foldernumber)
+    pd['upload','pagename'] = new_name
+    pd['upload','pagebrief'] = new_brief
+    pd['upload','pageident'] = str(pagenumber)
+    pd['upload','parent'] = str(foldernumber)
 
     # top descriptive text
-    page_data['top_text:para_text'] = """To copy a page, either the ident number of an existing page to be copied is required, alternatively - a previously downloaded page definition file can be uploaded."""
+    pd['top_text','para_text'] = """To copy a page, either the ident number of an existing page to be copied is required, alternatively - a previously downloaded page definition file can be uploaded."""
 
     # the submit ident text input
     if 'copyident' in call_data:
-        page_data['copyident','input_text'] = call_data['copyident']
+        pd['copyident','input_text'] = call_data['copyident']
 
 
 def submit_upload_page(skicall):
     "Copy a page from uploaded file"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     # first get submitted data for the new page
     project, foldernumber, pagenumber, new_name, new_brief = _common_page_items(skicall)

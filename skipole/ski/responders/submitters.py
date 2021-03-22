@@ -535,12 +535,12 @@ class _CSS(object):
         """Checks for header and status values"""
         if not page_data:
             return
-        if '@import' in page_data:
-            if isinstance(page_data['@import'], list):
-                self.imports = page_data['@import']
-            elif isinstance(page_data['@import'], str):
-                self.imports = [page_data['@import']]
-            del page_data['@import']
+        if 'cssimport' in page_data:
+            if isinstance(page_data['cssimport'], list):
+                self.imports = page_data['cssimport']
+            elif isinstance(page_data['cssimport'], str):
+                self.imports = [page_data['cssimport']]
+            del page_data['cssimport']
         if ('status' in page_data) and page_data['status']:
             self.status = page_data['status']
         if ('headers' in page_data) and page_data['headers']:
