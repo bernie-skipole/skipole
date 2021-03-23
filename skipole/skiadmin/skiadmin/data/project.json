@@ -7057,7 +7057,7 @@ false
 "parts": [
 [
 "Text",
-"Set the 'lang' attribute of the page html tag (also available to change via page_data['lang'])."
+"Set the 'lang' attribute of the page html tag (also available to change via PageData.lang attribute)."
 ]
 ]
 }
@@ -7197,7 +7197,7 @@ false
 "parts": [
 [
 "Text",
-"When a page is displayed, it can be shown from the top, or at the point it was last scrolled to. (This can also be done set by setting page_data['last_scroll'] to True or False.)"
+"When a page is displayed, it can be shown from the top, or at the point it was last scrolled to. (This can also be done set by setting PageData.last_scroll to True or False.)"
 ]
 ]
 }
@@ -7337,7 +7337,7 @@ false
 "parts": [
 [
 "Text",
-"The background colour in the html tag can also be set by setting skicall.page_data['show_backcol'] to True  and skicall.page_data['backcol'] with the colour string such as '#FF0A00' to set the colour value.\r\n\r\nIf the option above is unticked and submitted, or skicall.page_data['show_backcol'] is set to False, then the background colour attribute will not be shown in the 'html' tag."
+"The background colour in the html tag can also be set by setting PageData.show_backcol to True  and PageData.backcol with the colour string such as '#FF0A00' to set the colour value.\r\n\r\nIf the option above is unticked and submitted, or PageData.show_backcol is set to False, then the background colour attribute will not be shown in the 'html' tag."
 ]
 ]
 }
@@ -7352,7 +7352,7 @@ false
 "parts": [
 [
 "Text",
-"This Template page can be updated by a JSON call. If during such an update, a javascript error is thrown, and if a 'CatchToHTML' target label, or ident is set here - a call will be made and the page replaced. The target should be a Template page, or Responder leading to a Template page.\r\n\r\nThe CatchToHTML target can also be set by skicall.page_data['CatchToHTML'] being set to the label or ident."
+"This Template page can be updated by a JSON call. If during such an update, a javascript error is thrown, and if a 'CatchToHTML' target label, or ident is set here - a call will be made and the page replaced. The target should be a Template page, or Responder leading to a Template page.\r\n\r\nThe CatchToHTML target can also be set by the PageData.CatchToHTML attribute being set to the label or ident."
 ]
 ]
 }
@@ -7419,7 +7419,7 @@ false
 "parts": [
 [
 "Text",
-"Once the template page is displayed on the client browser, you can optionally set it to request a JSON page at regular intervals. This is typically used to display status fields which need continual updating.\r\nInput the refresh time in seconds, and the target label or ident number which, when called, should return a JSON file setting the required widgefields. These parameters can also be set dynamically by skicall.page_data['interval'] and skicall.page_data['IntervalTarget']."
+"Once the template page is displayed on the client browser, you can optionally set it to request a JSON page at regular intervals. This is typically used to display status fields which need continual updating.\r\nInput the refresh time in seconds, and the target label or ident number which, when called, should return a JSON file setting the required widgefields. These parameters can also be set dynamically by PageData.interval and PageData.IntervalTarget attributes."
 ]
 ]
 }
@@ -11404,7 +11404,7 @@ false
 "parts": [
 [
 "Text",
-"A 'Section' will be inserted into the page with the given alias. Widget fields can then be set using a page_data key of (aliasname, widget name, field name).\r\n\r\nNormally, a multiplier of 0 is set, which means the section will be simply inserted. However if the multiplier is given another value, say 3, then the section will appear three times, and the alias will have underscore and numbers attached, such as aliasname_0, aliasname_1 and aliasname_2.\r\n\r\nThis feature allows a section to be repeated down the page and populated entirely dependent on the data you wish to present.\r\n\r\nIf the multiplier is greater than zero, the list of sections will be held within a containing element. The tag of the container can be set here - typically a 'div'.\r\n\r\nThe multiplier can be set dynamically at run time with page_data[aliasname, 'multiplier'] = number, and the containing tag can be set with page_data[aliasname, 'multiplier_tag'] = value."
+"A 'Section' will be inserted into the page with the given alias. Widget fields can then be set using a SectionData key of (widget name, field name).\r\n\r\nNormally, a multiplier of 0 is set, which means the section will be simply inserted. However if the multiplier is given another value, say 3, then the section will appear three times, and the alias will have underscore and numbers attached, such as aliasname_0, aliasname_1 and aliasname_2.\r\n\r\nThis feature allows a section to be repeated down the page and populated entirely dependent on the data you wish to present.\r\n\r\nIf the multiplier is greater than zero, the list of sections will be held within a containing element. The tag of the container can be set here - typically a 'div'.\r\n\r\nThe multiplier can be set dynamically at run time by creating a SectionData(aliasname) object and setting its multiplier attribute to the number, and the containing tag can be set with multiplier_tag attribute."
 ]
 ]
 }
@@ -20600,7 +20600,7 @@ false
 "parts": [
 [
 "Text",
-"This widget has the following fields, which can have values set once it is created, or can be set at run time via the page_data dictionary:"
+"This widget has the following fields, which can have values set once it is created, or can be set at run time via a PageData object:"
 ]
 ]
 }
@@ -34338,7 +34338,7 @@ false
 "parts": [
 [
 "Text",
-"Normally JSON pages have their content set dynamically, and you would simply use an empty JSON page such as 'general_json' and populate it using a responder to set page_data.\r\nHowever, in some cases you may want some fields to be statically set - in which case you can add widgfields and values here."
+"Normally JSON pages have their content set dynamically, and you would simply use an empty JSON page such as 'general_json' and populate it using a responder to set a PageData object.\r\nHowever, in some cases you may want some fields to be statically set - in which case you can add widgfields and values here."
 ]
 ]
 }

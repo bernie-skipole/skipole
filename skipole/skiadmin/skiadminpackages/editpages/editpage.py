@@ -9,6 +9,8 @@ from ... import ValidateError, FailPage, ServerError, GoTo
 from ... import skilift
 from ....skilift import fromjson, part_contents, editpage
 
+from .... import SectionData
+
 from .. import utils
 
 

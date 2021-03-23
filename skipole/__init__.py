@@ -528,6 +528,21 @@ class SectionData(MutableMapping):
         return s
 
 
+    def multiply(self, number):
+        """Sets the multiplier tag to number and returns the given number of SectionData objects
+           each with sectionalias of sectionalias_0, sectionalias_1,.. etc"""
+        if number <= 1:
+            return []
+        sectionlist = []
+        for n in range(number):
+            newalias = self.sectionalias+ "_" + str(n)
+            newsection = self.copy(newalias)
+            newsection.multiplier = 0
+            sectionlist.append(newsection)
+        self.multiplier = number
+        return sectionlist
+
+
     def __getattr__(self, name):
         "Get a section attribute from the _section_data dictionary"
         if name == "sectionalias":

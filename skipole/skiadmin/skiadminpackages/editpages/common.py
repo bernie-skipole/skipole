@@ -5,13 +5,14 @@ from ... import ValidateError, FailPage, ServerError, GoTo
 from ....skilift import get_itemnumber
 from ....skilift.editpage import rename_page, page_description, new_parent
 
+from .... import SectionData
 
 
 def submit_rename_page(skicall):
     "rename this page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if 'page_number' not in call_data:
         raise FailPage(message = "Page missing")
@@ -23,7 +24,11 @@ def submit_rename_page(skicall):
         call_data['pchange'] = rename_page(call_data['editedprojname'], call_data['page_number'], call_data['pchange'], call_data['new_name'])
     except ServerError as e:
         raise FailPage(e.message)
-    page_data['page_edit','p_rename','set_input_accepted'] = True
+
+    sd = SectionData("page_edit")
+    sd['p_rename','set_input_accepted'] = True
+    pd.update(sd)
+
     call_data['status'] = 'Page renamed'
 
 
@@ -32,7 +37,6 @@ def submit_new_parent(skicall):
     "Gives a page a new parent"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -54,7 +58,6 @@ def submit_page_brief(skicall):
     "Sets new page brief"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -75,8 +78,6 @@ def submit_page_brief(skicall):
 def goto_edit(skicall):
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
-
 
     caller_num = skicall.caller_ident[1]
     if caller_num == 28009:
@@ -93,3 +94,4 @@ def goto_edit(skicall):
         raise GoTo(29007)          # filepage edit page
     else:
         raise GoTo('admin_home', clear_page_data=True)
+

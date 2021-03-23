@@ -721,8 +721,8 @@ class _Iterator(object):
             return
         if ('mimetype' in page_data) and page_data['mimetype']:
             self.headers.append(('content-type', page_data['mimetype']))
-        if ('content-length' in page_data) and page_data['content-length']:
-            self.headers.append(('content-length', page_data['content-length']))
+        if ('content_length' in page_data) and page_data['content_length']:
+            self.headers.append(('content-length', page_data['content_length']))
 
     def get_status(self):
         "Returns (status, headers)"

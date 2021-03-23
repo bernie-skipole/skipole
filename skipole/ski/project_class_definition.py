@@ -1421,6 +1421,18 @@ class SkiCall(object):
         else:
             self.page_data.update(itemdata)
 
+        # backwards compatable stuff
+        if ('content_length' not in self.page_data) and ('content-length' in self.page_data):
+            val = self.page_data['content-length']
+            del self.page_data['content-length']
+            self.page_data['content_length'] = val
+        if ('cssimport' not in self.page_data) and ('@import' in self.page_data):
+            val = self.page_data['@import']
+            del self.page_data['@import']
+            self.page_data['cssimport'] = val
+
+
+
     def clear_page_data(self):
         self.page_data = {}
 

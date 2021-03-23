@@ -33,7 +33,8 @@ Info = collections.namedtuple('Info', ['project', 'project_version', 'ident', 'i
 
 PAGE_VARIABLES = [ 'add_jscript', 'backcol', 'body_class', 'headers', 'ident_data', 'lang', 'last_scroll', 'localStorage',
                    'sessionStorage', 'show_backcol', 'show_error', 'status', 'filepath', 'mimetype', 'enable_cache', 'height', 'width',
-                   'cssimport', 'ClearAllErrors', 'interval', 'IntervalTarget', 'JSONtoHTML', 'CatchToHTML', 'throw']
+                   'cssimport', 'colour_substitution', 'ClearAllErrors', 'interval', 'IntervalTarget', 'JSONtoHTML', 'CatchToHTML', 'throw',
+                   'content_length']
 
 SECTION_VARIABLES = ['hide', 'multiplier', 'multiplier_tag', 'section_class',  'show']
 
