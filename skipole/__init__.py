@@ -529,7 +529,7 @@ class SectionData(MutableMapping):
 
 
     def multiply(self, number):
-        """Sets the multiplier tag to number and returns the given number of SectionData objects
+        """Sets the multiplier to number and returns the given number of SectionData objects
            each with sectionalias of sectionalias_0, sectionalias_1,.. etc"""
         if number <= 1:
             return []

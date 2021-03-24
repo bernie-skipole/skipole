@@ -3247,6 +3247,56 @@ false,
 "Widget",
 {
 "class": "paras.JSONDivLink",
+"name": "pagedata",
+"brief": "About the PageData object",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "The PageData class -",
+"button_show_text": "The PageData class +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.PageData",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "sectiondata",
+"brief": "About the SectionData object",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "The SectionData class -",
+"button_show_text": "The SectionData class +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.SectionData",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.JSONDivLink",
 "name": "skicall",
 "brief": "About the skicall object",
 "fields": {
@@ -3260,31 +3310,6 @@ false,
 "hide": true,
 "htmlescaped": false,
 "json_ident": "70051",
-"link_ident": "no_javascript",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.JSONDivLink",
-"name": "page_data",
-"brief": "About the skicall.page_data dictionary",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_hide_text": "The skicall.page_data attribute -",
-"button_show_text": "The skicall.page_data attribute +",
-"clear_error": false,
-"div_class": "w3-card w3-theme-light w3-padding",
-"div_content": "",
-"get_field": "aboutcode.page_data",
-"hide": true,
-"htmlescaped": false,
-"json_ident": 70050,
 "link_ident": "no_javascript",
 "show": true,
 "show_error": "",
@@ -7057,7 +7082,7 @@ false
 "parts": [
 [
 "Text",
-"Set the 'lang' attribute of the page html tag (also available to change via PageData.lang attribute)."
+"Set the 'lang' attribute of the page html tag (also available to change via PageData().lang attribute)."
 ]
 ]
 }
@@ -7197,7 +7222,7 @@ false
 "parts": [
 [
 "Text",
-"When a page is displayed, it can be shown from the top, or at the point it was last scrolled to. (This can also be done set by setting PageData.last_scroll to True or False.)"
+"When a page is displayed, it can be shown from the top, or at the point it was last scrolled to. (This can also be done set by setting PageData().last_scroll to True or False.)"
 ]
 ]
 }
@@ -7337,7 +7362,7 @@ false
 "parts": [
 [
 "Text",
-"The background colour in the html tag can also be set by setting PageData.show_backcol to True  and PageData.backcol with the colour string such as '#FF0A00' to set the colour value.\r\n\r\nIf the option above is unticked and submitted, or PageData.show_backcol is set to False, then the background colour attribute will not be shown in the 'html' tag."
+"The background colour in the html tag can also be set by setting PageData().show_backcol to True  and PageData().backcol with the colour string such as '#FF0A00' to set the colour value.\r\n\r\nIf the option above is unticked and submitted, or PageData().show_backcol is set to False, then the background colour attribute will not be shown in the 'html' tag."
 ]
 ]
 }
@@ -7352,7 +7377,7 @@ false
 "parts": [
 [
 "Text",
-"This Template page can be updated by a JSON call. If during such an update, a javascript error is thrown, and if a 'CatchToHTML' target label, or ident is set here - a call will be made and the page replaced. The target should be a Template page, or Responder leading to a Template page.\r\n\r\nThe CatchToHTML target can also be set by the PageData.CatchToHTML attribute being set to the label or ident."
+"This Template page can be updated by a JSON call. If during such an update, a javascript error is thrown, and if a 'CatchToHTML' target label, or ident is set here - a call will be made and the page replaced. The target should be a Template page, or Responder leading to a Template page.\r\n\r\nThe CatchToHTML target can also be set by the PageData().CatchToHTML attribute being set to the label or ident."
 ]
 ]
 }
@@ -7419,7 +7444,7 @@ false
 "parts": [
 [
 "Text",
-"Once the template page is displayed on the client browser, you can optionally set it to request a JSON page at regular intervals. This is typically used to display status fields which need continual updating.\r\nInput the refresh time in seconds, and the target label or ident number which, when called, should return a JSON file setting the required widgefields. These parameters can also be set dynamically by PageData.interval and PageData.IntervalTarget attributes."
+"Once the template page is displayed on the client browser, you can optionally set it to request a JSON page at regular intervals. This is typically used to display status fields which need continual updating.\r\nInput the refresh time in seconds, and the target label or ident number which, when called, should return a JSON file setting the required widgefields. These parameters can also be set dynamically by PageData().interval and PageData().IntervalTarget attributes."
 ]
 ]
 }
