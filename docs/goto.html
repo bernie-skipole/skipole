@@ -46,7 +46,7 @@
 <p>GoTo has arguments:</p>
 <p><strong>target</strong> - is the ident, label or external url of the page to jump to. If a url is given it should start with http:// or https:// or //</p>
 <p><strong>clear_submitted</strong> - if True, any submitted data in the widget fields will be discarded. This allows a GoTo to an AllowedFields responder that expects nothing to be submitted.</p>
-<p><strong>clear_page_data</strong> - if True, the page_data dictionary is cleared.</p>
+<p><strong>clear_page_data</strong> - if True, any data set in skicall is cleared.</p>
 <p>If the target ident is that of a responder page then it cannot be a responder already visited within the call (this will raise a ServerError) as this may cause an infinite loop condition.</p>
 </div>
 </div>

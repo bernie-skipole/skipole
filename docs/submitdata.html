@@ -47,10 +47,10 @@
         return
 
 </pre>
-<p>This function is called when a responder wishes to submit data for processing in some manner. This function typically should populate the skicall.page_data dictionary, usually with widgfields as keys, and values to insert into the fields.</p>
+<p>This function is called when a responder wishes to submit data for processing in some manner. This function typically should populate PageData object with widgfields as keys, and values to insert into the fields.</p>
 <p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
 
-<p>Using the skiadmin facility a responder is chosen from a list of responders by yourself, and added to this site like any other page. Each responder has a different functionality. Certain responders call this submit_data function. Typically a client web browser would make a call to a responder, which (after start_call is called) would set any received form data into the skicall.call_data dictionary, and then call your submit_data function. Responders generally are set with a target ident - generally the ident of a template page, which will have its widgets populated by any data you set in the skicall.page_data dictionary.</p>
+<p>Using the skiadmin facility a responder is chosen from a list of responders by yourself, and added to this site like any other page. Each responder has a different functionality. Certain responders call this submit_data function. Typically a client web browser would make a call to a responder, which (after start_call is called) would set any received form data into the skicall.call_data dictionary, and then call your submit_data function. Responders generally are set with a target ident - generally the ident of a template page, which will have its widgets populated by any data you set in the PageData object.</p>
 
 <p>The responder calling this function will specify what it wants returned from submit_data in its documentation.</p>
 <p>Most responders require 'None' to be returned, but, for example, the LogIn responder requires a session string.</p>
