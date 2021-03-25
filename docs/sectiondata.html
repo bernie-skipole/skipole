@@ -10,7 +10,7 @@
 <body class="w3-theme">
 <div class="w3-container w3-theme-d1">
 <p>
-<img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" />
+<a href="/skipole/index.html"><img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" /></a>
 &nbsp;Skipole WSGI generator.
 </p>
 </div>
@@ -18,13 +18,14 @@
 <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
 <p>Topics:</p>
  <div class="w3-bar-block w3-black">
-  <a href="/skipole/index.html" class="w3-bar-item w3-button w3-blue">Introduction</a>
+  <a href="/skipole/index.html" class="w3-bar-item w3-button">Introduction</a>
   <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
   <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
   <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
   <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
   <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
   <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
+
   <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
 </div>
 <p>Development at GitHub:</p>
@@ -35,22 +36,26 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>Serving your application</h3>
-<p>Your deployment web server should have skipole installed.</p>
-<p>Once you have developed a project inside a 'projectfiles' directory, copy projectfiles to your target web server. Delete the skiadmin project - you will not be serving that. Edit 'myproj.py' so it creates the application, and adds the 'skis' application, but does not create the Python web server or adds skiadmin.</p>
-<p>For test purposes, this could be served by some web servers straight from the command line. Though you would have to put your ../projectfiles onto the Python path - something like:</p>
-<p>export PYTHONPATH=${PYTHONPATH}:$HOME/projectfiles</p>
-<p>And then the application created in myproj could be served, for example using gunicorn:</p>
-<p>gunicorn3 -w 4 myproj:application</p>
-<p>Where gunicorn3 is the python3 version of gunicorn</p>
-<p>Or similarly using Waitress (python3-waitress on Debian based distro's)</p>
-<p>waitress-serve --port=8000 myproj:application</p>
-<p>In general however, you are likely to want the application to start on boot up, examples of running the wsgi app with a debian based server are given below:</p>
-<p><a href = "/skipole/servers/basicpi.html">Simple serving for a Raspberry Pi</a></p>
-<p><a href = "/skipole/servers/suggestions.html">Further suggestions for Pi</a></p>
-<p><a href = "/skipole/servers/nginxuwsgi.html">nginx and uwsgi</a></p>
-<p><a href = "/skipole/servers/poundwaitress.html">Pound reverse proxy and Waitress</a></p>
-<p><a href = "/skipole/servers/nginxwaitress.html">nginx load balancing and Waitress</a></p>
+<h3>SectionData</h3>
+
+</p>As well as page widgets and fields, you can also set section widget and field data into the skicall object.</p>
+<p>To do this, create a SectionData object.</p>
+<p>from skipole import SectionData</p>
+<p>sd = SectionData("sectionalias")  - sectionalias being the alias given to the section when inserted into a page.</p>
+<p>This instance is a dictionary-like object that also has certain attributes. It can be set with data, and then inserted into the skicall object with:</p>
+<p>skicall.update(sd)</p>
+<p>or it can be inserted into a PageData instance with:</p>
+<p>pd.update(sd)</p>
+<p>The keys of the SectionData instance sd are of the form:</p>
+<p>sd[widgetname,fieldname] = value</p>
+<p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
+<p>As well as dictionary keys, attributes can be set:</p>
+<p>sd.hide</p>
+<p>sd.multiplier</p>
+<p>sd.multiplier_tag</p>
+<p>sd.section_class</p>
+<p>sd.show</p>
+
 </div>
 </div>
 <script>

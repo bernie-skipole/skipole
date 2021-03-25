@@ -24,13 +24,13 @@ then connect with a browser to localhost:8000 to view the project, and call loca
 
 The file myproj.py contains code which generates the wsgi application, and functions which you will develop further yourself.
 
-The pages served at /skiadmin provide the web based admin facility allowing you to create template and responder pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call, and then route data from the call to your own functions defined in myproj.py. Your code sets data into a Python dictionary, which is set into a template page and returned to the caller.
+The pages served at /skiadmin provide the web based admin facility allowing you to create template and responder pages. Typically you set up 'responders' to accept an incoming call which in turn calls your own functions defined in myproj.py. Your code sets data into a Python object, which is set into a template page and returned to the caller.
 
-Your Python functions in myproj.py are described in greater detail within the skiadmin pages. These functions would typically call further code of your own, to serve whatever data you require.
+Your Python functions in myproj.py are described in greater detail within the skiadmin pages.
 
 ### Special features ###
 
-The dictionary of widget field values which you create are normally set into the returned template page, but they can also be set into a JSON file, which updates the widgets already displayed on the client browser. This enables facilities such as SVG meters and graphs to be dynamcally updated.
+The widget field values which you create are normally set into the returned template page, but they can also be set into a JSON file, which updates the widgets already displayed on the client browser. This enables facilities such as SVG meters and graphs to be dynamcally updated.
 
 The widgets created have a look and feel set by CSS classes, you have the facility to set your own classes on the widgets to change their looks, and also to set 'default' classes on a per project basis.
 

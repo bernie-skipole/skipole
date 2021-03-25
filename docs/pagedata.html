@@ -25,7 +25,7 @@
   <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
   <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
   <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
-  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button w3-blue">skicall.page_data</a>
+
   <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
 </div>
 <p>Development at GitHub:</p>
@@ -36,65 +36,80 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>skicall.page_data</h3>
-
-<p>Your 'start_call', 'submit_data' and 'end_call' functions are used to populate the attribute 'skicall.page_data' which is a dictionary. This dictionary contents are used to set the widget fields of the final template page returned.</p>
-<p>The keys of page_data are of the form:</p>
-<p>If a widget is in a section:</p>
-<p>skicall.page_data[sectionalias,widgetname,fieldname] = value</p>
-<p>If a widget is not in a section:</p>
-<p>skicall.page_data[widgetname,fieldname] = value</p>
+<h3>PageData</h3>
+<p>Your 'start_call', 'submit_data' and 'end_call' functions are used to populate the skicall object with widget field data which is set into the widget fields of the final template page returned.</p>
+<p>To do this, create a PageData object.</p>
+<p>from skipole import PageData</p>
+<p>pd = PageData()</p>
+<p>This instance is a dictionary-like object that also has certain attributes. It can be set with data, and then inserted into the skicall object with:</p>
+<p>skicall.update(pd)</p>
+<p>The keys of the PageData instance pd, which you would set, are of the form:</p>
+<p>pd[widgetname,fieldname] = value</p>
 <p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
-<p>Most of the skicall.page_data fields will be of the above form, however there are keys which set certain parameters, optionally overriding parameters set when the page is created:</p>
-<p>skicall.page_data[sectionalias, 'hide'] - Set True to hide the section</p>
-<p>skicall.page_data[sectionalias, 'multiplier'] - A section can be displayed multiple times - this sets the number of times this section to be shown</p>
-<p>skicall.page_data[sectionalias, 'multiplier_tag'] - Set the section tag containing each section when multiplied</p>
-<p>skicall.page_data[sectionalias, 'section_class'] - Set CSS class on the section</p>
-<p>skicall.page_data[sectionalias, 'show'] - Set False to remove the section</p>
-<p>These literal string keys set page parameters:</p>
-<p>skicall.page_data['add_jscript'] - Set to a string containing javascript code. This will be set within the pages automatically generated "$(document).ready(function(){})" and will be run when the page is loaded.</p>
-<p>skicall.page_data['backcol'] - Set the 'HTML' tag background color</p>
-<p>skicall.page_data['body_class'] - The CSS class of the 'BODY' tag</p>
-<p>skicall.page_data['headers'] - Sets the returned page headers</p>
-<p>skicall.page_data['ident_data'] - Set to a string, which will be returned as the 'skicall.ident_data' attribute if this page submits any data. The data is base64 encoded and added to hidden fields on each form and link widget.</p>
-<p>skicall.page_data['lang'] - Set the language, such as 'en' in the page 'HTML' tag. This is independent of the skicall lang and language attributes, though it would generally be set the same as skicall.language.</p>
-<p>skicall.page_data['last_scroll'] - Set True to display the page at its last scroll position</p>
-<p>skicall.page_data['localStorage'] - A dictionary of string keys and values to set in the browser storage</p>
-<p>skicall.page_data['sessionStorage'] - A dictionary of string keys and values to set in the browser storage</p>
-<p>skicall.page_data['show_backcol'] - Set True to enable the 'HTML' tag background color</p>
-<p>skicall.page_data['show_error'] - Error message to be shown on the page default error widget</p>
-<p>skicall.page_data['status'] - Sets the returned page status</p>
-<p>For File pages:</p>
-<p>skicall.page_data['filepath'] - The path (relative to projectfiles) to the linked static file.</p>
-<p>skicall.page_data['mimetype'] - The mime type of the file.</p>
-<p>skicall.page_data['enable_cache'] - If True instructs the client to cache the file.</p>
+<p>As well as dictionary keys, attributes can be set which override parameters set when the page is created:</p>
+<p>These set Template page parameters:</p>
+<p>pd.add_jscript - Set to a string containing javascript code. This will be set within the pages automatically generated "$(document).ready(function(){})" and will be run when the page is loaded.</p>
+<p>pd.backcol - Set the 'HTML' tag background color</p>
+<p>pd.body_class - The CSS class of the 'BODY' tag</p>
+<p>pd.headers - Sets the returned page headers</p>
+<p>pd.ident_data - Set to a string, which will be returned as the 'skicall.ident_data' attribute if this page submits any data. The data is base64 encoded and added to hidden fields on each form and link widget.</p>
+<p>pd.lang - Set the language, such as 'en' in the page 'HTML' tag. This is independent of the skicall lang and language attributes, though it would generally be set the same as skicall.language.</p>
+<p>pd.last_scroll - Set True to display the page at its last scroll position</p>
+<p>pd.localStorage - A dictionary of string keys and values to set in the browser storage</p>
+<p>pd.sessionStorage - A dictionary of string keys and values to set in the browser storage</p>
+<p>pd.set_cookie - Set with a http.cookies.BaseCookie object which will be appended to the page headers.</p>
+<p>pd.show_backcol - Set True to enable the 'HTML' tag background color</p>
+<p>pd.show_error - Error message to be shown on the page default error widget</p>
+<p>pd.status - Sets the returned page status</p>
+<p>pd.interval - A template page can request a JSON page at set intervals, this sets the interval time in seconds. Use 0 to disable the requests.</p>
+<p>pd.IntervalTarget - The label or ident of the target requested, typically a Responder which sets the data into a JSON page which is then returned.</p>
+<p>pd.CatchToHTML - a target label or ident which is called if a javascript error occurs when the page is updated by JSON call.</p>
+<p>Attributes relevant to File pages:</p>
+<p>pd.filepath - The path (relative to projectfiles) to the linked static file.</p>
+<p>pd.mimetype - The mime type of the file.</p>
+<p>pd.enable_cache - If True instructs the client to cache the file.</p>
 <p>For SVG pages (dynamic created pages, not static files):</p>
-<p>skicall.page_data['height'] - Set the height</p>
-<p>skicall.page_data['width'] - Set the width</p>
-<p>skicall.page_data['enable_cache'] - Enables client cache of this page.</p>
+<p>pd.height - Set the height</p>
+<p>pd.width - Set the width</p>
+<p>pd.enable_cache - Enables client cache of this page.</p>
 <p>For CSS pages (dynamic created pages, not static files):</p>
-<p>skicall.page_data['@import'] - A string or a list</p>
-<p>skicall.page_data['enable_cache'] - Enables client cache of this page.</p>
+<p>pd.cssimport - A string or a list</p>
+<p>pd.enable_cache - Enables client cache of this page.</p>
+<p>pd.colour_substitution - Set with a dictionary to substitute colours within the CSS file, see the ColourSubstitute Responder which uses this.</p>
 <p>For JSON pages:</p>
 <p>Those Widgets which submit data, or link to another page, are generally set with the page to call, and an HTML template page is returned. However some widgets can request a JSON page (requires javascript to be enabled in the client browser).</p>
 <p>In this case an alternative HTML page such as 'no_javascript' can be set in the HTML link field, which will be shown if the JSON call fails due to javascript being disabled.</p>
-<p>When a JSON request is made - you would typically call a Responder which sets the skicall.page_data widgfield/values into the target page 'general_json'. This being an empty JSON file which is then populated with the dictionary.</p>
-<p>On being received by the client the page widget fields will be updated, this will be quick, as a whole page is not sent, and looks very dynamic. Only certain widgfields are 'JSON enabled' and can be updated - this is shown in the widget documentation for each field.</p>
+<p>When a JSON request is made - you would typically call a Responder which sets the skicall data values into the target page 'general_json'. This being an empty JSON file which is then populated with the widget-field dictionary.</p>
+<p>On being received by the client the page widget fields will be updated, this will be quick, as a whole page is not sent, and looks very dynamic.  Only certain widgfields are 'JSON enabled' and can be updated - this is shown in the widget documentation for each field.</p>
 <p>As well as widgets, on setting up a Template Page you will see that the page can be set to make a JSON call at set intervals. Again this can be useful to continuously update required fields on the page.</p>
-<p>As well as widgfields, some specific fields can be set and returned in the JSON response, which have a particular effect, these are:</p>
-<p>skicall.page_data['ident_data'] - Set to a string, which will be returned as the 'skicall.ident_data' attribute with any submitted data.</p>
-<p>skicall.page_data['ClearAllErrors'] - If True, any widget displaying an Error will be cleared.</p>
-<p>skicall.page_data['localStorage'] - A dictionary of string keys and values to set in the browser storage</p>
-<p>skicall.page_data['sessionStorage'] - A dictionary of string keys and values to set in the browser storage</p>
-<p>skicall.page_data['interval'] - The interval time in seconds which the template page will request JSON updates. Use 0 to disable the requests.</p>
-<p>skicall.page_data['IntervalTarget'] - The label or ident of the target requested, typically a Responder which sets the data into a JSON page which is then returned.</p>
-<p>skicall.page_data['JSONtoHTML'] - A url, label or ident to divert to.</p>
+<p>As well as widgfields, some specific PageData attributes can be set and returned in the JSON response, which have a particular effect, these are:</p>
+<p>pd.ident_data - Set to a string, which will be returned as the 'skicall.ident_data' attribute with any submitted data.</p>
+<p>pd.ClearAllErrors - If True, any widget displaying an Error will be cleared.</p>
+<p>pd.localStorage - A dictionary of string keys and values to set in the browser storage</p>
+<p>pd.sessionStorage - A dictionary of string keys and values to set in the browser storage</p>
+<p>pd.interval - The interval time in seconds which the template page will request JSON updates. Use 0 to disable the requests.</p>
+<p>pd.IntervalTarget - The label or ident of the target requested, typically a Responder which sets the data into a JSON page which is then returned.</p>
+<p>pd.JSONtoHTML - A url, label or ident to divert to.</p>
 <p>This causes the client to call this target url.</p>
 <p>Similarly, the value 'CatchToHTML' can also be set.</p>
-<p>skicall.page_data['CatchToHTML'] - A label or ident.</p>
+<p>pd.CatchToHTML - A label or ident.</p>
 <p>This CatchToHTML target (typically a Responder leading to an HTML template) is called if the widgets being updated by a JSON call causes a javascript error of some sort, maybe due to an action not supported by the client browser. In this situation, the javascript error will be caught, and the CatchToHTML page will be called instead. This could be used in conjunction with:</p>
-<p>skicall.page_data['throw'] = "Any error message"</p>
+<p>pd.throw = "Any error message"</p>
 <p>This causes a javascript exception to be thrown, and will cause the CatchToHTML page to be called, if one has been set. If CatchToHTML has not been set, then an alert box with the error message will be shown.</p>
+<p>Methods</p>
+<p>PageData.from_dict(pagedict)</p>
+<p>This classmethod returns an instance of the PageData class given a dictionary as produced by the to_dict method.</p>
+<p>pd.to_dict()</p>
+<p>Returns a dictionary containing all the information of the PageData object, with keys as a string. This may be useful for storing the data in a cache or database.</p>
+<p>pd.clear()</p>
+<p>Clears all data from the instance.</p>
+<p>pd.update(sectiondata)</p>
+<p>Given a SectionData instance, updates the PageData object with the section data.</p>
+<p>pd.get_section(sectionalias)</p>
+<p>If this pd has been previously updated with a SectionData instance, then this method returns a SectionData object given the sectionalias. Returns None if the sectionalias is not recognised.</p>
+<p>pd.delete_section(sectionalias)</p>
+<p>If this pd has been previously updated with a SectionData instance, then this method deletes the section data given the sectionalias.</p>
+
 </div>
 </div>
 <script>

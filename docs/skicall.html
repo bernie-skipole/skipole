@@ -25,7 +25,6 @@
   <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
   <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
   <a href="/skipole/skicall.html" class="w3-bar-item w3-button w3-blue">skicall</a>
-  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">skicall.page_data</a>
   <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
 </div>
 <p>Development at GitHub:</p>
@@ -42,14 +41,11 @@
 <p>skicall.call_data is a dictionary which could contain data you set into it or could contain submitted form data (depending on the Responder handling the call).</p>
 <p>skicall.caller_ident is the ident of the page making the call, a tuple ('projname', pagenumber), generally sent with any submitted data, this value could be an empty tuple if the page ident is not known - which will happen if the calling page is external or if no data is submitted.</p>
 <p>skicall.environ is the wsgi environ dictionary.</p>
-<p>skicall.ident_data is a string which was previously saved onto the page by setting skicall.page_data['ident_data'], and has now been sent back together with any submitted data. skicall.ident_data will be None if not present.<br />This facility can be used to pass data between calls. You need to validate this received string as it can be altered by a malicious caller.</p>
+<p>skicall.ident_data is a string which was previously saved onto the page by setting a PageData attribute PageData().ident_data, and has now been sent back together with any submitted data. skicall.ident_data will be None if not present.<br />This facility can be used to pass data between calls. You need to validate this received string as it can be altered by a malicious caller.</p>
 <p>skicall.ident_list is initially an empty list but will have the ident ('projname', pagenumber) of each responder handling the call appended to it. Typically a call will be handled by a single responder, but it is possible for one responder to pass the call on to another, and so several may be involved in a call.</p>
 <p>skicall.lang is a read-only tuple of two strings containing the preferred language required by the client in the format (language, default_language).<br />
 This attribute is used when requesting TextBlocks.</p>
-<p>skicall.language is a string such as 'en' being the preferred language required by the client, initially taken from the client browser's language setting, or from a received language cookie. If changed it will cause a language cookie to be set. It may be that the client browser preferred language is not available, hence this is independent of the skicall.page_data['lang'] setting - which, if used, sets the page html tag 'lang' attribute.</p>
-<p>skicall.page_data is a dictionary to be populated by your functions during the progress of this call.<br />
-It consists of a dictionary of {widgfields:values,...} which will be set in the final template page.</p>
-<p>Note: a widgfield is a tuple ('widgetname', 'fieldname'), or a tuple ('sectionalias','widgetname', 'fieldname') if the widget is part of a section. </p>
+<p>skicall.language is a string such as 'en' being the preferred language required by the client, initially taken from the client browser's language setting, or from a received language cookie. If changed it will cause a language cookie to be set. It may be that the client browser preferred language is not available, hence this is independent of the Pagedata().lang attribute - which, if used, sets the page html tag 'lang' attribute.</p>
 <p>skicall.path is the URL path to the page called.</p>
 <p>skicall.proj_data is a project attribute, a dictionary set when creating the skipole.WSGIApplication object. It could be used for your own purpose - for example to input a database password when the program is started.</p>
 <p>skicall.project is the project name.</p>
