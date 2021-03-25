@@ -1,6 +1,6 @@
 
 
-import os, sys, re, json
+import os, sys, re, json, pathlib
 
 
 from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift, PageData
@@ -18,11 +18,22 @@ _AN = re.compile('[^\w]')
 
 def start_call(called_ident, skicall):
     "Checks initial incoming call parameters, and using ident_data, retrieves session data and populates call_data"
+     
 
     # initially populate call_data with some project info
     editedprojname = skicall.proj_data['editedprojname']
 
     projinfo = skilift.project_info(editedprojname)
+
+
+    if skicall.path.endswith("/skiadmin/defaults/defaults.json"):
+        # returns the editedproject defaults.json
+        defaults_file = pathlib.Path(projinfo.data_path, "defaults.json")
+        pd = PageData()
+        pd.mimetype = "application/octet-stream"
+        skicall.update(pd)
+        return defaults_file
+
 
     skicall.call_data = {'editedprojname':editedprojname,
                          'editedprojurl':projinfo.path,

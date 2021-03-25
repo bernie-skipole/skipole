@@ -41,9 +41,6 @@ project - the project name
 
 projectfiles - the directory containing your projects
 
-proj_data - an optional dictionary, passed as an attribute of skicall,
-            which is an object passed to your functions during the progress of a call
-
 start_call - a function you should create, called at the start of a call
 
 submit_data - a function you should create, called by responders
