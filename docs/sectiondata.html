@@ -52,12 +52,22 @@
 <p>sd[widgetname,fieldname] = value</p>
 <p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
 <p>As well as dictionary keys, attributes can be set:</p>
-<p>sd.hide</p>
-<p>sd.multiplier</p>
-<p>sd.multiplier_tag</p>
-<p>sd.section_class</p>
-<p>sd.show</p>
-
+<p>sd.hide - If True, the section will be hidden.</p>
+<p>sd.multiplier - If set to a number, the section will be multiplied down the page.</p>
+<p>sd.multiplier_tag - if multiplied, this sets the containing tag, typically "div".</p>
+<p>sd.section_class - Sets the CSS class of the section.</p>
+<p>sd.show - Normally True, if set False, the section is not included in the page.</p>
+<p>Methods</p>
+<p>SectionData.from_dict(sectiondict)</p>
+<p>This classmethod returns an instance of the SectionData class given a dictionary as produced by the to_dict method.</p>
+<p>sd.to_dict()</p>
+<p>Returns a dictionary containing all the information of the SectionData object, with keys as a string. This may be useful for storing the data in a cache or database.</p>
+<p>sd.clear()</p>
+<p>Clears all data from the instance.</p>
+<p>sd.copy(newalias)</p>
+<p>Returns a copy of this section with a new sectionalias</p>
+<p>sd.multiply(number)</p>
+<p>Sets the sd.multiplier to number and returns the given number of SectionData objects each with sectionalias of sectionalias_0, sectionalias_1,.. etc</p>
 </div>
 </div>
 <script>
