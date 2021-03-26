@@ -103,11 +103,6 @@ def handle_upload(skicall):
     call_data['status'] = 'Defaults file installed'
 
 
-def set_download(skicall):
-    "Set the path to the file to be downloaded"
-    pd = skicall.call_data['pagedata']
-    pd.filepath = os.path.join(skicall.call_data['editedprojname'], "data", "defaults.json")
-
 
 def set_widgets_css(skicall):
     "sets default css classes into widgets"

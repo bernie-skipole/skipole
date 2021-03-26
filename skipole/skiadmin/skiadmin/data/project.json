@@ -50,7 +50,7 @@
 "debugtoggle": 70,
 "default_page": 2700,
 "defaults": 80001,
-"defaults_json": 85002,
+"defaults_json": 80040,
 "delete_allowed_caller": 6090,
 "delete_container_dom": 44522,
 "delete_folder": 2007,
@@ -3953,15 +3953,6 @@ false,
 "restricted": true,
 "folders": {},
 "pages": {
-"defaults.json": {
-"ident": 85004,
-"brief": "link to edited project defaults json file",
-"FilePage": {
-"filepath": "skiadmin/data/defaults.json",
-"enable_cache": false,
-"mimetype": "application/octet-stream"
-}
-},
 "defaults_template": {
 "ident": 85001,
 "brief": "template for main defaults folder",
@@ -5207,20 +5198,12 @@ false
 }
 },
 "defaults.json": {
-"ident": 85002,
-"brief": "Responder to set edited project defaults json file",
+"ident": 80040,
+"brief": "Holder for label, never called, but call diverted to file in start_call",
 "RespondPage": {
-"class": "SubmitData",
+"class": "NoOperation",
 "original_args": {
-"allowed_callers": [],
-"fail_ident": "admin_home",
-"submit_list": [
-"skiadminpackages",
-"editfolders",
-"operations",
-"set_download"
-],
-"target_ident": 85004
+"target_ident": "url_not_found"
 },
 "original_fields": {}
 }

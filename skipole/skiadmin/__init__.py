@@ -26,13 +26,14 @@ def start_call(called_ident, skicall):
     projinfo = skilift.project_info(editedprojname)
 
 
-    if skicall.path.endswith("/skiadmin/defaults/defaults.json"):
-        # returns the editedproject defaults.json
-        defaults_file = pathlib.Path(projinfo.data_path, "defaults.json")
+    if (called_ident is not None) and (called_ident[1] == 80040):
+        # does not call page 80040 (which is a nop which would return page not found)
+        # instead it returns the server file defaults.json of the editedproject 
+        defaults_json = pathlib.Path(projinfo.data_path, "defaults.json")
         pd = PageData()
         pd.mimetype = "application/octet-stream"
         skicall.update(pd)
-        return defaults_file
+        return defaults_json
 
 
     skicall.call_data = {'editedprojname':editedprojname,
