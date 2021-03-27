@@ -266,16 +266,14 @@ class PageData(MutableMapping):
             if "/" in key:
                 # sectionalias/attribute
                 sectionalias,att = key.split("/")
-                if sectionalias not in pd.section_list:
-                    pd.section_list.append(sectionalias)
+                pd.sections.add(sectionalias)
                 pd._page_data[sectionalias, att] = val
             elif ":" in key:
                 front,fld = key.split(":")
                 if "-" in front:
                     # sectionalias-widget:field
                     sectionalias, widg = front.split("-")
-                    if sectionalias not in pd.section_list:
-                        pd.section_list.append(sectionalias)
+                    pd.sections.add(sectionalias)
                     pd._page_data[sectionalias, widg, fld] = val
                 else:
                     # widget:field
@@ -289,11 +287,11 @@ class PageData(MutableMapping):
     def __init__(self):
         "_page_data will become the skicall.page_data when this object is set into skicall"
         self._page_data = {}
-        self.section_list = []
+        self.sections = set()
 
     def clear(self):
-        self._page_data = {}
-        self.section_list = []
+        self._page_data.clear()
+        self.sections.clear()
 
     def to_dict(self):
         """Returns a dictionary containing the data held in this object, with keys as strings
@@ -306,7 +304,7 @@ class PageData(MutableMapping):
                 pagedict[key] = val
             elif isinstance(key, tuple):
                 if len(key) == 2:
-                    if key[0] in self.section_list:
+                    if key[0] in self.sections:
                         # keys are (sectionalias, attribute) set as "sectionalias/attribute"
                         pagedict[key[0]+'/'+key[1]] = val
                     else:
@@ -320,7 +318,7 @@ class PageData(MutableMapping):
 
     def get_section(self, sectionalias):
         "Retrieve a section, if it has not been added to the page, return None"
-        if sectionalias not in self.section_list:
+        if sectionalias not in self.sections:
             # it does not exist
             return None
         s = SectionData(sectionalias)
@@ -337,9 +335,9 @@ class PageData(MutableMapping):
 
     def delete_section(self, sectionalias):
         "Deletes a section"
-        if sectionalias not in self.section_list:
+        if sectionalias not in self.sections:
             return
-        self.section_list.remove(sectionalias)
+        self.sections.remove(sectionalias)
         newdict = {}
         for key, val in self._page_data.items():
             if isinstance(key, tuple) and (len(key) >= 2) and (key[0] == sectionalias):
@@ -353,7 +351,7 @@ class PageData(MutableMapping):
         if isinstance(item, SectionData):
             # update from SectionData
             sectionalias = item.sectionalias
-            if sectionalias not in self.section_list:
+            if sectionalias not in self.sections:
                 # test no widget clash
                 for key in self.keys():
                     if isinstance(key, tuple) and (len(key) == 2) and (sectionalias == key[0]):
@@ -372,8 +370,7 @@ class PageData(MutableMapping):
     def _add_section(self, section):
         "Add section data"
         sectionalias = section.sectionalias
-        if sectionalias not in self.section_list:
-            self.section_list.append(sectionalias)
+        self.sections.add(sectionalias)
         for at, val in section._section_data.items():
             if isinstance(at, str):
                 # A section attribute
@@ -412,7 +409,7 @@ class PageData(MutableMapping):
         if len(key) != 2:
             # All widgfields have a two element tuple as key
             return False
-        if key[0] in self.section_list:
+        if key[0] in self.sections:
             # this key name is used as a section alias
             return False
         return True

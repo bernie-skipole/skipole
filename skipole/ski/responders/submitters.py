@@ -333,6 +333,16 @@ class _JSON(object):
             self.status = page_data['status']
         if ('headers' in page_data) and page_data['headers']:
             self.headers = page_data['headers']
+            return
+        if ('content_length' in page_data) and page_data['content_length']:
+            self.headers = [('content-length', str(page_data['content_length'])),
+                            ('content-type', 'application/json'),
+                            ('cache-control','no-cache, no-store, must-revalidate'),
+                            ('Pragma', 'no-cache'),
+                            ( 'Expires', '0')]
+        if ('mimetype' in page_data) and page_data['mimetype']:
+            self.headers.remove(('content-type', 'application/json'))
+            self.headers.append(('content-type', page_data['mimetype']))
 
     def get_status(self):
         "Returns (status, headers)"
@@ -417,6 +427,14 @@ class _PlainText(object):
             self.status = page_data['status']
         if ('headers' in page_data) and page_data['headers']:
             self.headers = page_data['headers']
+            return
+        if ('content_length' in page_data) and page_data['content_length']:
+            self.headers = [('content-length', str(page_data['content_length'])),
+                            ('content-type', 'text/plain')]
+        if ('mimetype' in page_data) and page_data['mimetype']:
+            self.headers.remove(('content-type', 'text/plain'))
+            self.headers.append(('content-type', page_data['mimetype']))
+
 
     def get_status(self):
         "Returns (status, headers)"
@@ -545,6 +563,12 @@ class _CSS(object):
             self.status = page_data['status']
         if ('headers' in page_data) and page_data['headers']:
             self.headers = page_data['headers']
+            return
+        if ('mimetype' in page_data) and page_data['mimetype']:
+            self.headers.remove(('content-type', 'text/css'))
+            self.headers.append(('content-type', page_data['mimetype']))
+        if ('content_length' in page_data) and page_data['content_length']:
+            self.headers.append(('content-length', str(page_data['content_length'])))
 
     def get_status(self):
         "Returns (status, headers)"
@@ -722,7 +746,7 @@ class _Iterator(object):
         if ('mimetype' in page_data) and page_data['mimetype']:
             self.headers.append(('content-type', page_data['mimetype']))
         if ('content_length' in page_data) and page_data['content_length']:
-            self.headers.append(('content-length', page_data['content_length']))
+            self.headers.append(('content-length', str(page_data['content_length'])))
 
     def get_status(self):
         "Returns (status, headers)"

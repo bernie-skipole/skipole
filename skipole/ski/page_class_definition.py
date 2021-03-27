@@ -35,7 +35,6 @@ class ParentPage(object):
             self._name = ""
         self.ident = None
         self.status = '200 OK'
-        self.headers = [('content-type', 'text/html')]
         self.brief = brief
         # the change is a uuid which alters whenever the page changes
         self.change = uuid.uuid4().hex
@@ -43,6 +42,51 @@ class ParentPage(object):
         # Set by end_call
         self.session_cookie = ()
         self.language_cookie = ()
+        # page settings, provided by users page_data
+        self.page_settings = {}
+        # values to create a page header
+        self.headers = []
+        self.header_content_length = None
+        self.header_content_type = None
+        self.header_cache_control = None
+        self.header_Pragma = None
+        self.header_Expires = None
+
+
+    def _set_enable_cache(self, enable_cache):
+        "Sets enable cache in header"
+        if enable_cache:
+            self.header_cache_control = 'max-age=3600'
+            self.header_Pragma = None
+            self.header_Expires = None
+        else:
+            self.header_cache_control = 'no-cache, no-store, must-revalidate'
+            self.header_Pragma = 'no-cache'
+            self.header_Expires = '0'
+
+    def _create_header(self):
+        if self.headers:
+            # headers have been set by the user, only set cookies
+            if self.session_cookie:
+                self.headers.append(self.session_cookie)
+            if self.language_cookie:
+                self.headers.append(self.language_cookie)
+            return
+        if self.header_content_length:
+            self.headers.append(("content-length", self.header_content_length))
+        if self.header_content_type:
+            self.headers.append(("content-type", self.header_content_type))
+        if self.header_cache_control:
+            self.headers.append(("cache-control", self.header_cache_control))
+        if self.header_Pragma:
+            self.headers.append(("Pragma", self.header_Pragma))
+        if self.header_Expires:
+            self.headers.append(("Expires", self.header_Expires))
+        if self.session_cookie:
+            self.headers.append(self.session_cookie)
+        if self.language_cookie:
+            self.headers.append(self.language_cookie)
+
 
     def get_name(self):
         "The page name"
@@ -150,35 +194,30 @@ class ParentPage(object):
             return True
         return parentfolder.restricted
 
-    def update(self, environ, call_data, lang, ident_list=[]):
-        "override"
-        if self.session_cookie:
-            self.headers.append(self.session_cookie)
-        if self.language_cookie:
-            self.headers.append(self.language_cookie)
 
     def show_error(self, error_messages=None):
         """override"""
         pass
 
     def set_values(self, page_data):
-        """Checks for special page template values"""
-        if ('status' in page_data):
-            if page_data['status']:
-                self.status = page_data['status']
-            del page_data['status']
-        if ('headers' in page_data):
-            if page_data['headers']:
-                self.headers = page_data['headers']
-            del page_data['headers']
-        if ('ident_data' in page_data):
-            if page_data['ident_data']:
-                ident_data = page_data['ident_data']
-                if not isinstance(ident_data, str):
-                    ident_data = str(ident_data)
-                # set ident_data in page
-                self.ident_data = ident_data
-            del page_data['ident_data']
+        """Checks for special page values"""
+        page_setting_list = skiboot.PAGE_VARIABLES
+        # set all page settings into self.page_settings
+        # and remove them from page_data
+        for item in page_setting_list:
+            if item in page_data:
+                self.page_settings[item] = page_data.pop(item)
+
+        # deal with these particular settings
+        if ('status' in self.page_settings) and self.page_settings['status']:
+            self.status = self.page_settings['status']
+        if ('headers' in self.page_settings) and self.page_settings['headers']:
+            self.headers = self.page_settings['headers']
+        if ('content_length' in self.page_settings) and self.page_settings['content_length']:
+            self.header_content_length = str(self.page_settings['content_length'])
+        if 'ident_data' in self.page_settings:
+            # set ident_data in page
+            self.ident_data = str(self.page_settings['ident_data'])
 
     def import_sections(self, page_data=None):
         "Only used by Template and SVG, everything else just returns"
@@ -233,10 +272,16 @@ class TemplatePageAndSVG(ParentPage):
            should be updated
            """
         ParentPage.set_values(self, page_data)
+        # the above has removed page settings from page_data
         for widgfield, value in page_data.items():
-            # could be the special case of setting a section show or class value
-            if self._check_section_parameters(widgfield, value):
-                continue
+            _widget_set_value(self, widgfield, value)
+
+
+    def _widget_set_value(self, widgfield, value):
+        "Given a widgfield, checks its value"
+        # could be the special case of setting a section show or class value
+        sectionparam = self._check_section_parameters(widgfield, value):
+        if not sectionparam:
             widget, fieldname = self.widget_from_field(widgfield)
             if (widget is not None) and fieldname:
                 widget.set_value(fieldname, value)
@@ -498,6 +543,9 @@ class TemplatePage(TemplatePageAndSVG):
         """
 
         TemplatePageAndSVG.__init__(self, name=name, brief=brief)
+
+        self.header_content_type = 'text/html'
+
         # set up page head
         self.head = Part(tag_name="head")
         self.head.brief = "The head section of the page"
@@ -591,8 +639,6 @@ class TemplatePage(TemplatePageAndSVG):
             self.append_scriptlink(link_label)
         # import sections using parent method
         TemplatePageAndSVG.import_sections(self, page_data)
-
-
 
     def location_item(self, location):
         "Returns the part or widget at location"
@@ -699,10 +745,8 @@ $(document).ready(function(){
         # create javascript for widgets, this is set into self._js and appended
         # to self.head in the data function
         self.make_js(ident_list, environ, call_data, lang)
-        if self.session_cookie:
-            self.headers.append(self.session_cookie)
-        if self.language_cookie:
-            self.headers.append(self.language_cookie)
+        # create the page header
+        self._create_header()
 
 
     def set_idents(self):
@@ -814,81 +858,68 @@ $(document).ready(function(){
             widget.show_error(message)
 
     def set_values(self, page_data):
-        """Checks for special page template values, then passes on to parent set_values to set the widgets"""
+        """Passes on to parent set_values to set the widgets, then checks for special page template settings"""
+        TemplatePageAndSVG.set_values(self, page_data)
         try:
-            if 'set_cookie' in page_data:
+            if 'set_cookie' in self.page_settings:
                 # sets the cookies in the page headers
-                sendcookies = page_data['set_cookie']
+                sendcookies = self.page_settings['set_cookie']
                 if sendcookies:
                     for morsel in sendcookies.values():
                         self.headers.append(("Set-Cookie", morsel.OutputString()))
-                del page_data['set_cookie']                      # delete to stop parent object from testing this item is a widgfield
-            if 'CatchToHTML' in page_data:
-                self.catch_to_html = page_data['CatchToHTML']
-                del page_data['CatchToHTML']                      # delete to stop parent object from testing this item is a widgfield
-            if 'interval' in page_data:
+            if 'CatchToHTML' in self.page_settings:
+                self.catch_to_html = self.page_settings['CatchToHTML']
+            if 'interval' in self.page_settings:
                 interval = 0
                 try:
-                    interval = page_data['interval']
-                    del page_data['interval']
-                    interval = int(interval)
+                    interval = int(self.page_settings['interval'])
                 except:
                     pass
                 else:
                     self.interval=interval
-            if 'IntervalTarget' in page_data:
-                self.interval_target = page_data['IntervalTarget']
-                del page_data['IntervalTarget']
-            if 'last_scroll' in page_data:
-                self.last_scroll = bool(page_data['last_scroll'])
-                del page_data['last_scroll']
-            if 'lang' in page_data:
-                if isinstance(page_data['lang'], 'tuple') or isinstance(page_data['lang'], 'list'):
-                    self.lang = page_data['lang'][0]
+            if 'IntervalTarget' in self.page_settings:
+                self.interval_target = self.page_settings['IntervalTarget']
+            if 'last_scroll' in self.page_settings:
+                self.last_scroll = bool(self.page_settings['last_scroll'])
+            if 'lang' in self.page_settings:
+                if isinstance(self.page_settings['lang'], 'tuple') or isinstance(self.page_settings['lang'], 'list'):
+                    self.lang = self.page_settings['lang'][0]
                 else:
-                    self.lang = page_data['lang']
-                del page_data['lang']
-            if 'show_backcol' in page_data:
-                self.show_backcol = bool(page_data['show_backcol'])
-                del page_data['show_backcol']
-            if 'backcol' in page_data:
-                self.backcol = page_data['backcol']
-                del page_data['backcol']
-            if 'body_class' in page_data:
-                self.body.update_attribs({'class':page_data['body_class']})
-                del page_data['body_class']
-            if 'show_error' in page_data:
-                page_data[self._default_error_widget.set_field(f='show_error')] = page_data['show_error']
-                del page_data['show_error']
-            if 'add_jscript' in page_data:
-                self._add_jscript = page_data['add_jscript']
-                del page_data['add_jscript']
-            if ('localStorage' in page_data) or ('sessionStorage' in page_data):
+                    self.lang = self.page_settings['lang']
+            if 'show_backcol' in self.page_settings:
+                self.show_backcol = bool(self.page_settings['show_backcol'])
+            if 'backcol' in self.page_settings:
+                self.backcol = self.page_settings['backcol']
+            if 'body_class' in self.page_settings:
+                self.body.update_attribs({'class':self.page_settings['body_class']})
+            if 'show_error' in self.page_settings:
+                self._widget_set_value(self._default_error_widget.set_field(f='show_error'), self.page_settings['show_error'])
+            if 'add_jscript' in self.page_settings:
+                self._add_jscript = self.page_settings['add_jscript']
+            if ('localStorage' in self.page_settings) or ('sessionStorage' in self.page_settings):
                 self._add_storage += """  if (typeof(Storage) !== "undefined") {
 """
-                if 'localStorage' in page_data:
-                    if not isinstance(page_data['localStorage'], dict):
+                if 'localStorage' in self.page_settings:
+                    if not isinstance(self.page_settings['localStorage'], dict):
                         raise ServerError("localStorage must be a dictionary")
-                    for key,val in page_data['localStorage'].items():
+                    for key,val in self.page_settings['localStorage'].items():
                         escapedval = json.dumps(val)
                         self._add_storage += """    localStorage.setItem("%s", %s);
 """ % (key,escapedval)
-                    del page_data['localStorage']
-                if 'sessionStorage' in page_data:
-                    if not isinstance(page_data['sessionStorage'], dict):
+                if 'sessionStorage' in self.page_settings:
+                    if not isinstance(self.page_settings['sessionStorage'], dict):
                         raise ServerError("sessionStorage must be a dictionary")
-                    for key,val in page_data['sessionStorage'].items():
+                    for key,val in self.page_settings['sessionStorage'].items():
                         escapedval = json.dumps(val)
                         self._add_storage += """    sessionStorage.setItem("%s", %s);
 """ % (key,escapedval)
-                    del page_data['sessionStorage']
                 self._add_storage += """    }
 """
         except ServerError:
             raise
         except:
             raise ServerError("Error while setting values into Template page")
-        TemplatePageAndSVG.set_values(self, page_data)
+
 
     def data(self):
         "Returns the page as a list of binary strings"
@@ -1000,6 +1031,9 @@ class SVG(TemplatePageAndSVG):
         name: a url friendly page name
         """
         TemplatePageAndSVG.__init__(self, name=name, brief=brief)
+
+       self.header_content_type = 'image/svg+xml'
+
         self.css_list = [skiboot.make_ident(ident) for ident in css_list]
         self.svg = Part(tag_name="svg", attribs = {"xmlns":"http://www.w3.org/2000/svg",
                                                    "baseProfile":"full",
@@ -1007,27 +1041,9 @@ class SVG(TemplatePageAndSVG):
                                                    "width":width,
                                                    "height":height})
         self.svg.brief = "The svg section of the page"
-        # enable_cache flag
-        self._enable_cache = False
-        self.enable_cache = enable_cache
 
-    def set_enable_cache(self, enable_cache):
-        "Sets enable cache in header"
-        if enable_cache:
-            self._enable_cache = True
-            self.headers = [('content-type', 'image/svg+xml'), ('cache-control', 'max-age=3600')]
-        else:
-            self._enable_cache = False
-            self.headers = [('content-type', 'image/svg+xml'),
-                                              ('cache-control','no-cache, no-store, must-revalidate'),
-                                              ('Pragma', 'no-cache'),
-                                              ( 'Expires', '0') ]
+        self._set_enable_cache(enable_cache)
 
-
-    def get_enable_cache(self):
-        return self._enable_cache
-
-    enable_cache = property(get_enable_cache, set_enable_cache)
 
 
     def location_item(self, location):
@@ -1105,17 +1121,20 @@ class SVG(TemplatePageAndSVG):
 
 
     def set_values(self, page_data):
-        """Checks for special svg page template values, then passes on to parent set_values to set the widgets"""
-        if 'enable_cache' in page_data:
-            self.enable_cache = bool(page_data['enable_cache'])
-            del page_data['enable_cache']
-        if 'width' in page_data:
-            self.width = page_data['width']
-            del page_data['width']
-        if 'height' in page_data:
-            self.height = page_data['height']
-            del page_data['height']
+        """Passes on to parent set_values to set the widgets, checks for special svg page template values"""
         TemplatePageAndSVG.set_values(self, page_data)
+
+        try:
+            if 'enable_cache' in self.page_settings:
+                self.enable_cache = bool(self.page_settings['enable_cache'])
+            if 'width' in self.page_settings:
+                self.width = self.page_settings['width']
+            if 'height' in self.page_settings:
+                self.height = self.page_settings['height']
+        except ServerError:
+            raise
+        except:
+            raise ServerError("Error while setting values into SVG page")
 
 
     def data(self):
@@ -1152,13 +1171,14 @@ class FilePage(ParentPage):
         self._mimetype = mimetype
         self._enable_cache = False
         self.enable_cache = enable_cache
-        # flag for headers auto set
-        self._headers_flag = True
-        # environ, set by the update methon
+
+        # environ, set by the update method
         self._environ = None
 
     def set_enable_cache(self, enable_cache):
         "Sets enable cache in header"
+        if self.headers_set_by_user:
+            return
         if enable_cache:
             self._enable_cache = True
             self.headers = [('cache-control', 'max-age=3600')]
@@ -1219,25 +1239,27 @@ class FilePage(ParentPage):
     mimetype = property(get_mimetype, set_mimetype)
 
     def set_values(self, page_data):
-        "Only values allowed: status, headers, mimetype, filepath, enable_cache"
-        if 'filepath' in page_data:
-            self.filepath = page_data['filepath']
-        if 'mimetype' in page_data:
-            self._mimetype = page_data['mimetype']
-        if 'enable_cache' in page_data:
-            self.enable_cache = bool(page_data['enable_cache'])
-        if ('headers' in page_data) and page_data['headers']:
-            # headers have not been auto set, they are set specifically by the user
-            self._headers_flag = False
+        "Set mimetype, filepath, enable_cache"
         ParentPage.set_values(self, page_data)
+        try:
+            if 'filepath' in self.page_settings:
+                self.filepath = self.page_settings['filepath']
+            if 'mimetype' in self.page_settings:
+                self._mimetype = self.page_settings['mimetype']
+            if 'enable_cache' in self.page_settings:
+                self.enable_cache = bool(self.page_settings['enable_cache'])
+        except ServerError:
+            raise
+        except:
+            raise ServerError("Error while setting values into File page")
 
 
     def update(self, environ, call_data, lang, ident_list=[]):
         """"If filepath set, then this is the file returned, if not, then projectfiles/project/static/name is returned"""
         self._environ = environ
         mimetype = self.mimetype
-        if mimetype and self._headers_flag:
-            # only add mimetype if headers auto set, not if headers specified in page_data
+        if mimetype and (not self.headers_set_by_user):
+            # only add mimetype if headers not specified in page_data
             self.headers.append(('content-type', mimetype))
         if not self.filepath:
             raise ServerError(message="Filepath not set")
@@ -1246,9 +1268,9 @@ class FilePage(ParentPage):
             # no need to do anything further
             return
         # get length of file
-        if self._headers_flag:
-            # only add content-length if headers auto set, not if headers specified in page_data
-            self.headers.append(('content-length', str(os.path.getsize(self._filepath_relative_to_project_files))))
+        if not self.headers_set_by_user:
+            if not self.content_length_set_by_user:
+                self.headers.append(('content-length', str(os.path.getsize(self._filepath_relative_to_project_files))))
         # if a session cookie is specified, add it even if headers have been user set
         if self.session_cookie:
             self.headers.append(self.session_cookie)
@@ -1314,6 +1336,8 @@ class CSS(ParentPage):
 
     def set_enable_cache(self, enable_cache):
         "Sets enable cache in header"
+        if self.headers_set_by_user:
+            return
         if enable_cache:
             self._enable_cache = True
             self.headers = [('content-type', 'text/css'), ('cache-control', 'max-age=3600')]
@@ -1331,20 +1355,22 @@ class CSS(ParentPage):
 
 
     def set_values(self, page_data):
-        """enable_cache, cssimport, status, headers and ident_data"""
-        if 'enable_cache' in page_data:
-            self.enable_cache = bool(page_data['enable_cache'])
-            del page_data['enable_cache']
-        if 'colour_substitution' in page_data:
-            self.colour_substitution = page_data['colour_substitution']
-            del page_data['colour_substitution']
-        if 'cssimport' in page_data:
-            if isinstance(page_data['cssimport'], list):
-                self.imports = page_data['cssimport']
-            elif isinstance(page_data['cssimport'], str):
-                self.imports = [page_data['cssimport']]
-            del page_data['cssimport']
+        """enable_cache, cssimport, ident_data"""
         ParentPage.set_values(self, page_data)
+        try:
+            if 'enable_cache' in self.page_settings:
+                self.enable_cache = bool(self.page_settings['enable_cache'])
+            if 'colour_substitution' in self.page_settings:
+                self.colour_substitution = self.page_settings['colour_substitution']
+            if 'cssimport' in self.page_settings:
+                if isinstance(self.page_settings['cssimport'], list):
+                    self.imports = self.page_settings['cssimport']
+                elif isinstance(self.page_settings['cssimport'], str):
+                    self.imports = [self.page_settings['cssimport']]
+        except ServerError:
+            raise
+        except:
+            raise ServerError("Error while setting values into File page")
 
 
     def selector_list(self):
@@ -1453,6 +1479,8 @@ class JSON(ParentPage):
 
     def set_enable_cache(self, enable_cache):
         "Sets enable cache in header"
+        if self.headers_set_by_user:
+            return
         if enable_cache:
             self._enable_cache = True
             self.headers = [('content-type', 'application/json'), ('cache-control', 'max-age=3600')]
@@ -1490,56 +1518,56 @@ class JSON(ParentPage):
         """Sets json content"""
         if not page_data:
             return
-        if 'ClearAllErrors' in page_data:
-            self.content["ClearAllErrors"] = bool(page_data['ClearAllErrors'])
-            del page_data['ClearAllErrors']
-        if 'localStorage' in page_data:
-            if not isinstance(page_data['localStorage'], dict):
+        ParentPage.set_values(self, page_data)
+        if 'ClearAllErrors' in self.page_settings:
+            self.content["ClearAllErrors"] = bool(self.page_settings['ClearAllErrors'])
+
+        if 'localStorage' in self.page_settings:
+            if not isinstance(self.page_settings['localStorage'], dict):
                 raise ServerError("localStorage must be a dictionary")
-            self.content["localStorage"] = page_data['localStorage']
-            del page_data['localStorage']
-        if 'sessionStorage' in page_data:
-            if not isinstance(page_data['sessionStorage'], dict):
+            self.content["localStorage"] = self.page_settings['localStorage']
+ 
+        if 'sessionStorage' in self.page_settings:
+            if not isinstance(self.page_settings['sessionStorage'], dict):
                 raise ServerError("sessionStorage must be a dictionary")
-            self.content["sessionStorage"] = page_data['sessionStorage']
-            del page_data['sessionStorage']
-        if 'throw' in page_data:
-            self.content["throw"] = page_data['throw']
-            del page_data['throw']
-        if "IntervalTarget" in page_data:
-            url = skiboot.get_url(page_data["IntervalTarget"], proj_ident=self.proj_ident)
+            self.content["sessionStorage"] = self.page_settings['sessionStorage']
+
+        if 'throw' in self.page_settings:
+            self.content["throw"] = self.page_settings['throw']
+
+        if "IntervalTarget" in self.page_settings:
+            url = skiboot.get_url(self.page_settings["IntervalTarget"], proj_ident=self.proj_ident)
             if url:
                 self.content["IntervalTarget"] = url
-            del page_data["IntervalTarget"]
-        if 'interval' in page_data:
+
+        if 'interval' in self.page_settings:
             interval=0
             try:
-                interval = page_data['interval']
-                del page_data['interval']
-                interval = int(interval)
+                interval = int(self.page_settings['interval'])
             except:
                 pass
             else:
                 self.content["interval"]=interval
-        if "CatchToHTML" in page_data:
-            url = skiboot.get_url(page_data["CatchToHTML"], proj_ident=self.proj_ident)
+        if "CatchToHTML" in self.page_settings:
+            url = skiboot.get_url(self.page_settings["CatchToHTML"], proj_ident=self.proj_ident)
             if url:
                 self.content["CatchToHTML"] = url
-            del page_data["CatchToHTML"]
-        if "JSONtoHTML" in page_data:
-            url = skiboot.get_url(page_data["JSONtoHTML"], proj_ident=self.proj_ident)
+
+        if "JSONtoHTML" in self.page_settings:
+            url = skiboot.get_url(self.page_settings["JSONtoHTML"], proj_ident=self.proj_ident)
             if url:
                 self.content["JSONtoHTML"] = url
                 return
-            del page_data["JSONtoHTML"]
-        ParentPage.set_values(self, page_data)
+
+        if 'lang' in self.page_settings:
+            item = self.page_settings['lang']
+            if isinstance(item, 'tuple') or isinstance(item, 'list'):
+                self.content['lang'] = item[0]
+            else:
+                self.content['lang'] = item
+
         for field, item in page_data.items():
-            if field == 'lang':
-                if isinstance(item, 'tuple') or isinstance(item, 'list'):
-                    self.content['lang'] = item[0]
-                else:
-                    self.content['lang'] = item
-            elif isinstance(field, str):
+            if isinstance(field, str):
                 self.content[field] = item
             else:
                 widgfield = str(skiboot.make_widgfield(field))
