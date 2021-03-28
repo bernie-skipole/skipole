@@ -652,6 +652,9 @@ class TemplatePage(TemplatePageAndSVG):
         self._add_storage = ''
         self._add_jscript = ''
 
+        # holds cookies to send
+        self._sendcookies = None
+
     @property
     def validator_scriptlinks(self):
         return self._validator_scriptlinks
@@ -792,6 +795,10 @@ $(document).ready(function(){
         self.make_js(ident_list, environ, call_data, lang)
         # create the http header
         self._create_header()
+        # add cookies
+        if self._sendcookies:
+            for morsel in self._sendcookies.values():
+                self.headers.append(("Set-Cookie", morsel.OutputString()))
 
 
     def set_idents(self):
@@ -908,10 +915,7 @@ $(document).ready(function(){
         try:
             if 'set_cookie' in self.page_settings:
                 # sets the cookies in the page headers
-                sendcookies = self.page_settings['set_cookie']
-                if sendcookies:
-                    for morsel in sendcookies.values():
-                        self.headers.append(("Set-Cookie", morsel.OutputString()))
+                self._sendcookies = self.page_settings['set_cookie']
             if 'CatchToHTML' in self.page_settings:
                 self.catch_to_html = self.page_settings['CatchToHTML']
             if 'interval' in self.page_settings:
