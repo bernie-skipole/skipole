@@ -40123,7 +40123,7 @@ false
 "RespondPage": {
 "class": "ColourSubstitute",
 "original_args": {
-"fail_ident": "",
+"fail_ident": 1,
 "submit_list": [
 "skiadminpackages",
 "editfolders",

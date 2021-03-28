@@ -64,6 +64,15 @@ class ParentPage(object):
             self.header_Pragma = 'no-cache'
             self.header_Expires = '0'
 
+    def _get_enable_cache(self):
+        if self.header_cache_control == 'max-age=3600':
+            return True
+        return False
+
+    enable_cache = property(_get_enable_cache, _set_enable_cache)
+
+
+
     def _create_header(self):
         if self.headers:
             # headers have been set by the user, only set cookies
@@ -98,16 +107,31 @@ class ParentPage(object):
 
     name = property(get_name, set_name)
 
-    @property
-    def mimetype(self):
+
+    def _get_mimetype(self):
         if self.header_content_type: return self.header_content_type
         # mimetype not set, so guess it
+        if hasattr(self, 'filepath'):
+            if self.filepath:
+                name = os.path.basename(self.filepath)
+            else:
+                name=self._name
+        else:
+            name = self._name
         mimetypes.init()
-        t, e = mimetypes.guess_type(self._name, strict=False)
+        t, e = mimetypes.guess_type(name, strict=False)
         if t:
             return t
         else:
             return "application/octet-stream"
+
+
+    def _set_mimetype(self, mimetype):
+        self.header_content_type = mimetype
+
+
+    mimetype = property(_get_mimetype, _set_mimetype)
+
 
     @property
     def page_type(self):
@@ -295,7 +319,7 @@ class TemplatePageAndSVG(ParentPage):
         ParentPage.set_values(self, page_data)
         # the above has removed page settings from page_data
         for widgfield, value in page_data.items():
-            _widget_set_value(self, widgfield, value)
+            self._widget_set_value(widgfield, value)
 
 
     def _widget_set_value(self, widgfield, value):
@@ -895,7 +919,7 @@ $(document).ready(function(){
                 try:
                     interval = int(self.page_settings['interval'])
                 except:
-                    pass
+                    raise ServerError("Invalid interval")
                 else:
                     self.interval=interval
             if 'IntervalTarget' in self.page_settings:
@@ -1218,21 +1242,6 @@ class FilePage(ParentPage):
 
     filepath = property(get_filepath, set_filepath)
 
-    @property
-    def mimetype(self):
-        if self.header_content_type: return self.header_content_type
-        # mimetype not set, so guess it
-        if self.filepath:
-            name = os.path.basename(self.filepath)
-        else:
-            name=self._name
-        mimetypes.init()
-        t, e = mimetypes.guess_type(name, strict=False)
-        if t:
-            return t
-        else:
-            return "application/octet-stream"
-
 
     def set_values(self, page_data):
         "Set filepath"
@@ -1493,7 +1502,7 @@ class JSON(ParentPage):
             try:
                 interval = int(self.page_settings['interval'])
             except:
-                pass
+                raise ServerError("Invalid interval")
             else:
                 self.content["interval"]=interval
         if "CatchToHTML" in self.page_settings:

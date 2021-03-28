@@ -77,7 +77,7 @@ class SkipoleProject(object):
         else:
             self.end_call = end_call
 
-        # initially, assume this is the root projcet, and sub projects can be added
+        # initially, assume this is the root projet, and sub projects can be added
         self.rootproject = True
 
         # A check cookies function can be set in this project if it is added as a sub-project
@@ -449,6 +449,7 @@ class SkipoleProject(object):
 
         # pident is the ident returned from start_call, may be in a different project
         page = pident.item()
+
         if page is None:
             raise ServerError(message="Invalid ident returned from start_call", code=9038)
         if page.page_type == 'Folder':
@@ -611,7 +612,7 @@ class SkipoleProject(object):
                 ident = page.ident
                 if page.responder is None:
                     raise ServerError(message="Respond page %s does not have any responder set" % (page.url,), code=9042)
-                try: 
+                try:
                     page = page.call_responder(skicall, form_data, caller_page, ident_list, rawformdata)
                     if isinstance(page, str):
                         # must be a url
@@ -698,15 +699,20 @@ class SkipoleProject(object):
             message = "Invalid exception in end_call function."
             raise ServerError(message, code=9050) from e
 
-        # import any sections
+         # import any sections
         page.import_sections(skicall.page_data)
         if e_list:
             # show the list of errors on the page
             page.show_error(e_list)
-        # now set the widget fields
-        if skicall.page_data:
-            page.set_values(skicall.page_data)
-        page.update(environ, skicall.call_data, skicall.lang, ident_list)
+        try:
+            # now set the widget fields
+            if skicall.page_data:
+                page.set_values(skicall.page_data)
+            page.update(environ, skicall.call_data, skicall.lang, ident_list)
+        except ServerError as e:
+            raise e
+        except Exception as e:
+            raise ServerError(message = "Exception setting page values.") from e
         status, headers = page.get_status()
         return status, headers, page.data()
 
