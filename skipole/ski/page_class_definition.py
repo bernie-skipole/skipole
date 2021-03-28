@@ -301,7 +301,7 @@ class TemplatePageAndSVG(ParentPage):
     def _widget_set_value(self, widgfield, value):
         "Given a widgfield, checks its value"
         # could be the special case of setting a section show or class value
-        sectionparam = self._check_section_parameters(widgfield, value):
+        sectionparam = self._check_section_parameters(widgfield, value)
         if not sectionparam:
             widget, fieldname = self.widget_from_field(widgfield)
             if (widget is not None) and fieldname:
@@ -1053,7 +1053,7 @@ class SVG(TemplatePageAndSVG):
         """
         TemplatePageAndSVG.__init__(self, name=name, brief=brief)
 
-       self.header_content_type = 'image/svg+xml'
+        self.header_content_type = 'image/svg+xml'
 
         self.css_list = [skiboot.make_ident(ident) for ident in css_list]
         self.svg = Part(tag_name="svg", attribs = {"xmlns":"http://www.w3.org/2000/svg",
@@ -1182,8 +1182,8 @@ class FilePage(ParentPage):
             brief = "Link to %s" % filepath
         ParentPage.__init__(self, name=name, brief=brief)
 
-       if mimetype:
-           self.header_content_type = mimetype
+        if mimetype:
+            self.header_content_type = mimetype
 
         self.filepath = filepath
         self._absolute_filepath = None
