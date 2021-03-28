@@ -49,11 +49,24 @@
 <p>pd[widgetname,fieldname] = value</p>
 <p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
 <p>As well as dictionary keys, attributes can be set which override parameters set when the page is created:</p>
+<br />
+<p>The http status and headers are normally set automatically by the framework, but can also be set by:</p>
+<br />
+<p>pd.status - Sets the returned page status</p>
+<p>pd.headers - Sets the returned page headers</p>
+<br />
+<p>If pd.headers is not set, then the following individual fields can be set if required.</p>
+<br />
+<p>pd.mimetype - Sets the header content-type field.</p>
+<p>pd.enable_cache - If True sets header fields to instruct the client to cache the file, if False requests no caching.</p>
+<p>pd.content_length - Sets the header field with the file size.</p>
+<br />
+<p>The following attributes set Template page parameters:</p>
+<br />
 <p>These set Template page parameters:</p>
 <p>pd.add_jscript - Set to a string containing javascript code. This will be set within the pages automatically generated "$(document).ready(function(){})" and will be run when the page is loaded.</p>
 <p>pd.backcol - Set the 'HTML' tag background color</p>
 <p>pd.body_class - The CSS class of the 'BODY' tag</p>
-<p>pd.headers - Sets the returned page headers</p>
 <p>pd.ident_data - Set to a string, which will be returned as the 'skicall.ident_data' attribute if this page submits any data. The data is base64 encoded and added to hidden fields on each form and link widget.</p>
 <p>pd.lang - Set the language, such as 'en' in the page 'HTML' tag. This is independent of the skicall lang and language attributes, though it would generally be set the same as skicall.language.</p>
 <p>pd.last_scroll - Set True to display the page at its last scroll position</p>
@@ -62,22 +75,21 @@
 <p>pd.set_cookie - Set with a http.cookies.BaseCookie object which will be appended to the page headers.</p>
 <p>pd.show_backcol - Set True to enable the 'HTML' tag background color</p>
 <p>pd.show_error - Error message to be shown on the page default error widget</p>
-<p>pd.status - Sets the returned page status</p>
 <p>pd.interval - A template page can request a JSON page at set intervals, this sets the interval time in seconds. Use 0 to disable the requests.</p>
 <p>pd.IntervalTarget - The label or ident of the target requested, typically a Responder which sets the data into a JSON page which is then returned.</p>
 <p>pd.CatchToHTML - a target label or ident which is called if a javascript error occurs when the page is updated by JSON call.</p>
+<br />
 <p>Attributes relevant to File pages:</p>
 <p>pd.filepath - The path (relative to projectfiles) to the linked static file.</p>
-<p>pd.mimetype - The mime type of the file.</p>
-<p>pd.enable_cache - If True instructs the client to cache the file.</p>
+<br />
 <p>For SVG pages (dynamic created pages, not static files):</p>
 <p>pd.height - Set the height</p>
 <p>pd.width - Set the width</p>
-<p>pd.enable_cache - Enables client cache of this page.</p>
+<br />
 <p>For CSS pages (dynamic created pages, not static files):</p>
 <p>pd.cssimport - A string or a list</p>
-<p>pd.enable_cache - Enables client cache of this page.</p>
 <p>pd.colour_substitution - Set with a dictionary to substitute colours within the CSS file, see the ColourSubstitute Responder which uses this.</p>
+<br />
 <p>For JSON pages:</p>
 <p>Those Widgets which submit data, or link to another page, are generally set with the page to call, and an HTML template page is returned. However some widgets can request a JSON page (requires javascript to be enabled in the client browser).</p>
 <p>In this case an alternative HTML page such as 'no_javascript' can be set in the HTML link field, which will be shown if the JSON call fails due to javascript being disabled.</p>
