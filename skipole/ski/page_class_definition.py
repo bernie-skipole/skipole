@@ -99,6 +99,17 @@ class ParentPage(object):
     name = property(get_name, set_name)
 
     @property
+    def mimetype(self):
+        if self.header_content_type: return self.header_content_type
+        # mimetype not set, so guess it
+        mimetypes.init()
+        t, e = mimetypes.guess_type(self._name, strict=False)
+        if t:
+            return t
+        else:
+            return "application/octet-stream"
+
+    @property
     def page_type(self):
         return self.__class__.__name__
 
@@ -140,7 +151,6 @@ class ParentPage(object):
             if proj is None:
                 return
             return proj.root
-
 
     def get_parentfolder(self):
         "Uncopied parent folder"
@@ -213,11 +223,22 @@ class ParentPage(object):
             self.status = self.page_settings['status']
         if ('headers' in self.page_settings) and self.page_settings['headers']:
             self.headers = self.page_settings['headers']
+        if ('mimetype' in self.page_settings) and self.page_settings['mimetype']:
+            self.header_content_type = self.page_settings['mimetype']
         if ('content_length' in self.page_settings) and self.page_settings['content_length']:
             self.header_content_length = str(self.page_settings['content_length'])
+        if 'enable_cache' in self.page_settings:
+            self._set_enable_cache(bool(self.page_settings['enable_cache']))
         if 'ident_data' in self.page_settings:
             # set ident_data in page
             self.ident_data = str(self.page_settings['ident_data'])
+
+
+    def update(self, environ, call_data, lang, ident_list=[]):
+        """Normally overriden to add specific page attributes"""
+        # create the http header
+        self._create_header()
+
 
     def import_sections(self, page_data=None):
         "Only used by Template and SVG, everything else just returns"
@@ -745,7 +766,7 @@ $(document).ready(function(){
         # create javascript for widgets, this is set into self._js and appended
         # to self.head in the data function
         self.make_js(ident_list, environ, call_data, lang)
-        # create the page header
+        # create the http header
         self._create_header()
 
 
@@ -1041,7 +1062,6 @@ class SVG(TemplatePageAndSVG):
                                                    "width":width,
                                                    "height":height})
         self.svg.brief = "The svg section of the page"
-
         self._set_enable_cache(enable_cache)
 
 
@@ -1097,10 +1117,8 @@ class SVG(TemplatePageAndSVG):
         "Updates svg parts"
         ident_string = str(self.ident)+"_svg"
         self.svg.update(self, ident_list, environ, call_data, lang, ident_string)
-        if self.session_cookie:
-            self.headers.append(self.session_cookie)
-        if self.language_cookie:
-            self.headers.append(self.language_cookie)
+        # create the http header
+        self._create_header()
 
     def add_javascript(self, contents):
         "Currently not used"
@@ -1123,10 +1141,7 @@ class SVG(TemplatePageAndSVG):
     def set_values(self, page_data):
         """Passes on to parent set_values to set the widgets, checks for special svg page template values"""
         TemplatePageAndSVG.set_values(self, page_data)
-
         try:
-            if 'enable_cache' in self.page_settings:
-                self.enable_cache = bool(self.page_settings['enable_cache'])
             if 'width' in self.page_settings:
                 self.width = self.page_settings['width']
             if 'height' in self.page_settings:
@@ -1166,32 +1181,16 @@ class FilePage(ParentPage):
         if not brief:
             brief = "Link to %s" % filepath
         ParentPage.__init__(self, name=name, brief=brief)
-        self.filepath = filepath
-        self._filepath_relative_to_project_files = None
-        self._mimetype = mimetype
-        self._enable_cache = False
-        self.enable_cache = enable_cache
 
+       if mimetype:
+           self.header_content_type = mimetype
+
+        self.filepath = filepath
+        self._absolute_filepath = None
+        self._set_enable_cache(enable_cache)
         # environ, set by the update method
         self._environ = None
 
-    def set_enable_cache(self, enable_cache):
-        "Sets enable cache in header"
-        if self.headers_set_by_user:
-            return
-        if enable_cache:
-            self._enable_cache = True
-            self.headers = [('cache-control', 'max-age=3600')]
-        else:
-            self._enable_cache = False
-            self.headers = [ ('cache-control','no-cache, no-store, must-revalidate'),
-                                              ('Pragma', 'no-cache'),
-                                              ( 'Expires', '0')]
-
-    def get_enable_cache(self):
-        return self._enable_cache
-
-    enable_cache = property(get_enable_cache, set_enable_cache)
 
     def get_filepath(self):
         # self._filepath is a list of path parts
@@ -1219,13 +1218,14 @@ class FilePage(ParentPage):
 
     filepath = property(get_filepath, set_filepath)
 
-    def get_mimetype(self):
-        if self._mimetype: return self._mimetype
-        # self._mimetype not set, so guess it
+    @property
+    def mimetype(self):
+        if self.header_content_type: return self.header_content_type
+        # mimetype not set, so guess it
         if self.filepath:
             name = os.path.basename(self.filepath)
         else:
-            name=self.name
+            name=self._name
         mimetypes.init()
         t, e = mimetypes.guess_type(name, strict=False)
         if t:
@@ -1233,21 +1233,13 @@ class FilePage(ParentPage):
         else:
             return "application/octet-stream"
 
-    def set_mimetype(self, mt):
-        self._mimetype = mt
-
-    mimetype = property(get_mimetype, set_mimetype)
 
     def set_values(self, page_data):
-        "Set mimetype, filepath, enable_cache"
+        "Set filepath"
         ParentPage.set_values(self, page_data)
         try:
             if 'filepath' in self.page_settings:
                 self.filepath = self.page_settings['filepath']
-            if 'mimetype' in self.page_settings:
-                self._mimetype = self.page_settings['mimetype']
-            if 'enable_cache' in self.page_settings:
-                self.enable_cache = bool(self.page_settings['enable_cache'])
         except ServerError:
             raise
         except:
@@ -1257,30 +1249,25 @@ class FilePage(ParentPage):
     def update(self, environ, call_data, lang, ident_list=[]):
         """"If filepath set, then this is the file returned, if not, then projectfiles/project/static/name is returned"""
         self._environ = environ
-        mimetype = self.mimetype
-        if mimetype and (not self.headers_set_by_user):
-            # only add mimetype if headers not specified in page_data
-            self.headers.append(('content-type', mimetype))
         if not self.filepath:
             raise ServerError(message="Filepath not set")
-        self._filepath_relative_to_project_files = os.path.join(skiboot.projectfiles(self.proj_ident), self.filepath)
-        if not os.path.isfile(self._filepath_relative_to_project_files):
+        self._absolute_filepath = os.path.join(skiboot.projectfiles(self.proj_ident), self.filepath)
+        if not os.path.isfile(self._absolute_filepath):
             # no need to do anything further
             return
         # get length of file
-        if not self.headers_set_by_user:
-            if not self.content_length_set_by_user:
-                self.headers.append(('content-length', str(os.path.getsize(self._filepath_relative_to_project_files))))
-        # if a session cookie is specified, add it even if headers have been user set
-        if self.session_cookie:
-            self.headers.append(self.session_cookie)
-        if self.language_cookie:
-            self.headers.append(self.language_cookie)
+        if not self.header_content_length:
+            self.header_content_length = str(os.path.getsize(self._absolute_filepath))
+        # if mimetype not given, guess it
+        if not self.header_content_type:
+            self.header_content_type = self.mimetype
+        # create the http header
+        self._create_header()
 
 
     def _readfile(self, size=32768):
         "Return a generator reading the file"
-        with open(self._filepath_relative_to_project_files, "rb") as f:
+        with open(self._absolute_filepath, "rb") as f:
             data = f.read(size)
             while data:
                 yield data
@@ -1289,13 +1276,13 @@ class FilePage(ParentPage):
 
     def data(self):
         "returns an iterator reading the file"
-        if not os.path.isfile(self._filepath_relative_to_project_files):
+        if not os.path.isfile(self._absolute_filepath):
             # no need to do anything further
             return
         try:
             size = 32768
             if 'wsgi.file_wrapper' in self._environ:
-                f = open(self._filepath_relative_to_project_files, "rb")
+                f = open(self._absolute_filepath, "rb")
                 return self._environ['wsgi.file_wrapper'](f, size)
             else:
                 return self._readfile(size)
@@ -1322,44 +1309,25 @@ class CSS(ParentPage):
         "style held as ordered dictionary each value being a list of lists"
         ParentPage.__init__(self, name=name, brief=brief)
 
+        self.header_content_type = "text/css"
+
         # self.style is a dictionary with keys being css selectors
         # and values being a list of two element lists
         # acting as css declaration blocks.
 
         self.style = style
         self.colour_substitution = {}
-        # enable_cache flag
-        self._enable_cache = False
-        self.enable_cache = enable_cache
+
         # imports
         self.imports = []
 
-    def set_enable_cache(self, enable_cache):
-        "Sets enable cache in header"
-        if self.headers_set_by_user:
-            return
-        if enable_cache:
-            self._enable_cache = True
-            self.headers = [('content-type', 'text/css'), ('cache-control', 'max-age=3600')]
-        else:
-            self._enable_cache = False
-            self.headers = [('content-type', 'text/css'),
-                            ('cache-control','no-cache, no-store, must-revalidate'),
-                            ('Pragma', 'no-cache'),
-                            ( 'Expires', '0')]
-
-    def get_enable_cache(self):
-        return self._enable_cache
-
-    enable_cache = property(get_enable_cache, set_enable_cache)
+        self._set_enable_cache(enable_cache)
 
 
     def set_values(self, page_data):
-        """enable_cache, cssimport, ident_data"""
+        """cssimport, ident_data"""
         ParentPage.set_values(self, page_data)
         try:
-            if 'enable_cache' in self.page_settings:
-                self.enable_cache = bool(self.page_settings['enable_cache'])
             if 'colour_substitution' in self.page_settings:
                 self.colour_substitution = self.page_settings['colour_substitution']
             if 'cssimport' in self.page_settings:
@@ -1467,34 +1435,14 @@ class JSON(ParentPage):
     def __init__(self, name="", brief="New JSON Page", content=None, enable_cache=False):
         "content held as ordered dictionary"
         ParentPage.__init__(self, name=name, brief=brief)
+        self.header_content_type = "application/json"
         if content:
             self.content = content
         else:
             self.content = collections.OrderedDict()
-        # enable_cache flag
-        self._enable_cache = False
-        self.enable_cache = enable_cache
+        self._set_enable_cache(enable_cache)
         # setting jsondict overrides self.content
         self.jsondict = None
-
-    def set_enable_cache(self, enable_cache):
-        "Sets enable cache in header"
-        if self.headers_set_by_user:
-            return
-        if enable_cache:
-            self._enable_cache = True
-            self.headers = [('content-type', 'application/json'), ('cache-control', 'max-age=3600')]
-        else:
-            self._enable_cache = False
-            self.headers = [('content-type', 'application/json'),
-                                             ('cache-control','no-cache, no-store, must-revalidate'),
-                                              ('Pragma', 'no-cache'),
-                                              ( 'Expires', '0')]
-
-    def get_enable_cache(self):
-        return self._enable_cache
-
-    enable_cache = property(get_enable_cache, set_enable_cache)
 
     def add_widgfield(self, widgfield, value):
         "Add widgfield and value to self.content"
@@ -1575,10 +1523,6 @@ class JSON(ParentPage):
 
     def update(self, environ, call_data, lang, ident_list=[]):
         "Adds session_cookie, and also ident_list if debug mode is on"
-        if self.session_cookie:
-            self.headers.append(self.session_cookie)
-        if self.language_cookie:
-            self.headers.append(self.language_cookie)
         if skiboot.get_debug():
             # include environ, call_data and ident_list in json file
             self.content['environ'] = pprint.pformat(environ)
@@ -1593,6 +1537,7 @@ class JSON(ParentPage):
                 idents.append([ident.to_comma_str(), item.responder.__class__.__name__, item.brief])
             idents.append([self.ident.to_comma_str(), 'This page', self.brief])
             self.content['ident_list'] = idents
+        self._create_header()
 
     def show_error(self, error_messages=None):
         """Sets show error in page data"""
