@@ -1424,8 +1424,14 @@ class SkiCall(object):
             # add widgfields from section
             for key,val in itemdata.items():
                 self.page_data[sectionalias, key[0], key[1]] = val
+        elif isinstance(itemdata, dict):
+            for key, val in itemdata.items():
+                if isinstance(key, str) and ("/" in key):
+                    self.page_data[key.split("/")] = val
+                else:
+                    self.page_data[key] = val
         else:
-            self.page_data.update(itemdata)
+            raise ServerError(message="Error: invalid item used to update skicall")
 
         # backwards compatable stuff
         if ('content_length' not in self.page_data) and ('content-length' in self.page_data):

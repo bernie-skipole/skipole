@@ -469,21 +469,24 @@ class SectionData(MutableMapping):
         sd = cls(sectionalias)
         newdict = {}
         for key,val in sectiondict.items():
-            # Check this is not a pagedict
             if not isinstance(key, str):
                 raise KeyError
             if "/" in key:
-                raise KeyError
-            if ":" in key:
-                widg,fld = key.split(":")
-                if "-" in widg:
+                alias, att = key.split("/")
+                # discard alias, as it is to be replaced by sectionalias
+                if att not in cls.section_variables:
                     raise KeyError
-                newdict[widg,fld] = val
+                newdict[att] = val
+            elif ":" in key:
+                section_widg, fld = key.split(":")
+                if "-" in section_widg:
+                    alias,widg = section_widg.split("-")
+                    newdict[widg,fld] = val
+                else:
+                    raise KeyError
             else:
-                # not a widget, key must be in section_variables
-                if key not in cls.section_variables:
-                    raise KeyError
-                newdict[key] = val
+                # not an attribute or widget
+                raise KeyError
         # assign newdict to the new class
         sd._section_data = newdict
         return sd
@@ -504,14 +507,14 @@ class SectionData(MutableMapping):
         sectiondict = {}
         for key, val in self._section_data.items():
             if isinstance(key,str):
-                # keys are strings - section attributes, leave as strings
+                # keys are strings - section attributes, introduce sectionalias/attribute
                 if val is None:
                     continue
-                sectiondict[key] = val
+                sectiondict[self._sectionalias + "/" + key] = val
             elif isinstance(key, tuple):
                 if len(key) == 2:
-                    # keys are (widgetname, fieldname) set as "widgetname:fieldname"
-                    sectiondict[key[0]+':'+key[1]] = val
+                    # keys are (widgetname, fieldname) set as "sectionalias-widgetname:fieldname"
+                    sectiondict[self._sectionalias + "-" + key[0]+':'+key[1]] = val
         return sectiondict
 
 
