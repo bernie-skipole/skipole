@@ -18,7 +18,7 @@ def retrieve_page_edit(skicall):
     "Retrieves data for the edit page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -38,14 +38,20 @@ def retrieve_page_edit(skicall):
 
         call_data['pchange'] = pageinfo.change
 
+        sd_adminhead = SectionData("adminhead")
+        sd_page_edit = SectionData("page_edit")
+
         # fills in the data for editing page name, brief, parent, etc., 
-        page_data[("adminhead","page_head","large_text")] = pageinfo.name
-        page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-        page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-        page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+        sd_adminhead["page_head","large_text"] = pageinfo.name
+        sd_page_edit['p_ident','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_name','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_description','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_rename','input_text'] = pageinfo.name
+        sd_page_edit['p_parent','input_text'] = "%s,%s" % (project, pageinfo.parentfolder_number)
+        sd_page_edit['p_brief','input_text'] = pageinfo.brief
+
+        pd.update(sd_adminhead)
+        pd.update(sd_page_edit)
 
         pageOD = fromjson.page_to_OD(project, pagenumber)
     except ServerError as e:
@@ -57,32 +63,33 @@ def retrieve_page_edit(skicall):
         raise FailPage(message="This page not recognised as a Template page.")
 
     # page language
-    page_data[("setlang","input_text")] = pagedict["lang"]
+    pd["setlang","input_text"] = pagedict["lang"]
 
     # default error widget
     dew = pagedict["default_error_widget"]
     if dew[0]:
-        page_data[("default_e_widg","input_text")] = dew[0] + ',' + dew[1]
+        pd["default_e_widg","input_text"] = dew[0] + ',' + dew[1]
     elif dew[1]:
-        page_data[("default_e_widg","input_text")] = dew[1]
+        pd["default_e_widg","input_text"] = dew[1]
 
     # sets last_scroll flag
-    page_data[("lastscroll","checked")] = pagedict["last_scroll"]
+    pd["lastscroll","checked"] = pagedict["last_scroll"]
 
     # fills in the backcolor checkbox and value
     if pagedict["show_backcol"]:
-        page_data[("enablebackcolor","checked")] = True
-        page_data[('setbackcolor', 'hide')] = False
+        pd["enablebackcolor","checked"] = True
+        pd['setbackcolor', 'hide'] = False
     else:
-        page_data[("enablebackcolor","checked")] = False
-        page_data[('setbackcolor', 'hide')] = True
-    page_data[('setbackcolor', 'input_text')] = pagedict["backcol"]
+        pd["enablebackcolor","checked"] = False
+        pd['setbackcolor', 'hide'] = True
+
+    pd['setbackcolor', 'input_text'] = pagedict["backcol"]
 
     # Sets CatchToHTML
     if pagedict["catch_to_html"] is None:
-        page_data["set_catch_to_html", "input_text"] = ''
+        pd["set_catch_to_html", "input_text"] = ''
     else:
-        page_data["set_catch_to_html", "input_text"] = str(pagedict["catch_to_html"])
+        pd["set_catch_to_html", "input_text"] = str(pagedict["catch_to_html"])
 
     # fills in the JSON refresh checkbox
     if pagedict["interval"] and pagedict["interval_target"]:
@@ -90,24 +97,24 @@ def retrieve_page_edit(skicall):
             interval_target = ''
         else:
             interval_target = str(pagedict["interval_target"])
-        page_data[("refreshcheck","checked")] = True
-        page_data[('interval', 'disabled')] = False
-        page_data[('interval_target', 'disabled')] = False
-        page_data[('interval', 'input_text')] = str(pagedict["interval"])
-        page_data[('interval_target', 'input_text')] = interval_target
+        pd["refreshcheck","checked"] = True
+        pd['interval', 'disabled'] = False
+        pd['interval_target', 'disabled'] = False
+        pd['interval', 'input_text'] = str(pagedict["interval"])
+        pd['interval_target', 'input_text'] = interval_target
     else:
-        page_data[("refreshcheck","checked")] = False
-        page_data[('interval', 'disabled')] = True
-        page_data[('interval_target', 'disabled')] = True
-        page_data[('interval', 'input_text')] = '0'
-        page_data[('interval_target', 'input_text')] = ''
+        pd["refreshcheck","checked"] = False
+        pd['interval', 'disabled'] = True
+        pd['interval_target', 'disabled'] = True
+        pd['interval', 'input_text'] = '0'
+        pd['interval_target', 'input_text'] = ''
 
 
 def retrieve_page_head(skicall):
     "Gets data for the page head"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 
@@ -127,8 +134,11 @@ def retrieve_page_head(skicall):
     if pageinfo.item_type != 'TemplatePage':
         raise FailPage(message = "Invalid page")
 
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' head'
-    page_data["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = pageinfo.name + ' head'
+    pd.update(sd_adminhead)
+
+    pd["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
 
     # fill in the table
     call_data['location_string'] = 'head'
@@ -139,7 +149,7 @@ def retrieve_page_dom(skicall):
     "this call fills in the page dom table"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 
@@ -181,27 +191,29 @@ def retrieve_page_dom(skicall):
     #                       If True a link to link_ident/json_ident will be set with button_class applied to it
     #               3 - The get field value of the button link, empty string if no get field
 
-   
-    page_data['editdom', 'domtable', 'contents']  = domcontents
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'contents']  = domcontents
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
 
     # for each column: html link, JSON link, storage key
-    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                          # tag name, no link
-                                                      ['','',''],                                          # brief, no link
-                                                      ['no_javascript','move_up_in_page_dom',''],          # up arrow
-                                                      ['no_javascript','move_up_right_in_page_dom',''],    # up right
-                                                      ['no_javascript','move_down_in_page_dom',''],        # down
-                                                      ['no_javascript','move_down_right_in_page_dom',''],  # down right
-                                                      ['edit_page_dom','',''],                             # edit, html only
-                                                      ['no_javascript','insert_in_page',''],               # insert/append
-                                                      ['no_javascript',3680,''],                           # copy
-                                                      ['no_javascript',3690,'ski_part'],                   # paste
-                                                      ['no_javascript','cut_page_dom',''],                 # cut
-                                                      ['no_javascript','delete_page_dom','']               # delete
-                                                   ]
+    sd_editdom['domtable', 'cols']  =  [  ['','',''],                                          # tag name, no link
+                                          ['','',''],                                          # brief, no link
+                                          ['no_javascript','move_up_in_page_dom',''],          # up arrow
+                                          ['no_javascript','move_up_right_in_page_dom',''],    # up right
+                                          ['no_javascript','move_down_in_page_dom',''],        # down
+                                          ['no_javascript','move_down_right_in_page_dom',''],  # down right
+                                          ['edit_page_dom','',''],                             # edit, html only
+                                          ['no_javascript','insert_in_page',''],               # insert/append
+                                          ['no_javascript',3680,''],                           # copy
+                                          ['no_javascript',3690,'ski_part'],                   # paste
+                                          ['no_javascript','cut_page_dom',''],                 # cut
+                                          ['no_javascript','delete_page_dom','']               # delete
+                                       ]
 
-    page_data['editdom', 'domtable', 'dropident']  = 'move_in_page_dom'
+    sd_editdom['domtable', 'dropident']  = 'move_in_page_dom'
+
+    pd.update(sd_editdom)
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
@@ -224,7 +236,7 @@ def retrieve_page_body(skicall):
     "Gets data for the page body"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 
@@ -244,8 +256,11 @@ def retrieve_page_body(skicall):
     if pageinfo.item_type != 'TemplatePage':
         raise FailPage(message = "Invalid page")
 
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' body'
-    page_data["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = pageinfo.name + ' body'
+    pd.update(sd_adminhead)
+
+    pd["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
 
     # fill in the table
     call_data['location_string'] = 'body'
@@ -254,9 +269,9 @@ def retrieve_page_body(skicall):
 
 
 def copy_page(skicall):
-    "Gets page part and return it in page_data['localStorage'] with key ski_part for browser session storage"
+    "Gets page part and set PageData().localStorage with key ski_part for browser session storage"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -294,14 +309,14 @@ def copy_page(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['localStorage'] = {'ski_part':jsonstring}
+    pd.localStorage = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
 
 def paste_page(skicall):
     "Gets submitted json string and inserts it"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -339,9 +354,12 @@ def paste_page(skicall):
     call_data['pchange'] = editpage.create_item_in_page(editedprojname, pagenumber, call_data['pchange'], location, json_string)
 
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
 
 
 
@@ -349,7 +367,7 @@ def retrieve_svgpage_edit(skicall):
     "Retrieves widget data for the svg edit page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -369,15 +387,22 @@ def retrieve_svgpage_edit(skicall):
 
         call_data['pchange'] = pageinfo.change
 
-        # fills in the data for editing page name, brief, parent, etc., 
-        page_data[("adminhead","page_head","large_text")] = pageinfo.name
-        page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-        page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-        page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
-        page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
+        # fills in the data for editing page name, brief, parent, etc.,
+
+        sd_adminhead = SectionData("adminhead")
+        sd_adminhead["page_head","large_text"] = pageinfo.name
+        pd.update(sd_adminhead)
+
+        sd_page_edit = SectionData("page_edit")
+        sd_page_edit['p_ident','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_name','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_description','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_rename','input_text'] = pageinfo.name
+        sd_page_edit['p_parent','input_text'] = "%s,%s" % (project, pageinfo.parentfolder_number)
+        sd_page_edit['p_brief','input_text'] = pageinfo.brief
+        pd.update(sd_page_edit)
+
+        pd['enable_cache','radio_checked'] = pageinfo.enable_cache
 
     except ServerError as e:
         raise FailPage(message=e.message)
@@ -387,7 +412,7 @@ def retrieve_page_svg(skicall):
     "Gets data for the page svg part"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 
@@ -403,8 +428,12 @@ def retrieve_page_svg(skicall):
         raise FailPage(message = e.message)
     if pageinfo.item_type != 'SVG':
         raise FailPage(message = "Invalid page")
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name + ' svg'
-    page_data["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
+
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = pageinfo.name + ' svg'
+    pd.update(sd_adminhead)
+
+    pd["pageid", "para_text"] = "Page Ident: " + str(pagenumber)
     # fill in the table
     call_data['location_string'] = 'svg'
     retrieve_page_dom(skicall)
@@ -414,7 +443,6 @@ def set_html_lang(skicall):
     "Sets language in the page html tag"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -437,7 +465,6 @@ def enable_backcolour(skicall):
     """Enables background colour in HTML tag"""
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -463,7 +490,6 @@ def set_backcolour(skicall):
     """Sets the background colour in the HTML tag"""
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -492,7 +518,6 @@ def set_last_scroll(skicall):
     "Sets page last_scroll flag"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -516,7 +541,6 @@ def set_catch_to_html(skicall):
     """Sets the CatchToHTML target"""
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -540,7 +564,6 @@ def submit_refresh(skicall):
     "Sets JSON refresh facility"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -585,7 +608,6 @@ def submit_default_error_widget(skicall):
     "Sets page default_error_widget"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -603,7 +625,6 @@ def submit_cache(skicall):
     "Sets cache true or false"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -631,7 +652,7 @@ def retrieve_edit_jsonpage(skicall):
     "Retrieves widget data for the edit json page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -657,14 +678,20 @@ def retrieve_edit_jsonpage(skicall):
     except ServerError as e:
         raise FailPage(message = e.message)
 
-   # fills in the data for editing page name, brief, parent, etc., 
-    page_data[("adminhead","page_head","large_text")] = pageinfo.name
-    page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-    page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-    page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-    page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+    # fills in the data for editing page name, brief, parent, etc.,
+
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = pageinfo.name
+    pd.update(sd_adminhead)
+
+    sd_page_edit = SectionData("page_edit")
+    sd_page_edit['p_ident','page_ident'] = (project,str_pagenumber)
+    sd_page_edit['p_name','page_ident'] = (project,str_pagenumber)
+    sd_page_edit['p_description','page_ident'] = (project,str_pagenumber)
+    sd_page_edit['p_rename','input_text'] = pageinfo.name
+    sd_page_edit['p_parent','input_text'] = "%s,%s" % (project, pageinfo.parentfolder_number)
+    sd_page_edit['p_brief','input_text'] = pageinfo.brief
+    pd.update(sd_page_edit)
 
     json_content = editpage.json_contents(project, pagenumber)
 
@@ -681,21 +708,20 @@ def retrieve_edit_jsonpage(skicall):
             else:
                 contents.append([wfcomma,value,wfstr])
         if contents:
-            page_data['field_values_list','show'] = True
-            page_data['field_values_list','contents'] = contents
+            pd['field_values_list','show'] = True
+            pd['field_values_list','contents'] = contents
         else:
-            page_data['field_values_list','show'] = False
+            pd['field_values_list','show'] = False
     else:
-        page_data['field_values_list','show'] = False
+        pd['field_values_list','show'] = False
 
-    page_data['enable_cache:radio_checked'] = pageinfo.enable_cache
+    pd['enable_cache','radio_checked'] = pageinfo.enable_cache
 
 
 def set_json_cache(skicall):
     "Sets cache true or false"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -720,7 +746,6 @@ def remove_json_widgfield(skicall):
     "Removes widgfield from JSON page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -735,12 +760,10 @@ def remove_json_widgfield(skicall):
     call_data['status'] = "Widgfield removed"
 
 
-
 def add_json_widgfield(skicall):
     "Adds a widgfield to JSON page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -767,7 +790,7 @@ def downloadpage(skicall):
     "Gets template or SVG page, and returns a json dictionary, this will be sent as an octet file to be downloaded"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if 'page_number' in call_data:
         pagenumber = call_data['page_number']
@@ -791,7 +814,8 @@ def downloadpage(skicall):
         binline = line.encode('utf-8')
         n += len(binline)
         line_list.append(binline)
-    page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
+    pd.mimetype = 'application/octet-stream'
+    pd.content_length = str(n)
     return line_list
 
 
@@ -799,7 +823,7 @@ def move_up_in_page_dom(skicall):
     "Called by domtable to move an item in a page up"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -868,9 +892,12 @@ def move_up_in_page_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
 
 
 
@@ -878,7 +905,7 @@ def move_up_right_in_page_dom(skicall):
     "Called by domtable to move an item in a page up and to the right"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -953,9 +980,13 @@ def move_up_right_in_page_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
+
 
 
 
@@ -963,7 +994,7 @@ def move_down_in_page_dom(skicall):
     "Called by domtable to move an item in a page down"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1041,9 +1072,12 @@ def move_down_in_page_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
 
 
 
@@ -1051,7 +1085,7 @@ def move_down_right_in_page_dom(skicall):
     "Called by domtable to move an item in a page down and to the right"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1129,9 +1163,12 @@ def move_down_right_in_page_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
 
 
 
@@ -1139,8 +1176,7 @@ def after_dom_edit(skicall):
     "Called after a dom edit to refresh the correct page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
-    print(call_data)
+
     if 'location_string' in call_data:
         if call_data['location_string'] == 'head':
             del call_data['location_string']
@@ -1167,7 +1203,7 @@ def move_in_page_dom(skicall):
     "Called by domtable to move an item in a page after a drag and drop"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1275,16 +1311,19 @@ def move_in_page_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
+
 
 
 def edit_page_dom(skicall):
     "Called by domtable to edit an item in a page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1361,7 +1400,7 @@ def cut_page_dom(skicall):
     "Called by domtable to remove an item in a page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1405,7 +1444,7 @@ def cut_page_dom(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['localStorage'] = {'ski_part':jsonstring}
+    pd.localStorage = {'ski_part':jsonstring}
 
     # remove the item
     try:
@@ -1415,9 +1454,12 @@ def cut_page_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
 
     # once item is deleted, no info on the item should be
     # left in call_data - this may not be required in future
@@ -1438,7 +1480,7 @@ def delete_page_dom(skicall):
     "Called by domtable to delete an item in a page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if "page_number" in call_data:
         pagenumber = call_data["page_number"]
@@ -1483,9 +1525,12 @@ def delete_page_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _page_domcontents(editedprojname, pagenumber, location_string)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+
+    sd_editdom = SectionData("editdom")
+    sd_editdom['domtable', 'dragrows']  = dragrows
+    sd_editdom['domtable', 'droprows']  = droprows
+    sd_editdom['domtable', 'contents']  = domcontents
+    pd.update(sd_editdom)
 
     # once item is deleted, no info on the item should be
     # left in call_data - this may not be required in future
