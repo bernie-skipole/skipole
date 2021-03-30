@@ -1,7 +1,7 @@
 
 
 """
-This module defines the SkipoleProject class and SkiCall class
+This module defines the SkipoleProject, SkiCall, PageData, SectionData classes
 
 SkipoleProject being the core of the project which loads
 the project from JSON files and responds to incoming calls by calling the user functions
@@ -14,6 +14,8 @@ call and is passed as an argument to the user functions
 import copy, os, cgi, collections, html, pprint, json, shutil, uuid, sys, traceback, re, pathlib, mimetypes
 
 from base64 import urlsafe_b64decode
+
+from collections.abc import MutableMapping
 
 from http import cookies
 
@@ -30,9 +32,6 @@ _AN64 = re.compile('[^\w\-]')
 from . import skiboot, read_json
 from .excepts import ValidateError, ServerError, FailPage, ErrorMessage, GoTo, PageError
 from .. import textblocks
-
-from .. import PageData, SectionData
-
 
 # ServerError raised in this module use codes 9000 to 9100
 
@@ -1578,5 +1577,375 @@ def _read_server_file(environ, filepath, size=32768):
         return environ['wsgi.file_wrapper'](f, size)
     else:
         return _readfile(filepath, size)
+
+
+# An instance of this PageData is set into a skicall object to provide data for page widgets
+
+class PageData(MutableMapping):
+
+    page_variables = skiboot.PAGE_VARIABLES
+
+    @classmethod
+    def from_dict(cls, pagedict):
+        "Returns an instance of this class given a dictionary as produced by the to_dict method"
+        pd = cls()
+        for key,val in pagedict.items():
+            if "/" in key:
+                # sectionalias/attribute
+                sectionalias,att = key.split("/")
+                pd.sections.add(sectionalias)
+                pd._page_data[sectionalias, att] = val
+            elif ":" in key:
+                section_widg,fld = key.split(":")
+                if "-" in section_widg:
+                    # sectionalias-widget:field
+                    sectionalias, widg = section_widg.split("-")
+                    pd.sections.add(sectionalias)
+                    pd._page_data[sectionalias, widg, fld] = val
+                else:
+                    # widget:field
+                    pd._page_data[section_widg, fld] = val
+            else:
+                # a single string without / or : must be a page attribute
+                pd._page_data[key] = val
+        return pd
+
+
+    def __init__(self):
+        "_page_data will become the skicall.page_data when this object is set into skicall"
+        self._page_data = {}
+        self.sections = set()
+
+    def clear(self):
+        self._page_data.clear()
+        self.sections.clear()
+
+    def to_dict(self):
+        """Returns a dictionary containing the data held in this object, with keys as strings
+           possibly useful for storage or caching if this data is to be re-used"""
+        # introduce field delimiters / : - 
+        pagedict = {}
+        for key, val in self._page_data.items():
+            if isinstance(key,str):
+                # keys are strings - page attributes, leave as strings
+                pagedict[key] = val
+            elif isinstance(key, tuple):
+                if len(key) == 2:
+                    if key[0] in self.sections:
+                        # keys are (sectionalias, attribute) set as "sectionalias/attribute"
+                        pagedict[key[0]+'/'+key[1]] = val
+                    else:
+                        # or keys are (widgetname, fieldname) set as "widgetname:fieldname"
+                        pagedict[key[0]+':'+key[1]] = val
+                elif len(key) == 3:
+                    # keys will be of the form sectionalias-widgetname:fieldname
+                    pagedict[key[0]+'-'+key[1]+':'+key[2]] = val
+        return pagedict
+        
+
+    def get_section(self, sectionalias):
+        "Retrieve a section, if it has not been added to the page, return None"
+        if sectionalias not in self.sections:
+            # it does not exist
+            return None
+        s = SectionData(sectionalias)
+        for key, val in self._page_data.items():
+            if not isinstance(key, tuple):
+                continue
+            if key[0] == sectionalias:
+                if len(key) == 2:
+                    s._section_data[key[1]] = val
+                else:
+                    s._section_data[key[1], key[2]] = val
+        return s
+
+
+    def delete_section(self, sectionalias):
+        "Deletes a section"
+        if sectionalias not in self.sections:
+            return
+        self.sections.remove(sectionalias)
+        newdict = {}
+        for key, val in self._page_data.items():
+            if isinstance(key, tuple) and (len(key) >= 2) and (key[0] == sectionalias):
+                continue
+            newdict[key] = val
+        self._page_data = newdict
+
+
+    def update(self, item):
+        "Update with a PageData, SectionData or a dictionary"
+        if isinstance(item, SectionData):
+            # update from SectionData
+            sectionalias = item.sectionalias
+            if sectionalias not in self.sections:
+                # test no widget clash
+                for key in self:
+                    # iterates through every widget, with key being (widg,fld)
+                    if sectionalias == key[0]:
+                        # sectionalias clashes with a widget
+                        raise KeyError
+            self._add_section(item)
+        elif isinstance(item, PageData):
+            # update this PageData with another PageData object
+            # test the sections in the item object do not clash with widgets in this object
+            for key in self:
+                # iterates through every widget in self, with key being (widg,fld)
+                if key[0] in item.sections:
+                    # widget in self has the same name as a section in item
+                    raise KeyError
+            self._page_data.update(item._page_data)
+            self.sections.update(item.sections)
+        elif isinstance(item, dict):
+            # create a PageData object from the dictionary, and update with that
+            pd = PageData.from_dict(item)
+            for key in self:
+                # iterates through every widget in self, with key being (widg,fld)
+                if key[0] in pd.sections:
+                    # widget in self has the same name as a section in pd
+                    raise KeyError
+            self._page_data.update(pd._page_data)
+            self.sections.update(pd.sections)
+        else:
+            raise KeyError
+
+
+    def _add_section(self, section):
+        "Add section data"
+        sectionalias = section.sectionalias
+        self.sections.add(sectionalias)
+        for at, val in section._section_data.items():
+            if isinstance(at, str):
+                # A section attribute
+                if val is None:
+                    continue
+                self._page_data[sectionalias, at] = val
+        # add items from section
+        for key,val in section.items():
+            self._page_data[sectionalias, key[0], key[1]] = val
+                
+
+    def __getattr__(self, name):
+        "Get a page attribute from the _page_data dictionary"
+        if name not in self.page_variables:
+            raise AttributeError
+        if name in self._page_data:
+            return self._page_data[name]
+
+
+    def __setattr__(self, name, value):
+        "Sets a page attribute"
+        if name in self.page_variables:
+            if value is None:
+                if name in self._page_data:
+                    del self._page_data[name]
+            else:
+                self._page_data[name] = value
+            return
+        # for all other values
+        super().__setattr__(name, value)
+
+
+    def _valid_widgfield(self, key):
+        if not isinstance(key, tuple):
+            return False
+        if len(key) != 2:
+            # All widgfields have a two element tuple as key
+            return False
+        if key[0] in self.sections:
+            # this key name is used as a section alias
+            return False
+        return True
+
+
+    def __setitem__(self, key, value):
+        if self._valid_widgfield(key):
+            if (value is None) and (key in self._page_data):
+                del self._page_data[key]
+            else:
+                self._page_data[key] = value
+        else:
+            raise KeyError
+
+
+    def __delitem__(self, key):
+        if self._valid_widgfield(key):
+            if key in self._page_data:
+                del self._page_data[key]
+        else:
+            raise KeyError
+
+
+    def __getitem__(self, key):
+        if self._valid_widgfield(key):
+            return self._page_data[key]
+        else:
+            raise KeyError
+
+
+    def __iter__(self):
+        page_data = self._page_data
+        for key in page_data.keys():
+            if self._valid_widgfield(key):
+                yield key
+
+
+    def __len__(self):
+        "Returns the number of widgfields associated with the page"
+        page_data = self._page_data
+        length = 0
+        for key in page_data.keys():
+            if self._valid_widgfield(key):
+                length += 1
+        return length
+
+
+# instances of this SectionData is used with the update method of a PageData object to provide data for sections
+
+class SectionData(MutableMapping):
+
+    section_variables = skiboot.SECTION_VARIABLES
+
+    @classmethod
+    def from_dict(cls, sectiondict, sectionalias):
+        "Returns an instance of this class given a dictionary as produced by the to_dict method"
+        sd = cls(sectionalias)
+        newdict = {}
+        for key,val in sectiondict.items():
+            if not isinstance(key, str):
+                raise KeyError
+            if "/" in key:
+                alias, att = key.split("/")
+                # discard alias, as it is to be replaced by sectionalias
+                if att not in cls.section_variables:
+                    raise KeyError
+                newdict[att] = val
+            elif ":" in key:
+                section_widg, fld = key.split(":")
+                if "-" in section_widg:
+                    alias,widg = section_widg.split("-")
+                    newdict[widg,fld] = val
+                else:
+                    raise KeyError
+            else:
+                # not an attribute or widget
+                raise KeyError
+        # assign newdict to the new class
+        sd._section_data = newdict
+        return sd
+
+
+    def __init__(self, sectionalias):
+        """sectionalias is the name of this section as set in the page"""
+        self._section_data = {}
+        self._sectionalias = sectionalias
+
+    def clear(self):
+        self._section_data = {}
+
+    def to_dict(self):
+        """Returns a dictionary containing the data held in this object, with keys as strings
+           possibly useful for storage or caching if this data is to be re-used"""
+        # introduce field delimiter :  
+        sectiondict = {}
+        for key, val in self._section_data.items():
+            if isinstance(key,str):
+                # keys are strings - section attributes, introduce sectionalias/attribute
+                if val is None:
+                    continue
+                sectiondict[self._sectionalias + "/" + key] = val
+            elif isinstance(key, tuple):
+                if len(key) == 2:
+                    # keys are (widgetname, fieldname) set as "sectionalias-widgetname:fieldname"
+                    sectiondict[self._sectionalias + "-" + key[0]+':'+key[1]] = val
+        return sectiondict
+
+
+    def copy(self, newalias):
+        "Return a copy of this section with a new sectionalias"
+        s = self.__class__(newalias)
+        s._section_data = self._section_data.copy()
+        return s
+
+
+    def multiply(self, number):
+        """Sets the multiplier to number and returns the given number of SectionData objects
+           each with sectionalias of sectionalias_0, sectionalias_1,.. etc"""
+        if number <= 1:
+            return []
+        sectionlist = []
+        for n in range(number):
+            newalias = self.sectionalias+ "_" + str(n)
+            newsection = self.copy(newalias)
+            newsection.multiplier = 0
+            sectionlist.append(newsection)
+        self.multiplier = number
+        return sectionlist
+
+
+    def __getattr__(self, name):
+        "Get a section attribute from the _section_data dictionary"
+        if name == "sectionalias":
+            return self._sectionalias
+        if name not in self.section_variables:
+            raise AttributeError
+        return self._section_data[name]
+
+
+    def __setattr__(self, name, value):
+        "Sets a section attribute"
+        if name == '_section_data':
+            # this is required to insert values into self._section_data
+            super().__setattr__(name, value)
+            return
+        if name == '_sectionalias':
+            # this is required to insert the section name into self._sectionalias
+            super().__setattr__(name, value)
+            return
+        if name not in self.section_variables:
+            raise AttributeError
+        self._section_data[name] = value
+
+
+    def _valid_widgfield(self, key):
+        if not isinstance(key, tuple):
+            return False
+        if len(key) != 2:
+            # All widgfields have a two element tuple as key
+            return False
+        return True
+
+    def __setitem__(self, key, value):
+        if self._valid_widgfield(key):
+            self._section_data[key] = value
+        else:
+            raise KeyError
+
+    def __delitem__(self, key):
+        if self._valid_widgfield(key):
+            del self._section_data[key]
+        else:
+            raise KeyError
+
+    def __getitem__(self, key):
+        if self._valid_widgfield(key):
+            return self._section_data[key]
+        else:
+            raise KeyError
+
+    def __iter__(self):
+        for key in self._section_data.keys():
+            if self._valid_widgfield(key):
+                yield key
+
+    def __len__(self):
+        "Returns the number of widgfields associated with the section"
+        length = 0
+        for key in self._section_data.keys():
+            if self._valid_widgfield(key):
+                length += 1
+        return length
+
+
 
 
