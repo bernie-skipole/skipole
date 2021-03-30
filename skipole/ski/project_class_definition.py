@@ -31,6 +31,8 @@ from . import skiboot, read_json
 from .excepts import ValidateError, ServerError, FailPage, ErrorMessage, GoTo, PageError
 from .. import textblocks
 
+from .. import PageData, SectionData
+
 
 # ServerError raised in this module use codes 9000 to 9100
 
@@ -1410,26 +1412,18 @@ class SkiCall(object):
 
     def update(self, itemdata):
         "Updates page_data from a PageData, SectionData or Dictionary"
-        if hasattr(itemdata, "_page_data"):
+        if isinstance(itemdata, PageData):
             self.page_data.update(itemdata._page_data)
-        elif hasattr(itemdata, "_section_data"):
-            sectionalias = itemdata.sectionalias
-            # add attributes from the section
-            for at, val in itemdata._section_data.items():
-                if isinstance(at, str):
-                    # A section attribute
-                    if val is None:
-                        continue
-                    self.page_data[sectionalias, at] = val
-            # add widgfields from section
-            for key,val in itemdata.items():
-                self.page_data[sectionalias, key[0], key[1]] = val
+        elif isinstance(itemdata, SectionData):
+            # create a PageData object and update it with the section
+            pd = PageData()
+            pd.update(itemdata)
+            self.page_data.update(pd._page_data)
         elif isinstance(itemdata, dict):
-            for key, val in itemdata.items():
-                if isinstance(key, str) and ("/" in key):
-                    self.page_data[key.split("/")] = val
-                else:
-                    self.page_data[key] = val
+            # create a PageData object from the dictionary
+            pd = PageData.from_dict(itemdict)
+            # and update from that
+            self.page_data.update(pd._page_data)
         else:
             raise ServerError(message="Error: invalid item used to update skicall")
 

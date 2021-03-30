@@ -269,15 +269,15 @@ class PageData(MutableMapping):
                 pd.sections.add(sectionalias)
                 pd._page_data[sectionalias, att] = val
             elif ":" in key:
-                front,fld = key.split(":")
-                if "-" in front:
+                section_widg,fld = key.split(":")
+                if "-" in section_widg:
                     # sectionalias-widget:field
-                    sectionalias, widg = front.split("-")
+                    sectionalias, widg = section_widg.split("-")
                     pd.sections.add(sectionalias)
                     pd._page_data[sectionalias, widg, fld] = val
                 else:
                     # widget:field
-                    pd._page_data[front, fld] = val
+                    pd._page_data[section_widg, fld] = val
             else:
                 # a single string without / or : must be a page attribute
                 pd._page_data[key] = val
@@ -347,24 +347,40 @@ class PageData(MutableMapping):
 
 
     def update(self, item):
-        "Update with either a two tuple widgfield dictionary or a SectionData object"
+        "Update with a PageData, SectionData or a dictionary"
         if isinstance(item, SectionData):
             # update from SectionData
             sectionalias = item.sectionalias
             if sectionalias not in self.sections:
                 # test no widget clash
-                for key in self.keys():
-                    if isinstance(key, tuple) and (len(key) == 2) and (sectionalias == key[0]):
+                for key in self:
+                    # iterates through every widget, with key being (widg,fld)
+                    if sectionalias == key[0]:
                         # sectionalias clashes with a widget
                         raise KeyError
             self._add_section(item)
-            return
-        if not isinstance(item, dict):
+        elif isinstance(item, PageData):
+            # update this PageData with another PageData object
+            # test the sections in the item object do not clash with widgets in this object
+            for key in self:
+                # iterates through every widget in self, with key being (widg,fld)
+                if key[0] in item.sections:
+                    # widget in self has the same name as a section in item
+                    raise KeyError
+            self._page_data.update(item._page_data)
+            self.sections.update(item.sections)
+        elif isinstance(item, dict):
+            # create a PageData object from the dictionary, and update with that
+            pd = PageData.from_dict(item)
+            for key in self:
+                # iterates through every widget in self, with key being (widg,fld)
+                if key[0] in pd.sections:
+                    # widget in self has the same name as a section in pd
+                    raise KeyError
+            self._page_data.update(pd._page_data)
+            self.sections.update(pd.sections)
+        else:
             raise KeyError
-        for key in item.keys():
-            if not self._valid_widgfield(key):
-                raise KeyError
-        self._page_data.update(item)
 
 
     def _add_section(self, section):
