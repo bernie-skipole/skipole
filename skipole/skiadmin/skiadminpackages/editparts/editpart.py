@@ -7,13 +7,15 @@ from ... import skilift
 from ....skilift import fromjson, editpage, editsection, item_info
 from ... import FailPage, ValidateError, GoTo, ServerError
 
+from ....ski.project_class_definition import SectionData
+
 
 
 def retrieve_editpart(skicall):
     "Fills in the edit a part page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -57,7 +59,9 @@ def retrieve_editpart(skicall):
         raise FailPage(e.message)
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Edit the html element."
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Edit the html element."
+    pd.update(sd_adminhead)
 
     # header done, now page contents
 
@@ -77,9 +81,9 @@ def retrieve_editpart(skicall):
         for att in atts_list:
             vals_list.append(part.attribs[att])
             attstring += " %s = \"%s\"" % (att, part.attribs[att])
-        page_data[('tag_para','para_text')] = "Element tag : <%s%s%s" % (part.tag_name, attstring, ending)
+        pd['tag_para','para_text'] = "Element tag : <%s%s%s" % (part.tag_name, attstring, ending)
     else:
-        page_data[('tag_para','para_text')] = "Element tag : <%s%s" % (part.tag_name, ending)
+        pd['tag_para','para_text'] = "Element tag : <%s%s" % (part.tag_name, ending)
 
     # list table of attributes, widget tables.Table2_1
     # contents = list of lists, each inner has five elements
@@ -87,41 +91,40 @@ def retrieve_editpart(skicall):
     # col 1 is the text to place in the second column,
     # col 2, 3, 4 are the three get field contents of the link
     if len(atts_list):
-        page_data[('attribs_list_para','show')] = True
-        page_data[('attribs_list','show')] = True
+        pd['attribs_list_para','show'] = True
+        pd['attribs_list','show'] = True
         contents = []
         for index, att in enumerate(atts_list):
             row = [ att, vals_list[index], att]
             contents.append(row)
-        page_data['attribs_list', 'contents'] = contents
+        pd['attribs_list', 'contents'] = contents
     else:
-        page_data[('attribs_list_para','show')] = False
-        page_data[('attribs_list','show')] = False
+        pd['attribs_list_para','show'] = False
+        pd['attribs_list','show'] = False
 
     # input form to change the tag name
-    page_data[('tag_input','input_text')] = part.tag_name
+    pd['tag_input','input_text'] = part.tag_name
 
     # input form to change the tag brief
-    page_data[('tag_brief','input_text')] = part.brief
+    pd['tag_brief','input_text'] = part.brief
 
     if part.part_type == "Part":
         if part.hide_if_empty:
-            page_data[('hidecheck','checked')] = True
+            pd['hidecheck','checked'] = True
         else:
-            page_data[('hidecheck','checked')] = False
+            pd['hidecheck','checked'] = False
     else:
-        page_data[('set_to_hide','show')] = False
-        page_data[('para_to_hide','show')] = False
-        page_data[('para_to_hide2','show')] = False
-        page_data['partdownload', 'show'] = False
-        page_data['aboutdownload', 'show'] = False
+        pd['set_to_hide','show'] = False
+        pd['para_to_hide','show'] = False
+        pd['para_to_hide2','show'] = False
+        pd['partdownload', 'show'] = False
+        pd['aboutdownload', 'show'] = False
 
 
 def set_tag(skicall):
     "Sets the part tag name, or brief, adds an attribute"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     pagenumber = None
     section_name = None
@@ -195,7 +198,7 @@ def remove_tag_attribute(skicall):
     "Removes the given tag attribute"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     pagenumber = None
     section_name = None
@@ -228,8 +231,8 @@ def remove_tag_attribute(skicall):
 
         if part.attribs and (att in part.attribs):
             # set the attribute to be removed in the input boxes so it can be edited
-            page_data['add_attrib', 'input_text1'] = att
-            page_data['add_attrib', 'input_text2'] = part.attribs[att]
+            pd['add_attrib', 'input_text1'] = att
+            pd['add_attrib', 'input_text2'] = part.attribs[att]
         else:
             raise FailPage("A Tag attribute to remove has not been found")
 
@@ -248,7 +251,7 @@ def downloadpart(skicall):
     "Gets part, and returns a json dictionary, this will be sent as an octet file to be downloaded"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 
@@ -281,7 +284,8 @@ def downloadpart(skicall):
         binline = line.encode('utf-8')
         n += len(binline)
         line_list.append(binline)
-    page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
+    pd.mimetype = 'application/octet-stream'
+    pd.content_length = str(n)
     return line_list
 
 
@@ -289,7 +293,7 @@ def create_insert(skicall):
     "Creates the html element"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 

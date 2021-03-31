@@ -10,6 +10,8 @@ from ....skilift import editresponder
 
 from ... import ValidateError, FailPage, ServerError, GoTo
 
+from ....ski.project_class_definition import SectionData
+
 from .. import utils
 
 def _ident_to_str(ident):
@@ -45,14 +47,18 @@ def _t_ref(r_info, item):
     return ".".join(["responders", r_info.module_name, r_info.responder, item])
 
 
-
 def skicall_help(skicall):
     "Retrieves help text for the skicall object"
     text = skicall.textblock("aboutcode.skicall")
     if not text:
         text = "No help text for aboutcode.skicall has been found"
-    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
-    skicall.page_data[("adminhead","show_help","hide")] = False
+
+    pd = skicall.call_data['pagedata']
+    # Fill in header
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["show_help","para_text"] = "\n" + text
+    sd_adminhead["show_help","hide"] = False
+    pd.update(sd_adminhead)
 
 
 def use_submit_list_help(skicall):
@@ -60,8 +66,13 @@ def use_submit_list_help(skicall):
     text = skicall.textblock("aboutcode.usesubmitlist")
     if not text:
         text = "No help text for aboutcode.use_submit_list has been found"
-    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
-    skicall.page_data[("adminhead","show_help","hide")] = False
+
+    pd = skicall.call_data['pagedata']
+    # Fill in header
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["show_help","para_text"] = "\n" + text
+    sd_adminhead["show_help","hide"] = False
+    pd.update(sd_adminhead)
 
 
 def fail_page_help(skicall):
@@ -69,8 +80,13 @@ def fail_page_help(skicall):
     text = skicall.textblock("responders.fail_page")
     if not text:
         text = "No help text for responders.fail_page has been found"
-    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
-    skicall.page_data[("adminhead","show_help","hide")] = False
+
+    pd = skicall.call_data['pagedata']
+    # Fill in header
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["show_help","para_text"] = "\n" + text
+    sd_adminhead["show_help","hide"] = False
+    pd.update(sd_adminhead)
 
 
 def submit_data_help(skicall):
@@ -90,8 +106,13 @@ def submit_data_help(skicall):
     text = skicall.textblock(sdtextref)
     if not text:
         text = "No help text for %s has been found" % sdtextref
-    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
-    skicall.page_data[("adminhead","show_help","hide")] = False
+
+    pd = call_data['pagedata']
+    # Fill in header
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["show_help","para_text"] = "\n" + text
+    sd_adminhead["show_help","hide"] = False
+    pd.update(sd_adminhead)
 
 
 def submit_dict_help(skicall):
@@ -111,8 +132,13 @@ def submit_dict_help(skicall):
     text = skicall.textblock(sdtextref)
     if not text:
         text = "No help text for %s has been found" % sdtextref
-    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
-    skicall.page_data[("adminhead","show_help","hide")] = False
+
+    pd = call_data['pagedata']
+    # Fill in header
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["show_help","para_text"] = "\n" + text
+    sd_adminhead["show_help","hide"] = False
+    pd.update(sd_adminhead)
 
 
 def call_data_help(skicall):
@@ -132,8 +158,13 @@ def call_data_help(skicall):
     text = skicall.textblock(cdtextref)
     if not text:
         text = "No help text for %s has been found" % cdtextref
-    skicall.page_data[("adminhead","show_help","para_text")] = "\n" + text
-    skicall.page_data[("adminhead","show_help","hide")] = False
+
+    pd = call_data['pagedata']
+    # Fill in header
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["show_help","para_text"] = "\n" + text
+    sd_adminhead["show_help","hide"] = False
+    pd.update(sd_adminhead)
 
 
 def retrieve_edit_respondpage(skicall):
