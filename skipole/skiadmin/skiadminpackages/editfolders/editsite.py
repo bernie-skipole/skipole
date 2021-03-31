@@ -8,7 +8,7 @@ from ....skilift import off_piste, fromjson, editpage
 from .. import utils, css_styles
 from ... import FailPage, ValidateError, ServerError, GoTo
 
-from .... import SectionData
+from ....ski.project_class_definition import SectionData
 
 
 def retrieve_index_data(skicall):

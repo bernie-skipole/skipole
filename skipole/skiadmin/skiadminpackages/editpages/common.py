@@ -5,7 +5,7 @@ from ... import ValidateError, FailPage, ServerError, GoTo
 from ....skilift import get_itemnumber
 from ....skilift.editpage import rename_page, page_description, new_parent
 
-from .... import SectionData
+from ....ski.project_class_definition import SectionData
 
 
 def submit_rename_page(skicall):

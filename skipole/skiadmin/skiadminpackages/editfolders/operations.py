@@ -9,7 +9,7 @@ from ... import FailPage, ValidateError, ServerError, GoTo
 
 from .. import utils, css_styles
 
-from .... import SectionData
+from ....ski.project_class_definition import SectionData
 
 
 def retrieve_operations_data(skicall):

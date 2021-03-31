@@ -7,7 +7,7 @@ import collections
 
 from ... import ValidateError, FailPage, ServerError
 
-from .... import SectionData
+from ....ski.project_class_definition import SectionData
 
 from ... import skilift
 from ....skilift import editpage

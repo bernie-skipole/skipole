@@ -8,7 +8,7 @@ from ... import ValidateError, FailPage, ServerError
 from ... import skilift
 from ....skilift import fromjson, editfolder, editresponder, editpage
 
-from .... import SectionData
+from ....ski.project_class_definition import SectionData
 
 from .. import utils, css_styles
 

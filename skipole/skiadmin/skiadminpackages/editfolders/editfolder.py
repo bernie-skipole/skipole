@@ -9,7 +9,7 @@ from ... import skilift
 from ....skilift import editpage, editfolder, fromjson
 from .. import utils
 
-from .... import SectionData
+from ....ski.project_class_definition import SectionData
 
 
 def edit_root(skicall):

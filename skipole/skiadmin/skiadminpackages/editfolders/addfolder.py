@@ -6,7 +6,7 @@ from ... import ValidateError, FailPage, ServerError
 from ... import skilift
 from ....skilift import editfolder, fromjson
 
-from .... import SectionData
+from ....ski.project_class_definition import SectionData
 
 
 
