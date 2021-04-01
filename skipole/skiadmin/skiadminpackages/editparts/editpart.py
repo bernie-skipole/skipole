@@ -293,7 +293,6 @@ def create_insert(skicall):
     "Creates the html element"
 
     call_data = skicall.call_data
-    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
 

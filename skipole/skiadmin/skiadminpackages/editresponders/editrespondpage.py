@@ -171,7 +171,7 @@ def retrieve_edit_respondpage(skicall):
     "Retrieves widget data for the edit respond page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # clears any session data, keeping page_number, pchange and any status message
     utils.clear_call_data(call_data, keep=["page_number", "pchange", "status"])
@@ -191,130 +191,138 @@ def retrieve_edit_respondpage(skicall):
 
         call_data['pchange'] = pageinfo.change
 
-        # fills in the data for editing page name, brief, parent, etc., 
-        page_data[("adminhead","page_head","large_text")] = pageinfo.name
-        page_data[('page_edit','p_ident','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_name','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_description','page_ident')] = (project,str_pagenumber)
-        page_data[('page_edit','p_rename','input_text')] = pageinfo.name
-        page_data[('page_edit','p_parent','input_text')] = "%s,%s" % (project, pageinfo.parentfolder_number)
-        page_data[('page_edit','p_brief','input_text')] = pageinfo.brief
+
+        # Fill in header
+        sd_adminhead = SectionData("adminhead")
+        sd_adminhead["page_head","large_text"] = pageinfo.name
+        pd.update(sd_adminhead)
+
+        # fills in the data for editing page name, brief, parent, etc.,
+
+        sd_page_edit = SectionData("page_edit")
+        sd_page_edit['p_ident','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_name','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_description','page_ident'] = (project,str_pagenumber)
+        sd_page_edit['p_rename','input_text'] = pageinfo.name
+        sd_page_edit['p_parent','input_text'] = "%s,%s" % (project, pageinfo.parentfolder_number)
+        sd_page_edit['p_brief','input_text'] = pageinfo.brief
+        pd.update(sd_page_edit)
 
         # get a ResponderInfo named tuple with information about the responder
         r_info = editresponder.responder_info(project, pagenumber, call_data['pchange'])
     except ServerError as e:
         raise FailPage(message=e.message)
 
-    page_data['respondertype:para_text'] = "This page is a responder of type: %s." % (r_info.responder,)
-    page_data['responderdescription:textblock_ref'] = ".".join(["responders",r_info.module_name, r_info.responder])
+    pd['respondertype','para_text'] = "This page is a responder of type: %s." % (r_info.responder,)
+    pd['responderdescription','textblock_ref'] = ".".join(["responders",r_info.module_name, r_info.responder])
 
     if r_info.widgfield_required:
         if r_info.widgfield:
-            page_data['widgfield:input_text'] = r_info.widgfield
+            pd['widgfield','input_text'] = r_info.widgfield
     else:
-        page_data['widgfield:show'] = False
+        pd['widgfield','show'] = False
 
     if r_info.alternate_ident_required:
-        page_data['alternate','input_text'] = _ident_to_str(r_info.alternate_ident)
-        page_data['alternate_ident_description','textblock_ref'] = _t_ref(r_info, 'alternate_ident')
+        pd['alternate','input_text'] = _ident_to_str(r_info.alternate_ident)
+        pd['alternate_ident_description','textblock_ref'] = _t_ref(r_info, 'alternate_ident')
     else:
-        page_data['alternate','show'] = False
-        page_data['alternate_ident_description','show'] = False
+        pd['alternate','show'] = False
+        pd['alternate_ident_description','show'] = False
 
     if r_info.target_ident_required:
-        page_data['target:input_text'] = _ident_to_str(r_info.target_ident)
-        page_data['target_ident_description','textblock_ref'] = _t_ref(r_info, 'target_ident')
+        pd['target','input_text'] = _ident_to_str(r_info.target_ident)
+        pd['target_ident_description','textblock_ref'] = _t_ref(r_info, 'target_ident')
     else:
-        page_data['target:show'] = False
-        page_data['target_ident_description','show'] = False
+        pd['target','show'] = False
+        pd['target_ident_description','show'] = False
 
     if r_info.allowed_callers_required:
-        page_data['allowed_callers_description:textblock_ref'] = _t_ref(r_info, 'allowed_callers')
+        pd['allowed_callers_description','textblock_ref'] = _t_ref(r_info, 'allowed_callers')
         if r_info.allowed_callers:
             contents = []
             for ident in r_info.allowed_callers:
                 ident_row = [_ident_to_str(ident), _ident_to_str(ident).replace(",","_")]
                 contents.append(ident_row)
-            page_data['allowed_callers_list:contents'] = contents
+            pd['allowed_callers_list','contents'] = contents
         else:
-            page_data['allowed_callers_list:show'] = False
-        page_data['add_allowed_caller:input_text'] = ''
+            pd['allowed_callers_list','show'] = False
+        pd['add_allowed_caller','input_text'] = ''
     else:
-        page_data['allowed_callers_description:show'] = False
-        page_data['allowed_callers_list:show'] = False
-        page_data['add_allowed_caller:show'] = False
+        pd['allowed_callers_description','show'] = False
+        pd['allowed_callers_list','show'] = False
+        pd['add_allowed_caller','show'] = False
 
     # validate option
     if r_info.validate_option_available:
-        page_data[('val_option_desc', 'textblock_ref')] =  _t_ref(r_info, 'validate_option')
+        pd['val_option_desc', 'textblock_ref'] =  _t_ref(r_info, 'validate_option')
         if r_info.validate_option:
-            page_data['set_val_option','button_text'] = "Disable Validation"
-            page_data['val_status','para_text'] = "Validate received field values : Enabled"
-            page_data['validate_fail', 'input_text'] = _ident_to_str(r_info.validate_fail_ident)
-            page_data['validate_fail', 'hide'] = False
+            pd['set_val_option','button_text'] = "Disable Validation"
+            pd['val_status','para_text'] = "Validate received field values : Enabled"
+            pd['validate_fail', 'input_text'] = _ident_to_str(r_info.validate_fail_ident)
+            pd['validate_fail', 'hide'] = False
         else:
-            page_data['set_val_option','button_text'] = "Enable Validation"
-            page_data['val_status','para_text'] = "Validate received field values : Disabled"
-            page_data['validate_fail', 'hide'] = True
+            pd['set_val_option','button_text'] = "Enable Validation"
+            pd['val_status','para_text'] = "Validate received field values : Disabled"
+            pd['validate_fail', 'hide'] = True
     else:
-        page_data['val_option_desc','show'] = False
-        page_data['set_val_option','show'] = False
-        page_data['val_status','show'] = False
-        page_data['validate_fail', 'show'] = False
+        pd['val_option_desc','show'] = False
+        pd['set_val_option','show'] = False
+        pd['val_status','show'] = False
+        pd['validate_fail', 'show'] = False
 
     
     # submit option
 
     if r_info.submit_option_available:
-        page_data['submit_option_desc','textblock_ref'] = _t_ref(r_info, 'submit_option')
+        pd['submit_option_desc','textblock_ref'] = _t_ref(r_info, 'submit_option')
         if r_info.submit_option:
-            page_data['set_submit_option','button_text'] = 'Disable submit_data'
-            page_data['submit_status','para_text'] = "Call submit_data : Enabled"
+            pd['set_submit_option','button_text'] = 'Disable submit_data'
+            pd['submit_status','para_text'] = "Call submit_data : Enabled"
         else:
-            page_data['set_submit_option','button_text'] = 'Enable submit_data'
-            page_data['submit_status','para_text'] = "Call submit_data : Disabled"
+            pd['set_submit_option','button_text'] = 'Enable submit_data'
+            pd['submit_status','para_text'] = "Call submit_data : Disabled"
     else:
-        page_data['submit_option_desc','show'] = False
-        page_data['set_submit_option','show'] = False
-        page_data['submit_status','show'] = False
+        pd['submit_option_desc','show'] = False
+        pd['set_submit_option','show'] = False
+        pd['submit_status','show'] = False
 
     if r_info.submit_required or r_info.submit_option:
-        page_data['submit_list_description','textblock_ref'] = 'responders.about_submit_list'
+        pd['submit_list_description','textblock_ref'] = 'responders.about_submit_list'
 
         if r_info.submit_list:
             contents = []
             for index, s in enumerate(r_info.submit_list):
                 s_row = [s, str(index)]
                 contents.append(s_row)
-            page_data['submit_list','contents'] = contents
+            pd['submit_list','contents'] = contents
         else:
-            page_data['submit_list','show'] = False
-        page_data['submit_string','input_text'] = ''
-        page_data['fail_page_ident:input_text'] = _ident_to_str(r_info.fail_ident)
+            pd['submit_list','show'] = False
+        pd['submit_string','input_text'] = ''
+        pd['fail_page_ident','input_text'] = _ident_to_str(r_info.fail_ident)
     else:
-        page_data['submit_list_description','show'] = False
-        page_data['submit_list','show'] = False
-        page_data['submit_string','show'] = False
-        page_data['submit_info','show'] = False
-        page_data['fail_page_ident','show'] = False
+        pd['submit_list_description','show'] = False
+        pd['submit_list','show'] = False
+        pd['submit_string','show'] = False
+        pd['submit_info','show'] = False
+        pd['fail_page_ident','show'] = False
 
     # final paragraph
-    page_data['final_paragraph:textblock_ref'] = _t_ref(r_info, 'final_paragraph')
+    pd['final_paragraph','textblock_ref'] = _t_ref(r_info, 'final_paragraph')
 
     # field options
     f_options = r_info.field_options
     if not f_options['fields']:
         # no fields so no further data to input
-        return page_data
+        return
 
     # show the fields description
-    page_data['fields_description:show'] = True
-    page_data['fields_description:textblock_ref'] = _t_ref(r_info, 'fields')
+    pd['fields_description','show'] = True
+    pd['fields_description','textblock_ref'] = _t_ref(r_info, 'fields')
 
 
     if f_options['field_values'] and ( not f_options['single_field'] ):
-        page_data['field_values_list:show'] = True
-        page_data['add_field_value:show'] = True
+        pd['field_values_list','show'] = True
+        pd['add_field_value','show'] = True
         # populate field_values_list
         contents = []
         field_vals = r_info.field_values_list
@@ -327,24 +335,23 @@ def retrieve_edit_respondpage(skicall):
             contents.append(row)
         if contents:
             contents.sort()
-            page_data['field_values_list:contents'] = contents
+            pd['field_values_list','contents'] = contents
         else:
-            page_data['field_values_list:show'] = False
+            pd['field_values_list','show'] = False
         # set the add_field_value label to be descriptive
         if f_options['widgfields']:
             if f_options['field_keys']:
-                page_data['add_field_value','label'] = "Widgfields and keys:"
+                pd['add_field_value','label'] = "Widgfields and keys:"
             else:
-                page_data['add_field_value','label'] = "Widgfields and values:"
+                pd['add_field_value','label'] = "Widgfields and values:"
         else:
-            page_data['add_field_value','label'] = "Items:"
-
+            pd['add_field_value','label'] = "Items:"
         return
        
 
     if (not f_options['field_values']) and (not f_options['single_field']):
-        page_data['field_list','show'] = True
-        page_data['add_field','show'] = True
+        pd['field_list','show'] = True
+        pd['add_field','show'] = True
         # populate field_list
         contents = []
         field_vals = r_info.field_list
@@ -354,14 +361,14 @@ def retrieve_edit_respondpage(skicall):
             contents.append(row)
         if contents:
             contents.sort()
-            page_data['field_list','contents'] = contents
+            pd['field_list','contents'] = contents
         else:
-            page_data['field_list','show'] = False
+            pd['field_list','show'] = False
         # populate add_field
         if f_options['widgfields']:
-             page_data['add_field','label'] = "Add a widgfield:"
+             pd['add_field','label'] = "Add a widgfield:"
         else:
-            page_data['add_field,','label'] = "Add a string:"
+            pd['add_field,','label'] = "Add a string:"
 
     if not f_options['single_field']:
         return
@@ -370,13 +377,12 @@ def retrieve_edit_respondpage(skicall):
 
     if not f_options['field_values']:
         # a single value is a submit text input field
-        page_data[('single_field','show')] = True
+        pd['single_field','show'] = True
         if not r_info.single_field:
-            page_data[('single_field','input_text')] = ''
+            pd['single_field','input_text'] = ''
         else:
-            page_data[('single_field','input_text')] = r_info.single_field
+            pd['single_field','input_text'] = r_info.single_field
         return
-
 
     # remaining is for a single field and value - still to do
     # as there is currently no responder which takes a single field and value
@@ -387,7 +393,6 @@ def submit_widgfield(skicall):
     "Sets widgfield"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -408,7 +413,7 @@ def submit_alternate_ident(skicall):
     "Sets the alternate page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -420,7 +425,7 @@ def submit_alternate_ident(skicall):
         call_data['pchange'] = editresponder.set_alternate_ident(project, pagenumber, pchange, call_data['alternate_ident'])
     except ServerError as e:
         raise FailPage(e.message)
-    page_data['alternate','set_input_accepted'] = True
+    pd['alternate','set_input_accepted'] = True
     call_data['status'] = 'Page set'
 
 
@@ -429,7 +434,7 @@ def submit_target_ident(skicall):
     "Sets the target ident"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -441,7 +446,7 @@ def submit_target_ident(skicall):
         call_data['pchange'] = editresponder.set_target_ident(project, pagenumber, pchange, call_data['target_ident'])
     except ServerError as e:
         raise FailPage(e.message)
-    page_data['target','set_input_accepted'] = True
+    pd['target','set_input_accepted'] = True
     call_data['status'] = 'Target Ident set'
 
 
@@ -449,7 +454,7 @@ def submit_validate_fail_ident(skicall):
     "Sets the validate fail ident"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -461,7 +466,7 @@ def submit_validate_fail_ident(skicall):
         call_data['pchange'] = editresponder.set_validate_fail_ident(project, pagenumber, pchange, call_data['validate_fail_ident'])
     except ServerError as e:
         raise FailPage(e.message)
-    page_data['validate_fail','set_input_accepted'] = True
+    pd['validate_fail','set_input_accepted'] = True
     call_data['status'] = 'Validate Fail Ident set'
 
 
@@ -469,7 +474,6 @@ def submit_fail_ident(skicall):
     "Sets the fail ident"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -488,7 +492,6 @@ def add_allowed_caller(skicall):
     "Adds a new allowed caller"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -506,7 +509,6 @@ def delete_allowed_caller(skicall):
     "Deletes an allowed caller"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -524,7 +526,6 @@ def remove_field(skicall):
     "Deletes a field"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -542,7 +543,7 @@ def add_field_value(skicall):
     "Adds a field and value"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -567,9 +568,9 @@ def add_field_value(skicall):
         if not f_options['fields']:
             raise FailPage(message="Invalid submission, this responder does not have fields", widget="fields_error")
         if not f_options['empty_values_allowed']:
-            page_data['add_field_value', 'input_text1'] = call_data['field']
-            page_data['add_field_value', 'set_input_accepted1'] = True
-            page_data['add_field_value', 'set_input_errored2'] = True
+            pd['add_field_value', 'input_text1'] = call_data['field']
+            pd['add_field_value', 'set_input_accepted1'] = True
+            pd['add_field_value', 'set_input_errored2'] = True
             raise FailPage(message="Invalid submission, empty field values are not allowed", widget="fields_error")
     # Add the field and value
     try:
@@ -582,7 +583,6 @@ def add_field(skicall):
     "Adds a field"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -602,7 +602,6 @@ def set_single_field(skicall):
     "Sets the field in a responder, which require s single field only"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -625,7 +624,6 @@ def delete_submit_list_string(skicall):
     "deletes an indexed string from the submit_list"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -646,7 +644,6 @@ def add_submit_list_string(skicall):
     "Adds a new submit_list string"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -666,7 +663,7 @@ def set_validate_option(skicall):
     "Enable or disable the validate option"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -676,13 +673,13 @@ def set_validate_option(skicall):
     except ServerError as e:
         raise FailPage(e.message)        
     if validate_option:
-        page_data['set_val_option','button_text'] = "Disable Validation"
-        page_data['val_status','para_text'] = "Validate received field values : Enabled"
-        page_data['validate_fail', 'hide'] = False
+        pd['set_val_option','button_text'] = "Disable Validation"
+        pd['val_status','para_text'] = "Validate received field values : Enabled"
+        pd['validate_fail', 'hide'] = False
     else:
-        page_data['set_val_option','button_text'] = "Enable Validation"
-        page_data['val_status','para_text'] = "Validate received field values : Disabled"
-        page_data['validate_fail', 'hide'] = True
+        pd['set_val_option','button_text'] = "Enable Validation"
+        pd['val_status','para_text'] = "Validate received field values : Disabled"
+        pd['validate_fail', 'hide'] = True
     call_data['status'] = 'Validator changed'
 
 
@@ -690,7 +687,6 @@ def set_submit_option(skicall):
     "Enable or disable the submit option"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -706,11 +702,22 @@ def map(skicall):
     "Creates the responder map"
     pagenumber = skicall.call_data['page_number']
     project = skicall.call_data['editedprojname']
-    page_data = skicall.page_data
-    page_data['responder', 'responderid', 'text'] = "Ident: " + str(pagenumber)
+    pd = skicall.call_data['pagedata']
+
+    map_height = 1600
+
+    # get information about the responder
+    pageinfo = skilift.page_info(project, pagenumber)
+    r_info = editresponder.responder_info(project, pagenumber)
+    i_info = skilift.item_info(project, pagenumber)
+    label_list = i_info.label_list
+
+
+    sd_responder = SectionData('responder')
+    sd_responder['responderid', 'text'] = "Ident: " + str(pagenumber)
 
     # insert font text style
-    page_data['textstyle', 'text'] = """
+    pd['textstyle', 'text'] = """
   <style>
     /* <![CDATA[ */
     text {
@@ -724,14 +731,19 @@ def map(skicall):
   </style>
     """
 
+    # fill in the box regarding this responder
+    if pageinfo.restricted:
+        sd_responder['responderaccess', 'text'] = "Restricted access"
+    else:
+        sd_responder['responderaccess', 'text'] = "Open access"
+    if label_list:
+        sd_responder['responderlabels', 'text'] = "Label: " + ','.join(label_list)
+    else:
+        sd_responder['responderlabels', 'show'] = False
+    sd_responder['respondertype', 'text'] = "Responder: " + r_info.responder
+    sd_responder['responderbrief', 'text'] = pageinfo.brief
+    pd.update(sd_responder)
 
-    map_height = 1600
-
-    # get information about the responder
-    pageinfo = skilift.page_info(project, pagenumber)
-    r_info = editresponder.responder_info(project, pagenumber)
-    i_info = skilift.item_info(project, pagenumber)
-    label_list = i_info.label_list
 
     # list of all responders
     responder_list = editresponder.all_responders(project)
@@ -759,15 +771,22 @@ def map(skicall):
                 else:
                     callers2.append([0,n-280,str(responder_id) + " " + moreinfo.brief])
                 n += 20
+
+    sd_callers = SectionData('callers')
+    sd_callers2 = SectionData('callers2')
+
     if n == 40:
-        page_data['callers','show'] = False
-        page_data['callers2','show'] = False
+        sd_callers.show = False
+        sd_callers2.show = False
     elif not callers2:
-        page_data['callers', 'callers', 'lines'] = callers
-        page_data['callers2','show'] = False
+        sd_callers['callers', 'lines'] = callers
+        sd_callers2.show = False
     else:
-        page_data['callers', 'callers', 'lines'] = callers
-        page_data['callers2', 'callers', 'lines'] = callers2
+        sd_callers['callers', 'lines'] = callers
+        sd_callers2['callers', 'lines'] = callers2
+
+    pd.update(sd_callers)
+    pd.update(sd_callers2)
 
 
     # Find all responders which call this responder on failure
@@ -791,19 +810,25 @@ def map(skicall):
                 moreinfo = skilift.page_info(project, responder_id)
                 fails.append([0,n,str(responder_id) + " " + moreinfo.brief])
                 n += 20
+
+    sd_fails = SectionData('fails')
     if count:
         fails.append([0, 320, "Plus %s more responders." % (count,)]) 
     if n == 40:
-        page_data['fails','show'] = False
+        sd_fails.show = False
     else:
-        page_data['fails', 'callers', 'lines'] = fails
+        sd_fails['callers', 'lines'] = fails
+
+    pd.update(sd_fails)
 
 
     # Find allowed callers to this responder
 
+    sd_allowed = SectionData('allowed')
+
     allowed_list = r_info.allowed_callers
     if allowed_list:
-        page_data['allowed','show'] = True
+        sd_allowed.show = True
         allowed = [[0,0, "Allowed callers to %s:" % pagenumber], [0,20, "(Calling page must provide ident information)"]]
         n = 40
         for allowedid in allowed_list:
@@ -828,211 +853,221 @@ def map(skicall):
                         allowed.append([0,n,allowedident[0] + ", " + str(allowedident[1]) + ": " + allowedinfo.brief])
                 n += 20
 
-        page_data['allowed', 'callers', 'lines'] = allowed
+        sd_allowed['callers', 'lines'] = allowed
     else:
-        page_data['allowed','show'] = False
+        sd_allowed.show = False
 
+    pd.update(sd_allowed)
 
 
     # If the responder has a target, draw a target line on the page
+
+    sd_targetline = SectionData('targetline')
+
     if r_info.target_ident or r_info.target_ident_required:
-        page_data['targetline','show'] = True
+        sd_targetline.show = True
     else:
-        page_data['targetline','show'] = False
+        sd_targetline.show = False
 
     # normally no output ellipse is shown
-    page_data['output','show'] = False
-
-
-    # fill in the box regarding this responder
-    if pageinfo.restricted:
-        page_data['responder', 'responderaccess', 'text'] = "Restricted access"
-    else:
-        page_data['responder', 'responderaccess', 'text'] = "Open access"
-    if label_list:
-        page_data['responder', 'responderlabels', 'text'] = "Label: " + ','.join(label_list)
-    else:
-        page_data['responder', 'responderlabels', 'show'] = False
-    page_data['responder', 'respondertype', 'text'] = "Responder: " + r_info.responder
-    page_data['responder', 'responderbrief', 'text'] = pageinfo.brief
+    sd_output = SectionData('output')
+    sd_output.show = False
 
     # submit_data information
+    sd_submitdata = SectionData('submitdata')
+
+    sd_submitdata_failpage = SectionData('submitdata_failpage')
+
     if r_info.submit_option or r_info.submit_required:
-        page_data['submitdata','show'] = True
+        sd_submitdata.show = True
         if r_info.submit_list:
             s_list = []
             s = 0
             for item in r_info.submit_list:
                 s_list.append([0,s,item])
                 s += 20
-            page_data['submitdata', 'submitlist','lines'] = s_list
+            sd_submitdata['submitlist','lines'] = s_list
         # show the return value
         if r_info.responder == "ColourSubstitute":
-            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary of strings: colour strings"
+            sd_submitdata['submitdatareturn','text'] = "Returns a dictionary of strings: colour strings"
         elif r_info.responder == "SetCookies":
-            page_data['submitdata','submitdatareturn','text'] = "Returns an instance of http.cookies.BaseCookie"
+            sd_submitdata['submitdatareturn','text'] = "Returns an instance of http.cookies.BaseCookie"
         elif r_info.responder == "GetDictionaryDefaults":
-            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary with default values"
+            sd_submitdata['submitdatareturn','text'] = "Returns a dictionary with default values"
         elif r_info.responder == "SubmitJSON":
-            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary"
+            sd_submitdata['submitdatareturn','text'] = "Returns a dictionary"
             # no target, but include a target line
-            page_data['targetline','show'] = True
+            sd_targetline.show = True
             # change 'Target Page' to 'Output'
-            page_data['submitdata','output', 'text'] = "Output"
+            sd_submitdata['output', 'text'] = "Output"
             # show an output ellipse
-            page_data['output','show'] = True
-            page_data['output','textout', 'text'] = "Send JSON data"
-            page_data['output','textout', 'x'] = 320
+            sd_output.show = True
+            sd_output['textout', 'text'] = "Send JSON data"
+            sd_output['textout', 'x'] = 320
         elif r_info.responder == "SubmitPlainText":
-            page_data['submitdata','submitdatareturn','text'] = "Returns a string"
+            sd_submitdata['submitdatareturn','text'] = "Returns a string"
             # no target, but include a target line
-            page_data['targetline','show'] = True
+            sd_targetline.show = True
             # change 'Target Page' to 'Output'
-            page_data['submitdata','output', 'text'] = "Output"
+            sd_submitdata['output', 'text'] = "Output"
             # show an output ellipse
-            page_data['output','show'] = True
-            page_data['output','textout', 'text'] = "Send plain text"
-            page_data['output','textout', 'x'] = 320
+            sd_output.show = True
+            sd_output['textout', 'text'] = "Send plain text"
+            sd_output['textout', 'x'] = 320
         elif r_info.responder == "SubmitCSS":
-            page_data['submitdata','submitdatareturn','text'] = "Returns a style"
+            sd_submitdata['submitdatareturn','text'] = "Returns a style"
             # no target, but include a target line
-            page_data['targetline','show'] = True
+            sd_targetline.show = True
             # change 'Target Page' to 'Output'
-            page_data['submitdata','output', 'text'] = "Output"
+            sd_submitdata['output', 'text'] = "Output"
             # show an output ellipse
-            page_data['output','show'] = True
-            page_data['output','textout', 'text'] = "Send CSS data"
-            page_data['output','textout', 'x'] = 320
+            sd_output.show = True
+            sd_output['textout', 'text'] = "Send CSS data"
+            sd_output['textout', 'x'] = 320
         elif r_info.responder == "MediaQuery":
-            page_data['submitdata','submitdatareturn','text'] = "Returns a dictionary of media queries : CSS targets"
+            sd_submitdata['submitdatareturn','text'] = "Returns a dictionary of media queries : CSS targets"
             # no target, but include a target line
-            page_data['targetline','show'] = True
+            sd_targetline.show = True
             # change 'Target Page' to 'Output'
-            page_data['submitdata','output', 'text'] = "Output"
+            sd_submitdata['output', 'text'] = "Output"
             # show an output ellipse
-            page_data['output','show'] = True
-            page_data['output','textout', 'text'] = "Update query:target items"
-            page_data['output','textout', 'x'] = 320
+            sd_output.show = True
+            sd_output['textout', 'text'] = "Update query:target items"
+            sd_output['textout', 'x'] = 320
         elif r_info.responder == "SubmitIterator":
-            page_data['submitdata','submitdatareturn','text'] = "Returns a binary file iterator"
+            sd_submitdata['submitdatareturn','text'] = "Returns a binary file iterator"
             # no target, but include a target line
-            page_data['targetline','show'] = True
+            sd_targetline.show = True
             # change 'Target Page' to 'Output'
-            page_data['submitdata','output', 'text'] = "Output"
+            sd_submitdata['output', 'text'] = "Output"
             # show an output ellipse
-            page_data['output','show'] = True
-            page_data['output','textout', 'text'] = "Send Binary data"
-            page_data['output','textout', 'x'] = 320
+            sd_output.show = True
+            sd_output['textout', 'text'] = "Send Binary data"
+            sd_output['textout', 'x'] = 320
 
         # show the fail page
-        _show_submit_data_failpage(project, page_data, r_info)
+        _show_submit_data_failpage(project, sd_submitdata_failpage, r_info)
     else:
-        page_data['submitdata','show'] = False
-        page_data['submitdata_failpage','show'] = False
+        sd_submitdata.show = False
+        sd_submitdata_failpage.show = False
+
 
     # The target page
-    _show_target(project, page_data, r_info)
+    sd_target = SectionData('target')
+    _show_target(project, sd_target, r_info)
 
     # validation option
-    _show_validate_fail(project, page_data, r_info)
+    sd_validate = SectionData('validate')
+    _show_validate_fail(project, sd_validate, r_info)
 
     # The alternate option
-    _show_alternate(project, page_data, r_info)
+    sd_alternatebox = SectionData('alternatebox')
+    _show_alternate(project, sd_alternatebox, r_info)
 
     if r_info.responder == 'CaseSwitch':
-        _show_caseswitch(project, page_data, r_info)
+        _show_caseswitch(project, pd, r_info)
     elif r_info.responder == 'EmptyCallDataGoto':
-        _show_emptycalldatagoto(project, page_data, r_info)
+        _show_emptycalldatagoto(project, pd, r_info)
     elif r_info.responder == 'EmptyGoto':
-        _show_emptygoto(project, page_data, r_info)
+        _show_emptygoto(project, pd, r_info)
     elif r_info.responder == "MediaQuery":
-        _show_mediaquery(project, page_data, r_info)
+        _show_mediaquery(project, pd, r_info)
+
+    pd.update(sd_targetline)
+    pd.update(sd_output)
+    pd.update(sd_submitdata)
+    pd.update(sd_submitdata_failpage)
+    pd.update(sd_target)
+    pd.update(sd_validate)
+    pd.update(sd_alternatebox)
 
 
-def _show_target(project, page_data, r_info):
+
+
+def _show_target(project, sd_target, r_info):
     "The responder passes the call to this target"
     if r_info.target_ident or r_info.target_ident_required:
-        page_data['target','show'] = True
+        sd_target.show = True
         if r_info.target_ident:
             targetident = r_info.target_ident
             if isinstance(targetident, str):
                 targetident = skilift.ident_from_label(project, targetident)
             if targetident is None:
-                page_data['target','show'] = False
+                sd_target.show = False
             elif isinstance(targetident, str):
-                page_data['target', 'responderid', 'text'] = targetident
+                sd_target['responderid', 'text'] = targetident
             elif isinstance(targetident, tuple) and (len(targetident) == 2):
                 try:
                     targetinfo = skilift.page_info(*targetident)
                 except ServerError:
-                    page_data['target', 'responderid', 'text'] = "Unknown Ident: " + targetident[0] + ", " + str(targetident[1])
+                    sd_target['responderid', 'text'] = "Unknown Ident: " + targetident[0] + ", " + str(targetident[1])
                 else:
                     if targetident[0] == project:
-                        page_data['target', 'responderid', 'text'] = "Ident: " + str(targetident[1])
+                        sd_target['responderid', 'text'] = "Ident: " + str(targetident[1])
                     else:
-                        page_data['target', 'responderid', 'text'] = "Ident: " + targetident[0] + ", " + str(targetident[1])
+                        sd_target['responderid', 'text'] = "Ident: " + targetident[0] + ", " + str(targetident[1])
                     if targetinfo.restricted:
-                        page_data['target', 'responderaccess', 'text'] = "Restricted access"
+                        sd_target['responderaccess', 'text'] = "Restricted access"
                     else:
-                        page_data['target', 'responderaccess', 'text'] = "Open access"
+                        sd_target['responderaccess', 'text'] = "Open access"
                     if isinstance(r_info.target_ident, str):
-                        page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident
+                        sd_target['responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident
                     else:
-                        page_data['target', 'responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident[0] + ", " + str(r_info.target_ident[1])
-                    page_data['target', 'responderbrief', 'text'] = targetinfo.brief
+                        sd_target['responderlabels', 'text'] = "Targeted from responder as: " + r_info.target_ident[0] + ", " + str(r_info.target_ident[1])
+                    sd_target['responderbrief', 'text'] = targetinfo.brief
                     if targetinfo.item_type == "RespondPage":
-                        page_data['target', 'respondertype', 'text'] = "Responder: " + targetinfo.responder
+                        sd_target['respondertype', 'text'] = "Responder: " + targetinfo.responder
                     else:
-                        page_data['target', 'respondertype', 'text'] = targetinfo.item_type
+                        sd_target['respondertype', 'text'] = targetinfo.item_type
     else:
-        page_data['target','show'] = False
+        sd_target.show = False
 
 
-def _show_submit_data_failpage(project, page_data, r_info):
+def _show_submit_data_failpage(project, sd_submitdata_failpage, r_info):
     "The responder calls submit data, which, if it raises a FailPage, calls this"
-    page_data['submitdata_failpage','show'] = True
+    sd_submitdata_failpage.show = True
     if r_info.fail_ident:
         failident = r_info.fail_ident
         if isinstance(failident, str):
             failident = skilift.ident_from_label(project, failident)
         if failident is None:
-            page_data['submitdata_failpage', 'responderid', 'text'] = "Ident not recognised"
+            sd_submitdata_failpage['responderid', 'text'] = "Ident not recognised"
         elif isinstance(failident, str):
-            page_data['submitdata_failpage', 'responderid', 'text'] = failident
+            sd_submitdata_failpage['responderid', 'text'] = failident
         elif isinstance(failident, tuple) and (len(failident) == 2):
             try:
                 failinfo = skilift.page_info(*failident)
             except ServerError:
-                page_data['submitdata_failpage', 'responderid', 'text'] = "Unknown Ident: " + failident[0] + ", " + str(failident[1])
+                sd_submitdata_failpage['responderid', 'text'] = "Unknown Ident: " + failident[0] + ", " + str(failident[1])
             else:
                 if failident[0] == project:
-                    page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + str(failident[1])
+                    sd_submitdata_failpage['responderid', 'text'] = "Ident: " + str(failident[1])
                 else:
-                    page_data['submitdata_failpage', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
+                    sd_submitdata_failpage['responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
                 if failinfo.restricted:
-                    page_data['submitdata_failpage', 'responderaccess', 'text'] = "Restricted access"
+                    sd_submitdata_failpage['responderaccess', 'text'] = "Restricted access"
                 else:
-                    page_data['submitdata_failpage', 'responderaccess', 'text'] = "Open access"
+                    sd_submitdata_failpage['responderaccess', 'text'] = "Open access"
                 if isinstance(r_info.fail_ident, str):
-                    page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
+                    sd_submitdata_failpage['responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
                 else:
-                    page_data['submitdata_failpage', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
-                page_data['submitdata_failpage', 'responderbrief', 'text'] = failinfo.brief
+                    sd_submitdata_failpage['responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
+                sd_submitdata_failpage['responderbrief', 'text'] = failinfo.brief
                 if failinfo.item_type == "RespondPage":
-                    page_data['submitdata_failpage', 'respondertype', 'text'] = "Responder: " + failinfo.responder
+                    sd_submitdata_failpage['respondertype', 'text'] = "Responder: " + failinfo.responder
                 else:
-                    page_data['submitdata_failpage', 'respondertype', 'text'] = failinfo.item_type
+                    sd_submitdata_failpage['respondertype', 'text'] = failinfo.item_type
     else:
-        page_data['submitdata_failpage', 'responderid', 'text'] = "Ident not set"
+        sd_submitdata_failpage['responderid', 'text'] = "Ident not set"
 
 
-def _show_validate_fail(project, page_data, r_info):
+def _show_validate_fail(project, sd_validate, r_info):
     "The responder validates received data, on failure calls this"
 
     if r_info.validate_option:
-        page_data['validate','show'] = True
+        sd_validate.show = True
     else:
-        page_data['validate','show'] = False
+        sd_validate.show = False
         return
 
     if r_info.validate_fail_ident:
@@ -1040,39 +1075,39 @@ def _show_validate_fail(project, page_data, r_info):
         if isinstance(failident, str):
             failident = skilift.ident_from_label(project, failident)
         if isinstance(failident, str):
-            page_data['validate', 'responderid', 'text'] = failident
+            sd_validate['responderid', 'text'] = failident
         elif isinstance(failident, tuple) and (len(failident) == 2):
             try:
                 failinfo = skilift.page_info(*failident)
             except ServerError:
-                page_data['validate', 'responderid', 'text'] = "Unknown Ident: " + failident[0] + ", " + str(failident[1])
+                sd_validate['responderid', 'text'] = "Unknown Ident: " + failident[0] + ", " + str(failident[1])
             else:
                 if failident[0] == project:
-                    page_data['validate', 'responderid', 'text'] = "Ident: " + str(failident[1])
+                    sd_validate['responderid', 'text'] = "Ident: " + str(failident[1])
                 else:
-                    page_data['validate', 'responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
+                    sd_validate['responderid', 'text'] = "Ident: " + failident[0] + ", " + str(failident[1])
                 if failinfo.restricted:
-                    page_data['validate', 'responderaccess', 'text'] = "Restricted access"
+                    sd_validate['responderaccess', 'text'] = "Restricted access"
                 else:
-                    page_data['validate', 'responderaccess', 'text'] = "Open access"
+                    sd_validate['responderaccess', 'text'] = "Open access"
                 if isinstance(r_info.fail_ident, str):
-                    page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
+                    sd_validate['responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident
                 else:
-                    page_data['validate', 'responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
-                page_data['validate', 'responderbrief', 'text'] = failinfo.brief
+                    sd_validate['responderlabels', 'text'] = "Set in responder as: " + r_info.fail_ident[0] + ", " + str(r_info.fail_ident[1])
+                sd_validate['responderbrief', 'text'] = failinfo.brief
                 if failinfo.item_type == "RespondPage":
-                    page_data['validate', 'respondertype', 'text'] = "Responder: " + failinfo.responder
+                    sd_validate['respondertype', 'text'] = "Responder: " + failinfo.responder
                 else:
-                    page_data['validate', 'respondertype', 'text'] = failinfo.item_type
+                    sd_validate['respondertype', 'text'] = failinfo.item_type
 
 
-def _show_alternate(project, page_data, r_info):
+def _show_alternate(project, sd_alternatebox, r_info):
     "The alternate page"
 
     if r_info.alternate_ident:
-        page_data['alternatebox','show'] = True
+        sd_alternatebox.show = True
     else:
-        page_data['alternatebox','show'] = False
+        sd_alternatebox.show = False
         return
 
     if r_info.alternate_ident:
@@ -1080,42 +1115,42 @@ def _show_alternate(project, page_data, r_info):
         if isinstance(altident, str):
             altident = skilift.ident_from_label(project, altident)
         if isinstance(altident, str):
-            page_data['alternatebox', 'responderid', 'text'] = altident
+            sd_alternatebox['responderid', 'text'] = altident
         elif isinstance(altident, tuple) and (len(altident) == 2):
             try:
                 altinfo = skilift.page_info(*altident)
             except ServerError:
-                page_data['alternatebox', 'responderid', 'text'] = "Unknown Ident: " + altident[0] + ", " + str(altident[1])
+                sd_alternatebox['responderid', 'text'] = "Unknown Ident: " + altident[0] + ", " + str(altident[1])
             else:
                 if altident[0] == project:
-                    page_data['alternatebox', 'responderid', 'text'] = "Ident: " + str(altident[1])
+                    sd_alternatebox['responderid', 'text'] = "Ident: " + str(altident[1])
                 else:
-                    page_data['alternatebox', 'responderid', 'text'] = "Ident: " + altident[0] + ", " + str(altident[1])
+                    sd_alternatebox['responderid', 'text'] = "Ident: " + altident[0] + ", " + str(altident[1])
                 if altinfo.restricted:
-                    page_data['alternatebox', 'responderaccess', 'text'] = "Restricted access"
+                    sd_alternatebox['responderaccess', 'text'] = "Restricted access"
                 else:
-                    page_data['alternatebox', 'responderaccess', 'text'] = "Open access"
+                    sd_alternatebox['responderaccess', 'text'] = "Open access"
                 if isinstance(r_info.alternate_ident, str):
-                    page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident
+                    sd_alternatebox['responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident
                 else:
-                    page_data['alternatebox', 'responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident[0] + ", " + str(r_info.alternate_ident[1])
-                page_data['alternatebox', 'responderbrief', 'text'] = altinfo.brief
+                    sd_alternatebox['responderlabels', 'text'] = "Set in responder as: " + r_info.alternate_ident[0] + ", " + str(r_info.alternate_ident[1])
+                sd_alternatebox['responderbrief', 'text'] = altinfo.brief
                 if altinfo.item_type == "RespondPage":
-                    page_data['alternatebox', 'respondertype', 'text'] = "Responder: " + altinfo.responder
+                    sd_alternatebox['respondertype', 'text'] = "Responder: " + altinfo.responder
                 else:
-                    page_data['alternatebox', 'respondertype', 'text'] = altinfo.item_type
+                    sd_alternatebox['respondertype', 'text'] = altinfo.item_type
 
     if r_info.responder == 'CaseSwitch':
-        page_data['alternatebox', 'alttext', 'text'] = "Called if no match found"
+        sd_alternatebox['alttext', 'text'] = "Called if no match found"
     elif r_info.responder == 'EmptyCallDataGoto':
-        page_data['alternatebox', 'alttext', 'text'] = "Called if skicall.call_data has key with value"
+        sd_alternatebox['alttext', 'text'] = "Called if skicall.call_data has key with value"
     elif r_info.responder == 'EmptyGoto':
-        page_data['alternatebox', 'alttext', 'text'] = "Called if widgfield is present with a value"
+        sd_alternatebox['alttext', 'text'] = "Called if widgfield is present with a value"
 
 
-def _show_caseswitch(project, page_data, r_info):
+def _show_caseswitch(project, pd, r_info):
 
-    page_data['textgroup', 'transform'] = 'translate(500,600)'
+    pd['textgroup', 'transform'] = 'translate(500,600)'
 
     if r_info.widgfield:
         text_title = """<text x="0" y="90">CaseSwitch on widgfield %s</text>""" % r_info.widgfield
@@ -1129,7 +1164,7 @@ def _show_caseswitch(project, page_data, r_info):
 
     else:
         table_element = ''
-    page_data['textgroup', 'text'] = text_title + table_element
+    pd['textgroup', 'text'] = text_title + table_element
 
 
 def _caseswitchtable(index, field_values_list):
@@ -1142,31 +1177,31 @@ def _caseswitchtable(index, field_values_list):
 """ % (y, y, y+60, y+30, field_values_list[index][0],y+30, field_values_list[index][1])
 
 
-def _show_emptycalldatagoto(project, page_data, r_info):
+def _show_emptycalldatagoto(project, pd, r_info):
     value = 'UNKNOWN'
     if r_info.single_field:
         value = r_info.single_field
-    page_data['textgroup', 'transform'] = 'translate(750,700)'
-    page_data['textgroup', 'text'] = """
+    pd['textgroup', 'transform'] = 'translate(750,700)'
+    pd['textgroup', 'text'] = """
 <text x="0" y="0">Test skicall.call_data["%s"]</text>
 <text x="0" y="60">Called if key not present, or has empty value.</text>
 """ % (value,)
 
 
-def _show_emptygoto(project, page_data, r_info):
+def _show_emptygoto(project, pd, r_info):
     value = 'UNKNOWN'
     if r_info.widgfield:
         value = r_info.widgfield
-    page_data['textgroup', 'transform'] = 'translate(750,700)'
-    page_data['textgroup', 'text'] = """
+    pd['textgroup', 'transform'] = 'translate(750,700)'
+    pd['textgroup', 'text'] = """
 <text x="0" y="0">Test widgfield %s</text>
 <text x="0" y="60">Called if widgfield not present, or has empty value.</text>
 """ % (value,)
 
 
 
-def _show_mediaquery(project, page_data, r_info):
-    page_data['textgroup', 'transform'] = 'translate(50,550)'
+def _show_mediaquery(project, pd, r_info):
+    pd['textgroup', 'transform'] = 'translate(50,550)'
 
     if r_info.field_values_list:
         text_title = """<line x1="450" y1="70" x2="450" y2="100" style="stroke-width:3;stroke:black" />
@@ -1176,7 +1211,7 @@ def _show_mediaquery(project, page_data, r_info):
     table_element = ''
     for index, item in enumerate(r_info.field_values_list):
         table_element += _mediaquerytable(index, r_info.field_values_list)
-    page_data['textgroup', 'text'] = text_title + table_element
+    pd['textgroup', 'text'] = text_title + table_element
 
 
 def _mediaquerytable(index, field_values_list):
