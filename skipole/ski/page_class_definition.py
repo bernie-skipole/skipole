@@ -966,8 +966,8 @@ $(document).ready(function(){
 """
         except ServerError:
             raise
-        except:
-            raise ServerError("Error while setting values into Template page")
+        except Exception as e:
+            raise ServerError("Error while setting values into Template page") from e
 
 
     def data(self):
@@ -1176,8 +1176,8 @@ class SVG(TemplatePageAndSVG):
                 self.height = self.page_settings['height']
         except ServerError:
             raise
-        except:
-            raise ServerError("Error while setting values into SVG page")
+        except Exception as e:
+            raise ServerError("Error while setting values into SVG page") from e
 
 
     def data(self):
@@ -1255,8 +1255,8 @@ class FilePage(ParentPage):
                 self.filepath = self.page_settings['filepath']
         except ServerError:
             raise
-        except:
-            raise ServerError("Error while setting values into File page")
+        except Exception as e:
+            raise ServerError("Error while setting values into File page") from e
 
 
     def update(self, environ, call_data, lang, ident_list=[]):
@@ -1350,8 +1350,8 @@ class CSS(ParentPage):
                     self.imports = [self.page_settings['cssimport']]
         except ServerError:
             raise
-        except:
-            raise ServerError("Error while setting values into File page")
+        except Exception as e:
+            raise ServerError("Error while setting values into File page") from e
 
 
     def selector_list(self):

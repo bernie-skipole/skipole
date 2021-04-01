@@ -44,7 +44,7 @@
 <p>ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</p>
 <p>Within the Admin session pages the section on 'labels' lists a number of special pre-defined pages. One of these has label 'server_error'. Raising a ServerError exception will return the page with this label.</p>
 <p>This gives the developer the option of using the pre-defined page, or by setting the label to point to another page, a different server error page could be defined.</p>
-<p>The code argument is an error code number, internally the system uses codes 9000 to 9999. If the widget displaying the error message has a field called 'code', it will be set to this code number.</p>
+<p>The code argument is an optional error code number, which you can set if you wish. If the widget displaying the error message has a field called 'code', it will be set to this code number.</p>
 <p>Normally leave section and widget empty to allow the message to be displayed in the page default error widget.</p>
 </div>
 </div>

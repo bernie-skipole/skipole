@@ -90,13 +90,11 @@ class ServerError(SkiError):
 section is the section name (if it is in a section) of the widget where the message is to be displayed
 widget is the widget name where the message is to be displayed
 status is the html return status
-code is an optional error number you can use to be displayed on the Server Error page, avoid numbers
-9000 to 9999 which are reserved for system use
+code is an optional error number you can use to be displayed on the Server Error page
 """
         SkiError.__init__(self, message, section, widget)
         self.status = status
         # code 0 is default
-        # codes 9000 to 9999 are reserved for system use
         self.code = code
 
 

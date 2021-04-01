@@ -202,7 +202,7 @@ class SkipoleProject(object):
             if 'PATH_INFO' in environ:
                 path = environ['PATH_INFO']
             else:
-                raise ServerError(message="Invalid path", code=9034)
+                raise ServerError(message="Invalid path")
 
             # the path must start with this root project url
             if (path.find(self.url) != 0) and (path + "/" != self.url):
@@ -424,7 +424,7 @@ class SkipoleProject(object):
                             headers.append(('Expires', '0'))
                 data = _read_server_file(environ, pident)
             except Exception as e:
-                raise ServerError(message=f"Failed to read file {pident}", code=9035) from e
+                raise ServerError(message=f"Failed to read file {pident}") from e
             return status, headers, data
 
         # pident is the ident of the diverted page or a label or url string
@@ -439,24 +439,24 @@ class SkipoleProject(object):
                 # no '/' in pident so must be a label
                 pident = skiboot.find_ident_or_url(pident, self._proj_ident)
                 if not pident:
-                    raise ServerError(message="Returned page ident from start_call not recognised", code=9036)
+                    raise ServerError(message="Returned page ident from start_call not recognised")
                 if isinstance(pident, str):
                     # must be a url, get redirector page
                     return self._redirect_to_url(pident, environ, skicall.call_data, skicall.page_data, skicall.lang)
 
         # so pident must be an ident
         if not isinstance(pident, skiboot.Ident):
-            raise ServerError(message="Invalid ident returned from start_call", code=9037)
+            raise ServerError(message="Invalid ident returned from start_call")
 
         # pident is the ident returned from start_call, may be in a different project
         page = pident.item()
 
         if page is None:
-            raise ServerError(message="Invalid ident returned from start_call", code=9038)
+            raise ServerError(message="Invalid ident returned from start_call")
         if page.page_type == 'Folder':
             page = page.default_page
             if not page:
-                raise ServerError(message="Invalid ident returned from start_call", code=9039)
+                raise ServerError(message="Invalid ident returned from start_call")
 
         # read any submitted data from rawformdata, and place in form_data
         try:
@@ -551,7 +551,7 @@ class SkipoleProject(object):
         except ServerError as e:
             raise e
         except Exception as e:
-            raise ServerError(message = "Invalid exception in start_call function.", code=9040) from e
+            raise ServerError(message = "Invalid exception in start_call function.") from e
         return new_called_ident, skicall
 
 
@@ -612,7 +612,7 @@ class SkipoleProject(object):
             while page.page_type == 'RespondPage':
                 ident = page.ident
                 if page.responder is None:
-                    raise ServerError(message="Respond page %s does not have any responder set" % (page.url,), code=9042)
+                    raise ServerError(message="Respond page %s does not have any responder set" % (page.url,))
                 try:
                     page = page.call_responder(skicall, form_data, caller_page, ident_list, rawformdata)
                     if isinstance(page, str):
@@ -631,9 +631,9 @@ class SkipoleProject(object):
                         # get redirector page
                         return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, skicall.lang)
                     if page.ident == ident:
-                        raise ServerError(message="Invalid Failure page: can cause circulating call", code=9045)
+                        raise ServerError(message="Invalid Failure page: can cause circulating call")
                     if page.ident in ident_list:
-                        raise ServerError(message="Invalid Failure page: can cause circulating call", code=9043)
+                        raise ServerError(message="Invalid Failure page: can cause circulating call")
                     # show the list of errors on the page
                     e_list = ex.e_list
                 except GoTo as ex:
@@ -646,17 +646,17 @@ class SkipoleProject(object):
                     target = skiboot.find_ident_or_url(ex.target, ex.proj_ident)
                     # target is either an Ident, a URL or None
                     if not target:
-                        raise ServerError(message="GoTo exception target not recognised", code=9044)
+                        raise ServerError(message="GoTo exception target not recognised")
                     if isinstance(target, skiboot.Ident):
                         if target == ident:
-                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,), code=9045)
+                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,))
                         if target in ident_list:
-                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,), code=9046)
+                            raise ServerError(message="GoTo exception page ident %s invalid, can cause circulating call" % (target,))
                         page = target.item()
                         if not page:
-                            raise ServerError(message="GoTo exception page ident %s not recognised" % (target,), code=9047)
+                            raise ServerError(message="GoTo exception page ident %s not recognised" % (target,))
                         if page.page_type == 'Folder':
-                            raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,), code=9048)
+                            raise ServerError(message="GoTo exception page ident %s is a Folder, must be a page." % (target,))
                     else:
                         # target is a URL
                         skicall.call_data.clear()
@@ -695,10 +695,9 @@ class SkipoleProject(object):
                 if skicall._lang_cookie:
                     page.language_cookie = skicall._lang_cookie
         except GoTo as e:
-            raise ServerError("Invalid GoTo exception in end_call", code=9049) from e
+            raise ServerError("Invalid GoTo exception in end_call") from e
         except Exception as e:
-            message = "Invalid exception in end_call function."
-            raise ServerError(message, code=9050) from e
+            raise ServerError("Invalid exception in end_call function.") from e
 
          # import any sections
         page.import_sections(skicall.page_data)
@@ -829,30 +828,30 @@ class SkipoleProject(object):
         else:
             ident = skiboot.make_ident(ident, self._proj_ident)
             if ident is None:
-                raise ServerError(message="Sorry. Invalid ident", code=9000)
+                raise ServerError(message="Sorry. Invalid ident")
             if ident.num == 0:
                 # cannot add the root folder
-                raise ServerError(message="Sorry. Unable to add a new root", code=9001)
+                raise ServerError(message="Sorry. Unable to add a new root")
             if ident.proj != self._proj_ident:
                 # must be in this project
-                raise ServerError(message="Sorry. Invalid ident", code=9002)
+                raise ServerError(message="Sorry. Invalid ident")
             if ident in self.identitems:
                 # ident must not exist
-                raise ServerError(message="Sorry. The given ident already exists", code=9003)
+                raise ServerError(message="Sorry. The given ident already exists")
 
         # check parent folder
         if parent_ident.proj != self._proj_ident:
-            raise ServerError(message="Invalid parent ident", code=9004)
+            raise ServerError(message="Invalid parent ident")
         parent = self.get_item(parent_ident)
         if parent is None:
-            raise ServerError(message="Parent folder not found: Error in add_item method of Project class.", code=9005)
+            raise ServerError(message="Parent folder not found: Error in add_item method of Project class.")
         if parent.page_type != 'Folder':
-            raise ServerError(message="Parent not a folder", code=9006)
+            raise ServerError(message="Parent not a folder")
 
         if item.name in parent.pages:
-            raise ServerError(message="Sorry, a page with that name already exists in the parent folder", code=9007)
+            raise ServerError(message="Sorry, a page with that name already exists in the parent folder")
         if item.name in parent.folders:
-            raise ServerError(message="Sorry, a folder with that name already exists in the parent folder", code=9008)
+            raise ServerError(message="Sorry, a folder with that name already exists in the parent folder")
 
         # set the item ident
         item.ident = ident
@@ -888,12 +887,12 @@ class SkipoleProject(object):
         """Deletes the page or folder with the given ident from the database."""
         if itemident.num == 0:
             # cannot delete the root folder
-            raise ServerError(message="Cannot delete the root folder", code=9009)
+            raise ServerError(message="Cannot delete the root folder")
         if itemident.proj != self._proj_ident:
             # Must belong to this project
-            raise ServerError(message="Cannot delete this item (does not belong to this project)", code=9010)
+            raise ServerError(message="Cannot delete this item (does not belong to this project)")
         if itemident not in self.identitems:
-            raise ServerError(message="Item not found", code=9011)
+            raise ServerError(message="Item not found")
         # get the item
         item = self.identitems[itemident]
         # get the items parent folder
@@ -912,12 +911,12 @@ class SkipoleProject(object):
            returns parentfolder number and change when done, raises ServerError on failure"""
         if itemident.num == 0:
             # cannot delete the root folder
-            raise ServerError(message="Cannot delete the root folder", code=9009)
+            raise ServerError(message="Cannot delete the root folder")
         if itemident.proj != self._proj_ident:
             # Must belong to this project
-            raise ServerError(message="Cannot delete this item (does not belong to this project)", code=9010)
+            raise ServerError(message="Cannot delete this item (does not belong to this project)")
         if itemident not in self.identitems:
-            raise ServerError(message="Item not found", code=9011)
+            raise ServerError(message="Item not found")
         # get the item
         item = self.identitems[itemident]
         # get the items parent folder
@@ -977,14 +976,14 @@ class SkipoleProject(object):
            If new_parent_ident is not None, indicates the page has moved to a different folder
            Returns the new page.change uuid"""
         if item.page_type == 'Folder':
-            raise ServerError(message="Invalid item, not a page.", code=9012)
+            raise ServerError(message="Invalid item, not a page.")
         item_ident = item.ident
         if item_ident is None:
-            raise ServerError(message="Unable to save page - no ident set", code=9013)
+            raise ServerError(message="Unable to save page - no ident set")
         if self._proj_ident != item_ident.proj:
-            raise ServerError(message="Unable to save page - invalid ident", code=9014)
+            raise ServerError(message="Unable to save page - invalid ident")
         if item_ident not in self.identitems:
-            raise ServerError(message="This page ident does not exist", code=9015)
+            raise ServerError(message="This page ident does not exist")
         old_parent = self.identitems[item_ident].parentfolder
         old_name = self.identitems[item_ident].name
         if new_parent_ident is not None:
@@ -1010,9 +1009,9 @@ class SkipoleProject(object):
         if new_parent_ident is None:
             # so just a name change
             if item.name in old_parent.pages:
-                raise ServerError(message="Sorry, a page with that name already exists", code=9016)
+                raise ServerError(message="Sorry, a page with that name already exists")
             if item.name in old_parent.folders:
-                raise ServerError(message="Sorry, a folder with that name already exists", code=9017)
+                raise ServerError(message="Sorry, a folder with that name already exists")
             if old_name in old_parent.pages:
                 del old_parent.pages[old_name]
             old_parent.pages[item.name] = item_ident
@@ -1022,9 +1021,9 @@ class SkipoleProject(object):
             return item.change
         # change of folder
         if item.name in new_parent.pages:
-            raise ServerError(message="Sorry, a page with that name already exists", code=9018)
+            raise ServerError(message="Sorry, a page with that name already exists")
         if item.name in new_parent.folders:
-            raise ServerError(message="Sorry, a folder with that name already exists", code=9019)
+            raise ServerError(message="Sorry, a folder with that name already exists")
         if old_name in old_parent.pages:
             del old_parent.pages[old_name]
             old_parent.change = uuid.uuid4().hex
@@ -1041,21 +1040,21 @@ class SkipoleProject(object):
            If new_parent_ident is not None, indicates the folder has moved to a different parent folder
            Returns the new folder.change uuid"""
         if item.page_type != 'Folder':
-            raise ServerError(message="Invalid item, not a folder.", code=9020)
+            raise ServerError(message="Invalid item, not a folder.")
         item_ident = item.ident
         if item_ident is None:
-            raise ServerError(message="Unable to save folder - no ident set", code=9021)
+            raise ServerError(message="Unable to save folder - no ident set")
         if self._proj_ident != item_ident.proj:
-            raise ServerError(message="Unable to save folder - invalid ident", code=9022)
+            raise ServerError(message="Unable to save folder - invalid ident")
         if item_ident.num == 0:
             if new_parent_ident:
-                raise ServerError(message="Root folder cannot have new parent", code=9023)
+                raise ServerError(message="Root folder cannot have new parent")
             item.change = uuid.uuid4().hex
             self.root = item
             self.clear_cache()
             return item.change
         if item_ident not in self.identitems:
-            raise ServerError(message="This folder ident does not exist", code=9024)
+            raise ServerError(message="This folder ident does not exist")
         old_parent = self.identitems[item_ident].parentfolder
         old_name = self.identitems[item_ident].name
         if new_parent_ident is not None:
@@ -1076,9 +1075,9 @@ class SkipoleProject(object):
         if new_parent_ident is None:
             # so just a name change
             if item.name in old_parent.pages:
-                raise ServerError(message="Sorry, a page with that name already exists", code=9025)
+                raise ServerError(message="Sorry, a page with that name already exists")
             if item.name in old_parent.folders:
-                raise ServerError(message="Sorry, a folder with that name already exists", code=9026)
+                raise ServerError(message="Sorry, a folder with that name already exists")
             if old_name in old_parent.folders:
                 del old_parent.folders[old_name]
             old_parent.folders[item.name] = item_ident
@@ -1094,11 +1093,11 @@ class SkipoleProject(object):
         folder_ident_numbers = [ identnumber for name,identnumber in folder_list ]
         if item.ident.num in folder_ident_numbers:
             # item is a parent of new_parent
-            raise ServerError(message="Sorry, a folder cannot be moved into a subfolder of itself.", code=9027)
+            raise ServerError(message="Sorry, a folder cannot be moved into a subfolder of itself.")
         if item.name in new_parent.pages:
-            raise ServerError(message="Sorry, a page with that name already exists", code=9028)
+            raise ServerError(message="Sorry, a page with that name already exists")
         if item.name in new_parent.folders:
-            raise ServerError(message="Sorry, a folder with that name already exists", code=9029)
+            raise ServerError(message="Sorry, a folder with that name already exists")
         if old_name in old_parent.folders:
             del old_parent.folders[old_name]
             old_parent.change = uuid.uuid4().hex
@@ -1153,9 +1152,9 @@ class SkipoleProject(object):
     def set_special_page(self, label, target):
         "Sets a special page"
         if not label:
-            raise ServerError(message="Sorry, a special page label must be given", code=9030)
+            raise ServerError(message="Sorry, a special page label must be given")
         if not target:
-            raise ServerError(message="Sorry, a label target must be given", code=9031)
+            raise ServerError(message="Sorry, a label target must be given")
         if isinstance(target, str) and ( '/' in target ):
                 # item is a url
                 item = target
@@ -1166,7 +1165,7 @@ class SkipoleProject(object):
         else:
             item = skiboot.make_ident(target, self._proj_ident)
             if not item:
-                raise ServerError(message="Sorry, the page target is not recognised", code=9032)
+                raise ServerError(message="Sorry, the page target is not recognised")
         self.special_pages[label] = item
 
 
@@ -1215,7 +1214,7 @@ class SkipoleProject(object):
     def _redirect_to_url(self, url, environ, call_data, page_data, lang):
         "Return status, headers, page.data() of the redirector page, with fields set to url"
         if '/' not in url:
-            raise ServerError(message="Invalid target url, must contain at least one /", code=9033)
+            raise ServerError(message="Invalid target url, must contain at least one /")
         page = self._system_page('redirector')
         if (not page) or (page.page_type != "TemplatePage"):
             page_text = "<!DOCTYPE HTML>\n<html>\n<p>Page Redirect request. Please try: <a href=%s>%s</a></p>\n</html>" % (url, url)
