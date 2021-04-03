@@ -4,12 +4,15 @@ from ... import FailPage, ValidateError, GoTo, ServerError, skilift
 
 from ....skilift import editsection
 
+from ....ski.project_class_definition import SectionData
 
 def insert_in_section(skicall):
     """Called by domtable to either insert or append an item in a section
-       sets page_data to populate the insert or append modal panel"""
+       sets sata into a SectionData to populate the insert or append modal panel"""
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("sectioninserts")
+
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
     editedprojname = call_data['editedprojname']
@@ -39,34 +42,37 @@ def insert_in_section(skicall):
         insert_location = section_name
 
     # display the modal panel
-    page_data[("sectioninserts","insertitem","hide")] = False
+    sd["insertitem","hide"] = False
 
     if (part_tuple.part_type == "Part") or (part_tuple.part_type == "Section"):
         # insert
-        page_data[("sectioninserts","insertpara","para_text")] = "Choose an item to insert"
-        page_data[("sectioninserts","insertupload","para_text")] = "Or insert a new block by uploading a block definition file:"
+        sd["insertpara","para_text"] = "Choose an item to insert"
+        sd["insertupload","para_text"] = "Or insert a new block by uploading a block definition file:"
     else:
         # append
-        page_data[("sectioninserts","insertpara","para_text")] = "Choose an item to append"
-        page_data[("sectioninserts","insertupload","para_text")] = "Or append a new block by uploading a block definition file:"
+        sd["insertpara","para_text"] = "Choose an item to append"
+        sd["insertupload","para_text"] = "Or append a new block by uploading a block definition file:"
 
     # for each of the links, set get_field1 to be the insert_location
-    page_data[("sectioninserts","insert_text","get_field1")] = insert_location
-    page_data[("sectioninserts","insert_textblock","get_field1")] = insert_location
-    page_data[("sectioninserts","insert_symbol","get_field1")] = insert_location
-    page_data[("sectioninserts","insert_comment","get_field1")] = insert_location
-    page_data[("sectioninserts","insert_element","get_field1")] = insert_location
-    page_data[("sectioninserts","insert_widget","get_field1")] = insert_location
+    sd["insert_text","get_field1"] = insert_location
+    sd["insert_textblock","get_field1"] = insert_location
+    sd["insert_symbol","get_field1"] = insert_location
+    sd["insert_comment","get_field1"] = insert_location
+    sd["insert_element","get_field1"] = insert_location
+    sd["insert_widget","get_field1"] = insert_location
 
     # set the hidden field
-    page_data[("sectioninserts","uploadpart","hidden_field1")] = insert_location
+    sd["uploadpart","hidden_field1"] = insert_location
+
+    pd.update(sd)
 
 
 
 def insert_text(skicall):
     "Inserts text into a section"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     if ("sectioninserts","insert_text","get_field1") not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -99,15 +105,18 @@ def insert_text(skicall):
     call_data['location'] = new_location
     
     # go to edit text page
-    page_data[("adminhead","page_head","large_text")] = "Edit Text in section : %s" % (section_name,)
+    sd["page_head","large_text"] = "Edit Text in section : %s" % (section_name,)
     # Set the text in the text area
-    page_data[("text_input","input_text")] = new_text
+    pd["text_input","input_text"] = new_text
+
+    pd.update(sd)
 
 
 def insert_textblock(skicall):
     "Fills the template page for creating a textblock reference which will be inserted in the section"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     if ("sectioninserts","insert_textblock","get_field1") not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -138,22 +147,24 @@ def insert_textblock(skicall):
 
     # and set page data for the template page which inserts an textblock reference
 
-    page_data[("adminhead","page_head","large_text")] = "Insert TextBlock in section %s" % (section_name,)
+    sd["page_head","large_text"] = "Insert TextBlock in section %s" % (section_name,)
+    pd.update(sd)
 
-    page_data[("linebreaks","radio_values")]=['ON', 'OFF']
-    page_data[("linebreaks","radio_text")]=['On', 'Off']
-    page_data[("linebreaks","radio_checked")] = 'ON'
+    pd["linebreaks","radio_values"]=['ON', 'OFF']
+    pd["linebreaks","radio_text"]=['On', 'Off']
+    pd["linebreaks","radio_checked"] = 'ON'
 
-    page_data[("setescape","radio_values")]=['ON', 'OFF']
-    page_data[("setescape","radio_text")]=['On', 'Off']
-    page_data[("setescape","radio_checked")] = 'ON'
+    pd["setescape","radio_values"]=['ON', 'OFF']
+    pd["setescape","radio_text"]=['On', 'Off']
+    pd["setescape","radio_checked"] = 'ON'
 
 
 
 def insert_symbol(skicall):
     "Inserts html symbol into a section"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     if ("sectioninserts","insert_symbol","get_field1") not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -184,14 +195,18 @@ def insert_symbol(skicall):
     
     # go to edit symbol page
     sym = editsection.get_symbol(editedprojname, section_name, call_data['schange'], new_location)
-    page_data[("adminhead","page_head","large_text")] = "Edit Symbol in section : %s" % (section_name,)
-    page_data["symbol_input","input_text"] = sym
+
+    sd["page_head","large_text"] = "Edit Symbol in section : %s" % (section_name,)
+    pd.update(sd)
+
+    pd["symbol_input","input_text"] = sym
 
 
 def insert_comment(skicall):
     "Inserts a comment into a section"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     if ("sectioninserts","insert_comment","get_field1") not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -222,14 +237,18 @@ def insert_comment(skicall):
     
     # go to edit comment page
     com = editsection.get_comment(editedprojname, section_name, call_data['schange'], new_location)
-    page_data[("adminhead","page_head","large_text")] = "Edit Comment in section : %s" % (section_name,)
-    page_data[("comment_input","input_text")] = com
+
+    sd["page_head","large_text"] = "Edit Comment in section : %s" % (section_name,)
+    pd.update(sd)
+
+    pd["comment_input","input_text"] = com
 
 
 def insert_element(skicall):
     "Fills the template page for creating an html element which will be inserted in the section"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     if ("sectioninserts","insert_element","get_field1") not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -259,13 +278,13 @@ def insert_element(skicall):
     call_data['location'] = location
 
     # and set page data for the template page which inserts an element
-    page_data[("adminhead","page_head","large_text")] = "Insert an HTML element into section " + call_data['section_name']
+    sd["page_head","large_text"] = "Insert an HTML element into section " + call_data['section_name']
+    pd.update(sd)
 
 
 def insert_widget(skicall):
     "Gets section_name and location, used for creating a widget which will be inserted in the section"
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if ("sectioninserts","insert_widget","get_field1") not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -301,7 +320,6 @@ def insert_widget(skicall):
 def insert_upload(skicall):
     "Gets section_name and location, used for creating a widget which will be inserted in the section"
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if ("sectioninserts","uploadpart","hidden_field1") not in call_data:
         raise FailPage(message = "item to edit missing")

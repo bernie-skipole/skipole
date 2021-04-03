@@ -7,6 +7,8 @@ from .. import utils
 from ... import FailPage, ValidateError, GoTo, ServerError
 from ....skilift import fromjson, part_info, part_contents, editsection, versions
 
+from ....ski.project_class_definition import SectionData
+
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
@@ -14,20 +16,22 @@ def retrieve_managepage(skicall):
     "this call is for the manage sections page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # clears any session data
     utils.clear_call_data(call_data)
 
     project = call_data['editedprojname']
 
-    page_data[("adminhead","page_head","large_text")] = "Manage Sections"
+    sd["page_head","large_text"] = "Manage Sections"
+    pd.update(sd)
 
     # get current sections
     section_list = editsection.list_section_names(project)
     if not section_list:
-        page_data[("tabledescription", "show")] = False
-        page_data[("sectiontable", "show")] = False
+        pd["tabledescription", "show"] = False
+        pd["sectiontable", "show"] = False
         return
 
     # fill in the sections table
@@ -43,7 +47,7 @@ def retrieve_managepage(skicall):
     for section_name in section_list:
         contents.append([ section_name, section_name, section_name, '', '', True, True, False, False ])
 
-    page_data[("sectiontable", "contents")] = contents
+    pd["sectiontable", "contents"] = contents
 
 
 
@@ -51,7 +55,8 @@ def retrieve_section_dom(skicall):
     "this call fills in the section dom table"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     # clears any session data, keeping section_name and schange
     utils.clear_call_data(call_data, ["section_name", "schange"])
@@ -91,7 +96,7 @@ def retrieve_section_dom(skicall):
         raise FailPage(message=e.message)
 
 
-    # widget editdom,domtable is populated with fields
+    # widget domtable is populated with fields
 
     #    dragrows: A two element list for every row in the table, could be empty if no drag operation
     #              0 - True if draggable, False if not
@@ -113,26 +118,27 @@ def retrieve_section_dom(skicall):
     #                       If True a link to link_ident/json_ident will be set with button_class applied to it
     #               3 - The get field value of the button link, empty string if no get field
 
-    page_data['editdom', 'domtable', 'contents']  = domcontents
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
 
     # for each column: html link, JSON link, storage key
-    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                             # tag name, no link
-                                                      ['','',''],                                             # brief, no link
-                                                      ['no_javascript','move_up_in_section_dom',''],          # up arrow
-                                                      ['no_javascript','move_up_right_in_section_dom',''],    # up right
-                                                      ['no_javascript','move_down_in_section_dom',''],        # down
-                                                      ['no_javascript','move_down_right_in_section_dom',''],  # down right
-                                                      ['edit_section_dom','',''],                             # edit, html only
-                                                      ['no_javascript','insert_in_section',''],               # insert/append
-                                                      ['no_javascript',7580,''],                              # copy
-                                                      ['no_javascript',7590,'ski_part'],                      # paste
-                                                      ['no_javascript','cut_section_dom',''],                 # cut
-                                                      ['no_javascript','delete_section_dom','']               # delete
-                                                   ]
+    sd['domtable', 'cols']  =  [  ['','',''],                                             # tag name, no link
+                                  ['','',''],                                             # brief, no link
+                                  ['no_javascript','move_up_in_section_dom',''],          # up arrow
+                                  ['no_javascript','move_up_right_in_section_dom',''],    # up right
+                                  ['no_javascript','move_down_in_section_dom',''],        # down
+                                  ['no_javascript','move_down_right_in_section_dom',''],  # down right
+                                  ['edit_section_dom','',''],                             # edit, html only
+                                  ['no_javascript','insert_in_section',''],               # insert/append
+                                  ['no_javascript',7580,''],                              # copy
+                                  ['no_javascript',7590,'ski_part'],                      # paste
+                                  ['no_javascript','cut_section_dom',''],                 # cut
+                                  ['no_javascript','delete_section_dom','']               # delete
+                               ]
 
-    page_data['editdom', 'domtable', 'dropident']  = 'move_in_section_dom'
+    sd['domtable', 'dropident']  = 'move_in_section_dom'
+    pd.update(sd)
 
 
 def retrieve_section_contents(skicall):
@@ -140,14 +146,16 @@ def retrieve_section_contents(skicall):
     # fill in section dom table
     retrieve_section_dom(skicall)
     # set page head text
-    skicall.page_data[("adminhead","page_head","large_text")] = "Edit Section %s" % (skicall.call_data["section_name"],)
+    pd = skicall.call_data['pagedata']
+    sd = SectionData("adminhead")
+    sd["page_head","large_text"] = "Edit Section %s" % (skicall.call_data["section_name"],)
+    pd.update(sd)
 
 
 def submit_new_section(skicall):
     "Create new section"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     # get new section name
@@ -174,7 +182,6 @@ def delete_section(skicall):
     "Deletes a section"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     if "delete_section" not in call_data:
@@ -197,7 +204,7 @@ def downloadsection(skicall):
     "Gets section, and returns a json dictionary, this will be sent as an octet file to be downloaded"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if 'section_name' not in call_data:
         raise FailPage(message = "section missing")
@@ -218,7 +225,8 @@ def downloadsection(skicall):
         binline = line.encode('utf-8')
         n += len(binline)
         line_list.append(binline)
-    page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
+    pd.mimetype = 'application/octet-stream'
+    pd.content_length = str(n)
     return line_list
 
 
@@ -227,7 +235,8 @@ def newsectionpage(skicall):
     "Populate the page which creates a new section"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     project = call_data['editedprojname']
     if 'new_section_name' not in call_data:
@@ -247,18 +256,19 @@ def newsectionpage(skicall):
     section_list = editsection.list_section_names(project)
     if section_name in section_list:
         raise FailPage(message = "Section name already exists")
-    page_data[("adminhead","page_head","large_text")] = "New Section"
-    page_data["description", "input_text"] = "New section %s" % (section_name,)
+    sd["page_head","large_text"] = "New Section"
+    pd.update(sd)
+
+    pd["description", "input_text"] = "New section %s" % (section_name,)
     # set hidden fields on the two forms with the submitted section name
-    page_data["newsection", "section_name"] = section_name
-    page_data["uploadsection","section_name"] = section_name
+    pd["newsection", "section_name"] = section_name
+    pd["uploadsection","section_name"] = section_name
 
 
 def file_new_section(skicall):
     "Create new section from uploaded file"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -300,7 +310,6 @@ def edit_section_dom(skicall):
     "Called by domtable to edit an item in a section"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -366,9 +375,9 @@ def edit_section_dom(skicall):
 
 
 def copy_section(skicall):
-    "Gets section part and return it in page_data['localStorage'] with key ski_part for browser session storage"
+    "Gets section part and return it in pd.localStorage with key ski_part for browser session storage"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to copy missing")
@@ -399,14 +408,15 @@ def copy_section(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['localStorage'] = {'ski_part':jsonstring}
+    pd.localStorage = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
 
 def paste_section(skicall):
     "Gets submitted json string and inserts it"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "position to paste missing")
@@ -436,16 +446,18 @@ def paste_section(skicall):
     location = (section_name, None, location_integers)
     call_data['schange'] = editsection.create_item_in_section(editedprojname, section_name, call_data['schange'], location, json_string)
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def cut_section_dom(skicall):
     "Called by domtable to cut an item in a section, and copy for later pasting"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -481,7 +493,7 @@ def cut_section_dom(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['localStorage'] = {'ski_part':jsonstring}
+    pd.localStorage = {'ski_part':jsonstring}
 
     # remove the item
     try:
@@ -491,9 +503,10 @@ def cut_section_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
     # once item is deleted, no info on the item should be
     # left in call_data - this may not be required in future
@@ -511,7 +524,8 @@ def delete_section_dom(skicall):
     "Called by domtable to delete an item in a section"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -548,9 +562,10 @@ def delete_section_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
     # once item is deleted, no info on the item should be
     # left in call_data - this may not be required in future
@@ -569,7 +584,8 @@ def move_up_in_section_dom(skicall):
     "Called by domtable to move an item in a section up"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -628,16 +644,18 @@ def move_up_in_section_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def move_up_right_in_section_dom(skicall):
     "Called by domtable to move an item in a section up and to the right"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -702,16 +720,18 @@ def move_up_right_in_section_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def move_down_in_section_dom(skicall):
     "Called by domtable to move an item in a section down"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -779,16 +799,18 @@ def move_down_in_section_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def move_down_right_in_section_dom(skicall):
     "Called by domtable to move an item in a section down and to the right"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'contents') not in call_data:
         raise FailPage(message = "item to edit missing")
@@ -856,9 +878,10 @@ def move_down_right_in_section_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 
@@ -866,7 +889,8 @@ def move_in_section_dom(skicall):
     "Called by domtable to move an item in a section after a drag and drop"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData('editdom')
 
     if ('editdom', 'domtable', 'dragrows') not in call_data:
         raise FailPage(message = "item to drop missing")
@@ -954,9 +978,10 @@ def move_in_section_dom(skicall):
 
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['editdom', 'domtable', 'droprows']  = droprows
+    sd['editdom', 'domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def _section_domcontents(project, section_name):

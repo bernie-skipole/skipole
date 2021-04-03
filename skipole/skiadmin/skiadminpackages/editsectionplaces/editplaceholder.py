@@ -10,12 +10,14 @@ _AN = re.compile('[^\w_]')
 from ... import FailPage, ValidateError, GoTo, ServerError
 from ....skilift import part_info, editsection, item_info
 
+from ....ski.project_class_definition import SectionData
+
 
 def retrieve_editplaceholder(skicall):
     "Fills in the edit placeholder page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -30,7 +32,9 @@ def retrieve_editplaceholder(skicall):
         location = call_data['location']
  
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Edit Section place holder"
+    sd_adminhead = SectionData("adminhead")
+    sd_adminhead["page_head","large_text"] = "Edit Section place holder"
+    pd.update(sd_adminhead)
 
     # header done, now page contents
 
@@ -43,21 +47,21 @@ def retrieve_editplaceholder(skicall):
     section_list = editsection.list_section_names(project)
 
     if not section_list:
-        page_data[('editsection','option_list')] = ['-None-']
-        page_data[('editsection','selectvalue')] = '-None-'
-        page_data[("nosection", "show")] = True
+        pd['editsection','option_list'] = ['-None-']
+        pd['editsection','selectvalue'] = '-None-'
+        pd["nosection", "show"] = True
     elif placeholder.section_name in section_list:
-        page_data[('editsection','option_list')] = section_list[:]
-        page_data[('editsection','selectvalue')] = placeholder.section_name
+        pd['editsection','option_list'] = section_list[:]
+        pd['editsection','selectvalue'] = placeholder.section_name
     else:
-        page_data[('editsection','option_list')] = ['-None-'] + section_list
-        page_data[('editsection','selectvalue')] = '-None-'
-        page_data[("nosection", "show")] = True
+        pd['editsection','option_list'] = ['-None-'] + section_list
+        pd['editsection','selectvalue'] = '-None-'
+        pd["nosection", "show"] = True
 
-    page_data[("brief", "input_text")] = placeholder.brief
-    page_data[("placename", "input_text")] = placeholder.alias
-    page_data[("multiplier", "input_text")] = str(placeholder.multiplier)
-    page_data[("mtag", "input_text")] = placeholder.mtag
+    pd["brief", "input_text"] = placeholder.brief
+    pd["placename", "input_text"] = placeholder.alias
+    pd["multiplier", "input_text"] = str(placeholder.multiplier)
+    pd["mtag", "input_text"] = placeholder.mtag
 
     # set session data
     call_data['location'] = location
@@ -67,7 +71,6 @@ def set_placeholder(skicall):
     "Sets the placeholder section name, brief, or placename"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
@@ -144,7 +147,6 @@ def create_insert(skicall):
     "Creates the section placeholder"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
