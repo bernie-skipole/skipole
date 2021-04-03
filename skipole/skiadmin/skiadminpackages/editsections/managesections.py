@@ -979,8 +979,8 @@ def move_in_section_dom(skicall):
     # and re-draw the table
     domcontents, dragrows, droprows = _section_domcontents(editedprojname, section_name)
     sd['domtable', 'dragrows']  = dragrows
-    sd['editdom', 'domtable', 'droprows']  = droprows
-    sd['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
     pd.update(sd)
 
 

@@ -557,7 +557,7 @@ class JSONDivLink(Widget):
   <a href="#" role="button">  <!-- with class button_class -->
     <!-- set with button_show_text or button_hide_text -->
   </a>
-  <div>  <!-- with class div_class, and either hidden or not, depending on hide -->
+  <div>  <!-- with class div_class, style div_style, and either hidden or not, depending on hide -->
     <!-- div_content shown as either text or html -->
   </div>
 </div>"""

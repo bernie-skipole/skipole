@@ -47,34 +47,6 @@ def _t_ref(r_info, item):
     return ".".join(["responders", r_info.module_name, r_info.responder, item])
 
 
-def skicall_help(skicall):
-    "Retrieves help text for the skicall object"
-    text = skicall.textblock("aboutcode.skicall")
-    if not text:
-        text = "No help text for aboutcode.skicall has been found"
-
-    pd = skicall.call_data['pagedata']
-    # Fill in header
-    sd_adminhead = SectionData("adminhead")
-    sd_adminhead["show_help","para_text"] = "\n" + text
-    sd_adminhead["show_help","hide"] = False
-    pd.update(sd_adminhead)
-
-
-def use_submit_list_help(skicall):
-    "Retrieves help text for the use_submit_list decorator"
-    text = skicall.textblock("aboutcode.usesubmitlist")
-    if not text:
-        text = "No help text for aboutcode.use_submit_list has been found"
-
-    pd = skicall.call_data['pagedata']
-    # Fill in header
-    sd_adminhead = SectionData("adminhead")
-    sd_adminhead["show_help","para_text"] = "\n" + text
-    sd_adminhead["show_help","hide"] = False
-    pd.update(sd_adminhead)
-
-
 def fail_page_help(skicall):
     "Retrieves help text for the fail page ident"
     text = skicall.textblock("responders.fail_page")
