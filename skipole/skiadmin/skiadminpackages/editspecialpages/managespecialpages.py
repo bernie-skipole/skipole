@@ -10,12 +10,15 @@ from .. import utils
 
 from ... import FailPage, ValidateError, ServerError
 
+from ....ski.project_class_definition import SectionData
+
 
 def retrieve_managepage(skicall):
     "this call is for the manage special pages page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # clears any session data
     utils.clear_call_data(call_data)
@@ -23,26 +26,27 @@ def retrieve_managepage(skicall):
     project = call_data['editedprojname']
     labeldict = skilift.labels(project)
 
-    page_data[("adminhead","page_head","large_text")] = "Manage page labels"
+    sd["page_head","large_text"] = "Manage page labels"
+    pd.update(sd)
 
     system_list = skilift.sys_list()
-    page_data['system:col_label'] = system_list
-    page_data['system:col_input'] = _make_list(project, system_list, labeldict)
-    page_data['system:hidden_field1'] = system_list
+    pd['system','col_label'] = system_list
+    pd['system','col_input'] = _make_list(project, system_list, labeldict)
+    pd['system','hidden_field1'] = system_list
 
     lib_list = skilift.lib_list()
-    page_data['jq:col_label'] = lib_list
-    page_data['jq:col_input'] = _make_list(project, lib_list, labeldict)
-    page_data['jq:hidden_field1'] = lib_list
+    pd['jq','col_label'] = lib_list
+    pd['jq','col_input'] = _make_list(project, lib_list, labeldict)
+    pd['jq','hidden_field1'] = lib_list
 
     user_label_list = [item for item in labeldict if ( (item not in system_list) and (item not in lib_list) )]
     if user_label_list:
         user_label_list.sort()
-        page_data['user:col_label'] = user_label_list
-        page_data['user:col_input'] = _make_list(project, user_label_list, labeldict)
-        page_data['user:hidden_field1'] = user_label_list
+        pd['user','col_label'] = user_label_list
+        pd['user','col_input'] = _make_list(project, user_label_list, labeldict)
+        pd['user','hidden_field1'] = user_label_list
     else:
-        page_data['user:show'] = False
+        pd['user','show'] = False
 
 
 
@@ -70,7 +74,6 @@ def submit_special_page(skicall):
     "Sets special page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     label = call_data["label"]
@@ -109,7 +112,6 @@ def add_user_page(skicall):
     "Sets user defined label and target"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     label = call_data["label"]
@@ -146,7 +148,6 @@ def submit_user_page(skicall):
     "Edits or deletes a special user page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     if 'label' not in call_data:

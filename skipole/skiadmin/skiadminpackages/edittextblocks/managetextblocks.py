@@ -8,19 +8,23 @@ _TB = re.compile('[^\w\.]')
 from ... import FailPage, GoTo, skilift
 from .. import utils
 
+from ....ski.project_class_definition import SectionData
+
 
 def retrieve_link_table(skicall):
     "Gets data for the manage textblocks page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # clears any session data
     utils.clear_call_data(call_data)
 
     project = call_data['editedprojname']
 
-    page_data[("adminhead","page_head","large_text")] = "Manage TextBlocks"
+    sd["page_head","large_text"] = "Manage TextBlocks"
+    pd.update(sd)
 
     accesstextblocks = skilift.get_accesstextblocks(project)
 
@@ -34,11 +38,11 @@ def retrieve_link_table(skicall):
     #                  col 7 - True if the third button and link is to be shown, False if not
     #                  col 8 - True if the fourth button and link is to be shown, False if not
 
-    page_data[('txtblocks', 'contents')] = [ [ref, ref, ref, '', '', True, True, False, False] for ref in result if '.' not in ref]
-    if not page_data[('txtblocks', 'contents')]:
-        page_data[('txtblocks', 'show')] = False
+    pd['txtblocks', 'contents'] = [ [ref, ref, ref, '', '', True, True, False, False] for ref in result if '.' not in ref]
+    if not pd['txtblocks', 'contents']:
+        pd['txtblocks', 'show'] = False
     else:
-        page_data[('txtblocks', 'contents')].sort(key=lambda r: r[0])
+        pd['txtblocks', 'contents'].sort(key=lambda r: r[0])
 
     # set page data for widget tables000.Table1_Button name moretblocks - displaying refs that do have a '.' in them
     # contents: col 0 is the text to place in the first column, col 1 is the get field
@@ -51,24 +55,26 @@ def retrieve_link_table(skicall):
         if ritem not in reflinklist:
             reflinklist.append(ritem)
 
-
     if not reflinklist:
-        page_data[('moretblocks', 'show')] = False
+        pd['moretblocks', 'show'] = False
         return
     
-    page_data[('moretblocks', 'contents')] = [ [ref + "...", ref] for ref in reflinklist]
-    page_data[('moretblocks', 'contents')].sort(key=lambda r: r[0])
+    pd['moretblocks', 'contents'] = [ [ref + "...", ref] for ref in reflinklist]
+    pd['moretblocks', 'contents'].sort(key=lambda r: r[0])
 
 
 def retrieve_more(skicall):
     "Gets data for further textblock tables"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     project = call_data['editedprojname']
 
-    page_data[("adminhead","page_head","large_text")] = "Further TextBlocks"
+    sd["page_head","large_text"] = "Further TextBlocks"
+    pd.update(sd)
+
     call_data['extend_nav_buttons'] = []
 
     reference = call_data['ref']
@@ -81,7 +87,7 @@ def retrieve_more(skicall):
         call_data['extend_nav_buttons'].append([4006, "Previous", True, backref])
 
     # set input text
-    page_data[("st1","input_text")] = refdot
+    pd["st1","input_text"] = refdot
 
     # list of textrefs
     accesstextblocks = skilift.get_accesstextblocks(project)
@@ -106,10 +112,10 @@ def retrieve_more(skicall):
     newresult = [ ref for ref in result if displaylen == len(ref.split('.')) ]
 
     if newresult:
-        page_data[('txtblocks', 'contents')] = [ [ref, ref,  ref, '', '',  True, True, False, False] for ref in newresult]
-        page_data[('txtblocks', 'contents')].sort(key=lambda r: r[0])
+        pd['txtblocks', 'contents'] = [ [ref, ref,  ref, '', '',  True, True, False, False] for ref in newresult]
+        pd['txtblocks', 'contents'].sort(key=lambda r: r[0])
     else:
-        page_data[('txtblocks', 'show')] = False
+        pd['txtblocks', 'show'] = False
 
     # The more table displays remaining refs in result
 
@@ -126,18 +132,19 @@ def retrieve_more(skicall):
             reflinklist.append(ritem)
 
     if not reflinklist:
-        page_data[('moretblocks', 'show')] = False
+        pd['moretblocks', 'show'] = False
         return
     
-    page_data[('moretblocks', 'contents')] = [ [ref + "...", ref] for ref in reflinklist]
-    page_data[('moretblocks', 'contents')].sort(key=lambda r: r[0])
+    pd['moretblocks', 'contents'] = [ [ref + "...", ref] for ref in reflinklist]
+    pd['moretblocks', 'contents'].sort(key=lambda r: r[0])
 
 
 def retrieve_textblock(skicall):
     "Gets data for the edit textblock page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # clears any session data
     utils.clear_call_data(call_data, keep=['textblock','text','language','status'] )
@@ -146,13 +153,17 @@ def retrieve_textblock(skicall):
     language = skicall.lang[0].lower()
     default_language = skicall.lang[1]
 
-    page_data[("adminhead","page_head","large_text")] = "Edit TextBlock"
+    sd["page_head","large_text"] = "Edit TextBlock"
+    pd.update(sd)
     call_data['extend_nav_buttons'] = []
 
     if 'textblock' in call_data:
         edited_textblock = call_data['textblock']
     else:
         raise FailPage("TextBlock Reference not found")
+
+    sd["page_head","large_text"] = "Edit TextBlock : " + edited_textblock
+    pd.update(sd)
 
     accesstextblocks = skilift.get_accesstextblocks(project)
     result = accesstextblocks.get_textref_languages()
@@ -167,13 +178,12 @@ def retrieve_textblock(skicall):
     else:
         call_data['extend_nav_buttons'].append(['manage_textblocks', "List TextBlocks", True, ''])
 
-    page_data['st1:hidden_field1'] = edited_textblock
-    page_data['sta1:hidden_field1'] = edited_textblock
-    page_data['sb1:hidden_field1'] = edited_textblock
-    page_data['sb2:hidden_field1'] = edited_textblock
-    page_data['st2:hidden_field1'] = edited_textblock
-    page_data[("adminhead","page_head","large_text")] = "Edit TextBlock : " + edited_textblock
-    page_data['ts1:para_text'] = _list_to_string(result[edited_textblock])
+    pd['st1','hidden_field1'] = edited_textblock
+    pd['sta1','hidden_field1'] = edited_textblock
+    pd['sb1','hidden_field1'] = edited_textblock
+    pd['sb2','hidden_field1'] = edited_textblock
+    pd['st2','hidden_field1'] = edited_textblock
+    pd['ts1','para_text'] = _list_to_string(result[edited_textblock])
     # get default language textblock_lang
     langsplit = language.split('-')
     textblock_lang_list = result[edited_textblock]
@@ -198,36 +208,35 @@ def retrieve_textblock(skicall):
         textblock_language = call_data['language'].lower()
         textblock_text = accesstextblocks.get_exact_text(edited_textblock, textblock_language)
         if textblock_text is None:
-            page_data['sp1:para_text'] = "No text in this language has been found, edit and submit the text below to set this language text\n"
+            pd['sp1','para_text'] = "No text in this language has been found, edit and submit the text below to set this language text\n"
     else:
         textblock_language = textblock_lang
         textblock_text = accesstextblocks.get_exact_text(edited_textblock, textblock_language)
         if textblock_text is None:
             raise FailPage("Failed to find text for the TextBlock reference")
 
-    page_data['st1:input_text'] = textblock_language
-    page_data['sta1:hidden_field2'] = textblock_language
-    page_data['sb1:hidden_field2'] = textblock_language
+    pd['st1','input_text'] = textblock_language
+    pd['sta1','hidden_field2'] = textblock_language
+    pd['sb1','hidden_field2'] = textblock_language
     if 'text' in call_data:
         input_text = call_data['text']
     else:
         input_text = accesstextblocks.get_text(edited_textblock, (textblock_language,default_language))
     if input_text is None:
-        page_data['sta1:input_text'] = ''
+        pd['sta1','input_text'] = ''
     else:
-        page_data['sta1:input_text'] = input_text
+        pd['sta1','input_text'] = input_text
     # should delete language be shown
     if (len(textblock_lang_list) < 2) or (textblock_text is None):
-        page_data['sb1:show'] = False
+        pd['sb1','show'] = False
     else:
-        page_data['sb1:show'] = True
+        pd['sb1','show'] = True
 
 
 def submit_new_textblock(skicall):
     "A new textblock is to be created"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -258,7 +267,6 @@ def submit_text(skicall):
     "Set the text of the textblock"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -278,7 +286,6 @@ def submit_delete_language(skicall):
     "Delete a language"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -307,7 +314,6 @@ def submit_delete_textblock(skicall):
     "Delete a textblock"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -349,7 +355,6 @@ def submit_copy_textblock(skicall):
     "Copy a textblock"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

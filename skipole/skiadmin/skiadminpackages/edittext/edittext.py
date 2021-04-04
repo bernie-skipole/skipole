@@ -4,13 +4,15 @@ from ... import skilift
 from ....skilift import editpage, editsection
 from ... import FailPage, ValidateError, GoTo, ServerError
 
+from ....ski.project_class_definition import SectionData
 
 
 def retrieve_edittextpage(skicall):
     "Fills in the edit text page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -41,19 +43,20 @@ def retrieve_edittextpage(skicall):
         if pagenumber:
             call_data['page_number'] = pagenumber
             text = editpage.get_text(project, pagenumber, call_data['pchange'], location)
-            page_data[("adminhead","page_head","large_text")] = "Edit Text in page : %s" % (pagenumber,)
+            sd["page_head","large_text"] = "Edit Text in page : %s" % (pagenumber,)
         elif section_name:
             call_data['section_name'] = section_name
             text = editsection.get_text(project, section_name, call_data['schange'], location)
-            page_data[("adminhead","page_head","large_text")] = "Edit Text in section : %s" % (section_name,)
+            sd["page_head","large_text"] = "Edit Text in section : %s" % (section_name,)
         else:
             raise FailPage("Either a page or section must be specified")
+        pd.update(sd)
 
     except ServerError as e:
         raise FailPage(e.message)
 
     # Set the text in the text area
-    page_data[("text_input","input_text")] = text
+    pd["text_input","input_text"] = text
 
 
 
@@ -61,7 +64,6 @@ def edit_text(skicall):
     "Submits new text"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     location = call_data['location']
@@ -87,7 +89,8 @@ def retrieve_edit_symbol(skicall):
     "Fills in the edit html symbol page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -118,26 +121,25 @@ def retrieve_edit_symbol(skicall):
         if pagenumber:
             call_data['page_number'] = pagenumber
             sym = editpage.get_symbol(project, pagenumber, call_data['pchange'], location)
-            page_data[("adminhead","page_head","large_text")] = "Edit Symbol in page : %s" % (pagenumber,)
+            sd["page_head","large_text"] = "Edit Symbol in page : %s" % (pagenumber,)
         elif section_name:
             call_data['section_name'] = section_name
             sym = editsection.get_symbol(project, section_name, call_data['schange'], location)
-            page_data[("adminhead","page_head","large_text")] = "Edit Symbol in section : %s" % (section_name,)
+            sd["page_head","large_text"] = "Edit Symbol in section : %s" % (section_name,)
         else:
             raise FailPage("Either a page or section must be specified")
-
+        pd.update(sd)
     except ServerError as e:
         raise FailPage(e.message)
 
     # Set the symbol in the text area
-    page_data["symbol_input","input_text"] = sym
+    pd["symbol_input","input_text"] = sym
 
 
 def set_edit_symbol(skicall):
     "Submits new symbol after editing"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     location = call_data['location']
@@ -165,7 +167,8 @@ def retrieve_edit_comment(skicall):
     "Fills in the edit html comment page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -196,26 +199,26 @@ def retrieve_edit_comment(skicall):
         if pagenumber:
             call_data['page_number'] = pagenumber
             com = editpage.get_comment(project, pagenumber, call_data['pchange'], location)
-            page_data[("adminhead","page_head","large_text")] = "Edit Comment in page : %s" % (pagenumber,)
+            sd["page_head","large_text"] = "Edit Comment in page : %s" % (pagenumber,)
         elif section_name:
             call_data['section_name'] = section_name
             com = editsection.get_comment(project, section_name, call_data['schange'], location)
-            page_data[("adminhead","page_head","large_text")] = "Edit Comment in section : %s" % (section_name,)
+            sd["page_head","large_text"] = "Edit Comment in section : %s" % (section_name,)
         else:
             raise FailPage("Either a page or section must be specified")
+        pd.update(sd)
 
     except ServerError as e:
         raise FailPage(e.message)
 
     # Set the text in the input field
-    page_data[("comment_input","input_text")] = com
+    pd["comment_input","input_text"] = com
 
 
 def set_edit_comment(skicall):
     "Submits new comment after editing"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     location = call_data['location']

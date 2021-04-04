@@ -11,12 +11,15 @@ from ....skilift import item_info, editpage, editsection
 
 from ... import FailPage, ValidateError, GoTo, ServerError
 
+from ....ski.project_class_definition import SectionData
+
 
 def retrieve_textblockref(skicall):
     "Fills in the edit textblockref page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # a skilift.part_tuple is (project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
@@ -60,27 +63,28 @@ def retrieve_textblockref(skicall):
         raise FailPage(e.message)
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Edit the TextBlock."
+    sd["page_head","large_text"] = "Edit the TextBlock."
+    pd.update(sd)
 
     # header done, now page contents
 
-    page_data[("textblock_ref","input_text")]=tblock.textref
-    page_data["tblock_project", "input_text"]=tblock.tblock_project
-    page_data[("textblock_failed","input_text")]=tblock.failmessage
+    pd["textblock_ref","input_text"]=tblock.textref
+    pd["tblock_project", "input_text"]=tblock.tblock_project
+    pd["textblock_failed","input_text"]=tblock.failmessage
 
-    page_data[("linebreaks","radio_values")]=['ON', 'OFF']
-    page_data[("linebreaks","radio_text")]=['On', 'Off']
+    pd["linebreaks","radio_values"]=['ON', 'OFF']
+    pd["linebreaks","radio_text"]=['On', 'Off']
     if tblock.linebreaks:
-        page_data[("linebreaks","radio_checked")] = 'ON'
+        pd["linebreaks","radio_checked"] = 'ON'
     else:
-        page_data[("linebreaks","radio_checked")] = 'OFF'
+        pd["linebreaks","radio_checked"] = 'OFF'
 
-    page_data[("setescape","radio_values")]=['ON', 'OFF']
-    page_data[("setescape","radio_text")]=['On', 'Off']
+    pd["setescape","radio_values"]=['ON', 'OFF']
+    pd["setescape","radio_text"]=['On', 'Off']
     if tblock.escape:
-        page_data[("setescape","radio_checked")] = 'ON'
+        pd["setescape","radio_checked"] = 'ON'
     else:
-        page_data[("setescape","radio_checked")] = 'OFF'
+        pd["setescape","radio_checked"] = 'OFF'
 
 
 
@@ -88,7 +92,6 @@ def set_textblock(skicall):
     "Sets the textblock reference, fail message, linebreaks or escape"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     pagenumber = None
     section_name = None
@@ -175,7 +178,6 @@ def create_insert(skicall):
     "Creates the textblock ref"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
