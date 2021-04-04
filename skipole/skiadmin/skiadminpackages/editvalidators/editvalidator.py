@@ -6,6 +6,8 @@ from ... import ServerError, FailPage, ValidateError, GoTo
 from ... import skilift
 from ....skilift import editwidget, editvalidator
 
+from ....ski.project_class_definition import SectionData
+
 
 def _field_name(widget, field_argument):
     "Returns a field name"
@@ -21,7 +23,8 @@ def retrieve_editvalidator(skicall):
     "Fills in the edit a validator page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     project = call_data['editedprojname']
     section_name = None
@@ -44,9 +47,9 @@ def retrieve_editvalidator(skicall):
         raise FailPage("Field not identified")
 
     if section_name:
-        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
+        pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
     else:
-        page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
+        pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
 
     # get validator
     try:
@@ -71,20 +74,21 @@ def retrieve_editvalidator(skicall):
 
     call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
 
-    page_data[("adminhead","page_head","large_text")] = "Edit : %s on field %s" % (vinfo.validator, field_name)
+    sd["page_head","large_text"] = "Edit : %s on field %s" % (vinfo.validator, field_name)
+    pd.update(sd)
 
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
-    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
-    page_data[('validator_type','para_text')] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
+    pd['widget_type','para_text'] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    pd['widget_name','para_text'] = "Widget name : %s" % (widget_name,)
+    pd['field_type','para_text'] = "Field type : %s" % (field_arg,)
+    pd['field_name','para_text'] = "Field name : %s" % (field_name,)
+    pd['validator_type','para_text'] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
 
-    page_data[('validator_textblock','textblock_ref')] = ".".join(("validators",vinfo.module_name,vinfo.validator))
+    pd['validator_textblock','textblock_ref'] = ".".join(("validators",vinfo.module_name,vinfo.validator))
 
-    page_data[('e_message','input_text')] = vinfo.message
-    page_data[('e_message_ref','input_text')] = vinfo.message_ref
+    pd['e_message','input_text'] = vinfo.message
+    pd['e_message_ref','input_text'] = vinfo.message_ref
 
-    page_data[('displaywidget','input_text')] = vinfo.displaywidget
+    pd['displaywidget','input_text'] = vinfo.displaywidget
 
     # list of allowed values
     contents = []
@@ -93,10 +97,10 @@ def retrieve_editvalidator(skicall):
         row = [val, str(idx)]
         contents.append(row)
     if contents:
-        page_data[('allowed_values','contents')] = contents
-        page_data[('allowed_values','show')] = True
+        pd['allowed_values','contents'] = contents
+        pd['allowed_values','show'] = True
     else:
-        page_data[('allowed_values','show')] = False
+        pd['allowed_values','show'] = False
 
     # Validator arguments
     arg_contents = []
@@ -106,19 +110,18 @@ def retrieve_editvalidator(skicall):
         arg_contents.append(row)
     if arg_contents:
         arg_contents.sort(key=lambda x: x[0])
-        page_data[('validator_args','contents')] = arg_contents
-        page_data[('validator_args','show')] = True
-        page_data[('description5','show')] = True
+        pd['validator_args','contents'] = arg_contents
+        pd['validator_args','show'] = True
+        pd['description5','show'] = True
     else:
-        page_data[('validator_args','show')] = False
-        page_data[('description5','show')] = False
+        pd['validator_args','show'] = False
+        pd['description5','show'] = False
 
 
 def set_e_message(skicall):
     "Sets a validator error message"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -169,7 +172,6 @@ def set_e_message_ref(skicall):
     "Sets a validator error message reference"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -220,7 +222,6 @@ def set_displaywidget(skicall):
     "Sets a validator displaywidget"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -271,7 +272,6 @@ def set_allowed_value(skicall):
     "Adds a validator allowed value"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -322,7 +322,6 @@ def remove_allowed_value(skicall):
     "Removes a validator allowed value"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -373,7 +372,8 @@ def retrieve_arg(skicall):
     "Fills in the edit a validator argument page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     project = call_data['editedprojname']
     section_name = None
@@ -411,12 +411,12 @@ def retrieve_arg(skicall):
             widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
             widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
             vinfo = editvalidator.section_field_validator_info(project, section_name, call_data['schange'], widget_name, field_arg, validx)
-            page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
+            pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
         else:
             widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
             widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
             vinfo = editvalidator.page_field_validator_info(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx)
-            page_data[("validator_displaywidget_textblock","replace_strings")] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
+            pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
     except ServerError as e:
         raise FailPage(e.message)
 
@@ -428,25 +428,25 @@ def retrieve_arg(skicall):
     call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["back_to_validator", "Back to validator", True, '']])
 
     # navigator text
-    page_data[("adminhead","page_head","large_text")] = arg_name
+    sd["page_head","large_text"] = arg_name
+    pd.update(sd)
 
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
-    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
-    page_data[('validator_type','para_text')] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
+    pd['widget_type','para_text'] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    pd['widget_name','para_text'] = "Widget name : %s" % (widget_name,)
+    pd['field_type','para_text'] = "Field type : %s" % (field_arg,)
+    pd['field_name','para_text'] = "Field name : %s" % (field_name,)
+    pd['validator_type','para_text'] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
 
-    page_data[('validator_arg_textblock','textblock_ref')] = ".".join(("validators",vinfo.module_name,vinfo.validator,arg_name))
+    pd['validator_arg_textblock','textblock_ref'] = ".".join(("validators",vinfo.module_name,vinfo.validator,arg_name))
 
-    page_data[('arg_val','input_text')] = vinfo.val_args[arg_name]
-    page_data[('arg_val','hidden_field1')] = arg_name
+    pd['arg_val','input_text'] = vinfo.val_args[arg_name]
+    pd['arg_val','hidden_field1'] = arg_name
 
 
 def set_arg_value(skicall):
     "Sets a validator argument value"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -496,7 +496,6 @@ def move_up(skicall):
     "Moves a validator up in a field validator list"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -542,7 +541,6 @@ def move_down(skicall):
     "Moves a validator down in a field validator list"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -585,7 +583,6 @@ def remove_validator(skicall):
     "Removes a validator"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
@@ -630,7 +627,8 @@ def retrieve_validator_modules(skicall):
     "Creates a list of validator modules"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     project = call_data['editedprojname']
     section_name = None
@@ -666,12 +664,13 @@ def retrieve_validator_modules(skicall):
 
     field_name = _field_name(widget, field_arg)
 
-    page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget_name, field_name)
+    sd["page_head","large_text"] = "Add validator to (\"%s\",\"%s\")" % (widget_name, field_name)
+    pd.update(sd)
 
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
-    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
+    pd['widget_type','para_text'] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    pd['widget_name','para_text'] = "Widget name : %s" % (widget_name,)
+    pd['field_type','para_text'] = "Field type : %s" % (field_arg,)
+    pd['field_name','para_text'] = "Field name : %s" % (field_name,)
 
     call_data['extend_nav_buttons'].append(["back_to_field_edit", "Back to field", True, ''])
 
@@ -686,14 +685,15 @@ def retrieve_validator_modules(skicall):
 
     validator_modules = editvalidator.validator_modules()
 
-    page_data[("modulestable","link_table")] = [ [name, name, '', ".".join(('validators', name, 'module')), 'Description not found', ''] for name in validator_modules ]
+    pd["modulestable","link_table"] = [ [name, name, '', ".".join(('validators', name, 'module')), 'Description not found', ''] for name in validator_modules ]
 
 
 def retrieve_validator_list(skicall):
     "Creates a list of validators"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     project = call_data['editedprojname']
     section_name = None
@@ -729,12 +729,13 @@ def retrieve_validator_list(skicall):
 
     field_name = _field_name(widget, field_arg)
 
-    page_data[("adminhead","page_head","large_text")] = "Add validator to (\"%s\",\"%s\")" % (widget_name, field_name)
+    sd["page_head","large_text"] = "Add validator to (\"%s\",\"%s\")" % (widget_name, field_name)
+    pd.update(sd)
 
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
-    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
-    page_data[('field_name','para_text')] = "Field name : %s" % (field_name,)
+    pd['widget_type','para_text'] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    pd['widget_name','para_text'] = "Widget name : %s" % (widget_name,)
+    pd['field_type','para_text'] = "Field type : %s" % (field_arg,)
+    pd['field_name','para_text'] = "Field name : %s" % (field_name,)
 
     call_data['extend_nav_buttons'].extend([["back_to_field_edit", "Back to field", True, ''],["validator_modules", "Modules", True, '']])
 
@@ -748,7 +749,7 @@ def retrieve_validator_list(skicall):
     if module_name not in validator_modules:
         raise FailPage("Module not identified")
 
-    page_data[('moduledesc','textblock_ref')] = 'validators.' + module_name + '.module'
+    pd['moduledesc','textblock_ref'] = 'validators.' + module_name + '.module'
 
     # table of validators
 
@@ -761,14 +762,13 @@ def retrieve_validator_list(skicall):
 
     # tuple of validators in the module
     validators = editvalidator.validators_in_module(module_name)
-    page_data[("validators","link_table")] = [ [name, name, module_name, ".".join(("validators",module_name,name)), 'Description not found', ''] for name in validators ]
+    pd["validators","link_table"] = [ [name, name, module_name, ".".join(("validators",module_name,name)), 'Description not found', ''] for name in validators ]
 
 
 def create_validator(skicall):
     "Creates a validator and adds it to the field"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     section_name = None
