@@ -179,7 +179,7 @@ def makeapp(editedprojname):
 def set_navigation(identnum, call_data, pd, sd_adminhead):
     "Sets the navigation buttons, returns a left_nav SectionData object"
 
-    sd = SectionData['left_nav']
+    sd = SectionData('left_nav')
 
     # top navigation
 

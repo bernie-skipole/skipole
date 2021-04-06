@@ -1646,7 +1646,7 @@ class PageData(MutableMapping):
            Set sectionalias to None if this widget is not in a section"""
         if sectionalias is None:
             key = (widgetname, fieldname)
-            if not self._valid_widgfield(key)
+            if not self._valid_widgfield(key):
                 return
             if key in self._page_data:
                 return self._page_data[key]
