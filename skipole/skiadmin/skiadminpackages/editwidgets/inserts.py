@@ -4,12 +4,16 @@ from ... import FailPage, ValidateError, GoTo, ServerError, skilift
 
 from ....skilift import editpage, editsection
 
+from ....ski.project_class_definition import SectionData
+
 
 def show_empty_modal_insert(skicall):
     "Fills in empty modal insert"
     call_data = skicall.call_data
-    page_data = skicall.page_data
-    page_data["widgetinserts", "insertitem", "hide"] = False
+    pd = call_data['pagedata']
+    sd = SectionData("widgetinserts")
+
+    sd["insertitem", "hide"] = False
     location = call_data['location']
     widget_name = location[0]
     container = location[1]
@@ -20,24 +24,25 @@ def show_empty_modal_insert(skicall):
     insert_location = widget_name + "-" + str(container)
 
     # for each of the links, set get_field1 to be the insert_location
-    page_data[("widgetinserts","insert_text","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_textblock","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_symbol","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_comment","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_element","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_widget","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_section","get_field1")] = insert_location
+    sd["insert_text","get_field1"] = insert_location
+    sd["insert_textblock","get_field1"] = insert_location
+    sd["insert_symbol","get_field1"] = insert_location
+    sd["insert_comment","get_field1"] = insert_location
+    sd["insert_element","get_field1"] = insert_location
+    sd["insert_widget","get_field1"] = insert_location
+    sd["insert_section","get_field1"] = insert_location
 
     # set the hidden field
-    page_data[("widgetinserts","uploadpart","hidden_field1")] = insert_location
-
+    sd["uploadpart","hidden_field1"] = insert_location
+    pd.update(sd)
 
 
 def insert_in_widget(skicall):
     """Called by domtable to either insert or append an item in a widget container
-       sets page_data to populate the insert or append modal panel"""
+       sets PageData object to populate the insert or append modal panel"""
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("widgetinserts")
 
     pagenumber = None
     section_name = None
@@ -82,35 +87,38 @@ def insert_in_widget(skicall):
     insert_location = widget_name + '-' + str(container) + '-' + '-'.join(str(i) for i in location_integers)
 
     # display the modal panel
-    page_data[("widgetinserts","insertitem","hide")] = False
+    sd["insertitem","hide"] = False
 
     if (part_tuple.part_type == "Part") or (part_tuple.part_type == "Section"):
         # insert
-        page_data[("widgetinserts","insertpara","para_text")] = "Choose an item to insert"
-        page_data[("widgetinserts","insertupload","para_text")] = "Or insert a new block by uploading a block definition file:"
+        sd["insertpara","para_text"] = "Choose an item to insert"
+        sd["insertupload","para_text"] = "Or insert a new block by uploading a block definition file:"
     else:
         # append
-        page_data[("widgetinserts","insertpara","para_text")] = "Choose an item to append"
-        page_data[("widgetinserts","insertupload","para_text")] = "Or append a new block by uploading a block definition file:"
+        sd["insertpara","para_text"] = "Choose an item to append"
+        sd["insertupload","para_text"] = "Or append a new block by uploading a block definition file:"
 
     # for each of the links, set get_field1 to be the insert_location
-    page_data[("widgetinserts","insert_text","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_textblock","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_symbol","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_comment","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_element","get_field1")] = insert_location
-    page_data[("widgetinserts","insert_widget","get_field1")] = insert_location
+    sd["insert_text","get_field1"] = insert_location
+    sd["insert_textblock","get_field1"] = insert_location
+    sd["insert_symbol","get_field1"] = insert_location
+    sd["insert_comment","get_field1"] = insert_location
+    sd["insert_element","get_field1"] = insert_location
+    sd["insert_widget","get_field1"] = insert_location
     if pagenumber:
-        page_data[("widgetinserts","insert_section","get_field1")] = insert_location
+        sd["insert_section","get_field1"] = insert_location
 
     # set the hidden field
-    page_data[("widgetinserts","uploadpart","hidden_field1")] = insert_location
+    sd["uploadpart","hidden_field1"] = insert_location
+
+    pd.update(sd)
 
 
 def insert_text(skicall):
     "Inserts text into a page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     pagenumber = None
     section_name = None
@@ -153,20 +161,22 @@ def insert_text(skicall):
     new_text = 'Set text here'
     if pagenumber:
         call_data['pchange'], new_location = skilift.insert_item_in_page(editedprojname, pagenumber, call_data['pchange'], location, new_text)
-        page_data[("adminhead","page_head","large_text")] = "Edit Text in Page: %s Widget: %s" % (pagenumber,widget_name)
+        sd["page_head","large_text"] = "Edit Text in Page: %s Widget: %s" % (pagenumber,widget_name)
     else:
         call_data['schange'], new_location = skilift.insert_item_in_section(editedprojname, section_name, call_data['schange'], location, new_text)
-        page_data[("adminhead","page_head","large_text")] = "Edit Text in Section : %s Widget %s" % (section_name,widget_name)
+        sd["page_head","large_text"] = "Edit Text in Section : %s Widget %s" % (section_name,widget_name)
+    pd.update(sd)
     call_data['location'] = new_location
     
     # go to edit text page, set the text in the text area
-    page_data[("text_input","input_text")] = new_text
+    pd["text_input","input_text"] = new_text
 
 
 def insert_textblock(skicall):
     "Fills the template page for creating a textblock reference which will be inserted in the edited page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     pagenumber = None
     section_name = None
@@ -209,23 +219,25 @@ def insert_textblock(skicall):
 
     # and set page data for the template page which inserts an textblock reference
     if pagenumber:
-        page_data[("adminhead","page_head","large_text")] = "Insert TextBlock in Page: %s Widget: %s" % (pagenumber, widget_name)
+        sd["page_head","large_text"] = "Insert TextBlock in Page: %s Widget: %s" % (pagenumber, widget_name)
     else:
-        page_data[("adminhead","page_head","large_text")] = "Insert TextBlock in Section: %s Widget: %s" % (section_name, widget_name)
+        sd["page_head","large_text"] = "Insert TextBlock in Section: %s Widget: %s" % (section_name, widget_name)
+    pd.update(sd)
 
-    page_data[("linebreaks","radio_values")]=['ON', 'OFF']
-    page_data[("linebreaks","radio_text")]=['On', 'Off']
-    page_data[("linebreaks","radio_checked")] = 'ON'
+    pd["linebreaks","radio_values"]=['ON', 'OFF']
+    pd["linebreaks","radio_text"]=['On', 'Off']
+    pd["linebreaks","radio_checked"] = 'ON'
 
-    page_data[("setescape","radio_values")]=['ON', 'OFF']
-    page_data[("setescape","radio_text")]=['On', 'Off']
-    page_data[("setescape","radio_checked")] = 'ON'
+    pd["setescape","radio_values"]=['ON', 'OFF']
+    pd["setescape","radio_text"]=['On', 'Off']
+    pd["setescape","radio_checked"] = 'ON'
 
 
 def insert_symbol(skicall):
     "Inserts html symbol into a page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     pagenumber = None
     section_name = None
@@ -270,20 +282,22 @@ def insert_symbol(skicall):
     if pagenumber:
         call_data['pchange'], new_location = editpage.create_html_symbol_in_page(editedprojname, pagenumber, call_data['pchange'], location)
         sym = editpage.get_symbol(editedprojname, pagenumber, call_data['pchange'], new_location)
-        page_data[("adminhead","page_head","large_text")] = "Edit Symbol in Page: %s Widget: %s" % (pagenumber, widget_name)
+        sd["page_head","large_text"] = "Edit Symbol in Page: %s Widget: %s" % (pagenumber, widget_name)
     else:
         call_data['schange'], new_location = editsection.create_html_symbol_in_section(editedprojname, section_name, call_data['schange'], location)
         sym = editsection.get_symbol(editedprojname, section_name, call_data['schange'], new_location)
-        page_data[("adminhead","page_head","large_text")] = "Edit Symbol in Section: %s Widget: %s" % (section_name, widget_name)
+        sd["page_head","large_text"] = "Edit Symbol in Section: %s Widget: %s" % (section_name, widget_name)
+    pd.update(sd)
 
     call_data['location'] = new_location
-    page_data["symbol_input","input_text"] = sym
+    pd["symbol_input","input_text"] = sym
 
 
 def insert_comment(skicall):
     "Inserts a comment into a page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     pagenumber = None
     section_name = None
@@ -329,20 +343,22 @@ def insert_comment(skicall):
     if pagenumber:
         call_data['pchange'], new_location = editpage.create_html_comment_in_page(editedprojname, pagenumber, call_data['pchange'], location)
         com = editpage.get_comment(editedprojname, pagenumber, call_data['pchange'], new_location)
-        page_data[("adminhead","page_head","large_text")] = "Edit Comment in Page: %s Widget: %s" % (pagenumber, widget_name)
+        sd["page_head","large_text"] = "Edit Comment in Page: %s Widget: %s" % (pagenumber, widget_name)
     else:
         call_data['schange'], new_location = editsection.create_html_comment_in_section(editedprojname, section_name, call_data['schange'], location)
         com = editsection.get_comment(editedprojname, section_name, call_data['schange'], new_location)
-        page_data[("adminhead","page_head","large_text")] = "Edit Comment in Section: %s Widget: %s" % (section_name, widget_name)
+        sd["page_head","large_text"] = "Edit Comment in Section: %s Widget: %s" % (section_name, widget_name)
+    pd.update(sd)
 
     call_data['location'] = new_location
-    page_data[("comment_input","input_text")] = com
+    pd["comment_input","input_text"] = com
 
 
 def insert_element(skicall):
     "Fills the template page for creating an html element which will be inserted in the edited page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     pagenumber = None
     section_name = None
@@ -385,15 +401,15 @@ def insert_element(skicall):
 
     # and set page data for the template page which inserts an HTML element
     if pagenumber:
-        page_data[("adminhead","page_head","large_text")] = "Insert  an HTML element into Page: %s Widget: %s" % (pagenumber, widget_name)
+        sd["page_head","large_text"] = "Insert  an HTML element into Page: %s Widget: %s" % (pagenumber, widget_name)
     else:
-        page_data[("adminhead","page_head","large_text")] = "Insert  an HTML element into Section: %s Widget: %s" % (section_name, widget_name)
+        sd["page_head","large_text"] = "Insert  an HTML element into Section: %s Widget: %s" % (section_name, widget_name)
+    pd.update(sd)
 
 
 def insert_widget(skicall):
     "Gets page number and location, used for creating a widget which will be inserted in the page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     pagenumber = None
     section_name = None
@@ -442,7 +458,8 @@ def insert_widget(skicall):
 def insert_section(skicall):
     "Gets page number and location, used for creating a section reference which will be inserted in the page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     pagenumber = None
     section_name = None
@@ -483,25 +500,25 @@ def insert_section(skicall):
     call_data['location'] = location
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Insert Section place holder"
+    sd["page_head","large_text"] = "Insert Section place holder"
+    pd.update(sd)
 
     # get current sections
     section_list = editsection.list_section_names(editedprojname)
     if not section_list:
-        page_data[("nosection", "show")] = True
-        page_data[("descript", "show")] = False
-        page_data[("placename","show")] = False
+        pd["nosection", "show"] = True
+        pd["descript", "show"] = False
+        pd["placename","show"] = False
         return
 
-    page_data[('sectionname','option_list')] = section_list[:]
-    page_data[('sectionname','selectvalue')] = section_list[0]
+    pd['sectionname','option_list'] = section_list[:]
+    pd['sectionname','selectvalue'] = section_list[0]
 
 
 
 def insert_upload(skicall):
     "Gets page number and location, used for creating a widget which will be inserted in the page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     pagenumber = None
     section_name = None

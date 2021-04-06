@@ -10,6 +10,8 @@ from ....skilift import fromjson, editsection, editpage, editwidget, versions
 from .. import utils
 from ... import FailPage, ValidateError, ServerError, GoTo
 
+from ....ski.project_class_definition import SectionData
+
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
@@ -59,7 +61,8 @@ def retrieve_widget(skicall):
     "Fills in the edit a widget page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # get the widget name
     if ("left_nav","navbuttons","nav_links") in call_data:
@@ -82,7 +85,8 @@ def retrieve_widget(skicall):
     call_data['widget_name'] = widget_name
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name
+    sd["page_head","large_text"] = "Widget " + widget_name
+    pd.update(sd)
 
     project = call_data['editedprojname']
 
@@ -106,10 +110,10 @@ def retrieve_widget(skicall):
         raise FailPage(e.message)
     
 
-    page_data[('widget_type','para_text')] = "This widget is of type %s.%s." % (widgetdescription.modulename, widgetdescription.classname)
-    page_data[('widget_textblock','textblock_ref')] = ".".join(("widgets", widgetdescription.modulename, widgetdescription.classname))
-    page_data[('widget_name','input_text')] = widget_name
-    page_data[('widget_brief','input_text')] = widgetdescription.brief
+    pd['widget_type','para_text'] = "This widget is of type %s.%s." % (widgetdescription.modulename, widgetdescription.classname)
+    pd['widget_textblock','textblock_ref'] = ".".join(("widgets", widgetdescription.modulename, widgetdescription.classname))
+    pd['widget_name','input_text'] = widget_name
+    pd['widget_brief','input_text'] = widgetdescription.brief
 
     # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
     # with items ['field_arg', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
@@ -120,9 +124,9 @@ def retrieve_widget(skicall):
     arg_dict = widgetdescription.fields_dictionary
 
     if arg_list or arg_table or arg_dict:
-        page_data[('args_multi','show')] = True
+        pd['args_multi','show'] = True
     else:
-        page_data[('args_multi','show')] = False
+        pd['args_multi','show'] = False
 
 
     # args is shown on a LinkTextBlockTable2
@@ -153,10 +157,10 @@ def retrieve_widget(skicall):
                 field_value += '...'
             arg_row = [ name, arg.field_arg, '',field_value, ref, 'No description for %s' % (ref,), '']
             args_content.append(arg_row)
-        page_data[('args','link_table')] = args_content
+        pd['args','link_table'] = args_content
     else:
-        page_data[('args','show')] = False
-        page_data[('args_description','show')] = False
+        pd['args','show'] = False
+        pd['args_description','show'] = False
 
 
     # arg_list, arg_table and arg_dict are shown on LinkTextBlockTable widgets
@@ -180,10 +184,10 @@ def retrieve_widget(skicall):
                 args_valdt = True
             arg_row = [ name, arg.field_arg, '', ref, 'No description for %s' % (ref,), '']
             arg_list_content.append(arg_row)
-        page_data[('arg_list','link_table')] = arg_list_content
+        pd['arg_list','link_table'] = arg_list_content
     else:
-        page_data[('arg_list','show')] = False
-        page_data[('arg_list_description','show')] = False
+        pd['arg_list','show'] = False
+        pd['arg_list_description','show'] = False
 
     arg_table_content = []
     if arg_table:
@@ -195,10 +199,10 @@ def retrieve_widget(skicall):
                 args_valdt = True
             arg_row = [ name, arg.field_arg, '', ref, 'No description for %s' % (ref,), '']
             arg_table_content.append(arg_row)
-        page_data[('arg_table','link_table')] = arg_table_content
+        pd['arg_table','link_table'] = arg_table_content
     else:
-        page_data[('arg_table','show')] = False
-        page_data[('arg_table_description','show')] = False
+        pd['arg_table','show'] = False
+        pd['arg_table_description','show'] = False
 
     arg_dict_content = []
     if arg_dict:
@@ -210,18 +214,18 @@ def retrieve_widget(skicall):
                 args_valdt = True
             arg_row = [ name, arg.field_arg, '', ref, 'No description for %s' % (ref,), '']
             arg_dict_content.append(arg_row)
-        page_data[('arg_dict','link_table')] = arg_dict_content
+        pd['arg_dict','link_table'] = arg_dict_content
     else:
-        page_data[('arg_dict','show')] = False
-        page_data[('arg_dict_description','show')] = False
+        pd['arg_dict','show'] = False
+        pd['arg_dict_description','show'] = False
 
-    page_data[('args_valdt','show')] = args_valdt
+    pd['args_valdt','show'] = args_valdt
 
     # display the widget html
-    page_data[('widget_code','pre_text')] = widgetdescription.illustration
+    pd['widget_code','pre_text'] = widgetdescription.illustration
 
     if widgetdescription.containers:
-        page_data[('containerdesc','show')] = True
+        pd['containerdesc','show'] = True
 
     # remove any unwanted fields from session call_data
     if 'container' in call_data:
@@ -240,7 +244,6 @@ def set_widget_params(skicall):
     "Sets widget name and brief"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -293,7 +296,8 @@ def retrieve_editfield(skicall):
     "Fills in the edit a widget field page"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     project = call_data['editedprojname']
 
@@ -326,9 +330,9 @@ def retrieve_editfield(skicall):
     except ServerError as e:
         raise FailPage(e.message)
 
-    page_data[('widget_type','para_text')] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
-    page_data[('widget_name','para_text')] = "Widget name : %s" % (widget_name,)
-    page_data[('field_type','para_text')] = "Field type : %s" % (field_arg,)
+    pd['widget_type','para_text'] = "Widget type : %s.%s" % (widgetdescription.modulename, widgetdescription.classname)
+    pd['widget_name','para_text'] = "Widget name : %s" % (widget_name,)
+    pd['field_type','para_text'] = "Field type : %s" % (field_arg,)
 
     # widgetdescription.fields_single is a list of namedtuples, each inner namedtuple representing a field
     # with items ['field_arg', 'field_type', 'valdt', 'jsonset', 'cssclass', 'cssstyle']
@@ -351,20 +355,21 @@ def retrieve_editfield(skicall):
         raise FailPage("Field not identified")
 
     if field_datalist.jsonset:
-        page_data[('json_enabled','para_text')] = "JSON Enabled : Yes"
+        pd['json_enabled','para_text'] = "JSON Enabled : Yes"
     else:
-        page_data[('json_enabled','para_text')] = "JSON Enabled : No"
+        pd['json_enabled','para_text'] = "JSON Enabled : No"
 
     if field_arg in fields_single:
         if field_datalist.cssclass or field_datalist.cssstyle:
             default_value = skilift.fromjson.get_widget_default_field_value(project, widgetdescription.modulename, widgetdescription.classname, field_arg)
             if default_value:
-                page_data[('field_default','para_text')] = "Default value : " + default_value
-                page_data[('field_default','show')] = True
+                pd['field_default','para_text'] = "Default value : " + default_value
+                pd['field_default','show'] = True
 
     field_name = _field_name(widget, field_arg)
-    page_data[("adminhead","page_head","large_text")] = "(\'%s\',\'%s\')" % (widget_name, field_name)
-    page_data[('show_field_name','para_text')] = "Field name : %s" % (field_name,)
+    sd["page_head","large_text"] = "(\'%s\',\'%s\')" % (widget_name, field_name)
+    pd.update(sd)
+    pd['show_field_name','para_text'] = "Field name : %s" % (field_name,)
 
     value, field_value = _field_value(widget, field_arg)
 
@@ -375,58 +380,58 @@ def retrieve_editfield(skicall):
     adminaccesstextblocks = skilift.get_accesstextblocks(skicall.project)
 
     if adminaccesstextblocks.textref_exists(full_textref):
-        page_data[('widget_field_textblock','textblock_ref')] = full_textref
+        pd['widget_field_textblock','textblock_ref'] = full_textref
     else:
-        page_data[('widget_field_textblock','textblock_ref')] = ref
-    page_data[('field_name','input_text')] = field_name
+        pd['widget_field_textblock','textblock_ref'] = ref
+    pd['field_name','input_text'] = field_name
 
     replace_strings = [widget_name+'\",\"'+field_name]
 
     if field_arg in fields_single:
         if field_datalist.field_type == 'boolean':
-            page_data[("field_submit",'show')] = True
-            page_data[("boolean_field_value", "radio_checked")] = value
+            pd["field_submit",'show'] = True
+            pd["boolean_field_value", "radio_checked"] = value
         else:
-            page_data[("field_value",'show')] = True
-            page_data[("field_value",'input_text')] = field_value
+            pd["field_value",'show'] = True
+            pd["field_value",'input_text'] = field_value
         if field_datalist.cssclass or field_datalist.cssstyle:
             # add button to set given css class or style to defaults.json
-            page_data[("css_default_desc",'show')] = True
-            page_data[("set_field_default",'show')] = True
+            pd["css_default_desc",'show'] = True
+            pd["set_field_default",'show'] = True
         else:
-            page_data[("css_default_desc",'show')] = False
-            page_data[("set_field_default",'show')] = False
+            pd["css_default_desc",'show'] = False
+            pd["set_field_default",'show'] = False
 
-        page_data[("show_field_value",'show')] = True
-        page_data[("show_field_value",'para_text')] = "Field value : %s" % (field_value,)
-        page_data[("widget_args_desc",'show')] = True
-        page_data[("widget_args_desc",'replace_strings')] = replace_strings
+        pd["show_field_value",'show'] = True
+        pd["show_field_value",'para_text'] = "Field value : %s" % (field_value,)
+        pd["widget_args_desc",'show'] = True
+        pd["widget_args_desc",'replace_strings'] = replace_strings
     elif field_arg in fields_list:
-        page_data[("widget_arg_list_desc",'show')] = True
-        page_data[("widget_arg_list_desc",'replace_strings')] = replace_strings
-        page_data[("css_default_desc",'show')] = False
-        page_data[("set_field_default",'show')] = False
+        pd["widget_arg_list_desc",'show'] = True
+        pd["widget_arg_list_desc",'replace_strings'] = replace_strings
+        pd["css_default_desc",'show'] = False
+        pd["set_field_default",'show'] = False
     elif field_arg in fields_table:
-        page_data[("widget_arg_table_desc",'show')] = True
-        page_data[("widget_arg_table_desc",'replace_strings')] = replace_strings
-        page_data[("css_default_desc",'show')] = False
-        page_data[("set_field_default",'show')] = False
+        pd["widget_arg_table_desc",'show'] = True
+        pd["widget_arg_table_desc",'replace_strings'] = replace_strings
+        pd["css_default_desc",'show'] = False
+        pd["set_field_default",'show'] = False
     elif field_arg in fields_dictionary:
-        page_data[("widget_arg_dict_desc",'show')] = True
-        page_data[("widget_arg_dict_desc",'replace_strings')] = replace_strings
-        page_data[("css_default_desc",'show')] = False
-        page_data[("set_field_default",'show')] = False
+        pd["widget_arg_dict_desc",'show'] = True
+        pd["widget_arg_dict_desc",'replace_strings'] = replace_strings
+        pd["css_default_desc",'show'] = False
+        pd["set_field_default",'show'] = False
 
     # Show validators
     if field_datalist.valdt:
-        page_data[("validators_desc",'show')] = True
-        page_data[("validators_desc2",'show')] = True
-        page_data[("add_validator",'show')] = True
+        pd["validators_desc",'show'] = True
+        pd["validators_desc2",'show'] = True
+        pd["add_validator",'show'] = True
         # create the contents for the validator_table
         contents = []
         if ("validators" in widget) and (field_arg in widget["validators"]):
             val_list = widget["validators"][field_arg]
-            page_data["validator_table:show"] = True
+            pd["validator_table","show"] = True
             max_validator_index = len(val_list) - 1
             for index,validator in enumerate(val_list):
                 if index:
@@ -441,7 +446,7 @@ def retrieve_editfield(skicall):
                     down = False
                 table_pos =  str(index)
                 contents.append([validator['class'], table_pos, table_pos, table_pos, table_pos, True, up, down, True])
-            page_data["validator_table:contents"] = contents
+            pd["validator_table","contents"] = contents
 
     # set field_arg into session call_data
     call_data['field_arg'] = field_arg
@@ -454,7 +459,6 @@ def set_field_name(skicall):
     "Sets a widget field name"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -497,7 +501,6 @@ def set_field_value(skicall):
     "Sets a widget field value"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -540,7 +543,6 @@ def set_field_default(skicall):
     "Sets a widget field default value"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -602,7 +604,9 @@ def retrieve_container(skicall):
     "Edits a widget container"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd_adminhead = SectionData("adminhead")
+    sd_widgetinserts = SectionData("widgetinserts")
 
     # remove any unwanted fields from session call_data
     if 'location' in call_data:
@@ -647,13 +651,14 @@ def retrieve_container(skicall):
             widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
             containerinfo = editwidget.container_in_section(project, section_name, call_data['schange'], widget_name, container)
             # going into a section, so cannot add sections
-            page_data["widgetinserts", "insert_section", "show"] = False
+            sd_widgetinserts["insert_section", "show"] = False
         else:
             widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
             containerinfo = editwidget.container_in_page(project, pagenumber, call_data['pchange'], widget_name, container)
-            page_data["widgetinserts", "insert_section", "show"] = True
+            sd_widgetinserts["insert_section", "show"] = True
     except ServerError as e:
         raise FailPage(e.message)
+    pd.update(sd_widgetinserts)
 
     # containerinfo is a namedtuple ('container', 'empty')
 
@@ -667,39 +672,43 @@ def retrieve_container(skicall):
         raise GoTo(target = 54600, clear_submitted=True)
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Widget " + widget_name + " container: " + str(container)
+    sd_adminhead["page_head","large_text"] = "Widget " + widget_name + " container: " + str(container)
+    pd.update(sd_adminhead)
 
     # so header text and navigation done, now continue with the page contents
-    page_data[('container_description','textblock_ref')] = ".".join(("widgets",widgetdescription.modulename, widgetdescription.classname, "container" + str(container)))
+    pd['container_description','textblock_ref'] = ".".join(("widgets",widgetdescription.modulename, widgetdescription.classname, "container" + str(container)))
 
-    page_data[('further_description','para_text')] = "Choose an item to edit."
+    pd['further_description','para_text'] = "Choose an item to edit."
     # fill in the table
     call_data['location_string'] = widget_name
     retrieve_container_dom(skicall)
 
     # and do show the download button
-    page_data['download_description', 'show'] = True
-    page_data['containerdownload', 'show'] = True
+    pd['download_description', 'show'] = True
+    pd['containerdownload', 'show'] = True
 
 
 def empty_container(skicall):
     "Fills in empty_container page"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # location is (widget_name, container, ())
     location = call_data['location']
     widgetdescription = call_data['widgetdescription']
-    page_data[("adminhead","page_head","large_text")] = "Widget " + location[0] + " container: " + str(location[1])
+    sd["page_head","large_text"] = "Widget " + location[0] + " container: " + str(location[1])
+    pd.update(sd)
 
-    page_data[('container_description','textblock_ref')] = ".".join(("widgets",widgetdescription.modulename, widgetdescription.classname, "container" + str(location[1])))
+    pd['container_description','textblock_ref'] = ".".join(("widgets",widgetdescription.modulename, widgetdescription.classname, "container" + str(location[1])))
 
 
 def retrieve_container_dom(skicall):
     "this call fills in the container dom table"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     project = call_data['editedprojname']
 
@@ -755,26 +764,27 @@ def retrieve_container_dom(skicall):
 
     # create the table
 
-    page_data['editdom', 'domtable', 'contents']  = domcontents
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
 
     # for each column: html link, JSON link, storage key
-    page_data['editdom', 'domtable', 'cols']  =  [    ['','',''],                                                 # tag name, no link
-                                                      ['','',''],                                                 # brief, no link
-                                                      ['no_javascript','move_up_in_container_dom',''],            # up arrow
-                                                      ['no_javascript','move_up_right_in_container_dom',''],      # up right
-                                                      ['no_javascript','move_down_in_container_dom',''],          # down
-                                                      ['no_javascript','move_down_right_in_container_dom',''],    # down right
-                                                      ['edit_container_dom','',''],                               # edit, html only
-                                                      ['no_javascript',44205,''],                                 # insert/append
-                                                      ['no_javascript',44580,''],                                 # copy
-                                                      ['no_javascript',44590,'ski_part'],                         # paste
-                                                      ['no_javascript','cut_container_dom',''],                   # cut
-                                                      ['no_javascript','delete_container_dom','']                 # delete
-                                                   ]
+    sd['domtable', 'cols']  =  [  ['','',''],                                                 # tag name, no link
+                                  ['','',''],                                                 # brief, no link
+                                  ['no_javascript','move_up_in_container_dom',''],            # up arrow
+                                  ['no_javascript','move_up_right_in_container_dom',''],      # up right
+                                  ['no_javascript','move_down_in_container_dom',''],          # down
+                                  ['no_javascript','move_down_right_in_container_dom',''],    # down right
+                                  ['edit_container_dom','',''],                               # edit, html only
+                                  ['no_javascript',44205,''],                                 # insert/append
+                                  ['no_javascript',44580,''],                                 # copy
+                                  ['no_javascript',44590,'ski_part'],                         # paste
+                                  ['no_javascript','cut_container_dom',''],                   # cut
+                                  ['no_javascript','delete_container_dom','']                 # delete
+                               ]
 
-    page_data['editdom', 'domtable', 'dropident'] = 'move_in_container_dom'
+    sd['domtable', 'dropident'] = 'move_in_container_dom'
+    pd.update(sd)
 
 
 
@@ -823,7 +833,7 @@ def _container_domcontents(project, pagenumber, section_name, location_string, c
 def copy_container(skicall):
     "Gets container part and return it in page_data['localStorage'] with key ski_part for browser session storage"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
     project = call_data['editedprojname']
     pagenumber = None
     section_name = None
@@ -866,14 +876,16 @@ def copy_container(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['localStorage'] = {'ski_part':jsonstring}
+    pd.localStorage = {'ski_part':jsonstring}
     call_data['status'] = 'Item copied, and can now be pasted.'
 
 
 def paste_container(skicall):
     "Gets submitted json string and inserts it"
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
+
     project = call_data['editedprojname']
     pagenumber = None
     section_name = None
@@ -918,9 +930,10 @@ def paste_container(skicall):
         call_data['pchange'] = editpage.create_item_in_page(project, pagenumber, call_data['pchange'], location, json_string)
 
     domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, widget_name, container)
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 
@@ -928,7 +941,7 @@ def downloadcontainer(skicall):
     "Gets container, and returns a json dictionary, this will be sent as an octet file to be downloaded"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
     project = call_data['editedprojname']
 
     pagenumber = None
@@ -973,7 +986,8 @@ def downloadcontainer(skicall):
         binline = line.encode('utf-8')
         n += len(binline)
         line_list.append(binline)
-    page_data['headers'] = [('content-type', 'application/octet-stream'), ('content-length', str(n))]
+    pd.mimetype = 'application/octet-stream'
+    pd.content_length = str(n)
     return line_list
 
 
@@ -981,7 +995,6 @@ def back_to_parent_container(skicall):
     "Sets call_data['widget_name'] to parent_widget and call_data['container'] to parent_container"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 
@@ -1018,7 +1031,6 @@ def edit_container_dom(skicall):
     "Called by domtable to edit an item in a container"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
     pagenumber = None
@@ -1098,7 +1110,8 @@ def cut_container_dom(skicall):
     "Called by domtable to cut an item in a container"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     project = call_data['editedprojname']
     pagenumber = None
@@ -1147,7 +1160,7 @@ def cut_container_dom(skicall):
         jsonstring = json.dumps(['Part',itemdict], indent=0, separators=(',', ':'))
     else:
         jsonstring = json.dumps([itempart,itemdict], indent=0, separators=(',', ':'))
-    page_data['localStorage'] = {'ski_part':jsonstring}
+    pd.localStorage = {'ski_part':jsonstring}
 
     # remove the item using functions from skilift.editsection and skilift.editpage
     if pagenumber is None:
@@ -1187,9 +1200,10 @@ def cut_container_dom(skicall):
     domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, widget_name, container)
 
     # otherwise just redraw the table
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
     call_data['status'] = 'Item copied and then deleted. Use paste to recover or move it.'
 
 
@@ -1197,7 +1211,8 @@ def delete_container_dom(skicall):
     "Called by domtable to delete an item in a container"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     project = call_data['editedprojname']
     pagenumber = None
@@ -1277,9 +1292,10 @@ def delete_container_dom(skicall):
     domcontents, dragrows, droprows = _container_domcontents(project, pagenumber, section_name, widget_name, container)
 
     # otherwise just redraw the table
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
     call_data['status'] = 'Item deleted.'
 
 
@@ -1336,7 +1352,8 @@ def move_up_in_container_dom(skicall):
     "Called by domtable to move an item in a container up"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1381,16 +1398,18 @@ def move_up_in_container_dom(skicall):
         raise FailPage(message = e.message)
 
     # redraw the table
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def move_up_right_in_container_dom(skicall):
     "Called by domtable to move an item in a container up and to the right"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1441,16 +1460,18 @@ def move_up_right_in_container_dom(skicall):
         raise FailPage(message = e.message)
 
     # redraw the table
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def move_down_in_container_dom(skicall):
     "Called by domtable to move an item in a container down"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1504,16 +1525,18 @@ def move_down_in_container_dom(skicall):
         raise FailPage(message = e.message)
 
     # redraw the table
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def move_down_right_in_container_dom(skicall):
     "Called by domtable to move an item in a container down and to the right"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     try:
         part_tuple = _item_to_move(call_data)
@@ -1567,16 +1590,18 @@ def move_down_right_in_container_dom(skicall):
         raise FailPage(message = e.message)
 
     # redraw the table
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 def move_in_container_dom(skicall):
     "Called by domtable to move an item in a container after a drag and drop"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("editdom")
 
     if ('editdom', 'domtable', 'dragrows') not in call_data:
         raise FailPage(message = "item to drop missing")
@@ -1691,9 +1716,10 @@ def move_in_container_dom(skicall):
         raise FailPage(message = e.message)
 
     # redraw the table
-    page_data['editdom', 'domtable', 'dragrows']  = dragrows
-    page_data['editdom', 'domtable', 'droprows']  = droprows
-    page_data['editdom', 'domtable', 'contents']  = domcontents
+    sd['domtable', 'dragrows']  = dragrows
+    sd['domtable', 'droprows']  = droprows
+    sd['domtable', 'contents']  = domcontents
+    pd.update(sd)
 
 
 

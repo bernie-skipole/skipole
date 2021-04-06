@@ -1436,7 +1436,6 @@ class SkiCall(object):
             self.page_data['cssimport'] = val
 
 
-
     def clear_page_data(self):
         self.page_data = {}
 
@@ -1640,7 +1639,26 @@ class PageData(MutableMapping):
                     # keys will be of the form sectionalias-widgetname:fieldname
                     pagedict[key[0]+'-'+key[1]+':'+key[2]] = val
         return pagedict
-        
+
+
+    def get_value(self, sectionalias, widgetname, fieldname):
+        """Returns the value set in this field, if item not found, return None.
+           Set sectionalias to None if this widget is not in a section"""
+        if sectionalias is None:
+            key = (widgetname, fieldname)
+            if not self._valid_widgfield(key)
+                return
+            if key in self._page_data:
+                return self._page_data[key]
+            else:
+                return
+        if sectionalias not in self.sections:
+            # it does not exist
+            return None
+        key = (sectionalias, widgetname, fieldname)
+        if key in self._page_data:
+            return self._page_data[key]
+
 
     def get_section(self, sectionalias):
         "Retrieve a section, if it has not been added to the page, return None"

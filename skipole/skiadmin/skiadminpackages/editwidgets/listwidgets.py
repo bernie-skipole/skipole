@@ -10,6 +10,8 @@ from ....skilift import editwidget
 
 from ... import ServerError, FailPage, ValidateError, GoTo
 
+from ....ski.project_class_definition import SectionData
+
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
@@ -18,10 +20,12 @@ def retrieve_module_list(skicall):
     "this call is to retrieve data for listing widget modules"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # Fill in header
-    page_data[("adminhead","page_head","large_text")] = "Choose module"
+    sd["page_head","large_text"] = "Choose module"
+    pd.update(sd)
 
     # as this page chooses a module, clear any previous chosen module and widget class
     if 'module' in call_data:
@@ -47,14 +51,15 @@ def retrieve_module_list(skicall):
         notfound = 'Textblock reference %s not found' % ref
         contents.append([name, name, '', ref, notfound, ''])
 
-    page_data[("modules","link_table")] = contents
+    pd["modules","link_table"] = contents
 
 
 def retrieve_widgets_list(skicall):
     "this call is to retrieve data for listing widgets in a module"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # Fill in header
     call_data['extend_nav_buttons'].append(["list_widget_modules", "Modules", True, ''])
@@ -74,8 +79,9 @@ def retrieve_widgets_list(skicall):
     # set module into call_data
     call_data['module'] = module_name
 
-    page_data[("adminhead","page_head","large_text")] = "Widgets in module %s" % (module_name,)
-    page_data[('moduledesc','textblock_ref')] = 'widgets.' + module_name + '.module'
+    sd["page_head","large_text"] = "Widgets in module %s" % (module_name,)
+    pd.update(sd)
+    pd['moduledesc','textblock_ref'] = 'widgets.' + module_name + '.module'
 
     if 'widgetclass' in call_data:
         # as this page chooses a widget, clear any previous chosen widget class
@@ -98,14 +104,15 @@ def retrieve_widgets_list(skicall):
         classname = widget.classname
         contents.append([classname, classname, '', ref, notfound, ''])
 
-    page_data[("widgets","link_table")] = contents
+    pd["widgets","link_table"] = contents
 
 
 def retrieve_new_widget(skicall):
     "this call is to retrieve data for displaying a new widget"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
+    pd = call_data['pagedata']
+    sd = SectionData("adminhead")
 
     # Fill in header
     call_data['extend_nav_buttons'].extend([["list_widget_modules", "Modules", True, ''], ["back_widget_list", "Widgets", True, '']])
@@ -135,7 +142,8 @@ def retrieve_new_widget(skicall):
     widg = widget_dict[widget_class_name]
     # widg is a WidgetDescription named tuple
 
-    page_data[("adminhead","page_head","large_text")] = "Create widget of type %s" % (widget_class_name,)
+    sd["page_head","large_text"] = "Create widget of type %s" % (widget_class_name,)
+    pd.update(sd)
 
 
     ref = "widgets." + widg.modulename + "." + widg.classname
@@ -144,9 +152,9 @@ def retrieve_new_widget(skicall):
     adminaccesstextblocks = skilift.get_accesstextblocks(skicall.project)
 
     if adminaccesstextblocks.textref_exists(full_textref):
-        page_data['widgetdesc','textblock_ref'] = full_textref
+        pd['widgetdesc','textblock_ref'] = full_textref
     else:
-        page_data['widgetdesc','textblock_ref'] = ref
+        pd['widgetdesc','textblock_ref'] = ref
 
     field_contents = []
 
@@ -164,23 +172,22 @@ def retrieve_new_widget(skicall):
         else:
             field_contents.append([field_argument, ref + '.' + field_argument])
 
-    page_data[('fieldtable','contents')] = field_contents
+    pd['fieldtable','contents'] = field_contents
 
     if widg.containers:
-        page_data[('containerdesc','show')] = True
+        pd['containerdesc','show'] = True
 
     # set widget class name into call_data
     call_data['widgetclass'] = widget_class_name
 
     # display the widget html
-    page_data[('widget_code','pre_text')] = widg.illustration
+    pd['widget_code','pre_text'] = widg.illustration
 
 
 def create_new_widget(skicall):
     "this call is to create and insert a new widget, goes on to widget edit"
 
     call_data = skicall.call_data
-    page_data = skicall.page_data
 
     project = call_data['editedprojname']
 

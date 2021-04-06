@@ -6,6 +6,8 @@ import os, sys, re, json, pathlib
 from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift, PageData
 from ..skilift.fromjson import get_defaults_from_file
 
+from ..ski.project_class_definition import SectionData, PageData
+
 from . import skiadminpackages
 
 PROJECTFILES = os.path.dirname(os.path.realpath(__file__))
@@ -74,14 +76,15 @@ def end_call(page_ident, page_type, skicall):
     """Sets navigation menus, and sends session data as ident_data."""
 
     # skicall.call_data['pagedata'] is a PageData object
-    skicall.update(skicall.call_data['pagedata'])
+    call_data = skicall.call_data
+    pd = call_data['pagedata']
+
+    skicall.update(pd)
 
     # do not include session data or navigation for these types of pages
     if page_type in ('FilePage', 'CSS'):
         return
 
-    call_data = skicall.call_data
-    page_data = skicall.page_data
 
     editedprojname = call_data['editedprojname']
 
@@ -95,18 +98,25 @@ def end_call(page_ident, page_type, skicall):
     if identnum == 26010:
         return
 
+    sd_adminhead = SectionData("adminhead")
+    sd_foot = SectionData("foot")
+
     if page_type == "TemplatePage":
         # header information
-        if ("adminhead","page_head","large_text") not in page_data:
-            page_data["adminhead","page_head","large_text"] = "Project: %s version: %s" % (editedprojname, call_data['editedprojversion'])
+        if not pd.get_value("adminhead","page_head","large_text"):
+            sd_adminhead["page_head","large_text"] = "Project: %s version: %s" % (editedprojname, call_data['editedprojversion'])
         # fill in navigation information
-        set_navigation(identnum, call_data, page_data)
+        sd_left_nav = set_navigation(identnum, call_data, pd, sd_adminhead)
+        skicall.update(sd_left_nav)
 
     # Show the status message
     if 'status' in call_data:
-        page_data['foot', 'foot_status','footer_text'] = call_data['status']
-        page_data[("adminhead","show_status","para_text")] = call_data['status']
-        page_data[("adminhead","show_status","hide")] = False
+        sd_foot['foot_status','footer_text'] = call_data['status']
+        sd_adminhead["show_status","para_text"] = call_data['status']
+        sd_adminhead["show_status","hide"] = False
+
+    skicall.update(sd_adminhead)
+    skicall.update(sd_foot)
 
 
     # get any required session data which has been set into call_data
@@ -126,7 +136,9 @@ def end_call(page_ident, page_type, skicall):
         return
 
     # and this dictionary is inserted into ident_data as a json string
-    page_data['ident_data'] = json.dumps(sent_session_data)
+    pd_ident = PageData()
+    pd_ident.ident_data = json.dumps(sent_session_data)
+    skicall.update(pd_ident)
 
 
 # As this project is not intended to run as a stand-alone service, a function
@@ -164,12 +176,14 @@ def makeapp(editedprojname):
                            end_call=end_call)
 
 
-def set_navigation(identnum, call_data, page_data):
-    "Sets the navigation buttons"
+def set_navigation(identnum, call_data, pd, sd_adminhead):
+    "Sets the navigation buttons, returns a left_nav SectionData object"
+
+    sd = SectionData['left_nav']
 
     # top navigation
 
-    page_data["adminhead","top_nav","nav_links"] = [ [3, "Root Folder", False, ''] ]
+    sd_adminhead["top_nav","nav_links"] = [ [3, "Root Folder", False, ''] ]
 
     editedprojname = call_data['editedprojname']
 
@@ -187,9 +201,9 @@ def set_navigation(identnum, call_data, page_data):
             # for each item apart from root
             if item[1]:
                 edited_folder = editedprojname + '_' + str(item[1])
-                page_data["adminhead","top_nav","nav_links"].append(['edit_from_top_nav', item[0], False, edited_folder])
+                sd_adminhead["top_nav","nav_links"].append(['edit_from_top_nav', item[0], False, edited_folder])
     # Top navigation lists in reverse order as the float right keeps making the next link the rightmost
-    page_data["adminhead","top_nav","nav_links"].reverse()
+    sd_adminhead["top_nav","nav_links"].reverse()
 
 
     # Left navigation
@@ -203,82 +217,82 @@ def set_navigation(identnum, call_data, page_data):
 
     if identnum == 20001:
         # main site index page
-        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
-                                                            [3, "Root Folder", False, ''],
-                                                            ["manage_specialpages", "Page Labels", False, ''],
-                                                            ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, ''],
-                                                            [300, "Colours", False, ''],
-                                                            ['defaults', "Defaults", False, ''],
-                                                            ["about_code", "Getting Started", False, '']
-                                                           ]
+        sd["navbuttons","nav_links"] = [    [call_data['editedprojurl'], "Project", False, ''],
+                                            [3, "Root Folder", False, ''],
+                                            ["manage_specialpages", "Page Labels", False, ''],
+                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                            ["manage_sections", "Sections", False, ''],
+                                            [300, "Colours", False, ''],
+                                            ['defaults', "Defaults", False, ''],
+                                            ["about_code", "Getting Started", False, '']
+                                           ]
     elif identnum == 510:
         # about_skis page
-        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
-                                                            ['admin_home', "Admin", False, ''],
-                                                            [3, "Root Folder", False, ''],
-                                                            ["manage_specialpages", "Page Labels", False, ''],
-                                                            ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, ''],
-                                                            [300, "Colours", False, ''],
-                                                            ['defaults', "Defaults", False, ''],
-                                                            ["about_code", "Getting Started", False, '']
-                                                           ]
+        sd["navbuttons","nav_links"] = [    [call_data['editedprojurl'], "Project", False, ''],
+                                            ['admin_home', "Admin", False, ''],
+                                            [3, "Root Folder", False, ''],
+                                            ["manage_specialpages", "Page Labels", False, ''],
+                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                            ["manage_sections", "Sections", False, ''],
+                                            [300, "Colours", False, ''],
+                                            ['defaults', "Defaults", False, ''],
+                                            ["about_code", "Getting Started", False, '']
+                                           ]
     elif identnum == 85001:
         # operations index page
-        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
-                                                            ['admin_home', "Admin", False, ''],
-                                                            [3, "Root Folder", False, ''],
-                                                            ["manage_specialpages", "Page Labels", False, ''],
-                                                            ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, ''],
-                                                            [300, "Colours", False, ''],
-                                                            ["about_code", "Getting Started", False, '']
-                                                           ]
+        sd["navbuttons","nav_links"] = [    [call_data['editedprojurl'], "Project", False, ''],
+                                            ['admin_home', "Admin", False, ''],
+                                            [3, "Root Folder", False, ''],
+                                            ["manage_specialpages", "Page Labels", False, ''],
+                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                            ["manage_sections", "Sections", False, ''],
+                                            [300, "Colours", False, ''],
+                                            ["about_code", "Getting Started", False, '']
+                                           ]
     elif identnum == 20300:
         # colours index page
-        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
-                                                            ['admin_home', "Admin", False, ''],
-                                                            [3, "Root Folder", False, ''],
-                                                            ["manage_specialpages", "Page Labels", False, ''],
-                                                            ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, ''],
-                                                            ['defaults', "Defaults", False, ''],
-                                                            ["about_code", "Getting Started", False, '']
-                                                           ]
+        sd["navbuttons","nav_links"] = [    [call_data['editedprojurl'], "Project", False, ''],
+                                            ['admin_home', "Admin", False, ''],
+                                            [3, "Root Folder", False, ''],
+                                            ["manage_specialpages", "Page Labels", False, ''],
+                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                            ["manage_sections", "Sections", False, ''],
+                                            ['defaults', "Defaults", False, ''],
+                                            ["about_code", "Getting Started", False, '']
+                                           ]
 
     elif identnum == 70101:
         # about code page
-        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
-                                                            ['admin_home', "Admin", False, ''],
-                                                            [3, "Root Folder", False, ''],
-                                                            ["manage_specialpages", "Page Labels", False, ''],
-                                                            ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, ''],
-                                                            [300, "Colours", False, ''],
-                                                            ['defaults', "Defaults", False, '']
-                                                           ]
+        sd["navbuttons","nav_links"] = [    [call_data['editedprojurl'], "Project", False, ''],
+                                            ['admin_home', "Admin", False, ''],
+                                            [3, "Root Folder", False, ''],
+                                            ["manage_specialpages", "Page Labels", False, ''],
+                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                            ["manage_sections", "Sections", False, ''],
+                                            [300, "Colours", False, ''],
+                                            ['defaults', "Defaults", False, '']
+                                           ]
 
     elif identnum == 25001:
         # page labels
-        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
-                                                            ['admin_home', "Admin", False, ''],
-                                                            [3, "Root Folder", False, ''],
-                                                            ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, ''],
-                                                            ['defaults', "Defaults", False, '']
-                                                           ]
+        sd["navbuttons","nav_links"] = [    [call_data['editedprojurl'], "Project", False, ''],
+                                            ['admin_home', "Admin", False, ''],
+                                            [3, "Root Folder", False, ''],
+                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                            ["manage_sections", "Sections", False, ''],
+                                            ['defaults', "Defaults", False, '']
+                                           ]
 
 
-    elif ("left_nav","navbuttons","nav_links") not in page_data:
+    elif not pd.get_value("left_nav","navbuttons","nav_links"):
         # all other page have full suite of navigation buttons
-        page_data["left_nav","navbuttons","nav_links"] = [  [call_data['editedprojurl'], "Project", False, ''],
-                                                            ['admin_home', "Admin", False, ''],
-                                                            [3, "Root Folder", False, ''],
-                                                            ["manage_specialpages", "Page Labels", False, ''],
-                                                            ["manage_textblocks", "TextBlocks", False, ''],
-                                                            ["manage_sections", "Sections", False, '']
-                                                           ]
+        sd["navbuttons","nav_links"] = [    [call_data['editedprojurl'], "Project", False, ''],
+                                            ['admin_home', "Admin", False, ''],
+                                            [3, "Root Folder", False, ''],
+                                            ["manage_specialpages", "Page Labels", False, ''],
+                                            ["manage_textblocks", "TextBlocks", False, ''],
+                                            ["manage_sections", "Sections", False, '']
+                                           ]
 
     widget_info = None
 
@@ -288,37 +302,39 @@ def set_navigation(identnum, call_data, page_data):
             if (item_info.item_type == 'TemplatePage') or (item_info.item_type == 'SVG'):
                 # add page name to navbuttons
                 if item_info.item_type == 'TemplatePage':
-                    page_data["left_nav","navbuttons","nav_links"].append(['back_to_page', item_info.name, True, ''])
-                    page_data["left_nav","navbuttons","nav_links"].append(['page_head', item_info.name + ' - Head', True, ''])
-                    page_data["left_nav","navbuttons","nav_links"].append(['page_body', item_info.name + ' - Body', True, ''])
+                    sd["navbuttons","nav_links"].append(['back_to_page', item_info.name, True, ''])
+                    sd["navbuttons","nav_links"].append(['page_head', item_info.name + ' - Head', True, ''])
+                    sd["navbuttons","nav_links"].append(['page_body', item_info.name + ' - Body', True, ''])
                 if item_info.item_type == 'SVG':
-                    page_data["left_nav","navbuttons","nav_links"].append(['back_to_svgpage', item_info.name, True, ''])
-                    page_data["left_nav","navbuttons","nav_links"].append(['page_svg', 'SVG', True, ''])
+                    sd["navbuttons","nav_links"].append(['back_to_svgpage', item_info.name, True, ''])
+                    sd["navbuttons","nav_links"].append(['page_svg', 'SVG', True, ''])
                 if ('widget_name' in call_data) and ((item_info.item_type == 'TemplatePage') or (item_info.item_type == 'SVG')):
                     widget_info = skilift.widget_info(editedprojname, item_number, None, call_data['widget_name'])
 
     elif 'section_name' in call_data:
-        page_data["left_nav","navbuttons","nav_links"].append(['back_to_section', call_data['section_name'], True, ''])
+        sd["navbuttons","nav_links"].append(['back_to_section', call_data['section_name'], True, ''])
         if 'widget_name' in call_data:
             widget_info = skilift.widget_info(editedprojname, None, call_data['section_name'], call_data['widget_name'])
 
     if widget_info:
         # if widget has parent, display parent links
-        display_parent(widget_info, page_data)
-        page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', widget_info.name, True, widget_info.name])
+        display_parent(widget_info, sd)
+        sd["navbuttons","nav_links"].append(['retrieve_widget', widget_info.name, True, widget_info.name])
         # if widget has containers, display links to them
         if widget_info.containers:
             for cont in range(widget_info.containers):
                 str_cont = str(cont)
-                page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', widget_info.name + " " + str_cont, True, widget_info.name + "-" + str_cont])
+                sd["navbuttons","nav_links"].append(['retrieve_container', widget_info.name + " " + str_cont, True, widget_info.name + "-" + str_cont])
 
     # add further buttons which may be set in call_data['extend_nav_buttons']
     if 'extend_nav_buttons' in call_data:
         if call_data['extend_nav_buttons']:
-            page_data["left_nav","navbuttons","nav_links"].extend(call_data['extend_nav_buttons'])
+            sd["navbuttons","nav_links"].extend(call_data['extend_nav_buttons'])
+
+    return sd
 
 
-def display_parent(widget_info, page_data):
+def display_parent(widget_info, sd):
     "Appends link to parent widget in navigation buttons"
     location = widget_info.location
     # location is (parent, container, location integers) where parent is section_name, head/body or parent widget name
@@ -330,9 +346,9 @@ def display_parent(widget_info, page_data):
     parent_name = location[0]
     parent_info = skilift.widget_info(widget_info.project, widget_info.pagenumber, widget_info.section_name, parent_name)
     # recursively display grandparents
-    display_parent(parent_info, page_data)
+    display_parent(parent_info, sd)
     # display links to the parent widget
-    page_data["left_nav","navbuttons","nav_links"].append(['retrieve_widget', parent_name, True, parent_name])
-    page_data["left_nav","navbuttons","nav_links"].append(['retrieve_container', parent_name + " " + str(location[1]), True, parent_name + "-" + str(location[1])])
+    sd["navbuttons","nav_links"].append(['retrieve_widget', parent_name, True, parent_name])
+    sd["navbuttons","nav_links"].append(['retrieve_container', parent_name + " " + str(location[1]), True, parent_name + "-" + str(location[1])])
 
 
