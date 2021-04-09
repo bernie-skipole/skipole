@@ -1,4 +1,5 @@
 
+from ...ski.project_class_definition import SectionData
 
 
 def clear_call_data(call_data, keep=None):
@@ -22,5 +23,21 @@ def clear_call_data(call_data, keep=None):
     temp_storage = {key:value for key,value in call_data.items() if key in required}
     call_data.clear()
     call_data.update(temp_storage)
+
+
+
+def formtextinput(pd, sectionalias, textblock_ref, action, submit_label, field_label, input_text):
+    """Provides a function to fill in the formtextinput section
+       given an alias for the section, and the appropriate widget fields"""
+
+    sd = SectionData(sectionalias)
+    sd['paratext', 'textblock_ref'] = textblock_ref
+    sd['form', 'action'] = action
+    sd['form', 'left_label'] = submit_label
+    sd['textinput', 'label'] = field_label
+    sd['textinput', 'input_text'] = input_text
+    pd.update(sd)
+
+
 
 

@@ -6,6 +6,8 @@ from ... import ServerError, FailPage, ValidateError, GoTo
 from ... import skilift
 from ....skilift import editwidget, editvalidator
 
+from .. import utils
+
 from ....ski.project_class_definition import SectionData
 
 
@@ -46,11 +48,6 @@ def retrieve_editvalidator(skicall):
     else:
         raise FailPage("Field not identified")
 
-    if section_name:
-        pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
-    else:
-        pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
-
     # get validator
     try:
         validx = int(call_data['validx'])
@@ -86,9 +83,21 @@ def retrieve_editvalidator(skicall):
     pd['validator_textblock','textblock_ref'] = ".".join(("validators",vinfo.module_name,vinfo.validator))
 
     pd['e_message','input_text'] = vinfo.message
-    pd['e_message_ref','input_text'] = vinfo.message_ref
 
-    pd['displaywidget','input_text'] = vinfo.displaywidget
+    # error reference message
+    utils.formtextinput(pd, "error_ref", "validators.about_error_ref", "e_message_ref",
+                            "Submit the reference string:", "A TextBlock reference string can provide the error message:",
+                            vinfo.message_ref)
+
+    
+    failsectionwidget = vinfo.displaywidget
+    if "," in failsectionwidget:
+        failsection,failwidget = failsectionwidget.split(",")
+        pd['failsection','input_text'] = failsection
+        pd['failwidget','input_text'] = failwidget
+    else:
+        pd['failsection','input_text'] = ""
+        pd['failwidget','input_text'] = failsectionwidget
 
     # list of allowed values
     contents = []
@@ -193,11 +202,11 @@ def set_e_message_ref(skicall):
     else:
         raise FailPage("Field not identified")
 
-    if 'e_message_ref' not in call_data:
+    if ('error_ref','textinput','input_text') not in call_data:
         raise FailPage("Error message reference not given")
 
-    if call_data['e_message_ref']:
-        e_message_ref = call_data['e_message_ref']
+    if call_data['error_ref','textinput','input_text']:
+        e_message_ref = call_data['error_ref','textinput','input_text']
     else:
         e_message_ref = ''
 
@@ -243,13 +252,16 @@ def set_displaywidget(skicall):
     else:
         raise FailPage("Field not identified")
 
-    if 'displaywidget' not in call_data:
+    if ('failwidget', 'input_text') not in call_data:
         raise FailPage("Display widget not given")
 
-    if call_data['displaywidget']:
-        displaywidget = call_data['displaywidget']
+    if call_data['failwidget', 'input_text']:
+        displaywidget = call_data['failwidget', 'input_text']
     else:
         displaywidget = ''
+
+    if (('failsection', 'input_text') in call_data) and call_data['failsection', 'input_text'] and displaywidget:
+        displaywidget = call_data['failsection', 'input_text'] + "," + displaywidget
 
     # get validator index
     try:
