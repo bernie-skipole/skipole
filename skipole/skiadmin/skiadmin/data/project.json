@@ -15615,69 +15615,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"SectionPlaceHolder",
 {
-"tag_name": "br",
-"show": true
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "add_allowed",
-"brief": "add allowed value",
-"fields": {
-"action": "add_allowed_value",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Add value:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "150",
-"pattern": "",
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "Invalid value",
-"size": "50",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A value must be provided"
-}
-]
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"show": true
+"brief": "Form to add an allowed value",
+"section_name": "formtextinput",
+"placename": "add_allowed_value",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [

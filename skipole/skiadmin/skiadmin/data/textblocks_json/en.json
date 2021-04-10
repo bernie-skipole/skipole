@@ -263,6 +263,7 @@
   "uploaddefaults": "If you already have a defaults file and wish to upload it to use with this project, choose the upload function below.",
   "validators.about_error_message": "Set the error message to be displayed if the data input fails this validation test.",
   "validators.about_error_ref": "If a reference string is given here, rather than an Error Message, then the TextBlock with this reference will be shown as the error message.",
+  "validators.add_allowed_value": "Values which are automatically validated can be added here.",
   "validators.basic.AllowedValuesOnly": "Automatic fail - only passes the allowed values list.",
   "validators.basic.AllowedValuesOrEmpty": "Checks the value is in the allowed values list or is empty.",
   "validators.basic.AlphaNumDotUnder": "Checks the value is alphanumric, dot or underscore only.",

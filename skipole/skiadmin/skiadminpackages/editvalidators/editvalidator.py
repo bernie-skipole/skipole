@@ -82,8 +82,6 @@ def retrieve_editvalidator(skicall):
 
     pd['validator_textblock','textblock_ref'] = ".".join(("validators",vinfo.module_name,vinfo.validator))
 
-    pd['e_message','input_text'] = vinfo.message
-
     # error message
     utils.formtextinput(pd, "error_message", "validators.about_error_message", "e_message",
                             "Submit the error message:", "The error message to be displayed:",
@@ -116,6 +114,11 @@ def retrieve_editvalidator(skicall):
         pd['allowed_values','show'] = True
     else:
         pd['allowed_values','show'] = False
+
+
+    # add an allowed value
+    utils.formtextinput(pd, "add_allowed_value", "validators.add_allowed_value", "add_allowed_value",
+                            "Submit a value:", "Add an allowed value to list:", "")
 
     # Validator arguments
     arg_contents = []
@@ -318,11 +321,11 @@ def set_allowed_value(skicall):
     except Exception:
         raise FailPage("Invalid validator")
 
-    if 'add_allowed' not in call_data:
+    if ('add_allowed_value','textinput','input_text') not in call_data:
         raise FailPage("Allowed value to be added not given")
 
-    if call_data['add_allowed']:
-        allowed_value = call_data['add_allowed']
+    if call_data['add_allowed_value','textinput','input_text']:
+        allowed_value = call_data['add_allowed_value','textinput','input_text']
     else:
         raise FailPage("A none-empty string is required")
 
