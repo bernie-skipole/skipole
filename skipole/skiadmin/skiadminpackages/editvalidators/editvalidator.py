@@ -84,6 +84,12 @@ def retrieve_editvalidator(skicall):
 
     pd['e_message','input_text'] = vinfo.message
 
+    # error message
+    utils.formtextinput(pd, "error_message", "validators.about_error_message", "e_message",
+                            "Submit the error message:", "The error message to be displayed:",
+                            vinfo.message)
+
+
     # error reference message
     utils.formtextinput(pd, "error_ref", "validators.about_error_ref", "e_message_ref",
                             "Submit the reference string:", "A TextBlock reference string can provide the error message:",
@@ -152,11 +158,12 @@ def set_e_message(skicall):
     else:
         raise FailPage("Field not identified")
 
-    if 'e_message' not in call_data:
+
+    if ('error_message','textinput','input_text') not in call_data:
         raise FailPage("Error message not given")
 
-    if call_data['e_message']:
-        e_message = call_data['e_message']
+    if call_data['error_message','textinput','input_text']:
+        e_message = call_data['error_message','textinput','input_text']
     else:
         e_message = ''
 

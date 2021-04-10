@@ -261,6 +261,7 @@
   "svgtextstyle": "<style>\r\n    /* <![CDATA[ */\r\n    text {\r\n      fill: black;\r\n      font-family: Arial, Helvetica, sans-serif;\r\n      font-size: 15px;\r\n    }\r\n    .bigtext {\r\n      font-size: 20px;\r\n    }\r\n    .smalltext {\r\n      font-size: 10px;\r\n    }\r\n    /* ]]> */\r\n  </style>",
   "system_javascript_files": "Under 'Page Labels' the labels for system special files as default point to javascript files held in the skis sub-project. This is useful if the project and these files are to be served from the same web server. However the buttons below set these labels to point to a CDN server, saving your web server the effort of serving them. You can choose the option below, or set your own CDN servers under 'Page Labels', or revert back to the skis project.",
   "uploaddefaults": "If you already have a defaults file and wish to upload it to use with this project, choose the upload function below.",
+  "validators.about_error_message": "Set the error message to be displayed if the data input fails this validation test.",
   "validators.about_error_ref": "If a reference string is given here, rather than an Error Message, then the TextBlock with this reference will be shown as the error message.",
   "validators.basic.AllowedValuesOnly": "Automatic fail - only passes the allowed values list.",
   "validators.basic.AllowedValuesOrEmpty": "Checks the value is in the allowed values list or is empty.",

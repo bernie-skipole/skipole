@@ -68,7 +68,7 @@
 "downloadsection": 7050,
 "drop_rows": 2005,
 "dynamic_css": 200,
-"e_message": 46011,
+"e_message": 46010,
 "e_message_ref": 46020,
 "edit_action": 2002,
 "edit_comment": 41210,
@@ -15345,108 +15345,13 @@ false
 }
 ],
 [
-"Part",
+"SectionPlaceHolder",
 {
-"tag_name": "div",
-"brief": "Containing div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-cell-row"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Left div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container w3-cell",
-"style": "width : 32%;"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "Descriptive text",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"style": "font-weight : bold;"
-},
-"parts": [
-[
-"Text",
-"Set the error message to be displayed if the data input fails this validation test."
-]
-]
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "right div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container w3-cell"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "e_message",
-"brief": "Set error message",
-"fields": {
-"action": "e_message",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "w3-pale-green",
-"input_class": "padding:8px;border:2px solid #ccc;width:60%",
-"input_errored_class": "w3-pale-red",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "display: inline-block;",
-"inputdiv_class": "",
-"label": "Error Message: ",
-"label_class": "",
-"label_style": "",
-"maxlength": "150",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "Invalid message",
-"size": "50",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-container",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
-]
+"brief": "Form to input an error message",
+"section_name": "formtextinput",
+"placename": "error_message",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [
@@ -16399,25 +16304,6 @@ false
 "original_fields": {}
 }
 },
-"set_e_message": {
-"ident": 56013,
-"brief": "Sets the error message",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": 56007,
-"submit_list": [
-"skiadminpackages",
-"editvalidators",
-"editvalidator",
-"set_e_message"
-],
-"target_ident": 56007
-},
-"original_fields": {}
-}
-},
 "validate_add_allowed_value": {
 "ident": 56042,
 "brief": "check allowed value to be added",
@@ -16483,23 +16369,6 @@ false
 },
 "original_fields": {
 "arg_val:input_text": "arg_value"
-}
-}
-},
-"validate_e_message": {
-"ident": 56012,
-"brief": "check error message to be edited",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 56013,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"e_message:input_text": "e_message"
 }
 }
 },
@@ -17061,24 +16930,30 @@ false
 "original_fields": {}
 }
 },
-"e_message": {
-"ident": 46011,
-"brief": "check error message to be edited",
+"error_message": {
+"ident": 46010,
+"brief": "Creates a new error message",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStore",
 "original_args": {
 "allowed_callers": [
 56009
 ],
 "alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 56012,
+"fail_ident": 56007,
+"submit_list": [
+"skiadminpackages",
+"editvalidators",
+"editvalidator",
+"set_e_message"
+],
+"submit_option": true,
+"target_ident": 56007,
 "validate_fail_ident": null,
 "validate_option": false
 },
 "original_fields": {
-"e_message:input_text": ""
+"error_message-textinput:input_text": ""
 }
 }
 },
