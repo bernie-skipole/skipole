@@ -468,15 +468,11 @@ def retrieve_arg(skicall):
     pd['field_name','para_text'] = "Field name : %s" % (field_name,)
     pd['validator_type','para_text'] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
 
-    pd['arg_val','input_text'] = vinfo.val_args[arg_name]
-    pd['arg_val','hidden_field1'] = arg_name
-
-
     # validator argument form
     tblockref = ".".join(("validators",vinfo.module_name,vinfo.validator,arg_name))
     utils.formtextinput(pd, "validator_argument",                         # section alias
                             tblockref,                                    # textblock
-                            "Set the validator parameter:",                # field label
+                            "Set the validator parameter:",               # field label
                             vinfo.val_args[arg_name],                     # input text
                             action = "validator_parameter",
                             hidden_field1 = arg_name,

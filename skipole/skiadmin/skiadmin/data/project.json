@@ -163,7 +163,6 @@
 "server_error": "skis,server_error",
 "setHTMLbackcol": 80003,
 "set_alias": 45010,
-"set_arg_value": 46111,
 "set_backcolour": 3300,
 "set_brief": 20,
 "set_colour": 34,
@@ -14919,64 +14918,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "arg_val",
-"brief": "Set arg value",
-"fields": {
-"action": "set_arg_value",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Set value: ",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "150",
-"pattern": "",
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "Invalid value",
-"size": "50",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"hidden_field1": [
-{
-"class": "basic.NotEmpty",
-"message": "An argument name must be provided"
-}
-],
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A value must be provided"
-}
-]
-}
-}
-],
-[
 "SectionPlaceHolder",
 {
 "brief": "Form to add a validator argument",
@@ -16192,25 +16133,6 @@ false
 "original_fields": {}
 }
 },
-"set_arg_value": {
-"ident": 56114,
-"brief": "Sets the arg value",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": 56107,
-"submit_list": [
-"skiadminpackages",
-"editvalidators",
-"editvalidator",
-"set_arg_value"
-],
-"target_ident": 56007
-},
-"original_fields": {}
-}
-},
 "validate_arg": {
 "ident": 56105,
 "brief": "check validator argument to be edited",
@@ -16225,40 +16147,6 @@ false
 },
 "original_fields": {
 "validator_args:contents": "arg_name"
-}
-}
-},
-"validate_arg_name": {
-"ident": 56112,
-"brief": "check arg name",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 56113,
-"validate_fail_ident": 56007,
-"validate_option": true
-},
-"original_fields": {
-"arg_val:hidden_field1": "arg_name"
-}
-}
-},
-"validate_arg_value": {
-"ident": 56113,
-"brief": "check arg value",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 56114,
-"validate_fail_ident": 56107,
-"validate_option": true
-},
-"original_fields": {
-"arg_val:input_text": "arg_value"
 }
 }
 },
@@ -16962,28 +16850,6 @@ false
 },
 "original_fields": {
 "validator_table:remove_validator": ""
-}
-}
-},
-"set_arg_value": {
-"ident": 46111,
-"brief": "set validator argument value",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-56109
-],
-"alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 56112,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"arg_val:hidden_field1": "",
-"arg_val:input_text": ""
 }
 }
 },
@@ -38521,13 +38387,6 @@ false
 ],
 "val_args": {
 "maxlength": "50"
-}
-},
-{
-"class": "basic.IntMinMax",
-"val_args": {
-"maxval": "255",
-"minval": "0"
 }
 }
 ]
