@@ -3,7 +3,7 @@
 import os, sys, re, json, pathlib
 
 
-from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift, PageData
+from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
 from ..skilift.fromjson import get_defaults_from_file
 
 from ..ski.project_class_definition import SectionData, PageData
@@ -108,6 +108,10 @@ def end_call(page_ident, page_type, skicall):
         # fill in navigation information
         sd_left_nav = set_navigation(identnum, call_data, pd, sd_adminhead)
         skicall.update(sd_left_nav)
+        sd_diagnostic = SectionData("diagnostic_footer")
+        sd_diagnostic.show = True
+        skicall.update(sd_diagnostic)
+        
 
     # Show the status message
     if 'status' in call_data:

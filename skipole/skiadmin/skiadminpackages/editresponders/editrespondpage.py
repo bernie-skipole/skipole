@@ -188,11 +188,17 @@ def retrieve_edit_respondpage(skicall):
     pd['respondertype','para_text'] = "This page is a responder of type: %s." % (r_info.responder,)
     pd['responderdescription','textblock_ref'] = ".".join(["responders",r_info.module_name, r_info.responder])
 
+
+    sd_setwidgfield = SectionData("setwidgfield")
+
     if r_info.widgfield_required:
         if r_info.widgfield:
             pd['widgfield','input_text'] = r_info.widgfield
     else:
         pd['widgfield','show'] = False
+        sd_setwidgfield.show = False
+
+    pd.update(sd_setwidgfield)
 
     if r_info.alternate_ident_required:
         pd['alternate','input_text'] = _ident_to_str(r_info.alternate_ident)
