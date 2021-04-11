@@ -3448,27 +3448,25 @@ false,
 },
 "parts": [
 [
-"Part",
+"Widget",
 {
-"tag_name": "p",
-"brief": "Descriptive text",
+"class": "paras.TextBlockPara",
+"name": "paratext",
+"brief": "Paragraph containing a Textblock",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"linebreaks": true,
+"replace_strings": [],
 "show": true,
-"hide_if_empty": false,
-"attribs": {
-"style": "font-weight : bold;"
-},
-"parts": [
-[
-"TextBlock",
-{
-"textref": "responders.widget",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": true,
-"linebreaks": true
+"show_error": "",
+"text_refnotfound": "TextBlock not found",
+"text_replaceblock": "",
+"textblock_project": "",
+"textblock_ref": "responders.widget",
+"widget_class": "",
+"widget_style": "font-weight : bold;"
 }
-]
-]
 }
 ]
 ]
@@ -22471,11 +22469,11 @@ false
 ],
 "submit_option": true,
 "target_ident": 26007,
-"validate_fail_ident": 26007,
-"validate_option": true
+"validate_fail_ident": null,
+"validate_option": false
 },
 "original_fields": {
-"alternate:input_text": "alternate_ident"
+"alternate_ident-textinput:input_text": "alternate_ident"
 }
 }
 },
@@ -22498,11 +22496,11 @@ false
 ],
 "submit_option": true,
 "target_ident": "general_json",
-"validate_fail_ident": "general_json",
-"validate_option": true
+"validate_fail_ident": null,
+"validate_option": false
 },
 "original_fields": {
-"alternate:input_text": "alternate_ident"
+"alternate_ident-textinput:input_text": "alternate_ident"
 }
 }
 },
@@ -22914,22 +22912,30 @@ false
 },
 "widgfield": {
 "ident": 6030,
-"brief": "Check the widgfield fields",
+"brief": "Sets responder widgfield",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStore",
 "original_args": {
 "allowed_callers": [
 26009
 ],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 26032,
+"alternate_ident": "admin_home",
+"fail_ident": 26007,
+"submit_list": [
+"skiadminpackages",
+"editresponders",
+"editrespondpage",
+"submit_widgfield"
+],
+"submit_option": true,
+"target_ident": 26007,
 "validate_fail_ident": null,
 "validate_option": false
 },
 "original_fields": {
-"widgfield:input_text": ""
+"setwidgfield-responderfield:input_text": "",
+"setwidgfield-respondersection:input_text": "",
+"setwidgfield-responderwidget:input_text": ""
 }
 }
 }
@@ -29555,25 +29561,6 @@ false,
 "original_fields": {}
 }
 },
-"submit_widgfield": {
-"ident": 26039,
-"brief": "sets the widgfield",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": 26007,
-"submit_list": [
-"skiadminpackages",
-"editresponders",
-"editrespondpage",
-"submit_widgfield"
-],
-"target_ident": 26007
-},
-"original_fields": {}
-}
-},
 "template": {
 "ident": 26009,
 "brief": "Displays the responder page parameters and allows editing",
@@ -29859,58 +29846,6 @@ false,
 }
 ],
 [
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "widgfield",
-"brief": "Sets widgfield",
-"fields": {
-"action": "responder_widgfield",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "w3-section",
-"label": "Widgfield:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "50",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A widgfield is required"
-}
-]
-}
-}
-],
-[
 "SectionPlaceHolder",
 {
 "brief": "Sets the responder widgfield",
@@ -29921,61 +29856,13 @@ false,
 }
 ],
 [
-"Widget",
+"SectionPlaceHolder",
 {
-"class": "inputtext.SubmitTextInput1",
-"name": "alternate",
-"brief": "Sets responder alternate ident",
-"fields": {
-"action": "alternate_ident",
-"action_json": "alternate_ident_json",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Ident or label of alternate page:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "",
-"pattern": "",
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "Not good",
-"displaywidget": [
-"",
-"alternate",
-"",
-""
-]
-}
-]
-}
+"brief": "Sets the responder alternate ident",
+"section_name": "formtextinput",
+"placename": "alternate_ident",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [
@@ -30033,28 +29920,6 @@ false,
 ]
 }
 ]
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.TextBlockPara",
-"name": "alternate_ident_description",
-"brief": "Describes alternate ident",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_project": "",
-"textblock_ref": "",
-"widget_class": "",
-"widget_style": ""
 }
 }
 ],
@@ -31294,23 +31159,6 @@ false,
 },
 "original_fields": {
 "fail_page_ident:input_text": "fail_ident"
-}
-}
-},
-"validate_new_widgfield": {
-"ident": 26032,
-"brief": "Check new widgfield",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 26039,
-"validate_fail_ident": 26007,
-"validate_option": true
-},
-"original_fields": {
-"widgfield:input_text": "widget"
 }
 }
 },
@@ -38829,8 +38677,8 @@ false
 "RespondPage": {
 "class": "CaseSwitch",
 "original_args": {
-"alternate_ident": "",
-"widgfield": ""
+"alternate_ident": "admin_home",
+"widgfield": "ninety-seven:eight"
 },
 "original_fields": {}
 }

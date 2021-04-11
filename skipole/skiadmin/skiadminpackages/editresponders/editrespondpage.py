@@ -190,10 +190,29 @@ def retrieve_edit_respondpage(skicall):
 
 
     sd_setwidgfield = SectionData("setwidgfield")
+    sd_setwidgfield['widgfieldform', 'action'] = "responder_widgfield"
 
     if r_info.widgfield_required:
         if r_info.widgfield:
             pd['widgfield','input_text'] = r_info.widgfield
+            if not r_info.widgfield:
+                sd_setwidgfield['respondersection','input_text'] = ''
+                sd_setwidgfield['responderwidget','input_text'] = ''
+                sd_setwidgfield['responderfield','input_text'] = ''
+            else:
+                widg = r_info.widgfield.split(',')
+                if len(widg) == 3:
+                    sd_setwidgfield['respondersection','input_text'] = widg[0]
+                    sd_setwidgfield['responderwidget','input_text'] = widg[1]
+                    sd_setwidgfield['responderfield','input_text'] = widg[2]
+                elif len(widg) == 2:
+                    sd_setwidgfield['respondersection','input_text'] = ''
+                    sd_setwidgfield['responderwidget','input_text'] = widg[0]
+                    sd_setwidgfield['responderfield','input_text'] = widg[1]
+                else:
+                    sd_setwidgfield['respondersection','input_text'] = ''
+                    sd_setwidgfield['responderwidget','input_text'] = ''
+                    sd_setwidgfield['responderfield','input_text'] = ''
     else:
         pd['widgfield','show'] = False
         sd_setwidgfield.show = False
@@ -201,11 +220,17 @@ def retrieve_edit_respondpage(skicall):
     pd.update(sd_setwidgfield)
 
     if r_info.alternate_ident_required:
-        pd['alternate','input_text'] = _ident_to_str(r_info.alternate_ident)
-        pd['alternate_ident_description','textblock_ref'] = _t_ref(r_info, 'alternate_ident')
+        utils.formtextinput(pd, "alternate_ident",                         # section alias
+                                _t_ref(r_info, 'alternate_ident'),         # textblock
+                                "Set an alternate ident:",                 # field label
+                                _ident_to_str(r_info.alternate_ident),     # input text
+                                action = "alternate_ident",
+                                action_json = "alternate_ident_json",
+                                left_label = "Submit the ident : ")
     else:
-        pd['alternate','show'] = False
-        pd['alternate_ident_description','show'] = False
+        sd_alternate = SectionData("alternate_ident")
+        sd_alternate.show = False
+        pd.update(sd_alternate)
 
     if r_info.target_ident_required:
         pd['target','input_text'] = _ident_to_str(r_info.target_ident)
@@ -375,13 +400,24 @@ def submit_widgfield(skicall):
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
-    if not 'widget' in call_data:
-        raise FailPage(message="No widgfield given", widget="widgfield_error")
-    if not call_data['widget']:
-        raise FailPage(message="No widgfield given", widget="widgfield_error")
-    # Set the page widgfield
+
+    if ('setwidgfield','responderwidget','input_text') not in call_data:
+        raise FailPage(message="No widget name given", widget="widgfield_error")
+    if not call_data['setwidgfield','responderwidget','input_text']:
+        raise FailPage(message="No widget name given", widget="widgfield_error")
+    widgfield = call_data['setwidgfield','responderwidget','input_text']
+
+    if ('setwidgfield','responderfield','input_text') not in call_data:
+        raise FailPage(message="No widget field given", widget="widgfield_error")
+    if not call_data['setwidgfield','responderfield','input_text']:
+        raise FailPage(message="No widget field given", widget="widgfield_error")
+    widgfield = widgfield + "," + call_data['setwidgfield','responderfield','input_text']
+
+    if ('setwidgfield','respondersection','input_text') in call_data:
+        if call_data['setwidgfield','respondersection','input_text']:
+            widgfield = call_data['setwidgfield','respondersection','input_text'] + ',' + widgfield
     try:
-        call_data['pchange'] = editresponder.set_widgfield(project, pagenumber, pchange, call_data['widget'])
+        call_data['pchange'] = editresponder.set_widgfield(project, pagenumber, pchange, widgfield)
     except ServerError as e:
         raise FailPage(e.message)
     call_data['status'] = 'WidgField set'
@@ -397,13 +433,17 @@ def submit_alternate_ident(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'alternate_ident' in call_data:
-        raise FailPage(message="No alternate page label given", widget="alternate")
+        raise FailPage(message="No alternate page label given")
+    if not call_data['alternate_ident']:
+        raise FailPage(message="No alternate page label given")
     # Set the page alternate_ident
     try:
         call_data['pchange'] = editresponder.set_alternate_ident(project, pagenumber, pchange, call_data['alternate_ident'])
     except ServerError as e:
         raise FailPage(e.message)
-    pd['alternate','set_input_accepted'] = True
+    sd_alternate = SectionData("alternate_ident")
+    sd_alternate['textinput', 'set_input_accepted'] = True
+    pd.update(sd_alternate)
     call_data['status'] = 'Page set'
 
 
