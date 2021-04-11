@@ -8,7 +8,7 @@
 "about_code": 70001,
 "about_skis": 510,
 "add_allowed_caller": 6080,
-"add_allowed_value": 46041,
+"add_allowed_value": 46040,
 "add_field": 6210,
 "add_field_value": 6200,
 "add_new_filepage": 2450,
@@ -239,6 +239,7 @@
 "validator_modules": 46301,
 "validator_move_down": 46211,
 "validator_move_up": 46201,
+"validator_parameter": 46110,
 "w3_css": "skis,w3_css",
 "w3_theme_ski_css": 220,
 "widget_arg_dict_edit": 44014,
@@ -14920,35 +14921,6 @@ false
 [
 "Widget",
 {
-"class": "paras.TextBlockPara",
-"name": "validator_arg_textblock",
-"brief": "TextBlockPara",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_project": "",
-"textblock_ref": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"show": true
-}
-],
-[
-"Widget",
-{
 "class": "inputtext.SubmitTextInput1",
 "name": "arg_val",
 "brief": "Set arg value",
@@ -15002,6 +14974,16 @@ false
 }
 ]
 }
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Form to add a validator argument",
+"section_name": "formtextinput",
+"placename": "validator_argument",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [
@@ -16210,25 +16192,6 @@ false
 "original_fields": {}
 }
 },
-"set_allowed_value": {
-"ident": 56043,
-"brief": "Sets the allowed value",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": 56007,
-"submit_list": [
-"skiadminpackages",
-"editvalidators",
-"editvalidator",
-"set_allowed_value"
-],
-"target_ident": 56007
-},
-"original_fields": {}
-}
-},
 "set_arg_value": {
 "ident": 56114,
 "brief": "Sets the arg value",
@@ -16246,23 +16209,6 @@ false
 "target_ident": 56007
 },
 "original_fields": {}
-}
-},
-"validate_add_allowed_value": {
-"ident": 56042,
-"brief": "check allowed value to be added",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 56043,
-"validate_fail_ident": 56007,
-"validate_option": true
-},
-"original_fields": {
-"add_allowed:input_text": "add_allowed"
-}
 }
 },
 "validate_arg": {
@@ -16814,23 +16760,29 @@ false
 },
 "pages": {
 "add_allowed_value": {
-"ident": 46041,
-"brief": "check allowed value to be added",
+"ident": 46040,
+"brief": "Add an allowed value to the validator",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStore",
 "original_args": {
 "allowed_callers": [
 56009
 ],
 "alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 56042,
+"fail_ident": 56007,
+"submit_list": [
+"skiadminpackages",
+"editvalidators",
+"editvalidator",
+"set_allowed_value"
+],
+"submit_option": true,
+"target_ident": 56007,
 "validate_fail_ident": null,
 "validate_option": false
 },
 "original_fields": {
-"add_allowed:input_text": ""
+"add_allowed_value-textinput:input_text": ""
 }
 }
 },
@@ -17143,6 +17095,34 @@ false
 },
 "original_fields": {
 "validator_table:up": ""
+}
+}
+},
+"validator_parameter": {
+"ident": 46110,
+"brief": "Sets a validator parameter",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+56109
+],
+"alternate_ident": "admin_home",
+"fail_ident": 56107,
+"submit_list": [
+"skiadminpackages",
+"editvalidators",
+"editvalidator",
+"set_arg_value"
+],
+"submit_option": true,
+"target_ident": 56007,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"validator_argument-form:hidden_field1": "arg_name",
+"validator_argument-textinput:input_text": "arg_value"
 }
 }
 }
@@ -38531,15 +38511,23 @@ false
 "input_text": [
 {
 "class": "basic.MaxLength",
-"message": "oops",
+"message": "oopsy",
+"message_ref": "thing.two",
 "displaywidget": [
 "test",
-"tryout",
+"tryout2",
 "",
 ""
 ],
 "val_args": {
 "maxlength": "50"
+}
+},
+{
+"class": "basic.IntMinMax",
+"val_args": {
+"maxval": "255",
+"minval": "0"
 }
 }
 ]

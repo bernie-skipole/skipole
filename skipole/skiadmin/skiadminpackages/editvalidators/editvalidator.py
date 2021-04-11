@@ -83,15 +83,21 @@ def retrieve_editvalidator(skicall):
     pd['validator_textblock','textblock_ref'] = ".".join(("validators",vinfo.module_name,vinfo.validator))
 
     # error message
-    utils.formtextinput(pd, "error_message", "validators.about_error_message", "e_message",
-                            "Submit the error message:", "The error message to be displayed:",
-                            vinfo.message)
+    utils.formtextinput(pd, "error_message",                              # section alias
+                            "validators.about_error_message",             # textblock
+                            "The error message to be displayed:",         # field label
+                            vinfo.message,                                # input text
+                            action = "e_message",
+                            left_label = "Submit the error message : ")
 
 
     # error reference message
-    utils.formtextinput(pd, "error_ref", "validators.about_error_ref", "e_message_ref",
-                            "Submit the reference string:", "A TextBlock reference string can provide the error message:",
-                            vinfo.message_ref)
+    utils.formtextinput(pd, "error_ref",                                                   # section alias
+                            "validators.about_error_ref",                                  # textblock
+                            "A TextBlock reference string can provide the error message:", # field label
+                            vinfo.message_ref,                                             # input text
+                            action =  "e_message_ref",
+                            left_label = "Submit the reference string : ")
 
     
     failsectionwidget = vinfo.displaywidget
@@ -117,8 +123,12 @@ def retrieve_editvalidator(skicall):
 
 
     # add an allowed value
-    utils.formtextinput(pd, "add_allowed_value", "validators.add_allowed_value", "add_allowed_value",
-                            "Submit a value:", "Add an allowed value to list:", "")
+    utils.formtextinput(pd, "add_allowed_value",                     # section alias
+                            "validators.add_allowed_value",          # textblock
+                            "Add an allowed value to list:",         # field label
+                            "",                                      # input text
+                            action = "add_allowed_value",
+                            left_label = "Submit a value : ")
 
     # Validator arguments
     arg_contents = []
@@ -433,12 +443,11 @@ def retrieve_arg(skicall):
             widgetdescription = editwidget.section_widget_description(project, section_name, call_data['schange'], widget_name)
             widget =  editwidget.section_widget(project, section_name, call_data['schange'], widget_name)
             vinfo = editvalidator.section_field_validator_info(project, section_name, call_data['schange'], widget_name, field_arg, validx)
-            pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in this section, the name should be of the form %s,widget_name.' % (section_name,)]
         else:
             widgetdescription = editwidget.page_widget_description(project, pagenumber, call_data['pchange'], widget_name)
             widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
             vinfo = editvalidator.page_field_validator_info(project, pagenumber, call_data['pchange'], widget_name, field_arg, validx)
-            pd["validator_displaywidget_textblock","replace_strings"] = ['If the widget is in a section, the name should be of the form section_alias,widget_name.']
+
     except ServerError as e:
         raise FailPage(e.message)
 
@@ -459,10 +468,20 @@ def retrieve_arg(skicall):
     pd['field_name','para_text'] = "Field name : %s" % (field_name,)
     pd['validator_type','para_text'] = "Validator type : %s.%s" % (vinfo.module_name,vinfo.validator)
 
-    pd['validator_arg_textblock','textblock_ref'] = ".".join(("validators",vinfo.module_name,vinfo.validator,arg_name))
-
     pd['arg_val','input_text'] = vinfo.val_args[arg_name]
     pd['arg_val','hidden_field1'] = arg_name
+
+
+    # validator argument form
+    tblockref = ".".join(("validators",vinfo.module_name,vinfo.validator,arg_name))
+    utils.formtextinput(pd, "validator_argument",                         # section alias
+                            tblockref,                                    # textblock
+                            "Set the validator parameter:",                # field label
+                            vinfo.val_args[arg_name],                     # input text
+                            action = "validator_parameter",
+                            hidden_field1 = arg_name,
+                            left_label = "Submit the value : ")
+
 
 
 def set_arg_value(skicall):
