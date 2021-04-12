@@ -219,6 +219,7 @@ def retrieve_edit_respondpage(skicall):
 
     pd.update(sd_setwidgfield)
 
+    # alternate ident
     if r_info.alternate_ident_required:
         utils.formtextinput(pd, "alternate_ident",                         # section alias
                                 _t_ref(r_info, 'alternate_ident'),         # textblock
@@ -232,15 +233,23 @@ def retrieve_edit_respondpage(skicall):
         sd_alternate.show = False
         pd.update(sd_alternate)
 
+    # target ident
     if r_info.target_ident_required:
-        pd['target','input_text'] = _ident_to_str(r_info.target_ident)
-        pd['target_ident_description','textblock_ref'] = _t_ref(r_info, 'target_ident')
+        utils.formtextinput(pd, "target_ident",                         # section alias
+                                _t_ref(r_info, 'target_ident'),         # textblock
+                                "Set the target ident:",                 # field label
+                                _ident_to_str(r_info.target_ident),     # input text
+                                action = "set_target_ident",
+                                action_json = "set_target_ident_json",
+                                left_label = "Submit the ident : ")
     else:
-        pd['target','show'] = False
-        pd['target_ident_description','show'] = False
+        sd_target = SectionData("target_ident")
+        sd_target.show = False
+        pd.update(sd_target)
 
+    # allowed callers
     if r_info.allowed_callers_required:
-        pd['allowed_callers_description','textblock_ref'] = _t_ref(r_info, 'allowed_callers')
+        pd['allowed_callers_description','textblock_ref'] = _t_ref(r_info, 'allowed_callers_list')
         if r_info.allowed_callers:
             contents = []
             for ident in r_info.allowed_callers:
@@ -249,11 +258,19 @@ def retrieve_edit_respondpage(skicall):
             pd['allowed_callers_list','contents'] = contents
         else:
             pd['allowed_callers_list','show'] = False
-        pd['add_allowed_caller','input_text'] = ''
+
+        utils.formtextinput(pd, "allowed_caller",                         # section alias
+                                _t_ref(r_info, 'allowed_callers'),        # textblock
+                                "Add an allowed caller ident or label:",  # field label
+                                "",                                       # input text
+                                action = "add_allowed_caller",
+                                left_label = "Add the allowed caller : ")
     else:
         pd['allowed_callers_description','show'] = False
         pd['allowed_callers_list','show'] = False
-        pd['add_allowed_caller','show'] = False
+        sd_allowed_caller = SectionData("allowed_caller")
+        sd_allowed_caller.show = False
+        pd.update(sd_allowed_caller)
 
     # validate option
     if r_info.validate_option_available:
@@ -402,15 +419,15 @@ def submit_widgfield(skicall):
     pchange = call_data['pchange']
 
     if ('setwidgfield','responderwidget','input_text') not in call_data:
-        raise FailPage(message="No widget name given", widget="widgfield_error")
+        raise FailPage(message="No widget name given")
     if not call_data['setwidgfield','responderwidget','input_text']:
-        raise FailPage(message="No widget name given", widget="widgfield_error")
+        raise FailPage(message="No widget name given")
     widgfield = call_data['setwidgfield','responderwidget','input_text']
 
     if ('setwidgfield','responderfield','input_text') not in call_data:
-        raise FailPage(message="No widget field given", widget="widgfield_error")
+        raise FailPage(message="No widget field given")
     if not call_data['setwidgfield','responderfield','input_text']:
-        raise FailPage(message="No widget field given", widget="widgfield_error")
+        raise FailPage(message="No widget field given")
     widgfield = widgfield + "," + call_data['setwidgfield','responderfield','input_text']
 
     if ('setwidgfield','respondersection','input_text') in call_data:
@@ -447,7 +464,6 @@ def submit_alternate_ident(skicall):
     call_data['status'] = 'Page set'
 
 
-
 def submit_target_ident(skicall):
     "Sets the target ident"
 
@@ -458,13 +474,17 @@ def submit_target_ident(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'target_ident' in call_data:
-        raise FailPage(message="No target ident given", widget="target")
+        raise FailPage(message="No target ident given")
+    if not call_data['target_ident']:
+        raise FailPage(message="No target ident given")
     # Set the page target_ident
     try:
         call_data['pchange'] = editresponder.set_target_ident(project, pagenumber, pchange, call_data['target_ident'])
     except ServerError as e:
         raise FailPage(e.message)
-    pd['target','set_input_accepted'] = True
+    sd_target = SectionData("target_ident")
+    sd_target['textinput', 'set_input_accepted'] = True
+    pd.update(sd_target)
     call_data['status'] = 'Target Ident set'
 
 
@@ -515,7 +535,7 @@ def add_allowed_caller(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'allowed_caller' in call_data:
-        raise FailPage(message="No allowed caller given", widget="allowed_callers_error")
+        raise FailPage(message="No allowed caller given")
     # Set the page allowed caller
     try:
         call_data['pchange'] = editresponder.add_allowed_caller(project, pagenumber, pchange, call_data['allowed_caller'])
@@ -532,7 +552,7 @@ def delete_allowed_caller(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'delete_allowed_caller' in call_data:
-        raise FailPage(message="No allowed caller given", widget="allowed_callers_error")
+        raise FailPage(message="No allowed caller given")
     # Delete the page allowed caller
     try:
         call_data['pchange'] = editresponder.delete_allowed_caller(project, pagenumber, pchange, call_data['delete_allowed_caller'])

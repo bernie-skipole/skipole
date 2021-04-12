@@ -22382,7 +22382,7 @@ false
 "validate_option": false
 },
 "original_fields": {
-"add_allowed_caller:input_text": ""
+"allowed_caller-textinput:input_text": ""
 }
 }
 },
@@ -22821,11 +22821,11 @@ false
 ],
 "submit_option": true,
 "target_ident": 26007,
-"validate_fail_ident": "admin_home",
-"validate_option": true
+"validate_fail_ident": null,
+"validate_option": false
 },
 "original_fields": {
-"target:input_text": "target_ident"
+"target_ident-textinput:input_text": "target_ident"
 }
 }
 },
@@ -22848,11 +22848,11 @@ false
 ],
 "submit_option": true,
 "target_ident": "general_json",
-"validate_fail_ident": "general_json",
-"validate_option": true
+"validate_fail_ident": null,
+"validate_option": false
 },
 "original_fields": {
-"target:input_text": "target_ident"
+"target_ident-textinput:input_text": "target_ident"
 }
 }
 },
@@ -29822,30 +29822,6 @@ false,
 }
 ],
 [
-"Widget",
-{
-"class": "error_messages.ErrorDiv",
-"name": "widgfield_error",
-"brief": "ErrorDiv",
-"fields": {
-"clear_error": false,
-"container_class": "",
-"error_class": "w3-panel w3-red",
-"hide": true,
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-""
-]
-]
-}
-],
-[
 "SectionPlaceHolder",
 {
 "brief": "Sets the responder widgfield",
@@ -29866,107 +29842,13 @@ false,
 }
 ],
 [
-"Widget",
+"SectionPlaceHolder",
 {
-"class": "inputtext.SubmitTextInput1",
-"name": "target",
-"brief": "Set the target ident",
-"fields": {
-"action": "set_target_ident",
-"action_json": "set_target_ident_json",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Ident or label of target page:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "",
-"pattern": "",
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A target ident must be given",
-"displaywidget": [
-"",
-"target",
-"",
-""
-]
-}
-]
-}
-}
-],
-[
-"Widget",
-{
-"class": "paras.TextBlockPara",
-"name": "target_ident_description",
-"brief": "Describes the target ident field",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"linebreaks": true,
-"replace_strings": [],
-"show": true,
-"show_error": "",
-"text_refnotfound": "",
-"text_replaceblock": "",
-"textblock_project": "",
-"textblock_ref": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "error_messages.ErrorDiv",
-"name": "allowed_callers_error",
-"brief": "ErrorDiv",
-"fields": {
-"clear_error": false,
-"container_class": "",
-"error_class": "w3-panel w3-red",
-"hide": true,
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-""
-]
-]
+"brief": "Sets the responder target ident",
+"section_name": "formtextinput",
+"placename": "target_ident",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [
@@ -30049,55 +29931,13 @@ false,
 }
 ],
 [
-"Widget",
+"SectionPlaceHolder",
 {
-"class": "inputtext.SubmitTextInput1",
-"name": "add_allowed_caller",
-"brief": "Adds an allowed calling page",
-"fields": {
-"action": "add_allowed_caller",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Ident or label of an allowed caller:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "A page ident or label is required"
-}
-]
-}
+"brief": "add an allowed caller",
+"section_name": "formtextinput",
+"placename": "allowed_caller",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [
@@ -31069,11 +30909,11 @@ false,
 "fail_ident": null,
 "submit_option": false,
 "target_ident": 26089,
-"validate_fail_ident": 26007,
-"validate_option": true
+"validate_fail_ident": null,
+"validate_option": false
 },
 "original_fields": {
-"add_allowed_caller:input_text": "allowed_caller"
+"allowed_caller-textinput:input_text": "allowed_caller"
 }
 }
 },
@@ -38671,18 +38511,6 @@ false
 }
 },
 "pages": {
-"aaa": {
-"ident": 85004,
-"brief": "aaa",
-"RespondPage": {
-"class": "CaseSwitch",
-"original_args": {
-"alternate_ident": "admin_home",
-"widgfield": "ninety-seven:eight"
-},
-"original_fields": {}
-}
-},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",
