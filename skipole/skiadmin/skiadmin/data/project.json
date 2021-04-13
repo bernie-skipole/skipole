@@ -2648,32 +2648,36 @@ false,
 "brief": "General header with multiple navigation boxes",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme-d1",
+"style": "z-index:100;position:relative;"
+},
 "parts": [
 [
 "Part",
 {
-"tag_name": "h3",
-"brief": "Provides space for fixed heading bar",
+"tag_name": "div",
+"brief": "New Tag",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-display-container",
+"style": "height:58px;"
+},
 "parts": [
 [
-"ClosedPart",
+"Widget",
 {
-"tag_name": "br",
-"brief": "Line space",
-"show": true
+"class": "headers.HeadText",
+"name": "page_head",
+"brief": "large text on page heading",
+"fields": {
+"large_text": "",
+"show": true,
+"tag": "h3",
+"widget_class": "w3-display-topleft w3-container",
+"widget_style": ""
 }
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line space",
-"show": true
-}
-]
-]
 }
 ],
 [
@@ -2684,43 +2688,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-top w3-container w3-theme-d1"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "links.JSONButtonLink",
-"name": "help_button",
-"brief": "Button to display the help page",
-"fields": {
-"button_text": "Help",
-"button_wait_text": "Help",
-"clear_error": false,
-"error_class": "",
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"json_ident": 4,
-"link_ident": "no_javascript",
-"local_storage": "",
-"session_storage": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-button w3-theme-l1 w3-right",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "New Tag",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-right"
+"class": "w3-display-topright"
 },
 "parts": [
 [
@@ -2750,18 +2718,81 @@ false,
 }
 ],
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-display-topmiddle"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar"
+},
+"parts": [
+[
 "Widget",
 {
-"class": "headers.HeadText",
-"name": "page_head",
-"brief": "large text on page heading",
+"class": "links.JSONButtonLink",
+"name": "save_button",
+"brief": "Button to display the help page",
 "fields": {
-"large_text": "",
+"button_text": "Save",
+"button_wait_text": "Save",
+"clear_error": false,
+"error_class": "",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "4",
+"link_ident": "no_javascript",
+"local_storage": "",
+"session_storage": "",
 "show": true,
-"tag": "h3",
-"widget_class": "",
-"widget_style": ""
+"show_error": "",
+"widget_class": "w3-button w3-block w3-theme-l1 w3-border w3-bar-item",
+"widget_style": "margin-right:4px;"
 }
+}
+],
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
+"name": "help_button",
+"brief": "Button to display the help page",
+"fields": {
+"button_text": "Help",
+"button_wait_text": "Help",
+"clear_error": false,
+"error_class": "",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": 4,
+"link_ident": "no_javascript",
+"local_storage": "",
+"session_storage": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-button w3-block w3-theme-l1 w3-border w3-bar-item",
+"widget_style": "margin-left:4px;"
+}
+}
+]
+]
+}
+]
+]
 }
 ]
 ]
