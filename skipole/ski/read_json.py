@@ -47,10 +47,10 @@ def make_part_for_section(section, json_data):
     return newpart
 
 
-def make_item_for_section(section, json_string):
+def make_item_for_section(proj_ident, section, json_string):
     "Returns object created from json string, the section argument is used to give any items unique names. The object is not inserted, and section remains unchanged"
     item_list = json.loads(json_string, object_pairs_hook=collections.OrderedDict)
-    newitem = _create_item(item_list, section.proj_ident)
+    newitem = _create_item(item_list, proj_ident)
     # ensure widgets and placeholders in newitem have unique names
     if hasattr(newitem, 'set_unique_names'):
         name_list = list(section.widgets.keys()) + list(section.section_places.keys())

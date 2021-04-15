@@ -335,7 +335,7 @@ def create_item_in_section(project, section_name, schange, location, json_string
        Returns new schange value"""
     proj, section = get_proj_section(project, section_name, schange)
     try:
-        newitem = read_json.make_item_for_section(section, json_string)
+        newitem = read_json.make_item_for_section(project, section, json_string)
     except Exception:
         raise ServerError("Unable to create item")
     # call skilift.insert_item_in_section to insert the item, save the section and return schange

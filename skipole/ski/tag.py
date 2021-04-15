@@ -195,7 +195,8 @@ class ParentPart(object):
     def proj_ident(self):
         if not self.ident_string:
             return ''
-        return self.ident_string.split('_')[0]
+        # ident_string normally starts project_pageident_head-0-... etc
+        return self.ident_string.split('_')[0] ##############################
 
     def insert_id(self, id_string=''):
         """Adds the id_string to the part attributes. If no id_string given
@@ -936,7 +937,7 @@ class SectionPlaceHolder(object):
     def get_section(self):
         if not self.ident_string:
             return
-        proj_ident = self.ident_string.split('_')[0]
+        proj_ident = self.ident_string.split('_')[0] ########################
         proj = skiboot.getproject(proj_ident)
         if proj is None:
             return
