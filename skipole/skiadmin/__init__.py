@@ -187,7 +187,7 @@ def set_navigation(identnum, call_data, pd, sd_adminhead):
 
     # top navigation
 
-    sd_adminhead["top_nav","nav_links"] = [ [3, "Root Folder", False, ''] ]
+    sd_adminhead["top_nav","nav_links"] = [ [3, "Root", False, ''] ]
 
     editedprojname = call_data['editedprojname']
 

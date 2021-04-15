@@ -450,11 +450,9 @@ def debugtoggle(skicall):
         call_data['status'] = 'Debug mode set ON'
 
 
-def _submit_saveproject(skicall):
+def submit_saveproject(skicall):
     "save the project textblock and project.json files"
-
     call_data = skicall.call_data
-
     project = call_data['editedprojname']
     projinfo = skilift.project_info(project)
     # Create textblock json files
@@ -462,29 +460,10 @@ def _submit_saveproject(skicall):
     accesstextblocks.save()
     # create project.json
     fromjson.project_to_json(project)
-
-
-def json_submit_saveproject(skicall):
-    "save the project textblock and project.json files"
-
-    call_data = skicall.call_data
-    pd = call_data['pagedata']
-
-    _submit_saveproject(skicall)
-    pd["saveresult","para_text"] = "Project data saved to JSON files"
-    pd["saveresult","show_para"] = True
     # clears any session data
     utils.clear_call_data(call_data)
     call_data['status'] = "Project data saved to JSON files"
 
-
-def html_submit_saveproject(skicall):
-    "save the project textblock and project.json files"
-    call_data = skicall.call_data
-    _submit_saveproject(skicall)
-    # clears any session data
-    utils.clear_call_data(call_data)
-    call_data['status'] = "Project data saved to JSON files"
 
 
 def submit_hex_color(skicall):

@@ -1176,9 +1176,34 @@
 "hide_if_empty": false,
 "attribs": {
 "class": "w3-sidebar w3-bar-block w3-theme-d1 w3-container",
-"style": "width:20%; padding-top:60px;"
+"style": "width:20%;"
 },
 "parts": [
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
+"name": "save_button",
+"brief": "Button to display the help page",
+"fields": {
+"button_text": "Save",
+"button_wait_text": "Save",
+"clear_error": false,
+"error_class": "",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "save_project",
+"link_ident": "no_javascript",
+"local_storage": "",
+"session_storage": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-button w3-block w3-round w3-padding-small w3-theme-l1",
+"widget_style": "margin-top:5px;margin-bottom:20px;margin-left:auto;margin-right:auto;width:90%;"
+}
+}
+],
 [
 "Widget",
 {
@@ -2657,7 +2682,7 @@ false,
 "Part",
 {
 "tag_name": "div",
-"brief": "New Tag",
+"brief": "w3 display container so left,middle and right contents can be positioned",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -2684,7 +2709,7 @@ false,
 "Part",
 {
 "tag_name": "div",
-"brief": "Fixed top header and nav bar",
+"brief": "nav bar positioned to the top right",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -2721,7 +2746,7 @@ false,
 "Part",
 {
 "tag_name": "div",
-"brief": "New Tag",
+"brief": "Save,Help positioned top middle",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -2732,7 +2757,7 @@ false,
 "Part",
 {
 "tag_name": "div",
-"brief": "New Tag",
+"brief": "w3 bar to hold the save and help buttons together",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -2753,7 +2778,7 @@ false,
 "get_field1": "",
 "get_field2": "",
 "hide": false,
-"json_ident": "4",
+"json_ident": "save_project",
 "link_ident": "no_javascript",
 "local_storage": "",
 "session_storage": "",
@@ -32974,6 +32999,20 @@ false
 },
 "parts": [
 [
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "reference",
+"brief": "Shows the TextBlock Reference string",
+"fields": {
+"para_text": "Reference string not found!",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
 "Part",
 {
 "tag_name": "p",
@@ -35662,100 +35701,6 @@ false
 [
 "Part",
 {
-"tag_name": "div",
-"brief": "Section for committing the project text",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-section"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "Paragraph about committing the project",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"TextBlock",
-{
-"textref": "about_commit",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": true,
-"linebreaks": true
-}
-]
-]
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "button display container",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "ski_mid_button"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "links.JSONButtonLink",
-"name": "saveproj",
-"brief": "Saves the project, calls a json file",
-"fields": {
-"button_text": "Commit Project",
-"button_wait_text": "Please wait...project being saved...",
-"clear_error": false,
-"error_class": "w3-button w3-block w3-theme-action",
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"json_ident": "save_project",
-"link_ident": 45,
-"local_storage": "",
-"session_storage": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-button w3-block w3-theme-d4",
-"widget_style": ""
-}
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ShowPara1",
-"name": "saveresult",
-"brief": "Shows the result of the save opertaion",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"para_class": "",
-"para_text": "Project Saved !!!!!!!!",
-"pre_line": true,
-"show": true,
-"show_error": "Zoooom",
-"show_para": false,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
 "tag_name": "p",
 "brief": "About debug toggle",
 "show": true,
@@ -35988,7 +35933,7 @@ false
 "skiadminpackages",
 "editfolders",
 "editsite",
-"json_submit_saveproject"
+"submit_saveproject"
 ],
 "target_ident": 20041
 },
@@ -40056,9 +40001,7 @@ false
 "RespondPage": {
 "class": "AllowedFields",
 "original_args": {
-"allowed_callers": [
-20001
-],
+"allowed_callers": [],
 "alternate_ident": "admin_home",
 "fail_ident": null,
 "submit_option": false,

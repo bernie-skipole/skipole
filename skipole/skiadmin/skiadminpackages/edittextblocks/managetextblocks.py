@@ -162,8 +162,10 @@ def retrieve_textblock(skicall):
     else:
         raise FailPage("TextBlock Reference not found")
 
-    sd["page_head","large_text"] = "Edit TextBlock : " + edited_textblock
+    sd["page_head","large_text"] = "Edit TextBlock"
     pd.update(sd)
+
+    pd["reference", "para_text"] = "TextBlock Ref: " + edited_textblock
 
     accesstextblocks = skilift.get_accesstextblocks(project)
     result = accesstextblocks.get_textref_languages()
