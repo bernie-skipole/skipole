@@ -2810,6 +2810,31 @@ false,
 "show": true,
 "show_error": "",
 "widget_class": "w3-button w3-block w3-theme-l1 w3-border w3-bar-item",
+"widget_style": "margin-left:4px;margin-right:4px;"
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "map",
+"brief": "Link to responder map",
+"fields": {
+"button_text": "Map",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action w3-border w3-bar-item",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
+"hide": false,
+"link_ident": "6010",
+"show": false,
+"show_error": "",
+"target": "_blank",
+"widget_class": "w3-button w3-block w3-theme-l1 w3-border w3-bar-item",
 "widget_style": "margin-left:4px;"
 }
 }
@@ -28981,7 +29006,7 @@ false,
 "parts": [
 [
 "Text",
-"Page 26010"
+"Responder Map"
 ]
 ]
 }
@@ -29801,31 +29826,6 @@ false,
 "style": "margin-left:20%"
 },
 "parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "map",
-"brief": "Link to responder map",
-"fields": {
-"button_text": "Map",
-"clear_error": false,
-"error_class": "w3-button w3-block w3-theme-action",
-"force_ident": true,
-"get_field1": "",
-"get_field2": "",
-"get_field3": "",
-"get_field4": "",
-"hide": false,
-"link_ident": "6010",
-"show": true,
-"show_error": "",
-"target": "_blank",
-"widget_class": "w3-button w3-theme-d4 w3-right",
-"widget_style": ""
-}
-}
-],
 [
 "Widget",
 {
@@ -38487,6 +38487,20 @@ false
 }
 },
 "pages": {
+"aaaa": {
+"ident": 85004,
+"brief": "aaaa",
+"RespondPage": {
+"class": "EmptyGoto",
+"original_args": {
+"allowed_callers": [],
+"alternate_ident": "admin_home",
+"target_ident": "",
+"widgfield": "sect-widg:fld"
+},
+"original_fields": {}
+}
+},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",

@@ -1,8 +1,19 @@
 
-# This skis project is added to other projects and consists of
-# javascript and css files. As it is essentially a 'library'
-# it is usually given a URL of /lib when added - but this is
-# not a necessity, just convention.
+"""
+This skis project is added to other projects and consists of javascript and
+css files. As it is essentially a 'library' it is usually given a URL of /lib
+when added - but this is not a necessity, just convention.
+
+To use this module - in your own code you would normally create your own
+'application' object and then call this module's makeapp function to produce
+a 'skis_application'.
+
+You would then add skis_application to your application using
+
+from skipole import skis
+skis_application = skis.makeapp()
+application.add_project(skis_application, url='/lib')
+"""
 
 import os
 from . import WSGIApplication
@@ -31,20 +42,5 @@ def makeapp():
     # when added to the root project using application.add_project
 
     return WSGIApplication('skis', PROJECTFILES, {}, start_call, submit_data, end_call)
-
-
-
-############
-#
-#  To use this module - in your own code you would normally create your own 'application' object
-#  and then call this module's makeapp function to produce a 'skis_application'
-#  You would then add skis_application to your application using
-#  application.add_project(skis_application, url='/lib')
-#
-#  from skipole import skis
-#  skis_application = skis.makeapp()
-#  application.add_project(skis_application, url='/lib')
-#
-############
 
 

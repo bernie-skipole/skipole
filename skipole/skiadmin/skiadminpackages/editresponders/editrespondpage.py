@@ -167,6 +167,7 @@ def retrieve_edit_respondpage(skicall):
         # Fill in header
         sd_adminhead = SectionData("adminhead")
         sd_adminhead["page_head","large_text"] = pageinfo.name
+        sd_adminhead["map","show"] = True
         pd.update(sd_adminhead)
 
         # fills in the data for editing page name, brief, parent, etc.,

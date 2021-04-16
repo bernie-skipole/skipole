@@ -14,6 +14,10 @@ use_submit_list - is available to optionally wrap the user defined submit_data f
                   be called as the responder's submit_data function, where package,module
                   is relative to the users code.
 
+PageData - An instance of this class is used to update page widgets.
+
+SectionData - An instance of this class is used to update section widgets
+
 
 Exceptions
 ----------
@@ -37,9 +41,11 @@ An instance of this class should be created, and is a callable WSGI application.
 The WSGIApplication has the following arguments which should be provided to create
 an instance:
 
-project - the project name
+PROJECT - the project name
 
-projectfiles - the directory containing your projects
+PROJECTFILES - the directory containing your projects
+
+PROJ_DATA - An optional dictionary you may whish to provide
 
 start_call - a function you should create, called at the start of a call
 
@@ -49,22 +55,30 @@ end_call - a function you should create, called at the end of the call, prior to
 
 url - path where this project will be served, typically '/'
 
-The WSGIApplication class has the methods:
+You would typically define your functions, and then create an instance:
 
-__call__(self, environ, start_response) - which sets the instance as callable
+my_application = WSGIApplication(project=PROJECT,
+                                 projectfiles=PROJECTFILES,
+                                 proj_data=PROJ_DATA,
+                                 start_call=start_call,
+                                 submit_data=submit_data,
+                                 end_call=end_call,
+                                 url="/")
 
-set_accesstextblocks(self, accesstextblocks) - Set an instance of a class which reads and writes TextBlocks.
+This my_application is then a callable WSGI application.
 
-Normally not used, as a default class (defined in the skipole.textblocks module) is used. If required, your
-own object could be created and set into the WSGIApplication with this method. If you do this, your object
-should support the same methods of the default class.
+The WSGIApplication class has method:
 
 add_project(self, proj, url) - adds other projects to the 'root' project.
 
 Where proj is another instance of a WSGIApplication and will be served at the path
-given by argument url. At the minimum, your project should add the 'skis' sub project
-which provides needed javascript files. For example:
+given by argument url.
 
+The skis module has the function makeapp() which creates a project providing needed javascript
+files which should be added to your application, for example:
+
+from skipole import skis
+skis_application = skis.makeapp()
 my_application.add_project(skis_application, url='/lib')
 
 Which causes the skis project to be served at /lib.
@@ -76,7 +90,7 @@ sub-projects can only be added to the 'root' project.
 python3 -m skipole
 ------------------
 
-skipole can also be run from the command line with the python -m option
+skipole can be run from the command line with the python -m option
 
 Usage is
 

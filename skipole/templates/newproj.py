@@ -43,10 +43,13 @@ PROJ_DATA={}
 
 def start_call(called_ident, skicall):
     """When a call is initially received this function is called.
-       Unless you want to divert to another page, this function should return called_ident
-       which would typically be the ident of a Responder dealing with the call."""
-    # to serve static files, you can map a url to a server static directory with the
-    # skicall.map_url_to_server method, for example:
+       Unless you want to divert to another page, this function should return called_ident which
+       would typically be the ident of a Responder or Template page dealing with the call.
+       If a pathlib.Path object is returned, which contains the path to a local server file (not a url)
+       then that server file will be sent to the client. In this case, the end_call function will
+       not be called."""
+    # To serve a directory of static files, you can map a url to a server directory with the
+    # skicall.map_url_to_server method, which returns pathlib.Path objects, for example:
     # servedfile = skicall.map_url_to_server("images", "/home/user/thisproject/imagefiles")
     # if servedfile:
     #    return servedfile
@@ -58,14 +61,14 @@ def start_call(called_ident, skicall):
     # data to these functions.
 
     # Normally you would return called_ident, which is the page being called, or None to cause a
-    # page not found error, or another (project, pagenumber) to divert the call to another page.
+    # page not found error, or another ident (project, pagenumber) to divert the call to another page.
 
     return called_ident
 
 # After start_call, if the call is passed to a Responder page which you have set up to call
 # submit_data, then the function below will be called.
 #
-# You may wish to apply the decorator '@use_submit_list' to the submit_data function. This
+# You may wish to apply the decorator '@use_submit_list' to this submit_data function. This
 # takes the package, module and function name which you have set in the Responder's 'submit list'
 # and imports and calls that specified function instead. This is entirely optional. 
 
@@ -133,7 +136,6 @@ application.add_project(skis_application, url='/lib')
 # received_cookies dictionary, and with your application's proj_data dictionary. If your function
 # returns None, the call proceeds unhindered to the subapplication. If however your function returns
 # an ident tuple, of the form (projectname, pagenumber), then the call is routed to that page instead.
-
 
 
 
