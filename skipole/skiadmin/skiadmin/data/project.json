@@ -22791,7 +22791,7 @@ false
 "validate_option": false
 },
 "original_fields": {
-"single_field:input_text": ""
+"singlefield-textinput:input_text": ""
 }
 }
 },
@@ -25801,6 +25801,27 @@ false
 "style": "margin-left:20%"
 },
 "parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Add page paragraph",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "add_page",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+],
 [
 "Widget",
 {
@@ -29937,7 +29958,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"style": "margin-left:auto;margin-right:auto;width:80%;"
 },
 "parts": [
 [
@@ -29999,30 +30020,6 @@ false,
 [
 "Widget",
 {
-"class": "error_messages.ErrorDiv",
-"name": "fields_error",
-"brief": "ErrorDiv",
-"fields": {
-"clear_error": false,
-"container_class": "",
-"error_class": "w3-panel w3-red",
-"hide": true,
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-""
-]
-]
-}
-],
-[
-"Widget",
-{
 "class": "paras.TextBlockPara",
 "name": "fields_description",
 "brief": "TextBlockPara",
@@ -30050,7 +30047,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"style": "margin-left:auto;margin-right:auto;width:80%;"
 },
 "parts": [
 [
@@ -30101,47 +30098,13 @@ false,
 }
 ],
 [
-"Widget",
+"SectionPlaceHolder",
 {
-"class": "inputtext.SubmitTextInput1",
-"name": "single_field",
-"brief": "Edits a single field value",
-"fields": {
-"action": "set_field",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Set value:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "",
-"pattern": "",
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": false,
-"show_error": "",
-"size": "",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
+"brief": "Edits a single field name",
+"section_name": "formtextinput",
+"placename": "singlefield",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [
@@ -38487,20 +38450,6 @@ false
 }
 },
 "pages": {
-"aaaa": {
-"ident": 85004,
-"brief": "aaaa",
-"RespondPage": {
-"class": "EmptyGoto",
-"original_args": {
-"allowed_callers": [],
-"alternate_ident": "admin_home",
-"target_ident": "",
-"widgfield": "sect-widg:fld"
-},
-"original_fields": {}
-}
-},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",

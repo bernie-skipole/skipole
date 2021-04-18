@@ -193,6 +193,12 @@ def retrieve_edit_respondpage(skicall):
     sd_setwidgfield = SectionData("setwidgfield")
     sd_setwidgfield['widgfieldform', 'action'] = "responder_widgfield"
 
+    # set those sections which are not shown by default
+    sd_singlefield = SectionData('singlefield')
+    sd_singlefield.show = False
+    pd.update(sd_singlefield)
+
+
     if r_info.widgfield_required:
         if r_info.widgfield:
             pd['widgfield','input_text'] = r_info.widgfield
@@ -336,9 +342,10 @@ def retrieve_edit_respondpage(skicall):
         # no fields so no further data to input
         return
 
-    # show the fields description
+    # show the fields description  ========      this to be removed and replaced
     pd['fields_description','show'] = True
     pd['fields_description','textblock_ref'] = _t_ref(r_info, 'fields')
+    ###########################################################################
 
 
     if f_options['field_values'] and ( not f_options['single_field'] ):
@@ -396,13 +403,21 @@ def retrieve_edit_respondpage(skicall):
 
     # all remaining are if a single field is required
 
+    # single field, no value
     if not f_options['field_values']:
         # a single value is a submit text input field
-        pd['single_field','show'] = True
-        if not r_info.single_field:
-            pd['single_field','input_text'] = ''
+        if r_info.single_field:
+            fieldname = r_info.single_field
         else:
-            pd['single_field','input_text'] = r_info.single_field
+            fieldname = ''
+        utils.formtextinput(pd, "singlefield",                   # section alias
+                                _t_ref(r_info, 'fields'),        # textblock
+                                "Set the field name:",           # field label
+                                fieldname,                       # input text
+                                action = "set_field",
+                                left_label = "Submit the field : ")
+        sd_singlefield.show = True
+        pd.update(sd_singlefield)
         return
 
     # remaining is for a single field and value - still to do
@@ -570,7 +585,7 @@ def remove_field(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'remove_field' in call_data:
-        raise FailPage(message="No field to remove given", widget="fields_error")
+        raise FailPage(message="No field to remove given")
     # Delete the page field
     try:
         call_data['pchange'] = editresponder.remove_field(project, pagenumber, pchange, call_data['remove_field'])
@@ -589,11 +604,11 @@ def add_field_value(skicall):
     pchange = call_data['pchange']
 
     if not 'field' in call_data:
-        raise FailPage(message="No field given", widget="fields_error")
+        raise FailPage(message="No field given")
     if not call_data['field']:
-        raise FailPage(message="No field given", widget="fields_error")
+        raise FailPage(message="No field given")
     if not 'value' in call_data:
-        raise FailPage(message="No value given", widget="fields_error")
+        raise FailPage(message="No value given")
 
     # if value is empty ensure empty values allowed
     if not call_data['value']:
@@ -605,12 +620,12 @@ def add_field_value(skicall):
         # field options
         f_options = r_info.field_options
         if not f_options['fields']:
-            raise FailPage(message="Invalid submission, this responder does not have fields", widget="fields_error")
+            raise FailPage(message="Invalid submission, this responder does not have fields")
         if not f_options['empty_values_allowed']:
             pd['add_field_value', 'input_text1'] = call_data['field']
             pd['add_field_value', 'set_input_accepted1'] = True
             pd['add_field_value', 'set_input_errored2'] = True
-            raise FailPage(message="Invalid submission, empty field values are not allowed", widget="fields_error")
+            raise FailPage(message="Invalid submission, empty field values are not allowed")
     # Add the field and value
     try:
         call_data['pchange'] = editresponder.add_field_value(project, pagenumber, pchange, call_data['field'], call_data['value'])
@@ -627,9 +642,9 @@ def add_field(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'field' in call_data:
-        raise FailPage(message="No field given", widget="fields_error")
+        raise FailPage(message="No field given")
     if not call_data['field']:
-        raise FailPage(message="No field given", widget="fields_error")
+        raise FailPage(message="No field given")
     # Add the field
     try:
         call_data['pchange'] = editresponder.add_field(project, pagenumber, pchange, call_data['field'])
@@ -645,11 +660,11 @@ def set_single_field(skicall):
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
-    if not ('single_field', 'input_text') in call_data:
-        raise FailPage(message="No field given", widget="fields_error")
-    field = call_data[('single_field', 'input_text')]
+    if not ('singlefield', 'textinput', 'input_text') in call_data:
+        raise FailPage(message="No field given")
+    field = call_data['singlefield', 'textinput', 'input_text']
     if not field:
-        raise FailPage(message="No field given", widget="fields_error")
+        raise FailPage(message="No field given")
     # Add the field
     try:
         call_data['pchange'] = editresponder.set_single_field(project, pagenumber, pchange, field)
