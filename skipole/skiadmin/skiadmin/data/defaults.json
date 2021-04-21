@@ -293,6 +293,22 @@
 "outer_class": "w3-section",
 "widget_class": "w3-section"
 },
+"SubmitTextInput4": {
+"button_class": "w3-button w3-theme-d4",
+"buttondiv_class": "w3-container w3-cell",
+"error_class": "w3-panel w3-red",
+"formdiv_class": "w3-cell-row",
+"input_accepted_class": "w3-pale-green",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:100%",
+"inputdiv_class": "w3-container w3-cell",
+"inputdiv_style": "width : 32%;",
+"left_class": "w3-right-align",
+"left_style": "font-weight : bold;",
+"leftdiv_class": "w3-container w3-cell",
+"leftdiv_style": "width : 32%;",
+"widget_class": "w3-section"
+},
 "TextInput1": {
 "widget_class": "ski_input"
 },

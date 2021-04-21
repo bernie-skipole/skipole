@@ -928,9 +928,9 @@ class SubmitTextInput1(Widget):
             self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
 
         if self.get_field_value('label_class'):
-            self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
+            self[1][0][0].update_attribs({"class": self.get_field_value('label_class')})
         if self.get_field_value('label_style'):
-            self[1][0][0].attribs = {"style": self.get_field_value('label_style')}
+            self[1][0][0].update_attribs({"style": self.get_field_value('label_style')})
         if self.get_field_value('label'):
             self[1][0][0][0] = self.get_field_value('label')
 
@@ -938,7 +938,7 @@ class SubmitTextInput1(Widget):
         if self.get_field_value('inputandbutton_class'):
             self[1][0][1].attribs = {"class": self.get_field_value('inputandbutton_class')}
         if self.get_field_value('inputandbutton_style'):
-            self[1][0][1].attribs = {"style": self.get_field_value('inputandbutton_style')}
+            self[1][0][1].update_attribs({"style": self.get_field_value('inputandbutton_style')})
 
         # set an id in the input field for the 'label for' tag
         self[1][0][1][0].insert_id()
@@ -1195,9 +1195,9 @@ class SubmitTextInput3(Widget):
         if self.get_field_value('label'):
             self[2][0][0][0] = self.get_field_value('label')
         if self.get_field_value('label_class'):
-            self[2][0][0].attribs = {"class": self.get_field_value('label_class')}
+            self[2][0][0].update_attribs({"class": self.get_field_value('label_class')})
         if self.get_field_value('label_style'):
-            self[2][0][0].attribs = {"style": self.get_field_value('label_style')}
+            self[2][0][0].update_attribs({"style": self.get_field_value('label_style')})
 
         # set an id in the input field for the 'label for' tag
         self[2][0][1].insert_id()
@@ -1251,7 +1251,7 @@ class SubmitTextInput3(Widget):
         if self.get_field_value('button_label_class'):
             self[2][1][0].attribs = {"class": self.get_field_value('button_label_class')}
         if self.get_field_value('button_label_style'):
-            self[2][1][0].attribs = {"style": self.get_field_value('button_label_style')}
+            self[2][1][0].update_attribs({"style": self.get_field_value('button_label_style')})
 
 
         # submit button
@@ -1444,9 +1444,9 @@ class TwoInputsSubmit1(Widget):
         if self.get_field_value('label'):
             self[1][0][0][0] = self.get_field_value('label')
         if self.get_field_value('label_class'):
-            self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
+            self[1][0][0].update_attribs({"class": self.get_field_value('label_class')})
         if self.get_field_value('label_style'):
-            self[1][0][0].attribs = {"style": self.get_field_value('label_style')}
+            self[1][0][0].update_attribs({"style": self.get_field_value('label_style')})
         # first input field
         self[1][0][1].update_attribs({"name":self.get_formname('input_text1'), "value":self.get_field_value('input_text1')})
         if self.get_field_value('size1'):
@@ -1848,9 +1848,9 @@ class SubmitTextInput2(Widget):
             self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
 
         if self.get_field_value('label_class'):
-            self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
+            self[1][0][0].update_attribs({"class": self.get_field_value('label_class')})
         if self.get_field_value('label_style'):
-            self[1][0][0].attribs = {"style": self.get_field_value('label_style')}
+            self[1][0][0].update_attribs({"style": self.get_field_value('label_style')})
         if self.get_field_value('label'):
             self[1][0][0][0] = self.get_field_value('label')
 
@@ -1858,7 +1858,7 @@ class SubmitTextInput2(Widget):
         if self.get_field_value('inputandbutton_class'):
             self[1][0][1].attribs = {"class": self.get_field_value('inputandbutton_class')}
         if self.get_field_value('inputandbutton_style'):
-            self[1][0][1].attribs = {"style": self.get_field_value('inputandbutton_style')}
+            self[1][0][1].update_attribs({"style": self.get_field_value('inputandbutton_style')})
 
         # set an id in the input field for the 'label for' tag
         self[1][0][1][0].insert_id()
@@ -1957,6 +1957,264 @@ class SubmitTextInput2(Widget):
   </form>
 </div>"""
 
+
+
+class SubmitTextInput4(Widget):
+    """Defines a form with a text input field, and four hidden fields"""
+
+    # js_validators is a class attribute, True if javascript validation is enabled
+    js_validators=True
+
+    error_location = (0,0,0)
+
+    arg_descriptions = {'left_text':FieldArg("text", 'Your input:'),
+                        'left_class':FieldArg("cssclass", ''),
+                        'left_style':FieldArg("cssstyle", ''),
+                        'leftdiv_class':FieldArg("cssclass", ''),
+                        'leftdiv_style':FieldArg("cssstyle", ''),
+                        'action_json':FieldArg("url", ''),
+                        'action':FieldArg("url", ''),
+                        'error_class':FieldArg("cssclass", ''),
+                        'hidden_field1':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True, jsonset=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True, jsonset=True),
+                        'target':FieldArg("text",''),
+                        'button_text':FieldArg("text",'Submit'),
+                        'button_class':FieldArg("cssclass", ''),
+                        'formdiv_class':FieldArg("cssclass", ''),
+                        'formdiv_style':FieldArg("cssstyle", ''),
+                        'inputdiv_class':FieldArg("cssclass", ''),
+                        'inputdiv_style':FieldArg("cssstyle", ''),
+                        'buttondiv_class':FieldArg("cssclass", ''),
+                        'buttondiv_style':FieldArg("cssstyle", ''),
+                        'input_text':FieldArg("text", '', valdt=True, jsonset=True),
+                        'size':FieldArg("text", ''),
+                        'maxlength':FieldArg("text", ''),
+                        'required':FieldArg("boolean", False),
+                        'type':FieldArg("text", 'text'),
+                        'pattern':FieldArg("text", ''),
+                        'title':FieldArg("text", ''),
+                        'input_accepted_class':FieldArg("cssclass", ''),
+                        'input_errored_class':FieldArg("cssclass", ''),
+                        'input_class':FieldArg("cssclass", ''),
+                        'input_style':FieldArg("cssstyle", ''),
+                        'set_input_accepted':FieldArg("boolean", False, jsonset=True),
+                        'set_input_errored':FieldArg("boolean", False, jsonset=True),
+                        'hide':FieldArg("boolean", False, jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        left_text: The text displayed to the left of the text input field
+        leftdiv_class: The css class of the div containing the left paragraph
+        leftdiv_style: The css style of the div containing the left paragraph
+        left_class: The css class of the p tag containing left_text
+        left_style: The css style of the p tag containing left_text
+        action_json:  if a value set, and client has jscript enabled, this is the page ident, label, url this button links to, expects a json page back
+        action: The page ident, label, url this button links to, overridden if action_json is set.
+        error_class: The class applied to the paragraph containing the error message on error.
+        hidden_field1: A hidden field value, leave blank if unused, name used as the get field name
+        hidden_field2: A second hidden field value, leave blank if unused, name used as the get field name
+        hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
+        hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
+        target: if given, the target attribute will be set
+        button_text: The text on the button
+        button_class: The class given to the button tag
+        formdiv_class: the class attribute of the div which contains the left text, input field and button
+        formdiv_style: the style attribute of the div which contains the left text, input field and button
+        inputdiv_class: the class attribute of the div which contains the input field
+        inputdiv_style: the style attribute of the div which contains the input field
+        buttondiv_class: the class attribute of the div which contains the submit button
+        buttondiv_style: the style attribute of the div which contains the submit button
+        input_text: The default text in the text input field, field name used as the name attribute
+        size: The number of characters appearing in the text input area
+        maxlength: The maximum number of characters accepted in the text area
+        required: Set True to put the 'required' flag into the input field
+        type: the type set on the input field, such as text or email
+        pattern: regular expression pattern
+        title: helps describe the pattern
+        input_accepted_class: A class which can be set on the input field
+        input_errored_class: A class which can be set on the input field
+        input_class: Class set on the input field
+        input_style: Style set on the input field
+        set_input_accepted: If True, input_accepted_class will be set on the input field
+        set_errored_accepted: If True, input_errored_class will be set on the input field
+        hide: If True, widget is hidden
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+
+        # error div at 0
+        self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
+        self[0][0] = tag.Part(tag_name="p")
+        self[0][0][0] = ''
+
+        # The form
+        self[1] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
+
+        # div containing left text, input text and button
+        self[1][0] = tag.Part(tag_name='div')
+        # the left div
+        self[1][0][0] = tag.Part(tag_name="div", hide_if_empty=True)
+        # the left paragraph
+        self[1][0][0][0] = tag.Part(tag_name="p", hide_if_empty=True)
+        # div containing input field
+        self[1][0][1] = tag.Part(tag_name='div')
+        # the text input field
+        self[1][0][1][0] = tag.ClosedPart(tag_name="input", attribs ={"type":"text"})
+        # div containing the submit button
+        self[1][0][2] = tag.Part(tag_name='div')
+        # the submit button
+        self[1][0][2][0] = tag.Part(tag_name="button", attribs ={"type":"submit"})
+        self[1][0][2][0][0] = "Submit"
+        self._jsonurl = ''
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the form"
+        if self.get_field_value("target"):
+            self[1].update_attribs({"target":self.get_field_value("target")})
+        # Hides widget if no error and hide is True
+        self.widget_hide(self.get_field_value("hide"))
+        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        if self.get_field_value('error_class'):
+            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.error_status:
+            self[0].del_one_attrib("style")
+        if not self.get_field_value("action"):
+            # setting self._error replaces the entire tag
+            self._error = "Warning: No form action"
+            return
+        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        if not actionurl:
+            # setting self._error replaces the entire tag
+            self._error = "Warning: broken link"
+            return
+        # update the action of the form
+        self[1].update_attribs({"action": actionurl})
+        # the div holding label, input text and button
+        if self.get_field_value('formdiv_class'):
+            self[1][0].attribs = {"class": self.get_field_value('formdiv_class')}
+        if self.get_field_value('formdiv_style'):
+            self[1][0].update_attribs({"style": self.get_field_value('formdiv_style')})
+
+        if self.get_field_value('leftdiv_class'):
+            self[1][0][0].update_attribs({"class": self.get_field_value('leftdiv_class')})
+        if self.get_field_value('leftdiv_style'):
+            self[1][0][0].update_attribs({"style": self.get_field_value('leftdiv_style')})
+
+        if self.get_field_value('left_class'):
+            self[1][0][0][0].update_attribs({"class": self.get_field_value('left_class')})
+        if self.get_field_value('left_style'):
+            self[1][0][0][0].update_attribs({"style": self.get_field_value('left_style')})
+
+        if self.get_field_value('left_text'):
+            self[1][0][0][0][0] = self.get_field_value('left_text')
+
+        # the div holding the input field
+        if self.get_field_value('inputdiv_class'):
+            self[1][0][1].attribs = {"class": self.get_field_value('inputdiv_class')}
+        if self.get_field_value('inputdiv_style'):
+            self[1][0][1].update_attribs({"style": self.get_field_value('inputdiv_style')})
+
+        # set an id in the input field so javascript can find this field
+        self[1][0][1][0].insert_id()
+
+        self[1][0][1][0].update_attribs({"name":self.get_formname('input_text'), "value":self.get_field_value('input_text')})
+        if self.get_field_value('size'):
+            self[1][0][1][0].update_attribs({"size":self.get_field_value('size')})
+        if self.get_field_value('maxlength'):
+            self[1][0][1][0].update_attribs({"maxlength":self.get_field_value('maxlength')})
+        if self.get_field_value('required'):
+            self[1][0][1][0].update_attribs({"required":"required"})
+        if self.get_field_value('type'):
+            self[1][0][1][0].update_attribs({"type":self.get_field_value('type')})
+        if self.get_field_value('pattern'):
+            self[1][0][1][0].update_attribs({"pattern":self.get_field_value('pattern')})
+        if self.get_field_value('title'):
+            self[1][0][1][0].update_attribs({"title":self.get_field_value('title')})
+        if self.get_field_value('input_style'):
+            self[1][0][1][0].update_attribs({"style": self.get_field_value('input_style')})
+        if self.get_field_value('input_class'):
+            input_class = self.get_field_value('input_class')
+        else:
+            input_class = ''
+
+        if self.error_status and self.get_field_value('input_errored_class'):
+            if input_class:
+                input_class = input_class + ' ' + self.get_field_value('input_errored_class')
+            else:
+                input_class = self.get_field_value('input_errored_class')
+        elif self.get_field_value('set_input_errored') and self.get_field_value('input_errored_class'):
+            if input_class:
+                input_class = input_class + ' ' + self.get_field_value('input_errored_class')
+            else:
+                input_class = self.get_field_value('input_errored_class')
+        elif self.get_field_value('set_input_accepted') and self.get_field_value('input_accepted_class'):
+            if input_class:
+                input_class = input_class + ' ' + self.get_field_value('input_accepted_class')
+            else:
+                input_class = self.get_field_value('input_accepted_class')
+
+        if input_class:
+            self[1][0][1][0].update_attribs({"class":input_class})
+
+        # the div holding the submit button
+        if self.get_field_value('buttondiv_class'):
+            self[1][0][2].attribs = {"class": self.get_field_value('buttondiv_class')}
+        if self.get_field_value('buttondiv_style'):
+            self[1][0][2].update_attribs({"style": self.get_field_value('buttondiv_style')})
+
+        # submit button
+        if self.get_field_value('button_class'):
+            self[1][0][2][0].update_attribs({"class": self.get_field_value('button_class')})
+        if self.get_field_value('button_text'):
+            self[1][0][2][0][0] = self.get_field_value('button_text')
+
+        # add ident and four hidden fields
+        self.add_hiddens(self[1], page)
+
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a submit event handler"""
+        jscript = """  $("#{ident} form").on("submit input", function(e) {{
+    SKIPOLE.widgets["{ident}"].eventfunc(e);
+    }});
+""".format(ident=self.get_id())
+        if self._jsonurl:
+            return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', url=self._jsonurl, input_id=self[1][0][1][0].get_id())
+        return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', input_id=self[1][0][1][0].get_id())
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div> <!-- with widget id and class widget_class -->
+  <div>  <!-- div hidden when no error is displayed, with class set to error_class on error -->
+    <p> <!-- error message appears in this paragraph --> </p>
+  </div>
+  <form role="form" method="post"> <!-- action attribute set to action field -->
+    <div> <!-- class attribute set to formdiv_class -->
+      <div> <!-- class set to leftdiv_class -->
+          <p>  <!-- class set to left_class -->
+              <!-- content set to left_text -->
+          </p>
+      </div>
+      <div>  <!-- class attribute set to inputdiv_class -->
+          <input type="text" />  <!-- class set to input_class -->
+            <!-- input text value set to input_text -->
+      </div>
+      <div>  <!-- class attribute set to buttondiv_class -->
+          <button type="submit"> <!-- with class set to button_class -->
+            <!-- button_text -->
+          </button>
+      </div>
+    </div>
+    <!-- hidden input fields -->                              
+  </form>
+</div>"""
 
 
 

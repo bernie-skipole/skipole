@@ -27,7 +27,6 @@ def start_call(called_ident, skicall):
 
     projinfo = skilift.project_info(editedprojname)
 
-
     if (called_ident is not None) and (called_ident[1] == 80040):
         # does not call page 80040 (which is a nop which would return page not found)
         # instead it returns the server file defaults.json of the editedproject 

@@ -689,3 +689,127 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.clear_error = function() {
     this.set_errored(input_field, false);
     };
 
+
+
+SKIPOLE.inputtext.SubmitTextInput4 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    };
+SKIPOLE.inputtext.SubmitTextInput4.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputtext.SubmitTextInput4.prototype.constructor = SKIPOLE.inputtext.SubmitTextInput4;
+SKIPOLE.inputtext.SubmitTextInput4.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    /* check if an error message or clear_error is given */
+    this.check_error(fieldlist, result);
+    // sets hidden fields
+    this.sethiddenfields(fieldlist, result);
+    // sent input text
+    var fieldvalues = this.fieldvalues;
+    var text_input = $('#' + fieldvalues["input_id"]);
+    //var text_input = this.widg.find('input[type="text"]');
+    // Check for set_input_accepted or set_input_errored
+    this.set_accepted_errored(text_input, fieldlist, result);
+    // input_text
+    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    if (input_text !== undefined) {
+        text_input.val(input_text);
+        }
+    // hide
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide !== undefined) {
+        if (set_hide) {
+            if (this.widg.is(":visible")) {
+                this.widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(this.widg.is(":visible"))) {
+                this.widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput4.prototype.eventfunc = function (e) {
+    SKIPOLE.skiprefresh = true;
+    if (e.type == 'submit') {
+        // form submitted
+        if (!SKIPOLE.form_validate(this.widg)) {
+            // prevent the submission if validation failure
+            e.preventDefault();
+            }
+        else {
+            // form validated, so if json url set, call a json page
+            var jsonurl = this.fieldvalues["url"];
+            if (jsonurl) {
+                var self = this;
+                var widgform = this.widg.find('form');
+                var senddata = widgform.serializeArray();
+                e.preventDefault();
+                // respond to json or html
+                $.ajax({
+                      url: jsonurl,
+                      data: senddata
+                          })
+                      .done(function(result, textStatus, jqXHR) {
+                         if (jqXHR.responseJSON) {
+                              // JSON response
+                              if (self.get_error(result)) {
+                                  // if error, set any results received from the json call
+                                  SKIPOLE.setfields(result);
+                                  }
+                              else {
+                                  // If no error received, clear any previous error
+                                  self.clear_error();
+                                  SKIPOLE.setfields(result);
+                                  // enable input event, which is used to clear set_accepted class on input
+                                  self.widg.on('input', function(e) {self.eventfunc(e)});
+                                  }
+                               } else {
+                                  // html response
+                                  document.open();
+                                  document.write(result);
+                                  document.close();
+                                  }
+                          })
+                      .fail(function( jqXHR, textStatus, errorThrown ) {
+                                  if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                                      document.open();
+                                      document.write(jqXHR.responseText);
+                                      document.close();
+                                      }
+                                  else {
+                                      SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
+                                      }
+                          });
+                }
+            }
+        }
+    else if (e.type == 'input'){
+        // text changed in input field
+        this.widg.off(e);
+        this.set_accepted($(e.target),false);
+        }
+    };
+SKIPOLE.inputtext.SubmitTextInput4.prototype.show_error = function (error_message) {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
+    // var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
+    this.set_errored(input_field, true);
+    };
+SKIPOLE.inputtext.SubmitTextInput4.prototype.clear_error = function() {
+    if (!this.display_errors) {
+        return;
+        }
+    SKIPOLE.BaseWidget.prototype.clear_error.call(this);
+    // var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
+    this.set_errored(input_field, false);
+    };
+
+
