@@ -324,7 +324,7 @@ class TextInput2(Widget):
         if self.get_field_value('input_disabled_class'):
             fieldlist.append('input_disabled_class')
         if fieldlist:
-            return self._make_fieldvalues(*fieldlist)
+            return self._make_fieldvalues(*fieldlist, input_id=self[1][1].get_id())
         return ''
 
     @classmethod
@@ -624,7 +624,7 @@ class TextInput3(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets input_accepted_class, input_errored_class into fieldvalues"""
-        return self._make_fieldvalues('input_accepted_class', 'input_errored_class')
+        return self._make_fieldvalues('input_accepted_class', 'input_errored_class', input_id=self[1].get_id())
  
     @classmethod
     def description(cls):
@@ -789,7 +789,7 @@ class TextInput4(Widget):
         if self.get_field_value('input_disabled_class'):
             fieldlist.append('input_disabled_class')
         if fieldlist:
-            return self._make_fieldvalues(*fieldlist)
+            return self._make_fieldvalues(*fieldlist, input_id=self[1][0].get_id())
         return ''
 
     @classmethod
@@ -1002,8 +1002,8 @@ class SubmitTextInput1(Widget):
     }});
 """.format(ident=self.get_id())
         if self._jsonurl:
-            return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', url=self._jsonurl)
-        return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
+            return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', url=self._jsonurl, input_id=self[1][0][1][0].get_id())
+        return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', input_id=self[1][0][1][0].get_id())
 
 
     @classmethod
@@ -1278,8 +1278,8 @@ class SubmitTextInput3(Widget):
     }});
 """.format(ident=self.get_id())
         if self._jsonurl:
-            return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', url=self._jsonurl)
-        return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
+            return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', url=self._jsonurl, input_id=self[2][0][1].get_id())
+        return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', input_id=self[2][0][1].get_id())
 
     @classmethod
     def description(cls):
@@ -1926,11 +1926,13 @@ class SubmitTextInput2(Widget):
                                                     'input_errored_class',
                                                     'session_storage',
                                                     'local_storage',
-                                                    url=self._jsonurl)
+                                                    url=self._jsonurl,
+                                                    input_id=self[1][0][1][0].get_id())
         return jscript + self._make_fieldvalues('input_accepted_class',
                                                 'input_errored_class',
                                                 'session_storage',
-                                                'local_storage')
+                                                'local_storage',
+                                                input_id=self[1][0][1][0].get_id())
 
 
     @classmethod

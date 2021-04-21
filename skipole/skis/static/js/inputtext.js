@@ -51,7 +51,8 @@ SKIPOLE.inputtext.TextInput2.prototype.setvalues = function (fieldlist, result) 
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var text_input = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var text_input = $('#' + fieldvalues["input_id"]);
     var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
     this.set_if_disabled(text_input, input_disabled, fieldlist, result);
     this.set_accepted_errored(text_input, fieldlist, result);
@@ -96,7 +97,8 @@ SKIPOLE.inputtext.TextInput3.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var text_input = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var text_input = $('#' + fieldvalues["input_id"]);
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
     var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
@@ -116,7 +118,8 @@ SKIPOLE.inputtext.TextInput4.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var text_input = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var text_input = $('#' + fieldvalues["input_id"]);
     var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
     this.set_if_disabled(text_input, input_disabled, fieldlist, result);
     this.set_accepted_errored(text_input, fieldlist, result);
@@ -142,7 +145,8 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.setvalues = function (fieldlist, re
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // sent input text
-    var text_input = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var text_input = $('#' + fieldvalues["input_id"]);
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
@@ -231,7 +235,8 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
     };
 SKIPOLE.inputtext.SubmitTextInput1.prototype.clear_error = function() {
@@ -239,7 +244,8 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
 
@@ -258,7 +264,8 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // set text input
-    var text_input = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var text_input = $('#' + fieldvalues["input_id"]);
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // div2 is the second div of the widget holding the paragraphs
@@ -384,7 +391,8 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
     };
 SKIPOLE.inputtext.SubmitTextInput3.prototype.clear_error = function() {
@@ -392,7 +400,8 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
 
@@ -545,7 +554,8 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.setvalues = function (fieldlist, re
     if (localkey) {
         this.fieldvalues["local_storage"] = localkey;
         }
-    var text_input = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var text_input = $('#' + fieldvalues["input_id"]);
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
@@ -677,7 +687,8 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
     };
 SKIPOLE.inputtext.SubmitTextInput2.prototype.clear_error = function() {
@@ -685,7 +696,8 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var input_field = this.widg.find('input[type="text"]');
+    var fieldvalues = this.fieldvalues;
+    var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
 
@@ -707,7 +719,6 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.setvalues = function (fieldlist, re
     // sent input text
     var fieldvalues = this.fieldvalues;
     var text_input = $('#' + fieldvalues["input_id"]);
-    //var text_input = this.widg.find('input[type="text"]');
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
@@ -796,7 +807,6 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    // var input_field = this.widg.find('input[type="text"]');
     var fieldvalues = this.fieldvalues;
     var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
@@ -806,7 +816,6 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    // var input_field = this.widg.find('input[type="text"]');
     var fieldvalues = this.fieldvalues;
     var input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
