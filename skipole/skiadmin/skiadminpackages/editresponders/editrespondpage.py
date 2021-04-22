@@ -198,6 +198,9 @@ def retrieve_edit_respondpage(skicall):
     sd_singlefield.show = False
     pd.update(sd_singlefield)
 
+    sd_failpage = SectionData('failpage')
+    sd_failpage.show = False
+    pd.update(sd_failpage)
 
     if r_info.widgfield_required:
         if r_info.widgfield:
@@ -325,13 +328,22 @@ def retrieve_edit_respondpage(skicall):
         else:
             pd['submit_list','show'] = False
         pd['submit_string','input_text'] = ''
-        pd['fail_page_ident','input_text'] = _ident_to_str(r_info.fail_ident)
+        # fail page
+        utils.formtextinput(pd, "failpage",                        # section alias
+                                'responders.shortfailpage',        # textblock
+                                "Fail page ident or label:",       # field label
+                                _ident_to_str(r_info.fail_ident),  # input text
+                                action = "set_fail_ident",
+                                left_label = "Set the fail page : ")
+        sd_failpage.show = True
+        pd.update(sd_failpage)
+
     else:
         pd['submit_list_description','show'] = False
         pd['submit_list','show'] = False
         pd['submit_string','show'] = False
         pd['submit_info','show'] = False
-        pd['fail_page_ident','show'] = False
+
 
     # final paragraph
     pd['final_paragraph','textblock_ref'] = _t_ref(r_info, 'final_paragraph')
@@ -533,7 +545,7 @@ def submit_fail_ident(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'fail_ident' in call_data:
-        raise FailPage(message="No fail ident given", widget="fail_ident_error")
+        raise FailPage(message="No fail ident given")
     # Set the page fail_ident
     try:
         call_data['pchange'] = editresponder.set_fail_ident(project, pagenumber, pchange, call_data['fail_ident'])
@@ -683,7 +695,7 @@ def delete_submit_list_string(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'delete_submit_list_string_index' in call_data:
-        raise FailPage(message="No submit_list string given", widget="submit_list_error")
+        raise FailPage(message="No submit_list string given")
     try:
         # get the submit list
         submit_list = editresponder.get_submit_list(project, pagenumber, pchange)
@@ -703,7 +715,7 @@ def add_submit_list_string(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
     if not 'submit_list_string' in call_data:
-        raise FailPage(message="No submit_list string given", widget="submit_list_error")
+        raise FailPage(message="No submit_list string given")
     try:
         # get the submit list
         submit_list = editresponder.get_submit_list(project, pagenumber, pchange)
