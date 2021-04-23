@@ -16068,12 +16068,12 @@ false
 "input_errored_class": "w3-pale-red",
 "input_style": "padding:8px;border:2px solid #ccc;width:60%",
 "input_text": "",
-"inputdiv_class": "w3-container",
+"inputdiv_class": "",
 "inputdiv_style": "",
 "label": "Section alias of the widget used to display a validation error:",
 "label_class": "",
 "label_style": "",
-"labeldiv_class": "w3-container",
+"labeldiv_class": "",
 "labeldiv_style": "",
 "maxlength": "",
 "pattern": "",
@@ -16106,12 +16106,12 @@ false
 "input_errored_class": "w3-pale-red",
 "input_style": "padding:8px;border:2px solid #ccc;width:60%",
 "input_text": "",
-"inputdiv_class": "w3-container",
+"inputdiv_class": "",
 "inputdiv_style": "",
 "label": "The widget name used to display a validation error:",
 "label_class": "",
 "label_style": "",
-"labeldiv_class": "w3-container",
+"labeldiv_class": "",
 "labeldiv_style": "",
 "maxlength": "",
 "pattern": "",
@@ -30318,7 +30318,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_mid_button"
+"style": "margin-left:auto;margin-right:auto;width:20em;"
 },
 "parts": [
 [
@@ -30352,31 +30352,37 @@ false,
 [
 "Widget",
 {
-"class": "inputtext.SubmitTextInput1",
+"class": "inputtext.SubmitTextInput4",
 "name": "validate_fail",
-"brief": "Sets validate_fail_ident",
+"brief": "Sets the validate page ident",
 "fields": {
 "action": "set_validate_fail_ident",
 "action_json": "set_validate_fail_ident_json",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
+"buttondiv_class": "w3-container w3-cell",
+"buttondiv_style": "",
 "clear_error": false,
 "error_class": "w3-panel w3-red",
+"formdiv_class": "w3-cell-row",
+"formdiv_style": "",
 "hidden_field1": "",
 "hidden_field2": "",
 "hidden_field3": "",
 "hidden_field4": "",
 "hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:100%",
 "input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Ident of validate fail page:",
-"label_class": "ski_left_label",
-"label_style": "",
+"inputdiv_class": "w3-container w3-cell",
+"inputdiv_style": "width : 32%;",
+"left_class": "w3-right-align",
+"left_style": "font-weight : bold;",
+"left_text": "Ident of validate fail page:",
+"leftdiv_class": "w3-container w3-cell",
+"leftdiv_style": "width : 32%;",
 "maxlength": "",
 "pattern": "",
 "required": false,
@@ -30389,6 +30395,25 @@ false,
 "title": "",
 "type": "text",
 "widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "submit_status",
+"brief": "shows submit option status",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"para_text": "Text not available",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "",
 "widget_style": ""
 }
 }
@@ -30416,25 +30441,6 @@ false,
 }
 ],
 [
-"Widget",
-{
-"class": "paras.DivPara",
-"name": "submit_status",
-"brief": "shows submit option status",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"para_class": "",
-"para_text": "Text not available",
-"pre_line": true,
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "div",
@@ -30442,7 +30448,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_mid_button"
+"style": "margin-left:auto;margin-right:auto;width:20em;"
 },
 "parts": [
 [
