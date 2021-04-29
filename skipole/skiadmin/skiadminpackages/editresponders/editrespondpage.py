@@ -193,15 +193,6 @@ def retrieve_edit_respondpage(skicall):
     sd_setwidgfield = SectionData("setwidgfield")
     sd_setwidgfield['widgfieldform', 'action'] = "responder_widgfield"
 
-    # set those sections which are not shown by default
-    sd_singlefield = SectionData('singlefield')
-    sd_singlefield.show = False
-    pd.update(sd_singlefield)
-
-    sd_failpage = SectionData('failpage')
-    sd_failpage.show = False
-    pd.update(sd_failpage)
-
     if r_info.widgfield_required:
         if r_info.widgfield:
             pd['widgfield','input_text'] = r_info.widgfield
@@ -231,31 +222,31 @@ def retrieve_edit_respondpage(skicall):
 
     # alternate ident
     if r_info.alternate_ident_required:
-        utils.formtextinput(pd, "alternate_ident",                         # section alias
-                                _t_ref(r_info, 'alternate_ident'),         # textblock
-                                "Set an alternate ident:",                 # field label
-                                _ident_to_str(r_info.alternate_ident),     # input text
-                                action = "alternate_ident",
-                                action_json = "alternate_ident_json",
-                                left_label = "Submit the ident : ")
+        sd_alternate = utils.formtextinput( "alternate_ident",                         # section alias
+                                            _t_ref(r_info, 'alternate_ident'),         # textblock
+                                            "Set an alternate ident:",                 # field label
+                                            _ident_to_str(r_info.alternate_ident),     # input text
+                                            action = "alternate_ident",
+                                            action_json = "alternate_ident_json",
+                                            left_label = "Submit the ident : ")
     else:
         sd_alternate = SectionData("alternate_ident")
         sd_alternate.show = False
-        pd.update(sd_alternate)
+    pd.update(sd_alternate)
 
     # target ident
     if r_info.target_ident_required:
-        utils.formtextinput(pd, "target_ident",                         # section alias
-                                _t_ref(r_info, 'target_ident'),         # textblock
-                                "Set the target ident:",                 # field label
-                                _ident_to_str(r_info.target_ident),     # input text
-                                action = "set_target_ident",
-                                action_json = "set_target_ident_json",
-                                left_label = "Submit the ident : ")
+        sd_target = utils.formtextinput("target_ident",                         # section alias
+                                        _t_ref(r_info, 'target_ident'),         # textblock
+                                        "Set the target ident:",                 # field label
+                                        _ident_to_str(r_info.target_ident),     # input text
+                                        action = "set_target_ident",
+                                        action_json = "set_target_ident_json",
+                                        left_label = "Submit the ident : ")
     else:
         sd_target = SectionData("target_ident")
         sd_target.show = False
-        pd.update(sd_target)
+    pd.update(sd_target)
 
     # allowed callers
     if r_info.allowed_callers_required:
@@ -269,18 +260,19 @@ def retrieve_edit_respondpage(skicall):
         else:
             pd['allowed_callers_list','show'] = False
 
-        utils.formtextinput(pd, "allowed_caller",                         # section alias
-                                _t_ref(r_info, 'allowed_callers'),        # textblock
-                                "Add an allowed caller ident or label:",  # field label
-                                "",                                       # input text
-                                action = "add_allowed_caller",
-                                left_label = "Add the allowed caller : ")
+        sd_allowed_caller = utils.formtextinput("allowed_caller",                         # section alias
+                                                _t_ref(r_info, 'allowed_callers'),        # textblock
+                                                "Add an allowed caller ident or label:",  # field label
+                                                "",                                       # input text
+                                                action = "add_allowed_caller",
+                                                left_label = "Add the allowed caller : ")
     else:
         pd['allowed_callers_description','show'] = False
         pd['allowed_callers_list','show'] = False
         sd_allowed_caller = SectionData("allowed_caller")
         sd_allowed_caller.show = False
-        pd.update(sd_allowed_caller)
+
+    pd.update(sd_allowed_caller)
 
     # validate option
     if r_info.validate_option_available:
@@ -329,20 +321,21 @@ def retrieve_edit_respondpage(skicall):
             pd['submit_list','show'] = False
         pd['submit_string','input_text'] = ''
         # fail page
-        utils.formtextinput(pd, "failpage",                        # section alias
-                                'responders.shortfailpage',        # textblock
-                                "Fail page ident or label:",       # field label
-                                _ident_to_str(r_info.fail_ident),  # input text
-                                action = "set_fail_ident",
-                                left_label = "Set the fail page : ")
-        sd_failpage.show = True
-        pd.update(sd_failpage)
-
+        sd_failpage = utils.formtextinput(  "failpage",                        # section alias
+                                            'responders.shortfailpage',        # textblock
+                                            "Fail page ident or label:",       # field label
+                                            _ident_to_str(r_info.fail_ident),  # input text
+                                            action = "set_fail_ident",
+                                            left_label = "Set the fail page : ")
     else:
         pd['submit_list_description','show'] = False
         pd['submit_list','show'] = False
         pd['submit_string','show'] = False
         pd['submit_info','show'] = False
+        sd_failpage = SectionData('failpage')
+        sd_failpage.show = False
+
+    pd.update(sd_failpage)
 
 
     # final paragraph
@@ -351,18 +344,56 @@ def retrieve_edit_respondpage(skicall):
     # field options
     f_options = r_info.field_options
     if not f_options['fields']:
-        # no fields so no further data to input
+        # no fields so no further data to input, ensure the following sections are not shown
+
+        sd_singlefield = SectionData('singlefield')
+        sd_singlefield.show = False
+        pd.update(sd_singlefield)
+
+        sd_widgfieldval = SectionData('widgfieldval')
+        sd_widgfieldval.show = False
+        pd.update(sd_widgfieldval)
         return
+
+    # the fields option is enabled
 
     # show the fields description  ========      this to be removed and replaced
     pd['fields_description','show'] = True
     pd['fields_description','textblock_ref'] = _t_ref(r_info, 'fields')
     ###########################################################################
 
+    if f_options['single_field']:
+        # single field, no value
+        if not f_options['field_values']:
+            if r_info.single_field:
+                fieldname = r_info.single_field
+            else:
+                fieldname = ''
+            sd_singlefield = utils.formtextinput(   "singlefield",                   # section alias
+                                                    _t_ref(r_info, 'fields'),        # textblock
+                                                    "Set the field name:",           # field label
+                                                    fieldname,                       # input text
+                                                    action = "set_field",
+                                                    left_label = "Submit the field : ")
+            pd.update(sd_singlefield)
+        # currently there is no responder which takes a single field and value
+        #########################################################################
+        # if singlefield is enabled, no others are
+        sd_widgfieldval = SectionData('widgfieldval')
+        sd_widgfieldval.show = False
+        pd.update(sd_widgfieldval)
+        return
+    else:
+        sd_singlefield = SectionData('singlefield')
+        sd_singlefield.show = False
+        pd.update(sd_singlefield)
 
-    if f_options['field_values'] and ( not f_options['single_field'] ):
+
+    # to get here single_field is not enabled
+
+
+    if f_options['field_values']:
         pd['field_values_list','show'] = True
-        pd['add_field_value','show'] = True
         # populate field_values_list
         contents = []
         field_vals = r_info.field_values_list
@@ -378,18 +409,33 @@ def retrieve_edit_respondpage(skicall):
             pd['field_values_list','contents'] = contents
         else:
             pd['field_values_list','show'] = False
-        # set the add_field_value label to be descriptive
+        # populate the widgfieldval section
         if f_options['widgfields']:
             if f_options['field_keys']:
-                pd['add_field_value','label'] = "Widgfields and keys:"
+                sd_widgfieldval = utils.widgfieldval('widgfieldval',
+                                                     _t_ref(r_info, 'fields'),
+                                                     "key to be used in call_data:",
+                                                     action='add_widgfield_value',
+                                                     left_label='Add the key :')
             else:
-                pd['add_field_value','label'] = "Widgfields and values:"
+                sd_widgfieldval = utils.widgfieldval('widgfieldval',
+                                                     _t_ref(r_info, 'fields'),
+                                                     "Widget/field value:",
+                                                     action='add_widgfield_value',
+                                                     left_label='submit value :')
         else:
-            pd['add_field_value','label'] = "Items:"
-        return
-       
+            ### f_options['field_values'] is True, but not f_options['widgfields']
+            ### probably broken now and must add another field:items section
+            ################################################################################
+            sd_widgfieldval = SectionData('widgfieldval')
+            sd_widgfieldval.show = False
+        pd.update(sd_widgfieldval)
+    else:
+        # not field:values, so do not show widgfieldval section
+        sd_widgfieldval = SectionData('widgfieldval')
+        sd_widgfieldval.show = False
+        pd.update(sd_widgfieldval)
 
-    if (not f_options['field_values']) and (not f_options['single_field']):
         pd['field_list','show'] = True
         pd['add_field','show'] = True
         # populate field_list
@@ -410,31 +456,6 @@ def retrieve_edit_respondpage(skicall):
         else:
             pd['add_field,','label'] = "Add a string:"
 
-    if not f_options['single_field']:
-        return
-
-    # all remaining are if a single field is required
-
-    # single field, no value
-    if not f_options['field_values']:
-        # a single value is a submit text input field
-        if r_info.single_field:
-            fieldname = r_info.single_field
-        else:
-            fieldname = ''
-        utils.formtextinput(pd, "singlefield",                   # section alias
-                                _t_ref(r_info, 'fields'),        # textblock
-                                "Set the field name:",           # field label
-                                fieldname,                       # input text
-                                action = "set_field",
-                                left_label = "Submit the field : ")
-        sd_singlefield.show = True
-        pd.update(sd_singlefield)
-        return
-
-    # remaining is for a single field and value - still to do
-    # as there is currently no responder which takes a single field and value
-    #????????????????????????????????????????????????????????
 
 
 def submit_widgfield(skicall):
@@ -605,8 +626,8 @@ def remove_field(skicall):
         raise FailPage(e.message)
 
 
-def add_field_value(skicall):
-    "Adds a field and value"
+def add_widgfield_value(skicall):
+    "Adds a widgfield and value"
 
     call_data = skicall.call_data
     pd = call_data['pagedata']
@@ -615,15 +636,24 @@ def add_field_value(skicall):
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
 
-    if not 'field' in call_data:
-        raise FailPage(message="No field given")
-    if not call_data['field']:
-        raise FailPage(message="No field given")
-    if not 'value' in call_data:
-        raise FailPage(message="No value given")
+    try:
+        s = call_data['widgfieldval','respondersection','input_text']
+        w = call_data['widgfieldval','responderwidget','input_text']
+        f = call_data['widgfieldval','responderfield','input_text']
+        v = call_data['widgfieldval','responderval','input_text']
+    except:
+        raise FailPage(message="Invalid data given")
+
+    if (not w) or (not f):
+        raise FailPage(message="A widget and field is required")
+
+    if s:
+        field = s + ',' + w + ',' + f
+    else:
+        field = w + ',' + f
 
     # if value is empty ensure empty values allowed
-    if not call_data['value']:
+    if not v:
         # get a ResponderInfo named tuple with information about the responder
         try:
             r_info = editresponder.responder_info(project, pagenumber, pchange)
@@ -634,15 +664,21 @@ def add_field_value(skicall):
         if not f_options['fields']:
             raise FailPage(message="Invalid submission, this responder does not have fields")
         if not f_options['empty_values_allowed']:
-            pd['add_field_value', 'input_text1'] = call_data['field']
-            pd['add_field_value', 'set_input_accepted1'] = True
-            pd['add_field_value', 'set_input_errored2'] = True
+            ############  add field values to avoid re-inputting them
+            sd_widgfieldval = SectionData('widgfieldval')
+            sd_widgfieldval['respondersection','input_text'] = s
+            sd_widgfieldval['responderwidget','input_text'] = w
+            sd_widgfieldval['responderfield','input_text'] = f
+            pd.update(sd_widgfieldval)
             raise FailPage(message="Invalid submission, empty field values are not allowed")
     # Add the field and value
     try:
-        call_data['pchange'] = editresponder.add_field_value(project, pagenumber, pchange, call_data['field'], call_data['value'])
+        call_data['pchange'] = editresponder.add_field_value(project, pagenumber, pchange, field, v)
     except ServerError as e:
         raise FailPage(e.message)
+
+
+######## will need another add_field_value for non-widgfield fields
 
 
 def add_field(skicall):

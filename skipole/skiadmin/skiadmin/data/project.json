@@ -10,7 +10,6 @@
 "add_allowed_caller": 6080,
 "add_allowed_value": 46040,
 "add_field": 6210,
-"add_field_value": 6200,
 "add_new_filepage": 2450,
 "add_new_folder": 2200,
 "add_new_page": 2400,
@@ -20,6 +19,7 @@
 "add_submit_list_string": 6410,
 "add_tag_attrib": 43030,
 "add_user_page": 5500,
+"add_widgfield_value": 6220,
 "admin_home": 1,
 "after_dom_edit": 23010,
 "alternate_ident": 6040,
@@ -3611,12 +3611,12 @@ false,
 "input_errored_class": "w3-pale-red",
 "input_style": "padding:8px;border:2px solid #ccc;width:60%",
 "input_text": "",
-"inputdiv_class": "w3-container",
+"inputdiv_class": "",
 "inputdiv_style": "",
 "label": "Section alias of the widget:",
 "label_class": "",
 "label_style": "",
-"labeldiv_class": "w3-container",
+"labeldiv_class": "",
 "labeldiv_style": "",
 "maxlength": "",
 "pattern": "",
@@ -3649,12 +3649,12 @@ false,
 "input_errored_class": "w3-pale-red",
 "input_style": "padding:8px;border:2px solid #ccc;width:60%",
 "input_text": "",
-"inputdiv_class": "w3-container",
+"inputdiv_class": "",
 "inputdiv_style": "",
 "label": "The widget name:",
 "label_class": "",
 "label_style": "",
-"labeldiv_class": "w3-container",
+"labeldiv_class": "",
 "labeldiv_style": "",
 "maxlength": "",
 "pattern": "",
@@ -3687,12 +3687,265 @@ false,
 "input_errored_class": "w3-pale-red",
 "input_style": "padding:8px;border:2px solid #ccc;width:60%",
 "input_text": "",
-"inputdiv_class": "w3-container",
+"inputdiv_class": "",
 "inputdiv_style": "",
 "label": "The widget field:",
 "label_class": "",
 "label_style": "",
-"labeldiv_class": "w3-container",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+],
+"widgfieldval": [
+"Section",
+{
+"tag_name": "div",
+"brief": "widgfield with value",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-cell-row"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Left div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container w3-cell",
+"style": "width : 32%;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "paratext",
+"brief": "Paragraph containing a Textblock",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"linebreaks": true,
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "TextBlock not found",
+"text_replaceblock": "",
+"textblock_project": "",
+"textblock_ref": "responders.widget",
+"widget_class": "",
+"widget_style": "font-weight : bold;"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "right div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container w3-cell"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "widgfieldform",
+"brief": "Form holding section and widget",
+"fields": {
+"action": "admin_home",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"button_wait_text": "",
+"clear_error": false,
+"container_class": "",
+"div_class": "w3-section",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "",
+"left_label": "Submit  widget and value :",
+"left_style": "font-weight:bold;display:inline-block;width:50%;text-align:right;margin-right:4px;",
+"right_class": "",
+"right_label": "",
+"right_style": "",
+"show": true,
+"show_error": "Invalid widget",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "respondersection",
+"brief": "Section alias of the widget",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "Section alias of the widget:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "responderwidget",
+"brief": "The widget name",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "The widget name:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "responderfield",
+"brief": "The widget field",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "The widget field:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "responderval",
+"brief": "The widgfield value",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "The widget value:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
 "labeldiv_style": "",
 "maxlength": "",
 "pattern": "",
@@ -22488,28 +22741,6 @@ false
 }
 }
 },
-"add_field_value": {
-"ident": 6200,
-"brief": "Check the add_field_value fields",
-"RespondPage": {
-"class": "AllowedFields",
-"original_args": {
-"allowed_callers": [
-26009
-],
-"alternate_ident": "",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 26202,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"add_field_value:input_text1": "",
-"add_field_value:input_text2": ""
-}
-}
-},
 "add_submit_list_string": {
 "ident": 6410,
 "brief": "Check the add_submit_list_string fields",
@@ -22528,6 +22759,36 @@ false
 },
 "original_fields": {
 "submit_string:input_text": ""
+}
+}
+},
+"add_widgfield_value": {
+"ident": 6220,
+"brief": "Adds a widgfield and value",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+26009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 26007,
+"submit_list": [
+"skiadminpackages",
+"editresponders",
+"editrespondpage",
+"add_widgfield_value"
+],
+"submit_option": true,
+"target_ident": 26007,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"widgfieldval-responderfield:input_text": "",
+"widgfieldval-respondersection:input_text": "",
+"widgfieldval-responderval:input_text": "",
+"widgfieldval-responderwidget:input_text": ""
 }
 }
 },
@@ -29500,23 +29761,6 @@ false,
 }
 ]
 },
-"store_value": {
-"ident": 26203,
-"brief": "Store value",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 26209,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"add_field_value:input_text2": "value"
-}
-}
-},
 "submit_add_allowed_caller": {
 "ident": 26089,
 "brief": "sets the new allowed caller",
@@ -29549,25 +29793,6 @@ false,
 "editresponders",
 "editrespondpage",
 "add_field"
-],
-"target_ident": 26007
-},
-"original_fields": {}
-}
-},
-"submit_add_field_value": {
-"ident": 26209,
-"brief": "sets the new field and value",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": 26007,
-"submit_list": [
-"skiadminpackages",
-"editresponders",
-"editrespondpage",
-"add_field_value"
 ],
 "target_ident": 26007
 },
@@ -30152,69 +30377,13 @@ false,
 }
 ],
 [
-"Widget",
+"SectionPlaceHolder",
 {
-"class": "inputtext.TwoInputsSubmit1",
-"name": "add_field_value",
-"brief": "TwoInputsSubmit1",
-"fields": {
-"action": "add_field_value",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Add",
-"clear_error": false,
-"disabled1": false,
-"disabled2": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"input_accepted_class": "ski_input_accepted",
-"input_class1": "ski_input",
-"input_class2": "ski_input w3-margin-left",
-"input_errored_class": "ski_input_errored",
-"input_text1": "",
-"input_text2": "",
-"inputdiv_class": "",
-"label": "Widgfield and value:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength1": "60",
-"maxlength2": "60",
-"pattern1": "",
-"pattern2": "",
-"required1": false,
-"required2": false,
-"set_input_accepted1": false,
-"set_input_accepted2": false,
-"set_input_errored1": false,
-"set_input_errored2": false,
-"show": false,
-"show_error": "",
-"size1": "30",
-"size2": "30",
-"title1": "",
-"title2": "",
-"type1": "text",
-"type2": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text1": [
-{
-"class": "basic.NotEmpty",
-"message": "A field must be provided",
-"displaywidget": [
-"",
-"fields_error",
-"",
-""
-]
-}
-]
-}
+"brief": "Add a widgfield with value",
+"section_name": "widgfieldval",
+"placename": "widgfieldval",
+"multiplier": 0,
+"mtag": "div"
 }
 ],
 [
@@ -30883,23 +31052,6 @@ false,
 },
 "original_fields": {
 "add_field:input_text": "field"
-}
-}
-},
-"validate_add_field_value": {
-"ident": 26202,
-"brief": "Check new field",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 26203,
-"validate_fail_ident": 26007,
-"validate_option": true
-},
-"original_fields": {
-"add_field_value:input_text1": "field"
 }
 }
 },
@@ -39658,7 +39810,7 @@ false
 "validate_option": true
 },
 "original_fields": {
-"colhextest:input_text": "hexcol"
+"colhexttest:input_text": "hexcol"
 }
 }
 },

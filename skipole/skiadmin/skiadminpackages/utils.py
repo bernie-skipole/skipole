@@ -26,7 +26,7 @@ def clear_call_data(call_data, keep=None):
 
 
 
-def formtextinput(pd, sectionalias, textblock_ref, field_label, input_text, **formvalues):
+def formtextinput(sectionalias, textblock_ref, field_label, input_text, **formvalues):
     """Provides a function to fill in the formtextinput section
        given an alias for the section, and the appropriate widget fields
        formvalues should be things like action=targetlabel, left_label='submit button label'"""
@@ -40,7 +40,24 @@ def formtextinput(pd, sectionalias, textblock_ref, field_label, input_text, **fo
     for key, value in formvalues.items():
         sd['form', key] = value
 
-    pd.update(sd)
+    return sd
+
+
+def widgfieldval(sectionalias, textblock_ref, value_label, **formvalues):
+    """Provides a function to fill in the widgfieldval section
+       given an alias for the section, and the appropriate widget fields
+       formvalues should be things like action=targetlabel, left_label='submit button label'
+       Returns a SectionData object with the given alias"""
+
+    sd = SectionData(sectionalias)
+    sd['paratext', 'textblock_ref'] = textblock_ref
+    sd['responderval', 'label'] = value_label
+
+    # fill in form values
+    for key, value in formvalues.items():
+        sd['widgfieldform', key] = value
+
+    return sd
 
 
 
