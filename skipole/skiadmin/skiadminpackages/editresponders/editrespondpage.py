@@ -353,6 +353,11 @@ def retrieve_edit_respondpage(skicall):
         sd_widgfieldval = SectionData('widgfieldval')
         sd_widgfieldval.show = False
         pd.update(sd_widgfieldval)
+
+        sd_addfieldval = SectionData('addfieldval')
+        sd_addfieldval.show = False
+        pd.update(sd_addfieldval)
+
         return
 
     # the fields option is enabled
@@ -382,6 +387,11 @@ def retrieve_edit_respondpage(skicall):
         sd_widgfieldval = SectionData('widgfieldval')
         sd_widgfieldval.show = False
         pd.update(sd_widgfieldval)
+
+        sd_addfieldval = SectionData('addfieldval')
+        sd_addfieldval.show = False
+        pd.update(sd_addfieldval)
+
         return
     else:
         sd_singlefield = SectionData('singlefield')
@@ -411,6 +421,10 @@ def retrieve_edit_respondpage(skicall):
             pd['field_values_list','show'] = False
         # populate the widgfieldval section
         if f_options['widgfields']:
+            # addfieldval is not shown
+            sd_addfieldval = SectionData('addfieldval')
+            sd_addfieldval.show = False
+ 
             if f_options['field_keys']:
                 sd_widgfieldval = utils.widgfieldval('widgfieldval',
                                                      _t_ref(r_info, 'fields'),
@@ -425,16 +439,24 @@ def retrieve_edit_respondpage(skicall):
                                                      left_label='submit value :')
         else:
             ### f_options['field_values'] is True, but not f_options['widgfields']
-            ### probably broken now and must add another field:items section
-            ################################################################################
+            sd_addfieldval = utils.addfieldval('addfieldval',
+                                               _t_ref(r_info, 'fields'),        # textblock
+                                               'Set the value to be tested :',
+                                               'Set the ident or label to go to :',
+                                               action='admin_home')
             sd_widgfieldval = SectionData('widgfieldval')
             sd_widgfieldval.show = False
         pd.update(sd_widgfieldval)
+        pd.update(sd_addfieldval)
     else:
-        # not field:values, so do not show widgfieldval section
+        # not field:values, so do not show widgfieldval or addfieldval sections
         sd_widgfieldval = SectionData('widgfieldval')
         sd_widgfieldval.show = False
         pd.update(sd_widgfieldval)
+
+        sd_addfieldval = SectionData('addfieldval')
+        sd_addfieldval.show = False
+        pd.update(sd_addfieldval)
 
         pd['field_list','show'] = True
         pd['add_field','show'] = True

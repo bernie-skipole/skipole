@@ -249,6 +249,183 @@
 "widget_name": 44030
 },
 "sections": {
+"addfieldval": [
+"Section",
+{
+"tag_name": "div",
+"brief": "Adds a field and value",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-cell-row"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Left div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container w3-cell",
+"style": "width : 32%;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "paratext",
+"brief": "Paragraph containing a Textblock",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"linebreaks": true,
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "TextBlock not found",
+"text_replaceblock": "",
+"textblock_project": "",
+"textblock_ref": "responders.widget",
+"widget_class": "",
+"widget_style": "font-weight : bold;"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "right div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container w3-cell"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "fieldform",
+"brief": "Form holding a field and value",
+"fields": {
+"action": "admin_home",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"button_wait_text": "",
+"clear_error": false,
+"container_class": "",
+"div_class": "w3-section",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "",
+"left_label": "Submit  field and value :",
+"left_style": "font-weight:bold;display:inline-block;width:50%;text-align:right;margin-right:4px;",
+"right_class": "",
+"right_label": "",
+"right_style": "",
+"show": true,
+"show_error": "Invalid widget",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "responderfield",
+"brief": "The field name",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "The field:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "respondervalue",
+"brief": "The input value",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "The value:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+],
 "admin_footer": [
 "Section",
 {
@@ -30387,6 +30564,16 @@ false,
 }
 ],
 [
+"SectionPlaceHolder",
+{
+"brief": "Adds a field with value",
+"section_name": "addfieldval",
+"placename": "addfieldval",
+"multiplier": 0,
+"mtag": "div"
+}
+],
+[
 "Widget",
 {
 "class": "inputtext.SubmitTextInput1",
@@ -38518,6 +38705,18 @@ false
 }
 },
 "pages": {
+"aaa": {
+"ident": 85004,
+"brief": "aaa",
+"RespondPage": {
+"class": "CaseSwitch",
+"original_args": {
+"alternate_ident": "",
+"widgfield": ""
+},
+"original_fields": {}
+}
+},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",
@@ -39995,7 +40194,7 @@ false
 "target_ident": "server_error"
 },
 "original_fields": {
-"show_error": "An error has occurred when calling a JSON file"
+"message1:show_error": "An error has occurred when calling a JSON file"
 }
 }
 },

@@ -60,5 +60,23 @@ def widgfieldval(sectionalias, textblock_ref, value_label, **formvalues):
     return sd
 
 
+def addfieldval(sectionalias, textblock_ref, field_label, value_label, **formvalues):
+    """Provides a function to fill in the addfieldval section
+       given a label for the field input, and the value input
+       formvalues should be things like action=targetlabel, left_label='submit button label'
+       Returns a SectionData object with the given alias"""
+
+    sd = SectionData(sectionalias)
+    sd['paratext', 'textblock_ref'] = textblock_ref
+    sd['responderfield', 'label'] = field_label
+    sd['respondervalue', 'label'] = value_label
+
+    # fill in form values
+    for key, value in formvalues.items():
+        sd['fieldform', key] = value
+
+    return sd
+
+
 
 
