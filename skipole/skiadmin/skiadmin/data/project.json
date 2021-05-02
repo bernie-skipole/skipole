@@ -10,6 +10,7 @@
 "add_allowed_caller": 6080,
 "add_allowed_value": 46040,
 "add_field": 6210,
+"add_field_value": 6230,
 "add_new_filepage": 2450,
 "add_new_folder": 2200,
 "add_new_page": 2400,
@@ -22918,6 +22919,34 @@ false
 }
 }
 },
+"add_field_value": {
+"ident": 6230,
+"brief": "Adds a field with its value",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+26009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 26007,
+"submit_list": [
+"skiadminpackages",
+"editresponders",
+"editrespondpage",
+"add_field_val"
+],
+"submit_option": true,
+"target_ident": 26007,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"addfieldval-responderfield:input_text": "",
+"addfieldval-respondervalue:input_text": ""
+}
+}
+},
 "add_submit_list_string": {
 "ident": 6410,
 "brief": "Check the add_submit_list_string fields",
@@ -38705,18 +38734,6 @@ false
 }
 },
 "pages": {
-"aaa": {
-"ident": 85004,
-"brief": "aaa",
-"RespondPage": {
-"class": "CaseSwitch",
-"original_args": {
-"alternate_ident": "",
-"widgfield": ""
-},
-"original_fields": {}
-}
-},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",

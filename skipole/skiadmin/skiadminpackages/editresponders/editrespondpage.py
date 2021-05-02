@@ -441,9 +441,10 @@ def retrieve_edit_respondpage(skicall):
             ### f_options['field_values'] is True, but not f_options['widgfields']
             sd_addfieldval = utils.addfieldval('addfieldval',
                                                _t_ref(r_info, 'fields'),        # textblock
-                                               'Set the value to be tested :',
-                                               'Set the ident or label to go to :',
-                                               action='admin_home')
+                                               skicall.textblock(_t_ref(r_info, 'addfieldlabel')),
+                                               skicall.textblock(_t_ref(r_info, 'addvaluelabel')),
+                                               action='add_field_value',
+                                               left_label='add :')
             sd_widgfieldval = SectionData('widgfieldval')
             sd_widgfieldval.show = False
         pd.update(sd_widgfieldval)
@@ -701,6 +702,48 @@ def add_widgfield_value(skicall):
 
 
 ######## will need another add_field_value for non-widgfield fields
+
+def add_field_val(skicall):
+    "Adds a field and value"
+    call_data = skicall.call_data
+    pd = call_data['pagedata']
+
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+
+    try:
+        f = call_data['addfieldval','responderfield','input_text']
+        v = call_data['addfieldval','respondervalue','input_text']
+    except:
+        raise FailPage(message="Invalid data given")
+
+    if not f:
+        raise FailPage(message="Invalid data given")
+
+    # if value is empty ensure empty values allowed
+    if not v:
+        # get a ResponderInfo named tuple with information about the responder
+        try:
+            r_info = editresponder.responder_info(project, pagenumber, pchange)
+        except ServerError as e:
+            raise FailPage(message=e.message)
+        # field options
+        f_options = r_info.field_options
+        if not f_options['fields']:
+            raise FailPage(message="Invalid submission, this responder does not have fields")
+        if not f_options['empty_values_allowed']:
+            ############  add field values to avoid re-inputting them
+            sd_addfieldval = SectionData('addfieldval')
+            sd_addfieldval['responderfield','input_text'] = f
+            pd.update(sd_addfieldval)
+            raise FailPage(message="Invalid submission, empty fields are not allowed")
+    # Add the field and value
+    try:
+        call_data['pchange'] = editresponder.add_field_value(project, pagenumber, pchange, f, v)
+    except ServerError as e:
+        raise FailPage(e.message)
+
 
 
 def add_field(skicall):
