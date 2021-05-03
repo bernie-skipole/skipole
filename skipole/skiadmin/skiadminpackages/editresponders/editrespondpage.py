@@ -358,6 +358,10 @@ def retrieve_edit_respondpage(skicall):
         sd_addfieldval.show = False
         pd.update(sd_addfieldval)
 
+        sd_addwidgfield = SectionData('addwidgfield')
+        sd_addwidgfield.show = False
+        pd.update(sd_addwidgfield)
+
         return
 
     # the fields option is enabled
@@ -392,6 +396,10 @@ def retrieve_edit_respondpage(skicall):
         sd_addfieldval.show = False
         pd.update(sd_addfieldval)
 
+        sd_addwidgfield = SectionData('addwidgfield')
+        sd_addwidgfield.show = False
+        pd.update(sd_addwidgfield)
+
         return
     else:
         sd_singlefield = SectionData('singlefield')
@@ -403,6 +411,12 @@ def retrieve_edit_respondpage(skicall):
 
 
     if f_options['field_values']:
+
+        # fields with values means the addwidgfield section should not be shown
+        sd_addwidgfield = SectionData('addwidgfield')
+        sd_addwidgfield.show = False
+        pd.update(sd_addwidgfield)
+
         pd['field_values_list','show'] = True
         # populate field_values_list
         contents = []
@@ -459,6 +473,8 @@ def retrieve_edit_respondpage(skicall):
         sd_addfieldval.show = False
         pd.update(sd_addfieldval)
 
+        # so now add fields, without values
+
         pd['field_list','show'] = True
         pd['add_field','show'] = True
         # populate field_list
@@ -475,9 +491,16 @@ def retrieve_edit_respondpage(skicall):
             pd['field_list','show'] = False
         # populate add_field
         if f_options['widgfields']:
-             pd['add_field','label'] = "Add a widgfield:"
+            pd['add_field','label'] = "Add a widgfield:"
+            sd_addwidgfield = utils.widgfield('addwidgfield',
+                                              _t_ref(r_info, 'fields'),
+                                              action='add_widgfield',
+                                              left_label='Add the widget :')
         else:
             pd['add_field,','label'] = "Add a string:"
+            sd_addwidgfield = SectionData('addwidgfield')
+            sd_addwidgfield.show = False
+        pd.update(sd_addwidgfield)
 
 
 
@@ -761,6 +784,38 @@ def add_field(skicall):
     # Add the field
     try:
         call_data['pchange'] = editresponder.add_field(project, pagenumber, pchange, call_data['field'])
+    except ServerError as e:
+        raise FailPage(e.message)
+
+
+def add_widgfield(skicall):
+    "Adds a widgfield"
+
+    call_data = skicall.call_data
+    pd = call_data['pagedata']
+
+    project = call_data['editedprojname']
+    pagenumber = call_data['page_number']
+    pchange = call_data['pchange']
+
+    try:
+        s = call_data['addwidgfield','respondersection','input_text']
+        w = call_data['addwidgfield','responderwidget','input_text']
+        f = call_data['addwidgfield','responderfield','input_text']
+    except:
+        raise FailPage(message="Invalid data given")
+
+    if (not w) or (not f):
+        raise FailPage(message="A widget and field is required")
+
+    if s:
+        field = s + ',' + w + ',' + f
+    else:
+        field = w + ',' + f
+
+    # Add the field
+    try:
+        call_data['pchange'] = editresponder.add_field(project, pagenumber, pchange, field)
     except ServerError as e:
         raise FailPage(e.message)
 

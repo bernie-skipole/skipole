@@ -20,6 +20,7 @@
 "add_submit_list_string": 6410,
 "add_tag_attrib": 43030,
 "add_user_page": 5500,
+"add_widgfield": 6240,
 "add_widgfield_value": 6220,
 "admin_home": 1,
 "after_dom_edit": 23010,
@@ -22968,6 +22969,35 @@ false
 }
 }
 },
+"add_widgfield": {
+"ident": 6240,
+"brief": "Adds a widgfield as a responder field",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+26009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 26007,
+"submit_list": [
+"skiadminpackages",
+"editresponders",
+"editrespondpage",
+"add_widgfield"
+],
+"submit_option": true,
+"target_ident": 26007,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"addwidgfield-responderfield:input_text": "",
+"addwidgfield-respondersection:input_text": "",
+"addwidgfield-responderwidget:input_text": ""
+}
+}
+},
 "add_widgfield_value": {
 "ident": 6220,
 "brief": "Adds a widgfield and value",
@@ -30598,6 +30628,16 @@ false,
 "brief": "Adds a field with value",
 "section_name": "addfieldval",
 "placename": "addfieldval",
+"multiplier": 0,
+"mtag": "div"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "Add a widgfield as a field",
+"section_name": "widgfield",
+"placename": "addwidgfield",
 "multiplier": 0,
 "mtag": "div"
 }
