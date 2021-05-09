@@ -366,11 +366,6 @@ def retrieve_edit_respondpage(skicall):
 
     # the fields option is enabled
 
-    # show the fields description  ========      this to be removed and replaced
-    pd['fields_description','show'] = True
-    pd['fields_description','textblock_ref'] = _t_ref(r_info, 'fields')
-    ###########################################################################
-
     if f_options['single_field']:
         # single field, no value
         if not f_options['field_values']:
@@ -476,7 +471,6 @@ def retrieve_edit_respondpage(skicall):
         # so now add fields, without values
 
         pd['field_list','show'] = True
-        pd['add_field','show'] = True
         # populate field_list
         contents = []
         field_vals = r_info.field_list
@@ -491,15 +485,16 @@ def retrieve_edit_respondpage(skicall):
             pd['field_list','show'] = False
         # populate add_field
         if f_options['widgfields']:
-            pd['add_field','label'] = "Add a widgfield:"
             sd_addwidgfield = utils.widgfield('addwidgfield',
                                               _t_ref(r_info, 'fields'),
                                               action='add_widgfield',
                                               left_label='Add the widget :')
         else:
-            pd['add_field,','label'] = "Add a string:"
+            # this never called as there is no responder yet with the combination of
+            # both f_options['field_values']==False and f_options['widgfields']==False
             sd_addwidgfield = SectionData('addwidgfield')
             sd_addwidgfield.show = False
+
         pd.update(sd_addwidgfield)
 
 
@@ -724,7 +719,6 @@ def add_widgfield_value(skicall):
         raise FailPage(e.message)
 
 
-######## will need another add_field_value for non-widgfield fields
 
 def add_field_val(skicall):
     "Adds a field and value"
@@ -768,26 +762,6 @@ def add_field_val(skicall):
         raise FailPage(e.message)
 
 
-
-def add_field(skicall):
-    "Adds a field"
-
-    call_data = skicall.call_data
-
-    project = call_data['editedprojname']
-    pagenumber = call_data['page_number']
-    pchange = call_data['pchange']
-    if not 'field' in call_data:
-        raise FailPage(message="No field given")
-    if not call_data['field']:
-        raise FailPage(message="No field given")
-    # Add the field
-    try:
-        call_data['pchange'] = editresponder.add_field(project, pagenumber, pchange, call_data['field'])
-    except ServerError as e:
-        raise FailPage(e.message)
-
-
 def add_widgfield(skicall):
     "Adds a widgfield"
 
@@ -821,7 +795,7 @@ def add_widgfield(skicall):
 
 
 def set_single_field(skicall):
-    "Sets the field in a responder, which require s single field only"
+    "Sets the field in a responder, which requires single field only"
 
     call_data = skicall.call_data
 

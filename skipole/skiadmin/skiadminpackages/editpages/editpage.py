@@ -68,9 +68,13 @@ def retrieve_page_edit(skicall):
     # default error widget
     dew = pagedict["default_error_widget"]
     if dew[0]:
-        pd["default_e_widg","input_text"] = dew[0] + ',' + dew[1]
+        pd["default_e_widg","input_text"] = dew[0] + ',' + dew[1] ############
+        pd["d_e_section","input_text"] = dew[0]
+        pd["d_e_widget","input_text"] = dew[1]
+
     elif dew[1]:
-        pd["default_e_widg","input_text"] = dew[1]
+        pd["default_e_widg","input_text"] = dew[1]                #############
+        pd["d_e_widget","input_text"] = dew[1]
 
     # sets last_scroll flag
     pd["lastscroll","checked"] = pagedict["last_scroll"]
