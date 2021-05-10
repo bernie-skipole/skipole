@@ -1673,10 +1673,10 @@ false,
 "fields": {
 "disabled": false,
 "input_accepted_class": "w3-pale-green",
-"input_class": "",
+"input_class": "ski_input",
 "input_disabled_class": "",
 "input_errored_class": "w3-pale-red",
-"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_style": "width : 60%;",
 "input_text": "",
 "inputdiv_class": "",
 "inputdiv_style": "",
@@ -1820,10 +1820,10 @@ false,
 "fields": {
 "disabled": false,
 "input_accepted_class": "w3-pale-green",
-"input_class": "",
+"input_class": "ski_input",
 "input_disabled_class": "",
 "input_errored_class": "w3-pale-red",
-"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_style": "width : 60%;",
 "input_text": "",
 "inputdiv_class": "",
 "inputdiv_style": "",
@@ -1967,10 +1967,10 @@ false,
 "fields": {
 "disabled": false,
 "input_accepted_class": "w3-pale-green",
-"input_class": "",
+"input_class": "ski_input",
 "input_disabled_class": "",
 "input_errored_class": "w3-pale-red",
-"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_style": "width:60%;",
 "input_text": "",
 "inputdiv_class": "",
 "inputdiv_style": "",
@@ -8236,6 +8236,16 @@ false
 },
 "parts": [
 [
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -8321,15 +8331,15 @@ false
 "hidden_field3": "",
 "hidden_field4": "",
 "hide": false,
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "input_text": "en",
-"inputandbutton_class": "",
+"inputandbutton_class": "w3-container w3-cell",
 "inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Set html tag lang attribute:",
-"label_class": "ski_left_label",
+"inputdiv_class": "w3-cell-row",
+"label": "Set html tag lang attribute.",
+"label_class": "w3-container w3-cell ski_label",
 "label_style": "",
 "maxlength": "10",
 "pattern": "",
@@ -8743,15 +8753,15 @@ false
 "hidden_field3": "",
 "hidden_field4": "",
 "hide": false,
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "",
+"inputandbutton_class": "w3-container w3-cell",
 "inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Set the catch target ident or label:",
-"label_class": "ski_left_label",
+"inputdiv_class": "w3-cell-row",
+"label": "Set the catch target ident or label.",
+"label_class": "w3-container w3-cell ski_label",
 "label_style": "",
 "maxlength": "",
 "pattern": "",
@@ -9199,6 +9209,16 @@ false
 "class": "w3-theme"
 },
 "parts": [
+[
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
 [
 "Part",
 {
@@ -24430,6 +24450,16 @@ false
 },
 "parts": [
 [
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -25156,6 +25186,16 @@ false
 "class": "w3-theme"
 },
 "parts": [
+[
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
 [
 "Part",
 {
@@ -30310,6 +30350,16 @@ false,
 },
 "parts": [
 [
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -31228,16 +31278,6 @@ false,
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 0,
-"mtag": "div"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Shows diagnostic information",
-"section_name": "diagnostic_footer",
-"placename": "diagnostic_footer",
 "multiplier": 0,
 "mtag": "div"
 }
@@ -34690,6 +34730,16 @@ false
 "class": "w3-theme"
 },
 "parts": [
+[
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
 [
 "Part",
 {
@@ -38740,6 +38790,14 @@ false
 }
 },
 "pages": {
+"aaa": {
+"ident": 85004,
+"brief": "aaa",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
+},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",

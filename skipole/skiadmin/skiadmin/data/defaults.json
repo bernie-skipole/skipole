@@ -265,9 +265,9 @@
 "input_accepted_class": "w3-pale-green",
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
-"inputandbutton_class": "ski_nowrap",
-"inputdiv_class": "w3-section",
-"label_class": "ski_left_label",
+"inputandbutton_class": "w3-container w3-cell",
+"inputdiv_class": "w3-cell-row",
+"label_class": "w3-container w3-cell ski_label",
 "widget_class": "w3-section"
 },
 "SubmitTextInput2": {
@@ -330,9 +330,9 @@
 },
 "TextInput4": {
 "input_accepted_class": "w3-pale-green",
-"input_class": "",
+"input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
-"input_style": "padding:8px;border:2px solid #ccc;width:80%",
+"input_style": "width:60%;",
 "inputdiv_class": "w3-container",
 "label_class": "",
 "labeldiv_class": "w3-container",
