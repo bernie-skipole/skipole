@@ -608,7 +608,8 @@ def submit_refresh(skicall):
     call_data['status'] = text
 
 
-def submit_default_error_widget(skicall):
+
+def set_default_error_widget(skicall):
     "Sets page default_error_widget"
 
     call_data = skicall.call_data
@@ -616,13 +617,20 @@ def submit_default_error_widget(skicall):
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
-    if ('e_widg' not in call_data) or (not call_data['e_widg']):
+
+    if (("d_e_widget","input_text") not in call_data) or (not call_data["d_e_widget","input_text"]):
         raise FailPage(message="Error setting default error widget")
+
+    if (("d_e_section","input_text") in call_data) and call_data["d_e_section","input_text"]:
+        default_widget = call_data["d_e_section","input_text"] + ',' + call_data["d_e_widget","input_text"]
+    else:
+        default_widget = call_data["d_e_widget","input_text"]
     try:
-        call_data['pchange'] = editpage.page_default_error_widget(project, pagenumber, pchange, call_data['e_widg'])
+        call_data['pchange'] = editpage.page_default_error_widget(project, pagenumber, pchange, default_widget)
     except ServerError as e:
         raise FailPage(message=e.message)
     call_data['status'] = "default error widget set"
+
 
 
 def submit_cache(skicall):

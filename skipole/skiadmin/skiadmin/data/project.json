@@ -168,7 +168,7 @@
 "set_brief": 20,
 "set_colour": 34,
 "set_comment": 41220,
-"set_default_error_widget": 3250,
+"set_d_e_widget": 3210,
 "set_escape": 42050,
 "set_fail_ident": 6070,
 "set_failmessage": 42030,
@@ -8377,58 +8377,6 @@ false
 }
 ],
 [
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "default_e_widg",
-"brief": "Set default error widget",
-"fields": {
-"action": "set_default_error_widget",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "",
-"label": "Set the Default Error Widget:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "100",
-"pattern": "",
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "50",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"validators": {
-"input_text": [
-{
-"class": "basic.NotEmpty",
-"message": "An error widget must be provided"
-}
-]
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "div",
@@ -8496,7 +8444,7 @@ false
 "name": "d_e_form",
 "brief": "Form holding section and widget",
 "fields": {
-"action": "admin_home",
+"action": "set_d_e_widget",
 "action_json": "",
 "button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
@@ -10341,25 +10289,6 @@ false
 "original_fields": {}
 }
 },
-"submit_default_error_widget": {
-"ident": 23259,
-"brief": "sets the default_error_widget",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"allowed_callers": [],
-"fail_ident": 23207,
-"submit_list": [
-"skiadminpackages",
-"editpages",
-"editpage",
-"submit_default_error_widget"
-],
-"target_ident": 23207
-},
-"original_fields": {}
-}
-},
 "submit_new_brief_for_page": {
 "ident": 23049,
 "brief": "sets the new brief",
@@ -10415,23 +10344,6 @@ false
 "target_ident": 23409
 },
 "original_fields": {}
-}
-},
-"validate_default_error_widget": {
-"ident": 23251,
-"brief": "Check default_error_widget",
-"RespondPage": {
-"class": "StoreDataKeyed",
-"original_args": {
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 23259,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"default_e_widg:input_text": "e_widg"
-}
 }
 },
 "validate_new_brief_for_page": {
@@ -10723,24 +10635,31 @@ false
 }
 }
 },
-"set_default_error_widget": {
-"ident": 3250,
-"brief": "Check the default error widget",
+"set_d_e_widget": {
+"ident": 3210,
+"brief": "Sets the default error widget",
 "RespondPage": {
-"class": "AllowedFields",
+"class": "AllowStore",
 "original_args": {
 "allowed_callers": [
 23209
 ],
 "alternate_ident": "admin_home",
-"fail_ident": null,
-"submit_option": false,
-"target_ident": 23251,
+"fail_ident": 23207,
+"submit_list": [
+"skiadminpackages",
+"editpages",
+"editpage",
+"set_default_error_widget"
+],
+"submit_option": true,
+"target_ident": 23207,
 "validate_fail_ident": null,
 "validate_option": false
 },
 "original_fields": {
-"default_e_widg:input_text": ""
+"d_e_section:input_text": "",
+"d_e_widget:input_text": ""
 }
 }
 },
