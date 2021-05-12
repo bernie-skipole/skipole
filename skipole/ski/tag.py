@@ -453,7 +453,7 @@ class Part(ParentPart):
 
     # for formatting; any tag with these names will have its end tag put on
     # a new line
-    tag_list = ["div", "head", "body", "nav", "section", "header", "footer", "form", "table", "tr", "svg"]
+    tag_list = ["div", "head", "body", "nav", "section", "header", "footer", "form", "table", "tr", "svg", "script"]
 
     def __init__(self, tag_name="div", attribs=None, text="", show=True, hide_if_empty=False, brief=''):
         ParentPart.__init__(self, tag_name=tag_name, attribs=attribs, show=show, brief=brief)
@@ -744,7 +744,7 @@ class Part(ParentPart):
                 content += str(part)
         start_tag = "\n<{tag_name}{str_attribs}>".format(tag_name=self.tag_name, str_attribs=self.attributes_string)
         if self.tag_name in self.tag_list:
-            end_tag = "\n</{tag_name}>".format(tag_name=self.tag_name)
+            end_tag = "\n</{tag_name}>\n".format(tag_name=self.tag_name)
         else:
             end_tag = "</{tag_name}>".format(tag_name=self.tag_name)
         return start_tag+content+end_tag

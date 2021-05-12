@@ -1427,9 +1427,9 @@ false,
 "hidden_field3": "",
 "hidden_field4": "",
 "hide": false,
-"input_accepted_class": "ski_input_accepted",
+"input_accepted_class": "w3-pale-green",
 "input_class": "w3-input",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
 "input_text": "",
 "inputandbutton_class": "",
 "inputandbutton_style": "",
@@ -7987,9 +7987,11 @@ false
 },
 "original_fields": {
 "jsonfalse:button_text": "",
+"jsonfield:input_text": "",
+"jsonsection:input_text": "",
 "jsontext:input_text": "",
 "jsontrue:button_text": "",
-"jsonwidgfield:input_text": ""
+"jsonwidget:input_text": ""
 }
 }
 },
@@ -9044,16 +9046,6 @@ false
 "brief": "Section admin_footer with alias foot",
 "section_name": "admin_footer",
 "placename": "foot",
-"multiplier": 0,
-"mtag": "div"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Shows diagnostic information",
-"section_name": "diagnostic_footer",
-"placename": "diagnostic_footer",
 "multiplier": 0,
 "mtag": "div"
 }
@@ -34818,7 +34810,7 @@ false
 "parts": [
 [
 "Text",
-"Normally JSON pages have their content set dynamically, and you would simply use an empty JSON page such as 'general_json' and populate it using a responder to set a PageData object.\r\nHowever, in some cases you may want some fields to be statically set - in which case you can add widgfields and values here."
+"Normally JSON pages have their content set dynamically, and you would simply use an empty JSON page such as 'general_json' and populate it using a responder to set a PageData object.\r\n\r\nHowever, in some cases you may want some fields to be statically set - in which case you can add widget fields and values here."
 ]
 ]
 }
@@ -34877,22 +34869,7 @@ false
 "parts": [
 [
 "Text",
-"Add widgfield and value."
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About adding a widgfield",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Widgfields should be of the form widgetname,fieldname or sectionalias,widgetname,fieldname."
+"Add widget field and value."
 ]
 ]
 }
@@ -34947,40 +34924,184 @@ false
 "hide_if_empty": false,
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "Submit widgfield",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-cell-row"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Left div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container w3-cell",
+"style": "width : 32%;"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "paragraph",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "font-weight : bold;"
+},
+"parts": [
+[
+"TextBlock",
+{
+"textref": "json_widgfield",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "right div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container w3-cell"
+},
+"parts": [
+[
 "Widget",
 {
-"class": "inputtext.TextInput2",
-"name": "jsonwidgfield",
-"brief": "The widgfield to add",
+"class": "inputtext.TextInput4",
+"name": "jsonsection",
+"brief": "Section alias of the widget",
 "fields": {
-"clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
 "input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
 "input_text": "",
 "inputdiv_class": "",
-"label": "Widgfield to add:",
-"label_class": "ski_left_label",
+"inputdiv_style": "",
+"label": "Section alias of the widget:",
+"label_class": "",
 "label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
 "maxlength": "",
 "pattern": "",
 "redstar": false,
-"redstar_class": "",
-"redstar_style": "",
-"required": true,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
 "set_input_accepted": false,
 "set_input_errored": false,
 "show": true,
-"show_error": "",
-"size": "40",
+"size": "",
 "title": "",
 "type": "text",
-"widget_class": "w3-section",
+"widget_class": "",
 "widget_style": ""
 }
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "jsonwidget",
+"brief": "The widget name",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "The widget name:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput4",
+"name": "jsonfield",
+"brief": "The widget field",
+"fields": {
+"disabled": false,
+"input_accepted_class": "w3-pale-green",
+"input_class": "",
+"input_disabled_class": "",
+"input_errored_class": "w3-pale-red",
+"input_style": "padding:8px;border:2px solid #ccc;width:60%",
+"input_text": "",
+"inputdiv_class": "",
+"inputdiv_style": "",
+"label": "The widget field:",
+"label_class": "",
+"label_style": "",
+"labeldiv_class": "",
+"labeldiv_style": "",
+"maxlength": "",
+"pattern": "",
+"redstar": false,
+"redstar_class": "w3-margin-left",
+"redstar_style": "color:red",
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"size": "",
+"title": "",
+"type": "text",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
 }
 ],
 [
@@ -38790,14 +38911,6 @@ false
 }
 },
 "pages": {
-"aaa": {
-"ident": 85004,
-"brief": "aaa",
-"JSON": {
-"enable_cache": false,
-"content": {}
-}
-},
 "about_skis": {
 "ident": 510,
 "brief": "Description of the skis project",

@@ -780,9 +780,20 @@ def add_json_widgfield(skicall):
     project = call_data['editedprojname']
     pagenumber = call_data['page_number']
     pchange = call_data['pchange']
-    if not ('jsonwidgfield', 'input_text') in call_data:
-        raise FailPage(message="No widgfield given")
-    str_widgfield = call_data[ 'jsonwidgfield', 'input_text']
+
+    str_widgfield = ""
+
+    if (('jsonsection', 'input_text') in call_data) and call_data['jsonsection', 'input_text']:
+        str_widgfield = str_widgfield + ',' + call_data['jsonsection', 'input_text']
+    jsonwidget = call_data.get(('jsonwidget', 'input_text'))
+    if not jsonwidget:
+        raise FailPage(message="No widget given")
+    str_widgfield = str_widgfield + ',' + jsonwidget
+    jsonfield = call_data.get(('jsonfield', 'input_text'))
+    if not jsonfield:
+        raise FailPage(message="No widget field given")
+    str_widgfield = str_widgfield + ',' + jsonfield
+
     if call_data['jsontrue', 'button_text'] == 'True':
         value = True
     elif call_data['jsonfalse', 'button_text'] == 'False':
@@ -795,7 +806,7 @@ def add_json_widgfield(skicall):
         call_data['pchange'] = editpage.add_json_widgfield(project, pagenumber, pchange, str_widgfield, value)
     except ServerError as e:
         raise FailPage(message=e.message)
-    call_data['status'] = "Widgfield added"
+    call_data['status'] = "Widget field value added"
 
 
 def downloadpage(skicall):
