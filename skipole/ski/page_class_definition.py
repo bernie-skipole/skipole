@@ -298,6 +298,8 @@ class TemplatePageAndSVG(ParentPage):
         # dictionary of sections, page section name -> section
         # this is filled in when the sections are imported
         self.sections = {}
+        # a list of section aliases, filled in when sections are imported
+        self.section_aliases = []
 
 
     def set_values(self, page_data):
@@ -345,11 +347,20 @@ class TemplatePageAndSVG(ParentPage):
             sectionname, field = widgfield
         else:
             return False
-        if sectionname not in self.sections:
+#################
+        if sectionname not in self.section_aliases:
+            # this is not a section alias
             return False
-        if (field == 'show') and ((value is True) or (value is False)):
-            self.sections[sectionname].show = value
+        if sectionname not in self.sections:
+            # This sectionname is a valid section alias, but is not in self sections, as it has not been imported
+            # due to its show value being set to False
             return True
+##############
+#        if sectionname not in self.sections:
+#            return False
+#        if (field == 'show') and ((value is True) or (value is False)):
+#            self.sections[sectionname].show = value
+#            return True
         if field == 'section_class':
             self.sections[sectionname].set_class(value)
             return True
@@ -449,6 +460,7 @@ class TemplatePageAndSVG(ParentPage):
     def import_sections(self, page_data=None):
         "Imports the project sections into the page"
         self.sections = {}
+        self.section_aliases = []
         for placename, placeholder in self.section_places.items():
             # get top part of placeholder location
             pagepart = placeholder.pagepart
@@ -467,6 +479,22 @@ class TemplatePageAndSVG(ParentPage):
                     placeholder.multiplier = 0
                 else:
                     placeholder.multiplier = multiplier
+            ########
+            # set all section aliases, including multiplied aliases into self.section_aliases list
+            self.section_aliases.append(placename)
+            if placeholder.multiplier > 0:
+                for m in range(placeholder.multiplier):
+                    self.section_aliases.append(placename + "_" + str(m))
+
+            # if this section has show False, then do not import it
+            showsection = placeholder.show
+            if page_data and (placename,'show') in page_data:
+                showsection = page_data[placename,'show']
+
+            if not showsection:
+                continue
+            #########
+
             if placeholder.multiplier > 0:
                 for m in range(placeholder.multiplier):
                     self._import_multiplied_section(m, placeholder, toppart, page_data)
@@ -474,18 +502,17 @@ class TemplatePageAndSVG(ParentPage):
             section_name = placeholder.section_name
             sectionpart = self.project.section(section_name)
             # sectionpart is a tag.Section
-            if isinstance(sectionpart, Section):
-                # gives sectionpart and subparts an ident of page_ident_name_locationnumbers
-                # and sets sectionpart into self.sections
-                sectionpart.widgets = {}
-                sectionpart.section_places = {}
-                sectionpart.set_idents(str(self.ident) + '_' + placename, sectionpart.widgets, sectionpart.section_places, embedded=(section_name,'',None))
-                # If no id placed in the top tag, inserts the section placename
-                if not sectionpart.has_attrib('id'):
-                    sectionpart.insert_id(id_string=placename)
-                self.sections[placename] = sectionpart
-            else:
+            if not isinstance(sectionpart, Section):
                 continue
+            # gives sectionpart and subparts an ident of page_ident_name_locationnumbers
+            # and sets sectionpart into self.sections
+            sectionpart.widgets = {}
+            sectionpart.section_places = {}
+            sectionpart.set_idents(str(self.ident) + '_' + placename, sectionpart.widgets, sectionpart.section_places, embedded=(section_name,'',None))
+            # If no id placed in the top tag, inserts the section placename
+            if not sectionpart.has_attrib('id'):
+                sectionpart.insert_id(id_string=placename)
+            self.sections[placename] = sectionpart
             # Set section widgets field displaynames
             for widget in sectionpart.widgets.values():
                 # Note - this is called on named widgets only
