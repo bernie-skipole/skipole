@@ -833,8 +833,12 @@ def _create_sectionplaceholder(part_dict, proj_ident):
     if 'mtag' in part_dict:
         mtag = part_dict['mtag']
     else:
-        mtag = "div"    
-    return tag.SectionPlaceHolder(section_name=section_name, placename=placename, multiplier=multiplier, mtag=mtag, brief=brief)
+        mtag = "div"
+    if 'show' in part_dict:
+        show = part_dict['show']
+    else:
+        show = True 
+    return tag.SectionPlaceHolder(section_name=section_name, placename=placename, multiplier=multiplier, mtag=mtag, brief=brief, show=show)
 
 
 def _create_htmlsymbol(part_dict, proj_ident):

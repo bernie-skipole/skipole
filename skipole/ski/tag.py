@@ -919,12 +919,14 @@ class Section(Part):
 class SectionPlaceHolder(object):
     "Instance of this is added to a part, and acts as the placeholder for a section"
 
-    def __init__(self, section_name, placename, multiplier=0, mtag="div", brief=''):
+    def __init__(self, section_name, placename, multiplier=0, mtag="div", brief='', show=True):
         self.brief = brief
         self.section_name = section_name
         self.placename = placename
         self.mtag = mtag
         self.ident_string = ''
+        # set show to False if the section at this place is not to be shown
+        self.show = show
         try:
             mult = int(multiplier)
         except Exception:
@@ -991,6 +993,7 @@ class SectionPlaceHolder(object):
             part_dict["placename"] = self.placename
         part_dict["multiplier"] = self.multiplier
         part_dict["mtag"] = self.mtag
+        part_dict["show"] = self.show
         return ['SectionPlaceHolder', part_dict]
 
 

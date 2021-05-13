@@ -38,7 +38,7 @@ def placeholder_info(project, pagenumber, location):
        a container integer, such as 0 for widget container 0, or None if not in container
        a tuple or list of location integers
        returns None if placeholder not found, otherwise returns a namedtuple with items
-       project, pagenumber, section_name, alias, brief, multiplier, mtag
+       project, pagenumber, section_name, alias, brief, multiplier, mtag, show
     """
     proj, page = get_proj_page(project, pagenumber)
     part = page.location_item(location)
@@ -73,12 +73,17 @@ def placeholder_info(project, pagenumber, location):
     else:
         mtag = None
 
-    return PlaceHolderInfo(project, pagenumber, section_name, alias, brief, multiplier, mtag)
+    if hasattr(part, 'show'):
+        show = part.show
+    else:
+        show = True
+
+    return PlaceHolderInfo(project, pagenumber, section_name, alias, brief, multiplier, mtag, show)
 
 
-def edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier, mtag):
+def edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier, mtag, show):
     """Given a placeholder at project, pagenumber, location
-       sets the values section_name, alias, brief, multiplier, mtag, returns page change uuid """
+       sets the values section_name, alias, brief, multiplier, mtag, show, returns page change uuid """
     # raise error if invalid project
     if project is None:
         project = skiboot.project_ident()
@@ -123,19 +128,21 @@ def edit_placeholder(project, pagenumber, pchange, location, section_name, alias
     part.brief = brief
     part.multiplier = multiplier
     part.mtag = mtag
+    part.show = show
 
     # save the altered page, and return the page.change uuid
     return proj.save_page(page)
 
 
 
-def new_placeholder(project, pagenumber, pchange, location, section_name, alias, brief):
+def new_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, show=True):
     """Create a new placeholder at project, pagenumber, location
-       with section_name, alias, brief returns page change uuid and new location"""
+       with section_name, alias, brief, show returns page change uuid and new location"""
     # create new placeholder
     newplaceholder = tag.SectionPlaceHolder(section_name=section_name,
                                             placename=alias,
-                                            brief=brief)
+                                            brief=brief,
+                                            show=show)
     # call skilift.insert_item_in_page to insert the item, save the page and return pchange and new location
     return insert_item_in_page(project, pagenumber, pchange, location, newplaceholder)
 

@@ -26,7 +26,7 @@ PageTextBlock = namedtuple('PageTextBlock', ['project', 'pagenumber', 'pchange',
 
 WidgFieldInfo = namedtuple('WidgFieldInfo', ['tuple_widgfield', 'str_widgfield', 'str_comma_widgfield'])
 
-PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag'])
+PlaceHolderInfo = namedtuple('PlaceHolderInfo', ['project', 'pagenumber', 'section_name', 'alias', 'brief', 'multiplier', 'mtag', 'show'])
 
 SectionElement = namedtuple('SectionElement', ['project', 'section_name', 'schange', 'location', 'part_type', 'tag_name', 'brief', 'show', 'hide_if_empty', 'attribs'])
 
