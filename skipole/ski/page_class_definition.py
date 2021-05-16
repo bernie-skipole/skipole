@@ -326,48 +326,32 @@ class TemplatePageAndSVG(ParentPage):
 
     def _widget_set_value(self, widgfield, value):
         "Given a widgfield, checks its value"
-        # could be the special case of setting a section show or class value
-        sectionparam = self._check_section_parameters(widgfield, value)
-        if not sectionparam:
-            widget, fieldname = self.widget_from_field(widgfield)
-            if (widget is not None) and fieldname:
-                widget.set_value(fieldname, value)
 
-
-    def _check_section_parameters(self, widgfield, value):
-        """Checks special case of ('pagesectionname','show'),
-                               or ('pagesectionname','hide')
-                               or ('pagesectionname','section_class')"""
+        # does this widgfield specify a section, and field rather than widget
+        widglist = []
         if isinstance(widgfield, str) and (':' in widgfield):
             widglist = widgfield.split(':')
-            if len(widglist) != 2:
-                return False
+        elif isinstance(widgfield, list) or isinstance(widgfield, tuple):
+            widglist = widgfield
+
+        if len(widglist) == 2:
             sectionname, field = widglist
-        elif (isinstance(widgfield, list) or isinstance(widgfield, tuple)) and (len(widgfield) == 2):
-            sectionname, field = widgfield
-        else:
-            return False
-#################
-        if sectionname not in self.section_aliases:
-            # this is not a section alias
-            return False
-        if sectionname not in self.sections:
-            # This sectionname is a valid section alias, but is not in self sections, as it has not been imported
-            # due to its show value being set to False
-            return True
-##############
-#        if sectionname not in self.sections:
-#            return False
-#        if (field == 'show') and ((value is True) or (value is False)):
-#            self.sections[sectionname].show = value
-#            return True
-        if field == 'section_class':
-            self.sections[sectionname].set_class(value)
-            return True
-        if field == 'hide':
-            self.sections[sectionname].set_hide(value)
-            return True
-        return False
+            if sectionname in self.section_aliases:
+                # Its a section
+                if sectionname not in self.sections:
+                    # This sectionname is a valid section alias, but is not in self sections, as it has not been imported
+                    # due to its show value being set to False
+                    return
+                if field == 'section_class':
+                    self.sections[sectionname].set_class(value)
+                if field == 'hide':
+                    self.sections[sectionname].set_hide(value)
+                return
+        # so its not a section
+        widget, fieldname = self.widget_from_field(widgfield)
+        if (widget is not None) and fieldname:
+            widget.set_value(fieldname, value)
+
 
 
     def widget_from_field(self, widgfield):
@@ -534,21 +518,23 @@ class TemplatePageAndSVG(ParentPage):
     def _import_multiplied_section(self, m, placeholder, toppart, page_data):
         "If a placeholder has a multiplier, import its section multiple times inside a div"
         placename = placeholder.placename + "_" + str(m)
+        if page_data and (placename,'show') in page_data:
+            if not page_data[placename,'show']:
+                return
         section_name = placeholder.section_name
         sectionpart = self.project.section(section_name)
         # sectionpart is a tag.Section
-        if isinstance(sectionpart, Section):
-            # gives sectionpart and subparts an ident of page_ident_name_locationnumbers
-            # and sets sectionpart into self.sections
-            sectionpart.widgets = {}
-            sectionpart.section_places = {}
-            sectionpart.set_idents(str(self.ident) + '_' + placename, sectionpart.widgets, sectionpart.section_places, embedded=(section_name,'',None))
-            # If no id placed in the top tag, inserts the section placename
-            if not sectionpart.has_attrib('id'):
-                sectionpart.insert_id(id_string=placename)
-            self.sections[placename] = sectionpart
-        else:
+        if not isinstance(sectionpart, Section):
             return
+        # gives sectionpart and subparts an ident of page_ident_name_locationnumbers
+        # and sets sectionpart into self.sections
+        sectionpart.widgets = {}
+        sectionpart.section_places = {}
+        sectionpart.set_idents(str(self.ident) + '_' + placename, sectionpart.widgets, sectionpart.section_places, embedded=(section_name,'',None))
+        # If no id placed in the top tag, inserts the section placename
+        if not sectionpart.has_attrib('id'):
+            sectionpart.insert_id(id_string=placename)
+        self.sections[placename] = sectionpart
         # Set section widgets field displaynames
         for widget in sectionpart.widgets.values():
             # Note - this is called on named widgets only
@@ -557,8 +543,6 @@ class TemplatePageAndSVG(ParentPage):
         if m == 0:
             topdiv = Part(tag_name=placeholder.mtag)
             if page_data:
-                if (placeholder.placename,'show') in page_data:
-                    topdiv.show = bool(page_data[placeholder.placename,'show'])
                 if (placeholder.placename,'section_class') in page_data:
                     topdiv.set_class(page_data[placeholder.placename,'section_class'])
                 if (placeholder.placename,'multiplier_tag') in page_data:
