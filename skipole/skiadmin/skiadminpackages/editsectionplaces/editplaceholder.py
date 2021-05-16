@@ -62,6 +62,8 @@ def retrieve_editplaceholder(skicall):
     pd["placename", "input_text"] = placeholder.alias
     pd["multiplier", "input_text"] = str(placeholder.multiplier)
     pd["mtag", "input_text"] = placeholder.mtag
+    pd["show_section", "radio_checked"] = placeholder.show
+
 
     # set session data
     call_data['location'] = location

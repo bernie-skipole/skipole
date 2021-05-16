@@ -12796,13 +12796,92 @@ false
 "Part",
 {
 "tag_name": "p",
+"brief": "About the show attribute",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"If the section 'show' is set to True it will be included in the page, if False, it will not, unless a SectionData show attribute is set in your own function."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "sectionshow",
+"brief": "Set the show of the placeholder",
+"fields": {
+"action": "admin_home",
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"button_wait_text": "",
+"clear_error": false,
+"container_class": "",
+"div_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ski_left_label",
+"left_label": "Show section:",
+"left_style": "",
+"right_class": "",
+"right_label": "",
+"right_style": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+[
+"Widget",
+{
+"class": "radio.BooleanRadio",
+"name": "show_section",
+"brief": "BooleanRadio",
+"fields": {
+"div_class1": "",
+"div_class2": "",
+"left_class1": "ski_left_label",
+"left_class2": "ski_left_label",
+"left_label1": "True",
+"left_label2": "False",
+"left_style1": "",
+"left_style2": "",
+"radio_checked": true,
+"right_class1": "",
+"right_class2": "",
+"right_label1": "",
+"right_label2": "",
+"right_style1": "",
+"right_style2": "",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
 "brief": "About placeholder",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"A 'Section' will be inserted into the page with the given alias. Widget fields can then be set using a SectionData key of (widget name, field name).\r\n\r\nNormally, a multiplier of 0 is set, which means the section will be simply inserted. However if the multiplier is given another value, say 3, then the section will appear three times, and the alias will have underscore and numbers attached, such as aliasname_0, aliasname_1 and aliasname_2.\r\n\r\nThis feature allows a section to be repeated down the page and populated entirely dependent on the data you wish to present.\r\n\r\nIf the multiplier is greater than zero, the list of sections will be held within a containing element. The tag of the container can be set here - typically a 'div'.\r\n\r\nThe multiplier can be set dynamically at run time by creating a SectionData(aliasname) object and setting its multiplier attribute to the number, and the containing tag can be set with multiplier_tag attribute."
+"If set to True, the section will be inserted into the page with the given alias. Widget fields can then be set using a SectionData key of (widget name, field name).\r\n\r\nNormally, a multiplier of 0 is set, which means the section will be simply inserted. However if the multiplier is given another value, say 3, then the section will appear three times, and the alias will have underscore and numbers attached, such as aliasname_0, aliasname_1 and aliasname_2.\r\n\r\nThis feature allows a section to be repeated down the page and populated entirely dependent on the data you wish to present.\r\n\r\nIf the multiplier is greater than zero, the list of sections will be held within a containing element. The tag of the container can be set here - typically a 'div'.\r\n\r\nThe multiplier can be set dynamically at run time by creating a SectionData(aliasname) object and setting its multiplier attribute to the number, and the containing tag can be set with multiplier_tag attribute."
 ]
 ]
 }
