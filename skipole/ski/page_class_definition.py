@@ -293,9 +293,9 @@ class TemplatePageAndSVG(ParentPage):
         ParentPage.__init__(self, name=name, brief=brief)
         # self.widgets is a widget name -> widget dictionary
         self.widgets = {}
-        # self.section_places is a page section name -> SectionPlaceHolder dictionary
+        # self.section_places is a section alias -> SectionPlaceHolder dictionary
         self.section_places = {}
-        # dictionary of sections, page section name -> section
+        # dictionary of sections, section alias -> section
         # this is filled in when the sections are imported
         self.sections = {}
         # a list of section aliases, filled in when sections are imported
@@ -402,7 +402,7 @@ class TemplatePageAndSVG(ParentPage):
             section = self.sections[section_name]
             widget = section.widgets.get(widgetname)
         elif section_name in self.section_places:
-            # self.section_places is a page section name -> SectionPlaceHolder dictionary
+            # self.section_places is a section alias -> SectionPlaceHolder dictionary
             sectionplaceholder = self.section_places.get(section_name)
             if not sectionplaceholder:
                 return
