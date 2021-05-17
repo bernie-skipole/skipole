@@ -190,35 +190,34 @@ def retrieve_edit_respondpage(skicall):
     pd['responderdescription','textblock_ref'] = ".".join(["responders",r_info.module_name, r_info.responder])
 
 
-    sd_setwidgfield = SectionData("setwidgfield")
-    sd_setwidgfield['widgfieldform', 'action'] = "responder_widgfield"
-
     if r_info.widgfield_required:
+        sd_setwidgfield = SectionData("setwidgfield")
+        sd_setwidgfield['widgfieldform', 'action'] = "responder_widgfield"
+        sd_setwidgfield.show = True
         if r_info.widgfield:
             pd['widgfield','input_text'] = r_info.widgfield
-            if not r_info.widgfield:
+            widg = r_info.widgfield.split(',')
+            if len(widg) == 3:
+                sd_setwidgfield['respondersection','input_text'] = widg[0]
+                sd_setwidgfield['responderwidget','input_text'] = widg[1]
+                sd_setwidgfield['responderfield','input_text'] = widg[2]
+            elif len(widg) == 2:
+                sd_setwidgfield['respondersection','input_text'] = ''
+                sd_setwidgfield['responderwidget','input_text'] = widg[0]
+                sd_setwidgfield['responderfield','input_text'] = widg[1]
+            else:
                 sd_setwidgfield['respondersection','input_text'] = ''
                 sd_setwidgfield['responderwidget','input_text'] = ''
                 sd_setwidgfield['responderfield','input_text'] = ''
-            else:
-                widg = r_info.widgfield.split(',')
-                if len(widg) == 3:
-                    sd_setwidgfield['respondersection','input_text'] = widg[0]
-                    sd_setwidgfield['responderwidget','input_text'] = widg[1]
-                    sd_setwidgfield['responderfield','input_text'] = widg[2]
-                elif len(widg) == 2:
-                    sd_setwidgfield['respondersection','input_text'] = ''
-                    sd_setwidgfield['responderwidget','input_text'] = widg[0]
-                    sd_setwidgfield['responderfield','input_text'] = widg[1]
-                else:
-                    sd_setwidgfield['respondersection','input_text'] = ''
-                    sd_setwidgfield['responderwidget','input_text'] = ''
-                    sd_setwidgfield['responderfield','input_text'] = ''
+        else:
+            sd_setwidgfield['respondersection','input_text'] = ''
+            sd_setwidgfield['responderwidget','input_text'] = ''
+            sd_setwidgfield['responderfield','input_text'] = ''
+
+        pd.update(sd_setwidgfield)
     else:
         pd['widgfield','show'] = False
-        sd_setwidgfield.show = False
 
-    pd.update(sd_setwidgfield)
 
     # alternate ident
     if r_info.alternate_ident_required:
@@ -229,10 +228,7 @@ def retrieve_edit_respondpage(skicall):
                                             action = "alternate_ident",
                                             action_json = "alternate_ident_json",
                                             left_label = "Submit the ident : ")
-    else:
-        sd_alternate = SectionData("alternate_ident")
-        sd_alternate.show = False
-    pd.update(sd_alternate)
+        pd.update(sd_alternate)
 
     # target ident
     if r_info.target_ident_required:
@@ -243,10 +239,7 @@ def retrieve_edit_respondpage(skicall):
                                         action = "set_target_ident",
                                         action_json = "set_target_ident_json",
                                         left_label = "Submit the ident : ")
-    else:
-        sd_target = SectionData("target_ident")
-        sd_target.show = False
-    pd.update(sd_target)
+        pd.update(sd_target)
 
     # allowed callers
     if r_info.allowed_callers_required:
@@ -266,13 +259,11 @@ def retrieve_edit_respondpage(skicall):
                                                 "",                                       # input text
                                                 action = "add_allowed_caller",
                                                 left_label = "Add the allowed caller : ")
+        pd.update(sd_allowed_caller)
     else:
         pd['allowed_callers_description','show'] = False
         pd['allowed_callers_list','show'] = False
-        sd_allowed_caller = SectionData("allowed_caller")
-        sd_allowed_caller.show = False
 
-    pd.update(sd_allowed_caller)
 
     # validate option
     if r_info.validate_option_available:
@@ -327,41 +318,24 @@ def retrieve_edit_respondpage(skicall):
                                             _ident_to_str(r_info.fail_ident),  # input text
                                             action = "set_fail_ident",
                                             left_label = "Set the fail page : ")
+        pd.update(sd_failpage)
     else:
         pd['submit_list_description','show'] = False
         pd['submit_list','show'] = False
         pd['submit_string','show'] = False
         pd['submit_info','show'] = False
-        sd_failpage = SectionData('failpage')
-        sd_failpage.show = False
-
-    pd.update(sd_failpage)
-
 
     # final paragraph
     pd['final_paragraph','textblock_ref'] = _t_ref(r_info, 'final_paragraph')
 
+
+    # field sections have show = False by default, so the appropriate section
+    # to be shown is set here with show = True
+
     # field options
     f_options = r_info.field_options
     if not f_options['fields']:
-        # no fields so no further data to input, ensure the following sections are not shown
-
-        sd_singlefield = SectionData('singlefield')
-        sd_singlefield.show = False
-        pd.update(sd_singlefield)
-
-        sd_widgfieldval = SectionData('widgfieldval')
-        sd_widgfieldval.show = False
-        pd.update(sd_widgfieldval)
-
-        sd_addfieldval = SectionData('addfieldval')
-        sd_addfieldval.show = False
-        pd.update(sd_addfieldval)
-
-        sd_addwidgfield = SectionData('addwidgfield')
-        sd_addwidgfield.show = False
-        pd.update(sd_addwidgfield)
-
+        # no fields so no further data to input
         return
 
     # the fields option is enabled
@@ -381,37 +355,13 @@ def retrieve_edit_respondpage(skicall):
                                                     left_label = "Submit the field : ")
             pd.update(sd_singlefield)
         # currently there is no responder which takes a single field and value
-        #########################################################################
-        # if singlefield is enabled, no others are
-        sd_widgfieldval = SectionData('widgfieldval')
-        sd_widgfieldval.show = False
-        pd.update(sd_widgfieldval)
-
-        sd_addfieldval = SectionData('addfieldval')
-        sd_addfieldval.show = False
-        pd.update(sd_addfieldval)
-
-        sd_addwidgfield = SectionData('addwidgfield')
-        sd_addwidgfield.show = False
-        pd.update(sd_addwidgfield)
-
         return
-    else:
-        sd_singlefield = SectionData('singlefield')
-        sd_singlefield.show = False
-        pd.update(sd_singlefield)
 
 
     # to get here single_field is not enabled
 
 
     if f_options['field_values']:
-
-        # fields with values means the addwidgfield section should not be shown
-        sd_addwidgfield = SectionData('addwidgfield')
-        sd_addwidgfield.show = False
-        pd.update(sd_addwidgfield)
-
         pd['field_values_list','show'] = True
         # populate field_values_list
         contents = []
@@ -430,10 +380,6 @@ def retrieve_edit_respondpage(skicall):
             pd['field_values_list','show'] = False
         # populate the widgfieldval section
         if f_options['widgfields']:
-            # addfieldval is not shown
-            sd_addfieldval = SectionData('addfieldval')
-            sd_addfieldval.show = False
- 
             if f_options['field_keys']:
                 sd_widgfieldval = utils.widgfieldval('widgfieldval',
                                                      _t_ref(r_info, 'fields'),
@@ -446,6 +392,7 @@ def retrieve_edit_respondpage(skicall):
                                                      "Widget/field value:",
                                                      action='add_widgfield_value',
                                                      left_label='submit value :')
+            pd.update(sd_widgfieldval)
         else:
             ### f_options['field_values'] is True, but not f_options['widgfields']
             sd_addfieldval = utils.addfieldval('addfieldval',
@@ -454,20 +401,9 @@ def retrieve_edit_respondpage(skicall):
                                                skicall.textblock(_t_ref(r_info, 'addvaluelabel')),
                                                action='add_field_value',
                                                left_label='add :')
-            sd_widgfieldval = SectionData('widgfieldval')
-            sd_widgfieldval.show = False
-        pd.update(sd_widgfieldval)
-        pd.update(sd_addfieldval)
+ 
+            pd.update(sd_addfieldval)
     else:
-        # not field:values, so do not show widgfieldval or addfieldval sections
-        sd_widgfieldval = SectionData('widgfieldval')
-        sd_widgfieldval.show = False
-        pd.update(sd_widgfieldval)
-
-        sd_addfieldval = SectionData('addfieldval')
-        sd_addfieldval.show = False
-        pd.update(sd_addfieldval)
-
         # so now add fields, without values
 
         pd['field_list','show'] = True
@@ -489,14 +425,11 @@ def retrieve_edit_respondpage(skicall):
                                               _t_ref(r_info, 'fields'),
                                               action='add_widgfield',
                                               left_label='Add the widget :')
+            pd.update(sd_addwidgfield)
         else:
             # this never called as there is no responder yet with the combination of
             # both f_options['field_values']==False and f_options['widgfields']==False
-            sd_addwidgfield = SectionData('addwidgfield')
-            sd_addwidgfield.show = False
-
-        pd.update(sd_addwidgfield)
-
+            pass
 
 
 def submit_widgfield(skicall):
@@ -1418,6 +1351,5 @@ def _mediaquerytable(index, field_values_list):
 <text x="20" y="%s">%s</text>
 <text x="300" y="%s">%s</text>
 """ % (y, y, y+60, y+30, field_values_list[index][0],y+30, field_values_list[index][1])
-
 
 

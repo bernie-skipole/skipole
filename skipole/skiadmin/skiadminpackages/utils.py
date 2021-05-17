@@ -32,6 +32,7 @@ def formtextinput(sectionalias, textblock_ref, field_label, input_text, **formva
        formvalues should be things like action=targetlabel, left_label='submit button label'"""
 
     sd = SectionData(sectionalias)
+    sd.show = True
     sd['paratext', 'textblock_ref'] = textblock_ref
     sd['textinput', 'label'] = field_label
     sd['textinput', 'input_text'] = input_text
@@ -50,6 +51,7 @@ def widgfield(sectionalias, textblock_ref, **formvalues):
        Returns a SectionData object with the given alias"""
 
     sd = SectionData(sectionalias)
+    sd.show = True
     sd['paratext', 'textblock_ref'] = textblock_ref
 
     # fill in form values
@@ -66,6 +68,7 @@ def widgfieldval(sectionalias, textblock_ref, value_label, **formvalues):
        Returns a SectionData object with the given alias"""
 
     sd = SectionData(sectionalias)
+    sd.show = True
     sd['paratext', 'textblock_ref'] = textblock_ref
     sd['responderval', 'label'] = value_label
 
@@ -83,6 +86,7 @@ def addfieldval(sectionalias, textblock_ref, field_label, value_label, **formval
        Returns a SectionData object with the given alias"""
 
     sd = SectionData(sectionalias)
+    sd.show = True
     sd['paratext', 'textblock_ref'] = textblock_ref
     sd['responderfield', 'label'] = field_label
     sd['respondervalue', 'label'] = value_label
