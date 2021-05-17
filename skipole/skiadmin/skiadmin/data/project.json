@@ -183,6 +183,7 @@
 "set_placeholder_brief": 45005,
 "set_restricted_action": 2900,
 "set_section_name": 45001,
+"set_show_section": 45025,
 "set_submit_option": 6260,
 "set_symbol": 41120,
 "set_tag_brief": 43020,
@@ -12814,7 +12815,7 @@ false
 "name": "sectionshow",
 "brief": "Set the show of the placeholder",
 "fields": {
-"action": "admin_home",
+"action": "set_show_section",
 "action_json": "",
 "button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
@@ -13535,6 +13536,33 @@ false
 },
 "original_fields": {
 "editsection:selectvalue": "new_section_name"
+}
+}
+},
+"set_show_section": {
+"ident": 45025,
+"brief": "Sets the section placeholder show attribute",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+55009
+],
+"alternate_ident": "admin_home",
+"fail_ident": 55007,
+"submit_list": [
+"skiadminpackages",
+"editsectionplaces",
+"editplaceholder",
+"set_placeholder"
+],
+"submit_option": true,
+"target_ident": 55007,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"show_section:radio_checked": "show_section"
 }
 }
 }

@@ -92,6 +92,7 @@ def set_placeholder(skicall):
     brief = placeholder.brief
     multiplier = placeholder.multiplier
     mtag = placeholder.mtag
+    show = placeholder.show
 
     if 'new_section_name' in call_data:
         if call_data['new_section_name'] == '-None-':
@@ -105,6 +106,15 @@ def set_placeholder(skicall):
     elif 'placeholder_brief' in call_data:
         brief = call_data["placeholder_brief"]
         message = 'New description set'
+    elif "show_section" in call_data:
+        if call_data["show_section"] == "True":
+            show = True
+            message = 'Section show set to True'
+        elif call_data["show_section"] == "False":
+            show = False
+            message = 'Section show set to False'
+        else:
+            raise FailPage(message='Invalid input, show valu has not been recognised')
     elif 'multiplier' in call_data:
         try:
             multiplier = int(call_data["multiplier"])
@@ -139,10 +149,11 @@ def set_placeholder(skicall):
 
     # call editsection.edit_placeholder from skilift, which returns a new pchange
     try:
-        call_data['pchange'] = editsection.edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier, mtag)
+        call_data['pchange'] = editsection.edit_placeholder(project, pagenumber, pchange, location, section_name, alias, brief, multiplier, mtag, show)
     except ServerError as e:
         raise FailPage(e.message)
     call_data['status'] = message
+
 
 
 def create_insert(skicall):
