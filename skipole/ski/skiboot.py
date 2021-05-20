@@ -10,7 +10,7 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"version"         : "5.3.2",             # The skipole version
+"version"         : "5.3.3",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
@@ -31,7 +31,7 @@ _SYS_LABELS = ["url_not_found", "validate_error", "server_error", "redirector", 
 
 Info = collections.namedtuple('Info', ['project', 'project_version', 'ident', 'item_type', 'name', 'brief', 'path', 'label_list', 'change', 'parentfolder_ident', 'restricted'])
 
-PAGE_VARIABLES = [ 'add_jscript', 'backcol', 'body_class', 'headers', 'ident_data', 'lang', 'last_scroll', 'localStorage',
+PAGE_VARIABLES = [ 'add_jscript', 'backcol', 'body_class', 'headers', 'ident_data', 'lang', 'last_scroll', 'set_cookie', 'localStorage',
                    'sessionStorage', 'show_backcol', 'show_error', 'status', 'filepath', 'mimetype', 'enable_cache', 'height', 'width',
                    'cssimport', 'colour_substitution', 'ClearAllErrors', 'interval', 'IntervalTarget', 'JSONtoHTML', 'CatchToHTML', 'throw',
                    'content_length']
