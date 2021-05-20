@@ -518,14 +518,13 @@ class TemplatePageAndSVG(ParentPage):
     def _import_multiplied_section(self, m, placeholder, toppart, page_data):
         "If a placeholder has a multiplier, import its section multiple times inside a div"
         placename = placeholder.placename + "_" + str(m)
-        if page_data and (placename,'show') in page_data:
-            if not page_data[placename,'show']:
-                return
         section_name = placeholder.section_name
         sectionpart = self.project.section(section_name)
         # sectionpart is a tag.Section
         if not isinstance(sectionpart, Section):
             return
+        if (placename,'show') in page_data:
+            sectionpart.show = bool(page_data[placename,'show'])
         # gives sectionpart and subparts an ident of page_ident_name_locationnumbers
         # and sets sectionpart into self.sections
         sectionpart.widgets = {}
