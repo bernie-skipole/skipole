@@ -326,7 +326,8 @@ def _sectioncolor(pd, sectionalias, label, input_text, backcolor):
     sd = SectionData(sectionalias)
     sd["inputcol","label"] = label
     sd["inputcol","input_text"] = input_text
-    sd["boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (input_text, backcolor)
+#    sd["boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (input_text, backcolor)
+    sd["boxcol", "style"] = f"width: 10em; background-color: {input_text}; color: {backcolor}; border: solid white 2px; padding: 5px;"
     sd["boxcol","set_html"] = input_text
     pd.update(sd)
 
