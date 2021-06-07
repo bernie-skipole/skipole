@@ -8192,16 +8192,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -8244,16 +8241,6 @@ false
 "class": "w3-theme"
 },
 "parts": [
-[
-"TextBlock",
-{
-"textref": "ski_input",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": false,
-"linebreaks": false
-}
-],
 [
 "Part",
 {
@@ -8695,8 +8682,8 @@ false
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputandbutton_style": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
 "inputdiv_class": "w3-section",
 "label": "Set the background colour:",
 "label_class": "ski_left_label",
@@ -12708,8 +12695,8 @@ false
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputandbutton_style": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
 "inputdiv_class": "w3-section",
 "label": "Section multiplier:",
 "label_class": "ski_left_label",
@@ -12764,8 +12751,8 @@ false
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputandbutton_style": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
 "inputdiv_class": "w3-section",
 "label": "Multiplier container tag:",
 "label_class": "ski_left_label",
@@ -28860,6 +28847,16 @@ false
 }
 ],
 [
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
 "Part",
 {
 "tag_name": "script",
@@ -30536,16 +30533,13 @@ false,
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -30588,16 +30582,6 @@ false,
 "class": "w3-theme"
 },
 "parts": [
-[
-"TextBlock",
-{
-"textref": "ski_input",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": false,
-"linebreaks": false
-}
-],
 [
 "Part",
 {
@@ -30758,6 +30742,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
+"class": "w3-section",
 "style": "margin-left:auto;margin-right:auto;width:80%;"
 },
 "parts": [
@@ -30826,6 +30811,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
+"class": "w3-section",
 "style": "margin-left:auto;margin-right:auto;width:80%;"
 },
 "parts": [
@@ -30895,7 +30881,8 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"class": "w3-section",
+"style": "margin-left:auto;margin-right:auto;width:80%;"
 },
 "parts": [
 [
@@ -31217,7 +31204,8 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"class": "w3-section",
+"style": "margin-left:auto;margin-right:auto;width:80%;"
 },
 "parts": [
 [
@@ -34221,6 +34209,16 @@ false
 }
 ],
 [
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
 "Part",
 {
 "tag_name": "script",
@@ -34260,16 +34258,6 @@ false
 "class": "w3-theme"
 },
 "parts": [
-[
-"TextBlock",
-{
-"textref": "ski_input",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": false,
-"linebreaks": false
-}
-],
 [
 "Part",
 {
@@ -36055,6 +36043,16 @@ false
 }
 ],
 [
+"TextBlock",
+{
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
 "Part",
 {
 "tag_name": "script",
@@ -36094,16 +36092,6 @@ false
 "class": "w3-theme"
 },
 "parts": [
-[
-"TextBlock",
-{
-"textref": "ski_input",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": false,
-"linebreaks": false
-}
-],
 [
 "Part",
 {
@@ -36215,8 +36203,8 @@ false
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputandbutton_style": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
 "inputdiv_class": "w3-section",
 "label": "Project version:",
 "label_class": "ski_left_label",
@@ -36259,8 +36247,8 @@ false
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputandbutton_style": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
 "inputdiv_class": "w3-section",
 "label": "Project brief:",
 "label_class": "ski_left_label",
@@ -36317,8 +36305,8 @@ false
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputandbutton_style": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
 "inputdiv_class": "w3-section",
 "label": "Default language:",
 "label_class": "ski_left_label",
@@ -36404,8 +36392,8 @@ false
 "input_class": "ski_input",
 "input_errored_class": "w3-pale-red",
 "input_text": "",
-"inputandbutton_class": "ski_nowrap",
-"inputandbutton_style": "",
+"inputandbutton_class": "",
+"inputandbutton_style": "white-space: nowrap;",
 "inputdiv_class": "w3-section",
 "label": "A page or folder to edit:",
 "label_class": "ski_left_label",
@@ -40952,7 +40940,7 @@ false
 "original_fields": {}
 }
 },
-"w3-theme-ski-11162.css": {
+"w3-theme-ski-23589.css": {
 "ident": 220,
 "brief": "sets colour in w3-theme-ski.css",
 "RespondPage": {

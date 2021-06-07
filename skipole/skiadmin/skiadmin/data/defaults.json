@@ -39,8 +39,7 @@
 },
 "css_links": [
 "w3_css",
-"w3_theme_ski_css",
-"ski_css"
+"w3_theme_ski_css"
 ],
 "js_links": [
 "jquery_core",

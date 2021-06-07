@@ -174,14 +174,14 @@ def retrieve_colour_data(skicall):
     colours = skicall.proj_data['colours']
 
     pd["colhextest", "input_text"] = adminbackcol
-    admincol = css_styles.hex_int(adminbackcol)
-    pd["red","input_text"] = str(admincol[0])
-    pd["green","input_text"] = str(admincol[1])
-    pd["blue","input_text"] = str(admincol[2])
-    admin_h,admin_s,admin_l = css_styles.rgb_hsl(*admincol)
-    pd["hue","input_text"] = str(int(admin_h*360))
-    pd["saturation","input_text"] = str(int(admin_s*100))
-    pd["lightness","input_text"] = str(int(admin_l*100))
+#    admincol = css_styles.hex_int(adminbackcol)
+#    pd["red","input_text"] = str(admincol[0])
+#    pd["green","input_text"] = str(admincol[1])
+#    pd["blue","input_text"] = str(admincol[2])
+#    admin_h,admin_s,admin_l = css_styles.rgb_hsl(*admincol)
+#    pd["hue","input_text"] = str(int(admin_h*360))
+#    pd["saturation","input_text"] = str(int(admin_s*100))
+#    pd["lightness","input_text"] = str(int(admin_l*100))
 
     l5_color = colours['w3_theme_l5_color']
     l5_background_color = colours['w3_theme_l5_background_color']
@@ -326,7 +326,6 @@ def _sectioncolor(pd, sectionalias, label, input_text, backcolor):
     sd = SectionData(sectionalias)
     sd["inputcol","label"] = label
     sd["inputcol","input_text"] = input_text
-#    sd["boxcol", "style"] = "float: right; width: 20em; background-color: %s; color: %s; border: solid white 2px; padding: 5px;" % (input_text, backcolor)
     sd["boxcol", "style"] = f"width: 10em; background-color: {input_text}; color: {backcolor}; border: solid white 2px; padding: 5px;"
     sd["boxcol","set_html"] = input_text
     pd.update(sd)
