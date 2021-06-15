@@ -765,9 +765,11 @@ $(document).ready(function(){
 """
         if self._add_storage:
             scriptmiddle += self._add_storage
+        if self._add_jscript:
+            scriptmiddle += self._add_jscript
 
         # and create the script end
-        scriptend = self._add_jscript + """
+        scriptend = """
   if(SKIPOLE.interval && SKIPOLE.IntervalTarget) {
     SKIPOLE.interval_id = setInterval(SKIPOLE.refreshjson, SKIPOLE.interval*1000, SKIPOLE.IntervalTarget);
     }

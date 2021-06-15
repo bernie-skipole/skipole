@@ -375,3 +375,115 @@ SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
     };
 
 
+SKIPOLE.inputforms.SubmitFromScript = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.inputforms.SubmitFromScript.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.inputforms.SubmitFromScript.prototype.constructor = SKIPOLE.inputforms.SubmitFromScript;
+SKIPOLE.inputforms.SubmitFromScript.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    // hide
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide !== undefined) {
+        if (set_hide) {
+            if (this.widg.is(":visible")) {
+                this.widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(this.widg.is(":visible"))) {
+                this.widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+SKIPOLE.inputforms.SubmitFromScript.prototype.eventfunc = function (e) {
+    SKIPOLE.skiprefresh = true;
+    if (e.type == 'submit') {
+
+        // hidden_field1
+        let hf1 = this.fieldvalues["hidden_field1"];
+        if (hf1 !== undefined) {
+            hf1val = new Function(hf1);
+            let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field1') + "\"]";
+            let isfield = this.widg.find(find_field_name);
+            if (isfield.length){
+                isfield.first().val(hf1val());
+                }
+            }
+
+        // hidden_field2
+        let hf2 = this.fieldvalues["hidden_field2"];
+        if (hf2 !== undefined) {
+            hf2val = new Function(hf2);
+            let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field2') + "\"]";
+            let isfield = this.widg.find(find_field_name);
+            if (isfield.length){
+                isfield.first().val(hf2val());
+                }
+            }
+
+        // hidden_field3
+        let hf3 = this.fieldvalues["hidden_field3"];
+        if (hf3 !== undefined) {
+            hf3val = new Function(hf3);
+            let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field3') + "\"]";
+            let isfield = this.widg.find(find_field_name);
+            if (isfield.length){
+                isfield.first().val(hf3val());
+                }
+            }
+
+        // hidden_field4
+        let hf4 = this.fieldvalues["hidden_field4"];
+        if (hf4 !== undefined) {
+            hf4val = new Function(hf4);
+            let find_field_name = "input:hidden[name=\"" + this.formname('hidden_field4') + "\"]";
+            let isfield = this.widg.find(find_field_name);
+            if (isfield.length){
+                isfield.first().val(hf4val());
+                }
+            }
+
+        // form submitted, so if json url set, call a json page
+        let jsonurl = this.fieldvalues["url"];
+        if (jsonurl) {
+            var self = this;
+            var widgform = $(e.target);
+            var senddata = widgform.serializeArray();
+            e.preventDefault();
+            // respond to json or html
+            $.ajax({
+                  url: jsonurl,
+                  data: senddata
+                      })
+                  .done(function(result, textStatus, jqXHR) {
+                     if (jqXHR.responseJSON) {
+                          // JSON response
+                          SKIPOLE.setfields(result);
+                          }
+                     else {
+                          // html response
+                          document.open();
+                          document.write(result);
+                          document.close();
+                          }
+                      })
+                  .fail(function( jqXHR, textStatus, errorThrown ) {
+                              if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                                  document.open();
+                                  document.write(jqXHR.responseText);
+                                  document.close();
+                                  }
+                              else {
+                                  SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
+                                  }
+                      });
+            }
+        }
+    };
+
+

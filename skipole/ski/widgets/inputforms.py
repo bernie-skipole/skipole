@@ -619,5 +619,143 @@ class SubmitForm2(Widget):
 </div>"""
 
 
+class SubmitFromScript(Widget):
+    """Defines a form with four hidden fields, values set by javascript"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'action_json':FieldArg("url", ''),
+                        'action':FieldArg("url", ''),
+                        'hidden_field1':FieldArg("text", '', valdt=True),
+                        'hidden_field2':FieldArg("text", '', valdt=True),
+                        'hidden_field3':FieldArg("text", '', valdt=True),
+                        'hidden_field4':FieldArg("text", '', valdt=True),
+                        'target':FieldArg("text",''),
+                        'button_text':FieldArg("text",'Submit'),
+                        'button_class':FieldArg("cssclass", ''),
+                        'buttondiv_class':FieldArg("cssclass", ''),
+                        'buttondiv_style':FieldArg("cssstyle", ''),
+                        'hide':FieldArg("boolean", False, jsonset=True)
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        action_json:  if a value set, and client has jscript enabled, this is the page ident, label, url this button links to, expects a json page back
+        action: The page ident, label, url this button links to, overridden if action_json is set.
+        hidden_field1: Body of a javascript function returning a value, leave blank if unused
+        hidden_field2: Body of a javascript function returning a value, leave blank if unused
+        hidden_field3: Body of a javascript function returning a value, leave blank if unused
+        hidden_field4: Body of a javascript function returning a value, leave blank if unused
+        target: if given, the target attribute will be set
+        button_text: The text on the button
+        button_class: The class given to the button tag
+        buttondiv_class: the class attribute of the div which contains the submit button
+        buttondiv_style: the style attribute of the div which contains the submit button
+        hide: If True, widget is hidden
+        """
+        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+
+        # The form
+        self[0] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
+
+        # div containing the submit button
+        self[0][0] = tag.Part(tag_name='div')
+        # the submit button
+        self[0][0][0] = tag.Part(tag_name="button", attribs ={"type":"submit"})
+        self[0][0][0][0] = "Submit"
+        self._jsonurl = ''
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the form"
+        if self.get_field_value("target"):
+            self[0].update_attribs({"target":self.get_field_value("target")})
+        # Hides widget if no error and hide is True
+        self.widget_hide(self.get_field_value("hide"))
+        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+
+        if not self.get_field_value("action"):
+            # setting self._error replaces the entire tag
+            self._error = "Warning: No form action"
+            return
+        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        if not actionurl:
+            # setting self._error replaces the entire tag
+            self._error = "Warning: broken link"
+            return
+        # update the action of the form
+        self[0].update_attribs({"action": actionurl})
+
+        # the div holding the submit button
+        if self.get_field_value('buttondiv_class'):
+            self[0][0].attribs = {"class": self.get_field_value('buttondiv_class')}
+        if self.get_field_value('buttondiv_style'):
+            self[0][0].update_attribs({"style": self.get_field_value('buttondiv_style')})
+
+        # submit button
+        if self.get_field_value('button_class'):
+            self[0][0][0].update_attribs({"class": self.get_field_value('button_class')})
+        if self.get_field_value('button_text'):
+            self[0][0][0][0] = self.get_field_value('button_text')
+
+        # add ident and four hidden fields
+
+        if page is not None:
+            self[0].append(tag.ClosedPart(tag_name="input",
+                                   attribs ={"name":'ident',
+                                             "value":page.ident_data_string,
+                                             "type":"hidden"}))
+        # hidden field on the form
+        if self.get_field_value('hidden_field1'):
+            self[0].append(tag.ClosedPart(tag_name="input",
+                                       attribs ={"name":self.get_formname('hidden_field1'),
+                                                 "type":"hidden"}))
+
+        # Second hidden field on the form
+        if self.get_field_value('hidden_field2'):
+            self[0].append(tag.ClosedPart(tag_name="input",
+                                       attribs ={"name":self.get_formname('hidden_field2'),
+                                                 "type":"hidden"}))
+
+        # third hidden field on the form
+        if self.get_field_value('hidden_field3'):
+            self[0].append(tag.ClosedPart(tag_name="input",
+                                       attribs ={"name":self.get_formname('hidden_field3'),
+                                                 "type":"hidden"}))
+
+        # fourth hidden field on the form
+        if self.get_field_value('hidden_field4'):
+            self[0].append(tag.ClosedPart(tag_name="input",
+                                       attribs ={"name":self.get_formname('hidden_field4'),
+                                                 "type":"hidden"}))
+
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a submit event handler"""
+        jscript = """  $("#{ident} form").on("submit input", function(e) {{
+    SKIPOLE.widgets["{ident}"].eventfunc(e);
+    }});
+""".format(ident=self.get_id())
+        if self._jsonurl:
+            return jscript + self._make_fieldvalues('hidden_field1', 'hidden_field2', 'hidden_field3', 'hidden_field4', url=self._jsonurl)
+        return jscript + self._make_fieldvalues('hidden_field1', 'hidden_field2', 'hidden_field3', 'hidden_field4')
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div> <!-- with widget id and class widget_class -->
+  <form role="form" method="post"> <!-- action attribute set to action field -->
+    <div>  <!-- class attribute set to buttondiv_class -->
+      <button type="submit"> <!-- with class set to button_class -->
+        <!-- button_text -->
+      </button>
+    </div>
+    <!-- hidden input fields each submitting a value as returned by the corresponding javascript functions -->                              
+  </form>
+</div>"""
+
 
 
