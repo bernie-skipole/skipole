@@ -2003,7 +2003,6 @@
   "widgets.paras.TagText.tag": "The tag of the element, such as div or p.",
   "widgets.paras.TagText.tag_text": "The text in the element, JSON settable.",
   "widgets.paras.TagUnEscaped": "A tag, which can be specified, containing unescaped content.",
-  "widgets.paras.TagUnEscaped.hide": "If True the widget is hidden, JSON settable.",
   "widgets.paras.TagUnEscaped.tag": "The tag of the element, such as div or p.",
   "widgets.paras.TagUnEscaped.content": "The content in the element, JSON settable.",
   "widgets.paras.TextBlockDiv": "A div, containing a TextBlock. The content is not escaped, therefore useful for a TextBlock containing html.",

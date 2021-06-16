@@ -267,7 +267,6 @@ class TagUnEscaped(Widget):
     display_errors = False
 
     arg_descriptions = {'tag':FieldArg("text", 'div'),
-                        'hide':FieldArg("boolean", False, jsonset=True),
                         'content':FieldArg("text", "", jsonset=True)}
 
     def __init__(self, name=None, brief='', **field_args):
@@ -282,8 +281,6 @@ class TagUnEscaped(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         self.tag_name = self.get_field_value('tag')
-        # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
         self[0] = self.get_field_value("content")
 
     @classmethod
@@ -291,7 +288,6 @@ class TagUnEscaped(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <div>  <!-- with widget id and class widget_class and with div tag, or any other specified -->
-               <!-- and attribute style=display:none if hide is True -->
     <!-- set with content -->
 </div>"""
 

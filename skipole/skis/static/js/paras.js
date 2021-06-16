@@ -309,20 +309,6 @@ SKIPOLE.paras.TagUnEscaped.prototype.setvalues = function (fieldlist, result) {
     if (content !== undefined) {
         the_widg.html(content);
         }
-    /* hide */
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
-    if (set_hide !== undefined) {
-        if (set_hide) {
-            if (the_widg.is(":visible")) {
-                the_widg.fadeOut('slow');
-                }
-            }
-        else {
-            if (!(the_widg.is(":visible"))) {
-                the_widg.fadeIn('slow');
-                 }
-            }
-        }
     };
 
 
