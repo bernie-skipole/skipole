@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="skipole",
-    version="5.3.5",
+    version="5.3.6",
     author="Bernard Czenkusz",
     author_email="bernie@skipole.co.uk",
     description="A WSGI Application generator",

@@ -292,6 +292,39 @@ SKIPOLE.paras.TagText.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.paras.TagUnEscaped = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.paras.TagUnEscaped.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.paras.TagUnEscaped.prototype.constructor = SKIPOLE.paras.TagUnEscaped;
+SKIPOLE.paras.TagUnEscaped.prototype.setvalues = function (fieldlist, result) {
+    /* This widget accepts fields - hide, content */
+   if (!this.widg_id) {
+        return;
+        }
+    var the_widg = this.widg;
+    /* content */
+    var content = this.fieldarg_in_result('content', result, fieldlist);
+    if (content !== undefined) {
+        the_widg.html(content);
+        }
+    /* hide */
+    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    if (set_hide !== undefined) {
+        if (set_hide) {
+            if (the_widg.is(":visible")) {
+                the_widg.fadeOut('slow');
+                }
+            }
+        else {
+            if (!(the_widg.is(":visible"))) {
+                the_widg.fadeIn('slow');
+                 }
+            }
+        }
+    };
+
 
 SKIPOLE.paras.ParaText = function (widg_id, error_message, fieldmap) {
     SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
