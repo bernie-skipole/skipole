@@ -4260,19 +4260,6 @@ false,
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -5279,16 +5266,13 @@ false,
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -5384,7 +5368,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_top_bot_marg_10px"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -5867,7 +5851,7 @@ false,
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_top_bot_marg_10px"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -5930,8 +5914,8 @@ false
 "maximize_text_col": true,
 "odd_class": "w3-theme-d2",
 "show": true,
-"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered ski_wide_80",
-"widget_style": ""
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
+"widget_style": "margin-left:auto;margin-right:auto;width:80%;"
 }
 }
 ],
@@ -6017,7 +6001,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_top_bot_marg_10px"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -6080,8 +6064,8 @@ false
 "maximize_text_col": true,
 "odd_class": "w3-theme-d2",
 "show": true,
-"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered ski_wide_80",
-"widget_style": ""
+"widget_class": "w3-table w3-theme-d1 w3-border w3-bordered",
+"widget_style": "margin-left:auto;margin-right:auto;width:80%;"
 }
 }
 ],
