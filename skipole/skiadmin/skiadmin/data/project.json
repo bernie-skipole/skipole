@@ -9131,16 +9131,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -9548,19 +9545,6 @@ false
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -9829,19 +9813,6 @@ false
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -10104,19 +10075,6 @@ false
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -10951,16 +10909,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -11617,16 +11572,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
