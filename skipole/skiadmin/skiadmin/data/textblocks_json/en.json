@@ -2423,6 +2423,7 @@
   "widgets.textarea.SubmitTextArea.hidden_field4": "A hidden data field submitted with the form.",
   "widgets.textarea.SubmitTextArea.input_text": "The default text in the text input field, field name used in the submitted widgfield.",
   "widgets.textarea.SubmitTextArea.inputdiv_class": "The CSS class applied to the div which contains the input text area and button.",
+  "widgets.textarea.SubmitTextArea.inputdiv_style": "The CSS style applied to the div which contains the input text area and button.",
   "widgets.textarea.SubmitTextArea.rows": "The number of rows of the text area.",
   "widgets.textarea.SubmitTextArea.textarea_class": "The CSS class to apply to the textarea.",
   "widgets.textarea.SubmitTextArea.textarea_style": "The CSS style to apply to the text area.",

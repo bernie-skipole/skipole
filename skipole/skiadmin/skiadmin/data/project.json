@@ -14158,16 +14158,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -14491,8 +14488,8 @@ false
 "radio_values": [],
 "show": true,
 "show_error": "",
-"widget_class": "w3-section ski_left_marg_35_percent",
-"widget_style": ""
+"widget_class": "w3-section",
+"widget_style": "margin-left:35%"
 },
 "validators": {
 "radio_checked": [
@@ -14539,8 +14536,8 @@ false
 "radio_values": [],
 "show": true,
 "show_error": "",
-"widget_class": "w3-section ski_left_marg_35_percent",
-"widget_style": ""
+"widget_class": "w3-section",
+"widget_style": "margin-left:35%"
 },
 "validators": {
 "radio_checked": [
@@ -14963,16 +14960,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -15236,16 +15230,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -15512,16 +15503,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -15627,7 +15615,8 @@ false
 "hidden_field3": "",
 "hidden_field4": "",
 "input_text": "",
-"inputdiv_class": "ski_left_marg_35_percent",
+"inputdiv_class": "",
+"inputdiv_style": "margin-left:35%",
 "rows": "4",
 "show": true,
 "show_error": "Invalid input",
@@ -24299,6 +24288,7 @@ false
 "hidden_field4": "",
 "input_text": "",
 "inputdiv_class": "",
+"inputdiv_style": "",
 "rows": "50",
 "show": true,
 "show_error": "Invalid properties",
@@ -33627,6 +33617,7 @@ false
 "hidden_field4": "",
 "input_text": "",
 "inputdiv_class": "w3-section",
+"inputdiv_style": "",
 "rows": "10",
 "show": true,
 "show_error": "Invalid TextBlock",

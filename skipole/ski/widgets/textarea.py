@@ -21,6 +21,7 @@ class SubmitTextArea(Widget):
                         'button_text':FieldArg("text", 'Submit'),
                         'button_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
+                        'inputdiv_style':FieldArg("cssstyle", ''),
                         'input_text':FieldArg("text", '', valdt=True, jsonset=True),
                         'textarea_class':FieldArg("cssclass", ''),
                         'textarea_style':FieldArg("cssstyle", ''),
@@ -39,6 +40,7 @@ class SubmitTextArea(Widget):
         button_text: The text on the button
         button_class: class set on the buttons
         inputdiv_class: the class attribute of the div which contains the input text area and button
+        inputdiv_style: the style attribute of the div which contains the input text area and button
         error_class: The class applied to the paragraph containing the error message on error.
         input_text: The default text in the text area, field name used as the name attribute
         textarea_class: The class applied to the textarea
@@ -81,6 +83,9 @@ class SubmitTextArea(Widget):
         # the class of the div holding textarea and button
         if self.get_field_value('inputdiv_class'):
             self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
+
+        if self.get_field_value("inputdiv_style"):
+            self[1][0].update_attribs({"style":self.get_field_value("inputdiv_style")})
 
         # set up the text area
         self[1][0][0].attribs = {"name":self.get_formname('input_text')}
