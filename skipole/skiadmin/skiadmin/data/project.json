@@ -16007,19 +16007,6 @@ false
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -16333,19 +16320,6 @@ false
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -16782,7 +16756,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"style": "margin-top:10px; margin-left:auto; margin-right:auto; width:80%;"
 },
 "parts": [
 [
@@ -16866,7 +16840,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"style": "margin-top:10px; margin-left:auto; margin-right:auto; width:80%;"
 },
 "parts": [
 [
@@ -17014,19 +16988,6 @@ false
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
@@ -17646,19 +17607,6 @@ false
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
