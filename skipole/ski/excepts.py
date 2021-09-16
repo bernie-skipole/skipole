@@ -156,25 +156,41 @@ Note, skicall.call_data will not be changed.
 class ServeFile(Exception):
     """Exception used to return a server file to the client browser"""
 
-
-    def __init__(self, server_file, status='200 OK', mimetype=""):
-        "server_file should be a pathlib.Path object. A mimetype can be given, otherwise it will be guessed."
-        self.server_file = server_file
+    def __init__(self, server_file, status='200 OK', headers=None, enable_cache=None, mimetype=None):
+        """server_file should be a pathlib.Path object.
+           If headers is given it will be used, and enable_cache and mimetype will be ignored
+           If headers is not given, then enable_cache and mimetype can optionally be set."""
+        self.server_file = None
+        self.mimetype = None
+        self.status = None
+        self.headers = None
+        self.enable_cache = None
         if not isinstance(server_file, pathlib.Path):
-            self.server_file = None
-            self.mimetype = ''
-            self.status = ''
             return
+        self.server_file = server_file
         self.status = status
-        if mimetype:
-            self.mimetype = mimetype
+        if headers is not None:
+            self.headers = headers
         else:
-            mimetypes.init()
-            t, e = mimetypes.guess_type(server_file.name, strict=False)
-            if t:
-                self.mimetype = t
+            self.headers = [('content-length', str(server_file.stat().st_size))]
+            if mimetype is not None:
+                self.mimetype = mimetype
+                self.headers.append(('content-type', mimetype))
             else:
-                self.mimetype = "application/octet-stream"
+                t, e = mimetypes.guess_type(server_file.name, strict=False)
+                if t:
+                    self.headers.append(('content-type', t))
+                else:
+                    self.headers.append(('content-type', "application/octet-stream"))
+            if enable_cache is not None:
+                self.enable_cache = enable_cache
+                if enable_cache:
+                    self.headers.append(('cache-control', 'max-age=3600'))
+                else:
+                    self.headers.append(('cache-control','no-cache, no-store, must-revalidate'))
+                    self.headers.append(('Pragma', 'no-cache'))
+                    self.headers.append(('Expires', '0'))
+
 
 
 

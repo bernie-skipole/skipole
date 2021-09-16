@@ -382,52 +382,31 @@ class SkipoleProject(object):
         # now call the proj_start_call function which creates a skicall object and
         # calls the users start_call function, which could return a different page ident, or None
 
-        pident, skicall = self.proj_start_call(environ,
-                                               path,
-                                               ident,
-                                               caller_page_ident,
-                                               received_cookies,
-                                               ident_data,
-                                               lang)
+        try:
 
-        # parse the page ident returned
+            pident, skicall = self.proj_start_call(environ,
+                                                   path,
+                                                   ident,
+                                                   caller_page_ident,
+                                                   received_cookies,
+                                                   ident_data,
+                                                   lang)
 
-        if pident is None:
-            # URL NOT FOUND and start_call does not divert
-            return None
-
-        if isinstance(pident, pathlib.Path):
-            # pident is a path to a file on the server, so serve that file by returning status, headers, data
+        except ServeFile as e:
+            server_file = e.server_file
+            if server_file is None:
+                # URL NOT FOUND
+                return
+            # server_file is a path to a file on the server, so serve that file by returning status, headers, data
             try:
-                if ('status' in skicall.page_data) and skicall.page_data['status']:
-                    status = skicall.page_data['status']
-                else:
-                    status = "200 OK"
-                if ('headers' in skicall.page_data) and skicall.page_data['headers']:
-                    headers = skicall.page_data['headers']
-                else:
-                    headers = [('content-length', str(pident.stat().st_size))]
-                    if 'mimetype' in skicall.page_data:
-                        headers.append(('content-type', skicall.page_data['mimetype']))
-                    else:
-                        t, e = mimetypes.guess_type(pident.name, strict=False)
-                        if t:
-                            headers.append(('content-type', t))
-                        else:
-                            headers.append(('content-type', "application/octet-stream"))
-                    if 'enable_cache' in skicall.page_data:
-                        if skicall.page_data['enable_cache']:
-                            headers.append(('cache-control', 'max-age=3600'))
-                        else:
-                            headers.append(('cache-control','no-cache, no-store, must-revalidate'))
-                            headers.append(('Pragma', 'no-cache'))
-                            headers.append(('Expires', '0'))
-                data = _read_server_file(environ, pident)
+                data = _read_server_file(environ, server_file)
             except Exception as e:
-                raise ServerError(message=f"Failed to read file {pident}") from e
-            return status, headers, data
+                raise ServerError(message=f"Failed to read file {server_file}") from e
+            return e.status, e.headers, data
 
         # pident is the ident of the diverted page or a label or url string
+        if pident is None:
+            return
 
         # get the page from pident
         if isinstance(pident, str):
@@ -538,17 +517,15 @@ class SkipoleProject(object):
             # being set by the users own start_call function
             new_called_ident = self.start_call(called_ident, skicall)
 
-            # if new_called_ident is a Path object, then check if a file exists
-            if isinstance(new_called_ident, pathlib.Path):
-                if not new_called_ident.is_file():
-                    new_called_ident = None
             # convert returned tuple to an Ident object
             if isinstance(new_called_ident, int):
                 new_called_ident = (self._proj_ident, new_called_ident)
             if isinstance(new_called_ident, tuple):
                 new_called_ident = skiboot.make_ident(new_called_ident, self._proj_ident)
-            # could be a label
+            # could be a label or URL
         except ServerError as e:
+            raise e
+        except ServeFile as e:
             raise e
         except Exception as e:
             raise ServerError(message = "Invalid exception in start_call function.") from e
@@ -621,6 +598,17 @@ class SkipoleProject(object):
                         skicall.page_data.clear()
                         # get redirector page
                         return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, skicall.lang)
+        `        except ServeFile as e:
+                    server_file = e.server_file
+                    if server_file is None:
+                        # URL NOT FOUND
+                        return
+                    # server_file is a path to a file on the server, so serve that file by returning status, headers, data
+                    try:
+                        data = _read_server_file(environ, server_file)
+                    except Exception as e:
+                        raise ServerError(message=f"Failed to read file {server_file}") from e
+                    return e.status, e.headers, data
                 except PageError as ex:
                     # a jump to a page has occurred, with a list of errors
                     page = ex.page
@@ -694,6 +682,17 @@ class SkipoleProject(object):
             finally:
                 if skicall._lang_cookie:
                     page.language_cookie = skicall._lang_cookie
+        except ServeFile as e:
+            server_file = e.server_file
+            if server_file is None:
+                # URL NOT FOUND
+                return
+            # server_file is a path to a file on the server, so serve that file by returning status, headers, data
+            try:
+                data = _read_server_file(environ, server_file)
+            except Exception as e:
+                raise ServerError(message=f"Failed to read file {server_file}") from e
+            return e.status, e.headers, data
         except GoTo as e:
             raise ServerError("Invalid GoTo exception in end_call") from e
         except Exception as e:

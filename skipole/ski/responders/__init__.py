@@ -8,7 +8,7 @@
 import copy, sys, traceback
 
 from .. import skiboot, tag
-from ..excepts import ValidateError, ServerError, FailPage, ErrorMessage, PageError, GoTo
+from ..excepts import ValidateError, ServerError, FailPage, ErrorMessage, PageError, GoTo, ServeFile
 
 
 class Respond(object):
@@ -235,7 +235,7 @@ main purpose is to act as a parent class for all other respond objects.
             skicall.ident_list = tuple_ident_list
             skicall.submit_list = self.submit_list.copy()
             result = this_project.submit_data(skicall)
-        except (GoTo, FailPage, ServerError, ValidateError) as e:
+        except (GoTo, FailPage, ServerError, ValidateError, ServeFile) as e:
             raise e
         except Exception as e:
             message = 'Error in submit_data called by responder ' + str(tuple_ident_list[-1]) + '\n'
@@ -391,6 +391,8 @@ main purpose is to act as a parent class for all other respond objects.
         except GoTo as e:
             e.proj_ident=proj_ident
             raise e
+        except ServeFile:
+            raise
         except ValidateError:
             raise
         except ServerError:
