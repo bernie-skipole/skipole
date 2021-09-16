@@ -50,7 +50,7 @@ def start_call(called_ident, skicall):
        will not be called."""
     # To serve a directory of static files, you can map a url to a server directory with the
     # skicall.map_url_to_server method, which returns pathlib.Path objects, and then
-    # raise a ServeFile excption, which causes the file to be served. For example:
+    # raise a ServeFile exception, which causes the file to be served. For example:
     # servedfile = skicall.map_url_to_server("images", "/home/user/thisproject/imagefiles")
     # if servedfile:
     #    raise ServeFile(servedfile)

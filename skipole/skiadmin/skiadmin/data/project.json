@@ -4757,6 +4757,31 @@ false,
 }
 ],
 [
+"Widget",
+{
+"class": "paras.JSONDivLink",
+"name": "servefile",
+"brief": "Describes ServeFile",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_hide_text": "ServeFile -",
+"button_show_text": "ServeFile +",
+"clear_error": false,
+"div_class": "w3-card w3-theme-light w3-padding",
+"div_content": "",
+"get_field": "aboutcode.servefile",
+"hide": true,
+"htmlescaped": false,
+"json_ident": 70050,
+"link_ident": "no_javascript",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
 "Part",
 {
 "tag_name": "p",
