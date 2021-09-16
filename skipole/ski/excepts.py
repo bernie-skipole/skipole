@@ -6,6 +6,9 @@ This module defines base exceptions. It can be imported
 by any other module as it has no dependencies
 """
 
+
+import mimetypes, pathlib
+
 class ErrorMessage(object):
     """Acts as a store for attributes message, section, widget"""
 
@@ -148,4 +151,31 @@ Note, skicall.call_data will not be changed.
         self.proj_ident=None
         # this is set if a FailPage call leads to a responder which raises a GoTo
         self.e_list = []
+
+
+class ServeFile(Exception):
+    """Exception used to return a server file to the client browser"""
+
+
+    def __init__(self, server_file, status='200 OK', mimetype=""):
+        "server_file should be a pathlib.Path object. A mimetype can be given, otherwise it will be guessed."
+        self.server_file = server_file
+        if not isinstance(server_file, pathlib.Path):
+            self.server_file = None
+            self.mimetype = ''
+            self.status = ''
+            return
+        self.status = status
+        if mimetype:
+            self.mimetype = mimetype
+        else:
+            mimetypes.init()
+            t, e = mimetypes.guess_type(server_file.name, strict=False)
+            if t:
+                self.mimetype = t
+            else:
+                self.mimetype = "application/octet-stream"
+
+
+
 

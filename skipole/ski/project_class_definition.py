@@ -30,7 +30,7 @@ _AN = re.compile('[^\w]')
 _AN64 = re.compile('[^\w\-]')
 
 from . import skiboot, read_json
-from .excepts import ValidateError, ServerError, FailPage, ErrorMessage, GoTo, PageError
+from .excepts import ValidateError, ServerError, FailPage, ErrorMessage, GoTo, PageError, ServeFile
 from .. import textblocks
 
 # ServerError raised in this module use codes 9000 to 9100
@@ -1511,20 +1511,19 @@ class SkiCall(object):
         return fullpath
 
 
-    def map_url_to_server(self, urlfolder, serverfolder, mimetype=""):
+    def map_url_to_server(self, urlfolder, serverfolder):
         """Generally called in the start_call function. Maps a url folder such as
            "special/css" to a server folder such as "/home/user/thisproject/css"
            If a call is made to, say "/projectpath/special/css/myfile.css" this function will return a 
            pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file
            exists. If not then None is returned.
            If the given urlfolder starts with "/" then it is an absolute path and projectpath is not prepended.
-           If start_call returns such a pathlib.Path, then the framework will serve the file.
-           A mimetype can be given, otherwise it will be guessed.
+           If start_call uses this to raise a ServeFile exception, then the framework will serve the file.
            An example of usage is:
             def start_call(called_ident, skicall):
                 servedfile = skicall.map_url_to_server("special/css", "/home/user/thisproject/css")
                 if servedfile:
-                    return servedfile
+                    raise ServeFile(servedfile)
                 return called_ident
         """
         server_folder = pathlib.Path(serverfolder).expanduser().resolve()
@@ -1546,18 +1545,8 @@ class SkiCall(object):
                 return
             servedfileparts = server_folder.parts + path.parts[len(url_folder.parts):]
             servedfile = pathlib.Path(*servedfileparts)
-            if not servedfile.is_file():
-                return
-            if mimetype:
-                self.page_data['mimetype'] = mimetype
-            else:
-                mimetypes.init()
-                t, e = mimetypes.guess_type(path.name, strict=False)
-                if t:
-                    self.page_data['mimetype'] = t
-                else:
-                    self.page_data['mimetype'] = "application/octet-stream"
-            return servedfile
+            if servedfile.is_file():
+                return servedfile
         return
 
 def _readfile(filepath, size):
