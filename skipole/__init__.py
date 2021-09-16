@@ -125,12 +125,12 @@ from importlib import import_module
 from .ski import skiboot
 
 from .ski.project_class_definition import SkipoleProject, PageData, SectionData
-from .ski.excepts import ValidateError, ServerError, GoTo, FailPage
+from .ski.excepts import ValidateError, ServerError, GoTo, FailPage, ServeFile
 
 version = skiboot.version()
 
 
-__all__ = ['WSGIApplication', 'ValidateError', 'ServerError', 'GoTo', 'FailPage', 'set_debug', 'use_submit_list', 'version', 'PageData', 'SectionData']
+__all__ = ['WSGIApplication', 'ValidateError', 'ServerError', 'GoTo', 'FailPage', 'ServeFile', 'set_debug', 'use_submit_list', 'version', 'PageData', 'SectionData']
 
 
 class WSGIApplication(object):

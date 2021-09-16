@@ -4,9 +4,9 @@ import os
 
 # from skipole import the WSGIApplication class which will be used to create a wsgi application
 
-from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, skis, PageData, SectionData
+from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, ServeFile, use_submit_list, skis, PageData, SectionData
 
-# FailPage, GoTo, ValidateError and ServerError are exception classes which you can raise in your own code
+# FailPage, GoTo, ValidateError, ServerError, ServeFile are exception classes which you can raise in your own code
 
 # use_submit_list is a decorator described below
 
@@ -45,14 +45,15 @@ def start_call(called_ident, skicall):
     """When a call is initially received this function is called.
        Unless you want to divert to another page, this function should return called_ident which
        would typically be the ident of a Responder or Template page dealing with the call.
-       If a pathlib.Path object is returned, which contains the path to a local server file (not a url)
-       then that server file will be sent to the client. In this case, the end_call function will
-       not be called."""
+       If a ServeFile exception is raised, which contains a pathlib.Path object of a local server
+       file then that server file will be sent to the client. In this case, the end_call function
+       will not be called."""
     # To serve a directory of static files, you can map a url to a server directory with the
-    # skicall.map_url_to_server method, which returns pathlib.Path objects, for example:
+    # skicall.map_url_to_server method, which returns pathlib.Path objects, and then
+    # raise a ServeFile excption, which causes the file to be served. For example:
     # servedfile = skicall.map_url_to_server("images", "/home/user/thisproject/imagefiles")
     # if servedfile:
-    #    return servedfile
+    #    raise ServeFile(servedfile)
 
     # Of particular interest at this point are the attributes:
     # skicall.received_cookies is a dictionary of cookie name:values received from the client
