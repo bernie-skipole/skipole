@@ -4651,7 +4651,7 @@ false,
 "parts": [
 [
 "Text",
-"You can also import exceptions ServerError, ValidateError, FailPage and GoTo and raise them when required. Each is described below."
+"You can also import exceptions ServerError, ValidateError, FailPage, GoTo and ServeFile and raise them when required. Each is described below."
 ]
 ]
 }

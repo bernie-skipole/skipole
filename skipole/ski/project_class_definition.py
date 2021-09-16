@@ -598,7 +598,7 @@ class SkipoleProject(object):
                         skicall.page_data.clear()
                         # get redirector page
                         return self._redirect_to_url(page, environ, skicall.call_data, skicall.page_data, skicall.lang)
-        `        except ServeFile as e:
+                except ServeFile as e:
                     server_file = e.server_file
                     if server_file is None:
                         # URL NOT FOUND
