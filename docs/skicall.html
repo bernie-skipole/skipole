@@ -63,15 +63,15 @@ This attribute is used when requesting TextBlocks.</p>
 <p>skicall.textblock(textref, project=None) is a method which given a reference string returns the text of the associated TextBlock.<br />If project is None, it assumes the TextBlock is defined in the current project, if project is given it must be the root or a sub project. If no TextBlock is found, it returns None.</p>
 <p>skicall.projectpaths() returns a dictionary of project names as keys with the project url paths as values.</p>
 <p>skicall.makepath(*foldernames) returns a url path string starting with this project's url, with the given foldernames joined. If no foldernames are given, then just the project url is returned.</p>
-<p>skicall.map_url_to_server(urlfolder, serverfolder, mimetype="") maps a url folder to a server folder.<br />
+<p>skicall.map_url_to_server(urlfolder, serverfolder) maps a url folder to a server folder.<br />
 Generally called in the start_call function. Maps a url folder such as "/projecturl/special/css" to a server folder such as "/home/user/thisproject/css"<br />
-if a call is made to, say "/projecturl/special/css/myfile.css" this function will return a pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file exists. If not then None is returned. If start_call returns such a pathlib.Path, then the framework will serve the file. A mimetype can be given, otherwise it will be guessed.<br />
+if a call is made to, say "/projecturl/special/css/myfile.css" this function will return a pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file exists. If not then None is returned. If a ServeFile exception is raised with such a pathlib.Path, then the framework will serve the file.<br />
 An example of usage is:</p>
 <pre>
     def start_call(called_ident, skicall):
         servedfile = skicall.map_url_to_server("special/css", "/home/user/thisproject/css")
         if servedfile:
-            return servedfile
+            raise ServeFile(servedfile)
         return called_ident
 </pre>
 <p>Note: If the given urlfolder starts with a "/", it is an absolute url, if it does not, as in the above example, then it will be relative, with the project url prepended. Using relative paths makes the code more portable, particularly if this project is to become a sub-project added to a root which may change its project url.</p>
