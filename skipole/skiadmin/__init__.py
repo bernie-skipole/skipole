@@ -3,7 +3,7 @@
 import os, sys, re, json, pathlib
 
 
-from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, use_submit_list, set_debug, skilift
+from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, ServeFile, use_submit_list, set_debug, skilift
 from ..skilift.fromjson import get_defaults_from_file
 
 from ..ski.project_class_definition import SectionData, PageData
@@ -20,7 +20,6 @@ _AN = re.compile('[^\w]')
 
 def start_call(called_ident, skicall):
     "Checks initial incoming call parameters, and using ident_data, retrieves session data and populates call_data"
-     
 
     # initially populate call_data with some project info
     editedprojname = skicall.proj_data['editedprojname']
