@@ -157,7 +157,7 @@ class ServeFile(Exception):
     """Exception used to return a server file to the client browser"""
 
     def __init__(self, server_file, status='200 OK', headers=None, enable_cache=None, mimetype=None):
-        """server_file should be a pathlib.Path object.
+        """server_file should be a string or pathlib.Path object.
            If headers is given it will be used, and enable_cache and mimetype will be ignored
            If headers is not given, then enable_cache and mimetype can optionally be set."""
         self.server_file = None
@@ -165,19 +165,22 @@ class ServeFile(Exception):
         self.status = None
         self.headers = None
         self.enable_cache = None
-        if not isinstance(server_file, pathlib.Path):
+        if isinstance(server_file, str):
+            self.server_file = pathlib.Path(server_file).expanduser().resolve()
+        elif isinstance(server_file, pathlib.Path):
+            self.server_file = server_file
+        else:
             return
-        self.server_file = server_file
         self.status = status
         if headers is not None:
             self.headers = headers
         else:
-            self.headers = [('content-length', str(server_file.stat().st_size))]
+            self.headers = [('content-length', str(self.server_file.stat().st_size))]
             if mimetype is not None:
                 self.mimetype = mimetype
                 self.headers.append(('content-type', mimetype))
             else:
-                t, e = mimetypes.guess_type(server_file.name, strict=False)
+                t, e = mimetypes.guess_type(self.server_file.name, strict=False)
                 if t:
                     self.headers.append(('content-type', t))
                 else:
