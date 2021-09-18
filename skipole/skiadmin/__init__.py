@@ -30,10 +30,7 @@ def start_call(called_ident, skicall):
         # does not call page 80040 (which is a nop which would return page not found)
         # instead it returns the server file defaults.json of the editedproject 
         defaults_json = pathlib.Path(projinfo.data_path, "defaults.json")
-        pd = PageData()
-        pd.mimetype = "application/octet-stream"
-        skicall.update(pd)
-        return defaults_json
+        raise ServeFile(defaults_json, mimetype="application/octet-stream")
 
 
     skicall.call_data = {'editedprojname':editedprojname,
