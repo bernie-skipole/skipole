@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "5.4.1",
-"skipole": "5.4.1",
+"version": "5.4.2",
+"skipole": "5.4.2",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -18968,16 +18968,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -19334,16 +19331,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -19945,7 +19939,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"style": "margin-left:auto;margin-right:auto;width:80%;margin-top:10px;"
 },
 "parts": [
 [
@@ -20212,16 +20206,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -33335,16 +33326,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -34855,16 +34843,13 @@ false
 }
 ],
 [
-"ClosedPart",
+"TextBlock",
 {
-"tag_name": "link",
-"brief": "css link to ski_css",
+"textref": "ski_input",
+"failmessage": "TextBlock not found",
 "show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
+"escape": false,
+"linebreaks": false
 }
 ],
 [
@@ -34907,16 +34892,6 @@ false
 "class": "w3-theme"
 },
 "parts": [
-[
-"TextBlock",
-{
-"textref": "ski_input",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": false,
-"linebreaks": false
-}
-],
 [
 "Part",
 {
@@ -35011,7 +34986,7 @@ false
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ski_wide_80 ski_top_marg10px"
+"style": "margin-left:auto;margin-right:auto;width:80%;margin-top:10px;"
 },
 "parts": [
 [
@@ -35518,289 +35493,6 @@ false
 }
 ]
 ]
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section admin_footer with alias foot",
-"section_name": "admin_footer",
-"placename": "foot",
-"multiplier": 0,
-"mtag": "div",
-"show": true
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-},
-"edit_project_template": {
-"ident": 20129,
-"brief": "The skipole project edit page",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"catch_to_html": null,
-"lang": "en",
-"backcol": "#e5d29f",
-"default_error_widget": [
-"adminhead",
-"show_status"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "meta for viewport",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Edit project"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Sets class w3-theme",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"SectionPlaceHolder",
-{
-"brief": "Left navigation box",
-"section_name": "left_nav",
-"placename": "left_nav",
-"multiplier": 0,
-"mtag": "div",
-"show": true
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "Section top_header with alias adminhead",
-"section_name": "top_header",
-"placename": "adminhead",
-"multiplier": 0,
-"mtag": "div",
-"show": true
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Main content page div",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container",
-"style": "margin-left:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "p",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Set the path of the sub project (relevant to this site only):"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.SubmitTextInput1",
-"name": "subprojurl",
-"brief": "Set sub project path",
-"fields": {
-"action": "set_url",
-"action_json": "",
-"button_class": "w3-button w3-theme-d4 w3-margin-left",
-"button_text": "Submit",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"hide": false,
-"input_accepted_class": "w3-pale-green",
-"input_class": "ski_input",
-"input_errored_class": "w3-pale-red",
-"input_text": "",
-"inputandbutton_class": "",
-"inputandbutton_style": "",
-"inputdiv_class": "w3-section",
-"label": "Sub-project path:",
-"label_class": "ski_left_label",
-"label_style": "",
-"maxlength": "150",
-"pattern": "",
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "Invalid url",
-"size": "50",
-"target": "",
-"title": "",
-"type": "text",
-"widget_class": "",
-"widget_style": ""
-},
-"validators": {
-"hidden_field1": [
-{
-"class": "basic.NotEmpty",
-"message": "A valid project ident is required"
-}
-],
-"input_text": [
-{
-"class": "paths.PathLeadingTrailingSlashes",
-"message": "A valid project url is required",
-"val_args": {
-"leading_slash": true,
-"trailing_slash": true
-}
-}
-]
-}
 }
 ],
 [
