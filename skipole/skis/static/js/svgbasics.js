@@ -44,7 +44,7 @@ SKIPOLE.svgbasics.TextBlockGroup.prototype.setvalues = function (fieldlist, resu
    if (!this.widg_id) {
         return;
         }
-    var content_replaceblock = this.fieldarg_in_result('content_replaceblock', result, fieldlist);
+    let content_replaceblock = this.fieldarg_in_result('content_replaceblock', result, fieldlist);
     if (content_replaceblock) {
         this.widg.html(content_replaceblock);
         }
@@ -63,7 +63,7 @@ SKIPOLE.svgbasics.TextGroup.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var text = this.fieldarg_in_result('text', result, fieldlist);
+    let text = this.fieldarg_in_result('text', result, fieldlist);
     if (text) {
         this.widg.html(text);
         }
@@ -115,7 +115,7 @@ SKIPOLE.svgbasics.SimpleText.prototype.setvalues = function (fieldlist, result) 
     this.set_attribute('stroke', 'stroke', result, fieldlist);
     this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
 
-    var element_text = this.fieldarg_in_result('text', result, fieldlist);
+    let element_text = this.fieldarg_in_result('text', result, fieldlist);
     if (element_text) {
         this.widg.text(element_text);
         }
@@ -193,13 +193,13 @@ SKIPOLE.svgbasics.Polygon.prototype.setvalues = function (fieldlist, result) {
     this.set_attribute('fill', 'fill', result, fieldlist);
     this.set_attribute('stroke', 'stroke', result, fieldlist);
     this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
-    var points_table = this.fieldarg_in_result('points', result, fieldlist);
+    let points_table = this.fieldarg_in_result('points', result, fieldlist);
     if (!points_table) {
         return;
         }
-    var points = "";
-    for(var i = 0, size = points_table.length; i < size ; i++){
-        var point = points_table[i];
+    let points = "";
+    for(let i = 0, size = points_table.length; i < size ; i++){
+        let point = points_table[i];
         points = points.concat(point[0], ",", point[1], " ");
         }
     this.widg.attr("points", points);
@@ -219,13 +219,13 @@ SKIPOLE.svgbasics.Polyline.prototype.setvalues = function (fieldlist, result) {
     this.set_attribute('fill', 'fill', result, fieldlist);
     this.set_attribute('stroke', 'stroke', result, fieldlist);
     this.set_attribute('stroke-width', 'stroke_width', result, fieldlist);
-    var points_table = this.fieldarg_in_result('points', result, fieldlist);
+    let points_table = this.fieldarg_in_result('points', result, fieldlist);
     if (!points_table) {
         return;
         }
-    var points = "";
-    for(var i = 0, size = points_table.length; i < size ; i++){
-        var point = points_table[i];
+    let points = "";
+    for(let i = 0, size = points_table.length; i < size ; i++){
+        let point = points_table[i];
         points = points.concat(point[0], ",", point[1], " ");
         }
     this.widg.attr("points", points);

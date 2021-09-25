@@ -15,14 +15,14 @@ SKIPOLE.paras.TagBlock.prototype.dragstartfunc = function (e, data) {
     };
 SKIPOLE.paras.TagBlock.prototype.dropfunc = function (e, data) {
     e.preventDefault();
-    var dragwidgfield = e.dataTransfer.getData("text/formname");
-    var url = this.fieldvalues["dropurl"];
+    let dragwidgfield = e.dataTransfer.getData("text/formname");
+    let url = this.fieldvalues["dropurl"];
     if (!url) {
         return;
         }
     // now make a call, including data from the drag element and the drop element
-    var dropwidgfield = this.formname('drop');
-    var senddata = "ident=" + SKIPOLE.identdata;
+    let dropwidgfield = this.formname('drop');
+    let senddata = "ident=" + SKIPOLE.identdata;
     if (data) {
         senddata = senddata + "&" + dropwidgfield + "=" + data;
         }
@@ -67,10 +67,10 @@ SKIPOLE.paras.TagBlock.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var widg_id = this.widg_id
-    var the_widg = this.widg;
+    let widg_id = this.widg_id
+    let the_widg = this.widg;
     // hide the widget
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -84,7 +84,7 @@ SKIPOLE.paras.TagBlock.prototype.setvalues = function (fieldlist, result) {
             }
         }
     // enable or disable drag if a drag value is given
-    var drag = this.fieldarg_in_result('drag', result, fieldlist);
+    let drag = this.fieldarg_in_result('drag', result, fieldlist);
     if (drag !== undefined) {
         if (drag) {
             the_widg.attr("draggable","true");
@@ -96,7 +96,7 @@ SKIPOLE.paras.TagBlock.prototype.setvalues = function (fieldlist, result) {
             }
         }
     // enable or disable drop if a drop value is given
-    var drop = this.fieldarg_in_result('drop', result, fieldlist);
+    let drop = this.fieldarg_in_result('drop', result, fieldlist);
     if (drop !== undefined) {
         if (drop) {
             the_widg.attr("ondrop","SKIPOLE.widgets['" + widg_id + "'].dropfunc(event, '" + drop + "')");
@@ -120,9 +120,9 @@ SKIPOLE.paras.DivStyleDiv.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var widg_id = this.widg_id
-    var the_widg = this.widg;
-    var set_html = this.fieldarg_in_result('set_html', result, fieldlist);
+    let widg_id = this.widg_id
+    let the_widg = this.widg;
+    let set_html = this.fieldarg_in_result('set_html', result, fieldlist);
     if (set_html) {
         the_widg.html(set_html);
         }
@@ -141,14 +141,14 @@ SKIPOLE.paras.DivHTML.prototype.dragstartfunc = function (e, data) {
     };
 SKIPOLE.paras.DivHTML.prototype.dropfunc = function (e, data) {
     e.preventDefault();
-    var dragwidgfield = e.dataTransfer.getData("text/formname");
-    var url = this.fieldvalues["dropurl"];
+    let dragwidgfield = e.dataTransfer.getData("text/formname");
+    let url = this.fieldvalues["dropurl"];
     if (!url) {
         return;
         }
     // now make a call, including data from the drag element and the drop element
-    var dropwidgfield = this.formname('drop');
-    var senddata = "ident=" + SKIPOLE.identdata;
+    let dropwidgfield = this.formname('drop');
+    let senddata = "ident=" + SKIPOLE.identdata;
     if (data) {
         senddata = senddata + "&" + dropwidgfield + "=" + data;
         }
@@ -193,14 +193,14 @@ SKIPOLE.paras.DivHTML.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var widg_id = this.widg_id
-    var the_widg = this.widg;
-    var set_html = this.fieldarg_in_result('set_html', result, fieldlist);
+    let widg_id = this.widg_id
+    let the_widg = this.widg;
+    let set_html = this.fieldarg_in_result('set_html', result, fieldlist);
     if (set_html !== undefined) {
         the_widg.html(set_html);
         }
     // hide the widget
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -214,7 +214,7 @@ SKIPOLE.paras.DivHTML.prototype.setvalues = function (fieldlist, result) {
             }
         }
     // enable or disable drag if a drag value is given
-    var drag = this.fieldarg_in_result('drag', result, fieldlist);
+    let drag = this.fieldarg_in_result('drag', result, fieldlist);
     if (drag !== undefined) {
         if (drag) {
             the_widg.attr("draggable","true");
@@ -226,7 +226,7 @@ SKIPOLE.paras.DivHTML.prototype.setvalues = function (fieldlist, result) {
             }
         }
     // enable or disable drop if a drop value is given
-    var drop = this.fieldarg_in_result('drop', result, fieldlist);
+    let drop = this.fieldarg_in_result('drop', result, fieldlist);
     if (drop !== undefined) {
         if (drop) {
             the_widg.attr("ondrop","SKIPOLE.widgets['" + widg_id + "'].dropfunc(event, '" + drop + "')");
@@ -248,10 +248,10 @@ SKIPOLE.paras.SpanText.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.paras.SpanText.prototype.constructor = SKIPOLE.paras.SpanText;
 SKIPOLE.paras.SpanText.prototype.setvalues = function (fieldlist, result) {
     /* This widget accepts fields - span_text */
-   if (!this.widg_id) {
+    if (!this.widg_id) {
         return;
         }
-    var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
+    let span_text = this.fieldarg_in_result('span_text', result, fieldlist);
     if (span_text !== undefined) {
         this.widg.text(span_text);
         }
@@ -266,17 +266,17 @@ SKIPOLE.paras.TagText.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.paras.TagText.prototype.constructor = SKIPOLE.paras.TagText;
 SKIPOLE.paras.TagText.prototype.setvalues = function (fieldlist, result) {
     /* This widget accepts fields - hide, tag_text */
-   if (!this.widg_id) {
+    if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     /* tag_text */
-    var tag_text = this.fieldarg_in_result('tag_text', result, fieldlist);
+    let tag_text = this.fieldarg_in_result('tag_text', result, fieldlist);
     if (tag_text !== undefined) {
         the_widg.text(tag_text);
         }
     /* hide */
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -303,9 +303,9 @@ SKIPOLE.paras.TagUnEscaped.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     /* content */
-    var content = this.fieldarg_in_result('content', result, fieldlist);
+    let content = this.fieldarg_in_result('content', result, fieldlist);
     if (content !== undefined) {
         the_widg.html(content);
         }
@@ -320,10 +320,10 @@ SKIPOLE.paras.ParaText.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.paras.ParaText.prototype.constructor = SKIPOLE.paras.ParaText;
 SKIPOLE.paras.ParaText.prototype.setvalues = function (fieldlist, result) {
     /* This widget accepts fields - para_text */
-   if (!this.widg_id) {
+    if (!this.widg_id) {
         return;
         }
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text !== undefined) {
         this.widg.text(para_text);
         }
@@ -344,7 +344,7 @@ SKIPOLE.paras.PreText.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     // pre_text
-    var pre_text = this.fieldarg_in_result('pre_text', result, fieldlist);
+    let pre_text = this.fieldarg_in_result('pre_text', result, fieldlist);
     if (pre_text !== undefined) {
         this.widg.text(pre_text);
         }
@@ -359,7 +359,7 @@ SKIPOLE.paras.PreText.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     the_widg.text(error_message);
     };
@@ -367,7 +367,7 @@ SKIPOLE.paras.PreText.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
@@ -388,9 +388,9 @@ SKIPOLE.paras.DivPara.prototype.setvalues = function (fieldlist, result) {
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text !== undefined) {
-        var paragraph = this.widg.children().filter(":first");
+        let paragraph = this.widg.children().filter(":first");
         paragraph.text(para_text);
         }
     };
@@ -402,11 +402,11 @@ SKIPOLE.paras.DivPara.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
-    var paragraph = the_widg.find(':first');
+    let paragraph = the_widg.find(':first');
     paragraph.text(error_message);
-    var error_class = this.fieldvalues["error_class"];
+    let error_class = this.fieldvalues["error_class"];
     if (error_class) {
         paragraph.attr("class", error_class);
         }
@@ -415,13 +415,13 @@ SKIPOLE.paras.DivPara.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" );
         }
-    var paragraph = the_widg.find(':first');
+    let paragraph = the_widg.find(':first');
     paragraph.removeAttr( "class" );
-    var para_class = this.fieldvalues["para_class"];
+    let para_class = this.fieldvalues["para_class"];
     if (para_class) {
         paragraph.attr("class", para_class);
         }
@@ -437,10 +437,10 @@ SKIPOLE.paras.JSONTextLink.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var textbox = the_widg.children().filter(":last");
-    var button_show_text = this.fieldvalues["button_show_text"];
+    let textbox = the_widg.children().filter(":last");
+    let button_show_text = this.fieldvalues["button_show_text"];
     if (!button_show_text) {
         button_show_text = "Show";
         }
@@ -459,15 +459,15 @@ SKIPOLE.paras.JSONTextLink.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
 
     /* button_hide_text */
-    var button_hide_text = this.fieldvalues["button_hide_text"];
+    let button_hide_text = this.fieldvalues["button_hide_text"];
     if (!button_hide_text) {
         button_hide_text = "Hide";
         }
-    var textbox = the_widg.children().filter(":last");
+    let textbox = the_widg.children().filter(":last");
     if (textbox.is(":visible")) {
         textbox.text(error_message);
         }
@@ -486,26 +486,26 @@ SKIPOLE.paras.JSONTextLink.prototype.setvalues = function (fieldlist, result) {
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
-    var the_widg = this.widg;
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let the_widg = this.widg;
 
     // get button_hide_text
-    var button_hide_text = this.fieldvalues["button_hide_text"];
+    let button_hide_text = this.fieldvalues["button_hide_text"];
     if (!button_hide_text) {
         button_hide_text = "Hide";
         }
     // get button_show_text
-    var button_show_text = this.fieldvalues["button_show_text"];
+    let button_show_text = this.fieldvalues["button_show_text"];
     if (!button_show_text) {
         button_show_text = "Show";
         }
     // para_text
-    var textbox = the_widg.children().filter(":last");
+    let textbox = the_widg.children().filter(":last");
     if (para_text !== undefined) {
         textbox.text(para_text);
         }
     // hide
-    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
     if (hidebox != undefined) {
         if (hidebox) {
             if (textbox.is(":visible")) {
@@ -526,24 +526,24 @@ SKIPOLE.paras.JSONTextLink.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["url"]) {
         return;
         }
-    var the_widg = this.widg;
-    var button_show_text = fieldvalues["button_show_text"];
+    let the_widg = this.widg;
+    let button_show_text = fieldvalues["button_show_text"];
     if (!button_show_text) {
         button_show_text = "Show";
         }
-    var textbox = the_widg.children().filter(":last");
+    let textbox = the_widg.children().filter(":last");
     e.preventDefault();
     if (textbox.is(":visible")) {
         textbox.fadeOut('slow');
         $(e.target).text(button_show_text);
         }
     else {
-        var href = $(e.target).attr('href');
-        var senddata = href.substring(href.indexOf('?')+1);
+        let href = $(e.target).attr('href');
+        let senddata = href.substring(href.indexOf('?')+1);
         // respond to json or html
         $.ajax({
               url: fieldvalues["url"],
@@ -584,10 +584,10 @@ SKIPOLE.paras.JSONDivLink.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var button_show_text = this.fieldvalues["button_show_text"];
-    var divbox = the_widg.children().filter(":last");
+    let button_show_text = this.fieldvalues["button_show_text"];
+    let divbox = the_widg.children().filter(":last");
     if (!button_show_text) {
         button_show_text = "Show";
         }
@@ -606,18 +606,18 @@ SKIPOLE.paras.JSONDivLink.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     /* get text or html */
-    var textorhtml = this.fieldvalues["htmlescaped"];
+    let textorhtml = this.fieldvalues["htmlescaped"];
     if (!textorhtml) {
         textorhtml = "text";
         }
-    var button_hide_text = this.fieldvalues["button_hide_text"];
+    let button_hide_text = this.fieldvalues["button_hide_text"];
     if (!button_hide_text) {
         button_hide_text = "Hide";
         }
-    var divbox = the_widg.children().filter(":last");
+    let divbox = the_widg.children().filter(":last");
     if (divbox.is(":visible")) {
         if (textorhtml == "html") {
             divbox.html(error_message);
@@ -646,25 +646,25 @@ SKIPOLE.paras.JSONDivLink.prototype.setvalues = function (fieldlist, result) {
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var div_content = this.fieldarg_in_result('div_content', result, fieldlist);
-    var the_widg = this.widg;
+    let div_content = this.fieldarg_in_result('div_content', result, fieldlist);
+    let the_widg = this.widg;
     // get text or html
-    var textorhtml = this.fieldvalues["htmlescaped"];
+    let textorhtml = this.fieldvalues["htmlescaped"];
     if (!textorhtml) {
         textorhtml = "text";
         }
     // get button_hide_text
-    var button_hide_text = this.fieldvalues["button_hide_text"];
+    let button_hide_text = this.fieldvalues["button_hide_text"];
     if (!button_hide_text) {
         button_hide_text = "Hide";
         }
     // get button_show_text
-    var button_show_text = this.fieldvalues["button_show_text"];
+    let button_show_text = this.fieldvalues["button_show_text"];
     if (!button_show_text) {
         button_show_text = "Show";
         }
     // div_content
-    var divbox = the_widg.children().filter(":last");
+    let divbox = the_widg.children().filter(":last");
     if (div_content) {
         if (textorhtml == "html") {
             divbox.html(div_content);
@@ -674,7 +674,7 @@ SKIPOLE.paras.JSONDivLink.prototype.setvalues = function (fieldlist, result) {
             }
         }
     // hide
-    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
     if (hidebox != undefined) {
         if (hidebox) {
             if (divbox.is(":visible")) {
@@ -695,8 +695,8 @@ SKIPOLE.paras.JSONDivLink.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var button_show_text = fieldvalues["button_show_text"];
+    let fieldvalues = this.fieldvalues;
+    let button_show_text = fieldvalues["button_show_text"];
     if (!button_show_text) {
         button_show_text = "Show";
         }
@@ -706,7 +706,7 @@ SKIPOLE.paras.JSONDivLink.prototype.eventfunc = function (e) {
         $("#" + fieldvalues["buttonident"]).text(button_show_text);
         }
     else {
-        var senddata = {"ident":SKIPOLE.identdata};
+        let senddata = {"ident":SKIPOLE.identdata};
         if (fieldvalues["get_field"]) {
             senddata[this.formname("get_field")] = fieldvalues["get_field"];
             }
@@ -755,9 +755,9 @@ SKIPOLE.paras.TextBlockPara.prototype.setvalues = function (fieldlist, result) {
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var text_replaceblock = this.fieldarg_in_result('text_replaceblock', result, fieldlist);
+    let text_replaceblock = this.fieldarg_in_result('text_replaceblock', result, fieldlist);
     if (text_replaceblock) {
-        var linebreaks = this.fieldvalues["linebreaks"];
+        let linebreaks = this.fieldvalues["linebreaks"];
         if (linebreaks) {
             text_replaceblock = SKIPOLE.textbr(text_replaceblock);
             this.widg.html(text_replaceblock);
@@ -775,9 +775,9 @@ SKIPOLE.paras.TextBlockPara.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
-    var linebreaks = this.fieldvalues["linebreaks"];
+    let linebreaks = this.fieldvalues["linebreaks"];
     if (linebreaks) {
         error_message = SKIPOLE.textbr(error_message);
         the_widg.html(error_message);
@@ -785,7 +785,7 @@ SKIPOLE.paras.TextBlockPara.prototype.show_error = function (error_message) {
     else {
         the_widg.text(error_message);
         }
-    var error_class = this.fieldvalues["error_class"];
+    let error_class = this.fieldvalues["error_class"];
     if (error_class) {
         the_widg.attr("class", error_class);
         }
@@ -794,12 +794,12 @@ SKIPOLE.paras.TextBlockPara.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" );
         }
     the_widg.removeAttr( "class" );
-    var widget_class = this.fieldvalues["widget_class"];
+    let widget_class = this.fieldvalues["widget_class"];
     if (widget_class) {
         the_widg.attr("class", widget_class);
         }
@@ -814,10 +814,10 @@ SKIPOLE.paras.TextBlockDiv.prototype = Object.create(SKIPOLE.BaseWidget.prototyp
 SKIPOLE.paras.TextBlockDiv.prototype.constructor = SKIPOLE.paras.TextBlockDiv;
 SKIPOLE.paras.TextBlockDiv.prototype.setvalues = function (fieldlist, result) {
     /* This widget accepts field - content_replaceblock */
-   if (!this.widg_id) {
+    if (!this.widg_id) {
         return;
         }
-    var content_replaceblock = this.fieldarg_in_result('content_replaceblock', result, fieldlist);
+    let content_replaceblock = this.fieldarg_in_result('content_replaceblock', result, fieldlist);
     if (content_replaceblock) {
         this.widg.html(content_replaceblock);
         }
@@ -833,13 +833,13 @@ SKIPOLE.paras.ShowPara1.prototype.constructor = SKIPOLE.paras.ShowPara1;
 SKIPOLE.paras.ShowPara1.prototype.setvalues = function (fieldlist, result) {
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
-    var paragraph = the_widg.children().filter(":first");
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let the_widg = this.widg;
+    let paragraph = the_widg.children().filter(":first");
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text !== undefined) {
         paragraph.text(para_text);
         }
-    var show_para = this.fieldarg_in_result('show_para', result, fieldlist);
+    let show_para = this.fieldarg_in_result('show_para', result, fieldlist);
     if (show_para !== undefined) {
         if (show_para) {
             if (!(paragraph.is(":visible"))) {
@@ -860,10 +860,10 @@ SKIPOLE.paras.ShowPara1.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
-    var errordiv = the_widg.find("div:last");
-    var paragraph = the_widg.find("p:last");
+    let errordiv = the_widg.find("div:last");
+    let paragraph = the_widg.find("p:last");
     paragraph.text(error_message);
     if (!(errordiv.is(":visible"))) {
         errordiv.fadeIn('slow');
@@ -873,11 +873,11 @@ SKIPOLE.paras.ShowPara1.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
-    var errordiv = the_widg.find("div:last");
+    let errordiv = the_widg.find("div:last");
     if (errordiv.is(":visible")) {
         errordiv.fadeOut('slow');
         }
@@ -891,13 +891,13 @@ SKIPOLE.paras.ShowPara2 = function (widg_id, error_message, fieldmap) {
 SKIPOLE.paras.ShowPara2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.paras.ShowPara2.prototype.constructor = SKIPOLE.paras.ShowPara2;
 SKIPOLE.paras.ShowPara2.prototype.setvalues = function (fieldlist, result) {
-    var the_widg = this.widg;
-    var paragraph = the_widg.find("p");
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let the_widg = this.widg;
+    let paragraph = the_widg.find("p");
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text !== undefined) {
         paragraph.text(para_text);
         }
-    var hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (hide !== undefined) {
         if (hide) {
             if (the_widg.is(":visible")) {

@@ -12,22 +12,22 @@ SKIPOLE.lists.UList1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
-    var fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
     // contents
-    var contents = this.fieldarg_in_result('contents', result, fieldlist);
+    let contents = this.fieldarg_in_result('contents', result, fieldlist);
     // the class of the elements
-    var even_class = fieldvalues["even_class"];
-    var odd_class = fieldvalues["odd_class"];
+    let even_class = fieldvalues["even_class"];
+    let odd_class = fieldvalues["odd_class"];
 
     if (contents) {
         // If a request to renew the list is recieved, this block
         // empties the existing list, and re-draws it
-        var rows = contents.length;
+        let rows = contents.length;
         // empty the list
         the_widg.empty();
         // and now start filling it again
-        var htmlcontent = "";
+        let htmlcontent = "";
         for (row = 0; row < rows; row++) {
             // for each row
             if (even_class && (row % 2)) {
@@ -59,22 +59,22 @@ SKIPOLE.lists.UList2.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
-    var fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
     // contents
-    var contents = this.fieldarg_in_result('set_html', result, fieldlist);
+    let contents = this.fieldarg_in_result('set_html', result, fieldlist);
     // the class of the elements
-    var even_class = fieldvalues["even_class"];
-    var odd_class = fieldvalues["odd_class"];
+    let even_class = fieldvalues["even_class"];
+    let odd_class = fieldvalues["odd_class"];
 
     if (contents) {
         // If a request to renew the list is recieved, this block
         // empties the existing list, and re-draws it
-        var rows = contents.length;
+        let rows = contents.length;
         // empty the list
         the_widg.empty();
         // and now start filling it again
-        var htmlcontent = "";
+        let htmlcontent = "";
         for (row = 0; row < rows; row++) {
             // for each row
             if (even_class && (row % 2)) {

@@ -15,7 +15,7 @@ SKIPOLE.radio.RadioButton1.prototype.setvalues = function (fieldlist, result) {
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     // radio_checked
-    var radio_checked_value = this.fieldarg_in_result('radio_checked', result, fieldlist);
+    let radio_checked_value = this.fieldarg_in_result('radio_checked', result, fieldlist);
     if (radio_checked_value) {
         this.widg.find('[value="' + radio_checked_value + '"]').prop('checked', true);
         }
@@ -39,14 +39,14 @@ SKIPOLE.radio.RadioTable2.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // columns
-    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
-    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
-    var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
-    var itemchecked = this.fieldarg_in_result('radio_checked', result, fieldlist);
-    var index = 0;
-    var header = false;
+    let col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    let col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    let row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
+    let itemchecked = this.fieldarg_in_result('radio_checked', result, fieldlist);
+    let index = 0;
+    let header = false;
     if (the_widg.find('th').length) {
         header = true;
         }
@@ -63,7 +63,7 @@ SKIPOLE.radio.RadioTable2.prototype.setvalues = function (fieldlist, result) {
                     $(this).attr("class", row_classes[index]);
                     }
                 }
-            var cells = $(this).children();
+            let cells = $(this).children();
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);

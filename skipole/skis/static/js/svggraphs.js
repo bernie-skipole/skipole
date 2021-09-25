@@ -13,15 +13,15 @@ SKIPOLE.svggraphs.Chart1.prototype.setvalues = function (fieldlist, result) {
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
 
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // set the chart values
 
-    var values = this.fieldarg_in_result('values', result, fieldlist);
+    let values = this.fieldarg_in_result('values', result, fieldlist);
     if (values == undefined) {
         return;
         }
 
-    var number_of_points = values.length;
+    let number_of_points = values.length;
 
     if (!number_of_points) {
         return;
@@ -29,13 +29,13 @@ SKIPOLE.svggraphs.Chart1.prototype.setvalues = function (fieldlist, result) {
 
     // calculate points from these values
 
-    var xpoint = 510;
-    var points = "";
+    let xpoint = 510;
+    let points = "";
 
     values.reverse();
 
-    for (pt = 0; pt < number_of_points; pt++) {
-        var ypoint = values[pt];
+    for (let pt = 0; pt < number_of_points; pt++) {
+        let ypoint = values[pt];
         xpoint = xpoint-10;
         if (xpoint < 0) {
             break;
@@ -52,7 +52,7 @@ SKIPOLE.svggraphs.Chart1.prototype.setvalues = function (fieldlist, result) {
             }
         }
 
-    var line = the_widg.find('polyline');
+    let line = the_widg.find('polyline');
     if (line == undefined) {
         return;
         }
@@ -85,16 +85,16 @@ SKIPOLE.svggraphs.StarChartXY.prototype.setvalues = function (fieldlist, result)
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
 
-    var stroke = this.fieldvalues['stroke'];
-    var stroke_width = this.fieldvalues['stroke_width'];
-    var fill = this.fieldvalues['fill'];
-    var cross = this.fieldvalues['cross'];
-    var square = this.fieldvalues['square'];
+    let stroke = this.fieldvalues['stroke'];
+    let stroke_width = this.fieldvalues['stroke_width'];
+    let fill = this.fieldvalues['fill'];
+    let cross = this.fieldvalues['cross'];
+    let square = this.fieldvalues['square'];
 
-    var stars = this.fieldarg_in_result('stars', result, fieldlist);
-    var lines = this.fieldarg_in_result('lines', result, fieldlist);
+    let stars = this.fieldarg_in_result('stars', result, fieldlist);
+    let lines = this.fieldarg_in_result('lines', result, fieldlist);
 
     // if only transform has been set, and stars and lines are not included
     if (stars == undefined && lines == undefined) {
@@ -104,20 +104,20 @@ SKIPOLE.svggraphs.StarChartXY.prototype.setvalues = function (fieldlist, result)
     // delete existing starchart
     the_widg.empty();
     // Draw the circle
-    var graphstring = "<circle cx=\"250\" cy=\"250\" r=\"250\" fill=\"" + fill + "\" stroke=\"" + stroke + "\" stroke-width=\"" + stroke_width + "\" />";
+    let graphstring = "<circle cx=\"250\" cy=\"250\" r=\"250\" fill=\"" + fill + "\" stroke=\"" + stroke + "\" stroke-width=\"" + stroke_width + "\" />";
 
     // set the chart stars
     if (stars != undefined) {
-        var number_of_stars = stars.length;
+        let number_of_stars = stars.length;
         if (number_of_stars) {
             // draw new stars
-            for (st = 0; st < number_of_stars; st++) {
-                var radius = parseFloat(stars[st][0]) / 2.0;
+            for (let st = 0; st < number_of_stars; st++) {
+                let radius = parseFloat(stars[st][0]) / 2.0;
                 if (radius < 0.1) {
                      radius = 0.1;
                      }
-                var xpoint = 250.0 - parseFloat(stars[st][1]);
-                var ypoint = 250.0 - parseFloat(stars[st][2]);
+                let xpoint = 250.0 - parseFloat(stars[st][1]);
+                let ypoint = 250.0 - parseFloat(stars[st][2]);
                 graphstring += "<circle cx=\"" + xpoint + "\" cy=\"" + ypoint + "\" r=\"" + radius + "\" fill=\"" + stroke + "\" stroke=\"" + stroke + "\" />";
                 }
             }
@@ -139,18 +139,18 @@ SKIPOLE.svggraphs.StarChartXY.prototype.setvalues = function (fieldlist, result)
         the_widg.html(graphstring);
         return;
         }
-    var number_of_lines = lines.length;
+    let number_of_lines = lines.length;
     if (!number_of_lines) {
         the_widg.html(graphstring);
         return;
         }
 
     // draw lines
-    for (ln = 0; ln < number_of_lines; ln++) {
-        var x1point = 250.0 - parseFloat(lines[ln][0]);
-        var y1point = 250.0 - parseFloat(lines[ln][1]);
-        var x2point = 250.0 - parseFloat(lines[ln][2]);
-        var y2point = 250.0 - parseFloat(lines[ln][3]);
+    for (let ln = 0; ln < number_of_lines; ln++) {
+        let x1point = 250.0 - parseFloat(lines[ln][0]);
+        let y1point = 250.0 - parseFloat(lines[ln][1]);
+        let x2point = 250.0 - parseFloat(lines[ln][2]);
+        let y2point = 250.0 - parseFloat(lines[ln][3]);
         graphstring += "<line x1=\"" + x1point + "\" y1=\"" + y1point + "\" x2=\"" + x2point + "\" y2=\"" + y2point + "\"  stroke=\"" + stroke + "\" stroke-width=\"" + stroke_width + "\" />";
         }
     the_widg.html(graphstring);
@@ -224,37 +224,37 @@ SKIPOLE.svggraphs.Points.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // set the chart values
-    var values = this.fieldarg_in_result('values', result, fieldlist);
+    let values = this.fieldarg_in_result('values', result, fieldlist);
     if (values == undefined) {
         return;
         }
-    var number_of_points = values.length;
+    let number_of_points = values.length;
     if (!number_of_points) {
         return;
         }
 
-    var pointcol = this.fieldvalues['pointcol'];
-    var mx = this.fieldvalues['mx'];
-    var my = this.fieldvalues['my'];
-    var cx = this.fieldvalues['cx'];
-    var cy = this.fieldvalues['cy'];
-    var minx = this.fieldvalues['minx'];
-    var maxx = this.fieldvalues['maxx'];
-    var miny = this.fieldvalues['miny'];
-    var maxy = this.fieldvalues['maxy'];
+    let pointcol = this.fieldvalues['pointcol'];
+    let mx = this.fieldvalues['mx'];
+    let my = this.fieldvalues['my'];
+    let cx = this.fieldvalues['cx'];
+    let cy = this.fieldvalues['cy'];
+    let minx = this.fieldvalues['minx'];
+    let maxx = this.fieldvalues['maxx'];
+    let miny = this.fieldvalues['miny'];
+    let maxy = this.fieldvalues['maxy'];
 
-    var graphstring = "";
+    let graphstring = "";
 
     // delete existing points
     the_widg.empty();
     // draw new points
-    for (pt = 0; pt < number_of_points; pt++) {
-        var xpoint = parseFloat(values[pt][0]);
-        var ypoint = parseFloat(values[pt][1]);
-        var x = Math.floor(mx*xpoint + cx);
-        var y = Math.floor(my*ypoint + cy);
+    for (let pt = 0; pt < number_of_points; pt++) {
+        let xpoint = parseFloat(values[pt][0]);
+        let ypoint = parseFloat(values[pt][1]);
+        let x = Math.floor(mx*xpoint + cx);
+        let y = Math.floor(my*ypoint + cy);
         if (ypoint<miny) {continue;}
         if (ypoint>maxy) {continue;}
         if (xpoint<minx) {continue;}
@@ -277,43 +277,43 @@ SKIPOLE.svggraphs.Lines.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // set the chart values
-    var values = this.fieldarg_in_result('values', result, fieldlist);
+    let values = this.fieldarg_in_result('values', result, fieldlist);
     if (values == undefined) {
         return;
         }
-    var number_of_points = values.length;
+    let number_of_points = values.length;
     if (!number_of_points) {
         return;
         }
 
-    var linecol = this.fieldvalues['linecol'];
-    var linewidth = this.fieldvalues['linewidth'];
-    var pointradius = this.fieldvalues['pointradius'];
-    var mx = this.fieldvalues['mx'];
-    var my = this.fieldvalues['my'];
-    var cx = this.fieldvalues['cx'];
-    var cy = this.fieldvalues['cy'];
-    var minx = this.fieldvalues['minx'];
-    var maxx = this.fieldvalues['maxx'];
-    var miny = this.fieldvalues['miny'];
-    var maxy = this.fieldvalues['maxy'];
+    let linecol = this.fieldvalues['linecol'];
+    let linewidth = this.fieldvalues['linewidth'];
+    let pointradius = this.fieldvalues['pointradius'];
+    let mx = this.fieldvalues['mx'];
+    let my = this.fieldvalues['my'];
+    let cx = this.fieldvalues['cx'];
+    let cy = this.fieldvalues['cy'];
+    let minx = this.fieldvalues['minx'];
+    let maxx = this.fieldvalues['maxx'];
+    let miny = this.fieldvalues['miny'];
+    let maxy = this.fieldvalues['maxy'];
 
-    var graphstring = "";
+    let graphstring = "";
 
     // delete existing points
     the_widg.empty();
     // draw new points
 
-    var old_x = '';
-    var old_y = '';
+    let old_x = '';
+    let old_y = '';
 
-    for (pt = 0; pt < number_of_points; pt++) {
-        var xpoint = parseFloat(values[pt][0]);
-        var ypoint = parseFloat(values[pt][1]);
-        var x = Math.floor(mx*xpoint + cx);
-        var y = Math.floor(my*ypoint + cy);
+    for (let pt = 0; pt < number_of_points; pt++) {
+        let xpoint = parseFloat(values[pt][0]);
+        let ypoint = parseFloat(values[pt][1]);
+        let x = Math.floor(mx*xpoint + cx);
+        let y = Math.floor(my*ypoint + cy);
         if (ypoint<miny) {continue;}
         if (ypoint>maxy) {continue;}
         if (xpoint<minx) {continue;}
@@ -340,43 +340,43 @@ SKIPOLE.svggraphs.XBars.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // set the chart values
-    var values = this.fieldarg_in_result('values', result, fieldlist);
+    let values = this.fieldarg_in_result('values', result, fieldlist);
     if (values == undefined) {
         return;
         }
-    var number_of_points = values.length;
+    let number_of_points = values.length;
     if (!number_of_points) {
         return;
         }
 
-    var fill = this.fieldvalues['fill'];
-    var fill_opacity = this.fieldvalues['fill_opacity'];
-    var stroke = this.fieldvalues['stroke'];
-    var stroke_width = this.fieldvalues['stroke_width'];
-    var barwidth = this.fieldvalues['barwidth'];
-    var halfbar = Math.floor(barwidth/2);
-    var yaxis = this.fieldvalues['yaxis'];
-    var mx = this.fieldvalues['mx'];
-    var my = this.fieldvalues['my'];
-    var cx = this.fieldvalues['cx'];
-    var cy = this.fieldvalues['cy'];
-    var minx = this.fieldvalues['minx'];
-    var maxx = this.fieldvalues['maxx'];
-    var miny = this.fieldvalues['miny'];
-    var maxy = this.fieldvalues['maxy'];
+    let fill = this.fieldvalues['fill'];
+    let fill_opacity = this.fieldvalues['fill_opacity'];
+    let stroke = this.fieldvalues['stroke'];
+    let stroke_width = this.fieldvalues['stroke_width'];
+    let barwidth = this.fieldvalues['barwidth'];
+    let halfbar = Math.floor(barwidth/2);
+    let yaxis = this.fieldvalues['yaxis'];
+    let mx = this.fieldvalues['mx'];
+    let my = this.fieldvalues['my'];
+    let cx = this.fieldvalues['cx'];
+    let cy = this.fieldvalues['cy'];
+    let minx = this.fieldvalues['minx'];
+    let maxx = this.fieldvalues['maxx'];
+    let miny = this.fieldvalues['miny'];
+    let maxy = this.fieldvalues['maxy'];
 
-    var graphstring = "";
+    let graphstring = "";
 
     // delete existing points
     the_widg.empty();
     // draw rectangles
-    for (pt = 0; pt < number_of_points; pt++) {
-        var xpoint = parseFloat(values[pt][0]);
-        var ypoint = parseFloat(values[pt][1]);
-        var x = Math.floor(mx*xpoint + cx);
-        var y = Math.floor(my*ypoint + cy);
+    for (let pt = 0; pt < number_of_points; pt++) {
+        let xpoint = parseFloat(values[pt][0]);
+        let ypoint = parseFloat(values[pt][1]);
+        let x = Math.floor(mx*xpoint + cx);
+        let y = Math.floor(my*ypoint + cy);
         if (ypoint<miny) {continue;}
         if (ypoint>maxy) {continue;}
         if (xpoint<minx) {continue;}
@@ -398,43 +398,43 @@ SKIPOLE.svggraphs.YBars.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // set the chart values
-    var values = this.fieldarg_in_result('values', result, fieldlist);
+    let values = this.fieldarg_in_result('values', result, fieldlist);
     if (values == undefined) {
         return;
         }
-    var number_of_points = values.length;
+    let number_of_points = values.length;
     if (!number_of_points) {
         return;
         }
 
-    var fill = this.fieldvalues['fill'];
-    var fill_opacity = this.fieldvalues['fill_opacity'];
-    var stroke = this.fieldvalues['stroke'];
-    var stroke_width = this.fieldvalues['stroke_width'];
-    var barwidth = this.fieldvalues['barwidth'];
-    var halfbar = Math.floor(barwidth/2);
-    var xaxis = this.fieldvalues['xaxis'];
-    var mx = this.fieldvalues['mx'];
-    var my = this.fieldvalues['my'];
-    var cx = this.fieldvalues['cx'];
-    var cy = this.fieldvalues['cy'];
-    var minx = this.fieldvalues['minx'];
-    var maxx = this.fieldvalues['maxx'];
-    var miny = this.fieldvalues['miny'];
-    var maxy = this.fieldvalues['maxy'];
+    let fill = this.fieldvalues['fill'];
+    let fill_opacity = this.fieldvalues['fill_opacity'];
+    let stroke = this.fieldvalues['stroke'];
+    let stroke_width = this.fieldvalues['stroke_width'];
+    let barwidth = this.fieldvalues['barwidth'];
+    let halfbar = Math.floor(barwidth/2);
+    let xaxis = this.fieldvalues['xaxis'];
+    let mx = this.fieldvalues['mx'];
+    let my = this.fieldvalues['my'];
+    let cx = this.fieldvalues['cx'];
+    let cy = this.fieldvalues['cy'];
+    let minx = this.fieldvalues['minx'];
+    let maxx = this.fieldvalues['maxx'];
+    let miny = this.fieldvalues['miny'];
+    let maxy = this.fieldvalues['maxy'];
 
-    var graphstring = "";
+    let graphstring = "";
 
     // delete existing points
     the_widg.empty();
     // draw rectangles
-    for (pt = 0; pt < number_of_points; pt++) {
-        var xpoint = parseFloat(values[pt][0]);
-        var ypoint = parseFloat(values[pt][1]);
-        var x = Math.floor(mx*xpoint + cx);
-        var y = Math.floor(my*ypoint + cy);
+    for (let pt = 0; pt < number_of_points; pt++) {
+        let xpoint = parseFloat(values[pt][0]);
+        let ypoint = parseFloat(values[pt][1]);
+        let x = Math.floor(mx*xpoint + cx);
+        let y = Math.floor(my*ypoint + cy);
         if (ypoint<miny) {continue;}
         if (ypoint>maxy) {continue;}
         if (xpoint<minx) {continue;}

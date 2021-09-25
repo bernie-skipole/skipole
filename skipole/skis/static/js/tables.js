@@ -19,13 +19,13 @@ SKIPOLE.tables.TwoColTable1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // col1 and col2
-    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
-    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
-    var self = this;
-    var index = 0;
-    var header = false;
+    let col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    let col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    let self = this;
+    let index = 0;
+    let header = false;
     if (the_widg.find('th').length) {
         header = true;
         }
@@ -35,7 +35,7 @@ SKIPOLE.tables.TwoColTable1.prototype.setvalues = function (fieldlist, result) {
             }
         else {
             // for each row
-            var cells = $(this).children();
+            let cells = $(this).children();
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);
@@ -62,14 +62,14 @@ SKIPOLE.tables.ThreeColTable1.prototype.setvalues = function (fieldlist, result)
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // columns
-    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
-    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
-    var col3 = this.fieldarg_in_result('col3', result, fieldlist);
-    var self = this;
-    var index = 0;
-    var header = false;
+    let col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    let col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    let col3 = this.fieldarg_in_result('col3', result, fieldlist);
+    let self = this;
+    let index = 0;
+    let header = false;
     if (the_widg.find('th').length) {
         header = true;
         }
@@ -79,7 +79,7 @@ SKIPOLE.tables.ThreeColTable1.prototype.setvalues = function (fieldlist, result)
             }
         else {
             // for each row
-            var cells = $(this).children();
+            let cells = $(this).children();
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);

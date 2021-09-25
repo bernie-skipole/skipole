@@ -16,7 +16,7 @@ SKIPOLE.textarea.SubmitTextArea.prototype.setvalues = function (fieldlist, resul
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     textarea = this.widg.find('textarea').filter(":first")
     textarea.text(input_text);
     };
@@ -33,7 +33,7 @@ SKIPOLE.textarea.TextArea1.prototype.setvalues = function (fieldlist, result) {
         return;
         }
      // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text) {
         this.widg.text(input_text);
         }
@@ -52,8 +52,8 @@ SKIPOLE.textarea.TextArea2.prototype.setvalues = function (fieldlist, result) {
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     // input_text
-    var text_input = this.widg.find('textarea');
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let text_input = this.widg.find('textarea');
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text) {
         text_input.text(input_text);
         }

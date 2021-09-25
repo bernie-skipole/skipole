@@ -13,7 +13,7 @@ SKIPOLE.upload.SubmitUploadFile1.prototype.setvalues = function (fieldlist, resu
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
 
     /* check if an error message or clear_error is given */
     if (this.check_error(fieldlist, result)) {
@@ -22,7 +22,7 @@ SKIPOLE.upload.SubmitUploadFile1.prototype.setvalues = function (fieldlist, resu
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // set hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -48,7 +48,7 @@ SKIPOLE.upload.SubmitUploadFile2.prototype.setvalues = function (fieldlist, resu
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
 
     /* check if an error message or clear_error is given */
     if (this.check_error(fieldlist, result)) {
@@ -57,7 +57,7 @@ SKIPOLE.upload.SubmitUploadFile2.prototype.setvalues = function (fieldlist, resu
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // set hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -73,7 +73,7 @@ SKIPOLE.upload.SubmitUploadFile2.prototype.setvalues = function (fieldlist, resu
     };
 SKIPOLE.upload.SubmitUploadFile2.prototype.eventfunc = function(e) {
     SKIPOLE.skiprefresh = true;
-    var selected_form = $(e.target);
+    let selected_form = $(e.target);
     if (!SKIPOLE.form_validate(selected_form)) {
         // prevent the submission if validation failure
         e.preventDefault();

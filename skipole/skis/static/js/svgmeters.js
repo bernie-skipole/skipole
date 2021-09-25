@@ -47,25 +47,25 @@ SKIPOLE.svgmeters.Vertical1.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // set the fill attribute of the polygon
-    var arrow = the_widg.find('polygon');
+    let arrow = the_widg.find('polygon');
     if (arrow == undefined) {
         return;
         }
-    var arrow_fill = this.fieldarg_in_result('arrow_fill', result, fieldlist);
+    let arrow_fill = this.fieldarg_in_result('arrow_fill', result, fieldlist);
     if (arrow_fill) {
         arrow.attr('fill', arrow_fill);
         }
 
     // set the measurement
-    var measurement = this.fieldarg_in_result('measurement', result, fieldlist);
+    let measurement = this.fieldarg_in_result('measurement', result, fieldlist);
     if (measurement == undefined) {
         return;
         }
 
-    var minvalue = this.fieldvalues["minvalue"];
-    var maxvalue = this.fieldvalues["maxvalue"];
+    let minvalue = this.fieldvalues["minvalue"];
+    let maxvalue = this.fieldvalues["maxvalue"];
     if (minvalue == undefined) {
         return;
         }
@@ -73,9 +73,9 @@ SKIPOLE.svgmeters.Vertical1.prototype.setvalues = function (fieldlist, result) {
         return;
         }
 
-    var m = parseFloat(measurement);
-    var mn = parseFloat(minvalue);
-    var mx = parseFloat(maxvalue);
+    let m = parseFloat(measurement);
+    let mn = parseFloat(minvalue);
+    let mx = parseFloat(maxvalue);
 
     if (m >= mx) {
         arrow.attr('transform', "translate(0, 0)");
@@ -86,7 +86,7 @@ SKIPOLE.svgmeters.Vertical1.prototype.setvalues = function (fieldlist, result) {
         return;
         }
 
-    var scale = Math.round(600 - (m - mn)*600/(mx-mn));
+    let scale = Math.round(600 - (m - mn)*600/(mx-mn));
     arrow.attr('transform', "translate(0, " + scale + ")");
     };
 
@@ -102,30 +102,30 @@ SKIPOLE.svgmeters.Traditional1.prototype.setvalues = function (fieldlist, result
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // set the fill attribute of the polygon
-    var arrow = the_widg.find('polygon');
+    let arrow = the_widg.find('polygon');
     if (arrow == undefined) {
         return;
         }
-    var circle = the_widg.find('circle');
+    let circle = the_widg.find('circle');
     if (circle == undefined) {
         return;
         }
-    var arrow_stroke = this.fieldarg_in_result('arrow_stroke', result, fieldlist);
+    let arrow_stroke = this.fieldarg_in_result('arrow_stroke', result, fieldlist);
     if (arrow_stroke) {
         arrow.attr('stroke', arrow_stroke);
         circle.attr('stroke', arrow_stroke);
         }
 
     // set the measurement
-    var measurement = this.fieldarg_in_result('measurement', result, fieldlist);
+    let measurement = this.fieldarg_in_result('measurement', result, fieldlist);
     if (measurement == undefined) {
         return;
         }
 
-    var minvalue = this.fieldvalues["minvalue"];
-    var maxvalue = this.fieldvalues["maxvalue"];
+    let minvalue = this.fieldvalues["minvalue"];
+    let maxvalue = this.fieldvalues["maxvalue"];
     if (minvalue == undefined) {
         return;
         }
@@ -133,9 +133,9 @@ SKIPOLE.svgmeters.Traditional1.prototype.setvalues = function (fieldlist, result
         return;
         }
 
-    var m = parseFloat(measurement);
-    var mn = parseFloat(minvalue);
-    var mx = parseFloat(maxvalue);
+    let m = parseFloat(measurement);
+    let mn = parseFloat(minvalue);
+    let mx = parseFloat(maxvalue);
 
     if (m >= mx) {
         arrow.attr('transform', "rotate(60 350 350)");
@@ -146,7 +146,7 @@ SKIPOLE.svgmeters.Traditional1.prototype.setvalues = function (fieldlist, result
         return;
         }
 
-    var scale = Math.round((m-mn)*120/(mx-mn) - 60);
+    let scale = Math.round((m-mn)*120/(mx-mn) - 60);
     arrow.attr('transform', "rotate(" + scale + " 350 350)");
     };
 
@@ -162,21 +162,21 @@ SKIPOLE.svgmeters.Angle.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     this.set_attribute('transform', 'transform', result, fieldlist);
-    var the_widg = this.widg;
-    var arrow = the_widg.find('polygon');
+    let the_widg = this.widg;
+    let arrow = the_widg.find('polygon');
 
     // set the measurement
-    var measurement = this.fieldarg_in_result('measurement', result, fieldlist);
+    let measurement = this.fieldarg_in_result('measurement', result, fieldlist);
     if (measurement == undefined) {
         return;
         }
 
-    var scale_units = this.fieldvalues["scale_units"];
+    let scale_units = this.fieldvalues["scale_units"];
     if (scale_units == undefined) {
         return;
         }
 
-    var m = parseFloat(measurement);
+    let m = parseFloat(measurement);
 
     if (scale_units == "24") {
         if (m <= 0) {
@@ -187,7 +187,7 @@ SKIPOLE.svgmeters.Angle.prototype.setvalues = function (fieldlist, result) {
             arrow.removeAttr("transform");
             return;
             }
-        var rotate = Math.round(m*15);
+        let rotate = Math.round(m*15);
         arrow.attr('transform', "rotate(" + rotate + " 250 250)");
         }
 
@@ -200,7 +200,7 @@ SKIPOLE.svgmeters.Angle.prototype.setvalues = function (fieldlist, result) {
             arrow.removeAttr("transform");
             return;
             }
-        var rotate = Math.round(m*3.6);
+        let rotate = Math.round(m*3.6);
         arrow.attr('transform', "rotate(" + rotate + " 250 250)");
         }
 
@@ -213,7 +213,7 @@ SKIPOLE.svgmeters.Angle.prototype.setvalues = function (fieldlist, result) {
             arrow.removeAttr("transform");
             return;
             }
-        var rotate = Math.round(m);
+        let rotate = Math.round(m);
         arrow.attr('transform', "rotate(" + rotate + " 250 250)");
        }
 
