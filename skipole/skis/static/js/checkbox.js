@@ -15,7 +15,7 @@ SKIPOLE.checkbox.CheckBox1.prototype.setvalues = function (fieldlist, result) {
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     // checked
-    var checked_value = this.fieldarg_in_result('checked', result, fieldlist);
+    let checked_value = this.fieldarg_in_result('checked', result, fieldlist);
     if (checked_value === true) {
         this.widg.find('input').prop('checked', true);
         }
@@ -36,7 +36,7 @@ SKIPOLE.checkbox.CheckBox2.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     // checked
-    var checked_value = this.fieldarg_in_result('checked', result, fieldlist);
+    let checked_value = this.fieldarg_in_result('checked', result, fieldlist);
     if (checked_value === true) {
         this.widg.find('input').prop('checked', true);
         }
@@ -58,7 +58,7 @@ SKIPOLE.checkbox.CheckedText.prototype.setvalues = function (fieldlist, result) 
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     // checked
-    var checked_value = this.fieldarg_in_result('checked', result, fieldlist);
+    let checked_value = this.fieldarg_in_result('checked', result, fieldlist);
     if (checked_value === true) {
         this.widg.find('input[type="checkbox"]').prop('checked', true);
         this.widg.find('input[type="text"]').prop('disabled',false);
@@ -82,7 +82,7 @@ SKIPOLE.checkbox.CheckInputs.prototype.setvalues = function (fieldlist, result) 
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     // checked
-    var checked_value = this.fieldarg_in_result('checked', result, fieldlist);
+    let checked_value = this.fieldarg_in_result('checked', result, fieldlist);
     if (checked_value === true) {
         this.widg.find('input[type="checkbox"]').first().prop('checked', true);
         this.widg.find('input[type="text"]').prop('disabled',false);
@@ -104,20 +104,20 @@ SKIPOLE.checkbox.CheckBoxTable1.prototype.setvalues = function (fieldlist, resul
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // columns
-    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
-    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
-    var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
-    var itemschecked = this.fieldarg_in_result('checked', result, fieldlist);
-    var self = this;
+    let col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    let col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    let row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
+    let itemschecked = this.fieldarg_in_result('checked', result, fieldlist);
+    let self = this;
     if (itemschecked && itemschecked.length) {
         var nameschecked = itemschecked.map( function(item) {
             return self.formname('checked') + "-" + item;
             })
         }
-    var index = 0;
-    var header = false;
+    let index = 0;
+    let header = false;
     if (the_widg.find('th').length) {
         header = true;
         }
@@ -134,7 +134,7 @@ SKIPOLE.checkbox.CheckBoxTable1.prototype.setvalues = function (fieldlist, resul
                     $(this).attr("class", row_classes[index]);
                     }
                 }
-            var cells = $(this).children();
+            let cells = $(this).children();
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);
@@ -176,7 +176,7 @@ SKIPOLE.checkbox.SubmitCheckBox1.prototype.setvalues = function (fieldlist, resu
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     // checked
-    var checked_value = this.fieldarg_in_result('checked', result, fieldlist);
+    let checked_value = this.fieldarg_in_result('checked', result, fieldlist);
     if (checked_value === true) {
         this.widg.find('input[type="checkbox"]').prop('checked', true);
         }
@@ -186,7 +186,7 @@ SKIPOLE.checkbox.SubmitCheckBox1.prototype.setvalues = function (fieldlist, resu
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
@@ -210,11 +210,11 @@ SKIPOLE.checkbox.SubmitCheckBox1.prototype.eventfunc = function (e) {
             }
         else {
             // form validated, so if json url set, call a json page
-            var jsonurl = this.fieldvalues["url"];
+            let jsonurl = this.fieldvalues["url"];
             if (jsonurl) {
-                var self = this;
-                var widgform = this.widg.find('form');
-                var senddata = widgform.serializeArray();
+                let self = this;
+                let widgform = this.widg.find('form');
+                let senddata = widgform.serializeArray();
                 e.preventDefault();
                 // respond to json or html
                 $.ajax({

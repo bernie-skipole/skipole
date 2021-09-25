@@ -12,9 +12,9 @@ SKIPOLE.confirm.ConfirmBox1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // hide
-    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
     if (hidebox != undefined) {
         if (hidebox) {
             if (the_widg.is(":visible")) {
@@ -28,53 +28,53 @@ SKIPOLE.confirm.ConfirmBox1.prototype.setvalues = function (fieldlist, result) {
             }
         }
     // para_text
-    var paragraph = the_widg.find("p");
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let paragraph = the_widg.find("p");
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text) {
         paragraph.text(para_text);
         }
-     var a_1 = the_widg.find("a").first();
-     var a_2 = the_widg.find("a").last();
+    let a_1 = the_widg.find("a").first();
+    let a_2 = the_widg.find("a").last();
     // get_field1_1
-    var get_field1_1 = this.fieldarg_in_result('get_field1_1', result, fieldlist);
+    let get_field1_1 = this.fieldarg_in_result('get_field1_1', result, fieldlist);
     if (get_field1_1 != undefined) {
-        var href = a_1.attr('href');
-        var url = this.setgetfield(href, "get_field1_1", get_field1_1);
+        let href = a_1.attr('href');
+        let url = this.setgetfield(href, "get_field1_1", get_field1_1);
         a_1.attr('href', url);
         }
     // get_field1_2
-    var get_field1_2 = this.fieldarg_in_result('get_field1_2', result, fieldlist);
+    let get_field1_2 = this.fieldarg_in_result('get_field1_2', result, fieldlist);
     if (get_field1_2 != undefined) {
-        var href = a_1.attr('href');
-        var url = this.setgetfield(href, "get_field1_2", get_field1_2);
+        let href = a_1.attr('href');
+        let url = this.setgetfield(href, "get_field1_2", get_field1_2);
         a_1.attr('href', url);
         }
     // get_field1_3
-    var get_field1_3 = this.fieldarg_in_result('get_field1_3', result, fieldlist);
+    let get_field1_3 = this.fieldarg_in_result('get_field1_3', result, fieldlist);
     if (get_field1_3 != undefined) {
-        var href = a_1.attr('href');
-        var url = this.setgetfield(href, "get_field1_3", get_field1_3);
+        let href = a_1.attr('href');
+        let url = this.setgetfield(href, "get_field1_3", get_field1_3);
         a_1.attr('href', url);
         }
     // get_field2_1
-    var get_field2_1 = this.fieldarg_in_result('get_field2_1', result, fieldlist);
+    let get_field2_1 = this.fieldarg_in_result('get_field2_1', result, fieldlist);
     if (get_field2_1 != undefined) {
-        var href = a_2.attr('href');
-        var url = this.setgetfield(href, "get_field2_1", get_field2_1);
+        let href = a_2.attr('href');
+        let url = this.setgetfield(href, "get_field2_1", get_field2_1);
         a_2.attr('href', url);
         }
     // get_field2_2
-    var get_field2_2 = this.fieldarg_in_result('get_field2_2', result, fieldlist);
+    let get_field2_2 = this.fieldarg_in_result('get_field2_2', result, fieldlist);
     if (get_field2_2 != undefined) {
-        var href = a_2.attr('href');
-        var url = this.setgetfield(href, "get_field2_2", get_field2_2);
+        let href = a_2.attr('href');
+        let url = this.setgetfield(href, "get_field2_2", get_field2_2);
         a_2.attr('href', url);
         }
     // get_field2_3
-    var get_field2_3 = this.fieldarg_in_result('get_field2_3', result, fieldlist);
+    let get_field2_3 = this.fieldarg_in_result('get_field2_3', result, fieldlist);
     if (get_field2_3 != undefined) {
-        var href = a_2.attr('href');
-        var url = this.setgetfield(href, "get_field2_3", get_field2_3);
+        let href = a_2.attr('href');
+        let url = this.setgetfield(href, "get_field2_3", get_field2_3);
         a_2.attr('href', url);
         }
     };
@@ -83,14 +83,14 @@ SKIPOLE.confirm.ConfirmBox1.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var button = $(e.target);
-    var button_num = button.index();
-    var href = button.attr('href');
+    let fieldvalues = this.fieldvalues;
+    let button = $(e.target);
+    let button_num = button.index();
+    let href = button.attr('href');
     if (!href) {
         return;
         }
-    var senddata = href.substring(href.indexOf('?')+1);
+    let senddata = href.substring(href.indexOf('?')+1);
     if (button_num === 0) {
         if (!fieldvalues["url1"]) {
             return;
@@ -167,9 +167,9 @@ SKIPOLE.confirm.ConfirmBox2.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // hide
-    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
     if (hidebox != undefined) {
         if (hidebox) {
             if (the_widg.is(":visible")) {
@@ -183,53 +183,53 @@ SKIPOLE.confirm.ConfirmBox2.prototype.setvalues = function (fieldlist, result) {
             }
         }
     // para_text
-    var paragraph = the_widg.find("p");
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let paragraph = the_widg.find("p");
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text) {
         paragraph.text(para_text);
         }
-     var a_1 = the_widg.find("a").first();
-     var a_2 = the_widg.find("a").last();
+     let a_1 = the_widg.find("a").first();
+     let a_2 = the_widg.find("a").last();
     // get_field1_1
-    var get_field1_1 = this.fieldarg_in_result('get_field1_1', result, fieldlist);
+    let get_field1_1 = this.fieldarg_in_result('get_field1_1', result, fieldlist);
     if (get_field1_1 != undefined) {
-        var href = a_1.attr('href');
-        var url = this.setgetfield(href, "get_field1_1", get_field1_1);
+        let href = a_1.attr('href');
+        let url = this.setgetfield(href, "get_field1_1", get_field1_1);
         a_1.attr('href', url);
         }
     // get_field1_2
-    var get_field1_2 = this.fieldarg_in_result('get_field1_2', result, fieldlist);
+    let get_field1_2 = this.fieldarg_in_result('get_field1_2', result, fieldlist);
     if (get_field1_2 != undefined) {
-        var href = a_1.attr('href');
-        var url = this.setgetfield(href, "get_field1_2", get_field1_2);
+        let href = a_1.attr('href');
+        let url = this.setgetfield(href, "get_field1_2", get_field1_2);
         a_1.attr('href', url);
         }
     // get_field1_3
-    var get_field1_3 = this.fieldarg_in_result('get_field1_3', result, fieldlist);
+    let get_field1_3 = this.fieldarg_in_result('get_field1_3', result, fieldlist);
     if (get_field1_3 != undefined) {
-        var href = a_1.attr('href');
-        var url = this.setgetfield(href, "get_field1_3", get_field1_3);
+        let href = a_1.attr('href');
+        let url = this.setgetfield(href, "get_field1_3", get_field1_3);
         a_1.attr('href', url);
         }
     // get_field2_1
-    var get_field2_1 = this.fieldarg_in_result('get_field2_1', result, fieldlist);
+    let get_field2_1 = this.fieldarg_in_result('get_field2_1', result, fieldlist);
     if (get_field2_1 != undefined) {
-        var href = a_2.attr('href');
-        var url = this.setgetfield(href, "get_field2_1", get_field2_1);
+        let href = a_2.attr('href');
+        let url = this.setgetfield(href, "get_field2_1", get_field2_1);
         a_2.attr('href', url);
         }
     // get_field2_2
-    var get_field2_2 = this.fieldarg_in_result('get_field2_2', result, fieldlist);
+    let get_field2_2 = this.fieldarg_in_result('get_field2_2', result, fieldlist);
     if (get_field2_2 != undefined) {
-        var href = a_2.attr('href');
-        var url = this.setgetfield(href, "get_field2_2", get_field2_2);
+        let href = a_2.attr('href');
+        let url = this.setgetfield(href, "get_field2_2", get_field2_2);
         a_2.attr('href', url);
         }
     // get_field2_3
-    var get_field2_3 = this.fieldarg_in_result('get_field2_3', result, fieldlist);
+    let get_field2_3 = this.fieldarg_in_result('get_field2_3', result, fieldlist);
     if (get_field2_3 != undefined) {
-        var href = a_2.attr('href');
-        var url = this.setgetfield(href, "get_field2_3", get_field2_3);
+        let href = a_2.attr('href');
+        let url = this.setgetfield(href, "get_field2_3", get_field2_3);
         a_2.attr('href', url);
         }
     };
@@ -256,16 +256,16 @@ SKIPOLE.confirm.AlertClear1.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     /* check if an error message or clear_error is given */
-    var is_error = this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let is_error = this.check_error(fieldlist, result);
+    let the_widg = this.widg;
     if (!is_error) {
         // if no error condition check hide and para_text
-        var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+        let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
         if (para_text != undefined) {
-            var paragraph = the_widg.find("p:last");
+            let paragraph = the_widg.find("p:last");
             paragraph.text(para_text);
             }
-        var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+        let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
         if (hidebox != undefined) {
             if (hidebox) {
                 if (the_widg.is(":visible")) {
@@ -279,26 +279,26 @@ SKIPOLE.confirm.AlertClear1.prototype.setvalues = function (fieldlist, result) {
                 }
             }
         }
-    var button = the_widg.find("a");
+    let button = the_widg.find("a");
     // get_field1
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field1", get_field1);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field1", get_field1);
         button.attr('href', url);
         }
     // get_field2
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field2", get_field2);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field2", get_field2);
         button.attr('href', url);
         }
     // get_field3
-    var get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
+    let get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
     if (get_field3 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field3", get_field3);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field3", get_field3);
         button.attr('href', url);
         }
     };
@@ -319,12 +319,12 @@ SKIPOLE.confirm.AlertClear1.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     // get error_class to insert into div with inner_id
     if (fieldvalues["inner_id"]) {
-        var inner_div = $('#' + fieldvalues["inner_id"]);
+        let inner_div = $('#' + fieldvalues["inner_id"]);
         if (fieldvalues["inner_class"]) {
             inner_div.removeClass(fieldvalues["inner_class"]);
             }
@@ -333,7 +333,7 @@ SKIPOLE.confirm.AlertClear1.prototype.show_error = function (error_message) {
             }
         }
     // get error para to insert error message
-    var paragraph = the_widg.find("p:last");
+    let paragraph = the_widg.find("p:last");
     paragraph.text(error_message);
     if (!(the_widg.is(":visible"))) {
         the_widg.fadeIn('slow');
@@ -343,18 +343,18 @@ SKIPOLE.confirm.AlertClear1.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
     if (the_widg.is(":visible")) {
         the_widg.fadeOut('slow');
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["inner_id"]) {
         return;
         }
-    var inner_div = $('#' + fieldvalues["inner_id"]);
+    let inner_div = $('#' + fieldvalues["inner_id"]);
     if (fieldvalues["error_class"]) {
         inner_div.removeClass(fieldvalues["error_class"]);
         }
@@ -375,16 +375,16 @@ SKIPOLE.confirm.AlertClear2.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     /* check if an error message or clear_error is given */
-    var is_error = this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let is_error = this.check_error(fieldlist, result);
+    let the_widg = this.widg;
     if (!is_error) {
         // if no error condition check hide and para_text
-        var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+        let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
         if (para_text != undefined) {
-            var paragraph = the_widg.find("p:last");
+            let paragraph = the_widg.find("p:last");
             paragraph.text(para_text);
             }
-        var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+        let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
         if (hidebox != undefined) {
             if (hidebox) {
                 if (the_widg.is(":visible")) {
@@ -398,26 +398,26 @@ SKIPOLE.confirm.AlertClear2.prototype.setvalues = function (fieldlist, result) {
                 }
             }
         }
-    var button = the_widg.find("a");
+    let button = the_widg.find("a");
     // get_field1
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field1", get_field1);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field1", get_field1);
         button.attr('href', url);
         }
     // get_field2
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field2", get_field2);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field2", get_field2);
         button.attr('href', url);
         }
     // get_field3
-    var get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
+    let get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
     if (get_field3 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field3", get_field3);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field3", get_field3);
         button.attr('href', url);
         }
     };
@@ -429,14 +429,14 @@ SKIPOLE.confirm.AlertClear2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var button = this.widg.find("a");
-    var fieldvalues = this.fieldvalues;
+    let button = this.widg.find("a");
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["url"]) {
         // no json url, return and call html link
         return;
         }
-    var href = button.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = button.attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -475,12 +475,12 @@ SKIPOLE.confirm.AlertClear2.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     // get error_class to insert into div with inner_id
     if (fieldvalues["inner_id"]) {
-        var inner_div = $('#' + fieldvalues["inner_id"]);
+        let inner_div = $('#' + fieldvalues["inner_id"]);
         if (fieldvalues["inner_class"]) {
             inner_div.removeClass(fieldvalues["inner_class"]);
             }
@@ -489,7 +489,7 @@ SKIPOLE.confirm.AlertClear2.prototype.show_error = function (error_message) {
             }
         }
     // get error para to insert error message
-    var paragraph = the_widg.find("p:last");
+    let paragraph = the_widg.find("p:last");
     paragraph.text(error_message);
     if (!(the_widg.is(":visible"))) {
         the_widg.fadeIn('slow');
@@ -499,18 +499,18 @@ SKIPOLE.confirm.AlertClear2.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
     if (the_widg.is(":visible")) {
         the_widg.fadeOut('slow');
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["inner_id"]) {
         return;
         }
-    var inner_div = $('#' + fieldvalues["inner_id"]);
+    let inner_div = $('#' + fieldvalues["inner_id"]);
     if (fieldvalues["error_class"]) {
         inner_div.removeClass(fieldvalues["error_class"]);
         }

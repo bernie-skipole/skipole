@@ -12,11 +12,11 @@ SKIPOLE.footers.SimpleFooter.prototype.setvalues = function (fieldlist, result) 
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // footer_text
-    var footer_text = this.fieldarg_in_result('footer_text', result, fieldlist);
+    let footer_text = this.fieldarg_in_result('footer_text', result, fieldlist);
     if (footer_text) {
-	    var textident = this.fieldvalues["textident"];
+	    let textident = this.fieldvalues["textident"];
 	    if (!textident) {
 	        return;
             }

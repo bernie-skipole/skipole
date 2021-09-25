@@ -11,7 +11,7 @@ SKIPOLE.info.ServerTimeStamp.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var timestamp_text = this.fieldarg_in_result('timestamp', result, fieldlist);
+    let timestamp_text = this.fieldarg_in_result('timestamp', result, fieldlist);
     if (timestamp_text) {
         this.widg.text(timestamp_text);
         }
@@ -29,7 +29,7 @@ SKIPOLE.info.PageIdent.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
+    let span_text = this.fieldarg_in_result('span_text', result, fieldlist);
     if (span_text) {
         this.widg.text(span_text);
         }
@@ -47,7 +47,7 @@ SKIPOLE.info.PageName.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
+    let span_text = this.fieldarg_in_result('span_text', result, fieldlist);
     if (span_text) {
         this.widg.text(span_text);
         }
@@ -65,7 +65,7 @@ SKIPOLE.info.PageDescription.prototype.setvalues = function (fieldlist, result) 
    if (!this.widg_id) {
         return;
         }
-    var span_text = this.fieldarg_in_result('span_text', result, fieldlist);
+    let span_text = this.fieldarg_in_result('span_text', result, fieldlist);
     if (span_text) {
         this.widg.text(span_text);
         }
@@ -114,12 +114,12 @@ SKIPOLE.info.ProgressBar1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var progress = $("#" + this.fieldvalues["progressident"]);
-    var valuetext = this.fieldarg_in_result('text', result, fieldlist);
+    let progress = $("#" + this.fieldvalues["progressident"]);
+    let valuetext = this.fieldarg_in_result('text', result, fieldlist);
     if (valuetext) {
         progress.text(valuetext);
         }
-    var value = this.fieldarg_in_result('value', result, fieldlist);
+    let value = this.fieldarg_in_result('value', result, fieldlist);
     if (value || value === 0) {
         progress.attr("value", value);
         }

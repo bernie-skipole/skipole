@@ -79,12 +79,12 @@ SKIPOLE.basic = {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
             return true;
             }
-        var reg = /^0-9/;
+        let reg = /^0-9/;
         if ( reg.test(item)) {
             return false;
             }
         /* item is an integer string */
-        var value = parseInt(item, 10);
+        let value = parseInt(item, 10);
         if (value < args.minval) {
             return false;
             }
@@ -98,7 +98,7 @@ SKIPOLE.basic = {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
             return true;
             }
-        var reg = /[^\w]/;
+        let reg = /[^\w]/;
         if (reg.test(item)) {
             return false;
             }
@@ -109,7 +109,7 @@ SKIPOLE.basic = {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
             return true;
             }
-        var reg = /[^\w\.]/;
+        let reg = /[^\w\.]/;
         if (reg.test(item)) {
             return false;
             }
@@ -120,7 +120,7 @@ SKIPOLE.basic = {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
             return true;
             }
-        var reg = new RegExp(args.pattern, "i");
+        let reg = new RegExp(args.pattern, "i");
         if (reg.test(item)) {
             return true;
             }

@@ -12,7 +12,7 @@ SKIPOLE.inputforms.HiddenField.prototype.setvalues = function (fieldlist, result
         return;
         }
     // value
-    var value = this.fieldarg_in_result('hidden_field', result, fieldlist);
+    let value = this.fieldarg_in_result('hidden_field', result, fieldlist);
     if (value) {
         this.widg.attr("value", value);
         }
@@ -37,8 +37,8 @@ SKIPOLE.inputforms.HiddenSessionStorage.prototype.setvalues = function (fieldlis
         }
     if (typeof(Storage) !== "undefined") {
             // get the key, and its value from storage
-            var thekey = this.fieldarg_in_result('session_key', result, fieldlist);
-            var keyvalue = sessionStorage.getItem(thekey);
+            let thekey = this.fieldarg_in_result('session_key', result, fieldlist);
+            let keyvalue = sessionStorage.getItem(thekey);
             if (keyvalue !== "undefined") {
                 this.widg.attr("value", keyvalue);
                 this.fieldvalues["session_key"] = thekey
@@ -47,8 +47,8 @@ SKIPOLE.inputforms.HiddenSessionStorage.prototype.setvalues = function (fieldlis
     };
 SKIPOLE.inputforms.HiddenSessionStorage.prototype.updatefunc = function () {
     if (typeof(Storage) !== "undefined") {
-        var thekey = this.fieldvalues["session_key"];
-        var keyvalue = sessionStorage.getItem(thekey);
+        let thekey = this.fieldvalues["session_key"];
+        let keyvalue = sessionStorage.getItem(thekey);
         if (keyvalue !== "undefined") {
             this.widg.attr("value", keyvalue);
             }
@@ -74,8 +74,8 @@ SKIPOLE.inputforms.HiddenLocalStorage.prototype.setvalues = function (fieldlist,
         }
     if (typeof(Storage) !== "undefined") {
             // get the key, and its value from storage
-            var thekey = this.fieldarg_in_result('local_key', result, fieldlist);
-            var keyvalue = localStorage.getItem(thekey);
+            let thekey = this.fieldarg_in_result('local_key', result, fieldlist);
+            let keyvalue = localStorage.getItem(thekey);
             if (keyvalue !== "undefined") {
                 this.widg.attr("value", keyvalue);
                 this.fieldvalues["local_key"] = thekey
@@ -84,8 +84,8 @@ SKIPOLE.inputforms.HiddenLocalStorage.prototype.setvalues = function (fieldlist,
     };
 SKIPOLE.inputforms.HiddenLocalStorage.prototype.updatefunc = function () {
     if (typeof(Storage) !== "undefined") {
-        var thekey = this.fieldvalues["local_key"];
-        var keyvalue = localStorage.getItem(thekey);
+        let thekey = this.fieldvalues["local_key"];
+        let keyvalue = localStorage.getItem(thekey);
         if (keyvalue !== "undefined") {
             this.widg.attr("value", keyvalue);
             }
@@ -104,7 +104,7 @@ SKIPOLE.inputforms.SubmitButton1.prototype.setvalues = function (fieldlist, resu
         return;
         }
     // button_text
-    var button_text = this.fieldarg_in_result('button_text', result, fieldlist);
+    let button_text = this.fieldarg_in_result('button_text', result, fieldlist);
     if (button_text) {
         this.widg.attr("value", button_text);
         }
@@ -122,7 +122,7 @@ SKIPOLE.inputforms.SubmitButton2.prototype.setvalues = function (fieldlist, resu
         return;
         }
     // button_text
-    var button_text = this.fieldarg_in_result('button_text', result, fieldlist);
+    let button_text = this.fieldarg_in_result('button_text', result, fieldlist);
     if (button_text) {
         this.widg.attr("value", button_text);
         }
@@ -143,7 +143,7 @@ SKIPOLE.inputforms.Form1.prototype.setvalues = function (fieldlist, result) {
     };
 SKIPOLE.inputforms.Form1.prototype.eventfunc = function(e) {
     SKIPOLE.skiprefresh = true;
-    var selected_form = $(e.target);
+    let selected_form = $(e.target);
     if (!SKIPOLE.form_validate(selected_form)) {
         // prevent the submission if validation failure
         e.preventDefault();
@@ -166,27 +166,27 @@ SKIPOLE.inputforms.SubmitForm1.prototype.setvalues = function (fieldlist, result
 
 SKIPOLE.inputforms.SubmitForm1.prototype.eventfunc = function(e) {
     SKIPOLE.skiprefresh = true;
-    var selected_form = $(e.target);
+    let selected_form = $(e.target);
     if (!SKIPOLE.form_validate(selected_form)) {
         // prevent the submission if validation failure
         e.preventDefault();
         }
     else {
         // form validated, set please wait message on button
-        var btn = $("#" + this.fieldvalues["buttonident"]);
-        var buttontext = btn.attr("value");
+        let btn = $("#" + this.fieldvalues["buttonident"]);
+        let buttontext = btn.attr("value");
         // set button_wait_text
-        var button_wait_text = this.fieldvalues["button_wait_text"]
+        let button_wait_text = this.fieldvalues["button_wait_text"]
         if (button_wait_text) {
             btn.attr("value", button_wait_text);
             }
         // if action_json url set, call a json page
-        var jsonurl = this.fieldvalues["url"];
+        let jsonurl = this.fieldvalues["url"];
         if (jsonurl) {
             // json url set, send data with a request for json and prevent default
-            var self = this
-            var widgform = this.widg.find('form');
-            var senddata = widgform.serializeArray();
+            let self = this
+            let widgform = this.widg.find('form');
+            let senddata = widgform.serializeArray();
             e.preventDefault();
             // respond to json or html
             $.ajax({
@@ -251,12 +251,12 @@ SKIPOLE.inputforms.SubmitForm2.prototype.setvalues = function (fieldlist, result
     this.sethiddenfields(fieldlist, result);
 
     // session_storage
-    var sessionkey = this.fieldarg_in_result('session_storage', result, fieldlist);
+    let sessionkey = this.fieldarg_in_result('session_storage', result, fieldlist);
     if (sessionkey) {
         this.fieldvalues["session_storage"] = sessionkey;
         }
     // local_storage
-    var localkey = this.fieldarg_in_result('local_storage', result, fieldlist);
+    let localkey = this.fieldarg_in_result('local_storage', result, fieldlist);
     if (localkey) {
         this.fieldvalues["local_storage"] = localkey;
         }
@@ -264,7 +264,7 @@ SKIPOLE.inputforms.SubmitForm2.prototype.setvalues = function (fieldlist, result
 
 SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
     SKIPOLE.skiprefresh = true;
-    var selected_form = $(e.target);
+    let selected_form = $(e.target);
     if (!SKIPOLE.form_validate(selected_form)) {
         // prevent the submission if validation failure
         e.preventDefault();
@@ -272,16 +272,16 @@ SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
         }
 
     // form validated, set please wait message on button
-    var btn = $("#" + this.fieldvalues["buttonident"]);
-    var buttontext = btn.attr("value");
+    let btn = $("#" + this.fieldvalues["buttonident"]);
+    let buttontext = btn.attr("value");
     // set button_wait_text
-    var button_wait_text = this.fieldvalues["button_wait_text"]
+    let button_wait_text = this.fieldvalues["button_wait_text"]
     if (button_wait_text) {
         btn.attr("value", button_wait_text);
         }
 
     // Get the url to call
-    var url = this.fieldvalues["url"];
+    let url = this.fieldvalues["url"];
     if (!url) {
         url = selected_form.attr('action');
         }
@@ -291,11 +291,11 @@ SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
         }
 
     // url set, send data
-    var self = this
-    var senddata = new FormData(selected_form[0]);
+    let self = this
+    let senddata = new FormData(selected_form[0]);
 
-    var sessionkey = this.fieldvalues["session_storage"];
-    var localkey = this.fieldvalues["local_storage"];
+    let sessionkey = this.fieldvalues["session_storage"];
+    let localkey = this.fieldvalues["local_storage"];
 
     if (sessionkey || localkey) {
         // set stored data into senddata
@@ -318,11 +318,6 @@ SKIPOLE.inputforms.SubmitForm2.prototype.eventfunc = function(e) {
 
             }
         }
-
-    // Display the key/value pairs in senddata
-    // for (var pair of senddata.entries()) {
-    //    console.log(pair[0]+ ', ' + pair[1]); 
-    // }
 
 
     e.preventDefault();
@@ -386,7 +381,7 @@ SKIPOLE.inputforms.SubmitFromScript.prototype.setvalues = function (fieldlist, r
         return;
         }
     // hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
@@ -451,9 +446,9 @@ SKIPOLE.inputforms.SubmitFromScript.prototype.eventfunc = function (e) {
         // form submitted, so if json url set, call a json page
         let jsonurl = this.fieldvalues["url"];
         if (jsonurl) {
-            var self = this;
-            var widgform = $(e.target);
-            var senddata = widgform.serializeArray();
+            let self = this;
+            let widgform = $(e.target);
+            let senddata = widgform.serializeArray();
             e.preventDefault();
             // respond to json or html
             $.ajax({

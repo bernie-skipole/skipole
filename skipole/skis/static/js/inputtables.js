@@ -13,18 +13,18 @@ SKIPOLE.inputtables.InputTable1.prototype.setvalues = function (fieldlist, resul
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // columns
-    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
-    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
-    var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
-    var keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
+    let col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    let col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    let row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
+    let keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
     if (keysvals && Object.keys(keysvals).length) {
         var keysonly = Object.keys(keysvals);
         }
-    var self = this;
-    var index = 0;
-    var header = false;
+    let self = this;
+    let index = 0;
+    let header = false;
     if (the_widg.find('th').length) {
         header = true;
         }
@@ -41,7 +41,7 @@ SKIPOLE.inputtables.InputTable1.prototype.setvalues = function (fieldlist, resul
                     $(this).attr("class", row_classes[index]);
                     }
                 }
-            var cells = $(this).children();
+            let cells = $(this).children();
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);
@@ -79,7 +79,7 @@ SKIPOLE.inputtables.InputTable5.prototype = Object.create(SKIPOLE.BaseWidget.pro
 SKIPOLE.inputtables.InputTable5.prototype.constructor = SKIPOLE.inputtables.InputTable5;
 SKIPOLE.inputtables.InputTable5.prototype.eventfunc = function(e) {
     SKIPOLE.skiprefresh = true;
-     var selected_form = $(e.target);
+     let selected_form = $(e.target);
     if (!SKIPOLE.form_validate(selected_form)) {
         // prevent the submission if validation failure
         e.preventDefault();
@@ -89,20 +89,20 @@ SKIPOLE.inputtables.InputTable5.prototype.setvalues = function (fieldlist, resul
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // input_accepted and input_errored
-    var input_accepted = this.fieldarg_in_result('set_input_accepted', result, fieldlist);
-    var input_errored = this.fieldarg_in_result('set_input_errored', result, fieldlist);
-    var self = this;
-    var inputindex = 0;
+    let input_accepted = this.fieldarg_in_result('set_input_accepted', result, fieldlist);
+    let input_errored = this.fieldarg_in_result('set_input_errored', result, fieldlist);
+    let self = this;
+    let inputindex = 0;
     the_widg.find('input[type="text"]').each(function() {
         // for each text input field, get its index key
-        var text_input = $(this);
+        let text_input = $(this);
         if (text_input.prop('disabled')) {
             return true;
             }
         // get the index key of this input field
-        var input_key = inputindex.toString();
+        let input_key = inputindex.toString();
         inputindex += 1;
         if (input_accepted) {
             if (input_key in input_accepted) {
@@ -129,21 +129,21 @@ SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, resul
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // columns
-    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
-    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
-    var col3 = this.fieldarg_in_result('col3', result, fieldlist);
-    var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
-    var up_hide = this.fieldarg_in_result('up_hide', result, fieldlist);
-    var down_hide = this.fieldarg_in_result('down_hide', result, fieldlist);
-    var keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
+    let col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    let col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    let col3 = this.fieldarg_in_result('col3', result, fieldlist);
+    let row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
+    let up_hide = this.fieldarg_in_result('up_hide', result, fieldlist);
+    let down_hide = this.fieldarg_in_result('down_hide', result, fieldlist);
+    let keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
     if (keysvals && Object.keys(keysvals).length) {
         var keysonly = Object.keys(keysvals);
         }
-    var self = this;
-    var index = 0;
-    var header = false;
+    let self = this;
+    let index = 0;
+    let header = false;
     if (the_widg.find('th').length) {
         header = true;
         }
@@ -160,7 +160,7 @@ SKIPOLE.inputtables.InputTable4.prototype.setvalues = function (fieldlist, resul
                     $(this).attr("class", row_classes[index]);
                     }
                 }
-            var cells = $(this).children();
+            let cells = $(this).children();
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);
@@ -260,9 +260,9 @@ SKIPOLE.inputtables.InputTable4.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
-    var button_pressed = $(e.target);
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
+    let button_pressed = $(e.target);
 
     if (button_pressed.text() == "\u2191") {
         // up arrow button
@@ -285,8 +285,8 @@ SKIPOLE.inputtables.InputTable4.prototype.eventfunc = function (e) {
       return;
       }
 
-    var href = button_pressed.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = button_pressed.attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -328,31 +328,31 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // columns
-    var col1 = this.fieldarg_in_result('col1', result, fieldlist);
-    var col2 = this.fieldarg_in_result('col2', result, fieldlist);
+    let col1 = this.fieldarg_in_result('col1', result, fieldlist);
+    let col2 = this.fieldarg_in_result('col2', result, fieldlist);
 
-    var up_getfield1 = this.fieldarg_in_result('up_getfield1', result, fieldlist);
-    var up_getfield2 = this.fieldarg_in_result('up_getfield2', result, fieldlist);
-    var down_getfield1 = this.fieldarg_in_result('down_getfield1', result, fieldlist);
-    var down_getfield2 = this.fieldarg_in_result('down_getfield2', result, fieldlist);
-    var getfield3 = this.fieldarg_in_result('getfield3', result, fieldlist);
+    let up_getfield1 = this.fieldarg_in_result('up_getfield1', result, fieldlist);
+    let up_getfield2 = this.fieldarg_in_result('up_getfield2', result, fieldlist);
+    let down_getfield1 = this.fieldarg_in_result('down_getfield1', result, fieldlist);
+    let down_getfield2 = this.fieldarg_in_result('down_getfield2', result, fieldlist);
+    let getfield3 = this.fieldarg_in_result('getfield3', result, fieldlist);
 
     if (getfield3 === undefined) {
         getfield3 = {};
         }
 
-    var row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
-    var up_hide = this.fieldarg_in_result('up_hide', result, fieldlist);
-    var down_hide = this.fieldarg_in_result('down_hide', result, fieldlist);
-    var keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
+    let row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
+    let up_hide = this.fieldarg_in_result('up_hide', result, fieldlist);
+    let down_hide = this.fieldarg_in_result('down_hide', result, fieldlist);
+    let keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
     if (keysvals && Object.keys(keysvals).length) {
         var keysonly = Object.keys(keysvals);
         }
-    var self = this;
-    var index = 0;
-    var header = false;
+    let self = this;
+    let index = 0;
+    let header = false;
     if (the_widg.find('th').length) {
         header = true;
         }
@@ -370,7 +370,7 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                     $(this).attr("class", row_classes[index]);
                     }
                 }
-            var cells = $(this).children();
+            let cells = $(this).children();
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);
@@ -382,7 +382,7 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                     }
                  }
 
-            var inputtag = $(cells[2]).find('input');
+            let inputtag = $(cells[2]).find('input');
 
             // set the input field equal to values given in getfield3
             if (getfield3[index] === undefined) {
@@ -509,9 +509,9 @@ SKIPOLE.inputtables.InputTable3.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
-    var button_pressed = $(e.target);
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
+    let button_pressed = $(e.target);
 
     if (button_pressed.text() == "\u2191") {
         // up arrow button
@@ -534,8 +534,8 @@ SKIPOLE.inputtables.InputTable3.prototype.eventfunc = function (e) {
       return;
       }
 
-    var href = button_pressed.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = button_pressed.attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({

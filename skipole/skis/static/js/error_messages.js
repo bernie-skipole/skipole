@@ -17,9 +17,9 @@ SKIPOLE.error_messages.ErrorCode.prototype.setvalues = function (fieldlist, resu
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text) {
-        var paragraph = this.widg.find(':first').next();
+        let paragraph = this.widg.find(':first').next();
         paragraph.text(para_text);
         }
     };
@@ -31,11 +31,11 @@ SKIPOLE.error_messages.ErrorCode.prototype.show_error = function (error_message)
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
-    var paragraph = the_widg.find(':first').next();
+    let paragraph = the_widg.find(':first').next();
     paragraph.text(error_message);
-    var error_class = this.fieldvalues["error_class"];
+    let error_class = this.fieldvalues["error_class"];
     if (error_class) {
         paragraph.attr("class", error_class);
         }
@@ -44,13 +44,13 @@ SKIPOLE.error_messages.ErrorCode.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" );
         }
-    var paragraph = the_widg.find(':first').next();
+    let paragraph = the_widg.find(':first').next();
     paragraph.removeAttr( "class" );
-    var para_class = this.fieldvalues["para_class"];
+    let para_class = this.fieldvalues["para_class"];
     if (para_class) {
         paragraph.attr("class", para_class);
         }
@@ -71,9 +71,9 @@ SKIPOLE.error_messages.ErrorDiv.prototype.setvalues = function (fieldlist, resul
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     /*  if hide is given */
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // hide
-    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
     if (hidebox != undefined) {
         if (hidebox) {
             if (the_widg.is(":visible")) {
@@ -97,11 +97,11 @@ SKIPOLE.error_messages.ErrorDiv.prototype.show_error = function (error_message) 
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     // get error div, being first child
-    var error_div = the_widg.find(':first');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':first');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(the_widg.is(":visible"))) {
         the_widg.show();
@@ -126,9 +126,9 @@ SKIPOLE.error_messages.ErrorPara.prototype.setvalues = function (fieldlist, resu
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     /*  if hide is given */
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // hide
-    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
     if (hidebox != undefined) {
         if (hidebox) {
             if (the_widg.is(":visible")) {
@@ -152,7 +152,7 @@ SKIPOLE.error_messages.ErrorPara.prototype.show_error = function (error_message)
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     the_widg.text(error_message);
     if (!(the_widg.is(":visible"))) {
@@ -163,7 +163,7 @@ SKIPOLE.error_messages.ErrorPara.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
@@ -183,16 +183,16 @@ SKIPOLE.error_messages.ErrorClear1.prototype.setvalues = function (fieldlist, re
         return;
         }
     /* check if an error message or clear_error is given */
-    var is_error = this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let is_error = this.check_error(fieldlist, result);
+    let the_widg = this.widg;
     if (!is_error) {
         // if no error condition check hide and para_text
-        var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+        let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
         if (para_text != undefined) {
-            var paragraph = the_widg.find("p:last");
+            let paragraph = the_widg.find("p:last");
             paragraph.text(para_text);
             }
-        var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+        let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
         if (hidebox != undefined) {
             if (hidebox) {
                 if (the_widg.is(":visible")) {
@@ -206,26 +206,26 @@ SKIPOLE.error_messages.ErrorClear1.prototype.setvalues = function (fieldlist, re
                 }
             }
         }
-    var button = the_widg.find("a");
+    let button = the_widg.find("a");
     // get_field1
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field1", get_field1);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field1", get_field1);
         button.attr('href', url);
         }
     // get_field2
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field2", get_field2);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field2", get_field2);
         button.attr('href', url);
         }
     // get_field3
-    var get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
+    let get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
     if (get_field3 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field3", get_field3);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field3", get_field3);
         button.attr('href', url);
         }
     };
@@ -234,7 +234,7 @@ SKIPOLE.error_messages.ErrorClear1.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
@@ -251,10 +251,10 @@ SKIPOLE.error_messages.ErrorClear1.prototype.show_error = function (error_messag
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     // get error para to insert error message
-    var paragraph = the_widg.find("p:last");
+    let paragraph = the_widg.find("p:last");
     paragraph.text(error_message);
     if (!(the_widg.is(":visible"))) {
         the_widg.fadeIn('slow');
@@ -264,7 +264,7 @@ SKIPOLE.error_messages.ErrorClear1.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
@@ -284,11 +284,11 @@ SKIPOLE.error_messages.ErrorClear2.prototype.setvalues = function (fieldlist, re
         return;
         }
     /* check if an error message or clear_error is given */
-    var is_error = this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let is_error = this.check_error(fieldlist, result);
+    let the_widg = this.widg;
     if (!is_error) {
         // if no error condition check hide
-        var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+        let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
         if (hidebox != undefined) {
             if (hidebox) {
                 if (the_widg.is(":visible")) {
@@ -302,26 +302,26 @@ SKIPOLE.error_messages.ErrorClear2.prototype.setvalues = function (fieldlist, re
                 }
             }
         }
-    var button = the_widg.find("a");
+    let button = the_widg.find("a");
     // get_field1
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field1", get_field1);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field1", get_field1);
         button.attr('href', url);
         }
     // get_field2
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field2", get_field2);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field2", get_field2);
         button.attr('href', url);
         }
     // get_field3
-    var get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
+    let get_field3 = this.fieldarg_in_result('get_field3', result, fieldlist);
     if (get_field3 != undefined) {
-        var href = button.attr('href');
-        var url = this.setgetfield(href, "get_field3", get_field3);
+        let href = button.attr('href');
+        let url = this.setgetfield(href, "get_field3", get_field3);
         button.attr('href', url);
         }
     };
@@ -342,12 +342,12 @@ SKIPOLE.error_messages.ErrorClear2.prototype.show_error = function (error_messag
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     // get error para to insert error message
     if (fieldvalues["para_id"]) {
-        var para = $('#' + fieldvalues["para_id"]);
+        let para = $('#' + fieldvalues["para_id"]);
         para.text(error_message);
         if (!(the_widg.is(":visible"))) {
             the_widg.fadeIn('slow');
@@ -358,7 +358,7 @@ SKIPOLE.error_messages.ErrorClear2.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }

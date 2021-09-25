@@ -12,24 +12,24 @@ SKIPOLE.links.Link.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // content
-    var content = this.fieldarg_in_result('content', result, fieldlist);
+    let content = this.fieldarg_in_result('content', result, fieldlist);
     if (content) {
         the_widg.text(content);
         }
     /* get_field1 */
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field1', get_field1);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field1', get_field1);
         the_widg.attr('href', url);
         }
     /* get_field2 */
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field2', get_field2);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field2', get_field2);
         the_widg.attr('href', url);
         }
     };
@@ -45,19 +45,19 @@ SKIPOLE.links.ContainerLink1.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     /* get_field1 */
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field1', get_field1);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field1', get_field1);
         the_widg.attr('href', url);
         }
     /* get_field2 */
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field2', get_field2);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field2', get_field2);
         the_widg.attr('href', url);
         }
     };
@@ -73,19 +73,19 @@ SKIPOLE.links.ContainerLink2.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     /* get_field1 */
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field1', get_field1);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field1', get_field1);
         the_widg.attr('href', url);
         }
     /* get_field2 */
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field2', get_field2);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field2', get_field2);
         the_widg.attr('href', url);
         }
     };
@@ -94,13 +94,13 @@ SKIPOLE.links.ContainerLink2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["url"]) {
         // no json url, return and call html link
         return;
         }
-    var href = this.widg.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = this.widg.attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -143,20 +143,20 @@ SKIPOLE.links.LinkToWidget.prototype.setvalues = function (fieldlist, result) {
         return;
         }
     // content
-    var content = this.fieldarg_in_result('content', result, fieldlist);
+    let content = this.fieldarg_in_result('content', result, fieldlist);
     if (content) {
         this.widg.text(content);
         }
     /* towidget */
-    var towidget = this.fieldarg_in_result('towidget', result, fieldlist);
+    let towidget = this.fieldarg_in_result('towidget', result, fieldlist);
     if (towidget) {
-        var commaindex = towidget.indexOf(',');
+        let commaindex = towidget.indexOf(',');
         if (commaindex === -1) {
             // no comma
             var widget_id = towidget.trim()
             }
          else {
-            var sw = towidget.split(',');
+            let sw = towidget.split(',');
             var widget_id = sw[0].trim() + '-' + sw[1].trim();
             }      
         this.widg.attr('href', '#' + widget_id);
@@ -190,10 +190,10 @@ SKIPOLE.links.JSONButtonLink.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
     // set the widget class to widget_class
-    var widget_class = this.fieldarg_in_result('widget_class', result, fieldlist);
+    let widget_class = this.fieldarg_in_result('widget_class', result, fieldlist);
     if (widget_class) {
         the_widg.attr('class', widget_class);
         }
@@ -208,11 +208,11 @@ SKIPOLE.links.JSONButtonLink.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     the_widg.text(error_message);
     // set the widget class to error class
-    var error_class = this.fieldarg_in_result('error_class', result, fieldlist);
+    let error_class = this.fieldarg_in_result('error_class', result, fieldlist);
     if (error_class) {
         the_widg.attr('class', error_class);
         }
@@ -224,31 +224,31 @@ SKIPOLE.links.JSONButtonLink.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     /* check if an error message or clear_error is given */
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var button_text = this.fieldarg_in_result('button_text', result, fieldlist);
+    let button_text = this.fieldarg_in_result('button_text', result, fieldlist);
     if (button_text) {
         the_widg.text(button_text);
         }
     /* get_field1 */
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field1', get_field1);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field1', get_field1);
         the_widg.attr('href', url);
         }
     /* get_field2 */
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field2', get_field2);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field2', get_field2);
         the_widg.attr('href', url);
         }
     /* hide */
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -268,7 +268,7 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
 
     if (fieldvalues["json_url"]) {
         var sendurl = fieldvalues["json_url"];
@@ -277,14 +277,14 @@ SKIPOLE.links.JSONButtonLink.prototype.eventfunc = function (e) {
         var sendurl = fieldvalues["html_url"];
         }
 
-    var the_widg = this.widg;
-    var href = the_widg.attr('href');
-    var buttontext = the_widg.text();
-    var button_wait_text = fieldvalues["button_wait_text"]
+    let the_widg = this.widg;
+    let href = the_widg.attr('href');
+    let buttontext = the_widg.text();
+    let button_wait_text = fieldvalues["button_wait_text"]
     the_widg.text(button_wait_text);
 
-    var sessionkey = fieldvalues["session_storage"];
-    var localkey = fieldvalues["local_storage"];
+    let sessionkey = fieldvalues["session_storage"];
+    let localkey = fieldvalues["local_storage"];
 
     if (sessionkey || localkey) {
         // set stored data into senddata
@@ -373,10 +373,10 @@ SKIPOLE.links.ButtonLink1.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
     // set the widget class to widget_class
-    var widget_class = this.fieldarg_in_result('widget_class', result, fieldlist);
+    let widget_class = this.fieldarg_in_result('widget_class', result, fieldlist);
     if (widget_class) {
         the_widg.attr('class', widget_class);
         }
@@ -391,11 +391,11 @@ SKIPOLE.links.ButtonLink1.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     the_widg.text(error_message);
     // set the widget class to error class
-    var error_class = this.fieldarg_in_result('error_class', result, fieldlist);
+    let error_class = this.fieldarg_in_result('error_class', result, fieldlist);
     if (error_class) {
         the_widg.attr('class', error_class);
         }
@@ -407,16 +407,16 @@ SKIPOLE.links.ButtonLink1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     /* check if an error message or clear_error is given */
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var button_text = this.fieldarg_in_result('button_text', result, fieldlist);
+    let button_text = this.fieldarg_in_result('button_text', result, fieldlist);
     if (button_text) {
         the_widg.text(button_text);
         }
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -447,15 +447,15 @@ SKIPOLE.links.ButtonLink2.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     // if widg not visible, show it
     if (!(the_widg.is(":visible"))) {
          the_widg.show();
         }
     // get error div, being first child
-    var error_div = the_widg.find(':first');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':first');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(error_div.is(":visible"))) {
        error_div.show();
@@ -465,31 +465,31 @@ SKIPOLE.links.ButtonLink2.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
-    var button_text = this.fieldarg_in_result('button_text', result, fieldlist);
-    var a_link = the_widg.find('a');
+    let the_widg = this.widg;
+    let button_text = this.fieldarg_in_result('button_text', result, fieldlist);
+    let a_link = the_widg.find('a');
     if (button_text) {
         a_link.text(button_text);
         }
     /* get_field1 */
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = a_link.attr('href');
-        var url = this.setgetfield(href, 'get_field1', get_field1);
+        let href = a_link.attr('href');
+        let url = this.setgetfield(href, 'get_field1', get_field1);
         a_link.attr('href', url);
         }
     /* get_field2 */
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = a_link.attr('href');
-        var url = this.setgetfield(href, 'get_field2', get_field2);
+        let href = a_link.attr('href');
+        let url = this.setgetfield(href, 'get_field2', get_field2);
         a_link.attr('href', url);
         }
     /* check if an error message or clear_error is given */
     if (this.check_error(fieldlist, result)) {
         return;
         }
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -508,12 +508,12 @@ SKIPOLE.links.ButtonLink2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
-    var a_link = the_widg.find('a');
-    var buttontext = a_link.text();
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
+    let a_link = the_widg.find('a');
+    let buttontext = a_link.text();
    // set button_wait_text
-    var button_wait_text = fieldvalues["button_wait_text"]
+    let button_wait_text = fieldvalues["button_wait_text"]
     if (button_wait_text) {
         a_link.text(button_wait_text);
         }
@@ -521,8 +521,8 @@ SKIPOLE.links.ButtonLink2.prototype.eventfunc = function (e) {
         // no json url, return and call html link
         return;
         }
-    var href = a_link.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = a_link.attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -570,11 +570,11 @@ SKIPOLE.links.CloseButton.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
     // get id of target
-    var target_section = fieldvalues["target_section"];
-    var target_widget = fieldvalues["target_widget"];
+    let target_section = fieldvalues["target_section"];
+    let target_widget = fieldvalues["target_widget"];
     if (target_section && target_widget) {
         var target_id = target_section + "-" + target_widget;
     } else if ( target_section ) {
@@ -589,7 +589,7 @@ SKIPOLE.links.CloseButton.prototype.eventfunc = function (e) {
         return;
         }
     // close item with target_id
-    var target = $("#"+target_id);
+    let target = $("#"+target_id);
     if (target) {
         if (target.is(":visible")) {
             target.hide();
@@ -610,11 +610,11 @@ SKIPOLE.links.OpenButton.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
     // get id of target
-    var target_section = fieldvalues["target_section"];
-    var target_widget = fieldvalues["target_widget"];
+    let target_section = fieldvalues["target_section"];
+    let target_widget = fieldvalues["target_widget"];
     if (target_section && target_widget) {
         var target_id = target_section + "-" + target_widget;
     } else if ( target_section ) {
@@ -629,7 +629,7 @@ SKIPOLE.links.OpenButton.prototype.eventfunc = function (e) {
         return;
         }
     // open item with target_id
-    var target = $("#"+target_id);
+    let target = $("#"+target_id);
     if (target) {
         if (!(target.is(":visible"))) {
             target.show();
@@ -649,28 +649,28 @@ SKIPOLE.links.OpenButton2.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // content
-    var content = this.fieldarg_in_result('content', result, fieldlist);
+    let content = this.fieldarg_in_result('content', result, fieldlist);
     if (content) {
         the_widg.text(content);
         }
     /* get_field1 */
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
     if (get_field1 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field1', get_field1);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field1', get_field1);
         the_widg.attr('href', url);
         }
     /* get_field2 */
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
     if (get_field2 != undefined) {
-        var href = the_widg.attr('href');
-        var url = this.setgetfield(href, 'get_field2', get_field2);
+        let href = the_widg.attr('href');
+        let url = this.setgetfield(href, 'get_field2', get_field2);
         the_widg.attr('href', url);
         }
     /* hide */
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -689,11 +689,11 @@ SKIPOLE.links.OpenButton2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
     // get id of target
-    var target_section = fieldvalues["target_section"];
-    var target_widget = fieldvalues["target_widget"];
+    let target_section = fieldvalues["target_section"];
+    let target_widget = fieldvalues["target_widget"];
     if (target_section && target_widget) {
         var target_id = target_section + "-" + target_widget;
     } else if ( target_section ) {
@@ -708,7 +708,7 @@ SKIPOLE.links.OpenButton2.prototype.eventfunc = function (e) {
         return;
         }
     // open item with target_id
-    var target = $("#"+target_id);
+    let target = $("#"+target_id);
     if (target) {
         if (!(target.is(":visible"))) {
             target.show();
@@ -729,20 +729,20 @@ SKIPOLE.links.MessageButton.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
-    var messagebox_id = fieldvalues["messagebox_id"];
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let messagebox_id = fieldvalues["messagebox_id"];
     if (!messagebox_id) {
         return
         }
-    var messagebox = $("#"+messagebox_id);
-    var para = messagebox.find('p');
+    let messagebox = $("#"+messagebox_id);
+    let para = messagebox.find('p');
     if (para_text) {
         para.text(para_text);
         }
 
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (messagebox.is(":visible")) {
@@ -762,16 +762,16 @@ SKIPOLE.links.MessageButton.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
+    let the_widg = this.widg;
     // get id of message box
-    var messagebox_id = fieldvalues["messagebox_id"];
+    let messagebox_id = fieldvalues["messagebox_id"];
     if (!messagebox_id) {
         return
         }
-    var messagebox = $("#"+messagebox_id);
+    let messagebox = $("#"+messagebox_id);
 
-    var button_pressed = $(e.target);
+    let button_pressed = $(e.target);
 
     if ( button_pressed.is( "button" ) ){
            messagebox.fadeOut('slow');
@@ -785,8 +785,8 @@ SKIPOLE.links.MessageButton.prototype.eventfunc = function (e) {
         // no json url, return and call html link
         return;
         }
-    var href = button_pressed.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = button_pressed.attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -828,9 +828,9 @@ SKIPOLE.links.Image1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
-    var fieldvalues = this.fieldvalues;
-    var img_url = this.fieldarg_in_result("img_url", result, fieldlist);
+    let the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
+    let img_url = this.fieldarg_in_result("img_url", result, fieldlist);
     if (img_url) {
         the_widg.attr("src", img_url + "#" + new Date().getTime());
         }
@@ -887,9 +887,9 @@ SKIPOLE.links.Table2_Links.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var button = $(e.target);
-    var href = button.attr('href');
+    let fieldvalues = this.fieldvalues;
+    let button = $(e.target);
+    let href = button.attr('href');
     if (!href) {
         return;
         }
@@ -897,7 +897,7 @@ SKIPOLE.links.Table2_Links.prototype.eventfunc = function (e) {
     /* fieldvalues["jurls"] is a list of json urls, one for each row
        need to get the row index to find which of these
        urls to send the call to */
-    var row = button.parent().parent().index();
+    let row = button.parent().parent().index();
     // button.parent() is the td element
     // button.parent().parent() is the tr element, and index is the row number
 
@@ -911,7 +911,7 @@ SKIPOLE.links.Table2_Links.prototype.eventfunc = function (e) {
         var sendurl = fieldvalues["jurls"][row];
         }
 
-    var senddata = href.substring(href.indexOf('?')+1);
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -953,8 +953,8 @@ SKIPOLE.links.Table1_Button.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let the_widg = this.widg;
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -973,12 +973,12 @@ SKIPOLE.links.Table1_Button.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["url"]) {
         return;
         }
-    var href = $(e.target).attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = $(e.target).attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -1020,8 +1020,8 @@ SKIPOLE.links.Table2_Button.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let the_widg = this.widg;
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -1040,12 +1040,12 @@ SKIPOLE.links.Table2_Button.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["url"]) {
         return;
         }
-    var href = $(e.target).attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = $(e.target).attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -1087,20 +1087,20 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var button = $(e.target);
-    var buttontext = button.text();
-    var myCol = button.parent().index();
-    var href = button.attr('href');
+    let fieldvalues = this.fieldvalues;
+    let button = $(e.target);
+    let buttontext = button.text();
+    let myCol = button.parent().index();
+    let href = button.attr('href');
     if (!href) {
         return;
         }
-    var senddata = href.substring(href.indexOf('?')+1);
+    let senddata = href.substring(href.indexOf('?')+1);
 
     if (myCol === 3) {
 
        // set button_wait_text
-        var button_wait_text = fieldvalues["button_wait_text1"]
+        let button_wait_text = fieldvalues["button_wait_text1"]
         if (button_wait_text) {
             button.text(button_wait_text);
             }
@@ -1144,7 +1144,7 @@ SKIPOLE.links.Table3_Buttons2.prototype.eventfunc = function (e) {
         } else if (myCol === 4) {
 
             // set button_wait_text
-            var button_wait_text = fieldvalues["button_wait_text2"]
+            let button_wait_text = fieldvalues["button_wait_text2"]
             if (button_wait_text) {
                 button.text(button_wait_text);
                 }
@@ -1210,20 +1210,20 @@ SKIPOLE.links.GeneralButtonTable2.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var button = $(e.target);
-    var href = button.attr('href');
+    let fieldvalues = this.fieldvalues;
+    let button = $(e.target);
+    let href = button.attr('href');
     if (!href) {
         return;
         }
     if (!fieldvalues["json_url"]) {
         return;
         }
-    var senddata = href.substring(href.indexOf('?')+1);
+    let senddata = href.substring(href.indexOf('?')+1);
     /* fieldvalues["json_url"] is a list of column json urls
        need to get the column index to find which of these
        urls to send the call to */
-    var col = button.parent().index();
+    let col = button.parent().index();
     if (!fieldvalues["json_url"][col]) {
         return;
         }
@@ -1262,19 +1262,19 @@ SKIPOLE.links.GeneralButtonTable2.prototype.dragstartfunc = function (e, data) {
     };
 SKIPOLE.links.GeneralButtonTable2.prototype.dropfunc = function (e, data) {
     e.preventDefault();
-    var widg_id = e.dataTransfer.getData("text/widgid");
+    let widg_id = e.dataTransfer.getData("text/widgid");
     if (widg_id != this.widg_id) {
         return;
         }
-    var url = this.fieldvalues["dropurl"];
+    let url = this.fieldvalues["dropurl"];
     if (!url) {
         return;
         }
     // now make a call, including data from the drag element and the drop element
-    var dragwidgfield = this.formname('dragrows');
-    var dropwidgfield = this.formname('droprows');
+    let dragwidgfield = this.formname('dragrows');
+    let dropwidgfield = this.formname('droprows');
 
-    var senddata = "ident=" + SKIPOLE.identdata;
+    let senddata = "ident=" + SKIPOLE.identdata;
     if (data) {
         senddata = senddata + "&" + dropwidgfield + "=" + data;
         }
@@ -1319,11 +1319,11 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
    if (!this.widg_id) {
         return;
         }
-    var widg_id = this.widg_id
-    var the_widg = this.widg;
-    var fieldvalues = this.fieldvalues;
+    let widg_id = this.widg_id
+    let the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
     // hide the widget
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -1337,40 +1337,40 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
             }
         }
     // the class of the button's if any
-    var button_class = fieldvalues["button_class"];
+    let button_class = fieldvalues["button_class"];
     // the class of the rows
-    var even_class = fieldvalues["even_class"];
-    var odd_class = fieldvalues["odd_class"];
+    let even_class = fieldvalues["even_class"];
+    let odd_class = fieldvalues["odd_class"];
     // get column urls and number of columns
-    var json_url = fieldvalues["json_url"];
-    var html_url = fieldvalues["html_url"];
+    let json_url = fieldvalues["json_url"];
+    let html_url = fieldvalues["html_url"];
     if (json_url == undefined) {
         return;
         }
     if (html_url == undefined) {
         return;
         }
-    var cols = html_url.length;
+    let cols = html_url.length;
     if (cols != json_url.length) {
         return;
         }
     // cols is the number of columns
 
     // The table contents
-    var contents = this.fieldarg_in_result('contents', result, fieldlist);
+    let contents = this.fieldarg_in_result('contents', result, fieldlist);
     if (contents) {
         // If a request to renew the table is recieved, this bock
         // empties the existing table, and re-draws it
-        var rows = Math.floor(contents.length/cols);
-        if (rows*cols != contents.length) {
+        let newrows = Math.floor(contents.length/cols);
+        if (newrows*cols != contents.length) {
             return;
             }
         // empty the table
         the_widg.empty();
         // and now start filling it again
-        var htmlcontent = "";
-        var cell = -1;
-        for (row = 0; row < rows; row++) {
+        let htmlcontent = "";
+        let cell = -1;
+        for (row = 0; row < newrows; row++) {
             // for each row in the table
             // row class
             if (even_class && (row % 2)) {
@@ -1385,9 +1385,9 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
 
             for (col = 0; col < cols; col++) {
                 cell += 1;
-                var element = contents[cell];
+                let element = contents[cell];
                 // cell text
-                var celltext = '';
+                let celltext = '';
                 if (element[0]) {
                     celltext = element[0];
                     }
@@ -1399,7 +1399,7 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
                     htmlcontent += "<td>";
                     }
                 // get html url for this column
-                var url = html_url[col];
+                let url = html_url[col];
                 // is it a button link
                 if (url && element[2]) {
                     // its a link, apply button class
@@ -1441,8 +1441,8 @@ SKIPOLE.links.GeneralButtonTable2.prototype.setvalues = function (fieldlist, res
               });
         }
     // dragrows and droprows
-    var dragrows = this.fieldarg_in_result('dragrows', result, fieldlist);
-    var droprows = this.fieldarg_in_result('droprows', result, fieldlist);
+    let dragrows = this.fieldarg_in_result('dragrows', result, fieldlist);
+    let droprows = this.fieldarg_in_result('droprows', result, fieldlist);
     if (dragrows || droprows) {
         // count the number of rows in the current table
         var tablerows = $("#" + this.widg_id + " tr");
@@ -1517,9 +1517,9 @@ SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var button = $(e.target);
-    var href = button.attr('href');
+    let fieldvalues = this.fieldvalues;
+    let button = $(e.target);
+    let href = button.attr('href');
     if (!href) {
         return;
         }
@@ -1527,7 +1527,7 @@ SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
     /* fieldvalues["json_url"] is a list of column json urls
        need to get the column index to find which of these
        urls to send the call to */
-    var col = button.parent().index();
+    let col = button.parent().index();
 
     if (!fieldvalues["json_url"]) {
         var sendurl = fieldvalues["html_url"][col];
@@ -1539,14 +1539,14 @@ SKIPOLE.links.GeneralButtonTable1.prototype.eventfunc = function (e) {
         var sendurl = fieldvalues["json_url"][col];
         }
 
-    var key = fieldvalues["keys"][col];
+    let key = fieldvalues["keys"][col];
 
     if (key) {
         // set stored data into senddata
         var senddata = {};
         if (typeof(Storage) !== "undefined") {
             // get the key value from storage
-            var keyvalue = localStorage.getItem(key);
+            let keyvalue = localStorage.getItem(key);
             if (keyvalue != null) {
                 senddata[this.formname("cols")] = keyvalue;
                 }
@@ -1599,19 +1599,19 @@ SKIPOLE.links.GeneralButtonTable1.prototype.dragstartfunc = function (e, data) {
     };
 SKIPOLE.links.GeneralButtonTable1.prototype.dropfunc = function (e, data) {
     e.preventDefault();
-    var widg_id = e.dataTransfer.getData("text/widgid");
+    let widg_id = e.dataTransfer.getData("text/widgid");
     if (widg_id != this.widg_id) {
         return;
         }
-    var url = this.fieldvalues["dropurl"];
+    let url = this.fieldvalues["dropurl"];
     if (!url) {
         return;
         }
     // now make a call, including data from the drag element and the drop element
-    var dragwidgfield = this.formname('dragrows');
-    var dropwidgfield = this.formname('droprows');
+    let dragwidgfield = this.formname('dragrows');
+    let dropwidgfield = this.formname('droprows');
 
-    var senddata = "ident=" + SKIPOLE.identdata;
+    let senddata = "ident=" + SKIPOLE.identdata;
     if (data) {
         senddata = senddata + "&" + dropwidgfield + "=" + data;
         }
@@ -1656,11 +1656,11 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
    if (!this.widg_id) {
         return;
         }
-    var widg_id = this.widg_id
-    var the_widg = this.widg;
-    var fieldvalues = this.fieldvalues;
+    let widg_id = this.widg_id
+    let the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
     // hide the widget
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide != undefined) {
         if (set_hide) {
             if (the_widg.is(":visible")) {
@@ -1674,14 +1674,14 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
             }
         }
     // the class of the button's if any
-    var button_class = fieldvalues["button_class"];
+    let button_class = fieldvalues["button_class"];
     // the class of the rows
-    var even_class = fieldvalues["even_class"];
-    var odd_class = fieldvalues["odd_class"];
+    let even_class = fieldvalues["even_class"];
+    let odd_class = fieldvalues["odd_class"];
     // get column urls and number of columns
-    var json_url = fieldvalues["json_url"];
-    var html_url = fieldvalues["html_url"];
-    var keys = fieldvalues["keys"];
+    let json_url = fieldvalues["json_url"];
+    let html_url = fieldvalues["html_url"];
+    let keys = fieldvalues["keys"];
     if (json_url == undefined) {
         return;
         }
@@ -1691,7 +1691,7 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
     if (keys == undefined) {
         return;
         }
-    var cols = html_url.length;
+    let cols = html_url.length;
     if (cols != json_url.length) {
         return;
         }
@@ -1701,20 +1701,20 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
     // cols is the number of columns
 
     // The table contents
-    var contents = this.fieldarg_in_result('contents', result, fieldlist);
+    let contents = this.fieldarg_in_result('contents', result, fieldlist);
     if (contents) {
         // If a request to renew the table is recieved, this bock
         // empties the existing table, and re-draws it
-        var rows = Math.floor(contents.length/cols);
-        if (rows*cols != contents.length) {
+        let newrows = Math.floor(contents.length/cols);
+        if (newrows*cols != contents.length) {
             return;
             }
         // empty the table
         the_widg.empty();
         // and now start filling it again
-        var htmlcontent = "";
-        var cell = -1;
-        for (row = 0; row < rows; row++) {
+        let htmlcontent = "";
+        let cell = -1;
+        for (row = 0; row < newrows; row++) {
             // for each row in the table
             // row class
             if (even_class && (row % 2)) {
@@ -1729,9 +1729,9 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
 
             for (col = 0; col < cols; col++) {
                 cell += 1;
-                var element = contents[cell];
+                let element = contents[cell];
                 // cell text
-                var celltext = '';
+                let celltext = '';
                 if (element[0]) {
                     celltext = element[0];
                     }
@@ -1743,7 +1743,7 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
                     htmlcontent += "<td>";
                     }
                 // get html url for this column
-                var url = html_url[col];
+                let url = html_url[col];
                 // is it a button link
                 if (url && element[2]) {
                     // its a link, apply button class
@@ -1785,8 +1785,8 @@ SKIPOLE.links.GeneralButtonTable1.prototype.setvalues = function (fieldlist, res
               });
         }
     // dragrows and droprows
-    var dragrows = this.fieldarg_in_result('dragrows', result, fieldlist);
-    var droprows = this.fieldarg_in_result('droprows', result, fieldlist);
+    let dragrows = this.fieldarg_in_result('dragrows', result, fieldlist);
+    let droprows = this.fieldarg_in_result('droprows', result, fieldlist);
     if (dragrows || droprows) {
         // count the number of rows in the current table
         var tablerows = $("#" + this.widg_id + " tr");
@@ -1852,9 +1852,9 @@ SKIPOLE.links.Audio1.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
-    var fieldvalues = this.fieldvalues;
-    var play_audio = this.fieldarg_in_result("play", result, fieldlist);
+    let the_widg = this.widg;
+    let fieldvalues = this.fieldvalues;
+    let play_audio = this.fieldarg_in_result("play", result, fieldlist);
     if (play_audio) {
         document.getElementById(this.widg_id).play();
         }
@@ -1871,15 +1871,15 @@ SKIPOLE.links.Audio2.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
 
-    var src_mp3 = this.fieldarg_in_result("src_mp3", result, fieldlist);
-    var src_wav = this.fieldarg_in_result("src_wav", result, fieldlist);
-    var src_ogg = this.fieldarg_in_result("src_ogg", result, fieldlist);
+    let src_mp3 = this.fieldarg_in_result("src_mp3", result, fieldlist);
+    let src_wav = this.fieldarg_in_result("src_wav", result, fieldlist);
+    let src_ogg = this.fieldarg_in_result("src_ogg", result, fieldlist);
     if (src_mp3 || src_wav || src_ogg) {
         // empty the widget audio src links
         the_widg.empty();
-        var htmlcontent = "";
+        let htmlcontent = "";
         if (src_mp3) {
             htmlcontent +=  "<source src=\"" + src_mp3 + "\" type=\"audio/mpeg\" />";
             }
@@ -1893,7 +1893,7 @@ SKIPOLE.links.Audio2.prototype.setvalues = function (fieldlist, result) {
         document.getElementById(this.widg_id).load();
         }
 
-    var play_audio = this.fieldarg_in_result("play", result, fieldlist);
+    let play_audio = this.fieldarg_in_result("play", result, fieldlist);
     if (play_audio) {
         document.getElementById(this.widg_id).play();
         }

@@ -14,7 +14,7 @@ SKIPOLE.debug_tools.ShowEnviron = function (widg_id, error_message, fieldmap) {
 SKIPOLE.debug_tools.ShowEnviron.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.debug_tools.ShowEnviron.prototype.constructor = SKIPOLE.debug_tools.ShowEnviron;
 SKIPOLE.debug_tools.ShowEnviron.prototype.updatefunc = function (arg) {
-    var thispre = this.widg.find('pre');
+    let thispre = this.widg.find('pre');
     thispre.html(arg);
     };
 
@@ -31,7 +31,7 @@ SKIPOLE.debug_tools.ShowCallData = function (widg_id, error_message, fieldmap) {
 SKIPOLE.debug_tools.ShowCallData.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.debug_tools.ShowCallData.prototype.constructor = SKIPOLE.debug_tools.ShowCallData;
 SKIPOLE.debug_tools.ShowCallData.prototype.updatefunc = function (arg) {
-    var thispre = this.widg.find('pre');
+    let thispre = this.widg.find('pre');
     thispre.html(arg);
     };
 
@@ -48,12 +48,12 @@ SKIPOLE.debug_tools.ShowResponders = function (widg_id, error_message, fieldmap)
 SKIPOLE.debug_tools.ShowResponders.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.debug_tools.ShowResponders.prototype.constructor = SKIPOLE.debug_tools.ShowResponders;
 SKIPOLE.debug_tools.ShowResponders.prototype.updatefunc = function (arg) {
-    var thistable = this.widg.find('table');
+    let thistable = this.widg.find('table');
     // empty the table
     thistable.empty();
     // and now start filling it again
-    var rows = arg.length;
-    var htmlcontent = "";
+    let rows = arg.length;
+    let htmlcontent = "";
     for (row = 0; row < rows; row++) {
         // for each row in the table
         htmlcontent += "<tr><td>" + arg[row][0] + "</td><td>" + arg[row][1] + "</td><td>" + arg[row][2] + "</td></tr>";

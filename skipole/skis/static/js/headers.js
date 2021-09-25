@@ -16,9 +16,9 @@ SKIPOLE.headers.HeaderErrorPara.prototype.setvalues = function (fieldlist, resul
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     /*  if hide is given */
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // hide
-    var hidebox = this.fieldarg_in_result('hide', result, fieldlist);
+    let hidebox = this.fieldarg_in_result('hide', result, fieldlist);
     if (hidebox != undefined) {
         if (hidebox) {
             if (the_widg.is(":visible")) {
@@ -42,7 +42,7 @@ SKIPOLE.headers.HeaderErrorPara.prototype.show_error = function (error_message) 
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
     if (!(the_widg.is(":visible"))) {
         the_widg.text(error_message).fadeIn('slow');
@@ -52,7 +52,7 @@ SKIPOLE.headers.HeaderErrorPara.prototype.clear_error = function() {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     if (the_widg.attr("data-status") == "error") {
         the_widg.removeAttr( "data-status" )
         }
@@ -73,9 +73,9 @@ SKIPOLE.headers.HeadText.prototype.setvalues = function (fieldlist, result) {
    if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     /* large_text */
-    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
         the_widg.text(large_text);
         }
@@ -94,17 +94,17 @@ SKIPOLE.headers.HeaderText1.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // large_text
-    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h1');
+        let h1_text = the_widg.find('h1');
         h1_text.text(large_text);
         }
     // small_text
-    var small_text = this.fieldarg_in_result('small_text', result, fieldlist);
+    let small_text = this.fieldarg_in_result('small_text', result, fieldlist);
     if (small_text) {
-        var p_text = the_widg.find(':nth-child(2)');
+        let p_text = the_widg.find(':nth-child(2)');
         p_text.text(small_text);
         }
     };
@@ -118,11 +118,11 @@ SKIPOLE.headers.HeaderText1.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
 
-    var error_div = the_widg.find(':nth-child(3)');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':nth-child(3)');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(error_div.is(":visible"))) {
        error_div.show();
@@ -132,9 +132,9 @@ SKIPOLE.headers.HeaderText1.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var error_div = the_widg.find(':nth-child(3)');
+    let error_div = the_widg.find(':nth-child(3)');
     if (error_div.is(":visible")) {
         //error_div.fadeOut('slow');
         error_div.hide();
@@ -153,17 +153,17 @@ SKIPOLE.headers.HeaderText2.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // large_text
-    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h2');
+        let h1_text = the_widg.find('h2');
         h1_text.text(large_text);
         }
     // small_text
-    var small_text = this.fieldarg_in_result('small_text', result, fieldlist);
+    let small_text = this.fieldarg_in_result('small_text', result, fieldlist);
     if (small_text) {
-        var p_text = the_widg.find(':nth-child(2)');
+        let p_text = the_widg.find(':nth-child(2)');
         p_text.text(small_text);
         }
     };
@@ -177,11 +177,11 @@ SKIPOLE.headers.HeaderText2.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
 
-    var error_div = the_widg.find(':nth-child(3)');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':nth-child(3)');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(error_div.is(":visible"))) {
        error_div.show();
@@ -191,9 +191,9 @@ SKIPOLE.headers.HeaderText2.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var error_div = the_widg.find(':nth-child(3)');
+    let error_div = the_widg.find(':nth-child(3)');
     if (error_div.is(":visible")) {
         //error_div.fadeOut('slow');
         error_div.hide();
@@ -212,17 +212,17 @@ SKIPOLE.headers.HeaderText3.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // large_text
-    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h3');
+        let h1_text = the_widg.find('h3');
         h1_text.text(large_text);
         }
     // small_text
-    var small_text = this.fieldarg_in_result('small_text', result, fieldlist);
+    let small_text = this.fieldarg_in_result('small_text', result, fieldlist);
     if (small_text) {
-        var p_text = the_widg.find(':nth-child(2)');
+        let p_text = the_widg.find(':nth-child(2)');
         p_text.text(small_text);
         }
     };
@@ -236,11 +236,11 @@ SKIPOLE.headers.HeaderText3.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
 
-    var error_div = the_widg.find(':nth-child(3)');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':nth-child(3)');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(error_div.is(":visible"))) {
        error_div.show();
@@ -250,9 +250,9 @@ SKIPOLE.headers.HeaderText3.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var error_div = the_widg.find(':nth-child(3)');
+    let error_div = the_widg.find(':nth-child(3)');
     if (error_div.is(":visible")) {
         //error_div.fadeOut('slow');
         error_div.hide();
@@ -271,17 +271,17 @@ SKIPOLE.headers.HeaderText4.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // large_text
-    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h4');
+        let h1_text = the_widg.find('h4');
         h1_text.text(large_text);
         }
     // small_text
-    var small_text = this.fieldarg_in_result('small_text', result, fieldlist);
+    let small_text = this.fieldarg_in_result('small_text', result, fieldlist);
     if (small_text) {
-        var p_text = the_widg.find(':nth-child(2)');
+        let p_text = the_widg.find(':nth-child(2)');
         p_text.text(small_text);
         }
     };
@@ -295,11 +295,11 @@ SKIPOLE.headers.HeaderText4.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
 
-    var error_div = the_widg.find(':nth-child(3)');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':nth-child(3)');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(error_div.is(":visible"))) {
        error_div.show();
@@ -309,9 +309,9 @@ SKIPOLE.headers.HeaderText4.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var error_div = the_widg.find(':nth-child(3)');
+    let error_div = the_widg.find(':nth-child(3)');
     if (error_div.is(":visible")) {
         //error_div.fadeOut('slow');
         error_div.hide();
@@ -329,17 +329,17 @@ SKIPOLE.headers.HeaderText5.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // large_text
-    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h5');
+        let h1_text = the_widg.find('h5');
         h1_text.text(large_text);
         }
     // small_text
-    var small_text = this.fieldarg_in_result('small_text', result, fieldlist);
+    let small_text = this.fieldarg_in_result('small_text', result, fieldlist);
     if (small_text) {
-        var p_text = the_widg.find(':nth-child(2)');
+        let p_text = the_widg.find(':nth-child(2)');
         p_text.text(small_text);
         }
     };
@@ -353,11 +353,11 @@ SKIPOLE.headers.HeaderText5.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
 
-    var error_div = the_widg.find(':nth-child(3)');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':nth-child(3)');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(error_div.is(":visible"))) {
        error_div.show();
@@ -367,9 +367,9 @@ SKIPOLE.headers.HeaderText5.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var error_div = the_widg.find(':nth-child(3)');
+    let error_div = the_widg.find(':nth-child(3)');
     if (error_div.is(":visible")) {
         //error_div.fadeOut('slow');
         error_div.hide();
@@ -388,17 +388,17 @@ SKIPOLE.headers.HeaderText6.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // large_text
-    var large_text = this.fieldarg_in_result('large_text', result, fieldlist);
+    let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
-        var h1_text = the_widg.find('h6');
+        let h1_text = the_widg.find('h6');
         h1_text.text(large_text);
         }
     // small_text
-    var small_text = this.fieldarg_in_result('small_text', result, fieldlist);
+    let small_text = this.fieldarg_in_result('small_text', result, fieldlist);
     if (small_text) {
-        var p_text = the_widg.find(':nth-child(2)');
+        let p_text = the_widg.find(':nth-child(2)');
         p_text.text(small_text);
         }
     };
@@ -412,11 +412,11 @@ SKIPOLE.headers.HeaderText6.prototype.show_error = function (error_message) {
     if (!error_message) {
         error_message = "Unknown Error";
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.attr("data-status", "error");
 
-    var error_div = the_widg.find(':nth-child(3)');
-    var error_para = error_div.find(':first');
+    let error_div = the_widg.find(':nth-child(3)');
+    let error_para = error_div.find(':first');
     error_para.text(error_message);
     if (!(error_div.is(":visible"))) {
        error_div.show();
@@ -426,9 +426,9 @@ SKIPOLE.headers.HeaderText6.prototype.clear_error = function () {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     the_widg.removeAttr("data-status");
-    var error_div = the_widg.find(':nth-child(3)');
+    let error_div = the_widg.find(':nth-child(3)');
     if (error_div.is(":visible")) {
         //error_div.fadeOut('slow');
         error_div.hide();
@@ -460,15 +460,15 @@ SKIPOLE.headers.NavButtons3.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
         }
-    var the_widg = this.widg;
+    let the_widg = this.widg;
     // links
-    var button_text = this.fieldarg_in_result('button_text', result, fieldlist);
-    var get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
-    var get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
-    var button_classes = this.fieldarg_in_result('button_classes', result, fieldlist);
+    let button_text = this.fieldarg_in_result('button_text', result, fieldlist);
+    let get_field1 = this.fieldarg_in_result('get_field1', result, fieldlist);
+    let get_field2 = this.fieldarg_in_result('get_field2', result, fieldlist);
+    let button_classes = this.fieldarg_in_result('button_classes', result, fieldlist);
 
-    var self = this;
-    var index = 0;
+    let self = this;
+    let index = 0;
 
     the_widg.find('a').each(function() {
             // for each link
@@ -508,18 +508,18 @@ SKIPOLE.headers.NavButtons3.prototype.eventfunc = function (e) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
+    let fieldvalues = this.fieldvalues;
     if (!fieldvalues["jsonurl"]) {
         // no json url, return and call html link
         return;
         }
 
-    var the_widg = this.widg;
-    var button_pressed = $(e.target);
-    var url = fieldvalues["jsonurl"];
+    let the_widg = this.widg;
+    let button_pressed = $(e.target);
+    let url = fieldvalues["jsonurl"];
 
-    var href = button_pressed.attr('href');
-    var senddata = href.substring(href.indexOf('?')+1);
+    let href = button_pressed.attr('href');
+    let senddata = href.substring(href.indexOf('?')+1);
     e.preventDefault();
     // respond to json or html
     $.ajax({
@@ -559,20 +559,20 @@ SKIPOLE.headers.TabButtons1.prototype = Object.create(SKIPOLE.BaseWidget.prototy
 SKIPOLE.headers.TabButtons1.prototype.constructor = SKIPOLE.headers.TabButtons1;
 SKIPOLE.headers.TabButtons1.prototype.eventfunc = function (e) {
     SKIPOLE.skiprefresh = true;
-    var button = $(e.target);
+    let button = $(e.target);
     this.setbutton(button.index());
     }
 SKIPOLE.headers.TabButtons1.prototype.setbutton = function (button_index) {
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var allbuttons = this.widg.find('button');
+    let fieldvalues = this.fieldvalues;
+    let allbuttons = this.widg.find('button');
     // hide all items with hide_class
     if (fieldvalues["hide_class"]) {
         $("." + fieldvalues["hide_class"]).hide();
         }
-    var number_of_buttons = allbuttons.length;
+    let number_of_buttons = allbuttons.length;
     // handle situation where button_index does not match a button
     if ((button_index < 0) || (button_index >= number_of_buttons)) {
         if (fieldvalues["onclick_removeclass"]){
@@ -586,7 +586,7 @@ SKIPOLE.headers.TabButtons1.prototype.setbutton = function (button_index) {
         return;
         }
     // button_index is valid, get the button
-    var button = allbuttons.eq(button_index);
+    let button = allbuttons.eq(button_index);
     if (fieldvalues["onclick_removeclass"]){
         // add the class to all buttons (to be removed from the pressed button)
         allbuttons.addClass( fieldvalues["onclick_removeclass"] );
@@ -600,14 +600,14 @@ SKIPOLE.headers.TabButtons1.prototype.setbutton = function (button_index) {
         button.addClass( fieldvalues["onclick_addclass"] );
         }
     // display the item with the given id
-    var displayid = fieldvalues["display_id_list"][button_index];
+    let displayid = fieldvalues["display_id_list"][button_index];
     if (displayid) {
         $("#" + displayid).show();
         }
     }
 SKIPOLE.headers.TabButtons1.prototype.setvalues = function (fieldlist, result) {
     // activate a button
-    var active_button = this.fieldarg_in_result('active_button', result, fieldlist);
+    let active_button = this.fieldarg_in_result('active_button', result, fieldlist);
     if (active_button != undefined) {
         this.setbutton(active_button);
         }

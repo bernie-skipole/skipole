@@ -14,7 +14,7 @@ SKIPOLE.inputtext.TextInput1.prototype.setvalues = function (fieldlist, result) 
         }
     this.set_accepted_errored(this.widg, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         this.widg.val(input_text);
         }
@@ -33,7 +33,7 @@ SKIPOLE.inputtext.Password1.prototype.setvalues = function (fieldlist, result) {
         }
     this.set_accepted_errored(this.widg, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         this.widg.val(input_text);
         }
@@ -51,13 +51,13 @@ SKIPOLE.inputtext.TextInput2.prototype.setvalues = function (fieldlist, result) 
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var fieldvalues = this.fieldvalues;
-    var text_input = $('#' + fieldvalues["input_id"]);
-    var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
+    let fieldvalues = this.fieldvalues;
+    let text_input = $('#' + fieldvalues["input_id"]);
+    let input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
     this.set_if_disabled(text_input, input_disabled, fieldlist, result);
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
@@ -75,12 +75,12 @@ SKIPOLE.inputtext.Password2.prototype.setvalues = function (fieldlist, result) {
         }
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
-    var text_input = this.widg.find('input[type="password"]');
-    var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
+    let text_input = this.widg.find('input[type="password"]');
+    let input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
     this.set_if_disabled(text_input, input_disabled, fieldlist, result);
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
@@ -97,11 +97,11 @@ SKIPOLE.inputtext.TextInput3.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var text_input = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let text_input = $('#' + fieldvalues["input_id"]);
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
@@ -118,13 +118,13 @@ SKIPOLE.inputtext.TextInput4.prototype.setvalues = function (fieldlist, result) 
     if (!this.widg_id) {
         return;
         }
-    var fieldvalues = this.fieldvalues;
-    var text_input = $('#' + fieldvalues["input_id"]);
-    var input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
+    let fieldvalues = this.fieldvalues;
+    let text_input = $('#' + fieldvalues["input_id"]);
+    let input_disabled = this.fieldarg_in_result('disabled', result, fieldlist);
     this.set_if_disabled(text_input, input_disabled, fieldlist, result);
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
@@ -145,17 +145,17 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.setvalues = function (fieldlist, re
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // sent input text
-    var fieldvalues = this.fieldvalues;
-    var text_input = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let text_input = $('#' + fieldvalues["input_id"]);
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
     // hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
@@ -179,11 +179,11 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.eventfunc = function (e) {
             }
         else {
             // form validated, so if json url set, call a json page
-            var jsonurl = this.fieldvalues["url"];
+            let jsonurl = this.fieldvalues["url"];
             if (jsonurl) {
-                var self = this;
-                var widgform = this.widg.find('form');
-                var senddata = widgform.serializeArray();
+                let self = this;
+                let widgform = this.widg.find('form');
+                let senddata = widgform.serializeArray();
                 e.preventDefault();
                 // respond to json or html
                 $.ajax({
@@ -235,8 +235,8 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
     };
 SKIPOLE.inputtext.SubmitTextInput1.prototype.clear_error = function() {
@@ -244,8 +244,8 @@ SKIPOLE.inputtext.SubmitTextInput1.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
 
@@ -264,20 +264,20 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // set text input
-    var fieldvalues = this.fieldvalues;
-    var text_input = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let text_input = $('#' + fieldvalues["input_id"]);
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // div2 is the second div of the widget holding the paragraphs
-    var div2 = this.widg.find("div:eq(1)");
-    var para1 = div2.find(':first');
+    let div2 = this.widg.find("div:eq(1)");
+    let para1 = div2.find(':first');
     // para_text
-    var para_text = this.fieldarg_in_result('para_text', result, fieldlist);
+    let para_text = this.fieldarg_in_result('para_text', result, fieldlist);
     if (para_text !== undefined) {
         para1.text(para_text);
         }
     // show_para1
-    var show_para1 = this.fieldarg_in_result('show_para1', result, fieldlist);
+    let show_para1 = this.fieldarg_in_result('show_para1', result, fieldlist);
     if (show_para1 != undefined) {
         if (show_para1) {
             if (!(para1.is(":visible"))) {
@@ -291,9 +291,9 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
             }
         }
     // show_para2
-    var show_para2 = this.fieldarg_in_result('show_para2', result, fieldlist);
+    let show_para2 = this.fieldarg_in_result('show_para2', result, fieldlist);
     if (show_para2 != undefined) {
-        var para2 = div2.find(':eq(1)');
+        let para2 = div2.find(':eq(1)');
         if (show_para2) {
             if (!(para2.is(":visible"))) {
                 para2.fadeIn('slow');
@@ -306,12 +306,12 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.setvalues = function (fieldlist, re
             }
         }
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
     // hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
@@ -335,11 +335,11 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.eventfunc = function (e) {
             }
         else {
             // form validated, so if json url set, call a json page
-            var jsonurl = this.fieldvalues["url"];
+            let jsonurl = this.fieldvalues["url"];
             if (jsonurl) {
-                var self = this
-                var widgform = this.widg.find('form');
-                var senddata = widgform.serializeArray();
+                let self = this
+                let widgform = this.widg.find('form');
+                let senddata = widgform.serializeArray();
                 e.preventDefault();
                 // respond to json or html
                 $.ajax({
@@ -391,8 +391,8 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
     };
 SKIPOLE.inputtext.SubmitTextInput3.prototype.clear_error = function() {
@@ -400,8 +400,8 @@ SKIPOLE.inputtext.SubmitTextInput3.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
 
@@ -420,26 +420,26 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.setvalues = function (fieldlist, re
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // input 1
-    var text1 = this.widg.find('input:first');
+    let text1 = this.widg.find('input:first');
     // Check for set_input_accepted1 or set_input_errored1
-    var input_accepted1 = this.fieldarg_in_result('set_input_accepted1', result, fieldlist);
+    let input_accepted1 = this.fieldarg_in_result('set_input_accepted1', result, fieldlist);
     this.set_accepted(text1, input_accepted1);
-    var input_errored1 = this.fieldarg_in_result('set_input_errored1', result, fieldlist);
+    let input_errored1 = this.fieldarg_in_result('set_input_errored1', result, fieldlist);
     this.set_errored(text1, input_errored1);
     // input_text1
-    var input_text1 = this.fieldarg_in_result('input_text1', result, fieldlist);
+    let input_text1 = this.fieldarg_in_result('input_text1', result, fieldlist);
     if (input_text1 !== undefined) {
         text1.val(input_text1);
         }
     // input 2
-    var text2 = this.widg.find('input:eq(1)');
+    let text2 = this.widg.find('input:eq(1)');
     // Check for set_input_accepted2 or set_input_errored2
-    var input_accepted2 = this.fieldarg_in_result('set_input_accepted2', result, fieldlist);
+    let input_accepted2 = this.fieldarg_in_result('set_input_accepted2', result, fieldlist);
     this.set_accepted(text2, input_accepted2);
-    var input_errored2 = this.fieldarg_in_result('set_input_errored2', result, fieldlist);
+    let input_errored2 = this.fieldarg_in_result('set_input_errored2', result, fieldlist);
     this.set_errored(text2, input_errored2);
     // input_text2
-    var input_text2 = this.fieldarg_in_result('input_text2', result, fieldlist);
+    let input_text2 = this.fieldarg_in_result('input_text2', result, fieldlist);
     if (input_text2 !== undefined) {
         text2.val(input_text2);
         }
@@ -454,11 +454,11 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.eventfunc = function (e) {
             }
         else {
             // form validated, so if json url set, call a json page
-            var jsonurl = this.fieldvalues["url"];
+            let jsonurl = this.fieldvalues["url"];
             if (jsonurl) {
-                var self = this
-                var widgform = this.widg.find('form');
-                var senddata = widgform.serializeArray();
+                let self = this
+                let widgform = this.widg.find('form');
+                let senddata = widgform.serializeArray();
                 e.preventDefault();
                 // respond to json or html
                 $.ajax({
@@ -510,9 +510,9 @@ SKIPOLE.inputtext.TwoInputsSubmit1.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var text1 = this.widg.find('input:first');
+    let text1 = this.widg.find('input:first');
     this.set_errored(text1, false);
-    var text2 = this.widg.find('input:eq(1)');
+    let text2 = this.widg.find('input:eq(1)');
     this.set_errored(text2, false);
     };
 
@@ -545,21 +545,21 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.setvalues = function (fieldlist, re
     /* check if an error message or clear_error is given */
     this.check_error(fieldlist, result);
     // session_storage
-    var sessionkey = this.fieldarg_in_result('session_storage', result, fieldlist);
+    let sessionkey = this.fieldarg_in_result('session_storage', result, fieldlist);
     if (sessionkey) {
         this.fieldvalues["session_storage"] = sessionkey;
         }
     // local_storage
-    var localkey = this.fieldarg_in_result('local_storage', result, fieldlist);
+    let localkey = this.fieldarg_in_result('local_storage', result, fieldlist);
     if (localkey) {
         this.fieldvalues["local_storage"] = localkey;
         }
-    var fieldvalues = this.fieldvalues;
-    var text_input = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let text_input = $('#' + fieldvalues["input_id"]);
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
@@ -568,7 +568,7 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.setvalues = function (fieldlist, re
     this.sethiddenfields(fieldlist, result);
 
     // hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
@@ -587,13 +587,13 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.eventfunc = function (e) {
     if (e.type == 'submit') {
         // form submitted
         e.preventDefault();
-        var selected_form = $(e.target);
+        let selected_form = $(e.target);
         if (!SKIPOLE.form_validate(selected_form)) {
             return;
             }
 
         // Get the url to call
-        var url = this.fieldvalues["url"];
+        let url = this.fieldvalues["url"];
         if (!url) {
             url = selected_form.attr('action');
             }
@@ -602,11 +602,11 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.eventfunc = function (e) {
             }
 
         // url set, send data
-        var self = this
-        var senddata = new FormData(selected_form[0]);
+        let self = this
+        let senddata = new FormData(selected_form[0]);
 
-        var sessionkey = this.fieldvalues["session_storage"];
-        var localkey = this.fieldvalues["local_storage"];
+        let sessionkey = this.fieldvalues["session_storage"];
+        let localkey = this.fieldvalues["local_storage"];
 
         if (sessionkey || localkey) {
             // set stored data into senddata
@@ -687,8 +687,8 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
     };
 SKIPOLE.inputtext.SubmitTextInput2.prototype.clear_error = function() {
@@ -696,8 +696,8 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
 
@@ -717,17 +717,17 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.setvalues = function (fieldlist, re
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     // sent input text
-    var fieldvalues = this.fieldvalues;
-    var text_input = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let text_input = $('#' + fieldvalues["input_id"]);
     // Check for set_input_accepted or set_input_errored
     this.set_accepted_errored(text_input, fieldlist, result);
     // input_text
-    var input_text = this.fieldarg_in_result('input_text', result, fieldlist);
+    let input_text = this.fieldarg_in_result('input_text', result, fieldlist);
     if (input_text !== undefined) {
         text_input.val(input_text);
         }
     // hide
-    var set_hide = this.fieldarg_in_result('hide', result, fieldlist);
+    let set_hide = this.fieldarg_in_result('hide', result, fieldlist);
     if (set_hide !== undefined) {
         if (set_hide) {
             if (this.widg.is(":visible")) {
@@ -751,11 +751,11 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.eventfunc = function (e) {
             }
         else {
             // form validated, so if json url set, call a json page
-            var jsonurl = this.fieldvalues["url"];
+            let jsonurl = this.fieldvalues["url"];
             if (jsonurl) {
-                var self = this;
-                var widgform = this.widg.find('form');
-                var senddata = widgform.serializeArray();
+                let self = this;
+                let widgform = this.widg.find('form');
+                let senddata = widgform.serializeArray();
                 e.preventDefault();
                 // respond to json or html
                 $.ajax({
@@ -807,8 +807,8 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.show_error = function (error_messag
         return;
         }
     SKIPOLE.BaseWidget.prototype.show_error.call(this, error_message);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, true);
     };
 SKIPOLE.inputtext.SubmitTextInput4.prototype.clear_error = function() {
@@ -816,8 +816,8 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.clear_error = function() {
         return;
         }
     SKIPOLE.BaseWidget.prototype.clear_error.call(this);
-    var fieldvalues = this.fieldvalues;
-    var input_field = $('#' + fieldvalues["input_id"]);
+    let fieldvalues = this.fieldvalues;
+    let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
 
