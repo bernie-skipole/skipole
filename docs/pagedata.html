@@ -45,6 +45,8 @@
 <p>pd = PageData()</p>
 <p>This instance is a dictionary-like object that also has certain attributes. It can be set with data, and then inserted into the skicall object with:</p>
 <p>skicall.update(pd)</p>
+<p>A copy of the current PageData object which has been set into skicall can be obtained using:</p>
+<p>pd = skicall.get_pagedata()</p>
 <p>The keys of the PageData instance pd, which you would set, are of the form:</p>
 <p>pd[widgetname,fieldname] = value</p>
 <p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>

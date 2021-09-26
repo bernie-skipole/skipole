@@ -58,7 +58,8 @@ This attribute is used when requesting TextBlocks.</p>
 <p>skicall.submit_dict is a dictionary set by a responder.</p>
 <h3>METHODS</h3>
 <p>skicall.update(itemdata) updates skicall from a PageData or SectionData object.</p>
-<p>skicall.clear_page_data() clears any data.</p>
+<p>skicall.get_pagedata() Returns a PageData object of the current data in skicall, note this is a copy, if changed it will not change the data in skicall, unless skicall.update is called with the new PageData object.</p>
+<p>skicall.clear_pagedata() clears any data.</p>
 <p>skicall.label_value(label, project=None) is a method which given a label, returns the associated ident or URL.<br />If project is not given assumes the current project, if given, project must exist as either the root, or a sub project of the root. If no label is found, returns None.</p>
 <p>skicall.textblock(textref, project=None) is a method which given a reference string returns the text of the associated TextBlock.<br />If project is None, it assumes the TextBlock is defined in the current project, if project is given it must be the root or a sub project. If no TextBlock is found, it returns None.</p>
 <p>skicall.projectpaths() returns a dictionary of project names as keys with the project url paths as values.</p>
