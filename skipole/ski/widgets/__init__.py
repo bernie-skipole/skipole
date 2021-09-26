@@ -1640,7 +1640,8 @@ class ClosedWidget(tag.ClosedPart):
         fieldvalues.update(otherparams)
         if not fieldvalues:
             return ''
-        return """  SKIPOLE.widgets["{ident}"].fieldvalues={fieldvalues};""".format(ident=self.get_id(), fieldvalues=json.dumps(fieldvalues))
+        return """  SKIPOLE.widgets["{ident}"].fieldvalues={fieldvalues};
+""".format(ident=self.get_id(), fieldvalues=json.dumps(fieldvalues))
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         return ''

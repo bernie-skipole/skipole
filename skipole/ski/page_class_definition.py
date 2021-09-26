@@ -658,7 +658,8 @@ class TemplatePage(TemplatePageAndSVG):
         # to add links to the validator js modules in the page head
         self._validator_scriptlinks = []
 
-        # These will be added to the page javascript within the jquery $(document).ready(function() {
+        # These will be added to the page javascript within the jquery $(function() { ... })
+        # handler which ensures these are run after the dom is loaded
         self._add_storage = ''
         self._add_jscript = ''
 
@@ -761,7 +762,7 @@ class TemplatePage(TemplatePageAndSVG):
         # The start of the script is created in the .data function
         scriptmiddle = """
 // Widget functions
-$(document).ready(function(){
+$(function(){
 """
         if self._add_storage:
             scriptmiddle += self._add_storage
@@ -943,7 +944,7 @@ $(document).ready(function(){
             if 'last_scroll' in self.page_settings:
                 self.last_scroll = bool(self.page_settings['last_scroll'])
             if 'lang' in self.page_settings:
-                if isinstance(self.page_settings['lang'], 'tuple') or isinstance(self.page_settings['lang'], 'list'):
+                if isinstance(self.page_settings['lang'], tuple) or isinstance(self.page_settings['lang'], list):
                     self.lang = self.page_settings['lang'][0]
                 else:
                     self.lang = self.page_settings['lang']

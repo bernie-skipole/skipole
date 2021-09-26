@@ -1434,8 +1434,17 @@ class SkiCall(object):
             del self.page_data['@import']
             self.page_data['cssimport'] = val
 
+    def get_pagedata(self):
+        """Returns a PageData object of the current data in skicall, note this is a copy,
+          if changed it will not change the data in skicall, unless skicall.update is called with
+          the new PageData object """
+        return PageData.from_dict(self.page_data.copy())
+
 
     def clear_page_data(self):
+        self.page_data = {}
+
+    def clear_pagedata(self):
         self.page_data = {}
 
     @property

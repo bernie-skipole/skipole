@@ -117,7 +117,6 @@ def end_call(page_ident, page_type, skicall):
     skicall.update(sd_adminhead)
     skicall.update(sd_foot)
 
-
     # get any required session data which has been set into call_data
     # and pass it to the client as ident_data
 
@@ -138,6 +137,8 @@ def end_call(page_ident, page_type, skicall):
     pd_ident = PageData()
     pd_ident.ident_data = json.dumps(sent_session_data)
     skicall.update(pd_ident)
+
+
 
 
 # As this project is not intended to run as a stand-alone service, a function
