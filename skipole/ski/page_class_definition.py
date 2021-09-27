@@ -1554,15 +1554,15 @@ class JSON(ParentPage):
             self.content['environ'] = pprint.pformat(environ)
             if call_data:
                 self.content['call_data'] = pprint.pformat(call_data)
-            if not ident_list:
+            if ident_list:
+                idents = []
+                for ident in ident_list:
+                    item = skiboot.from_ident(ident)
+                    idents.append([ident.to_comma_str(), item.responder.__class__.__name__, item.brief])
+                idents.append([self.ident.to_comma_str(), 'This page', self.brief])
+                self.content['ident_list'] = idents
+            else:
                 self.content['ident_list'] = [[self.ident.to_comma_str(), 'This page', self.brief]]
-                return
-            idents = []
-            for ident in ident_list:
-                item = skiboot.from_ident(ident)
-                idents.append([ident.to_comma_str(), item.responder.__class__.__name__, item.brief])
-            idents.append([self.ident.to_comma_str(), 'This page', self.brief])
-            self.content['ident_list'] = idents
         self._create_header()
 
     def show_error(self, error_messages=None):
