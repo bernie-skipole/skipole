@@ -38,21 +38,56 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>Code Examples</h3>
-<p>Examples of using various Python packages with skipole are given here. Note: these have only been tested on Linux.</p>
-<p>In general you will probably want to try these in a virtual environment, for example, use the following:</p>
-<p>python3 -m venv ~/myenv</p>
-<p>source ~/myenv/bin/activate</p>
-<p>pip install -U pip setuptools wheel</p>
-<p>pip install skipole
-<p>pip install other packages you may want to test</p>
-<p>create a directory, and move to it, then create a skipole project, note the trailing space dot, for current directory.</p>
+<h3>Using Matplotlib to serve an svg image chart</h3>
+<p>Ensure your virtual environment has:</p>
+<p>pip install matplotlib numpy skipole</p>
+<p>Create a directory, and move to it, then create a skipole project "myproj", note the trailing space dot, for current directory.</p>
 <p>python -m skipole myproj .</p>
-<p>which creates the file myproj.py in your current directory, then edit it appropriately.</p>
-<p>The following links gives examples of code:</p>
-<p><a href = "/skipole/examples/matplotlib.html">Serving svg inline charts produced by Matplotlib</a></p>
-<p><a href = "/skipole/examples/matplotlib2.html">Serving svg image charts produced by Matplotlib</a></p>
+<p>which creates the file myproj.py in your current directory.</p>
+<p>Edit the start of your myproj.py file to include the imports:</p>
+<pre>
 
+from io import StringIO
+
+from matplotlib.figure import Figure
+
+import numpy as np
+
+</pre>
+
+<p>Run the project and use skiadmin to create a SubmitIterator responder, with a name such as 'chart.svg'. Calling this from the browser will call your submit_data function which should return a binary iterator.</p>
+
+<p>So a submit_data function such as this will do the job:</p>
+
+<pre>
+
+def submit_data(skicall):
+    """This function is called when a Responder wishes to submit data for processing in some manner
+       Typically you would create a PageData object containing widget,field values and call the
+       skicall.update method, where the data will be applied to the page returned"""
+    # Generate the svg figure
+    fig = Figure()
+    ax = fig.subplots()
+    # create a plot, this example from the matplotlib website
+    x = np.linspace(0, 2, 100)
+    ax.plot(x, x, label='linear')  # Plot some data on the axes.
+    ax.plot(x, x**2, label='quadratic')  # Plot more data on the axes...
+    ax.plot(x, x**3, label='cubic')  # ... and some more.
+    ax.set_xlabel('x label')  # Add an x-label to the axes.
+    ax.set_ylabel('y label')  # Add a y-label to the axes.
+    ax.set_title("Simple Plot")  # Add a title to the axes.
+    ax.legend()  # Add a legend.
+    # Save it to a temporary string buffer.
+    with StringIO() as figfile:
+        fig.savefig(figfile, format="svg")
+        figdata = figfile.getvalue()
+    pd = PageData()
+    pd.mimetype = 'image/svg+xml'
+    skicall.update(pd)
+    return [figdata.encode('utf-8')]
+ 
+</pre>
+<p>The code string produced in variable figdata is encoded as utf-8, and set into a list. When chart.svg is called, this submit_data function returns the svg code and the image is served to the client.</p>
 </div>
 </div>
 <script>
@@ -65,4 +100,3 @@ function w3_close() {
 </script>
 </body>
 </html>
-
