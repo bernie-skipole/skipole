@@ -10,7 +10,7 @@
 <body class="w3-theme">
 <div class="w3-container w3-theme-d1">
 <p>
-<a href="/skipole/index.html"><img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" /></a>
+<img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" />
 &nbsp;Skipole WSGI generator.
 </p>
 </div>
@@ -18,9 +18,9 @@
 <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
 <p>Topics:</p>
  <div class="w3-bar-block w3-black">
-  <a href="/skipole/index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="/skipole/index.html" class="w3-bar-item w3-button w3-blue">Introduction</a>
   <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
-  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button w3-blue">Your Code</a>
+  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
   <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
   <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
   <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
@@ -38,15 +38,20 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>ServerError</h3>
-<p>This exception can be imported using:</p>
-<p>from skipole import ServerError</p>
-<p>It has arguments:</p>
-<p>ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</p>
-<p>Within the Admin session pages the section on 'labels' lists a number of special pre-defined pages. One of these has label 'server_error'. Raising a ServerError exception will return the page with this label.</p>
-<p>This gives the developer the option of using the pre-defined page, or by setting the label to point to another page, a different server error page could be defined.</p>
-<p>The code argument is an optional error code number, which you can set if you wish. If the widget displaying the error message has a field called 'code', it will be set to this code number.</p>
-<p>Normally leave section and widget empty to allow the message to be displayed in the page default error widget.</p>
+<h3>Code Examples</h3>
+<p>Examples of using various Python packages with skipole are given here. Note: only tested on Linux</p>
+<p>In general you will probably want to try these in a virtual environment, try the following</p>
+<p>python3 -m venv ~/myenv</p>
+<p>source ~/myenv/bin/activate</p>
+<p>pip install -U pip setuptools wheel</p>
+<p>pip install skipole
+<p>pip install other packages you may want to test</p>
+<p>create a directory, and move to it, then create a skipole project, note the trailing space dot, for current directory.</p>
+<p>python -m skipole myproj .</p>
+<p>which creates the file myproj.py in your current directory, then edit it appropriately.</p>
+<p>The following links gives examples of code:</p>
+<p><a href = "/skipole/examples/matplotlib.html">Serving charts produced by Matplotlib</a></p>
+
 </div>
 </div>
 <script>
