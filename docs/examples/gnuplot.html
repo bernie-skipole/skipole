@@ -38,22 +38,58 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>Code Examples</h3>
-<p>Examples of using various Python packages with skipole are given here. Note: these have only been tested on Linux.</p>
-<p>In general you will probably want to try these in a virtual environment, for example, use the following:</p>
-<p>python3 -m venv ~/myenv</p>
-<p>source ~/myenv/bin/activate</p>
-<p>pip install -U pip setuptools wheel</p>
-<p>pip install skipole
-<p>pip install other packages you may want to test</p>
-<p>create a directory, and move to it, then create a skipole project, note the trailing space dot, for current directory.</p>
+<h3>Using Gnuplot to serve an svg image chart</h3>
+<p>Ensure your server has gnuplot installed.</p>
+<p>Create a directory, and move to it, then create a skipole project "myproj", note the trailing space dot, for current directory.</p>
 <p>python -m skipole myproj .</p>
-<p>which creates the file myproj.py in your current directory, then edit it appropriately.</p>
-<p>The following links gives examples of code:</p>
-<p><a href = "/skipole/examples/matplotlib.html">Serving svg inline charts produced by Matplotlib</a></p>
-<p><a href = "/skipole/examples/matplotlib2.html">Serving svg image charts produced by Matplotlib</a></p>
-<p><a href = "/skipole/examples/gnuplot.html">Serving svg image charts produced by Gnuplot</a></p>
+<p>which creates the file myproj.py in your current directory.</p>
+<p>Edit the start of your myproj.py file to include the import:</p>
+<pre>
 
+import subprocess
+
+</pre>
+
+<p>Run the project and use skiadmin to create a SubmitIterator responder, with a name such as 'chart.svg'. Calling this from the browser will call your submit_data function which should return a binary iterator.</p>
+
+<p>So a submit_data function such as this will do the job:</p>
+
+<pre>
+
+def submit_data(skicall):
+    """This function is called when a Responder wishes to submit data for processing in some manner
+       Typically you would create a PageData object containing widget,field values and call the
+       skicall.update method, where the data will be applied to the page returned"""
+    result = linechart()
+    pd = PageData()
+    pd.mimetype = 'image/svg+xml'
+    skicall.update(pd)
+    return [result]
+
+
+def linechart():
+    "Create an SVG line chart, return svg code as a bytes string"
+    # data to plot
+    dataset = ((0, 1), (1, 2), (2, 3))
+    datastring = "\n".join(f"{x} {y}" for x,y in dataset)
+    # commands to plot the points
+    commands = ['set title "line.svg"',
+                'set key off',
+                'plot "-" with lines'
+               ]
+    return svgplot(commands, datastring)
+
+
+def svgplot(commands, datastring):
+    "Call gnuplot with commands, and datastring returns svg bytes"
+    commandstring = "set terminal svg;" + ";".join(commands)
+    args = ["gnuplot", "-e", commandstring]
+    result = subprocess.check_output(args, input=datastring.encode("utf-8"), timeout=2)
+    return result
+
+ 
+</pre>
+<p>When chart.svg is called, this submit_data function returns the svg code and the image is served to the client.</p>
 </div>
 </div>
 <script>
@@ -66,4 +102,3 @@ function w3_close() {
 </script>
 </body>
 </html>
-
