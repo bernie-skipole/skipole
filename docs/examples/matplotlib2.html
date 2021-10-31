@@ -56,36 +56,35 @@ import numpy as np
 
 </pre>
 
-<p>Run the project and use skiadmin to create a SubmitIterator responder, with a name such as 'chart.svg'. Calling this from the browser will call your submit_data function which should return a binary iterator.</p>
+<p>Run the project and use skiadmin to create a SubmitIterator responder, with a name such as 'chart.svg', and set with a submit_list string 'matplotlib'. Calling this from the browser will call your submit_data function which should return a binary iterator.</p>
 
 <p>So a submit_data function such as this will do the job:</p>
 
 <pre>
 
 def submit_data(skicall):
-    """This function is called when a Responder wishes to submit data for processing in some manner
-       Typically you would create a PageData object containing widget,field values and call the
-       skicall.update method, where the data will be applied to the page returned"""
-    # Generate the svg figure
-    fig = Figure()
-    ax = fig.subplots()
-    # create a plot, this example from the matplotlib website
-    x = np.linspace(0, 2, 100)
-    ax.plot(x, x, label='linear')  # Plot some data on the axes.
-    ax.plot(x, x**2, label='quadratic')  # Plot more data on the axes...
-    ax.plot(x, x**3, label='cubic')  # ... and some more.
-    ax.set_xlabel('x label')  # Add an x-label to the axes.
-    ax.set_ylabel('y label')  # Add a y-label to the axes.
-    ax.set_title("Simple Plot")  # Add a title to the axes.
-    ax.legend()  # Add a legend.
-    # Save it to a temporary string buffer.
-    with StringIO() as figfile:
-        fig.savefig(figfile, format="svg")
-        figdata = figfile.getvalue()
-    pd = PageData()
-    pd.mimetype = 'image/svg+xml'
-    skicall.update(pd)
-    return [figdata.encode('utf-8')]
+    """This function is called by Responders"""
+    if skicall.submit_list[0] == 'matplotlib':
+        # Generate the svg figure
+        fig = Figure()
+        ax = fig.subplots()
+        # create a plot, this example from the matplotlib website
+        x = np.linspace(0, 2, 100)
+        ax.plot(x, x, label='linear')  # Plot some data on the axes.
+        ax.plot(x, x**2, label='quadratic')  # Plot more data on the axes...
+        ax.plot(x, x**3, label='cubic')  # ... and some more.
+        ax.set_xlabel('x label')  # Add an x-label to the axes.
+        ax.set_ylabel('y label')  # Add a y-label to the axes.
+        ax.set_title("Simple Plot")  # Add a title to the axes.
+        ax.legend()  # Add a legend.
+        # Save it to a temporary string buffer.
+        with StringIO() as figfile:
+            fig.savefig(figfile, format="svg")
+            figdata = figfile.getvalue()
+        pd = PageData()
+        pd.mimetype = 'image/svg+xml'
+        skicall.update(pd)
+        return [figdata.encode('utf-8')]
  
 </pre>
 <p>The code string produced in variable figdata is encoded as utf-8, and set into a list. When chart.svg is called, this submit_data function returns the svg code and the image is served to the client.</p>
