@@ -59,7 +59,19 @@
 <p>If start_call returns None, the 'URL NOT FOUND' page will be automatically returned to the client.</p>
 <p>If a string url is returned, then a redirector page will be sent to the client. A url would not normally be used to redirect to a page within the project, but could be used to redirect to an external site.</p>
 <p>If a ServeFile exception is raised, with the path to a local server file (not a url) - then that server file will be sent to the client. In this case, the submit_data and end_call functions will not be called.</p>
-<p>Also see the skicall.map_url_to_server() method, which can be used to map a url folder to a folder of static files.</p>
+<p>Also note the skicall.map_url_to_server() method, which can be used to map a url folder to a folder of static files.</p>
+<h3>skicall.map_url_to_server(urlfolder, serverfolder)</h3>
+<p>Generally called in the start_call function. Maps a url folder such as "/projecturl/special/css" to a server folder such as "/home/user/thisproject/css"<br />
+if a call is made to, say "/projecturl/special/css/myfile.css" this function will return a pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file exists. If not then None is returned. If a ServeFile exception is raised with such a pathlib.Path, then the framework will serve the file.<br />
+An example of usage is:</p>
+<pre>
+    def start_call(called_ident, skicall):
+        servedfile = skicall.map_url_to_server("special/css", "/home/user/thisproject/css")
+        if servedfile:
+            raise ServeFile(servedfile)
+        return called_ident
+</pre>
+<p>Note: If the given urlfolder starts with a "/", it is an absolute url, if it does not, as in the above example, then it will be relative, with the project url prepended. Using relative paths makes the code more portable, particularly if this project is to become a sub-project added to a root which may change its project url.</p>
 </div>
 </div>
 <script>
