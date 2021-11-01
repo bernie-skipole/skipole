@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Index</title>
+<link href="/skipole/css/w3.css" type="text/css" rel="stylesheet" />
+<link href="/skipole/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" />
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="/skipole/index.html" class="w3-bar-item w3-button w3-blue">Introduction</a>
+  <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="/skipole/skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
+  <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="/skipole/exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
+  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">PageData</a>
+  <a href="/skipole/sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
+  <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
+  <a href="/skipole/examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
+</div>
+<p>Development at GitHub:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://github.com/bernie-skipole/skipole/" class="w3-bar-item w3-button">github.com/bernie-skipole/skipole</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>skiadmin</h3>
+<p>Having created a project with:</p>
+<p>python3 -m skipole myproj /path/to/my/projectfiles</p>
+<p>Inspect the file /path/to/my/projectfiles/myproj.py, and you will see it contains the application:</p>
+<pre>
+    application = WSGIApplication(project='myproj',
+                                  projectfiles=PROJECTFILES,
+                                  proj_data={},
+                                  start_call=start_call,
+                                  submit_data=submit_data,
+                                  end_call=end_call,
+                                  url="/")
+</pre>
+<p>You will also see that a sub-project has been added:</p>
+<pre>
+if __name__ == "__main__":
+
+    ############### THESE LINES ADD THE SKIADMIN SUB-PROJECT FOR DEVELOPMENT #
+    ################# AND SHOULD BE REMOVED WHEN YOU DEPLOY YOUR APPLICATION #
+
+    from skipole import skiadmin, set_debug, skilift
+    set_debug(True)
+    skiadmin_application = skiadmin.makeapp(editedprojname=PROJECT)
+    application.add_project(skiadmin_application, url='/skiadmin')
+
+    # serve the application with the development server from skilift
+
+    host = "127.0.0.1"
+    port = 8000
+    print("Serving %s on port %s. Call http://localhost:%s/skiadmin to edit." % (PROJECT, port, port))
+    skilift.development_server(host, port, application)
+</pre>
+
+<p>This code does three things, it calls set_debug(True), which gives enhanced error reporting, it creates a project 'skiadmin' which is added to your own project at url '/skiadmin', and it runs your application on a development web server.</p>
+<p>Both your project, and the skiadmin sub project are served and can be accessed by your web browser. Skiadmin provides a web based method of adding pages and widgets to your web site.</p>
+<p>Finally, when you deploy your code to a live web site, you would delete the above lines, so that the skiadmin sub project is no longer served.</p>
+<p>skiadmin allows you to add pages of different types, and edit them, typically 'template' pages containing widgets, and 'responder' pages which accept incoming requests from the user, then calls your code, and passes the results to a template page, which is returned to the client.</p>
+<p>The pages added by skiadmin are given 'idents' being (projectname, pagenumber) and labels mapping a name to these idents can be created. As well as 'pages', 'sections' can be created, which also contain widgets, and can be inserted into template pages, and 'textblocks' can be made which contain either plain text or your own html code.</p>
+<p>When you create or alter any page, ensure you choose the 'Save' option to make your changes permanent, and also when you change your code you need to stop the site running (with ctrl-c), and start it again.</p>
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>
+
