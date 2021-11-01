@@ -49,30 +49,42 @@
         return
 
 </pre>
-<p>This function is called when a responder wishes to submit data for processing in some manner. This function typically should populate PageData object with widgfields as keys, and values to insert into the fields.</p>
+<p>This function is called when a responder wishes to submit data for processing in some manner. This function typically should populate a PageData object with widgfields as keys, and values to insert into the fields.</p>
 <p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
 
-<p>Using the skiadmin facility a responder is chosen from a list of responders by yourself, and added to this site like any other page. Each responder has a different functionality. Certain responders call this submit_data function. Typically a client web browser would make a call to a responder, which (after start_call is called) would set any received form data into the skicall.call_data dictionary, and then call your submit_data function. Responders generally are set with a target ident - generally the ident of a template page, which will have its widgets populated by any data you set in the PageData object.</p>
+<p>Using the skiadmin facility a responder is chosen from a list of responders by yourself, and added to this site like any other page. Each responder has a different functionality. Certain responders call this submit_data function. Typically a client web browser would make a call to a responder, which (after start_call is called) would then call your submit_data function. Responders generally are set with a target ident - generally the ident of a template page, which will have its widgets populated by any data you set in the PageData object.</p>
 
 <p>The responder calling this function will specify what it wants returned from submit_data in its documentation.</p>
 <p>Most responders require 'None' to be returned, but, for example, the LogIn responder requires a session string.</p>
 
-<p>It is possible for one responder to pass the call to another, therefore submit_data could be called multiple times within a single call. Your function can inspect skicall.ident_list which is the list of such responder idents called - the first item being the responder ident called by the user, the last entry being the responder ident that called submit_data.</p>
+<p>On returning from submit_data the call will be passed to the responder's target page, which could typically be a template page (in which case your end_call function will be called next) or it could be another responder. If required a GoTo exception could be raised to jump elsewhere, or a FailPage exception could be raised to jump to the responders failure page with an error message.</p>
+
+<p>It is possible for one responder to pass the call to another, therefore submit_data could be called multiple times within a single call.</p>
+
+<p>The submit_data function can inspect the skicall object's attributes to decide how to handle the call.</p>
+
+<p>For example skicall.ident_list which is the list of such responder idents called - the first item being the responder ident called by the user, the last entry being the responder ident that called submit_data.</p>
 
 <p>Each ident in the list is a tuple of the form ('projname', pagenumber).</p>
 <p>So skicall.ident_list[-1][1] will give the ident number of the responder calling this submit_data function.</p>
 
-<p>skicall.submit_list is a list of strings which may be submitted by the responder calling this function.</p>
-<p>They are optionally used for your convenience, and set when you add a responder to the project.</p>
+<p>skicall.submit_dict is a dictionary which may be submitted by the responder calling submit_data. The dictionary contents depends on the responder, and are documented for each responder type in the skiadmin pages.</p>
 
-<p>skicall.submit_dict is a dictionary which may be submitted by the responder calling this function.</p>
-<p>The submit_dict contents depends on the responder, and are documented for each responder type in the skiadmin pages.</p>
+<p>skicall.call_data is a dictionary which you can populate with your own data during the progress of the call. If you wish to clear it, use skicall.call_data.clear(). Typically a responder would be used to pass submitted form data into this call_data dictionary prior to submit_data being called.</p>
 
-<p>skicall.call_data is a dictionary which you can populate with your own data during the progress of the call. If you wish to clear it, use skicall.call_data.clear().</p>
+<p>When creating a responder that calls submit_data, you will have the option to place one or more strings in the responder's 'submit_list'. These will then be available as the attribute skicall.submit_list, and you could inspect the list to decide which responder called. For example:</p>
 
-<p>Typically a responder would be used to pass submitted form data into this call_data dictionary prior to this function being called.</p>
+<pre>
 
-<p>On returning from this function the call will be passed to the responder's target page, which could typically be a template page (in which case your end_call function will be called next) or it could be another responder. If required a GoTo exception could be raised to jump elsewhere, or a FailPage exception could be raised to jump to the responders failure page with an error message.</p>
+def submit_data(skicall):
+    if skicall.submit_list[0] == "gethelp":
+        .... call help function
+    elif skicall.submit_list[0] == "anotherfunc":
+        .... call another function
+    elif ....
+</pre>
+
+<p>Alternatively you could use the use_submit_list decorator, to route the call to a function of your own choice</p>
 
 <h3>Decorator use_submit_list</h3>
 <p>The decorator use_submit_list can be imported:</p>
@@ -87,14 +99,14 @@ def submit_data(skicall):
 </pre>
 <p>The effect of this decorator is to inspect the skicall.submit_list attribute, (which you set in the calling responder) and if it contains nothing, or a single element only - it does nothing, submit_data runs as normal, in the above example, it raises an error.</p>
 <p>However if skicall.submit_list contains more than one string, it expects the strings to be ordered as ['module_name', 'function_name'] - or ['package_name', 'module_name', 'function_name'].</p>
-<p>It then uses these names to replace submit_data with the found function. This can be convenient. When you create a responder that calls 'submit_data' - you set the responder submit list to call the appropriate function in your code.</p>
+<p>It then uses these names to call the specified function instead of submit_data. This can be convenient. When you create a responder that calls 'submit_data' - you set the responder submit list to call the appropriate function in your code.</p>
 <p>If you are providing a complex tree of packages and modules to handle the submit_data calls, this avoids the need to import them all into your top script, since the decorator will do the importing according to the submit_list.</p>
 <p>Your target functions should be of the form:</p>
 <pre>
 def function_name(skicall):
     ....  your code 
 </pre>
-<p>You do not have to use this decorator, if you prefer to use submit_list, or route functionality some other way, then that is your choice.</p>
+<p>You do not have to use this decorator, if you prefer to route functionality some other way, then that is your choice.</p>
 </div>
 </div>
 <script>
