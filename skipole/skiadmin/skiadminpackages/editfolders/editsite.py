@@ -6,9 +6,28 @@ from ... import skilift
 from ....skilift import off_piste, fromjson, editpage
 
 from .. import utils, css_styles
-from ... import FailPage, ValidateError, ServerError, GoTo
+from ....ski.excepts import FailPage, ValidateError, ServerError, GoTo, SkiStop, SkiRestart
 
 from ....ski.project_class_definition import SectionData
+
+
+def stopserver(skicall):
+    "Called from admin page to stop the web server"
+    call_data = skicall.call_data
+    starttime = call_data['starttime']
+    rxstarttime = call_data['rxstarttime']
+    if rxstarttime != starttime:
+        raise GoTo('admin_home')    
+    raise SkiStop
+
+def restartserver(skicall):
+    "Called from admin page to restart the web server"
+    call_data = skicall.call_data
+    starttime = call_data['starttime']
+    rxstarttime = call_data['rxstarttime']
+    if rxstarttime != starttime:
+        raise GoTo('admin_home')    
+    raise SkiRestart
 
 
 def retrieve_index_data(skicall):
@@ -19,6 +38,9 @@ def retrieve_index_data(skicall):
 
     # clears any session data
     utils.clear_call_data(call_data)
+
+    # send starttime
+    call_data['rxstarttime'] = call_data['starttime']
 
     project = call_data['editedprojname']
 

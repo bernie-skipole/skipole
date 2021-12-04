@@ -527,6 +527,10 @@ class SkipoleProject(object):
             raise e
         except ServeFile as e:
             raise e
+##########################################
+        except AssertionError as e:
+            raise e
+###########################################
         except Exception as e:
             raise ServerError(message = "Invalid exception in start_call function.") from e
         return new_called_ident, skicall

@@ -1,9 +1,10 @@
 
 
-import os, sys, re, json, pathlib
+import os, sys, re, json, pathlib, time
 
 
-from .. import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, ServeFile, use_submit_list, set_debug, skilift
+from .. import WSGIApplication, use_submit_list, set_debug, skilift
+from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError, ServeFile
 from ..skilift.fromjson import get_defaults_from_file
 
 from ..ski.project_class_definition import SectionData, PageData
@@ -16,6 +17,10 @@ PROJECT = 'skiadmin'
 # a search for anything none-alphanumeric and not an underscore
 _AN = re.compile('[^\w]')
 
+# get a program start time
+_START = str(time.time())
+# This is used by the server restart and stop functions, to ensure the incoming command
+# is from this running program, and no previouse restart has been done.
 
 
 def start_call(called_ident, skicall):
@@ -40,7 +45,8 @@ def start_call(called_ident, skicall):
                          'adminproj':skicall.project,
                          'extend_nav_buttons':[],
                          'caller_ident':skicall.caller_ident,
-                         'pagedata': PageData()}
+                         'pagedata': PageData(),
+                         'starttime':_START}
 
     if called_ident is None:
         # The call is to a url not found
@@ -124,7 +130,7 @@ def end_call(page_ident, page_type, skicall):
 
     # this is a list of items to store in session data if they are available in call_data
     session_keys = ['location', 'field_arg', 'validx', 'module', 'widgetclass', 'widget_name', 'container', 'add_to_foldernumber', 
-                    'section_name', 'schange', 'page_number', 'pchange', 'folder_number', 'fchange']
+                    'section_name', 'schange', 'page_number', 'pchange', 'folder_number', 'fchange', 'rxstarttime']
 
     for key, val in call_data.items():
         if key in session_keys:

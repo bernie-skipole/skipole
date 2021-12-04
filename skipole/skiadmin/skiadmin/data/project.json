@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "5.4.2",
-"skipole": "5.4.2",
+"version": "5.4.3",
+"skipole": "5.4.3",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -35931,6 +35931,101 @@ false
 [
 "Part",
 {
+"tag_name": "div",
+"brief": "button width",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button",
+"style": "margin-top:10px;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "server_restart",
+"brief": "Restarts the server",
+"fields": {
+"button_text": "Restart server",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
+"hide": false,
+"link_ident": "520",
+"show": true,
+"show_error": "",
+"target": "",
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "button width",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ski_mid_button",
+"style": "margin-top:10px;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "server_stop",
+"brief": "Stops the server",
+"fields": {
+"button_text": "Stop server",
+"clear_error": false,
+"error_class": "w3-button w3-block w3-theme-action",
+"force_ident": true,
+"get_field1": "",
+"get_field2": "",
+"get_field3": "",
+"get_field4": "",
+"hide": false,
+"link_ident": "530",
+"show": true,
+"show_error": "",
+"target": "",
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About restarting",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Note: restarting or stopping the server will lose any changes that you have not saved. Press Save first! A restart is needed after you have made any changes to your Python code, the stop and restart functions are only available with the development web server."
+]
+]
+}
+],
+[
+"Part",
+{
 "tag_name": "h2",
 "brief": "Sub projects",
 "show": true,
@@ -40161,6 +40256,27 @@ false
 }
 }
 },
+"restartserver": {
+"ident": 520,
+"brief": "Restarts development web server",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+20001
+],
+"fail_ident": "admin_home",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editsite",
+"restartserver"
+],
+"target_ident": "admin_home"
+},
+"original_fields": {}
+}
+},
 "save_project": {
 "ident": 40,
 "brief": "Save button pressed",
@@ -40352,6 +40468,27 @@ false
 "RespondPage": {
 "class": "NoOperation",
 "original_args": {
+"target_ident": "admin_home"
+},
+"original_fields": {}
+}
+},
+"stopserver": {
+"ident": 530,
+"brief": "Stops the development web server",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+20001
+],
+"fail_ident": "admin_home",
+"submit_list": [
+"skiadminpackages",
+"editfolders",
+"editsite",
+"stopserver"
+],
 "target_ident": "admin_home"
 },
 "original_fields": {}

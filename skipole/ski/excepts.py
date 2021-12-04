@@ -31,6 +31,12 @@ code: %s
        self.widget)
 
 
+class SkiStop(Exception):
+    pass
+
+class SkiRestart(Exception):
+    pass
+
 class SkiError(Exception):
     """Exception used as a parent to other exception classes that carry message information.
     """

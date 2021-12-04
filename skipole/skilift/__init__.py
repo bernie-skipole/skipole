@@ -2,11 +2,15 @@
 
 """Functions that access the ski framework"""
 
-import os
+import os, sys
 
-from wsgiref.simple_server import make_server,  WSGIRequestHandler
+from threading import Thread
 
-from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError
+from time import sleep
+
+from wsgiref.simple_server import make_server, WSGIRequestHandler, ServerHandler
+
+from ..ski.excepts import FailPage, GoTo, ValidateError, ServerError, SkiStop, SkiRestart
 
 from ..ski import skiboot, tag
 
@@ -14,35 +18,104 @@ from .info_tuple import ProjectInfo, ItemInfo, PartInfo, PageInfo, FolderInfo, W
 
 
 
-###### create a development server, which is wsgiref.simple_server with errors suppressed
+###### create a development server, which is wsgiref.simple_server with extras that allow the server
+###### to be either stopped or re-started
 
-class _Hide_Error:
+_RESTART = False
+_STOP = False
 
-    def write(self,errorstring):
-        "Discards error messages"
-        pass
+
+def _shutdown_function(httpd):
+    "If _RESTART or _STOP are True, calls httpd.shutdown(), this has to be done in a thread"
+    while (not _RESTART) and (not _STOP):
+        sleep(0.2)
+    # RESTART or _STOP has become True
+    httpd.shutdown()
+
+
+class _DevServerHandler(ServerHandler):
+    "overwrite the run method"
+
+    def run(self, application):
+        """Invoke the application"""
+        # This is a copy of the ServerHandler.run method with added catching of
+        # SkiRestart and SkiStop exceptions
+
+        global _RESTART, _STOP
+        try:
+            self.setup_environ()
+            self.result = application(self.environ, self.start_response)
+            self.finish_response()
+        except (ConnectionAbortedError, BrokenPipeError, ConnectionResetError):
+            # We expect the client to close the connection abruptly from time
+            # to time.
+            return
+        except SkiRestart as e:
+            try:
+                self.error_body = b"The server has restarted. Refresh the page to continue."
+                self.handle_error()
+            except:
+                # If we get an error handling an error, just give up already!
+                self.close()
+                raise   # ...and let the actual server figure it out.
+            # error is handled, now stop the server by setting the global _RESTART
+            _RESTART = True
+        except SkiStop as e:
+            try:
+                self.error_body = b"The server has stopped."
+                self.handle_error()
+            except:
+                # If we get an error handling an error, just give up already!
+                self.close()
+                raise   # ...and let the actual server figure it out.
+            # error is handled, now stop the server by setting the global _STOP
+            _STOP = True
+        except:
+            try:
+                self.error_body = b"A server error occurred.  Please contact the administrator."
+                self.handle_error()
+            except:
+                # If we get an error handling an error, just give up already!
+                self.close()
+                raise   # ...and let the actual server figure it out.
 
 
 class _DevHandler(WSGIRequestHandler):
+    "overwrite the handle method"
 
     def handle(self):
-        "Uses WSGIRequestHandler.handle but ignores exceptions"
-        try:
-            WSGIRequestHandler.handle(self)
-        except Exception as e:
-            pass
+        """Handle a single HTTP request"""
 
-    def get_stderr(self):
-        "returns an instance of _Hide_Error which dumps the error"
-        return _Hide_Error()
+        self.raw_requestline = self.rfile.readline(65537)
+        if len(self.raw_requestline) > 65536:
+            self.requestline = ''
+            self.request_version = ''
+            self.command = ''
+            self.send_error(414)
+            return
+
+        if not self.parse_request(): # An error code has been sent, just exit
+            return
+
+        handler = _DevServerHandler(
+            self.rfile, self.wfile, self.get_stderr(), self.get_environ(),
+            multithread=False,
+        )
+        handler.request_handler = self      # backpointer for logging
+        handler.run(self.server.get_app())
+
 
 def development_server(host, port, application):
     "Serves the wsgi application"
-    httpd = make_server(host, port, application, handler_class=_DevHandler)
-    httpd.serve_forever()
-
-##### The above is used because wsgiref.simple_server reports brokenpipe error
-##### due (I believe) to clients dropping the connection
+    with make_server(host, port, application, handler_class=_DevHandler) as httpd:
+        thread = Thread(target = _shutdown_function, args = (httpd, ))
+        thread.start()
+        httpd.serve_forever()
+    if _STOP:
+        print("Server stopped")
+    elif _RESTART:
+        print("Server restarting")
+        os.execv(sys.executable, ['python3'] + sys.argv)
 
 
 
