@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "skiadmin - The Skipole Admin project",
-"version": "5.4.4",
-"skipole": "5.4.4",
+"version": "5.4.5",
+"skipole": "5.4.5",
 "specialpages": {
 "about_code": 70001,
 "about_skis": 510,
@@ -5859,6 +5859,29 @@ false,
 [
 "Part",
 {
+"tag_name": "p",
+"brief": "About labels",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The following options specify links which are inserted into template page 'head' sections. Rather than link URL's, labels are used, these are set under 'Page Labels' in the left navigation panel. A label is a reference string which points to a target page ident or URL."
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
+"show": true
+}
+],
+[
+"Part",
+{
 "tag_name": "div",
 "brief": "section",
 "show": true,
@@ -6177,7 +6200,7 @@ false
 "parts": [
 [
 "Text",
-"System special javascript files:"
+"System javascript files:"
 ]
 ]
 }
@@ -6221,7 +6244,7 @@ false
 "name": "linktocdn",
 "brief": "Sets special file labels to CDN",
 "fields": {
-"button_text": "Link special files to CDN",
+"button_text": "Link javascript files to CDN",
 "clear_error": false,
 "error_class": "w3-button w3-block w3-theme-action",
 "force_ident": true,
@@ -6246,7 +6269,7 @@ false
 "name": "linktoskis",
 "brief": "Sets special file labels to skis",
 "fields": {
-"button_text": "Link special files to skis",
+"button_text": "Link javascript files to skis",
 "clear_error": false,
 "error_class": "w3-button w3-block w3-theme-action",
 "force_ident": true,
@@ -31662,13 +31685,13 @@ false,
 "Part",
 {
 "tag_name": "p",
-"brief": "System special files",
+"brief": "System javascript files",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"System special javascript files:"
+"System javascript files:"
 ]
 ]
 }
@@ -34064,8 +34087,14 @@ false
 "hide_if_empty": false,
 "parts": [
 [
-"Text",
-"These admin pages use CSS from the w3.css library. Your own project could use this or any other library - under the 'Page Labels' section, create labels to the CSS files of your choice, and within the 'Defaults' section, ensure they are included in each new page created.\r\n\r\nIf you do use another CSS library you will have to choose different widget CSS classes. When you add widgets with new CSS class fields, you can set your CSS classes to be defaults, and your project will be tailored to use your preferred CSS files.\r\n\r\nFurther information about w3.css can be found here:"
+"TextBlock",
+{
+"textref": "index_w3_css",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
 ]
 ]
 }
@@ -39025,7 +39054,7 @@ false
 "parts": [
 [
 "Text",
-"url_not_found"
+"skis,url_not_found"
 ]
 ]
 }
@@ -39066,7 +39095,7 @@ false
 "parts": [
 [
 "Text",
-"validate_error"
+"skis,validate_error"
 ]
 ]
 }
@@ -39107,7 +39136,7 @@ false
 "parts": [
 [
 "Text",
-"server_error"
+"skis,server_error"
 ]
 ]
 }
@@ -39148,7 +39177,7 @@ false
 "parts": [
 [
 "Text",
-"redirector"
+"skis,redirector"
 ]
 ]
 }
@@ -39189,7 +39218,7 @@ false
 "parts": [
 [
 "Text",
-"no_javascript"
+"skis,no_javascript"
 ]
 ]
 }
@@ -39349,7 +39378,7 @@ false
 "parts": [
 [
 "Text",
-"Ident: 2010"
+"Ident: skis,2010"
 ]
 ]
 }
@@ -39450,7 +39479,7 @@ false
 "parts": [
 [
 "Text",
-"Ident: 2020"
+"Ident: skis,2020"
 ]
 ]
 }
@@ -39551,7 +39580,7 @@ false
 "parts": [
 [
 "Text",
-"Ident: 2030"
+"Ident: skis,2030"
 ]
 ]
 }
@@ -39652,7 +39681,7 @@ false
 "parts": [
 [
 "Text",
-"Ident: 2040"
+"Ident: skis,2040"
 ]
 ]
 }
@@ -39753,7 +39782,7 @@ false
 "parts": [
 [
 "Text",
-"Ident: 2050"
+"Ident: skis,2050"
 ]
 ]
 }
@@ -39854,7 +39883,7 @@ false
 "parts": [
 [
 "Text",
-"Ident: 2060"
+"Ident: skis,2060"
 ]
 ]
 }
@@ -39955,7 +39984,7 @@ false
 "parts": [
 [
 "Text",
-"Ident: 2070"
+"Ident: skis,2070"
 ]
 ]
 }

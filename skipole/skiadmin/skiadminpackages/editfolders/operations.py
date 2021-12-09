@@ -407,9 +407,6 @@ def set_javascript_to_cdn(skicall):
             # so label is a widget or validator javascript label, of the format "ski_basic" etc
             # which needs to be given a value of the format "basic.min.js"
             set_label(editedprojname, label, starthttp +label[4:]+".min.js")
-        if "w3_css" in projlabels:
-            if projlabels["w3_css"] == "skis,w3_css":
-                set_label(editedprojname, "w3_css", "https://www.w3schools.com/w3css/4/w3.css")
     except ServerError as e:
         raise FailPage(message = e.message)
     call_data['status'] = "Special file labels now point to CDN's"

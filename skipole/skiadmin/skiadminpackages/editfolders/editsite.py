@@ -15,7 +15,7 @@ def stopserver(skicall):
     "Called from admin page to stop the web server"
     call_data = skicall.call_data
     starttime = call_data['starttime']
-    rxstarttime = call_data['rxstarttime']
+    rxstarttime = call_data.get('rxstarttime')
     if rxstarttime != starttime:
         raise GoTo('admin_home')    
     raise SkiStop
@@ -24,7 +24,7 @@ def restartserver(skicall):
     "Called from admin page to restart the web server"
     call_data = skicall.call_data
     starttime = call_data['starttime']
-    rxstarttime = call_data['rxstarttime']
+    rxstarttime = call_data.get('rxstarttime')
     if rxstarttime != starttime:
         raise GoTo('admin_home')    
     raise SkiRestart
