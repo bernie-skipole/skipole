@@ -21,7 +21,8 @@ class SVGContainer(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an SVG widget, containing other widgets, so show, class and dimensions can be set"""
-        Widget.__init__(self, name=name, tag_name="svg", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "svg"
         self.htmlescaped = False
         self.linebreaks = False
         # the widget is a container
@@ -59,7 +60,8 @@ class Group(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """Acts as an g widget, containing other widgets, so group class, style, transform can be set"""
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self.htmlescaped = False
         self.linebreaks = False
         # The widget is a container
@@ -101,7 +103,8 @@ class TextBlockGroup(Widget):
         content_replaceblock: content set here will replace the textblock
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self[0] = ''
         self.htmlescaped = False
         self.linebreaks = False
@@ -149,7 +152,8 @@ class TextGroup(Widget):
        text: the string set here will be set as content
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self[0] = ''
         self.htmlescaped = False
         self.linebreaks = False
@@ -201,7 +205,8 @@ class Rect(ClosedWidget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        ClosedWidget.__init__(self, name=name, tag_name="rect", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "rect"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -256,7 +261,8 @@ class SimpleText(Widget):
         text: The text to display
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="text", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "text"
         self.hide_if_empty=False
 
 
@@ -318,7 +324,8 @@ class TextList(Widget):
         lines: List of lists, of [x,y,text]
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="text", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "text"
         self.hide_if_empty=False
 
 
@@ -383,7 +390,8 @@ class Circle(ClosedWidget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        ClosedWidget.__init__(self, name=name, tag_name="circle", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "circle"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -427,7 +435,8 @@ class Line(ClosedWidget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        ClosedWidget.__init__(self, name=name, tag_name="line", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "line"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -475,7 +484,8 @@ class Ellipse(ClosedWidget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        ClosedWidget.__init__(self, name=name, tag_name="ellipse", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "ellipse"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -519,7 +529,8 @@ class Polygon(ClosedWidget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        ClosedWidget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "polygon"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -572,7 +583,8 @@ class Polyline(ClosedWidget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        ClosedWidget.__init__(self, name=name, tag_name="polyline", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "polyline"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -624,7 +636,8 @@ class Path(ClosedWidget):
         stroke_width: The outline edge width
         """
         # pass fields to Widget
-        ClosedWidget.__init__(self, name=name, tag_name="path", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "path"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):

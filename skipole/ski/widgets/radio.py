@@ -33,7 +33,8 @@ class RadioButton1(Widget):
         label_class: css class applied to each label text on the right of the radio button
         div_class: css class applied to the div after the error paragraph
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -137,7 +138,8 @@ class RadioTable(Widget):
         radio_checked: value to be checked, this is the field returned
         contents: table of values, labels and textblock or text
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -274,7 +276,8 @@ class TwoRadioOptions(Widget):
         value2: the value returned if the second radio button is chosen
         radio_checked: value to be checked, this is the field returned
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='div')
         self[0][0] = tag.Part(tag_name='label')
         self[1] = tag.Part(tag_name='div')
@@ -375,7 +378,8 @@ class BooleanRadio(Widget):
         right_class2: The css class of the label to the right of the second radio button
         radio_checked: default value to be checked, True or False, field name is the field returned
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='div')
         self[0][0] = tag.Part(tag_name="label", hide_if_empty=True)
         self[0][1] = tag.ClosedPart(tag_name="input")
@@ -494,7 +498,8 @@ class RadioTable2(Widget):
         radiocol: A list of value strings for the radio buttons to place in the third column
         radio_checked: value to be checked, this is the field returned
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
