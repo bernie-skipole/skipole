@@ -46,7 +46,8 @@ class InputTable1(Widget):
                    the fields submitted will have name 'widgetname:inputdict-keyname'
                    and the user will receive a widgfield ('widgetname','inputdict') containing a dictionary of keyname:values
          """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -191,7 +192,8 @@ class InputTable5(Widget):
         set_input_accepted: Dictionary of col index keys that should be set with input_accepted_class
         set_input_errored: Dictionary of col index keys that should be set with input_errored_class
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -485,7 +487,8 @@ class InputTable4(Widget):
                    the fields submitted will have name 'widgetname:inputdict-keyname'
                    and the user will receive a widgfield ('widgetname','inputdict') containing a dictionary of keyname:values
          """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._up_jsonurl = ''
         self._down_jsonurl = ''
 
@@ -814,7 +817,8 @@ class InputTable3(Widget):
                    and the user will receive a widgfield ('widgetname','inputdict') containing a dictionary of keyname:values
                    If values are None, then the values listed in getfield3 will be used, otherwise values given here have priority
          """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._up_jsonurl = ''
         self._down_jsonurl = ''
 

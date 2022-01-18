@@ -49,7 +49,8 @@ class TextInput1(ClosedWidget):
         pattern: regular expression pattern
         title: helps describe the pattern
         """
-        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "input"
         self.update_attribs({"type":"text"})
 
 
@@ -133,7 +134,8 @@ class Password1(ClosedWidget):
         disabled: Set True if the field is to be disabled
         required: Set True to put the 'required' attribute into the input field
         """
-        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "input"
         self.update_attribs({"type":"password"})
 
 
@@ -234,7 +236,8 @@ class TextInput2(Widget):
         pattern: regular expression pattern
         title: helps describe the pattern
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -396,7 +399,8 @@ class Password2(Widget):
         redstar: If True a red asterix is shown by the side of the input field
         required: Set True to put the 'required' flag into the input field
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -558,7 +562,8 @@ class TextInput3(Widget):
         pattern: regular expression pattern
         title: helps describe the pattern
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="label", hide_if_empty=True)
         self[1] = tag.ClosedPart(tag_name="input", attribs = {"type":"text"})
         self[2] = tag.Part(tag_name="label", hide_if_empty=True)
@@ -700,7 +705,8 @@ class TextInput4(Widget):
         pattern: regular expression pattern
         title: helps describe the pattern
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # label div at 0
         self[0] = tag.Part(tag_name="div")
         # the label
@@ -879,7 +885,8 @@ class SubmitTextInput1(Widget):
         set_errored_accepted: If True, input_errored_class will be set on the input field
         hide: If True, widget is hidden
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -1116,8 +1123,8 @@ class SubmitTextInput3(Widget):
         set_errored_accepted: If True, input_errored_class will be set on the input field
         hide: If True, widget is hidden
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -1396,7 +1403,8 @@ class TwoInputsSubmit1(Widget):
         pattern2: regular expression pattern for the second input field
         title2: helps describe the pattern of the second input field
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -1616,7 +1624,8 @@ class SubmitDict1(Widget):
         hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
         hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # The form
         self[0] = tag.Part(tag_name='form', attribs={"method":"post"})
         self[0][0] = tag.Part(tag_name='ul')
@@ -1799,7 +1808,8 @@ class SubmitTextInput2(Widget):
         set_errored_accepted: If True, input_errored_class will be set on the input field
         hide: If True, widget is hidden
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -2044,8 +2054,8 @@ class SubmitTextInput4(Widget):
         set_errored_accepted: If True, input_errored_class will be set on the input field
         hide: If True, widget is hidden
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")

@@ -28,7 +28,8 @@ class ShowEnviron(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """toptext: The text appearing above environ data
            error_class: If given the class of the error text"""
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -89,7 +90,8 @@ class ShowCallData(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """toptext: The text appearing above call_data
            error_class: If given the class of the error text"""
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -150,7 +152,8 @@ class ShowResponders(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         "Create the div and table, does not require any arguments"
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''

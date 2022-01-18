@@ -27,7 +27,8 @@ class SimpleFooter(Widget):
          error_class: css class of the error paragraph
         """
 
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")

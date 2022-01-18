@@ -27,7 +27,8 @@ class UList1(Widget):
         even_class: class of even li elements, if empty string, then no class will be applied
         odd_class: class of odd li elements, if empty string, then no class will be applied
         """
-        Widget.__init__(self, name=name, tag_name="ul", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "ul"
         self._even = ''
         self._odd = ''
 
@@ -86,7 +87,8 @@ class UList2(Widget):
         even_class: class of even li elements, if empty string, then no class will be applied
         odd_class: class of odd li elements, if empty string, then no class will be applied
         """
-        Widget.__init__(self, name=name, tag_name="ul", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "ul"
         self._even = ''
         self._odd = ''
 

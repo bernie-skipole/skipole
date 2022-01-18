@@ -39,7 +39,8 @@ class CheckBox1(Widget):
         error_class: css class applied to the normally hidden error paragraph
         div_class: css class applied to the div after the error paragraph
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -132,7 +133,8 @@ class CheckBox2(Widget):
         right_class: The css class of the label to the right of the checkbox
         checked: True if checkbox ticked, False otherwise
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = tag.Part(tag_name="label", hide_if_empty=True)
         self[1] = tag.ClosedPart(tag_name="input", attribs = {"type":"checkbox"})
         self[2] = tag.Part(tag_name="label", hide_if_empty=True)
@@ -215,7 +217,8 @@ class CheckedText(Widget):
         size: The number of characters appearing in the text input area
         maxlength: The maximum number of characters accepted in the text area
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -325,7 +328,8 @@ class CheckInputs(Widget):
         checked: True if checkbox ticked, False otherwise
         error_class: css class applied to the normally hidden error paragraph
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -443,7 +447,8 @@ class SubmitCheckBox1(Widget):
         checkbox_class: The css class of the checkbox input field
         checked: True if checkbox ticked, False otherwise
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -594,7 +599,8 @@ class CheckBoxTable1(Widget):
         checked: a list of keynames which will be checked,  the fields submitted will have name 'widgetname:checked-keyname'
                        and the user will receive a widgfield ('widgetname','checked') containing a dictionary of keyname:values ticked
          """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):

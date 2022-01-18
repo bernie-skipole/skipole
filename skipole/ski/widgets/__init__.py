@@ -526,12 +526,12 @@ class Widget(tag.Part):
 
     # All widgets automatically have a show, show_error, widget_class and widget_style field arguments
 
-    def __init__(self, name=None, tag_name="div", brief='', **field_args):
+    def __init__(self, name=None, brief='', **field_args):
 
         if not brief:
             brief = self.__class__.__name__
 
-        tag.Part.__init__(self, tag_name=tag_name, text='', show=True, brief=brief, hide_if_empty=False)
+        tag.Part.__init__(self, tag_name="div", text='', show=True, brief=brief, hide_if_empty=False)
         self.name = name
         # create self.fields which is a dictionary of {field_arg:FieldArg,...}
         # for example - in this case field_arg is the string 'widget_class', and value is
@@ -1405,10 +1405,10 @@ class ClosedWidget(tag.ClosedPart):
     arg_descriptions = {'widget_class':FieldArg("cssclass", "", jsonset=True)}
 
 
-    def __init__(self, name=None, tag_name="link", brief='', **field_args):
+    def __init__(self, name=None, brief='', **field_args):
         if not brief:
             brief = self.__class__.__name__
-        tag.ClosedPart.__init__(self, tag_name=tag_name, show=True, brief=brief)
+        tag.ClosedPart.__init__(self, tag_name="link", show=True, brief=brief)
         self.name = name
         # Get fields from arg_descriptions
         self.fields = copy.deepcopy(self.arg_descriptions)

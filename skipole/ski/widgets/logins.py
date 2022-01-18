@@ -55,7 +55,8 @@ class Pin4(Widget):
         hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
         button_text: The text on the button
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # inner div
         self[0] = tag.Part(tag_name="div")
         # error div
@@ -340,7 +341,8 @@ class NamePasswd1(Widget):
         pattern2: regular expression pattern for the second input field
         title2: helps describe the pattern of the second input field
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")

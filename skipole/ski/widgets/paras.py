@@ -32,7 +32,8 @@ class TagBlock(Widget):
            dropident - ident or label of target which returns a JSON page, called when a drop occurs here
 
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # container is the widget itself
         self[0] =  ""
         self._dropurl = ''
@@ -87,7 +88,8 @@ class DivStyleDiv(Widget):
         """A div, containing a div which can have a style set, containing unescaped html
             inner_tag - the tag of the inside element
            style - the style of the inside element"""
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='div')
         self[0].htmlescaped = False
         self[0].linebreaks=False
@@ -129,7 +131,8 @@ class DivHTML(Widget):
                   if nothing set here, this item will not be set as droppable.
            dropident - ident or label of target which returns a JSON page, called when a drop occurs here"""
 
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = ""  # where the html string is to be set
         self.htmlescaped = False
         self.linebreaks=False
@@ -183,7 +186,8 @@ class PreText(Widget):
         pre_text: The text appearing in the pre tag
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="pre", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "pre"
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -211,7 +215,8 @@ class SpanText(Widget):
         span_text: The text appearing in the span tag
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -241,7 +246,8 @@ class TagText(Widget):
         tag_text: The text appearing in the tag
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -274,7 +280,8 @@ class TagUnEscaped(Widget):
         content: The content appearing in the tag
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = ''
         self.htmlescaped = False
         self.linebreaks=False
@@ -305,7 +312,8 @@ class ParaText(Widget):
         para_text: The text appearing in the p tag
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="p", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "p"
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -342,7 +350,8 @@ class DivPara(Widget):
                   new line breaks
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='p')
         # do not insert <br /> - leave that to pre_line
         self[0].linebreaks=False
@@ -406,7 +415,8 @@ class JSONTextLink(Widget):
                   new line breaks
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='a', attribs={'role':'button'})
         self[0][0] = ""  # where button text is to be set
         self[1] = tag.Part(tag_name="p")
@@ -518,7 +528,8 @@ class JSONDivLink(Widget):
         div_content: The content appearing in the div
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='a', attribs={'role':'button'})
         self[0][0] = ""  # where button text is to be set
         self[1] = tag.Part(tag_name='div')
@@ -622,7 +633,8 @@ class TextBlockPara(Widget):
                      replaces widget_class on error.
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="p", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "p"
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -682,7 +694,8 @@ class TextBlockDiv(Widget):
         content_replaceblock: content set here will replace the textblock
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = ''
         self.htmlescaped = False
         self.linebreaks = False
@@ -732,7 +745,8 @@ class ShowPara1(Widget):
         pre_line: If True, sets style="white-space: pre-line;" into the paragraph which preserves
                   new line breaks
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # The para_text
         self[0] = tag.Part(tag_name="p")
         # do not insert <br /> - leave that to pre_line
@@ -801,7 +815,8 @@ class ShowPara2(Widget):
                   new line breaks
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='div', attribs={"onclick":"this.parentElement.style.display='none'"})
         self[0][0] = tag.HTMLSymbol("&times;")
         self[1] = tag.Part(tag_name='div')

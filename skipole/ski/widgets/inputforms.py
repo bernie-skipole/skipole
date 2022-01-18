@@ -18,7 +18,8 @@ class HiddenField(ClosedWidget):
 
     def __init__(self, name=None, brief='', **field_args):
         "hidden_field: A hidden input field"
-        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "input"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
@@ -48,7 +49,8 @@ class HiddenSessionStorage(ClosedWidget):
 
     def __init__(self, name=None, brief='', **field_args):
         "hidden_field: A hidden input field with value from session storage"
-        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "input"
         self._key = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -89,7 +91,8 @@ class HiddenLocalStorage(ClosedWidget):
 
     def __init__(self, name=None, brief='', **field_args):
         "hidden_field: A hidden input field with value from local storage"
-        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "input"
         self._key = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -132,7 +135,8 @@ class SubmitButton1(ClosedWidget):
 
     def __init__(self, name=None, brief='', **field_args):
         "Create input type submit button widget"
-        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "input"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
@@ -161,7 +165,8 @@ class SubmitButton2(ClosedWidget):
 
     def __init__(self, name=None, brief='', **field_args):
         "Create input type submit button widget"
-        ClosedWidget.__init__(self, name=name, tag_name="input", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "input"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
@@ -207,7 +212,8 @@ class Form1(Widget):
         hidden_field4: A fourth hidden field value, leave blank if unused
         container_class: the class attribute of the div holding the container
         error_class: The class applied to the paragraph containing the error message on error."""
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self.update_attribs({"role":"form", "method":"post"})
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
@@ -324,7 +330,8 @@ class SubmitForm1(Widget):
         container_class: the class attribute of the div holding the container
         error_class: The class applied to the paragraph containing the error message on error.
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -496,7 +503,8 @@ class SubmitForm2(Widget):
         container_class: the class attribute of the div holding the container
         error_class: The class applied to the paragraph containing the error message on error.
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -655,8 +663,8 @@ class SubmitFromScript(Widget):
         buttondiv_style: the style attribute of the div which contains the submit button
         hide: If True, widget is hidden
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # The form
         self[0] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
 

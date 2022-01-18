@@ -39,7 +39,8 @@ class DropDown1(Widget):
         error_class: css class applied to the normally hidden error paragraph
         div_class: css class applied to the div after the error paragraph
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -153,7 +154,8 @@ class SubmitDropDown1(Widget):
         hide: If True, widget is hidden
         disabled: Set True if the select field and submit button are to be disabled
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error para at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -307,7 +309,8 @@ class HiddenContainer(Widget):
         inner_class: The CSS class of the div holding the paragraph
         buttondiv_class: The class of the div holding the button
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div")
         # div holding X button
         self[0][0] = tag.Part(tag_name="div")

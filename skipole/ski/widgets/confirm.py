@@ -55,7 +55,8 @@ class ConfirmBox1(Widget):
         json_ident1: The url, ident or label to link by button1, expecting a json file to be returned
         json_ident2: The url, ident or label to link by button2, expecting a json file to be returned
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div")
         # The location 0,0 is the div containing the paragraph
         self[0][0] = tag.Part(tag_name="div")
@@ -223,7 +224,8 @@ class ConfirmBox2(Widget):
         para_class: The class of the text paragraph
         buttondiv_class: The class of the div holding the buttons
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div")
         # The location 0,0 is the div containing the paragraph
         self[0][0] = tag.Part(tag_name="div")
@@ -370,7 +372,8 @@ class AlertClear1(Widget):
         error_class: The CSS class of the div holding the paragraph when error raised
         buttondiv_class: The class of the div holding the button
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div")
         # div holding X button
         self[0][0] = tag.Part(tag_name="div")
@@ -501,7 +504,8 @@ class AlertClear2(Widget):
         buttondiv_class: The class of the div holding the button
         json_ident: The url, ident or label to link by the X button, expecting a json file to be returned
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div")
         # div holding X button
         self[0][0] = tag.Part(tag_name="div")

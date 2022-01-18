@@ -45,8 +45,8 @@ class IconLink(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
-
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         # The location 0,0 is available as a container
         self[0] = tag.Part(tag_name="svg")
         self[0][0] = tag.Part(tag_name="g")
@@ -127,7 +127,8 @@ class ContainerLink1(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         # where content can be placed
         self[0] = ''
 
@@ -184,7 +185,8 @@ class ContainerLink2(Widget):
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         # where content can be placed
         self[0] = ''
         self._jsonurl = ''
@@ -259,7 +261,8 @@ class Link(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         # where content can be placed
         self[0] = ''
 
@@ -312,7 +315,8 @@ class LinkToWidget(Widget):
         content: The text to be placed within the link, if none given, the towidget id will be used
         towidget: widget name, or sectionalias,widgetname
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         # where content can be placed
         self[0] = ''
 
@@ -381,7 +385,8 @@ class ImageOrTextLink(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -463,7 +468,8 @@ class CloseButton(Widget):
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         self.update_attribs({"role":"button"})
         self[0] = tag.HTMLSymbol("&times;")
 
@@ -517,7 +523,8 @@ class OpenButton(Widget):
         get_field1: Optional 'get' string set in the target url
         get_field2: Optional second 'get' string set in the target url
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         self.update_attribs({"role":"button"})
         self[0] = tag.HTMLSymbol("&#9776;")
 
@@ -576,7 +583,8 @@ class OpenButton2(Widget):
         content: The text to be placed within the link
         hide: If True the button will be hidden
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         self.update_attribs({"role":"button"})
         # where content can be placed
         self[0] = 'Open'
@@ -652,7 +660,8 @@ class JSONButtonLink(Widget):
         widget_class: The class applied to the widget, should describe a button
         error_class: class which replaces widget_class on error
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         self.update_attribs({"role":"button"})
         # on error, button text is replaced by error message
         self[0] = ''
@@ -746,7 +755,8 @@ class ButtonLink1(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         self.update_attribs({"role":"button"})
         # on error, button text is replaced by error message
         self[0] = ''
@@ -834,7 +844,8 @@ class ButtonLink2(Widget):
         error_class: class given to normally hidden error div
         """
 
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -964,7 +975,8 @@ class MessageButton(Widget):
         inner_class: The CSS class of the div holding the paragraph
         buttondiv_class: The class of the div holding the button
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # message div
         self[0] = tag.Part(tag_name="div")
         # boxdiv
@@ -1129,7 +1141,8 @@ class ImageLink1(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="a", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "a"
         self[0] = tag.ClosedPart(tag_name="img")
         self._hover_img_url = ''
         self._img_url = ''
@@ -1216,7 +1229,8 @@ class Image1(ClosedWidget):
         height: The height of the image
         alt: The alt attribute
         """
-        ClosedWidget.__init__(self, name=name, tag_name="img", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "img"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
@@ -1277,7 +1291,8 @@ class LinkTextBlockTable1(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -1417,7 +1432,8 @@ class LinkTextBlockTable2(Widget):
         force_ident: If True then the page ident will be included, even if no get fields set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self.update_attribs({"style":"border-spacing:0;border-collapse:collapse;"})
 
 
@@ -1554,7 +1570,8 @@ class ListLinks(Widget):
                      col 2 is the get field contents of the link, empty if not used
                      the name of this field is used as the widgfield of the get data returned
         """
-        Widget.__init__(self, name=name, tag_name="ul", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "ul"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -1636,7 +1653,8 @@ class Table1_Links(Widget):
         force_ident: If True then the page ident will be included, even if no get field set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
@@ -1802,7 +1820,8 @@ class Table2_Links(Widget):
         force_ident: If True then the page ident will be included, even if no get field set
                      If False, the page ident will only be included if a get field is set
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._col2_json_idents = []
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -1987,7 +2006,8 @@ class Table1_Button(Widget):
                   col 1 is the get field contents of the button link
                   This fieldname used as the widgfield
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._jsonurl =''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -2128,7 +2148,8 @@ class Table2_Button(Widget):
                   col 2 is the get field contents of the button link
                   This fieldname used as the widgfield
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._jsonurl =''
 
 
@@ -2287,7 +2308,8 @@ class Table3_Buttons2(Widget):
                     col 7 - True if the first button and link is to be shown, False if not
                     col 8 - True if the second button and link is to be shown, False if not
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._url1 = ''
         self._jsonurl1 = ''
         self._url2 = ''
@@ -2486,7 +2508,8 @@ class Table1_Buttons4(Widget):
                     col 8 - True if the fourth button and link is to be shown, False if not
         col0_classes: if given is a list of CSS classes to apply to each td of the text column
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -2708,7 +2731,8 @@ class GeneralButtonTable2(Widget):
  
                   This fieldname used as the widgfield for the get data
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._jsonurl_list = []
         self._dropurl = ''
         self._htmlurl_list = []
@@ -2855,7 +2879,8 @@ class ProjectiFrame(Widget):
         width: The width in pixels of the iframe
         height: the height in pixels of the iframe
         """
-        Widget.__init__(self, name=name, tag_name="iframe", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "iframe"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -2936,7 +2961,8 @@ class GeneralButtonTable1(Widget):
                    col 3 - The get field value of the button link, empty string if no get field
                   This fieldname used as the widgfield for the get data
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
         self._jsonurl_list = []
         self._dropurl = ''
         self._htmlurl_list = []
@@ -3089,7 +3115,8 @@ class Audio1(Widget):
         controls: If True sets the controls attribute
         play: If True, sets autoplay attribute, if set True by JSON, causes the file to play 
         """
-        Widget.__init__(self, name=name, tag_name="audio", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "audio"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -3143,7 +3170,8 @@ class Audio2(Widget):
         controls: If True sets the controls attribute
         play: If True, sets autoplay attribute, if set True by JSON, causes the file to play 
         """
-        Widget.__init__(self, name=name, tag_name="audio", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "audio"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):

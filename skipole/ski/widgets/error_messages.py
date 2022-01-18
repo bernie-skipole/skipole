@@ -35,7 +35,8 @@ class ErrorCode(Widget):
         code: integer code number
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='p')
         self[0][0] = ''
         self[1] = tag.Part(tag_name='p')
@@ -107,7 +108,8 @@ class ErrorDiv(Widget):
               If False, or error sets display:block
         error_class: The CSS class of the paragraph
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -155,7 +157,8 @@ class ErrorPara(Widget):
         hide: If True, sets display: none; on the widget, can be set/unset via JSON file
               If False, or error sets display:block
         """
-        Widget.__init__(self, name=name, tag_name="p", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "p"
         self[0] = self.error_message
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -209,7 +212,8 @@ class ErrorClear1(Widget):
         error_class: The CSS class of the div holding the paragraph
         buttondiv_class: The class of the div holding the button
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div")
         # The location 0,0 is the div holding the text paragraph
         self[0][0] = tag.Part(tag_name="div")
@@ -324,7 +328,8 @@ class ErrorClear2(Widget):
         error_class: The CSS class of the div holding the paragraph
         buttondiv_class: The class of the div holding the button
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div")
         # div holding X button
         self[0][0] = tag.Part(tag_name="div")

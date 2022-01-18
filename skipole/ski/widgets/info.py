@@ -27,7 +27,8 @@ class ServerTimeStamp(Widget):
         timestamp: normally empty and timestamp will automatically be displayed, or other text can be set here.
         utc: If True, time is utc, if False it is local time
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -66,7 +67,8 @@ class PageIdent(Widget):
         page_ident: The ident of a page or folder, converted to string
         span_text: if given, overrides the page_ident value
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -105,7 +107,8 @@ class PageName(Widget):
         page_ident: The ident of a page or folder
         span_text: if given, overrides the page name value
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -148,7 +151,8 @@ class PageDescription(Widget):
         page_ident: The ident of a page or folder
         span_text: if given, overrides the page description value
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -186,7 +190,8 @@ class ProjectName(Widget):
         """
         Shows project name
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -215,7 +220,8 @@ class Version(Widget):
         """
         Shows project version
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -244,7 +250,8 @@ class SkipoleVersion(Widget):
         """
         Shows skipole version
         """
-        Widget.__init__(self, name=name, tag_name="span", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "span"
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -282,8 +289,8 @@ class Redirector(Widget):
         text_replaceblock: text set here will replace the textblock
         linebreaks: Set True if linebreaks in the text are to be shown as html breaks
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name='script', attribs={"type":"text/javascript"})
         self[1] = tag.Part(tag_name='p')
         self._url = ''
@@ -363,8 +370,8 @@ class ProgressBar1(Widget):
         """
         text shown in place of the bar if the client browser does not support the progress tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
-
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="label", hide_if_empty=True)
         self[1] = tag.Part(tag_name='progress')
 

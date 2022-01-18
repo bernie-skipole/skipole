@@ -33,7 +33,8 @@ class NavButtons1(Widget):
         li_class: The class of the li tag
         ul_class: The class of the ul tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
         self[0][0][0] = ''
@@ -119,7 +120,8 @@ class NavButtons2(Widget):
           3 : The get field data to send with the link
         button_class: The class of the button links - which provides the appearance via CSS
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # as this widget does not display errors, and is not json settable, hide if empty
         self.hide_if_empty=True
 
@@ -188,7 +190,8 @@ class NavButtons3(Widget):
         button_classes: list of CSS classes, each list item set to button links
         button_style: A style set on every button
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self._jsonurl = ''
 
 
@@ -289,7 +292,8 @@ class TabButtons1(Widget):
         onclick_removeclass: CSS class to remove from a button when it is clicked
         active_button: the button index (starting at 0) of the button which is currently active
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self.hide_if_empty=True
         self._display_id_list = []
         self._hide_class = ''
@@ -411,7 +415,8 @@ class DropDownButton1(Widget):
         div_class: CSS class of inner div holding links
         link_class: CSS class of each link
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self.hide_if_empty=True
 
 
@@ -482,7 +487,8 @@ class HeaderErrorPara(Widget):
         hide: If True, sets display: none; on the widget, can be set/unset via JSON file
                     on error the value is overridden and the widget is shown
         """
-        Widget.__init__(self, name=name, tag_name="p", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "p"
         self[0] = self.error_message
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -515,7 +521,8 @@ class HeadText(Widget):
         large_text: The text appearing in the tag
         """
         # pass fields to Widget
-        Widget.__init__(self, name=name, tag_name="h1", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "h1"
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -557,7 +564,8 @@ class HeaderText1(Widget):
         h_class: CSS class applied to the h tag
         p_class: CSS class applied to the p tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="h1")
         self[1] = tag.Part(tag_name="p")
         # error div at 2
@@ -623,7 +631,8 @@ class HeaderText2(Widget):
         h_class: CSS class applied to the h tag
         p_class: CSS class applied to the p tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="h2")
         self[1] = tag.Part(tag_name="p")
         # error div at 2
@@ -690,7 +699,8 @@ class HeaderText3(Widget):
         h_class: CSS class applied to the h tag
         p_class: CSS class applied to the p tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="h3")
         self[1] = tag.Part(tag_name="p")
         # error div at 2
@@ -757,7 +767,8 @@ class HeaderText4(Widget):
         h_class: CSS class applied to the h tag
         p_class: CSS class applied to the p tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="h4")
         self[1] = tag.Part(tag_name="p")
         # error div at 2
@@ -824,7 +835,8 @@ class HeaderText5(Widget):
         h_class: CSS class applied to the h tag
         p_class: CSS class applied to the p tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="h5")
         self[1] = tag.Part(tag_name="p")
         # error div at 2
@@ -891,7 +903,8 @@ class HeaderText6(Widget):
         h_class: CSS class applied to the h tag
         p_class: CSS class applied to the p tag
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         self[0] = tag.Part(tag_name="h6")
         self[1] = tag.Part(tag_name="p")
         # error div at 2
