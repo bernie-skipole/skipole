@@ -522,7 +522,16 @@ class Widget(tag.Part):
     # if it is not None, then show_error will show the error at that location
     error_location = None
 
-    arg_descriptions = {'widget_class':FieldArg("cssclass", "", jsonset=True)}
+    arg_descriptions = {}
+
+    common_args = {'widget_class':FieldArg("cssclass", "", jsonset=True),
+                   'widget_style':FieldArg("cssstyle", "", jsonset=True),
+                   'show':FieldArg("boolean", True)}
+
+    error_args = {'show_error':FieldArg("text", '', jsonset=True),
+                  'clear_error':FieldArg("boolean", False, jsonset=True )}
+
+
 
     # All widgets automatically have a show, show_error, widget_class and widget_style field arguments
 
@@ -533,40 +542,26 @@ class Widget(tag.Part):
 
         tag.Part.__init__(self, tag_name="div", text='', show=True, brief=brief, hide_if_empty=False)
         self.name = name
-        # create self.fields which is a dictionary of {field_arg:FieldArg,...}
-        # for example - in this case field_arg is the string 'widget_class', and value is
-        # a deep copy of the FieldArg object created by FieldArg("cssclass", "", jsonset=True)
-        self.fields = copy.deepcopy(self.arg_descriptions)
-        # ALL Widgets have a show and widget_class arguments
-        if 'show' not in self.fields:
-            self.fields['show'] = FieldArg("boolean", True)
-        if 'widget_class' not in self.fields:
-            self.fields['widget_class'] = FieldArg("cssclass", '', jsonset=True)
-        if 'widget_style' not in self.fields:
-            self.fields['widget_style'] = FieldArg("cssstyle", '', jsonset=True)
-        # if widget has display_errors set True, then they also have a show_error and clear_error argument
-        if self.display_errors:
-            if 'show_error' not in self.fields:
-                self.fields['show_error'] = FieldArg("text", '', jsonset=True)
-            if 'clear_error' not in self.fields:
-                self.fields['clear_error'] = FieldArg("boolean", False, jsonset=True )
+        # create self.fields which is a dictionary of {fname:FieldArg,...}, by calling the class method
+        self.fields = copy.deepcopy(self.field_name_dict())
+
         # Each FieldArg object has a name and value.
-        # **field_args is a dictionary of {field_arg:value, ...}  - in this example it could be
-        # {"widget_class": "css_class_name',...}
-        # For each FieldArg object in self.fields, if its field_arg does not appear in the **field_args, then its value will be that
+        # **field_args is a dictionary of {fname:value, ...} 
+
+        # For each FieldArg object in self.fields, if its fname does not appear in the **field_args, then its value will be that
         # given in the class attribute 'default'. If it does appear, then its
         # value is set to that given in **field_args
-        for field_arg, field in self.fields.items():
-            # initially set field names to be the same as field argument
+        for fname, field in self.fields.items():
+            # initially set field names to be the same as given in arg_descriptions
             if self.name:
-                field.name = field_arg
+                field.name = fname
             else:
                 # If this widget has no name - it is set inside another. To avoid name clashes when inserting one widget in another,
-                # all names in this widget are initially set to start with an underscore"
-                field.name = '_' + field_arg
-            # set field values to be the values given in **field_args (note: field_args is plural to differentiate)
-            if field_arg in field_args:
-                field.value = field_args[field_arg]
+                # all names in this widget are initially set to start with an underscore
+                field.name = '_' + fname
+            # set field values to be the values given in **field_args
+            if fname in field_args:
+                field.value = field_args[fname]
         # set initial self.error_message to the value given in show_error argument
         if self.display_errors and self.fields['show_error'].value:
             self.error_message = self.fields['show_error'].value
@@ -576,7 +571,7 @@ class Widget(tag.Part):
         # the widget show is set by the show argument
         self.show = self.fields["show"].value
 
-        # Creates a dictionary of names against field arguments in self._names
+        # Creates a dictionary of names against field arguments fname in self._names
         self._create_name_dict()
 
         # If the widget is in error status, this becomes True
@@ -588,7 +583,7 @@ class Widget(tag.Part):
 
     def _create_name_dict(self):
         "Creates a dictionary of names against field arguments"
-        self._names = { field.name:field_arg for field_arg, field in self.fields.items() }
+        self._names = { field.name:fname for fname, field in self.fields.items() }
 
 
     def get_container_parts(self, index):
@@ -741,24 +736,28 @@ class Widget(tag.Part):
 
 
     @classmethod
+    def field_name_dict(cls):
+        "Returns a dictionary of {fname: fieldarg} as given in the class field description attributes"
+        # ALL Widgets have a widget_class, widget_style, show arguments
+        fields = cls.common_args.copy()
+        # if widget has display_errors set True, then fields also contains show_error and clear_error arguments
+        if cls.display_errors:
+            fields.update(cls.error_args)
+        # update with fields described in arg_descriptions
+        fields.update(cls.arg_descriptions)
+        return fields
+
+
+    @classmethod
     def field_arguments_single(cls):
         """Returns a list of lists.
         The inner list consists of: [ field arg, field type, valdt, jsonset, cssclass, cssstyle]
         sorted by field argument"""
         args = []
-        for arg, item in cls.arg_descriptions.items():
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArg):
-                args.append( [arg, item.field_type, item.valdt, item.jsonset, item.cssclass, item.cssstyle] )
-        if 'show' not in cls.arg_descriptions:
-            args.append( ['show', 'boolean', False, False, False, False] )
-        if 'widget_class' not in cls.arg_descriptions:
-            args.append( ['widget_class', 'cssclass', False, True, True, False] )
-        if 'widget_style' not in cls.arg_descriptions:
-            args.append( ['widget_style', 'cssstyle', False, True, False, True] )
-        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append( ['show_error', 'text', False, True, False, False] )
-        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
-            args.append( ['clear_error', 'boolean', False, True, False, False] )
+                args.append( [fname, item.field_type, item.valdt, item.jsonset, item.cssclass, item.cssstyle] )
         args.sort(key=lambda row: row[0])
         return args
 
@@ -768,13 +767,13 @@ class Widget(tag.Part):
         """Returns a list of lists.
         The inner list consists of: [ field arg, field type, valdt, jsonset].
         sorted by field argument"""
-        arg_list = []
-        for arg, item in cls.arg_descriptions.items():
+        args = []
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArgList):
-                arg_list.append( [arg, item.field_type, item.valdt, item.jsonset] )
-        if arg_list:
-            arg_list.sort(key=lambda row: row[0])
-        return arg_list
+                args.append( [fname, item.field_type, item.valdt, item.jsonset] )
+        args.sort(key=lambda row: row[0])
+        return args
 
 
     @classmethod
@@ -783,13 +782,13 @@ class Widget(tag.Part):
         The inner list consists of: [ field arg, field type, valdt, jsonset].
         sorted by field argument.
         field type is a list of column types"""
-        arg_table = []
-        for arg, item in cls.arg_descriptions.items():
+        args = []
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArgTable):
-                arg_table.append( [arg, item.field_type, item.valdt, item.jsonset] )
-        if arg_table:
-            arg_table.sort(key=lambda row: row[0])
-        return arg_table
+                args.append( [fname, item.field_type, item.valdt, item.jsonset] )
+        args.sort(key=lambda row: row[0])
+        return args
 
 
     @classmethod
@@ -797,31 +796,19 @@ class Widget(tag.Part):
         """Returns a list of lists.
         The inner list consists of: [ field arg, field type, valdt, jsonset].
         sorted by field argument"""
-        arg_dict = []
-        for arg, item in cls.arg_descriptions.items():
+        args = []
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArgDict):
-                arg_dict.append( [arg, item.field_type, item.valdt, item.jsonset] )
-        if arg_dict:
-            arg_dict.sort(key=lambda row: row[0])
-        return arg_dict
+                args.append( [fname, item.field_type, item.valdt, item.jsonset] )
+        args.sort(key=lambda row: row[0])
+        return args
 
 
     @classmethod
     def field_arguments(cls):
         """Returns a list of field args"""
-        args = []
-        for arg in cls.arg_descriptions:
-            args.append(arg)
-        if 'show' not in cls.arg_descriptions:
-            args.append('show')
-        if 'widget_class' not in cls.arg_descriptions:
-            args.append('widget_class')
-        if 'widget_style' not in cls.arg_descriptions:
-            args.append('widget_style')
-        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append('show_error')
-        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
-            args.append('clear_error')
+        args = list(cls.field_name_dict().keys())
         args.sort()
         return args
 
@@ -1402,7 +1389,14 @@ class ClosedWidget(tag.ClosedPart):
     # always None and unused
     error_location = None
 
-    arg_descriptions = {'widget_class':FieldArg("cssclass", "", jsonset=True)}
+    arg_descriptions = {}
+
+    common_args = {'widget_class':FieldArg("cssclass", "", jsonset=True),
+                   'widget_style':FieldArg("cssstyle", "", jsonset=True),
+                   'show':FieldArg("boolean", True)}
+
+    error_args = {'show_error':FieldArg("text", '', jsonset=True),
+                  'clear_error':FieldArg("boolean", False, jsonset=True )}
 
 
     def __init__(self, name=None, brief='', **field_args):
@@ -1410,32 +1404,27 @@ class ClosedWidget(tag.ClosedPart):
             brief = self.__class__.__name__
         tag.ClosedPart.__init__(self, tag_name="link", show=True, brief=brief)
         self.name = name
-        # Get fields from arg_descriptions
-        self.fields = copy.deepcopy(self.arg_descriptions)
-        # ALL Widgets have a show, widget_class and widget_style arguments
-        if 'show' not in self.fields:
-            self.fields['show'] = FieldArg("boolean", True)
-        if 'widget_class' not in self.fields:
-            self.fields['widget_class'] = FieldArg("cssclass", "", jsonset=True)
-        if 'widget_style' not in self.fields:
-            self.fields['widget_style'] = FieldArg("cssstyle", '', jsonset=True)
-        # if widget has display_errors set True, then they also have a show_error and clear_error argument
-        if self.display_errors:
-            if 'show_error' not in self.fields:
-                self.fields['show_error'] = FieldArg("text", '', jsonset=True)
-            if 'clear_error' not in self.fields:
-                self.fields['clear_error'] = FieldArg("boolean", False, jsonset=True )
-        for field_arg, field in self.fields.items():
+        # create self.fields which is a dictionary of {fname:FieldArg,...}, by calling the class method
+        self.fields = copy.deepcopy(self.field_name_dict())
+
+        # Each FieldArg object has a name and value.
+        # **field_args is a dictionary of {fname:value, ...} 
+
+        # For each FieldArg object in self.fields, if its fname does not appear in the **field_args, then its value will be that
+        # given in the class attribute 'default'. If it does appear, then its
+        # value is set to that given in **field_args
+
+        for fname, field in self.fields.items():
             # initially set field names to be the same as field argument
             if self.name:
-                field.name = field_arg
+                field.name = fname
             else:
                 # If this widget has no name - it is set inside another. To avoid name clashes when inserting one widget in another,
                 # all names in this widget are initially set to start with an underscore"
-                field.name = '_' + field_arg
+                field.name = '_' + fname
             # set field values to be the values given in **field_args
-            if field_arg in field_args:
-                field.value = field_args[field_arg]
+            if fname in field_args:
+                field.value = field_args[fname]
 
         # Creates a dictionary of names against field arguments in self._names
         self._create_name_dict()
@@ -1479,8 +1468,20 @@ class ClosedWidget(tag.ClosedPart):
             return None, None
 
     def _create_name_dict(self):
-        "Creates a dictionary of names against field arguments"
-        self._names = { field.name:field_arg for field_arg, field in self.fields.items() }
+        "Creates a dictionary of names against field arguments fnames"
+        self._names = { field.name:fname for fname, field in self.fields.items() }
+
+    @classmethod
+    def field_name_dict(cls):
+        "Returns a dictionary of {fname: fieldarg} as given in the class field description attributes"
+        # ALL Widgets have a widget_class, widget_style, show arguments
+        fields = cls.common_args.copy()
+        # if widget has display_errors set True, then fields also contains show_error and clear_error arguments
+        if cls.display_errors:
+            fields.update(cls.error_args)
+        # update with fields described in arg_descriptions
+        fields.update(cls.arg_descriptions)
+        return fields
 
 
     @classmethod
@@ -1489,19 +1490,10 @@ class ClosedWidget(tag.ClosedPart):
         The inner list consists of: [ field arg, field type, valdt, jsonset, cssclass, cssstyle]
         sorted by field argument"""
         args = []
-        for arg, item in cls.arg_descriptions.items():
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArg):
-                args.append( [arg, item.field_type, item.valdt, item.jsonset, item.cssclass, item.cssstyle] )
-        if 'show' not in cls.arg_descriptions:
-            args.append( ['show', 'boolean', False, False, False, False] )
-        if 'widget_class' not in cls.arg_descriptions:
-            args.append( ['widget_class', 'cssclass', False, True, True, False] )
-        if 'widget_style' not in cls.arg_descriptions:
-            args.append( ['widget_style', 'cssstyle', False, True, False, True] )
-        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append( ['show_error', 'text', False, True, False, False] )
-        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
-            args.append( ['clear_error', 'boolean', False, True, False, False] )
+                args.append( [fname, item.field_type, item.valdt, item.jsonset, item.cssclass, item.cssstyle] )
         args.sort(key=lambda row: row[0])
         return args
 
@@ -1511,13 +1503,13 @@ class ClosedWidget(tag.ClosedPart):
         """Returns a list of lists.
         The inner list consists of: [ field arg, field type, valdt, jsonset].
         sorted by field argument"""
-        arg_list = []
-        for arg, item in cls.arg_descriptions.items():
+        args = []
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArgList):
-                arg_list.append( [arg, item.field_type, item.valdt, item.jsonset] )
-        if arg_list:
-            arg_list.sort(key=lambda row: row[0])
-        return arg_list
+                args.append( [fname, item.field_type, item.valdt, item.jsonset] )
+        args.sort(key=lambda row: row[0])
+        return args
 
 
     @classmethod
@@ -1526,13 +1518,13 @@ class ClosedWidget(tag.ClosedPart):
         The inner list consists of: [ field arg, field type, valdt, jsonset].
         sorted by field argument.
         field type is a list of column types"""
-        arg_table = []
-        for arg, item in cls.arg_descriptions.items():
+        args = []
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArgTable):
-                arg_table.append( [arg, item.field_type, item.valdt, item.jsonset] )
-        if arg_table:
-            arg_table.sort(key=lambda row: row[0])
-        return arg_table
+                args.append( [fname, item.field_type, item.valdt, item.jsonset] )
+        args.sort(key=lambda row: row[0])
+        return args
 
 
     @classmethod
@@ -1540,31 +1532,19 @@ class ClosedWidget(tag.ClosedPart):
         """Returns a list of lists.
         The inner list consists of: [ field arg, field type, valdt, jsonset].
         sorted by field argument"""
-        arg_dict = []
-        for arg, item in cls.arg_descriptions.items():
+        args = []
+        fields = cls.field_name_dict()
+        for fname, item in fields.items():
             if isinstance(item, FieldArgDict):
-                arg_dict.append( [arg, item.field_type, item.valdt, item.jsonset] )
-        if arg_dict:
-            arg_dict.sort(key=lambda row: row[0])
-        return arg_dict
+                args.append( [fname, item.field_type, item.valdt, item.jsonset] )
+        args.sort(key=lambda row: row[0])
+        return args
 
 
     @classmethod
     def field_arguments(cls):
         """Returns a list of field args"""
-        args = []
-        for arg in cls.arg_descriptions:
-            args.append(arg)
-        if 'show' not in cls.arg_descriptions:
-            args.append('show')
-        if 'widget_class' not in cls.arg_descriptions:
-            args.append('widget_class')
-        if 'widget_style' not in cls.arg_descriptions:
-            args.append('widget_style')
-        if cls.display_errors and ('show_error' not in cls.arg_descriptions):
-            args.append('show_error')
-        if cls.display_errors and ('clear_error' not in cls.arg_descriptions):
-            args.append('clear_error')
+        args = list(cls.field_name_dict().keys())
         args.sort()
         return args
 
