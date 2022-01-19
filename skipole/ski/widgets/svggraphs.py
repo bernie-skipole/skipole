@@ -36,7 +36,8 @@ class Chart1(Widget):
            These will be plotted on the chart at 10point intervals, with the
            last point on the right of the chart
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"0",
                                                            "y":"0",
                                                            "width":"500",
@@ -227,7 +228,8 @@ class Graph48Hr(Widget):
            These will be plotted on the chart to the latest date in the values
            If last_day given, rightmost axis will be midnight of that day 
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._hr = datetime.timedelta(hours=1)
         self._axiscol = "green"
         self._plotcol = "black"
@@ -586,7 +588,8 @@ class StarChart(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a circular star chart, held in a 500 high x 500 wide space
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self[0] = tag.ClosedPart(tag_name='circle', attribs={"cx":"250",
                                                              "cy":"250",
                                                              "r":"250",
@@ -845,7 +848,8 @@ class StarChartXY(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a circular star chart, held in a 500 high x 500 wide space
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self[0] = tag.ClosedPart(tag_name='circle', attribs={"cx":"250",
                                                              "cy":"250",
                                                              "r":"250",
@@ -978,7 +982,8 @@ class Axis1(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a graph axis, held in a 1200 high x 1200 wide space
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._axiscol = "green"
         self._font_family = "arial"
         self[0] = tag.Part(tag_name="g")
@@ -1317,7 +1322,8 @@ class Points(Widget):
         """A g element which holds a table of points, intended to be included in the container 0
            of an Axis widget. 
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._minx = 0
         self._maxx = 960
         self._miny = 0
@@ -1452,7 +1458,8 @@ class Axis2(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a graph axis
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._axiscol = "green"
         self._font_family = "arial"
         self[0] = tag.Part(tag_name="g")
@@ -1751,7 +1758,8 @@ class Lines(Widget):
         """A g element which holds a table of points joined by lines, intended to be included in the container 0
            of an Axis widget. 
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._minx = 0
         self._maxx = 960
         self._miny = 0
@@ -1880,7 +1888,8 @@ class XBars(Widget):
         """A g element which holds a series of vertical bars, intended to be included in the container 0
            of an Axis widget. 
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._minx = 0
         self._maxx = 960
         self._miny = 0
@@ -2017,7 +2026,8 @@ class YBars(Widget):
         """A g element which holds a series of horizontal bars, intended to be included in the container 0
            of an Axis widget. 
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._minx = 0
         self._maxx = 960
         self._miny = 0
@@ -2164,7 +2174,8 @@ class Axis3(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a graph axis
         """
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self._axiscol = "green"
         self._font_family = "arial"
         self[0] = tag.Part(tag_name="g")

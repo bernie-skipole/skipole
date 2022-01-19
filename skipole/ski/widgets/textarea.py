@@ -48,7 +48,8 @@ class SubmitTextArea(Widget):
         rows:  The number of rows of the text area
         cols: The number of columns of the text area
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error at div 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -162,7 +163,8 @@ class TextArea1(Widget):
         rows:  The number of rows of the text area
         cols: The number of columns of the text area
         """
-        Widget.__init__(self, name=name, tag_name="textarea", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "textarea"
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -222,7 +224,8 @@ class TextArea2(Widget):
         rows:  The number of rows of the text area
         cols: The number of columns of the text area
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")

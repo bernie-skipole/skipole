@@ -54,7 +54,8 @@ class SubmitUploadFile1(Widget):
         hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
         hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -193,7 +194,8 @@ class UploadFile1(Widget):
         inputdiv_class: The css class of the div containing the label and input field
         error_class: The class applied to the paragraph containing the error message on error.
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -300,7 +302,8 @@ class SubmitUploadFile2(Widget):
         hidden_field3: A third hidden field value, leave blank if unused, name used as the get field name
         hidden_field4: A fourth hidden field value, leave blank if unused, name used as the get field name
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")

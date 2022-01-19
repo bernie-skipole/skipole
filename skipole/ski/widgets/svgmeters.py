@@ -31,7 +31,8 @@ class Arrow1(ClosedWidget):
         stroke_width: The outline edge thickness
         transform: The svg transform object, use it to scals and rotate
         """
-        ClosedWidget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "polygon"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "create arrow"                  
@@ -80,7 +81,8 @@ class Arrow2(ClosedWidget):
         stroke_width: The outline edge thickness
         transform: The svg transform object, use it to scals and rotate
         """
-        ClosedWidget.__init__(self, name=name, tag_name="polygon", brief=brief, **field_args)
+        ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "polygon"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "create arrow"                  
@@ -152,7 +154,8 @@ class Vertical1(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds a vertical scale and arrow, held in a 700 high x 250 wide space"""
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         self[0] = tag.ClosedPart(tag_name='rect', attribs={"x":"100",
                                                            "y":"1",
                                                            "rx":"2",
@@ -311,8 +314,8 @@ class Traditional1(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds the scale and arrow, held in a 400 high x 700 wide space"""
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args)
-
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         # A path which holds the curved shape which will contain the meter
 
         # the angle of the white backing is 140 degrees, this makes an
@@ -545,7 +548,8 @@ class Angle(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """A g element which holds the compass, held in a 500 high x 500 wide space"""
-        Widget.__init__(self, name=name, tag_name="g", brief=brief, **field_args) 
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "g"
         # insert a circle at arrow hub, of radius 240
         self[0] = tag.ClosedPart(tag_name='circle', attribs={
                                                        "cx": "250",

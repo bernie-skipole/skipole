@@ -28,7 +28,8 @@ class ColorTable1(Widget):
         titles: List of text used as headers, gives the number of columns
         contents: list of lists, 0:text in the table, 1:the text color, 2:the background color
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
@@ -130,7 +131,8 @@ class TwoColTable1(Widget):
         col1 : A list of text strings to place in the first column
         col2: A list of text strings to place in the second column
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
@@ -224,7 +226,8 @@ class ThreeColTable1(Widget):
         col2: A list of text strings to place in the second column
         col3: A list of text strings to place in the third column
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
@@ -318,7 +321,8 @@ class TextBlockTable2(Widget):
         contents: col 0 is the text to place in the first column,
                   col 1 is the textblock to place in the second colum
         """
-        Widget.__init__(self, name=name, tag_name="table", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "table"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
@@ -409,7 +413,8 @@ class ButtonTextBlockTable1(Widget):
                  text is the values on the button, and which will be returned
                  textbock_ref is the reference of the textblock appearing in the second column
         """
-        Widget.__init__(self, name=name, tag_name="div", brief=brief, **field_args)
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
         # hidden error
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
