@@ -66,93 +66,91 @@ class ConfirmBox1(Widget):
         self[0][1] = tag.Part(tag_name="div")
         self[0][1][0] = tag.Part(tag_name="a", attribs={"role":"button"})
         self[0][1][1] = tag.Part(tag_name="a", attribs={"role":"button"})
-        self._jsonurl1 =''
-        self._jsonurl2 =''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
-        if self.get_field_value('boxdiv_style'):
-            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
-        if self.get_field_value("buttondiv_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('buttondiv_class')})
-        if self.get_field_value("buttondiv_style"):
-            self[0][1].update_attribs({'style':self.get_field_value("buttondiv_style")})
-        if self.get_field_value("paradiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('paradiv_class')})
-        if self.get_field_value("para_class"):
-            self[0][0][0].update_attribs({"class":self.get_field_value('para_class')})
-        if self.get_field_value("para_text"):
-            self[0][0][0][0] = self.get_field_value('para_text')
+        self.widget_hide(self.wf.hide)
+        if self.wf.boxdiv_class:
+            self[0].update_attribs({"class":self.wf.boxdiv_class})
+        if self.wf.boxdiv_style:
+            self[0].update_attribs({"style":self.wf.boxdiv_style})
+        if self.wf.buttondiv_class:
+            self[0][1].update_attribs({"class":self.wf.buttondiv_class})
+        if self.wf.buttondiv_style:
+            self[0][1].update_attribs({'style':self.wf.buttondiv_style})
+        if self.wf.paradiv_class:
+            self[0][0].update_attribs({"class":self.wf.paradiv_class})
+        if self.wf.para_class:
+            self[0][0][0].update_attribs({"class":self.wf.para_class})
+        if self.wf.para_text:
+            self[0][0][0][0] = self.wf.para_text
         # button1
-        if self.get_field_value('button1_class'):
-            self[0][1][0].update_attribs({"class":self.get_field_value('button1_class')})
-        if self.get_field_value('button1_style'):
-            self[0][1][0].update_attribs({"style":self.get_field_value('button1_style')})
-        if self.get_field_value("json_ident1"):
-            self._jsonurl1 = skiboot.get_url(self.get_field_value("json_ident1"), proj_ident=page.proj_ident)
-        if not self.get_field_value("link_ident1"):
+        if self.wf.button1_class:
+            self[0][1][0].update_attribs({"class":self.wf.button1_class})
+        if self.wf.button1_style:
+            self[0][1][0].update_attribs({"style":self.wf.button1_style})
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.json_ident1:
+            self.jlabels['url1'] = skiboot.get_url(self.wf.json_ident1, proj_ident=page.proj_ident)
+
+        if not self.wf.link_ident1:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident1"), proj_ident=page.proj_ident)
+            url = skiboot.get_url(self.wf.link_ident1, proj_ident=page.proj_ident)
             if not url:
                 self[0][1][0][0] = "Warning: broken link"
             else:
-                if self.get_field_value("button_text1"):
-                    self[0][1][0][0] = self.get_field_value("button_text1")
+                if self.wf.button_text1:
+                    self[0][1][0][0] = self.wf.button_text1
                 else:
                     self[0][1][0][0] = url
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1_1"):self.get_field_value("get_field1_1"),
-                                            self.get_formname("get_field1_2"):self.get_field_value("get_field1_2"),
-                                            self.get_formname("get_field1_3"):self.get_field_value("get_field1_3")}
+                get_fields = {self.get_formname("get_field1_1"):self.wf.get_field1_1,
+                              self.get_formname("get_field1_2"):self.wf.get_field1_2,
+                              self.get_formname("get_field1_3"):self.wf.get_field1_3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][1][0].update_attribs({"href": url})
         # button2
-        if self.get_field_value('button2_class'):
-            self[0][1][1].update_attribs({"class":self.get_field_value('button2_class')})
-        if self.get_field_value('button2_style'):
-            self[0][1][1].update_attribs({"style":self.get_field_value('button2_style')})
-        if self.get_field_value("json_ident2"):
-            self._jsonurl2 = skiboot.get_url(self.get_field_value("json_ident2"), proj_ident=page.proj_ident)
-        if not self.get_field_value("link_ident2"):
+        if self.wf.button2_class:
+            self[0][1][1].update_attribs({"class":self.wf.button2_class})
+        if self.wf.button2_style:
+            self[0][1][1].update_attribs({"style":self.wf.button2_style})
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.json_ident2:
+            self.jlabels['url2'] = skiboot.get_url(self.wf.json_ident2, proj_ident=page.proj_ident)
+
+        if not self.wf.link_ident2:
             self[0][1][1][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident2"), proj_ident=page.proj_ident)
+            url = skiboot.get_url(self.wf.link_ident2, proj_ident=page.proj_ident)
             if not url:
                 self[0][1][1][0] = "Warning: broken link"
             else:
-                if self.get_field_value("button_text2"):
-                    self[0][1][1][0] = self.get_field_value("button_text2")
+                if self.wf.button_text2:
+                    self[0][1][1][0] = self.wf.button_text2
                 else:
                     self[0][1][1][0] = url
                 # create a url for the href
-                get_fields = {self.get_formname("get_field2_1"):self.get_field_value("get_field2_1"),
-                              self.get_formname("get_field2_2"):self.get_field_value("get_field2_2"),
-                              self.get_formname("get_field2_3"):self.get_field_value("get_field2_3")}
+                get_fields = {self.get_formname("get_field2_1"):self.wf.get_field2_1,
+                              self.get_formname("get_field2_2"):self.wf.get_field2_2,
+                              self.get_formname("get_field2_3"):self.wf.get_field2_3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][1][1].update_attribs({"href": url})
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        if not (self._jsonurl1 or self._jsonurl2):
+        if not (self.jlabels['url1'] or self.jlabels['url2']):
             return
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident = self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        if self._jsonurl1 and self._jsonurl2:
-            return jscript + self._make_fieldvalues( url1=self._jsonurl1, url2=self._jsonurl2)
-        elif self._jsonurl1:
-            return jscript + self._make_fieldvalues( url1=self._jsonurl1)
-        else:
-            return jscript + self._make_fieldvalues( url2=self._jsonurl2)
-
+"""
 
     @classmethod
     def description(cls):
@@ -239,75 +237,74 @@ class ConfirmBox2(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
-        if self.get_field_value('boxdiv_style'):
-            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
-        if self.get_field_value("buttondiv_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('buttondiv_class')})
-        if self.get_field_value("buttondiv_style"):
-            self[0][1].update_attribs({'style':self.get_field_value("buttondiv_style")})
-        if self.get_field_value("paradiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('paradiv_class')})
-        if self.get_field_value("para_class"):
-            self[0][0][0].update_attribs({"class":self.get_field_value('para_class')})
-        if self.get_field_value("para_text"):
-            self[0][0][0][0] = self.get_field_value('para_text')
+        self.widget_hide(self.wf.hide)
+        if self.wf.boxdiv_class:
+            self[0].update_attribs({"class":self.wf.boxdiv_class})
+        if self.wf.boxdiv_style:
+            self[0].update_attribs({"style":self.wf.boxdiv_style})
+        if self.wf.buttondiv_class:
+            self[0][1].update_attribs({"class":self.wf.buttondiv_class})
+        if self.wf.buttondiv_style:
+            self[0][1].update_attribs({'style':self.wf.buttondiv_style})
+        if self.wf.paradiv_class:
+            self[0][0].update_attribs({"class":self.wf.paradiv_class})
+        if self.wf.para_class:
+            self[0][0][0].update_attribs({"class":self.wf.para_class})
+        if self.wf.para_text:
+            self[0][0][0][0] = self.wf.para_text
         # button1
-        if self.get_field_value('button1_class'):
-            self[0][1][0].update_attribs({"class":self.get_field_value('button1_class')})
-        if self.get_field_value('button1_style'):
-            self[0][1][0].update_attribs({"style":self.get_field_value('button1_style')})
-        if not self.get_field_value("link_ident1"):
+        if self.wf.button1_class:
+            self[0][1][0].update_attribs({"class":self.wf.button1_class})
+        if self.wf.button1_style:
+            self[0][1][0].update_attribs({"style":self.wf.button1_style})
+        if not self.wf.link_ident1:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident1"), proj_ident=page.proj_ident)
+            url = skiboot.get_url(self.wf.link_ident1, proj_ident=page.proj_ident)
             if not url:
                 self[0][1][0][0] = "Warning: broken link"
             else:
-                if self.get_field_value("button_text1"):
-                    self[0][1][0][0] = self.get_field_value("button_text1")
+                if self.wf.button_text1:
+                    self[0][1][0][0] = self.wf.button_text1
                 else:
                     self[0][1][0][0] = url
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1_1"):self.get_field_value("get_field1_1"),
-                                            self.get_formname("get_field1_2"):self.get_field_value("get_field1_2"),
-                                            self.get_formname("get_field1_3"):self.get_field_value("get_field1_3")}
+                get_fields = {self.get_formname("get_field1_1"):self.wf.get_field1_1,
+                              self.get_formname("get_field1_2"):self.wf.get_field1_2,
+                              self.get_formname("get_field1_3"):self.wf.get_field1_3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][1][0].update_attribs({"href": url})
         # button2
-        if self.get_field_value('button2_class'):
-            self[0][1][1].update_attribs({"class":self.get_field_value('button2_class')})
-        if self.get_field_value('button2_style'):
-            self[0][1][1].update_attribs({"style":self.get_field_value('button2_style')})
-        if not self.get_field_value("link_ident2"):
+        if self.wf.button2_class:
+            self[0][1][1].update_attribs({"class":self.wf.button2_class})
+        if self.wf.button2_style:
+            self[0][1][1].update_attribs({"style":self.wf.button2_style})
+        if not self.wf.link_ident2:
             self[0][1][1][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident2"), proj_ident=page.proj_ident)
+            url = skiboot.get_url(self.wf.link_ident2, proj_ident=page.proj_ident)
             if not url:
                 self[0][1][1][0] = "Warning: broken link"
             else:
-                if self.get_field_value("button_text2"):
-                    self[0][1][1][0] = self.get_field_value("button_text2")
+                if self.wf.button_text2:
+                    self[0][1][1][0] = self.wf.button_text2
                 else:
                     self[0][1][1][0] = url
                 # create a url for the href
-                get_fields = {self.get_formname("get_field2_1"):self.get_field_value("get_field2_1"),
-                                            self.get_formname("get_field2_2"):self.get_field_value("get_field2_2"),
-                                            self.get_formname("get_field2_3"):self.get_field_value("get_field2_3")}
+                get_fields = {self.get_formname("get_field2_1"):self.wf.get_field2_1,
+                              self.get_formname("get_field2_2"):self.wf.get_field2_2,
+                              self.get_formname("get_field2_3"):self.wf.get_field2_3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][1][1].update_attribs({"href": url})
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a buttons"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident = self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        return jscript
-
+"""
 
     @classmethod
     def description(cls):
@@ -387,46 +384,50 @@ class AlertClear1(Widget):
         self[0][1][0][0] = ''
 
 
-
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
-        if self.get_field_value('boxdiv_style'):
-            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
+        self.widget_hide(self.wf.hide)
+        if self.wf.boxdiv_class:
+            self[0].update_attribs({"class":self.wf.boxdiv_class})
+        if self.wf.boxdiv_style:
+            self[0].update_attribs({"style":self.wf.boxdiv_style})
         # buttondiv
-        if self.get_field_value("buttondiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('buttondiv_class')})
-        if self.get_field_value("buttondiv_style"):
-            self[0][0].update_attribs({'style':self.get_field_value("buttondiv_style")})
+        if self.wf.buttondiv_class:
+            self[0][0].update_attribs({"class":self.wf.buttondiv_class})
+        if self.wf.buttondiv_style:
+            self[0][0].update_attribs({'style':self.wf.buttondiv_style})
         # inner div
-        if self.error_status and self.get_field_value("error_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('error_class')})
-        elif self.get_field_value("inner_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('inner_class')})
-        if self.get_field_value("inner_style"):
-            self[0][1].update_attribs({'style':self.get_field_value("inner_style")})
+        if self.error_status and self.wf.error_class:
+            self[0][1].update_attribs({"class":self.wf.error_class})
+        elif self.wf.inner_class:
+            self[0][1].update_attribs({"class":self.wf.inner_class})
+        if self.wf.inner_style:
+            self[0][1].update_attribs({'style':self.wf.inner_style})
+
         # insert an id for setting the error class
-        self[0][1].insert_id()
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['inner_id'] = self[0][1].insert_id()
+        self.jlabels['inner_class'] = self.wf.inner_class
+        self.jlabels['error_class'] = self.wf.error_class
+
         # paragraph
-        if self.get_field_value("pre_line"):
+        if self.wf.pre_line:
             self[0][1][0].attribs={"style":"white-space: pre-line;"}
         if not self.error_status:
-            self[0][1][0][0] = self.get_field_value("para_text")
+            self[0][1][0][0] = self.wf.para_text
         # button
-        if self.get_field_value('button_class'):
-            self[0][0][0].update_attribs({"class":self.get_field_value('button_class')})
-        if not self.get_field_value("link_ident"):
+        if self.wf.button_class:
+            self[0][0][0].update_attribs({"class":self.wf.button_class})
+        if not self.wf.link_ident:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = skiboot.get_url(self.wf.link_ident, proj_ident=page.proj_ident)
             if url:
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                              self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                              self.get_formname("get_field3"):self.get_field_value("get_field3")}
+                get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                              self.get_formname("get_field2"):self.wf.get_field2,
+                              self.get_formname("get_field3"):self.wf.get_field3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][0][0].update_attribs({"href": url})
             else:
@@ -435,13 +436,11 @@ class AlertClear1(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a button"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident = self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        # return this javascript and the inner class and id
-        return jscript + self._make_fieldvalues('inner_class', 'error_class', inner_id=self[0][1].get_id())
-
+"""
 
     @classmethod
     def description(cls):
@@ -517,51 +516,58 @@ class AlertClear2(Widget):
         # do not set any linebreaks, leave that to pre-line
         self[0][1][0].linebreaks = False
         self[0][1][0][0] = ''
-        self._jsonurl =''
-
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
-        if self.get_field_value('boxdiv_style'):
-            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
+        self.widget_hide(self.wf.hide)
+        if self.wf.boxdiv_class:
+            self[0].update_attribs({"class":self.wf.boxdiv_class})
+        if self.wf.boxdiv_style:
+            self[0].update_attribs({"style":self.wf.boxdiv_style})
         # buttondiv
-        if self.get_field_value("buttondiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('buttondiv_class')})
-        if self.get_field_value("buttondiv_style"):
-            self[0][0].update_attribs({'style':self.get_field_value("buttondiv_style")})
+        if self.wf.buttondiv_class:
+            self[0][0].update_attribs({"class":self.wf.buttondiv_class})
+        if self.wf.buttondiv_style:
+            self[0][0].update_attribs({'style':self.wf.buttondiv_style})
         # inner div
-        if self.error_status and self.get_field_value("error_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('error_class')})
-        elif self.get_field_value("inner_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('inner_class')})
-        if self.get_field_value("inner_style"):
-            self[0][1].update_attribs({'style':self.get_field_value("inner_style")})
+        if self.error_status and self.wf.error_class:
+            self[0][1].update_attribs({"class":self.wf.error_class})
+        elif self.wf.inner_class:
+            self[0][1].update_attribs({"class":self.wf.inner_class})
+        if self.wf.inner_style:
+            self[0][1].update_attribs({'style':self.wf.inner_style})
         # insert an id for setting the error class
         self[0][1].insert_id()
+
+        # insert an id for setting the error class
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['inner_id'] = self[0][1].insert_id()
+        self.jlabels['inner_class'] = self.wf.inner_class
+        self.jlabels['error_class'] = self.wf.error_class
+
         # paragraph
-        if self.get_field_value("pre_line"):
+        if self.wf.pre_line:
             self[0][1][0].attribs={"style":"white-space: pre-line;"}
         if not self.error_status:
-            self[0][1][0][0] = self.get_field_value("para_text")
+            self[0][1][0][0] = self.wf.para_text
         # button
-        if self.get_field_value('button_class'):
-            self[0][0][0].update_attribs({"class":self.get_field_value('button_class')})
-        if self.get_field_value("json_ident"):
-            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
-        if not self.get_field_value("link_ident"):
+        if self.wf.button_class:
+            self[0][0][0].update_attribs({"class":self.wf.button_class})
+
+        if self.wf.json_ident:
+            self.jlabels['url'] = skiboot.get_url(self.wf.json_ident, proj_ident=page.proj_ident)
+
+        if not self.wf.link_ident:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = skiboot.get_url(self.wf.link_ident, proj_ident=page.proj_ident)
             if url:
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                              self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                              self.get_formname("get_field3"):self.get_field_value("get_field3")}
+                get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                              self.get_formname("get_field2"):self.wf.get_field2,
+                              self.get_formname("get_field3"):self.wf.get_field3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][0][0].update_attribs({"href": url})
             else:
@@ -570,15 +576,11 @@ class AlertClear2(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a button"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident = self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        # return this javascript and the inner class and id
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues('inner_class', 'error_class', inner_id=self[0][1].get_id(), url=self._jsonurl)
-        return jscript + self._make_fieldvalues('inner_class', 'error_class', inner_id=self[0][1].get_id())
-
+"""
 
     @classmethod
     def description(cls):

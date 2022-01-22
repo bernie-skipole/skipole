@@ -23,6 +23,7 @@ class SimpleFooter(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """
          footer_text: The text to appear in the footer
+         paradiv_class: css class of the div holding the footer paragraph
          para_class: css class of the footer text paragraph
          error_class: css class of the error paragraph
         """
@@ -38,22 +39,20 @@ class SimpleFooter(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the paragraph"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.wf.error_class:
+            self[0].update_attribs({"class":self.wf.error_class})
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.get_field_value('paradiv_class'):
-            self[1].update_attribs({"class":self.get_field_value('paradiv_class')})
-        if self.get_field_value('para_class'):
-            self[1][0].update_attribs({"class":self.get_field_value('para_class')})
-        if self.get_field_value("footer_text"):
-            self[1][0][0] = self.get_field_value("footer_text")
+        if self.wf.paradiv_class:
+            self[1].update_attribs({"class":self.wf.paradiv_class})
+        if self.wf.para_class:
+            self[1][0].update_attribs({"class":self.wf.para_class})
+        if self.wf.footer_text:
+            self[1][0][0] = self.wf.footer_text
         # set an id in the footer_text paragraph
-        self[1][0].insert_id()
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['textident'] = self[1][0].insert_id()
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """stores ident in footer text paragraph"""
-        return self._make_fieldvalues(textident = self[1][0].get_id()) # ident of the footer_text paragraph
 
     @classmethod
     def description(cls):

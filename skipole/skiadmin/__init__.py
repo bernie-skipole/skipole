@@ -112,7 +112,6 @@ def end_call(page_ident, page_type, skicall):
         sd_diagnostic = SectionData("diagnostic_footer")
         sd_diagnostic.show = True
         skicall.update(sd_diagnostic)
-        
 
     # Show the status message
     if 'status' in call_data:

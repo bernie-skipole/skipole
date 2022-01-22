@@ -110,6 +110,10 @@ class ParentPart(object):
         # self.name is only set if a part is also a widget
         self.name=None
 
+        # dictionary of labels to values to be inserted into javascript as fieldvalues attribute
+        # again, only used if a part is a widget
+        self.jlabels = {}
+
         self.tag_name = tag_name
         self._attribs = {}
         self.hide_if_empty = False
@@ -201,20 +205,22 @@ class ParentPart(object):
     def insert_id(self, id_string=''):
         """Adds the id_string to the part attributes. If no id_string given
            but the part has a name, sets the id to the part name, otherwise
-           sets the id to self.ident_string"""
+           sets the id to self.ident_string, returns the id"""
         if id_string:
             self.update_attribs({"id": id_string})
-            return
+            return id_string
         if self.name:
             # This only applies to named widgets
             if self.placename:
                 full_id = self.placename + '-' + self.name
                 self.update_attribs({"id": full_id})
+                return full_id
             else:
                 self.update_attribs({"id": self.name})
-            return
+                return self.name
         if self.ident_string:
             self.update_attribs({"id": self.ident_string})
+            return self.ident_string
 
     def get_id(self):
         return self.get_attrib_value('id')

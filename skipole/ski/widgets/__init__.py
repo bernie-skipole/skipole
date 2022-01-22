@@ -8,6 +8,7 @@ from tag.Part and tag.ClosedPart"""
 
 import html, copy, collections, re, json, datetime
 from string import Template
+from types import SimpleNamespace
 
 from .. import tag, skiboot
 from ..excepts import ServerError, ValidateError
@@ -571,11 +572,15 @@ class Widget(tag.Part):
         # the widget show is set by the show argument
         self.show = self.fields["show"].value
 
+        # create an initial namespace of field names to values, this will be updated in the update method
+        self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
+
         # Creates a dictionary of names against field arguments fname in self._names
         self._create_name_dict()
 
         # If the widget is in error status, this becomes True
         self.error_status = False
+
 
     @classmethod
     def module_name(cls):
@@ -869,12 +874,13 @@ class Widget(tag.Part):
             if isinstance(self._error, TextBlock):
                 self._error.update(page, ident_list, environ, call_data, lang, self.ident_string, self.placename, embedded_parts)
             return
-        # build the widget
+        # build the widget, set self.wf with updated field values
+        self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
         # the class attribute is set by 'widget_class'
-        if self.fields['widget_class'].value:
-            self.update_attribs({'class':self.fields['widget_class'].value})
-        if self.fields['widget_style'].value:
-            self.update_attribs({'style':self.fields['widget_style'].value})
+        if self.wf.widget_class:
+            self.update_attribs({'class':self.wf.widget_class})
+        if self.wf.widget_style:
+            self.update_attribs({'style':self.wf.widget_style})
         # Insert this widgets id
         self.insert_id()
         # insert further parts according to each widget build
@@ -892,15 +898,11 @@ class Widget(tag.Part):
 
 
     def _make_fieldvalues(self, *fieldargs, **otherparams):
-        "Creates a javascript string of fieldvalues, which can be used by _build_js"
-        fieldvalues = {}
+        "Creates a javascript string of self.jlabels, which can be used by _build_js"
         for farg in fieldargs:
-            fieldvalues[farg] = self.get_field_value(farg)
-        fieldvalues.update(otherparams)
-        if not fieldvalues:
-            return ''
-        return """  SKIPOLE.widgets["{ident}"].fieldvalues={fieldvalues};
-""".format(ident=self.get_id(), fieldvalues=json.dumps(fieldvalues))
+            self.jlabels[farg] = self.get_field_value(farg)
+        self.jlabels.update(otherparams)
+        return "\n"
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Called by make_js, and should be overwritten by widgets to set widget specific javascript
@@ -970,6 +972,10 @@ class Widget(tag.Part):
         if contents:
             page.add_javascript(contents)
 
+        # add fieldvalues stored in self.jlabels
+        if self.jlabels:
+            page.add_javascript(f"""  SKIPOLE.widgets["{self.get_id()}"].fieldvalues={json.dumps(self.jlabels)};
+""")
 
     def set_placename(self, section_name, placename):
         "Widgets in sections with displayname validators need displaynames to change"
@@ -1426,6 +1432,9 @@ class ClosedWidget(tag.ClosedPart):
             if fname in field_args:
                 field.value = field_args[fname]
 
+        # create an initial namespace of field names to values, this will be updated in the update method
+        self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
+
         # Creates a dictionary of names against field arguments in self._names
         self._create_name_dict()
 
@@ -1602,26 +1611,24 @@ class ClosedWidget(tag.ClosedPart):
             if isinstance(self._error, TextBlock):
                 self._error.update(page, ident_list, environ, call_data, lang, self.ident_string, self.placename, embedded_parts)
             return
-        # build the widget
+        # build the widget, set self.wf with updated field values
+        self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
         # the class attribute is set by 'widget_class'
-        if self.fields['widget_class'].value:
-            self.update_attribs({'class':self.fields['widget_class'].value})
-        if self.fields['widget_style'].value:
-            self.update_attribs({'style':self.fields['widget_style'].value})
+        if self.wf.widget_class:
+            self.update_attribs({'class':self.wf.widget_class})
+        if self.wf.widget_style:
+            self.update_attribs({'style':self.wf.widget_style})
         # Insert this widgets id
         self.insert_id()
         self._build(page, ident_list, environ, call_data, lang)
 
+
     def _make_fieldvalues(self, *fieldargs, **otherparams):
-        "Creates a javascript string of fieldvalues, which can be used by _build_js"
-        fieldvalues = {}
+        "Creates a javascript string of self.jlabels, which can be used by _build_js"
         for farg in fieldargs:
-            fieldvalues[farg] = self.get_field_value(farg)
-        fieldvalues.update(otherparams)
-        if not fieldvalues:
-            return ''
-        return """  SKIPOLE.widgets["{ident}"].fieldvalues={fieldvalues};
-""".format(ident=self.get_id(), fieldvalues=json.dumps(fieldvalues))
+            self.jlabels[farg] = self.get_field_value(farg)
+        self.jlabels.update(otherparams)
+        return "\n"
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         return ''
@@ -1686,6 +1693,11 @@ class ClosedWidget(tag.ClosedPart):
         contents = self._build_js(page, ident_list, environ, call_data, lang)
         if contents:
             page.add_javascript(contents)
+
+        # add fieldvalues stored in self.jlabels
+        if self.jlabels:
+            page.add_javascript(f"""  SKIPOLE.widgets["{self.get_id()}"].fieldvalues={json.dumps(self.jlabels)};
+""")
 
 
     def set_placename(self, section_name, placename):
