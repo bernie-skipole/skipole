@@ -3,7 +3,7 @@
 
 """Contains widgets displaying checkboxes"""
 
-from .. import skiboot, tag, excepts
+from .. import tag, excepts
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -51,34 +51,21 @@ class CheckBox1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the checkbox"
-        if self.wf.error_class:
-            self[0].update_attribs({"class":self.wf.error_class})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.wf.div_class:
-            self[1].update_attribs({"class":self.wf.div_class})
-        if self.wf.div_style:
-            self[1].update_attribs({"style":self.wf.div_style})
+        self[1].set_class_style(self.wf.div_class, self.wf.div_style)
         if self.wf.left_label:
             self[1][0][0] = self.wf.left_label
-        if self.wf.left_class:
-            self[1][0].attribs = {"class": self.wf.left_class}
-        if self.wf.left_style:
-            self[1][0].attribs = {"style": self.wf.left_style}
+        self[1][0].set_class_style(self.wf.left_class, self.wf.left_style)
         if self.wf.checked:
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
         else:
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
-        if self.wf.checkbox_class:
-            self[1][1].update_attribs({"class": self.wf.checkbox_class})
-        if self.wf.checkbox_style:
-            self[1][1].update_attribs({"style": self.wf.checkbox_style})
+        self[1][1].set_class_style(self.wf.checkbox_class, self.wf.checkbox_style)
         if self.wf.right_label:
             self[1][2][0] = self.wf.right_label
-        if self.wf.right_class:
-            self[1][2].attribs = {"class": self.wf.right_class}
-        if self.wf.right_style:
-            self[1][2].attribs = {"style": self.wf.right_style}
+        self[1][2].set_class_style(self.wf.right_class, self.wf.right_style)
         # set an id in the checkbox for the 'label for' tag
         for_id = self[1][1].insert_id()
         # set the label 'for' attribute
@@ -144,24 +131,15 @@ class CheckBox2(Widget):
         "build the checkbox"
         if self.wf.left_label:
             self[0][0] = self.wf.left_label
-        if self.wf.left_class:
-            self[0].attribs = {"class": self.wf.left_class}
-        if self.wf.left_style:
-            self[0].attribs = {"style": self.wf.left_style}
+        self[0].set_class_style(self.wf.left_class, self.wf.left_style) 
         if self.wf.checked:
             self[1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
         else:
             self[1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
-        if self.wf.checkbox_class:
-            self[1].update_attribs({"class": self.wf.checkbox_class})
-        if self.wf.checkbox_style:
-            self[1].update_attribs({"style": self.wf.checkbox_style})
+        self[1].set_class_style(self.wf.checkbox_class, self.wf.checkbox_style)
         if self.wf.right_label:
             self[2][0] = self.wf.right_label
-        if self.wf.right_class:
-            self[2].attribs = {"class": self.wf.right_class}
-        if self.wf.right_style:
-            self[2].attribs = {"style": self.wf.right_style}
+        self[2].set_class_style(self.wf.right_class, self.wf.right_style)
         # set an id in the checkbox for the 'label for' tag
         for_id = self[1].insert_id()
         # set the label 'for' attribute
@@ -473,7 +451,7 @@ class SubmitCheckBox1(Widget):
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         if self.wf.action_json:
-            self.jlabels['url'] = skiboot.get_url(self.wf.action_json, proj_ident=page.proj_ident)
+            self.jlabels['url'] = self.get_url(self.wf.action_json)
 
         if self.wf.error_class:
             self[0].update_attribs({"class":self.wf.error_class})
@@ -483,7 +461,7 @@ class SubmitCheckBox1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.wf.action, proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"

@@ -383,6 +383,18 @@ class ParentPart(object):
         for att,val in attribs.items():
             self._attribs[att]=val
 
+    def set_class_style(self, class_attribute='', style_attribute='')
+        "Sets the tag class and style attributes"
+        if class_attribute:
+            self._attribs["class"] = class_attribute
+        if style_attribute:
+            self._attribs["style"] = style_attribute
+
+
+    def get_url(self, label_url_ident):
+        "Returns a url given a page ident, url or label, if not found, return None"
+        return skiboot.get_url(label_url_ident, self.proj_ident)
+
 
     def make_get_url(self, page, url, get_fields={}, force_ident=False):
         "returns url, including the page ident_data for a get link"
