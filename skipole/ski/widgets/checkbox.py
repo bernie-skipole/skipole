@@ -208,23 +208,18 @@ class CheckedText(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the checkbox"
-        if self.wf.error_class:
-            self[0].update_attribs({"class":self.wf.error_class})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
 
         # the div holding label, input fields
-        if self.wf.inputdiv_class:
-            self[1].attribs = {"class": self.wf.inputdiv_class}
-        if self.wf.inputdiv_style:
-            self[1].attribs = {"style": self.wf.inputdiv_style}
+        self[1].set_class_style(self.wf.inputdiv_class, self.wf.inputdiv_style)
+
         # the label
         if self.wf.label_text:
             self[1][0][0] = self.wf.label_text
-        if self.wf.label_class:
-            self[1][0].attribs = {"class": self.wf.label_class}
-        if self.wf.label_style:
-            self[1][0].attribs = {"style": self.wf.label_style}
+        self[1][0].set_class_style(self.wf.label_class, self.wf.label_style)
+
         if self.wf.checked:
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "checked":"checked"})
         else:
@@ -232,15 +227,14 @@ class CheckedText(Widget):
             self[1][2].update_attribs({"disabled":"disabled"})
         if self.wf.checkbox:
             self[1][1].update_attribs({"value":self.wf.checkbox})
-        if self.wf.checkbox_class:
-            self[1][1].update_attribs({"class": self.wf.checkbox_class})
+        self[1][1].set_class_style(self.wf.checkbox_class)
+
         self[1][2].update_attribs({"name":self.get_formname('input_text'), "value":self.wf.input_text})
         if self.wf.size:
             self[1][2].update_attribs({"size":self.wf.size})
         if self.wf.maxlength:
             self[1][2].update_attribs({"maxlength":self.wf.maxlength})
-        if self.wf.input_class:
-            self[1][2].update_attribs({"class":self.wf.input_class})
+        self[1][2].set_class_style(self.wf.input_class)
 
         # set an id in the checkbox for the 'label for' tag
         # and set the label 'for' attribute
@@ -318,18 +312,15 @@ class CheckInputs(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the checkbox"
-        if self.wf.error_class:
-            self[0].update_attribs({"class":self.wf.error_class})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.wf.div_class:
-            self[1].attribs = {"class": self.wf.div_class}
+
+        self[1].set_class_style(self.wf.div_class)
         if self.wf.label_text:
             self[1][0][0] = self.wf.label_text
-        if self.wf.label_class:
-            self[1][0].attribs = {"class": self.wf.label_class}
-        if self.wf.label_style:
-            self[1][0].attribs = {"style": self.wf.label_style}
+       self[1][0].set_class_style(self.wf.label_class, self.wf.label_style)
+
         # Create the checkbox
         if self.wf.checked:
             self[1][1].update_attribs({"name":self.get_formname('checkbox'), "checked":"checked"})
@@ -337,11 +328,11 @@ class CheckInputs(Widget):
             self[1][1].update_attribs({"name":self.get_formname('checkbox')})
         if self.wf.checkbox:
             self[1][1].update_attribs({"value":self.wf.checkbox})
-        if self.wf.checkbox_class:
-            self[1][1].update_attribs({"class": self.wf.checkbox_class})
+        self[1][1].set_class_style(self.wf.checkbox_class)
+
         # the div holding the container
-        if self.wf.container_class:
-            self[1][2].attribs = {"class": self.wf.container_class}
+        self[1][2].set_class_style(self.wf.container_class)
+
         # set an id in the checkbox for the 'label for' tag
         # and set the label 'for' attribute
         self[1][0].update_attribs({'for':self[1][1].insert_id()})
@@ -453,8 +444,7 @@ class SubmitCheckBox1(Widget):
         if self.wf.action_json:
             self.jlabels['url'] = self.get_url(self.wf.action_json)
 
-        if self.wf.error_class:
-            self[0].update_attribs({"class":self.wf.error_class})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
         if not self.wf.action:
@@ -469,18 +459,13 @@ class SubmitCheckBox1(Widget):
         # update the action of the form
         self[1].update_attribs({"action": actionurl})
         # the div holding label, checkbox and button
-        if self.wf.inputdiv_class:
-            self[1][0].attribs = {"class": self.wf.inputdiv_class}
-        if self.wf.label_class:
-            self[1][0][0].attribs = {"class": self.wf.label_class}
-        if self.wf.label_style:
-            self[1][0][0].attribs = {"style": self.wf.label_style}
+        self[1][0].set_class_style(self.wf.inputdiv_class)
+        self[1][0][0].set_class_style(self.wf.label_class, self.wf.label_style)
         if self.wf.label:
             self[1][0][0][0] = self.wf.label
 
         # the span holding input checkbox and button
-        if self.wf.inputandbutton_class:
-            self[1][0][1].attribs = {"class": self.wf.inputandbutton_class}
+        self[1][0][1].set_class_style(self.wf.inputandbutton_class)
 
         # set an id in the input checkbox field for the 'label for' tag
         for_id = self[1][0][1][0].insert_id()
@@ -489,15 +474,13 @@ class SubmitCheckBox1(Widget):
             self[1][0][1][0].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
         else:
             self[1][0][1][0].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
-        if self.wf.checkbox_class:
-            self[1][0][1][0].update_attribs({"class": self.wf.checkbox_class})
+        self[1][0][1][0].set_class_style(self.wf.checkbox_class)
 
         # set the label 'for' attribute
         self[1][0][0].update_attribs({'for':for_id})
 
         # submit button
-        if self.wf.button_class:
-            self[1][0][1][1].update_attribs({"class": self.wf.button_class})
+        self[1][0][1][1].set_class_style(self.wf.button_class)
         if self.wf.button_text:
             self[1][0][1][1][0] = self.wf.button_text
 

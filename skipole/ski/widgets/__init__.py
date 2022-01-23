@@ -876,11 +876,8 @@ class Widget(tag.Part):
             return
         # build the widget, set self.wf with updated field values
         self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
-        # the class attribute is set by 'widget_class'
-        if self.wf.widget_class:
-            self.update_attribs({'class':self.wf.widget_class})
-        if self.wf.widget_style:
-            self.update_attribs({'style':self.wf.widget_style})
+        # set the widget class and style attributes
+        self.set_class_style(self.wf.widget_class, self.wf.widget_style)
         # Insert this widgets id
         self.insert_id()
         # insert further parts according to each widget build
@@ -1120,16 +1117,16 @@ class Widget(tag.Part):
         field.value = value
         if name == self.fields["show"].name:
             self.show = bool(value)
-        if name == self.fields['widget_class'].name:
-            if value:
-                self.update_attribs({'class':value})
-            else:
-                self.del_one_attrib('class')
-        if name == self.fields['widget_style'].name:
-            if value:
-                self.update_attribs({'style':value})
-            else:
-                self.del_one_attrib('style')
+#        if name == self.fields['widget_class'].name:
+#            if value:
+#                self.update_attribs({'class':value})
+#            else:
+#                self.del_one_attrib('class')
+#        if name == self.fields['widget_style'].name:
+#            if value:
+#                self.update_attribs({'style':value})
+#            else:
+#                self.del_one_attrib('style')
 
         
 
@@ -1613,11 +1610,8 @@ class ClosedWidget(tag.ClosedPart):
             return
         # build the widget, set self.wf with updated field values
         self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
-        # the class attribute is set by 'widget_class'
-        if self.wf.widget_class:
-            self.update_attribs({'class':self.wf.widget_class})
-        if self.wf.widget_style:
-            self.update_attribs({'style':self.wf.widget_style})
+        # set the widget class and style attributes
+        self.set_class_style(self.wf.widget_class, self.wf.widget_style)
         # Insert this widgets id
         self.insert_id()
         self._build(page, ident_list, environ, call_data, lang)
@@ -1827,16 +1821,16 @@ class ClosedWidget(tag.ClosedPart):
         field.value = value
         if name == self.fields["show"].name:
             self.show = bool(value)
-        if name == self.fields['widget_class'].name:
-            if value:
-                self.update_attribs({'class':value})
-            else:
-                self.del_one_attrib('class')
-        if name == self.fields['widget_style'].name:
-            if value:
-                self.update_attribs({'style':value})
-            else:
-                self.del_one_attrib('style')
+#        if name == self.fields['widget_class'].name:
+#            if value:
+#                self.update_attribs({'class':value})
+#            else:
+#                self.del_one_attrib('class')
+#        if name == self.fields['widget_style'].name:
+#            if value:
+#                self.update_attribs({'style':value})
+#            else:
+#                self.del_one_attrib('style')
 
 
     def set_single_multivalue(self, name, value):
