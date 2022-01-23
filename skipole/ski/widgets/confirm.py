@@ -4,7 +4,7 @@
 """Contains widgets displaying confirm/cancel messages and buttons"""
 
 
-from .. import skiboot, tag, excepts
+from .. import tag, excepts
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -72,34 +72,25 @@ class ConfirmBox1(Widget):
         "build the box"
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
-        if self.wf.boxdiv_class:
-            self[0].update_attribs({"class":self.wf.boxdiv_class})
-        if self.wf.boxdiv_style:
-            self[0].update_attribs({"style":self.wf.boxdiv_style})
-        if self.wf.buttondiv_class:
-            self[0][1].update_attribs({"class":self.wf.buttondiv_class})
-        if self.wf.buttondiv_style:
-            self[0][1].update_attribs({'style':self.wf.buttondiv_style})
-        if self.wf.paradiv_class:
-            self[0][0].update_attribs({"class":self.wf.paradiv_class})
-        if self.wf.para_class:
-            self[0][0][0].update_attribs({"class":self.wf.para_class})
+
+        self[0].set_class_style(self.wf.boxdiv_class, self.wf.boxdiv_style)
+        self[0][1].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
+        self[0][0].set_class_style(self.wf.paradiv_class)
+        self[0][0][0].set_class_style(self.wf.para_class)
         if self.wf.para_text:
             self[0][0][0][0] = self.wf.para_text
+
         # button1
-        if self.wf.button1_class:
-            self[0][1][0].update_attribs({"class":self.wf.button1_class})
-        if self.wf.button1_style:
-            self[0][1][0].update_attribs({"style":self.wf.button1_style})
+        self[0][1][0].set_class_style(self.wf.button1_class, self.wf.button1_style)
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         if self.wf.json_ident1:
-            self.jlabels['url1'] = skiboot.get_url(self.wf.json_ident1, proj_ident=page.proj_ident)
+            self.jlabels['url1'] = self.get_url(self.wf.json_ident1)
 
         if not self.wf.link_ident1:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.wf.link_ident1, proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident1)
             if not url:
                 self[0][1][0][0] = "Warning: broken link"
             else:
@@ -113,20 +104,18 @@ class ConfirmBox1(Widget):
                               self.get_formname("get_field1_3"):self.wf.get_field1_3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][1][0].update_attribs({"href": url})
+
         # button2
-        if self.wf.button2_class:
-            self[0][1][1].update_attribs({"class":self.wf.button2_class})
-        if self.wf.button2_style:
-            self[0][1][1].update_attribs({"style":self.wf.button2_style})
+        self[0][1][1].set_class_style(self.wf.button2_class, self.wf.button2_style)
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         if self.wf.json_ident2:
-            self.jlabels['url2'] = skiboot.get_url(self.wf.json_ident2, proj_ident=page.proj_ident)
+            self.jlabels['url2'] = self.get_url(self.wf.json_ident2)
 
         if not self.wf.link_ident2:
             self[0][1][1][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.wf.link_ident2, proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident2)
             if not url:
                 self[0][1][1][0] = "Warning: broken link"
             else:
@@ -238,29 +227,22 @@ class ConfirmBox2(Widget):
         "build the box"
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
-        if self.wf.boxdiv_class:
-            self[0].update_attribs({"class":self.wf.boxdiv_class})
-        if self.wf.boxdiv_style:
-            self[0].update_attribs({"style":self.wf.boxdiv_style})
-        if self.wf.buttondiv_class:
-            self[0][1].update_attribs({"class":self.wf.buttondiv_class})
-        if self.wf.buttondiv_style:
-            self[0][1].update_attribs({'style':self.wf.buttondiv_style})
-        if self.wf.paradiv_class:
-            self[0][0].update_attribs({"class":self.wf.paradiv_class})
-        if self.wf.para_class:
-            self[0][0][0].update_attribs({"class":self.wf.para_class})
+
+        self[0].set_class_style(self.wf.boxdiv_class, self.wf.boxdiv_style)
+        self[0][1].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
+        self[0][0].set_class_style(self.wf.paradiv_class)
+        self[0][0][0].set_class_style(self.wf.para_class)
+
         if self.wf.para_text:
             self[0][0][0][0] = self.wf.para_text
+
         # button1
-        if self.wf.button1_class:
-            self[0][1][0].update_attribs({"class":self.wf.button1_class})
-        if self.wf.button1_style:
-            self[0][1][0].update_attribs({"style":self.wf.button1_style})
+        self[0][1][0].set_class_style(self.wf.button1_class, self.wf.button1_style)
+
         if not self.wf.link_ident1:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.wf.link_ident1, proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident1)
             if not url:
                 self[0][1][0][0] = "Warning: broken link"
             else:
@@ -274,15 +256,14 @@ class ConfirmBox2(Widget):
                               self.get_formname("get_field1_3"):self.wf.get_field1_3}
                 url = self.make_get_url(page, url, get_fields, True)
                 self[0][1][0].update_attribs({"href": url})
+
         # button2
-        if self.wf.button2_class:
-            self[0][1][1].update_attribs({"class":self.wf.button2_class})
-        if self.wf.button2_style:
-            self[0][1][1].update_attribs({"style":self.wf.button2_style})
+        self[0][1][1].set_class_style(self.wf.button2_class, self.wf.button2_style)
+
         if not self.wf.link_ident2:
             self[0][1][1][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.wf.link_ident2, proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident2)
             if not url:
                 self[0][1][1][0] = "Warning: broken link"
             else:
@@ -388,22 +369,15 @@ class AlertClear1(Widget):
         "build the box"
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
-        if self.wf.boxdiv_class:
-            self[0].update_attribs({"class":self.wf.boxdiv_class})
-        if self.wf.boxdiv_style:
-            self[0].update_attribs({"style":self.wf.boxdiv_style})
+        self[0].set_class_style(self.wf.boxdiv_class, self.wf.boxdiv_style)
+
         # buttondiv
-        if self.wf.buttondiv_class:
-            self[0][0].update_attribs({"class":self.wf.buttondiv_class})
-        if self.wf.buttondiv_style:
-            self[0][0].update_attribs({'style':self.wf.buttondiv_style})
+        self[0][0].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
+
         # inner div
+        self[0][1].set_class_style(self.wf.inner_class, self.wf.inner_style)
         if self.error_status and self.wf.error_class:
-            self[0][1].update_attribs({"class":self.wf.error_class})
-        elif self.wf.inner_class:
-            self[0][1].update_attribs({"class":self.wf.inner_class})
-        if self.wf.inner_style:
-            self[0][1].update_attribs({'style':self.wf.inner_style})
+            self[0][1].set_class_style(self.wf.error_class)
 
         # insert an id for setting the error class
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
@@ -416,13 +390,14 @@ class AlertClear1(Widget):
             self[0][1][0].attribs={"style":"white-space: pre-line;"}
         if not self.error_status:
             self[0][1][0][0] = self.wf.para_text
+
         # button
-        if self.wf.button_class:
-            self[0][0][0].update_attribs({"class":self.wf.button_class})
+        self[0][0][0].set_class_style(self.wf.button_class)
+
         if not self.wf.link_ident:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.wf.link_ident, proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident)
             if url:
                 # create a url for the href
                 get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
@@ -522,24 +497,15 @@ class AlertClear2(Widget):
         "build the box"
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
-        if self.wf.boxdiv_class:
-            self[0].update_attribs({"class":self.wf.boxdiv_class})
-        if self.wf.boxdiv_style:
-            self[0].update_attribs({"style":self.wf.boxdiv_style})
+        self[0].set_class_style(self.wf.boxdiv_class, self.wf.boxdiv_style)
+
         # buttondiv
-        if self.wf.buttondiv_class:
-            self[0][0].update_attribs({"class":self.wf.buttondiv_class})
-        if self.wf.buttondiv_style:
-            self[0][0].update_attribs({'style':self.wf.buttondiv_style})
+        self[0][0].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
+
         # inner div
+        self[0][1].set_class_style(self.wf.inner_class, self.wf.inner_style)
         if self.error_status and self.wf.error_class:
-            self[0][1].update_attribs({"class":self.wf.error_class})
-        elif self.wf.inner_class:
-            self[0][1].update_attribs({"class":self.wf.inner_class})
-        if self.wf.inner_style:
-            self[0][1].update_attribs({'style':self.wf.inner_style})
-        # insert an id for setting the error class
-        self[0][1].insert_id()
+            self[0][1].set_class_style(self.wf.error_class)
 
         # insert an id for setting the error class
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
@@ -552,17 +518,17 @@ class AlertClear2(Widget):
             self[0][1][0].attribs={"style":"white-space: pre-line;"}
         if not self.error_status:
             self[0][1][0][0] = self.wf.para_text
+
         # button
-        if self.wf.button_class:
-            self[0][0][0].update_attribs({"class":self.wf.button_class})
+        self[0][0][0].set_class_style(self.wf.button_class)
 
         if self.wf.json_ident:
-            self.jlabels['url'] = skiboot.get_url(self.wf.json_ident, proj_ident=page.proj_ident)
+            self.jlabels['url'] = self.get_url(self.wf.json_ident)
 
         if not self.wf.link_ident:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.wf.link_ident, proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident)
             if url:
                 # create a url for the href
                 get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
