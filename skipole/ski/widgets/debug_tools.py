@@ -17,6 +17,9 @@ class ShowEnviron(Widget):
        On error a paragraph above the toptext paragraph appears with error_class
     """
 
+    # special widget, not shown if debug is off
+    only_show_on_debug = True
+
     error_location = (0,0,0)
 
     arg_descriptions = {'toptext':FieldArg("text", 'DEBUG MODE IS ON'),
@@ -36,23 +39,13 @@ class ShowEnviron(Widget):
         self[1] = tag.Part(tag_name="p", hide_if_empty=True)
         self[2] = tag.Part(tag_name="pre")
 
-    # special widget, not shown if debug is off
-
-    def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
-        """Sets self.show False if debug is False"""
-        if not skiboot.get_debug():
-            self.show = False
-            return
-        Widget.update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded)
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.get_field_value('para_class'):
-            self[1].update_attribs({"class":self.get_field_value('para_class')})
-        self[1].text = self.get_field_value('toptext')
+        self[1].set_class_style(self.wf.para_class)
+        self[1].text = self.wf.toptext
         self[2].text = pprint.pformat(environ)
 
 
@@ -79,6 +72,9 @@ class ShowCallData(Widget):
        On error a paragraph above the toptext paragraph appears with error_class
     """
 
+    # special widget, not shown if debug is off
+    only_show_on_debug = True
+
     error_location = (0,0,0)
 
     arg_descriptions = {'toptext':FieldArg("text", 'DEBUG MODE IS ON'),
@@ -98,23 +94,12 @@ class ShowCallData(Widget):
         self[1] = tag.Part(tag_name="p", hide_if_empty=True)
         self[2] = tag.Part(tag_name="pre")
 
-    # special widget, not shown if debug is off
-
-    def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
-        """Sets self.show False if debug is False"""
-        if not skiboot.get_debug():
-            self.show = False
-            return
-        Widget.update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded)
-
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.get_field_value('para_class'):
-            self[1].update_attribs({"class":self.get_field_value('para_class')})
-        self[1].text = self.get_field_value('toptext')
+        self[1].set_class_style(self.wf.para_class)
+        self[1].text = self.wf.toptext
         self[2].text = pprint.pformat(call_data)
 
 
@@ -140,6 +125,9 @@ class ShowResponders(Widget):
        showing the responders called to access this page
     """
 
+    # special widget, not shown if debug is off
+    only_show_on_debug = True
+
     error_location = (0,0,0)
 
     arg_descriptions = {'toptext':FieldArg("text", 'DEBUG MODE IS ON'),
@@ -161,28 +149,16 @@ class ShowResponders(Widget):
         self[1][0] = tag.Part(tag_name="p", hide_if_empty=True)
         self[2] = tag.Part(tag_name="table")
 
-    # special widget, not shown if debug is off
-
-    def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
-        """Sets self.show False if debug is False"""
-        if not skiboot.get_debug():
-            self.show = False
-            return
-        Widget.update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded)
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Update the table to show responder data"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.get_field_value('paradiv_class'):
-            self[1].update_attribs({"class":self.get_field_value('paradiv_class')})
-        if self.get_field_value('para_class'):
-            self[1][0].update_attribs({"class":self.get_field_value('para_class')})
-        self[1][0].text = self.get_field_value('toptext')
-        if self.get_field_value('table_class'):
-            self[2].attribs = {"class":self.get_field_value('table_class')}
+        self[1].set_class_style(self.wf.paradiv_class)
+        self[1][0].set_class_style(self.wf.para_class)
+        self[1][0].text = self.wf.toptext
+        self[2].set_class_style(self.wf.table_class)
         # The ident_list is the list of responder idents used when calling this page
         if not ident_list:
             self[2][0] = tag.Part(tag_name="tr")

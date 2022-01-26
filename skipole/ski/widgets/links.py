@@ -1150,11 +1150,11 @@ class ImageLink1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
         if self.get_field_value('width') and self.get_field_value('height'):
-            self[0].set_attribs({'width':self.get_field_value('width'), 'height':self.get_field_value('height')})
+            self[0].attribs = {'width':self.get_field_value('width'), 'height':self.get_field_value('height')}
         elif self.get_field_value('width'):
-            self[0].set_attribs({'width':self.get_field_value('width')})
+            self[0].attribs = {'width':self.get_field_value('width')}
         elif self.get_field_value('height'):
-            self[0].set_attribs({'height':self.get_field_value('height')})
+            self[0].attribs = {'height':self.get_field_value('height')}
         if self.get_field_value('align'):
             self[0].update_attribs({'align':self.get_field_value('align')})
         if self.get_field_value("target"):

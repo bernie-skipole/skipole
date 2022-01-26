@@ -3,7 +3,7 @@
 """Contains widgets for dropdown forms"""
 
 
-from .. import skiboot, tag, excepts
+from .. import tag, excepts
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -52,40 +52,31 @@ class DropDown1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the checkbox"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.get_field_value('div_class'):
-            self[1].update_attribs({"class":self.get_field_value('div_class')})
-        if self.get_field_value('left_label'):
-            self[1][0][0] = self.get_field_value('left_label')
-        if self.get_field_value('left_class'):
-            self[1][0].attribs = {"class": self.get_field_value('left_class')}
-        if self.get_field_value('left_style'):
-            self[1][0].attribs = {"style": self.get_field_value('left_style')}
-        if self.get_field_value('select_class'):
-            self[1][1].attribs = {"class": self.get_field_value('select_class')}
-        if self.get_field_value('select_style'):
-            self[1][1].attribs = {"style": self.get_field_value('select_style')}
+        self[1].set_class_style(self.wf.div_class)
+
+        if self.wf.left_label:
+            self[1][0][0] = self.wf.left_label
+        self[1][0].set_class_style(self.wf.left_class, self.wf.left_style)
+        self[1][1].set_class_style(self.wf.select_class, self.wf.select_style)
         self[1][1].update_attribs({"name":self.get_formname('selectvalue')})
-        selected_option = self.get_field_value('selectvalue')
-        for index, opt in enumerate(self.get_field_value('option_list')):
+
+        selected_option = self.wf.selectvalue
+        for index, opt in enumerate(self.wf.option_list):
             if selected_option == opt:
                 self[1][1][index] = tag.Part(tag_name="option", text=opt, attribs ={"selected":"selected"})
             else:
                 self[1][1][index] = tag.Part(tag_name="option", text=opt)
-        if self.get_field_value('right_label'):
-            self[1][2][0] = self.get_field_value('right_label')
-        if self.get_field_value('right_class'):
-            self[1][2].attribs = {"class": self.get_field_value('right_class')}
-        if self.get_field_value('right_style'):
-            self[1][2].attribs = {"style": self.get_field_value('right_style')}
+        if self.wf.right_label:
+            self[1][2][0] = self.wf.right_label
+        self[1][2].set_class_style(self.wf.right_class, self.wf.right_style)
         # set an id in the select for the 'label for' tag
-        self[1][1].insert_id()
+        for_id = self[1][1].insert_id()
         # set the label 'for' attribute
-        self[1][0].update_attribs({'for':self[1][1].get_id()})
-        self[1][2].update_attribs({'for':self[1][1].get_id()})
+        self[1][0].update_attribs({'for':for_id})
+        self[1][2].update_attribs({'for':for_id})
 
     @classmethod
     def description(cls):
@@ -173,66 +164,63 @@ class SubmitDropDown1(Widget):
         # the submit button
         self[1][0][2] = tag.Part(tag_name="button", attribs ={"type":"submit"})
         self[1][0][2][0] = "Submit"
-        self._jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if not self.get_field_value("action"):
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.action_json:
+            self.jlabels['url'] = self.get_url(self.wf.action_json)
+
         # update the action of the form
         self[1].update_attribs({"action": actionurl})
         # the div holding label, dropdown and button
-        if self.get_field_value('inputdiv_class'):
-            self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
-        if self.get_field_value('label'):
-            self[1][0][0][0] = self.get_field_value('label')
-        if self.get_field_value('label_class'):
-            self[1][0][0].attribs = {"class": self.get_field_value('label_class')}
-        if self.get_field_value('label_style'):
-            self[1][0][0].attribs = {"style": self.get_field_value('label_style')}
-        if self.get_field_value('select_class'):
-            self[1][0][1].attribs = {"class": self.get_field_value('select_class')}
-        if self.get_field_value('select_style'):
-            self[1][0][1].attribs = {"style": self.get_field_value('select_style')}
+        self[1][0].set_class_style(self.wf.inputdiv_class)
+
+        if self.wf.label:
+            self[1][0][0][0] = self.wf.label
+        self[1][0][0].set_class_style(self.wf.label_class, self.wf.label_style)
+        self[1][0][1].set_class_style(self.wf.select_class, self.wf.select_style)
+
         self[1][0][1].update_attribs({"name":self.get_formname('selectvalue')})
 
-        if self.get_field_value('disabled'):
+        if self.wf.disabled:
             self[1][0][1].update_attribs({"disabled":"disabled"})
 
         # set an id in the input field for the 'label for' tag
-        self[1][0][1].insert_id()
+        for_id = self[1][0][1].insert_id()
 
-        selected_option = self.get_field_value('selectvalue')
-        for index, opt in enumerate(self.get_field_value('option_list')):
+        selected_option = self.wf.selectvalue
+        for index, opt in enumerate(self.wf.option_list):
             if selected_option == opt:
                 self[1][0][1][index] = tag.Part(tag_name="option", text=opt, attribs ={"selected":"selected"})
             else:
                 self[1][0][1][index] = tag.Part(tag_name="option", text=opt)
 
         # set the label 'for' attribute
-        self[1][0][0].update_attribs({'for':self[1][0][1].get_id()})
+        self[1][0][0].update_attribs({'for':for_id})
 
         # submit button
-        if self.get_field_value('button_text'):
-            self[1][0][2][0] = self.get_field_value('button_text')
-        if self.get_field_value('button_class'):
-            self[1][0][2].update_attribs({"class": self.get_field_value('button_class')})
-        if self.get_field_value('disabled'):
+        if self.wf.button_text:
+            self[1][0][2][0] = self.wf.button_text
+
+        self[1][0][2].set_class_style(self.wf.button_class)
+        if self.wf.disabled:
             self[1][0][2].update_attribs({"disabled":"disabled"})
 
         # add ident and four hidden fields
@@ -241,14 +229,11 @@ class SubmitDropDown1(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
-        jscript = """  $('#{ident}').on("submit", function(e) {{
+        ident = self.get_id()
+        return f"""  $('#{ident}').on("submit", function(e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident=self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues(url=self._jsonurl)
-        return jscript
-
+"""
 
     @classmethod
     def description(cls):
@@ -345,7 +330,7 @@ class HiddenContainer(Widget):
         if not self.get_field_value("link_ident"):
             self[0][0][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.get_field_value("link_ident"))
             if url:
                 # create a url for the href
                 get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),

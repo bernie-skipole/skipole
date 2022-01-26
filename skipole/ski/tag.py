@@ -115,18 +115,19 @@ class ParentPart(object):
         self.jlabels = {}
 
         self.tag_name = tag_name
-        self._attribs = {}
+
         self.hide_if_empty = False
 
         # set when set_idents is called on the containing page
         self.ident_string = ''
 
-
         # self.brief is a string describing what this part does
         self.brief = brief
 
         if attribs:
-            self.set_attribs(attribs)
+            self.attribs = attribs
+        else:
+            self.attribs = {}
 
         # set show to False if this part is not to be shown
         self.show = show
@@ -200,7 +201,7 @@ class ParentPart(object):
         if not self.ident_string:
             return ''
         # ident_string normally starts project_pageident_head-0-... etc
-        return self.ident_string.split('_')[0] ##############################
+        return self.ident_string.split('_')[0]
 
     def insert_id(self, id_string=''):
         """Adds the id_string to the part attributes. If no id_string given
@@ -229,20 +230,20 @@ class ParentPart(object):
         return self.get_attrib_value('class')
 
     def set_class(self, value):
-        if (not value) and ('class' in self._attribs):
-            del self._attribs['class']
+        if (not value) and ('class' in self.attribs):
+            del self.attribs['class']
         else:
-            self._attribs['class'] = value
+            self.attribs['class'] = value
 
     def set_hide(self, value=True):
         "If True, Sets display:none !important into style, if False removes it"
         if value:
-            attribs = self._attribs
+            attribs = self.attribs
             if 'style' not in attribs:
-                self._attribs['style'] = "display:none !important;"
+                self.attribs['style'] = "display:none !important;"
                 return
             # An existing style is in place
-            style = self._attribs['style']
+            style = self.attribs['style']
             style_list = style.split(';')
             # ensure no empty items
             style_list = [item for item in style_list if item]
@@ -261,16 +262,16 @@ class ParentPart(object):
                 style_list.remove("display:block !important")
             # append display:none !important;
             if not style_list:
-                self._attribs['style'] = "display:none !important;"
+                self.attribs['style'] = "display:none !important;"
                 return
             style_list.append("display:none !important;")
-            self._attribs['style'] = ";".join(style_list)
+            self.attribs['style'] = ";".join(style_list)
         else:
-            attribs = self._attribs
+            attribs = self.attribs
             if 'style' not in attribs:
                 return
             # An existing style is in place
-            style = self._attribs['style']
+            style = self.attribs['style']
             style_list = style.split(';')
             style_list = [item for item in style_list if item]
             if "display:none !important" in style_list:
@@ -278,18 +279,18 @@ class ParentPart(object):
             if "display:none" in style_list:
                 style_list.remove("display:none")
             if style_list:
-                self._attribs['style'] = ";".join(style_list)
+                self.attribs['style'] = ";".join(style_list)
             else:
-                del self._attribs['style']
+                del self.attribs['style']
 
     def set_block(self):
         "Sets display:block !important into style"
-        attribs = self._attribs
+        attribs = self.attribs
         if 'style' not in attribs:
-            self._attribs['style'] = "display:block !important;"
+            self.attribs['style'] = "display:block !important;"
             return
         # An existing style is in place
-        style = self._attribs['style']
+        style = self.attribs['style']
         style_list = style.split(';')
         # ensure no empty items
         style_list = [item for item in style_list if item]
@@ -308,33 +309,17 @@ class ParentPart(object):
             style_list.remove("display:none !important")
         # append display:block !important;
         if not style_list:
-            self._attribs['style'] = "display:block !important;"
+            self.attribs['style'] = "display:block !important;"
             return
         style_list.append("display:block !important;")
-        self._attribs['style'] = ";".join(style_list)
+        self.attribs['style'] = ";".join(style_list)
 
-    def get_attribs(self):
-        return self._attribs.copy()
-
-    def set_attribs(self, attribs):
-        self._attribs = {}
-        if attribs:
-            for att,val in attribs.items():
-                if val:
-                    self._attribs[att]=val
-                else:
-                    self._attribs[att]=''
-
-    def del_attribs(self):
-        self._attribs = {}
-
-    attribs = property(get_attribs, set_attribs, del_attribs)
 
     @property
     def attributes_string(self):
         "Returns a string showing the attributes"
         str_attribs = ''
-        for att,val in self._attribs.items():
+        for att,val in self.attribs.items():
             if val:
                 if val[0] == '{':
                     value = self._expand_label(str(val))
@@ -364,31 +349,31 @@ class ParentPart(object):
 
     def has_attrib(self, name):
         "If this attrib exists, return True otherwise False"
-        return name in self._attribs
+        return name in self.attribs
 
     def get_attrib_value(self, name):
         """Get an attribute value, given its name, if it does not exist, return None"""
-        if name not in self._attribs:
-            return None
-        return self._attribs[name]
+        if name not in self.attribs:
+            return
+        return self.attribs[name]
 
     def del_one_attrib(self, attrib):
         "deletes an attribute"
-        if attrib in self._attribs:
-            del self._attribs[attrib]
+        if attrib in self.attribs:
+            del self.attribs[attrib]
 
 
     def update_attribs(self, attribs):
         "Updates attributes with the dictionary given in the attribs argument"
         for att,val in attribs.items():
-            self._attribs[att]=val
+            self.attribs[att]=val
 
-    def set_class_style(self, class_attribute='', style_attribute='')
+    def set_class_style(self, class_attribute='', style_attribute=''):
         "Sets the tag class and style attributes"
         if class_attribute:
-            self._attribs["class"] = class_attribute
+            self.attribs["class"] = class_attribute
         if style_attribute:
-            self._attribs["style"] = style_attribute
+            self.attribs["style"] = style_attribute
 
 
     def get_url(self, label_url_ident):
@@ -957,7 +942,7 @@ class SectionPlaceHolder(object):
     def get_section(self):
         if not self.ident_string:
             return
-        proj_ident = self.ident_string.split('_')[0] ########################
+        proj_ident = self.ident_string.split('_')[0]
         proj = skiboot.getproject(proj_ident)
         if proj is None:
             return

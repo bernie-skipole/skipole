@@ -523,6 +523,9 @@ class Widget(tag.Part):
     # if it is not None, then show_error will show the error at that location
     error_location = None
 
+    # If True, this widget will only be shown if debug is True
+    only_show_on_debug = False
+
     arg_descriptions = {}
 
     common_args = {'widget_class':FieldArg("cssclass", "", jsonset=True),
@@ -857,6 +860,9 @@ class Widget(tag.Part):
 
     def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
         """Runs self._build, then update all sub widgets"""
+        if self.only_show_on_debug and not skiboot.get_debug():
+            self.show = False
+            return
         if not self.show:
             return
         if placename:
@@ -1168,7 +1174,7 @@ class Widget(tag.Part):
             part = self.get_location_value(loc)
         else:
             part = self
-        part.del_attribs()
+        part.attribs = {}
         for idx in range(n):
             # field_arg is data1, data2 etc..
             field_arg = 'data' + str(idx+1)
@@ -1386,6 +1392,9 @@ class ClosedWidget(tag.ClosedPart):
     # display_errors is a class attribute, True if this widget accepts and displays error messages, False otherwise
     display_errors = True
 
+    # If True, this widget will only be shown if debug is True
+    only_show_on_debug = False
+
     # always empty list and unused
     _container=[]
 
@@ -1591,6 +1600,9 @@ class ClosedWidget(tag.ClosedPart):
 
     def update(self, page, ident_list, environ, call_data, lang, ident_string, placename, embedded):
         """builds the widget"""
+        if self.only_show_on_debug and not skiboot.get_debug():
+            self.show = False
+            return
         if not self.show:
             return
         if placename:
@@ -1867,7 +1879,7 @@ class ClosedWidget(tag.ClosedPart):
             return
         if n != m:
             raise ServerError("field data values are mismatched")
-        self.del_attribs()
+        self.attribs = {}
         for idx in range(n):
             # field_arg is data1, data2 etc..
             field_arg = 'data' + str(idx+1)

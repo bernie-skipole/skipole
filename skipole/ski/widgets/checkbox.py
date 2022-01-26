@@ -319,7 +319,7 @@ class CheckInputs(Widget):
         self[1].set_class_style(self.wf.div_class)
         if self.wf.label_text:
             self[1][0][0] = self.wf.label_text
-       self[1][0].set_class_style(self.wf.label_class, self.wf.label_style)
+        self[1][0].set_class_style(self.wf.label_class, self.wf.label_style)
 
         # Create the checkbox
         if self.wf.checked:
