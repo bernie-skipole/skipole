@@ -1,6 +1,5 @@
 
 
-
 """Contains widgets displaying confirm/cancel messages and buttons"""
 
 
@@ -103,7 +102,7 @@ class ConfirmBox1(Widget):
                               self.get_formname("get_field1_2"):self.wf.get_field1_2,
                               self.get_formname("get_field1_3"):self.wf.get_field1_3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][1][0].update_attribs({"href": url})
+                self[0][1][0].attribs["href"] = url
 
         # button2
         self[0][1][1].set_class_style(self.wf.button2_class, self.wf.button2_style)
@@ -128,7 +127,7 @@ class ConfirmBox1(Widget):
                               self.get_formname("get_field2_2"):self.wf.get_field2_2,
                               self.get_formname("get_field2_3"):self.wf.get_field2_3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][1][1].update_attribs({"href": url})
+                self[0][1][1].attribs["href"] = url
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
@@ -255,7 +254,7 @@ class ConfirmBox2(Widget):
                               self.get_formname("get_field1_2"):self.wf.get_field1_2,
                               self.get_formname("get_field1_3"):self.wf.get_field1_3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][1][0].update_attribs({"href": url})
+                self[0][1][0].attribs["href"] = url
 
         # button2
         self[0][1][1].set_class_style(self.wf.button2_class, self.wf.button2_style)
@@ -276,7 +275,7 @@ class ConfirmBox2(Widget):
                               self.get_formname("get_field2_2"):self.wf.get_field2_2,
                               self.get_formname("get_field2_3"):self.wf.get_field2_3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][1][1].update_attribs({"href": url})
+                self[0][1][1].attribs["href"] = url
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
@@ -404,7 +403,7 @@ class AlertClear1(Widget):
                               self.get_formname("get_field2"):self.wf.get_field2,
                               self.get_formname("get_field3"):self.wf.get_field3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][0][0].update_attribs({"href": url})
+                self[0][0][0].attribs["href"] = url
             else:
                 self[0][1][0][0] = "Warning: broken link"
 
@@ -535,7 +534,7 @@ class AlertClear2(Widget):
                               self.get_formname("get_field2"):self.wf.get_field2,
                               self.get_formname("get_field3"):self.wf.get_field3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][0][0].update_attribs({"href": url})
+                self[0][0][0].attribs["href"] = url
             else:
                 self[0][1][0][0] = "Warning: broken link"
 

@@ -1,9 +1,8 @@
 
 
-
 """Defines widgets to aid in debugging"""
 
-from string import Template
+
 import pprint
 
 from .. import skiboot

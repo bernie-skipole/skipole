@@ -2,7 +2,7 @@
 """Defines widgets of page headers,
 typically with titles, logo images and navigational buttons."""
 
-from .. import skiboot
+
 from .. import tag
 from . import Widget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
@@ -43,32 +43,29 @@ class NavButtons1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        button_class = self.get_field_value('button_class')
-        li_class = self.get_field_value('li_class')
+        button_class = self.wf.button_class
+        li_class = self.wf.li_class
 
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.get_field_value('ul_class'):
-            self[1].update_attribs({"class":self.get_field_value('ul_class')})
+        self[1].set_class_style(self.wf.ul_class)
 
         # for each link in the nav_links table - create a link and add it
         # as a list item
-        for row in self.get_field_value('nav_links'):
+        for row in self.wf.nav_links:
             linkurl, linktext, link_force_ident, link_getdata = row
             if not (linkurl or linktext):
                 continue
-            url = skiboot.get_url(linkurl, proj_ident=page.proj_ident)
+            url = self.get_url(linkurl)
             if not url:
                 continue
             lnk = tag.Part(tag_name="a", text=linktext, attribs={"role":"button"})
-            if button_class:
-                lnk.update_attribs({"class":button_class})
+            lnk.set_class_style(button_class)
             # create a url for the href
             get_field = {self.get_formname("nav_links"):link_getdata}
             url = self.make_get_url(page, url, get_field, link_force_ident)
-            lnk.update_attribs({"href": url})
+            lnk.attribs["href"] = url
             if li_class:
                 listtag = tag.Part(tag_name="li", attribs={'class':li_class})
             else:
@@ -128,27 +125,24 @@ class NavButtons2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list of links"
-        button_class = self.get_field_value('button_class')
-        button_style = self.get_field_value('button_style')
+        button_class = self.wf.button_class
+        button_style = self.wf.button_style
 
         # for each link in the nav_links table - create a link and add it
         # as a list item
-        for row in self.get_field_value('nav_links'):
+        for row in self.wf.nav_links:
             linkurl, linktext, link_force_ident, link_getdata = row
             if not (linkurl or linktext):
                 continue
-            url = skiboot.get_url(linkurl, proj_ident=page.proj_ident)
+            url = self.get_url(linkurl)
             if not url:
                 continue
             lnk = tag.Part(tag_name="a", text=linktext, attribs={"role":"button"})
-            if button_class:
-                lnk.update_attribs({"class":button_class})
-            if button_style:
-                lnk.update_attribs({"style":button_style})
+            lnk.set_class_style(button_class, button_style)
             # create a url for the href
             get_field = {self.get_formname("nav_links"):link_getdata}
             url = self.make_get_url(page, url, get_field, link_force_ident)
-            lnk.update_attribs({"href": url})
+            lnk.attribs["href"] = url
             self.append(lnk)
 
     @classmethod
@@ -197,51 +191,51 @@ class NavButtons3(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list of links"
-        button_classes = self.get_field_value('button_classes')
-        button_style = self.get_field_value('button_style')
-        button_text = self.get_field_value('button_text')
-        get_field1 = self.get_field_value('get_field1')
-        get_field2 = self.get_field_value('get_field2')
+        button_classes = self.wf.button_classes
+        button_style = sself.wf.button_style
+        button_text = self.wf.button_text
+        get_field1 = self.wf.get_field1
+        get_field2 = self.wf.get_field2
 
         if not button_text:
             return
 
-        link_ident = self.get_field_value("link_ident")
+        link_ident = self.wf.link_ident
         if not link_ident:
             link_ident = 'no_javascript'
         # get url
-        linkurl = skiboot.get_url(link_ident, proj_ident=page.proj_ident)
+        linkurl = self.get_url(link_ident)
 
-        json_ident = self.get_field_value("json_ident")
+        json_ident = self.wf.json_ident
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         if json_ident:
-            self._jsonurl = skiboot.get_url(json_ident, proj_ident=page.proj_ident)
+            self.jlabels['jsonurl'] = self.get_url(json_ident)
 
         # for each link - create a link and add it
         for index,txt in enumerate(button_text):
             lnk = tag.Part(tag_name="a", text=txt, attribs={"role":"button"})
             if button_style:
-                lnk.update_attribs({"style":button_style})
+                lnk.attribs["style"] = button_style
             if button_classes:
                 button_class = button_classes[index] if index < len(button_classes) else ''
                 if button_class:
-                    lnk.update_attribs({"class":button_class})
+                    lnk.attribs["class"] = button_class
 
             get1 = get_field1[index] if index < len(get_field1) else ''
             get2 = get_field2[index] if index < len(get_field2) else ''
             get_fields = {self.get_formname("get_field1"):get1, self.get_formname("get_field2"):get2}
             url = self.make_get_url(page, linkurl, get_fields, True)
-            lnk.update_attribs({"href": url})
+            lnk.attribs["href"] = url
             self.append(lnk)
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident = self.get_id()
+        jreturn f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues(jsonurl=self._jsonurl)
-
+"""
 
     @classmethod
     def description(cls):
@@ -254,11 +248,6 @@ class NavButtons3(Widget):
   </a>
   <!-- further links -->
 </div>"""
-
-
-
-
-
 
 
 
@@ -444,7 +433,7 @@ class DropDownButton1(Widget):
             linkurl, linktext, link_force_ident, link_getdata = row
             if not (linkurl or linktext):
                 continue
-            url = skiboot.get_url(linkurl, proj_ident=page.proj_ident)
+            url = self.get_url(linkurl)
             if not url:
                 continue
             lnk = tag.Part(tag_name="a", text=linktext)

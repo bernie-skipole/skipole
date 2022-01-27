@@ -61,7 +61,7 @@ class DropDown1(Widget):
             self[1][0][0] = self.wf.left_label
         self[1][0].set_class_style(self.wf.left_class, self.wf.left_style)
         self[1][1].set_class_style(self.wf.select_class, self.wf.select_style)
-        self[1][1].update_attribs({"name":self.get_formname('selectvalue')})
+        self[1][1].attribs["name"] = self.get_formname('selectvalue')
 
         selected_option = self.wf.selectvalue
         for index, opt in enumerate(self.wf.option_list):
@@ -75,8 +75,8 @@ class DropDown1(Widget):
         # set an id in the select for the 'label for' tag
         for_id = self[1][1].insert_id()
         # set the label 'for' attribute
-        self[1][0].update_attribs({'for':for_id})
-        self[1][2].update_attribs({'for':for_id})
+        self[1][0].attribs['for'] = for_id
+        self[1][2].attribs['for'] = for_id
 
     @classmethod
     def description(cls):
@@ -188,7 +188,7 @@ class SubmitDropDown1(Widget):
             self.jlabels['url'] = self.get_url(self.wf.action_json)
 
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
+        self[1].attribs["action"] = actionurl
         # the div holding label, dropdown and button
         self[1][0].set_class_style(self.wf.inputdiv_class)
 
@@ -197,10 +197,10 @@ class SubmitDropDown1(Widget):
         self[1][0][0].set_class_style(self.wf.label_class, self.wf.label_style)
         self[1][0][1].set_class_style(self.wf.select_class, self.wf.select_style)
 
-        self[1][0][1].update_attribs({"name":self.get_formname('selectvalue')})
+        self[1][0][1].attribs["name"] = self.get_formname('selectvalue')
 
         if self.wf.disabled:
-            self[1][0][1].update_attribs({"disabled":"disabled"})
+            self[1][0][1].attribs["disabled"] = "disabled"
 
         # set an id in the input field for the 'label for' tag
         for_id = self[1][0][1].insert_id()
@@ -213,7 +213,7 @@ class SubmitDropDown1(Widget):
                 self[1][0][1][index] = tag.Part(tag_name="option", text=opt)
 
         # set the label 'for' attribute
-        self[1][0][0].update_attribs({'for':for_id})
+        self[1][0][0].attribs['for'] = for_id
 
         # submit button
         if self.wf.button_text:
@@ -221,7 +221,7 @@ class SubmitDropDown1(Widget):
 
         self[1][0][2].set_class_style(self.wf.button_class)
         if self.wf.disabled:
-            self[1][0][2].update_attribs({"disabled":"disabled"})
+            self[1][0][2].attribs["disabled"] = "disabled"
 
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
@@ -310,44 +310,37 @@ class HiddenContainer(Widget):
         "build the box"
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
-        if self.get_field_value('boxdiv_style'):
-            self[0].update_attribs({"style":self.get_field_value('boxdiv_style')})
+ 
+        self[0].set_class_style(self.wf.boxdiv_class, self.wf.boxdiv_style)
         # buttondiv
-        if self.get_field_value("buttondiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('buttondiv_class')})
-        if self.get_field_value("buttondiv_style"):
-            self[0][0].update_attribs({'style':self.get_field_value("buttondiv_style")})
+        self[0][0].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
         # inner div
-        if self.get_field_value("inner_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('inner_class')})
-        if self.get_field_value("inner_style"):
-            self[0][1].update_attribs({'style':self.get_field_value("inner_style")})
+        self[0][1].set_class_style(self.wf.inner_class, self.wf.inner_style)
         # button
-        if self.get_field_value('button_class'):
-            self[0][0][0].update_attribs({"class":self.get_field_value('button_class')})
+        self[0][0][0].set_class_style(self.wf.button_class)
+
         if not self.get_field_value("link_ident"):
             self[0][0][0][0] = "Warning: broken link"
         else:
-            url = self.get_url(self.get_field_value("link_ident"))
+            url = self.get_url(self.wf.link_ident)
             if url:
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                              self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                              self.get_formname("get_field3"):self.get_field_value("get_field3")}
+                get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                              self.get_formname("get_field2"):self.wf.get_field2,
+                              self.get_formname("get_field3"):self.wf.get_field3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][0][0].update_attribs({"href": url})
+                self[0][0][0].attribs["href"] = url
             else:
                 self[0][0][0][0] = "Warning: broken link"
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a button"""
-        return """  $("#{ident} a").first().click(function (e) {{
+        ident = self.get_id()
+        return f"""  $("#{ident} a").first().click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
+"""
 
 
     @classmethod

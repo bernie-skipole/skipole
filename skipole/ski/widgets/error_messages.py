@@ -2,9 +2,6 @@
 
 """Contains commonly used error display widgets"""
 
-from string import Template
-
-from .. import skiboot
 from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
@@ -45,26 +42,25 @@ class ErrorCode(Widget):
         self[1][0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value('code_class'):
-            self[0].update_attribs({"class":self.get_field_value('code_class')})
-        if self.get_field_value("code"):
-            self[0][0] = "Error code : " + str(self.get_field_value("code"))
+        self[0].set_class_style(self.wf.code_class)
+        if self.wf.code:
+            self[0][0] = "Error code : " + str(self.wf.code)
         else:
             self[0][0] = "Error code : 0"
-        if self.get_field_value("pre_line"):
-            self[1].attribs={"style":"white-space: pre-line;"}
-        if self.get_field_value('para_class'):
-            self[1].update_attribs({"class":self.get_field_value('para_class')})
+        if self.wf.pre_line:
+            self[1].attribs["style"] = "white-space: pre-line;"
+        self[1].set_class_style(self.wf.para_class)
+
         # self[1][0] could be set by an error message
         if not self.error_status:
-            self[1][0] = self.get_field_value("para_text")
-        if self.error_status and self.get_field_value('error_class'):
-            self[1].update_attribs({"class":self.get_field_value('error_class')})
-
-            
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets fieldvalues"""
-        return self._make_fieldvalues('para_class', 'error_class')
+            self[1][0] = self.wf.para_text
+        if self.error_status:
+            self[1].set_class_style(self.wf.error_class)
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.para_class:
+            self.jlabels['para_class'] = self.wf.para_class
+        if self.wf.error_class:
+            self.jlabels['error_class'] = self.wf.error_class
 
 
     @classmethod
@@ -119,15 +115,14 @@ class ErrorDiv(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value('error_class'):
-            self[0].attribs = {'class':self.get_field_value('error_class')}
+        self.widget_hide(self.wf.hide)
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self.update_attribs({"style":"display: block;"})
+            self.attribs["style"] = "display: block;"
             self[0].del_one_attrib("style")
         # the div holding the container
-        if self.get_field_value('container_class'):
-            self[1].attribs = {"class": self.get_field_value('container_class')}
+        self[1].set_class_style(self.wf.container_class)
+
 
     @classmethod
     def description(cls):
@@ -163,7 +158,7 @@ class ErrorPara(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
+        self.widget_hide(self.wf.hide)
 
 
     @classmethod
@@ -228,52 +223,46 @@ class ErrorClear1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
-        if self.get_field_value("error_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('error_class')})
-        if self.get_field_value("buttondiv_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('buttondiv_class')})
-        if self.get_field_value("buttondiv_style"):
-            self[0][1].update_attribs({'style':self.get_field_value("buttondiv_style")})
+        self.widget_hide(self.wf.hide)
+        self[0].set_class_style(self.wf.boxdiv_class)
+        self[0][0].set_class_style(self.wf.error_class)
+        self[0][1].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
 
-        if self.get_field_value("pre_line"):
-            self[0][0][0].attribs={"style":"white-space: pre-line;"}
+        if self.wf.pre_line:
+            self[0][0][0].attribs["style"] = "white-space: pre-line;"
 
         if not self.error_status:
-            self[0][0][0][0] = self.get_field_value("para_text")
+            self[0][0][0][0] = self.wf.para_text
 
         # button
-        if self.get_field_value('button_class'):
-            self[0][1][0].update_attribs({"class":self.get_field_value('button_class')})
-        if not self.get_field_value("link_ident"):
+        self[0][1][0].set_class_style(self.wf.button_class)
+
+        if not self.wf.link_ident:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident)
             if not url:
                 self[0][1][0][0] = "Warning: broken link"
             else:
-                if self.get_field_value("button_text"):
-                    self[0][1][0][0] = self.get_field_value("button_text")
+                if self.wf.button_text:
+                    self[0][1][0][0] = self.wf.button_text
                 else:
                     self[0][1][0][0] = url
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                                            self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                                            self.get_formname("get_field3"):self.get_field_value("get_field3")}
+                get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                              self.get_formname("get_field2"):self.wf.get_field2,
+                              self.get_formname("get_field3"):self.wf.get_field3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][1][0].update_attribs({"href": url})
+                self[0][1][0].attribs["href"] = url
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a button"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident = self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        return jscript
-
+"""
 
     @classmethod
     def description(cls):
@@ -346,50 +335,49 @@ class ErrorClear2(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value("boxdiv_class"):
-            self[0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+        self.widget_hide(self.wf.hide)
+
+        self[0].set_class_style(self.wf.boxdiv_class)
         # buttondiv
-        if self.get_field_value("buttondiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('buttondiv_class')})
-        if self.get_field_value("buttondiv_style"):
-            self[0][0].update_attribs({'style':self.get_field_value("buttondiv_style")})
+        self[0][0].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
         # inner div
-        if self.get_field_value("error_class"):
-            self[0][1].update_attribs({"class":self.get_field_value('error_class')})
+        self[0][1].set_class_style(self.wf.error_class)
+
         # paragraph
-        if self.get_field_value("pre_line"):
-            self[0][1][0].attribs={"style":"white-space: pre-line;"}
+        if self.wf.pre_line:
+            self[0][1][0].attribs["style"] = "white-space: pre-line;"
         if not self.error_status:
-            self[0][1][0][0] = self.get_field_value("show_error")
-        # insert an id into the paragraph for setting the error text
-        self[0][1][0].insert_id()
+            self[0][1][0][0] = self.wf.show_error
+
+        # insert an id for setting the error text
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['para_id'] = self[0][1][0].insert_id()
+
         # button
-        if self.get_field_value('button_class'):
-            self[0][0][0].update_attribs({"class":self.get_field_value('button_class')})
-        if not self.get_field_value("link_ident"):
+        self[0][0][0].set_class_style(self.wf.button_class)
+
+        if not self.wf.link_ident:
             self[0][1][0][0] = "Warning: broken link"
         else:
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.wf.link_ident)
             if url:
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                              self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                              self.get_formname("get_field3"):self.get_field_value("get_field3")}
+                get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                              self.get_formname("get_field2"):self.wf.get_field2,
+                              self.get_formname("get_field3"):self.wf.get_field3}
                 url = self.make_get_url(page, url, get_fields, True)
-                self[0][0][0].update_attribs({"href": url})
+                self[0][0][0].attribs["href"] = url
             else:
                 self[0][1][0][0] = "Warning: broken link"
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a button"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident = self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        # return this javascript and the paragraph id
-        return jscript + self._make_fieldvalues(para_id=self[0][1][0].get_id())
+"""
 
 
     @classmethod

@@ -2,8 +2,6 @@
 
 """Defines widgets which may be used as page footers"""
 
-from string import Template
-from .. import skiboot
 from .. import tag
 from . import Widget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
@@ -39,14 +37,11 @@ class SimpleFooter(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the paragraph"
-        if self.wf.error_class:
-            self[0].update_attribs({"class":self.wf.error_class})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.wf.paradiv_class:
-            self[1].update_attribs({"class":self.wf.paradiv_class})
-        if self.wf.para_class:
-            self[1][0].update_attribs({"class":self.wf.para_class})
+        self[1].set_class_style(self.wf.paradiv_class)
+        self[1][0].set_class_style(self.wf.para_class)
         if self.wf.footer_text:
             self[1][0][0] = self.wf.footer_text
         # set an id in the footer_text paragraph

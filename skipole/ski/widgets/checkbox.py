@@ -1,6 +1,5 @@
 
 
-
 """Contains widgets displaying checkboxes"""
 
 from .. import tag, excepts
@@ -59,9 +58,9 @@ class CheckBox1(Widget):
             self[1][0][0] = self.wf.left_label
         self[1][0].set_class_style(self.wf.left_class, self.wf.left_style)
         if self.wf.checked:
-            self[1][1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
+            self[1][1].attribs.update({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
         else:
-            self[1][1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
+            self[1][1].attribs.update({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
         self[1][1].set_class_style(self.wf.checkbox_class, self.wf.checkbox_style)
         if self.wf.right_label:
             self[1][2][0] = self.wf.right_label
@@ -69,8 +68,8 @@ class CheckBox1(Widget):
         # set an id in the checkbox for the 'label for' tag
         for_id = self[1][1].insert_id()
         # set the label 'for' attribute
-        self[1][0].update_attribs({'for':for_id})
-        self[1][2].update_attribs({'for':for_id})
+        self[1][0].attribs['for'] = for_id
+        self[1][2].attribs['for'] = for_id
 
     @classmethod
     def description(cls):
@@ -133,9 +132,9 @@ class CheckBox2(Widget):
             self[0][0] = self.wf.left_label
         self[0].set_class_style(self.wf.left_class, self.wf.left_style) 
         if self.wf.checked:
-            self[1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
+            self[1].attribs.update({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
         else:
-            self[1].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
+            self[1].attribs.update({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
         self[1].set_class_style(self.wf.checkbox_class, self.wf.checkbox_style)
         if self.wf.right_label:
             self[2][0] = self.wf.right_label
@@ -143,8 +142,8 @@ class CheckBox2(Widget):
         # set an id in the checkbox for the 'label for' tag
         for_id = self[1].insert_id()
         # set the label 'for' attribute
-        self[0].update_attribs({'for':for_id})
-        self[2].update_attribs({'for':for_id})
+        self[0].attribs['for'] = for_id
+        self[2].attribs['for'] = for_id
 
     @classmethod
     def description(cls):
@@ -221,24 +220,24 @@ class CheckedText(Widget):
         self[1][0].set_class_style(self.wf.label_class, self.wf.label_style)
 
         if self.wf.checked:
-            self[1][1].update_attribs({"name":self.get_formname('checkbox'), "checked":"checked"})
+            self[1][1].attribs.update({"name":self.get_formname('checkbox'), "checked":"checked"})
         else:
-            self[1][1].update_attribs({"name":self.get_formname('checkbox')})
-            self[1][2].update_attribs({"disabled":"disabled"})
+            self[1][1].attribs["name"] = self.get_formname('checkbox')
+            self[1][2].attribs["disabled"] = "disabled"
         if self.wf.checkbox:
-            self[1][1].update_attribs({"value":self.wf.checkbox})
+            self[1][1].attribs["value"] = self.wf.checkbox
         self[1][1].set_class_style(self.wf.checkbox_class)
 
-        self[1][2].update_attribs({"name":self.get_formname('input_text'), "value":self.wf.input_text})
+        self[1][2].attribs.update({"name":self.get_formname('input_text'), "value":self.wf.input_text})
         if self.wf.size:
-            self[1][2].update_attribs({"size":self.wf.size})
+            self[1][2].attribs["size"] = self.wf.size
         if self.wf.maxlength:
-            self[1][2].update_attribs({"maxlength":self.wf.maxlength})
+            self[1][2].attribs["maxlength"] = self.wf.maxlength
         self[1][2].set_class_style(self.wf.input_class)
 
         # set an id in the checkbox for the 'label for' tag
         # and set the label 'for' attribute
-        self[1][0].update_attribs({'for':self[1][1].insert_id()})
+        self[1][0].attribs['for'] = self[1][1].insert_id()
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """jscript to enable the textbox"""
@@ -323,11 +322,11 @@ class CheckInputs(Widget):
 
         # Create the checkbox
         if self.wf.checked:
-            self[1][1].update_attribs({"name":self.get_formname('checkbox'), "checked":"checked"})
+            self[1][1].attribs.update({"name":self.get_formname('checkbox'), "checked":"checked"})
         else:
-            self[1][1].update_attribs({"name":self.get_formname('checkbox')})
+            self[1][1].attribs.update({"name":self.get_formname('checkbox')})
         if self.wf.checkbox:
-            self[1][1].update_attribs({"value":self.wf.checkbox})
+            self[1][1].attribs["value"] = self.wf.checkbox
         self[1][1].set_class_style(self.wf.checkbox_class)
 
         # the div holding the container
@@ -335,7 +334,7 @@ class CheckInputs(Widget):
 
         # set an id in the checkbox for the 'label for' tag
         # and set the label 'for' attribute
-        self[1][0].update_attribs({'for':self[1][1].insert_id()})
+        self[1][0].attribs['for'] = self[1][1].insert_id()
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
@@ -457,7 +456,7 @@ class SubmitCheckBox1(Widget):
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
+        self[1].attribs["action"] = actionurl
         # the div holding label, checkbox and button
         self[1][0].set_class_style(self.wf.inputdiv_class)
         self[1][0][0].set_class_style(self.wf.label_class, self.wf.label_style)
@@ -471,13 +470,13 @@ class SubmitCheckBox1(Widget):
         for_id = self[1][0][1][0].insert_id()
 
         if self.wf.checked:
-            self[1][0][1][0].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
+            self[1][0][1][0].attribs.update({"name":self.get_formname('checkbox'), "value":self.wf.checkbox, "checked":"checked"})
         else:
-            self[1][0][1][0].update_attribs({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
+            self[1][0][1][0].attribs.update({"name":self.get_formname('checkbox'), "value":self.wf.checkbox})
         self[1][0][1][0].set_class_style(self.wf.checkbox_class)
 
         # set the label 'for' attribute
-        self[1][0][0].update_attribs({'for':for_id})
+        self[1][0][0].attribs['for'] = for_id
 
         # submit button
         self[1][0][1][1].set_class_style(self.wf.button_class)
@@ -614,9 +613,9 @@ class CheckBoxTable1(Widget):
                 keyed_name = input_name + key
                 self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"checkbox"})
                 if key in checked:
-                    self[rownumber][2][0].update_attribs({"value":checkbox_dict[key], "checked":"checked"})
+                    self[rownumber][2][0].attribs.update({"value":checkbox_dict[key], "checked":"checked"})
                 else:
-                    self[rownumber][2][0].update_attribs({"value":checkbox_dict[key]})
+                    self[rownumber][2][0].attribs["value"] = checkbox_dict[key]
 
 
     @classmethod
