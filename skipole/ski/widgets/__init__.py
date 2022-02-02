@@ -972,13 +972,13 @@ class Widget(tag.Part):
 
         # and add widget specific json
         contents = self._build_js(page, ident_list, environ, call_data, lang)
-        if contents:
-            page.add_javascript(contents)
-
-        # add fieldvalues stored in self.jlabels
         if self.jlabels:
             page.add_javascript(f"""  SKIPOLE.widgets["{self.get_id()}"].fieldvalues={json.dumps(self.jlabels)};
 """)
+        if contents:
+            # contents added after fieldvalues in case these contents use the fieldvalues
+            page.add_javascript(contents)
+
 
     def set_placename(self, section_name, placename):
         "Widgets in sections with displayname validators need displaynames to change"
@@ -1697,13 +1697,15 @@ class ClosedWidget(tag.ClosedPart):
 
         # and add widget specific json
         contents = self._build_js(page, ident_list, environ, call_data, lang)
-        if contents:
-            page.add_javascript(contents)
-
         # add fieldvalues stored in self.jlabels
         if self.jlabels:
             page.add_javascript(f"""  SKIPOLE.widgets["{self.get_id()}"].fieldvalues={json.dumps(self.jlabels)};
 """)
+        if contents:
+            # contents added after fieldvalues in case these contents use the fieldvalues
+            page.add_javascript(contents)
+
+
 
 
     def set_placename(self, section_name, placename):

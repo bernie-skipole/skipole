@@ -232,7 +232,7 @@ class NavButtons3(Widget):
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
         ident = self.get_id()
-        jreturn f"""  $("#{ident} a").click(function (e) {{
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """
@@ -284,82 +284,65 @@ class TabButtons1(Widget):
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "div"
         self.hide_if_empty=True
-        self._display_id_list = []
-        self._hide_class = ''
-        self._onclick_addclass = ''
-        self._onclick_removeclass = ''
-        self._active = 0
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list of buttons"
 
         # get parameters to send to javascript
-        self._hide_class = self.get_field_value('hide_class')
-        self._onclick_addclass = self.get_field_value('onclick_addclass')
-        self._onclick_removeclass = self.get_field_value('onclick_removeclass')
+        onclick_addclass = self.wf.onclick_addclass
+        onclick_removeclass = self.wf.onclick_removeclass
 
-        button_class = self.get_field_value('button_class')
-        button_style = self.get_field_value('button_style')
+        button_class = self.wf.button_class
+        button_style = self.wf.button_style
+
+        display_id_list = []
+
         # for each button in the tabs table - create a button and add it
-
-        self._active = self.get_field_value('active_button')
-
-        for index, btn in enumerate(self.get_field_value('tabs')):
+        for index, btn in enumerate(self.wf.tabs):
             buttontext, displayid = btn
             if not (buttontext or displayid):
                 continue
             btn = tag.Part(tag_name="button", text=buttontext)
-            if index == self._active:
+            btn.set_class_style(button_class, button_style)
+            if index == self.wf.active_button:
                 # this button flagged as chosen
-                if button_class and self._onclick_addclass:
-                    if button_class == self._onclick_addclass:
-                        btn.update_attribs({"class":button_class})
+                if onclick_addclass:
+                    if button_class:
+                        if button_class != onclick_addclass:
+                            btn.attribs["class"] = button_class + " " + onclick_addclass
                     else:
-                        btn.update_attribs({"class":button_class + " " + self._onclick_addclass})
-                elif button_class:
-                    btn.update_attribs({"class":button_class})
-                elif self._onclick_addclass:
-                    btn.update_attribs({"class":self._onclick_addclass})
+                        btn.attribs["class"] = onclick_addclass
             else:
-                # give each button button_class and self._onclick_removeclass which will be removed when the button is clicked
-                if button_class and self._onclick_removeclass:
-                    if button_class == self._onclick_removeclass:
-                        btn.update_attribs({"class":button_class})
+                # give each button button_class and onclick_removeclass which will be removed when the button is clicked
+                if onclick_removeclass:
+                    if button_class:
+                        if button_class != onclick_removeclass:
+                            btn.attribs["class"] = button_class + " " + onclick_removeclass
                     else:
-                        btn.update_attribs({"class":button_class + " " + self._onclick_removeclass})
-                elif button_class:
-                    btn.update_attribs({"class":button_class})
-                elif self._onclick_removeclass:
-                    btn.update_attribs({"class":self._onclick_removeclass})
-            if button_style:
-                btn.update_attribs({"style":button_style})
+                        btn.attribs["class"] = onclick_removeclass
             self.append(btn)
-            self._display_id_list.append(displayid)
+            display_id_list.append(displayid)
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if display_id_list:
+            self.jlabels['display_id_list'] = display_id_list
+        if self.wf.hide_class:
+            self.jlabels['hide_class'] = self.wf.hide_class
+        if onclick_addclass:
+            self.jlabels['onclick_addclass'] = onclick_addclass
+        if onclick_removeclass:
+            self.jlabels['onclick_removeclass'] = onclick_removeclass
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        jscript = """  $("#{ident} button").click(function (e) {{
+        ident = self.get_id()
+        jscript = f"""  $("#{ident} button").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        other_parameters = {}
-        if self._display_id_list:
-            other_parameters['display_id_list'] = self._display_id_list
-        if self._hide_class:
-            other_parameters['hide_class'] = self._hide_class
-        if self._onclick_addclass:
-            other_parameters['onclick_addclass'] = self._onclick_addclass
-        if self._onclick_removeclass:
-            other_parameters['onclick_removeclass'] = self._onclick_removeclass
-        if other_parameters:
-            fieldvalues = self._make_fieldvalues(**other_parameters)
-        else:
-            fieldvalues = ""
-        return jscript + fieldvalues + """  SKIPOLE.widgets["{ident}"].setbutton({active});
-""".format(ident = self.get_id(), active=self._active)
-
+  SKIPOLE.widgets["{ident}"].setbutton({self.wf.active_button});
+"""
 
     @classmethod
     def description(cls):
@@ -410,26 +393,15 @@ class DropDownButton1(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        "Build the list of links"
-        button_class = self.get_field_value('button_class')
-        button_style = self.get_field_value('button_style')
-        div_class = self.get_field_value('div_class')
-        link_class = self.get_field_value('link_class')
-
-        self[0] = tag.Part(tag_name="button", text=self.get_field_value('button_text'))
-        if button_class:
-            self[0].update_attribs({"class":button_class})
-        if button_style:
-            self[0].update_attribs({"style":button_style})
-
-        if div_class:
-            self[1] =  tag.Part(tag_name="div", attribs={"class":div_class})
-        else:
-            self[1] =  tag.Part(tag_name="div")
-
+        "Build the list of links" 
+        self[0] = tag.Part(tag_name="button", text=self.wf.button_text)
+        self[0].set_class_style(self.wf.button_class, self.wf.button_style)
+        self[1] = tag.Part(tag_name="div")
+        self[1].set_class_style(self.wf.div_class)
+        link_class = self.wf.link_class
         # for each link in the nav_links table - create a link and add it
         # as a list item
-        for row in self.get_field_value('nav_links'):
+        for row in self.wf.nav_links:
             linkurl, linktext, link_force_ident, link_getdata = row
             if not (linkurl or linktext):
                 continue
@@ -437,13 +409,13 @@ class DropDownButton1(Widget):
             if not url:
                 continue
             lnk = tag.Part(tag_name="a", text=linktext)
-            if link_class:
-                lnk.update_attribs({"class":link_class})
+            lnk.set_class_style(link_class)
             # create a url for the href
             get_field = {self.get_formname("nav_links"):link_getdata}
             url = self.make_get_url(page, url, get_field, link_force_ident)
-            lnk.update_attribs({"href": url})
+            lnk.attribs["href"] = url
             self[1].append(lnk)
+
 
     @classmethod
     def description(cls):
@@ -482,7 +454,7 @@ class HeaderErrorPara(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
+        self.widget_hide(self.wf.hide)
 
 
     @classmethod
@@ -515,8 +487,8 @@ class HeadText(Widget):
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self.tag_name = self.get_field_value('tag')
-        self[0] = self.get_field_value("large_text")
+        self.tag_name = self.wf.tag
+        self[0] = self.wf.large_text
 
     @classmethod
     def description(cls):
@@ -564,21 +536,15 @@ class HeaderText1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        self[0].text=self.get_field_value("large_text")
-        self[1].text=self.get_field_value("small_text")
-        if self.get_field_value("h_class"):
-            self[0].update_attribs({"class":self.get_field_value("h_class")})
-        if self.get_field_value("p_class"):
-            self[1].update_attribs({"class":self.get_field_value("p_class")})
-        if self.get_field_value("h_style"):
-            self[0].update_attribs({"style":self.get_field_value("h_style")})
-        if self.get_field_value("p_style"):
-            self[1].update_attribs({"style":self.get_field_value("p_style")})
-        if self.get_field_value('error_class'):
-            self[2].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].text=self.wf.large_text
+        self[1].text=self.wf.small_text
+
+        self[0].set_class_style(self.wf.h_class, self.wf.h_style)
+        self[1].set_class_style(self.wf.p_class, self.wf.p_style)
+        self[2].set_class_style(self.wf.error_class)
+
         if self.error_status:
             self[2].del_one_attrib("style")
-
 
 
     @classmethod
