@@ -60,15 +60,17 @@
 <p>Where 'PROJECTFILES' is the path to your projectfiles directory - this informs the object where the project JSON files can be found.</p>
 <p>start_call, submit_data and end_call are three functions that you will provide. Minimum versions are available in myproj.py which you will develop further. They are called during the progress of a call:</p>
 <p><a href="/skipole/startcall.html">start_call(called_ident, skicall)</a></p>
-<p>start_call is called when the server initially receives an incoming call.</p>
+<p>start_call is called when the server initially receives an incoming call. called_ident is 'None' if the ident of the requested page is unknown, or it is a tuple of (project name, page ident number). skicall is an object containing further information and methods which will be described later in this documentation.</p>
+<p>The function would normally return the 'called_ident' tuple, to pass the call on to the page requested, but it could return a different ident tuple which would divert the call to a different page.</p>
 <p><a href="/skipole/submitdata.html">submit_data(skicall)</a></p>
-<p>submit_data is called by Responder pages.</p>
+<p>submit_data is called by Responder pages, in this function you would typically handle any data submitted and create the response by filling in the data for a template page.</p>
 <p><a href="/skipole/endcall.html">end_call(page_ident, page_type, skicall)</a></p>
-<p>end_call is called after any Responders have handled the call and prior to returning the page.</p>
+<p>end_call is called prior to returning the page. Any final widget fields can be set here.</p>
 <p>These functions can in turn call on any further modules you wish to include within the package - hence you can access your own databases and functionality.</p>
 <p>You will notice the framework passes the skicall object to your functions which contains a good deal of information you will need, more about it is given here:<a href="/skipole/skicall.html">skicall</a></p>
-<p>In particular your functions will create a PageData object, which is a dictionary-like object where widget field values can be set. These will be set in the page finally returned to the client. For further details:<a href="/skipole/pagedata.html">skicall.PageData</a></p>
-<p>Before the application is ready, it needs to have the application from the 'skis' project added to it. Within myproj.py you will see this is done with:</p>
+<p>In particular your functions will create a PageData object, which is a dictionary-like object where widget field values can be set. These will be set in the page finally returned to the client. For further details:<a href="/skipole/pagedata.html">PageData</a></p>
+<h3>The skis project</h3>
+<p>A project can have further 'sub-projects' added to it at a given path. The 'skis' sub project is provided by the skipole framework, before your application is ready it needs to have the application from the 'skis' project added to it. Within myproj.py you will see this is done with:</p>
 <pre>
 
     from skipole import skis

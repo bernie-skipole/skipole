@@ -1,10 +1,7 @@
 
 
-
 """This module defines various widgets which provide information"""
 import time
-
-from string import Template
 
 from .. import skiboot
 from .. import tag

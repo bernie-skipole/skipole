@@ -538,14 +538,11 @@ class HeaderText1(Widget):
         "Build the header"
         self[0].text=self.wf.large_text
         self[1].text=self.wf.small_text
-
         self[0].set_class_style(self.wf.h_class, self.wf.h_style)
         self[1].set_class_style(self.wf.p_class, self.wf.p_style)
         self[2].set_class_style(self.wf.error_class)
-
         if self.error_status:
             self[2].del_one_attrib("style")
-
 
     @classmethod
     def description(cls):
@@ -598,22 +595,13 @@ class HeaderText2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        self[0].text=self.get_field_value("large_text")
-        self[1].text=self.get_field_value("small_text")
-        if self.get_field_value("h_class"):
-            self[0].update_attribs({"class":self.get_field_value("h_class")})
-        if self.get_field_value("p_class"):
-            self[1].update_attribs({"class":self.get_field_value("p_class")})
-        if self.get_field_value("h_style"):
-            self[0].update_attribs({"style":self.get_field_value("h_style")})
-        if self.get_field_value("p_style"):
-            self[1].update_attribs({"style":self.get_field_value("p_style")})
-        if self.get_field_value('error_class'):
-            self[2].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].text=self.wf.large_text
+        self[1].text=self.wf.small_text
+        self[0].set_class_style(self.wf.h_class, self.wf.h_style)
+        self[1].set_class_style(self.wf.p_class, self.wf.p_style)
+        self[2].set_class_style(self.wf.error_class)
         if self.error_status:
             self[2].del_one_attrib("style")
-
-
 
     @classmethod
     def description(cls):
@@ -666,21 +654,13 @@ class HeaderText3(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        self[0].text=self.get_field_value("large_text")
-        self[1].text=self.get_field_value("small_text")
-        if self.get_field_value("h_class"):
-            self[0].update_attribs({"class":self.get_field_value("h_class")})
-        if self.get_field_value("p_class"):
-            self[1].update_attribs({"class":self.get_field_value("p_class")})
-        if self.get_field_value("h_style"):
-            self[0].update_attribs({"style":self.get_field_value("h_style")})
-        if self.get_field_value("p_style"):
-            self[1].update_attribs({"style":self.get_field_value("p_style")})
-        if self.get_field_value('error_class'):
-            self[2].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].text=self.wf.large_text
+        self[1].text=self.wf.small_text
+        self[0].set_class_style(self.wf.h_class, self.wf.h_style)
+        self[1].set_class_style(self.wf.p_class, self.wf.p_style)
+        self[2].set_class_style(self.wf.error_class)
         if self.error_status:
             self[2].del_one_attrib("style")
-
 
 
     @classmethod
@@ -734,18 +714,11 @@ class HeaderText4(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        self[0].text=self.get_field_value("large_text")
-        self[1].text=self.get_field_value("small_text")
-        if self.get_field_value("h_class"):
-            self[0].update_attribs({"class":self.get_field_value("h_class")})
-        if self.get_field_value("p_class"):
-            self[1].update_attribs({"class":self.get_field_value("p_class")})
-        if self.get_field_value("h_style"):
-            self[0].update_attribs({"style":self.get_field_value("h_style")})
-        if self.get_field_value("p_style"):
-            self[1].update_attribs({"style":self.get_field_value("p_style")})
-        if self.get_field_value('error_class'):
-            self[2].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].text=self.wf.large_text
+        self[1].text=self.wf.small_text
+        self[0].set_class_style(self.wf.h_class, self.wf.h_style)
+        self[1].set_class_style(self.wf.p_class, self.wf.p_style)
+        self[2].set_class_style(self.wf.error_class)
         if self.error_status:
             self[2].del_one_attrib("style")
 
@@ -802,21 +775,13 @@ class HeaderText5(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        self[0].text=self.get_field_value("large_text")
-        self[1].text=self.get_field_value("small_text")
-        if self.get_field_value("h_class"):
-            self[0].update_attribs({"class":self.get_field_value("h_class")})
-        if self.get_field_value("p_class"):
-            self[1].update_attribs({"class":self.get_field_value("p_class")})
-        if self.get_field_value("h_style"):
-            self[0].update_attribs({"style":self.get_field_value("h_style")})
-        if self.get_field_value("p_style"):
-            self[1].update_attribs({"style":self.get_field_value("p_style")})
-        if self.get_field_value('error_class'):
-            self[2].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].text=self.wf.large_text
+        self[1].text=self.wf.small_text
+        self[0].set_class_style(self.wf.h_class, self.wf.h_style)
+        self[1].set_class_style(self.wf.p_class, self.wf.p_style)
+        self[2].set_class_style(self.wf.error_class)
         if self.error_status:
             self[2].del_one_attrib("style")
-
 
 
     @classmethod
@@ -870,18 +835,11 @@ class HeaderText6(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the header"
-        self[0].text=self.get_field_value("large_text")
-        self[1].text=self.get_field_value("small_text")
-        if self.get_field_value("h_class"):
-            self[0].update_attribs({"class":self.get_field_value("h_class")})
-        if self.get_field_value("p_class"):
-            self[1].update_attribs({"class":self.get_field_value("p_class")})
-        if self.get_field_value("h_style"):
-            self[0].update_attribs({"style":self.get_field_value("h_style")})
-        if self.get_field_value("p_style"):
-            self[1].update_attribs({"style":self.get_field_value("p_style")})
-        if self.get_field_value('error_class'):
-            self[2].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].text=self.wf.large_text
+        self[1].text=self.wf.small_text
+        self[0].set_class_style(self.wf.h_class, self.wf.h_style)
+        self[1].set_class_style(self.wf.p_class, self.wf.p_style)
+        self[2].set_class_style(self.wf.error_class)
         if self.error_status:
             self[2].del_one_attrib("style")
 
