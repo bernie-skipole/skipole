@@ -26,14 +26,13 @@ class ServerTimeStamp(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "span"
-        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"
         # set timer or string
-        if self.get_field_value("timestamp"):
-            self[0] = self.get_field_value("timestamp")
-        elif self.get_field_value("utc"):
+        if self.wf.timestamp:
+            self[0] = self.wf.timestamp
+        elif self.wf.utc:
             self[0] = time.strftime("%c", time.gmtime())
         else:
             self[0] = time.strftime("%c", time.localtime())
@@ -66,14 +65,13 @@ class PageIdent(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "span"
-        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"
-        if self.get_field_value("span_text"):
-            self[0] = self.get_field_value("span_text")
-        elif self.get_field_value("page_ident"):
-            self[0] = self.get_field_value("page_ident").to_comma_str()
+        if self.wf.span_text:
+            self[0] = self.wf.span_text
+        elif self.wf.page_ident:
+            self[0] = self.wf.page_ident.to_comma_str()
         else:
             self[0] = page.ident.to_comma_str()
 
@@ -106,14 +104,13 @@ class PageName(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "span"
-        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"
-        if self.get_field_value("span_text"):
-            self[0] = self.get_field_value("span_text")
-        elif self.get_field_value("page_ident"):
-            requested_page = skiboot.get_item(self.get_field_value("page_ident"))
+        if self.wf.span_text:
+            self[0] = self.wf.span_text
+        elif self.wf.page_ident:
+            requested_page = skiboot.get_item(self.wf.page_ident)
             if requested_page is None:
                 self[0] = "Unknown page"
             else:
@@ -150,14 +147,13 @@ class PageDescription(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "span"
-        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"
-        if self.get_field_value("span_text"):
-            self[0] = self.get_field_value("span_text")
-        elif self.get_field_value("page_ident"):
-            requested_page = skiboot.get_item(self.get_field_value("page_ident"))
+        if self.wf.span_text:
+            self[0] = self.wf.span_text
+        elif self.wf.page_ident:
+            requested_page = skiboot.get_item(self.wf.page_ident)
             if requested_page is None:
                 self[0] = "Unknown page"
             else:
@@ -189,7 +185,6 @@ class ProjectName(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "span"
-        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"        
@@ -219,7 +214,6 @@ class Version(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "span"
-        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"        
@@ -249,7 +243,6 @@ class SkipoleVersion(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "span"
-        self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the element"        
@@ -304,21 +297,21 @@ class Redirector(Widget):
         if self.error_status and self._url:
             url = self._url
         else:
-            url = self.get_field_value("url")
+            url = self.wf.url
 
         self[0][0] = "window.location.replace(\"%s\");" % (url,)
 
-        linebreaks = bool(self.get_field_value('linebreaks'))
+        linebreaks = bool(self.wf.linebreaks)
 
-        if self.get_field_value('text_replaceblock'):
+        if self.wf.text_replaceblock:
             # no textblock, just the replacement text
-            tblock = self.get_field_value('text_replaceblock')
+            tblock = self.wf.text_replaceblock
             if not linebreaks:
                 self[1].linebreaks = False
         else:
             # define the textblock
-            tblock = self.get_field_value("textblock_ref")
-            tblock.failmessage = self.get_field_value('text_refnotfound')
+            tblock = self.wf.textblock_ref
+            tblock.failmessage = self.wf.text_refnotfound
             tblock.linebreaks = linebreaks
             tblock.proj_ident = page.proj_ident
 
@@ -374,29 +367,23 @@ class ProgressBar1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the widget"
-        if self.get_field_value('label_class'):
-            self[0].update_attribs({"class": self.get_field_value('label_class')})
-        if self.get_field_value('label_style'):
-            self[0].update_attribs({"style": self.get_field_value('label_style')})
-        if self.get_field_value("label"):
-            self[0][0] = self.get_field_value("label")
+        self[0].set_class_style(self.wf.label_class, self.wf.label_style)
+        if self.wf.label:
+            self[0][0] = self.wf.label
         # set an id in the progress tag for the 'label for' tag
-        self[1].insert_id()
-        self[0].update_attribs({'for':self[1].get_id()})
-        if self.get_field_value('progress_class'):
-            self[1].update_attribs({"class": self.get_field_value('progress_class')})
-        if self.get_field_value('progress_style'):
-            self[1].update_attribs({"style": self.get_field_value('progress_style')})
-        if self.get_field_value("text"):
-            self[1][0] = self.get_field_value("text")
-        if self.get_field_value('max'):
-            self[1].update_attribs({"max": self.get_field_value('max')})
-        if self.get_field_value('value'):
-            self[1].update_attribs({"value": self.get_field_value('value')})
+        for_id = self[1].insert_id()
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['progressident'] = for_id
+        self[0].attribs['for'] = for_id
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets progress bar id into jscript"""
-        return self._make_fieldvalues(progressident = self[1].get_id())
+        self[1].set_class_style(self.wf.progress_class, self.wf.progress_style)
+        if self.wf.text:
+            self[1][0] = self.wf.text
+        if self.wf.max:
+            self[1].attribs["max"] = self.wf.max
+        if self.wf.value:
+            self[1].attribs["value"] = self.wf.value
+
 
     @classmethod
     def description(cls):

@@ -4,7 +4,7 @@
       further input fields.  The module also has an Hidden Field and Submit Button widgets, which can be inserted into
      a form. """
 
-from .. import skiboot, tag
+from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -23,13 +23,12 @@ class HiddenField(ClosedWidget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
-        value = self.get_field_value('hidden_field')
-        if not value:
+        if not self.wf.hidden_field:
             self.show = False
             return
-        self.update_attribs({"name":self.get_formname('hidden_field'),
-                       "value":value,
-                       "type":"hidden"})
+        self.attribs.update({"name":self.get_formname('hidden_field'),
+                             "value":self.wf.hidden_field,
+                             "type":"hidden"})
 
     @classmethod
     def description(cls):
@@ -51,26 +50,26 @@ class HiddenSessionStorage(ClosedWidget):
         "hidden_field: A hidden input field with value from session storage"
         ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "input"
-        self._key = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
-        self._key = self.get_field_value('session_key')
-        if not self._key:
+        if not self.wf.session_key:
             self.show = False
             return
-        self.update_attribs({"name":self.get_formname('session_key'),
-                       "value":"",
-                       "type":"hidden"})
+        self.attribs.update({"name":self.get_formname('session_key'),
+                             "value":"",
+                             "type":"hidden"})
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['session_key'] = self.wf.session_key
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets key value into the value attribute by calling the widget updatefunc"""
-        if not self._key:
+        if not self.wf.session_key:
             return
-        jscript =  """
+        ident = self.get_id()
+        return f"""
   SKIPOLE.widgets["{ident}"].updatefunc();
-""".format(ident=self.get_id())
-        return self._make_fieldvalues(session_key=self._key) + jscript
+"""
 
     @classmethod
     def description(cls):
@@ -93,28 +92,26 @@ class HiddenLocalStorage(ClosedWidget):
         "hidden_field: A hidden input field with value from local storage"
         ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "input"
-        self._key = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
-        self._key = self.get_field_value('local_key')
-        if not self._key:
+        if not self.wf.local_key:
             self.show = False
             return
-        self.update_attribs({"name":self.get_formname('local_key'),
-                       "value":"",
-                       "type":"hidden"})
+        self.attribs.update({"name":self.get_formname('local_key'),
+                             "value":"",
+                             "type":"hidden"})
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['local_key'] = self.wf.local_key
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets key value into the value attribute by calling the widget updatefunc"""
-        if not self._key:
+        if not self.wf.local_key:
             return
-        jscript = """
+        ident = self.get_id()
+        return f"""
   SKIPOLE.widgets["{ident}"].updatefunc();
-""".format(ident=self.get_id())
-        return self._make_fieldvalues(local_key=self._key) + jscript
-
-
+"""
 
     @classmethod
     def description(cls):
@@ -140,12 +137,12 @@ class SubmitButton1(ClosedWidget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
-        button_text = self.get_field_value('button_text')
+        button_text = self.wf.button_text
         if not button_text:
             button_text = "Submit"
-        self.update_attribs({"name":self.get_formname('button_text'),
-                       "value":button_text,
-                       "type":"submit"})
+        self.attribs.update({"name":self.get_formname('button_text'),
+                             "value":button_text,
+                             "type":"submit"})
 
     @classmethod
     def description(cls):
@@ -170,10 +167,10 @@ class SubmitButton2(ClosedWidget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Sets the attributes"
-        button_text = self.get_field_value('button_text')
+        button_text = self.wf.button_text
         if not button_text:
             button_text = "Submit"
-        self.update_attribs({"value":button_text, "type":"submit"})
+        self.attribs.update({"value":button_text, "type":"submit"})
 
     @classmethod
     def description(cls):
@@ -235,7 +232,7 @@ class Form1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
@@ -353,7 +350,7 @@ class SubmitForm1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -362,7 +359,7 @@ class SubmitForm1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
@@ -526,7 +523,7 @@ class SubmitForm2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -535,7 +532,7 @@ class SubmitForm2(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
@@ -681,13 +678,13 @@ class SubmitFromScript(Widget):
             self[0].update_attribs({"target":self.get_field_value("target")})
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
 
         if not self.get_field_value("action"):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"

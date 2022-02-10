@@ -186,13 +186,11 @@ class NavButtons3(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "div"
-        self._jsonurl = ''
-
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list of links"
         button_classes = self.wf.button_classes
-        button_style = sself.wf.button_style
+        button_style = self.wf.button_style
         button_text = self.wf.button_text
         get_field1 = self.wf.get_field1
         get_field2 = self.wf.get_field2
