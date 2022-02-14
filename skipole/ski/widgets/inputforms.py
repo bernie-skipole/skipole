@@ -211,7 +211,7 @@ class Form1(Widget):
         error_class: The class applied to the paragraph containing the error message on error."""
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "div"
-        self.update_attribs({"role":"form", "method":"post"})
+        self.attribs.update({"role":"form", "method":"post"})
         # error div at 0
         self[0] = tag.Part(tag_name="div", attribs={"style":"display:none;"})
         self[0][0] = tag.Part(tag_name="p")
@@ -224,27 +224,25 @@ class Form1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if not self.get_field_value("action"):
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = self.get_url(self.get_field_value("action"))
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
-        if self.get_field_value('enctype'):
-            self[1].update_attribs({"enctype": self.get_field_value('enctype')})
+        self[1].attribs["action"] = actionurl
+        if self.wf.enctype:
+            self[1].attribs["enctype"] = self.wf.enctype
 
         # the div holding the container
-        if self.get_field_value('container_class'):
-            self[1][0].attribs = {"class": self.get_field_value('container_class')}
+        self[1][0].set_class_style(self.wf.container_class)
 
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
@@ -254,11 +252,11 @@ class Form1(Widget):
         """Sets a submit event handler"""
         # this ensures any input text widgets added to the container, get local validation
         # when the form is submitted
-        jscript = """  $('#{ident} form').on("submit", function(e) {{
+        ident=self.get_id()
+        return f"""  $('#{ident} form').on("submit", function(e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident=self.get_id())
-        return jscript
+"""
 
     @classmethod
     def description(cls):
@@ -343,66 +341,63 @@ class SubmitForm1(Widget):
         # the left label
         self[1][1][0] = tag.Part(tag_name="label", hide_if_empty=True)
         # the submit button
-        self[1][1][1] = tag.ClosedPart(tag_name="input")
+        self[1][1][1] = tag.ClosedPart(tag_name="input", attribs={"type":"submit"})
         # the right label
         self[1][1][2] = tag.Part(tag_name="label", hide_if_empty=True)
-        self._jsonurl = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        self._jsonurl = self.get_url(self.get_field_value("action_json"))
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        jsonurl = self.get_url(self.wf.action_json)
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if jsonurl:
+            self.jlabels['url'] = jsonurl
+        if self.wf.button_wait_text:
+           self.jlabels['button_wait_text'] = self.wf.button_wait_text
+
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if not self.get_field_value("action"):
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = self.get_url(self.get_field_value("action"))
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
-        if self.get_field_value('enctype'):
-            self[1].update_attribs({"enctype": self.get_field_value('enctype')})
+        self[1].attribs["action"] = actionurl
+        if self.wf.enctype:
+            self[1].attribs["enctype"] = self.wf.enctype
 
         # the div holding the container
-        if self.get_field_value('container_class'):
-            self[1][0].attribs = {"class": self.get_field_value('container_class')}
+        self[1][0].set_class_style(self.wf.container_class)
 
         # the div holding label and button
-        if self.get_field_value('div_class'):
-            self[1][1].attribs = {"class": self.get_field_value('div_class')}
+        self[1][1].set_class_style(self.wf.div_class)
 
-        if self.get_field_value('left_label'):
-            self[1][1][0][0] = self.get_field_value('left_label')
-        if self.get_field_value('left_class'):
-            self[1][1][0].attribs = {"class": self.get_field_value('left_class')}
-        if self.get_field_value('left_style'):
-            self[1][1][0].attribs = {"style": self.get_field_value('left_style')}
+        self[1][1][0].set_class_style(self.wf.left_class, self.wf.left_style)
+        if self.wf.left_label:
+            self[1][1][0][0] = self.wf.left_label
 
         # submit button
-        if self.get_field_value('button_class'):
-            self[1][1][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit", "class": self.get_field_value('button_class')}
-        else:
-            self[1][1][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit"}
+        self[1][1][1].set_class_style(self.wf.button_class)
+        self[1][1][1].attribs["value"] = self.wf.button_text
 
         # set an id in the submit button for the 'label for' tag
-        self[1][1][1].insert_id()
+        for_id = self[1][1][1].insert_id()
 
-        if self.get_field_value('right_label'):
-            self[1][1][2][0] = self.get_field_value('right_label')
-        if self.get_field_value('right_class'):
-            self[1][1][2].attribs = {"class": self.get_field_value('right_class')}
-        if self.get_field_value('right_style'):
-            self[1][1][2].attribs = {"style": self.get_field_value('right_style')}
+        self[1][1][2].set_class_style(self.wf.right_class, self.wf.right_style)
+        if self.wf.right_label:
+            self[1][1][2][0] = self.wf.right_label
 
         # set the label 'for' attribute
-        self[1][1][0].update_attribs({'for':self[1][1][1].get_id()})
-        self[1][1][2].update_attribs({'for':self[1][1][1].get_id()})
+        self[1][1][0].attribs['for'] = for_id
+        self[1][1][2].attribs['for'] = for_id
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['buttonident'] = for_id
 
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
@@ -410,15 +405,11 @@ class SubmitForm1(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
-        jscript = """$('#{ident} form').on("submit", function(e) {{
+        ident=self.get_id()
+        return f"""$('#{ident} form').on("submit", function(e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident=self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id(), url=self._jsonurl)
-        else:
-            return jscript + self._make_fieldvalues('button_wait_text', buttonident = self[1][1][1].get_id())
-
+"""
 
     @classmethod
     def description(cls):
@@ -516,66 +507,68 @@ class SubmitForm2(Widget):
         # the left label
         self[1][1][0] = tag.Part(tag_name="label", hide_if_empty=True)
         # the submit button
-        self[1][1][1] = tag.ClosedPart(tag_name="input")
+        self[1][1][1] = tag.ClosedPart(tag_name="input", attribs={"type":"submit"})
         # the right label
         self[1][1][2] = tag.Part(tag_name="label", hide_if_empty=True)
-        self._jsonurl = ''
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        self._jsonurl = self.get_url(self.get_field_value("action_json"))
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        jsonurl = self.get_url(self.wf.action_json)
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if jsonurl:
+            self.jlabels['url'] = jsonurl
+        if self.wf.button_wait_text:
+           self.jlabels['button_wait_text'] = self.wf.button_wait_text
+        if self.wf.session_storage:
+           self.jlabels['session_storage'] = self.wf.session_storage
+        if self.wf.local_storage:
+           self.jlabels['local_storage'] = self.wf.local_storage
+
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if not self.get_field_value("action"):
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = self.get_url(self.get_field_value("action"))
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
-        if self.get_field_value('enctype'):
-            self[1].update_attribs({"enctype": self.get_field_value('enctype')})
+        self[1].attribs["action"] = actionurl
+        if self.wf.enctype:
+            self[1].attribs["enctype"] = self.wf.enctype
 
         # the div holding the container
-        if self.get_field_value('container_class'):
-            self[1][0].attribs = {"class": self.get_field_value('container_class')}
+        self[1][0].set_class_style(self.wf.container_class)
 
         # the div holding label and button
-        if self.get_field_value('div_class'):
-            self[1][1].attribs = {"class": self.get_field_value('div_class')}
+        self[1][1].set_class_style(self.wf.div_class)
 
-        if self.get_field_value('left_label'):
-            self[1][1][0][0] = self.get_field_value('left_label')
-        if self.get_field_value('left_class'):
-            self[1][1][0].attribs = {"class": self.get_field_value('left_class')}
-        if self.get_field_value('left_style'):
-            self[1][1][0].attribs = {"style": self.get_field_value('left_style')}
+        self[1][1][0].set_class_style(self.wf.left_class, self.wf.left_style)
+        if self.wf.left_label:
+            self[1][1][0][0] = self.wf.left_label
 
         # submit button
-        if self.get_field_value('button_class'):
-            self[1][1][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit", "class": self.get_field_value('button_class')}
-        else:
-            self[1][1][1].attribs = {"value":self.get_field_value('button_text'), "type":"submit"}
+        self[1][1][1].set_class_style(self.wf.button_class)
+        self[1][1][1].attribs["value"] = self.wf.button_text
 
         # set an id in the submit button for the 'label for' tag
-        self[1][1][1].insert_id()
+        for_id = self[1][1][1].insert_id()
 
-        if self.get_field_value('right_label'):
-            self[1][1][2][0] = self.get_field_value('right_label')
-        if self.get_field_value('right_class'):
-            self[1][1][2].attribs = {"class": self.get_field_value('right_class')}
-        if self.get_field_value('right_style'):
-            self[1][1][2].attribs = {"style": self.get_field_value('right_style')}
+        self[1][1][2].set_class_style(self.wf.right_class, self.wf.right_style)
+        if self.wf.right_label:
+            self[1][1][2][0] = self.wf.right_label
 
         # set the label 'for' attribute
-        self[1][1][0].update_attribs({'for':self[1][1][1].get_id()})
-        self[1][1][2].update_attribs({'for':self[1][1][1].get_id()})
+        self[1][1][0].attribs['for'] = for_id
+        self[1][1][2].attribs['for'] = for_id
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['buttonident'] = for_id
 
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
@@ -583,22 +576,11 @@ class SubmitForm2(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
-        jscript = """$('#{ident} form').on("submit", function(e) {{
+        ident=self.get_id()
+        return f"""$('#{ident} form').on("submit", function(e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident=self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues('button_wait_text',
-                                                    'session_storage',
-                                                    'local_storage',
-                                                    buttonident = self[1][1][1].get_id(),
-                                                    url=self._jsonurl)
-        else:
-            return jscript + self._make_fieldvalues('button_wait_text',
-                                                    'session_storage',
-                                                    'local_storage',
-                                                    buttonident = self[1][1][1].get_id())
-
+"""
 
     @classmethod
     def description(cls):
@@ -664,73 +646,79 @@ class SubmitFromScript(Widget):
         self.tag_name = "div"
         # The form
         self[0] = tag.Part(tag_name='form', attribs={"role":"form", "method":"post"})
-
         # div containing the submit button
         self[0][0] = tag.Part(tag_name='div')
         # the submit button
         self[0][0][0] = tag.Part(tag_name="button", attribs ={"type":"submit"})
         self[0][0][0][0] = "Submit"
-        self._jsonurl = ''
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        if self.get_field_value("target"):
-            self[0].update_attribs({"target":self.get_field_value("target")})
+        if self.wf.target:
+            self[0].attribs["target"] = self.wf.target
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        self._jsonurl = self.get_url(self.get_field_value("action_json"))
+        self.widget_hide(self.wf.hide)
 
-        if not self.get_field_value("action"):
+        jsonurl = self.get_url(self.wf.action_json)
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if jsonurl:
+            self.jlabels['url'] = jsonurl
+        if self.wf.hidden_field1:
+           self.jlabels['hidden_field1'] = self.wf.hidden_field1
+        if self.wf.hidden_field2:
+           self.jlabels['hidden_field2'] = self.wf.hidden_field2
+        if self.wf.local_storage:
+           self.jlabels['hidden_field3'] = self.wf.hidden_field3
+        if self.wf.local_storage:
+           self.jlabels['hidden_field4'] = self.wf.hidden_field4
+
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = self.get_url(self.get_field_value("action"))
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[0].update_attribs({"action": actionurl})
+        self[0].attribs["action"] = actionurl
 
         # the div holding the submit button
-        if self.get_field_value('buttondiv_class'):
-            self[0][0].attribs = {"class": self.get_field_value('buttondiv_class')}
-        if self.get_field_value('buttondiv_style'):
-            self[0][0].update_attribs({"style": self.get_field_value('buttondiv_style')})
+        self[0][0].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
 
         # submit button
-        if self.get_field_value('button_class'):
-            self[0][0][0].update_attribs({"class": self.get_field_value('button_class')})
-        if self.get_field_value('button_text'):
-            self[0][0][0][0] = self.get_field_value('button_text')
+        self[0][0][0].set_class_style(self.wf.button_class)
+        if self.wf.button_text:
+            self[0][0][0][0] = self.wf.button_text
 
         # add ident and four hidden fields
-
         if page is not None:
             self[0].append(tag.ClosedPart(tag_name="input",
                                    attribs ={"name":'ident',
                                              "value":page.ident_data_string,
                                              "type":"hidden"}))
         # hidden field on the form
-        if self.get_field_value('hidden_field1'):
+        if self.wf.hidden_field1:
             self[0].append(tag.ClosedPart(tag_name="input",
                                        attribs ={"name":self.get_formname('hidden_field1'),
                                                  "type":"hidden"}))
 
         # Second hidden field on the form
-        if self.get_field_value('hidden_field2'):
+        if self.wf.hidden_field2:
             self[0].append(tag.ClosedPart(tag_name="input",
                                        attribs ={"name":self.get_formname('hidden_field2'),
                                                  "type":"hidden"}))
 
         # third hidden field on the form
-        if self.get_field_value('hidden_field3'):
+        if self.wf.hidden_field3:
             self[0].append(tag.ClosedPart(tag_name="input",
                                        attribs ={"name":self.get_formname('hidden_field3'),
                                                  "type":"hidden"}))
 
         # fourth hidden field on the form
-        if self.get_field_value('hidden_field4'):
+        if self.wf.hidden_field4:
             self[0].append(tag.ClosedPart(tag_name="input",
                                        attribs ={"name":self.get_formname('hidden_field4'),
                                                  "type":"hidden"}))
@@ -738,13 +726,11 @@ class SubmitFromScript(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
-        jscript = """  $("#{ident} form").on("submit input", function(e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident} form").on("submit input", function(e) {{
     SKIPOLE.widgets["{ident}"].eventfunc(e);
     }});
-""".format(ident=self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues('hidden_field1', 'hidden_field2', 'hidden_field3', 'hidden_field4', url=self._jsonurl)
-        return jscript + self._make_fieldvalues('hidden_field1', 'hidden_field2', 'hidden_field3', 'hidden_field4')
+"""
 
 
     @classmethod
