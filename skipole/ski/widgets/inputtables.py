@@ -3,7 +3,7 @@
 
 from urllib.parse import quote
 
-from .. import skiboot, tag, excepts
+from .. import tag, excepts
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -52,24 +52,24 @@ class InputTable1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        inputdict = self.get_field_value("inputdict")
-        rowc = self.get_field_value("row_classes")
-        col1 = self.get_field_value("col1")
-        col2 = self.get_field_value("col2")
+        inputdict = self.wf.inputdict
+        rowc = self.wf.row_classes
+        col1 = self.wf.col1
+        col2 = self.wf.col2
         input_name = self.get_formname("inputdict") + '-'
-        size = self.get_field_value('size')
-        maxlength = self.get_field_value('maxlength')
+        size = self.wf.size
+        maxlength = self.wf.maxlength
 
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):
+        if self.wf.title1 or self.wf.title2 or self.wf.title3:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
-            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
 
         # create rows
         rows = max( len(col1), len(col2), len(inputdict) )
@@ -203,19 +203,19 @@ class InputTable5(Widget):
         ident_value = page.ident_data_string
 
         # get the form action url
-        action_url = skiboot.get_url(self.get_field_value("action"), proj_ident=page.proj_ident)
+        action_url = self.get_url(self.wf.action)
         if not action_url:
             # setting self._error replaces the entire tag by the self._error message
             self._error = "Warning: broken link"
             return
 
 
-        len_label = len(self.fields["col_label"])
-        len_input = len(self.fields["col_input"])
-        len_hidden_field1 = len(self.fields["hidden_field1"])
-        len_hidden_field2 = len(self.fields["hidden_field2"])
-        len_hidden_field3 = len(self.fields["hidden_field3"])
-        len_hidden_field4 = len(self.fields["hidden_field4"])
+        len_label = len(self.wf.col_label)
+        len_input = len(self.wf.col_input)
+        len_hidden_field1 = len(self.wf.hidden_field1)
+        len_hidden_field2 = len(self.wf.hidden_field2)
+        len_hidden_field3 = len(self.wf.hidden_field3)
+        len_hidden_field4 = len(self.wf.hidden_field4)
 
         rows = max(len_label, len_input)
         if not rows:
@@ -223,58 +223,63 @@ class InputTable5(Widget):
 
         input_name = self.get_formname("col_input")
         button_name1 = self.get_formname("button_text1")
-        button_value1 = self.get_field_value('button_text1')
-        button1_class = self.get_field_value('button1_class')
+        button_value1 = self.wf.button_text1
+        button1_class = self.wf.button1_class
         button_name2 = self.get_formname("button_text2")
-        button_value2 = self.get_field_value('button_text2')
-        button2_class = self.get_field_value('button2_class')
+        button_value2 = self.wf.button_text2
+        button2_class = self.wf.button2_class
         hidden_field1_name = self.get_formname("hidden_field1")
         hidden_field2_name = self.get_formname("hidden_field2")
         hidden_field3_name = self.get_formname("hidden_field3")
         hidden_field4_name = self.get_formname("hidden_field4")
 
-        label_class = self.get_field_value('label_class')
-        label_style = self.get_field_value('label_style')
+        label_class = self.wf.label_class
+        label_style = self.wf.label_style
 
         form_id = self.get_id() + '_'
 
-        if self.get_field_value('input_accepted_class') and self.get_field_value("set_input_accepted"):
-            set_input_accepted = self.get_field_value("set_input_accepted")
+        if self.wf.input_accepted_class and self.wf.set_input_accepted:
+            set_input_accepted = self.wf.set_input_accepted
         else:
             set_input_accepted = {}
 
-        if self.get_field_value('input_errored_class') and self.get_field_value("set_input_errored"):
-            set_input_errored = self.get_field_value("set_input_errored")
+        if self.wf.input_errored_class and self.wf.set_input_errored:
+            set_input_errored = self.wf.set_input_errored
         else:
             set_input_errored = {}
 
-        input_class = self.get_field_value('input_class')
-        input_style = self.get_field_value('input_style')
+        input_class = self.wf.input_class
+        input_style = self.wf.input_style
 
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.input_accepted_class:
+            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
+        if self.wf.input_errored_class:
+            self.jlabels['input_errored_class'] = self.wf.input_errored_class
 
         for rownumber in range(rows):
             if rownumber<len_label:
-                col_label = self.get_field_value("col_label")[rownumber]
+                col_label = self.wf.col_label[rownumber]
             else:
                 col_label = ''
             if rownumber<len_input:
-                col_input = self.get_field_value("col_input")[rownumber]
+                col_input = self.wf.col_input[rownumber]
             else:
                 col_input = ''
             if rownumber<len_hidden_field1:
-                col_hidden_field1 = self.get_field_value("hidden_field1")[rownumber]
+                col_hidden_field1 = self.wf.hidden_field1[rownumber]
             else:
                 col_hidden_field1 = ''
             if rownumber<len_hidden_field2:
-                col_hidden_field2 = self.get_field_value("hidden_field2")[rownumber]
+                col_hidden_field2 = self.wf.hidden_field2[rownumber]
             else:
                 col_hidden_field2 = ''
             if rownumber<len_hidden_field3:
-                col_hidden_field3 = self.get_field_value("hidden_field3")[rownumber]
+                col_hidden_field3 = self.wf.hidden_field3[rownumber]
             else:
                 col_hidden_field3 = ''
             if rownumber<len_hidden_field4:
-                col_hidden_field4 = self.get_field_value("hidden_field4")[rownumber]
+                col_hidden_field4 = self.wf.hidden_field4[rownumber]
             else:
                 col_hidden_field4 = ''
 
@@ -287,7 +292,7 @@ class InputTable5(Widget):
             else:
                 formrow[0] = tag.Part(tag_name="label")
             if label_style:
-                formrow[0].update_attribs({"style":label_style})
+                formrow[0].attribs["style"] = label_style
             formrow[0][0] = col_label
 
             # 2nd column is a text input field
@@ -295,32 +300,31 @@ class InputTable5(Widget):
                                     attribs ={"name":input_name,
                                     "value":col_input,
                                     "type":"text"})
-            if self.get_field_value('size'):
-                formrow[1].update_attribs({"size":self.get_field_value('size')})
-            if self.get_field_value('maxlength'):
-                formrow[1].update_attribs({"maxlength":self.get_field_value('maxlength')})
-            if self.get_field_value('required'):
-                formrow[1].update_attribs({"required":"required"})
+            if self.wf.size:
+                formrow[1].attribs["size"] = self.wf.size
+            if self.wf.maxlength:
+                formrow[1].attribs["maxlength"] = self.wf.maxlength
+            if self.wf.required:
+                formrow[1].attribs["required"] = "required"
             # set an id in the input field for the 'label for' tag
             this_id = form_id + str(rownumber) + '_0_1'
-            formrow[1].insert_id(this_id)
             # set the label 'for' attribute
-            formrow[0].update_attribs({'for':formrow[1].get_id()})
+            formrow[0].attribs['for'] = formrow[1].insert_id(this_id)
             if (rownumber in set_input_errored) and set_input_errored[rownumber]:
                 if input_class:
-                    formrow[1].update_attribs({"class":input_class + ' ' + self.get_field_value('input_errored_class')})
+                    formrow[1].attribs["class"] = input_class + ' ' + self.wf.input_errored_class
                 else:
-                    formrow[1].update_attribs({"class":self.get_field_value('input_errored_class')})
+                    formrow[1].attribs["class"] = self.wf.input_errored_class
             elif (rownumber in set_input_accepted) and set_input_accepted[rownumber]:
                 if input_class:
-                    formrow[1].update_attribs({"class":input_class + ' ' + self.get_field_value('input_accepted_class')})
+                    formrow[1].attribs["class"] = input_class + ' ' + self.wf.input_accepted_class
                 else:
-                    formrow[1].update_attribs({"class":self.get_field_value('input_accepted_class')})
+                    formrow[1].attribs["class"] = self.wf.input_accepted_class
             elif input_class:
-                formrow[1].update_attribs({"class":input_class})
+                formrow[1].attribs["class"] = input_class
 
             if input_style:
-                formrow[1].update_attribs({"style":input_style})
+                formrow[1].attribs["style"] = input_style
 
             # 3rd column is a submit button
             if button_value1:
@@ -371,20 +375,19 @@ class InputTable5(Widget):
 
             # place form in a div
             self[rownumber] = tag.Part(tag_name="div")
-            if self.get_field_value('div_class'):
-                self[rownumber].attribs = {"class": self.get_field_value('div_class')}
+            self[rownumber].set_class_style(self.wf.div_class)
             self[rownumber][0] = formrow
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
-        jscript = """  $('#{ident}').find( 'form').each(function() {{
+        ident=self.get_id()
+        return f"""  $('#{ident}').find( 'form').each(function() {{
     $(this).on("submit", function(e) {{
         SKIPOLE.widgets['{ident}'].eventfunc(e);
         }});
     }});
-""".format(ident=self.get_id())
-        return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
+"""
 
     @classmethod
     def description(cls):
@@ -535,16 +538,16 @@ class InputTable4(Widget):
         # up arrow link
         # get json url
         if up_json_ident:
-            self._up_jsonurl = skiboot.get_url(up_json_ident, proj_ident=page.proj_ident)
+            self._up_jsonurl = self.get_url(up_json_ident)
         # get url
-        up_url = skiboot.get_url(up_link_ident, proj_ident=page.proj_ident)
+        up_url = self.get_url(up_link_ident)
 
         # down arrow link
         # get json url
         if down_json_ident:
-            self._down_jsonurl = skiboot.get_url(down_json_ident, proj_ident=page.proj_ident)
+            self._down_jsonurl = self.get_url(down_json_ident)
         # get url
-        down_url = skiboot.get_url(down_link_ident, proj_ident=page.proj_ident)
+        down_url = self.get_url(down_link_ident)
 
 
         header = 0
@@ -872,16 +875,16 @@ class InputTable3(Widget):
         # up arrow link
         # get json url
         if up_json_ident:
-            self._up_jsonurl = skiboot.get_url(up_json_ident, proj_ident=page.proj_ident)
+            self._up_jsonurl = self.get_url(up_json_ident)
         # get url
-        up_url = skiboot.get_url(up_link_ident, proj_ident=page.proj_ident)
+        up_url = self.get_url(up_link_ident)
 
         # down arrow link
         # get json url
         if down_json_ident:
-            self._down_jsonurl = skiboot.get_url(down_json_ident, proj_ident=page.proj_ident)
+            self._down_jsonurl = self.get_url(down_json_ident)
         # get url
-        down_url = skiboot.get_url(down_link_ident, proj_ident=page.proj_ident)
+        down_url = self.get_url(down_link_ident)
 
 
         header = 0
