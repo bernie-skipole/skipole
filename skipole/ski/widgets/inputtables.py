@@ -102,9 +102,9 @@ class InputTable1(Widget):
                 keyed_name = input_name + key
                 self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"text", "value":inputdict[key]})
                 if size:
-                    self[rownumber][2][0].update_attribs({"size":size})
+                    self[rownumber][2][0].attribs["size"] = size
                 if maxlength:
-                    self[rownumber][2][0].update_attribs({"maxlength":maxlength})
+                    self[rownumber][2][0].attribs["maxlength"] = maxlength
 
 
 
@@ -382,7 +382,7 @@ class InputTable5(Widget):
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
         ident=self.get_id()
-        return f"""  $('#{ident}').find( 'form').each(function() {{
+        return f"""  $('#{ident}').find('form').each(function() {{
     $(this).on("submit", function(e) {{
         SKIPOLE.widgets['{ident}'].eventfunc(e);
         }});
@@ -492,75 +492,73 @@ class InputTable4(Widget):
          """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._up_jsonurl = ''
-        self._down_jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        inputdict = self.get_field_value("inputdict")
-        rowc = self.get_field_value("row_classes")
-        col1 = self.get_field_value("col1")
-        col2 = self.get_field_value("col2")
-        col3 = self.get_field_value("col3")
-        up_hide = self.get_field_value("up_hide")
-        down_hide = self.get_field_value("down_hide")
-
+        inputdict = self.wf.inputdict
+        rowc = self.wf.row_classes
+        col1 = self.wf.col1
+        col2 = self.wf.col2
+        col3 = self.wf.col3
+        up_hide = self.wf.up_hide
+        down_hide = self.wf.down_hide
 
         input_name = self.get_formname("inputdict") + '-'
 
-        col1_class = self.get_field_value("col1_class")
-        col2_class = self.get_field_value("col2_class")
-        col3_class = self.get_field_value("col3_class")
-        col4_class = self.get_field_value("col4_class")
-        col4_style = self.get_field_value("col4_style")
+        col1_class = self.wf.col1_class
+        col2_class = self.wf.col2_class
+        col3_class = self.wf.col3_class
+        col4_class = self.wf.col4_class
+        col4_style = self.wf.col4_style
 
-        up_link_ident = self.get_field_value("up_link_ident") # ident of the up arrow link if javascript disabled
+        up_link_ident = up_link_ident # ident of the up arrow link if javascript disabled
         if not up_link_ident:
             up_link_ident = 'no_javascript'
-        up_json_ident = self.get_field_value("up_json_ident") # ident of the up arrow link, expects a json file returned
+        up_json_ident = self.wf.up_json_ident # ident of the up arrow link, expects a json file returned
 
-        down_link_ident = self.get_field_value("down_link_ident") # ident of the down arrow link if javascript disabled
+        down_link_ident = self.wf.down_link_ident # ident of the down arrow link if javascript disabled
         if not down_link_ident:
             down_link_ident = 'no_javascript'
-        down_json_ident = self.get_field_value("down_json_ident") # ident of the down arrow link, expects a json file returned
+        down_json_ident = self.wf.down_json_ident # ident of the down arrow link, expects a json file returned
 
-        up_style = self.get_field_value("up_style") # CSS style applied to the up arrows
-        down_style = self.get_field_value("down_style") # CSS style applied to the down arrows
-        up_class = self.get_field_value("up_class") # CSS class applied to the up arrows
-        down_class = self.get_field_value("down_class") # CSS class applied to the down arrows
+        up_style = self.wf.up_style     # CSS style applied to the up arrows
+        down_style = self.wf.down_style # CSS style applied to the down arrows
+        up_class = self.wf.up_class     # CSS class applied to the up arrows
+        down_class = self.wf.down_class # CSS class applied to the down arrows
 
-        up_getfield1 = self.get_field_value("up_getfield1") # list of get fields, one for each up arrow link
-        up_getfield2 = self.get_field_value("up_getfield2") # list of second get fields, one for each up arrow link
-        down_getfield1 = self.get_field_value("down_getfield1") # list of get fields, one for each down arrow link
-        down_getfield2 = self.get_field_value("down_getfield2") # list of get fields, one for each down arrow link
+        up_getfield1 = self.wf.up_getfield1     # list of get fields, one for each up arrow link
+        up_getfield2 = self.wf.up_getfield2     # list of second get fields, one for each up arrow link
+        down_getfield1 = self.wf.down_getfield1 # list of get fields, one for each down arrow link
+        down_getfield2 = self.wf.down_getfield2 # list of get fields, one for each down arrow link
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
 
         # up arrow link
         # get json url
         if up_json_ident:
-            self._up_jsonurl = self.get_url(up_json_ident)
+            self.jlabels["upurl"] = self.get_url(up_json_ident)
         # get url
         up_url = self.get_url(up_link_ident)
 
         # down arrow link
         # get json url
         if down_json_ident:
-            self._down_jsonurl = self.get_url(down_json_ident)
+            self.jlabels["downurl"] = self.get_url(down_json_ident)
         # get url
         down_url = self.get_url(down_link_ident)
 
-
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3') or self.get_field_value('title4'):
+        if self.wf.title1 or self.wf.title2 or self.wf.title3 or self.wf.title4:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
-            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
-            self[0][3] = tag.Part(tag_name='th', text = self.get_field_value('title4'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
+            self[0][3] = tag.Part(tag_name='th', text = self.wf.title4)
 
         # create rows
         rows = max( len(col1), len(col2), len(col3), len(inputdict) )
@@ -611,7 +609,7 @@ class InputTable4(Widget):
                 self[rownumber][3] = tag.Part(tag_name='td')
 
             if col4_style:
-                self[rownumber][3].update_attribs({"style": col4_style})
+                self[rownumber][3].attribs["style"] = col4_style
 
             if up_style:
                 up_button_style = up_style
@@ -634,7 +632,7 @@ class InputTable4(Widget):
                 self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if up_class:
-                self[rownumber][3][0].update_attribs({"class": up_class})
+                self[rownumber][3][0].attribs["class"] = up_class
 
             self[rownumber][3][0][0] = tag.HTMLSymbol("&uarr;")
 
@@ -643,8 +641,7 @@ class InputTable4(Widget):
             upget2 = up_getfield2[index] if index < len(up_getfield2) else ''
             get_fields = {self.get_formname("up_getfield1"):upget1,
                           self.get_formname("up_getfield2"):upget2}
-            url = self.make_get_url(page, up_url, get_fields, True)
-            self[rownumber][3][0].update_attribs({"href": url})
+            self[rownumber][3][0].attribs["href"] = self.make_get_url(page, up_url, get_fields, True)
 
             if down_style:
                 down_button_style = down_style
@@ -666,7 +663,7 @@ class InputTable4(Widget):
                 self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if down_class:
-                self[rownumber][3][1].update_attribs({"class": down_class})
+                self[rownumber][3][1].attribs["class"] = down_class
 
             self[rownumber][3][1][0] = tag.HTMLSymbol("&darr;")
 
@@ -675,8 +672,7 @@ class InputTable4(Widget):
             downget2 = down_getfield2[index] if index < len(down_getfield2) else ''
             get_fields = {self.get_formname("down_getfield1"):downget1,
                           self.get_formname("down_getfield2"):downget2}
-            url = self.make_get_url(page, down_url, get_fields, True)
-            self[rownumber][3][1].update_attribs({"href": url})
+            self[rownumber][3][1].attribs["href"] = self.make_get_url(page, down_url, get_fields, True)
 
             key = keylist[index]
             if key:  # this is the dictionary key
@@ -686,14 +682,11 @@ class InputTable4(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        if self._up_jsonurl or self._down_jsonurl:
-            return jscript + self._make_fieldvalues(upurl=self._up_jsonurl, downurl=self._down_jsonurl)
-
-
+"""
 
     @classmethod
     def description(cls):
@@ -822,82 +815,82 @@ class InputTable3(Widget):
          """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._up_jsonurl = ''
-        self._down_jsonurl = ''
+#        self._up_jsonurl = ''
+#        self._down_jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        inputdict = self.get_field_value("inputdict")
-        rowc = self.get_field_value("row_classes")
-        col1 = self.get_field_value("col1")
-        col2 = self.get_field_value("col2")
-        up_hide = self.get_field_value("up_hide")
-        down_hide = self.get_field_value("down_hide")
-
+        inputdict = self.wf.inputdict
+        rowc = self.wf.row_classes
+        col1 = self.wf.col1
+        col2 = self.wf.col2
+        up_hide = self.wf.up_hide
+        down_hide = self.wf.down_hide
 
         input_name = self.get_formname("inputdict") + '-'
 
-        col1_class = self.get_field_value("col1_class")
-        col2_class = self.get_field_value("col2_class")
-        col3_class = self.get_field_value("col3_class")
-        col4_class = self.get_field_value("col4_class")
-        col4_style = self.get_field_value("col4_style")
+        col1_class = self.wf.col1_class
+        col2_class = self.wf.col2_class
+        col3_class = self.wf.col3_class
+        col4_class = self.wf.col4_class
+        col4_style = self.wf.col4_style
 
-        input_class = self.get_field_value("input_class")
-        input_style = self.get_field_value("input_style")
+        input_class = self.wf.input_class
+        input_style = self.wf.input_style
 
-        size = self.get_field_value('size')
-        maxlength = self.get_field_value('maxlength')
+        size = self.wf.size
+        maxlength = self.wf.maxlength
 
-        up_link_ident = self.get_field_value("up_link_ident") # ident of the up arrow link if javascript disabled
+        up_link_ident = self.wf.up_link_ident     # ident of the up arrow link if javascript disabled
         if not up_link_ident:
             up_link_ident = 'no_javascript'
-        up_json_ident = self.get_field_value("up_json_ident") # ident of the up arrow link, expects a json file returned
+        up_json_ident = self.wf.up_json_ident     # ident of the up arrow link, expects a json file returned
 
-        down_link_ident = self.get_field_value("down_link_ident") # ident of the down arrow link if javascript disabled
+        down_link_ident = self.wf.down_link_ident # ident of the down arrow link if javascript disabled
         if not down_link_ident:
             down_link_ident = 'no_javascript'
-        down_json_ident = self.get_field_value("down_json_ident") # ident of the down arrow link, expects a json file returned
+        down_json_ident = self.wf.down_json_ident # ident of the down arrow link, expects a json file returned
 
-        up_style = self.get_field_value("up_style") # CSS style applied to the up arrows
-        down_style = self.get_field_value("down_style") # CSS style applied to the down arrows
-        up_class = self.get_field_value("up_class") # CSS class applied to the up arrows
-        down_class = self.get_field_value("down_class") # CSS class applied to the down arrows
+        up_style = self.wf.up_style               # CSS style applied to the up arrows
+        down_style = self.wf.down_style           # CSS style applied to the down arrows
+        up_class = self.wf.up_class               # CSS class applied to the up arrows
+        down_class = self.wf.down_class           # CSS class applied to the down arrows
 
-        up_getfield1 = self.get_field_value("up_getfield1") # list of get fields, one for each up arrow link
-        up_getfield2 = self.get_field_value("up_getfield2") # list of second get fields, one for each up arrow link
-        down_getfield1 = self.get_field_value("down_getfield1") # list of get fields, one for each down arrow link
-        down_getfield2 = self.get_field_value("down_getfield2") # list of get fields, one for each down arrow link
+        up_getfield1 = self.wf.up_getfield1       # list of get fields, one for each up arrow link
+        up_getfield2 = self.wf.up_getfield2       # list of second get fields, one for each up arrow link
+        down_getfield1 = self.wf.down_getfield1   # list of get fields, one for each down arrow link
+        down_getfield2 = self.wf.down_getfield2   # list of get fields, one for each down arrow link
 
-        getfield3 = self.get_field_value("getfield3") # list of get fields, one for each row, sent with both arrows
+        getfield3 = self.wf.getfield3             # list of get fields, one for each row, sent with both arrows
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
 
         # up arrow link
         # get json url
         if up_json_ident:
-            self._up_jsonurl = self.get_url(up_json_ident)
+            self.jlabels["upurl"] = self.get_url(up_json_ident)
         # get url
         up_url = self.get_url(up_link_ident)
 
         # down arrow link
         # get json url
         if down_json_ident:
-            self._down_jsonurl = self.get_url(down_json_ident)
+            self.jlabels["downurl"] = self.get_url(down_json_ident)
         # get url
         down_url = self.get_url(down_link_ident)
 
-
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3') or self.get_field_value('title4'):
+        if self.wf.title1 or self.wf.title2 or self.wf.title3 or self.wf.title4:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
-            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
-            self[0][3] = tag.Part(tag_name='th', text = self.get_field_value('title4'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
+            self[0][3] = tag.Part(tag_name='th', text = self.wf.title4)
 
         # create rows
         rows = max( len(col1), len(col2), len(inputdict) )
@@ -958,24 +951,19 @@ class InputTable3(Widget):
                 self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name,
                                                                                   "type":"text",
                                                                                    "value":inputdict[key],
-                "onchange":"SKIPOLE.widgets['{ident}'].setnewnumber(this.value, {data})".format(ident = self.get_id(), data=rownumber)
+                                             "onchange":f"SKIPOLE.widgets['{self.get_id()}'].setnewnumber(this.value, {rownumber})"
                                                                                  })
                 if size:
-                    self[rownumber][2][0].update_attribs({"size":size})
+                    self[rownumber][2][0].attribs["size"] = size
                 if maxlength:
-                    self[rownumber][2][0].update_attribs({"maxlength":maxlength})
+                    self[rownumber][2][0].attribs["maxlength"] = maxlength
                 if input_class:
-                    self[rownumber][2][0].update_attribs({"class":input_class})
+                    self[rownumber][2][0].attribs["class"] = input_class
                 if input_style:
-                    self[rownumber][2][0].update_attribs({"style":input_style})
+                    self[rownumber][2][0].attribs["style"] = input_style
 
-            if col4_class:
-                self[rownumber][3] = tag.Part(tag_name='td', attribs={"class":col4_class})
-            else:
-                self[rownumber][3] = tag.Part(tag_name='td')
-
-            if col4_style:
-                self[rownumber][3].update_attribs({"style": col4_style})
+            self[rownumber][3] = tag.Part(tag_name='td')
+            self[rownumber][3].set_class_style(col4_class, col4_style)
 
             if up_style:
                 up_button_style = up_style
@@ -997,7 +985,7 @@ class InputTable3(Widget):
                 self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if up_class:
-                self[rownumber][3][0].update_attribs({"class": up_class})
+                self[rownumber][3][0].attribs["class"] = up_class
 
             self[rownumber][3][0][0] = tag.HTMLSymbol("&uarr;")
 
@@ -1008,8 +996,7 @@ class InputTable3(Widget):
                           self.get_formname("up_getfield2"):upget2,
                           self.get_formname("getfield3"):get3
                           }
-            url = self.make_get_url(page, up_url, get_fields, True)
-            self[rownumber][3][0].update_attribs({"href": url})
+            self[rownumber][3][0].attribs["href"] = self.make_get_url(page, up_url, get_fields, True)
 
             if down_style:
                 down_button_style = down_style
@@ -1031,7 +1018,7 @@ class InputTable3(Widget):
                 self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if down_class:
-                self[rownumber][3][1].update_attribs({"class": down_class})
+                self[rownumber][3][1].attribs["class"] = down_class
 
             self[rownumber][3][1][0] = tag.HTMLSymbol("&darr;")
 
@@ -1042,21 +1029,15 @@ class InputTable3(Widget):
                           self.get_formname("down_getfield2"):downget2,
                           self.get_formname("getfield3"):get3
                           }
-            url = self.make_get_url(page, down_url, get_fields, True)
-            self[rownumber][3][1].update_attribs({"href": url})
-
-
-
+            self[rownumber][3][1].attribs["href"] = self.make_get_url(page, down_url, get_fields, True)
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        if self._up_jsonurl or self._down_jsonurl:
-            return jscript + self._make_fieldvalues(upurl=self._up_jsonurl, downurl=self._down_jsonurl)
-
+"""
 
 
     @classmethod
