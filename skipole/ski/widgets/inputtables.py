@@ -1,8 +1,6 @@
 
 """Contains widgets for inputting data"""
 
-from urllib.parse import quote
-
 from .. import tag, excepts
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
@@ -815,8 +813,6 @@ class InputTable3(Widget):
          """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-#        self._up_jsonurl = ''
-#        self._down_jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):

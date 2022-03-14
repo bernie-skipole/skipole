@@ -1,12 +1,8 @@
 
 
-
 """Contains widgets for inputting text"""
 
-from string import Template
-import json
-
-from .. import skiboot, tag, excepts
+from .. import tag, excepts
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -51,43 +47,43 @@ class TextInput1(ClosedWidget):
         """
         ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "input"
-        self.update_attribs({"type":"text"})
+        self.attribs["type"] = "text"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the input field"
-        self.update_attribs({"name":self.get_formname('input_text'), "value":self.get_field_value('input_text')})
-        if self.get_field_value('set_input_accepted') and self.get_field_value('input_accepted_class'):
-            if self.get_field_value('widget_class'):
-                new_class = self.get_field_value('widget_class') + " " + self.get_field_value('input_accepted_class')
-            else:
-                new_class = self.get_field_value('input_accepted_class')
-            self.update_attribs({"class":new_class})
-        if self.get_field_value('set_input_errored') and self.get_field_value('input_errored_class'):
-            if self.get_field_value('widget_class'):
-                new_class = self.get_field_value('widget_class') + " " + self.get_field_value('input_errored_class')
-            else:
-                new_class = self.get_field_value('input_errored_class')
-            self.update_attribs({"class":new_class})
-        if self.get_field_value('size'):
-            self.update_attribs({"size":self.get_field_value('size')})
-        if self.get_field_value('maxlength'):
-            self.update_attribs({"maxlength":self.get_field_value('maxlength')})
-        if self.get_field_value('disabled'):
-            self.update_attribs({"disabled":"disabled"})
-        if self.get_field_value('required'):
-            self.update_attribs({"required":"required"})
-        if self.get_field_value('type'):
-            self.update_attribs({"type":self.get_field_value('type')})
-        if self.get_field_value('pattern'):
-            self.update_attribs({"pattern":self.get_field_value('pattern')})
-        if self.get_field_value('title'):
-            self.update_attribs({"title":self.get_field_value('title')})
+        self.attribs["name"] = self.get_formname('input_text')
+        self.attribs["value"] = self.wf.input_text
 
+        if self.wf.set_input_accepted and self.wf.input_accepted_class:
+            if self.wf.widget_class:
+                self.attribs["class"] = self.wf.widget_class + " " + self.wf.input_accepted_class
+            else:
+                self.attribs["class"] = self.wf.input_accepted_class
+        if self.wf.set_input_errored and self.wf.input_errored_class:
+            if self.wf.widget_class:
+                self.attribs["class"] = self.wf.widget_class + " " + self.wf.input_errored_class
+            else:
+                self.attribs["class"] = self.wf.input_errored_class
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets input_accepted_class, input_errored_class into fieldvalues"""
-        return self._make_fieldvalues('input_accepted_class', 'input_errored_class')
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
+        self.jlabels['input_errored_class'] = self.wf.input_errored_class
+
+        if self.wf.size:
+            self.attribs["size"] = self.wf.size
+        if self.wf.maxlength:
+            self.attribs["maxlength"] = self.wf.maxlength
+        if self.wf.disabled:
+            self.attribs["disabled"] = "disabled"
+        if self.wf.required:
+            self.attribs["required"] = "required"
+        if self.wf.type:
+            self.attribs["type"] = self.wf.type
+        if self.wf.pattern:
+            self.attribs["pattern"] = self.wf.pattern
+        if self.wf.title:
+            self.attribs["title"] = self.wf.title
 
  
     @classmethod
@@ -914,7 +910,7 @@ class SubmitTextInput1(Widget):
             self[1].update_attribs({"target":self.get_field_value("target")})
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -923,7 +919,7 @@ class SubmitTextInput1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
@@ -1163,7 +1159,7 @@ class SubmitTextInput3(Widget):
             self[2].update_attribs({"target":self.get_field_value("target")})
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -1172,7 +1168,7 @@ class SubmitTextInput3(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
@@ -1431,14 +1427,14 @@ class TwoInputsSubmit1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
         self[1].update_attribs({"action": actionurl})
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -1646,7 +1642,7 @@ class SubmitDict1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        action_url = skiboot.get_url(self.get_field_value("action"), proj_ident=page.proj_ident)
+        action_url = self.get_url(self.get_field_value("action"))
         if not action_url:
             # setting self._error replaces the entire tag by the self._error message
             self._error = "Warning: broken link"
@@ -1837,7 +1833,7 @@ class SubmitTextInput2(Widget):
             self[1].update_attribs({"target":self.get_field_value("target")})
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -1846,7 +1842,7 @@ class SubmitTextInput2(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
@@ -2088,7 +2084,7 @@ class SubmitTextInput4(Widget):
             self[1].update_attribs({"target":self.get_field_value("target")})
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
-        self._jsonurl = skiboot.get_url(self.get_field_value("action_json"), proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("action_json"))
         if self.get_field_value('error_class'):
             self[0].update_attribs({"class":self.get_field_value('error_class')})
         if self.error_status:
@@ -2097,7 +2093,7 @@ class SubmitTextInput4(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
