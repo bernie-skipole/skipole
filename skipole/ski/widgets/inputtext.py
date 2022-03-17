@@ -405,80 +405,71 @@ class Password2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the input field"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+
+        self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self[0].del_one_attrib("style")
-        if self.get_field_value('inputdiv_class'):
-            self[1].update_attribs({"class": self.get_field_value('inputdiv_class')})
-        if self.get_field_value('label_class'):
-            self[1][0].update_attribs({"class": self.get_field_value('label_class')})
-        if self.get_field_value('label_style'):
-            self[1][0].update_attribs({"style": self.get_field_value('label_style')})
-        if self.get_field_value("label"):
-            self[1][0][0] = self.get_field_value("label")
+
+        self[1].set_class_style(self.wf.inputdiv_class)
+
+        self[1][0].set_class_style(self.wf.label_class, self.wf.label_style)
+        if self.wf.label:
+            self[1][0][0] = self.wf.label
+
         # set an id in the input field for the 'label for' tag
-        self[1][1].insert_id()
-        self[1][0].update_attribs({'for':self[1][1].get_id()})
-        self[1][1].update_attribs({"name":self.get_formname('input_text'), "value":self.get_field_value('input_text')})
-        if self.get_field_value('size'):
-            self[1][1].update_attribs({"size":self.get_field_value('size')})
-        if self.get_field_value('maxlength'):
-            self[1][1].update_attribs({"maxlength":self.get_field_value('maxlength')})
-        if self.get_field_value('required'):
-            self[1][1].update_attribs({"required":"required"})
-        if self.get_field_value('input_style'):
-            self[1][1].update_attribs({"style":self.get_field_value('input_style')})
-        if self.get_field_value('input_class'):
-            input_class = self.get_field_value('input_class')
+        self[1][0].attribs['for'] = self[1][1].insert_id()
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.input_accepted_class:
+            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
+        if self.wf.input_errored_class:
+            self.jlabels['input_errored_class'] = self.wf.input_errored_class
+        if self.wf.input_class:
+            self.jlabels['input_class'] = self.wf.input_class
+        if self.wf.input_disabled_class:
+            self.jlabels['input_disabled_class'] = self.wf.input_disabled_class
+
+        self[1][1].attribs.update({"name":self.get_formname('input_text'), "value":self.wf.input_text})
+
+        if self.wf.size:
+            self[1][1].attribs["size"] = self.wf.size
+        if self.wf.maxlength:
+            self[1][1].attribs["maxlength"] = self.wf.maxlength
+        if self.wf.required:
+            self[1][1].attribs["required"] = "required"
+        if self.wf.input_style:
+            self[1][1].attribs["style"] = self.wf.input_style
+
+        if self.wf.input_class:
+            input_class = self.wf.input_class
         else:
             input_class = ''
-        if self.get_field_value('disabled'):
-            self[1][1].update_attribs({"disabled":"disabled"})
-            if self.get_field_value('input_disabled_class'):
-                input_class = self.get_field_value('input_disabled_class')
-        if self.error_status and self.get_field_value('input_errored_class'):
+        if self.wf.disabled:
+            self[1][1].attribs["disabled"] = "disabled"
+            if self.wf.input_disabled_class:
+                input_class = self.wf.input_disabled_class
+        if self.error_status and self.wf.input_errored_class:
             if input_class:
-                input_class = input_class + ' ' + self.get_field_value('input_errored_class')
+                input_class = input_class + ' ' + self.wf.input_errored_class
             else:
-                input_class = self.get_field_value('input_errored_class')
-        elif self.get_field_value('set_input_errored') and self.get_field_value('input_errored_class'):
+                input_class = self.wf.input_errored_class
+        elif self.wf.set_input_errored and self.wf.input_errored_class:
             if input_class:
-                input_class = input_class + ' ' + self.get_field_value('input_errored_class')
+                input_class = input_class + ' ' + self.wf.input_errored_class
             else:
-                input_class = self.get_field_value('input_errored_class')
-        elif self.get_field_value('set_input_accepted') and self.get_field_value('input_accepted_class'):
+                input_class = self.wf.input_errored_class
+        elif self.wf.set_input_accepted and self.wf.input_accepted_class:
             if input_class:
-                input_class = input_class + ' ' + self.get_field_value('input_accepted_class')
+                input_class = input_class + ' ' + self.wf.input_accepted_class
             else:
-                input_class = self.get_field_value('input_accepted_class')
+                input_class = self.wf.input_accepted_class
         if input_class:
-            self[1][1].update_attribs({"class":input_class})
+            self[1][1].attribs["class"] = input_class
         # redstar
-        if self.get_field_value('redstar'):
+        if self.wf.redstar:
             self[1][2] = tag.Part(tag_name="span")
-            if self.get_field_value('redstar_style'):
-                self[1][2].update_attribs({"style":self.get_field_value('redstar_style')})
-            if self.get_field_value('redstar_class'):
-                self[1][2].update_attribs({"class":self.get_field_value('redstar_class')})
+            self[1][2].set_class_style(self.wf.redstar_class, self.wf.redstar_style)
             self[1][2][0] = '*'
-
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets input classes into fieldvalues"""
-        fieldlist = []
-        if self.get_field_value('input_accepted_class'):
-            fieldlist.append('input_accepted_class')
-        if self.get_field_value('input_errored_class'):
-            fieldlist.append('input_errored_class')
-        if self.get_field_value('input_class'):
-            fieldlist.append('input_class')
-        if self.get_field_value('input_disabled_class'):
-            fieldlist.append('input_disabled_class')
-        if fieldlist:
-            return self._make_fieldvalues(*fieldlist)
-        return ''
 
 
     @classmethod
