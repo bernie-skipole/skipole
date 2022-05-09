@@ -1112,18 +1112,17 @@ class SubmitTextInput3(Widget):
         # the text input field
         self[2][0][1] = tag.ClosedPart(tag_name="input", attribs ={"type":"text"})
 
-
         # div containing button
         self[2][1] = tag.Part(tag_name='div')
         # the label on the left of the button
         self[2][1][0] = tag.Part(tag_name="label", hide_if_empty=True)
         # the submit button
         self[2][1][1] = tag.ClosedPart(tag_name="input", attribs={"type":"submit"})
-#        self._jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
+
         if self.wf.target:
             self[2].attribs["target"] = self.wf.target
         # Hides widget if no error and hide is True
@@ -1133,11 +1132,6 @@ class SubmitTextInput3(Widget):
         jsonurl = self.get_url(self.wf.action_json)
         if jsonurl:
             self.jlabels['url'] = jsonurl
-
-        if self.wf.input_accepted_class:
-            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
-        if self.wf.input_errored_class:
-            self.jlabels['input_errored_class'] = self.wf.input_errored_class
 
         if self.wf.error_class:
             self[0].attribs["class"] = self.wf.error_class
@@ -1156,8 +1150,8 @@ class SubmitTextInput3(Widget):
         self[2].attribs["action"] = actionurl
 
         # the class of the outer div
-        if self.wf.outer_class:
-            self[1].attribs["class"] = self.wf.outer_class
+        self[1].set_class_style(self.wf.outer_class)
+
 
         # set paragraphs
         if not self.wf.show_para1:
@@ -1172,8 +1166,7 @@ class SubmitTextInput3(Widget):
             self[1][1][0] = tblock
 
         # the div holding label and input text
-        if self.wf.inputdiv_class:
-            self[2][0].attribs["class"] = self.wf.inputdiv_class
+        self[2][0].set_class_style(self.wf.inputdiv_class)
 
         if self.wf.label:
             self[2][0][0][0] = self.wf.label
@@ -1197,6 +1190,11 @@ class SubmitTextInput3(Widget):
             self[2][0][1].attribs["pattern"] = self.wf.pattern
         if self.wf.title:
             self[2][0][1].attribs["title"] = self.wf.title
+
+        if self.wf.input_accepted_class:
+            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
+        if self.wf.input_errored_class:
+            self.jlabels['input_errored_class'] = self.wf.input_errored_class
 
         if self.wf.input_class:
             input_class = self.wf.input_class
@@ -1224,7 +1222,6 @@ class SubmitTextInput3(Widget):
 
         # set the label 'for' attribute
         self[2][0][0].attribs['for'] = self.jlabels['input_id']
-
 
         # the div holding button
         if self.wf.buttondiv_class:
@@ -1257,7 +1254,6 @@ class SubmitTextInput3(Widget):
     SKIPOLE.widgets["{ident}"].eventfunc(e);
     }});
 """
-
 
     @classmethod
     def description(cls):
