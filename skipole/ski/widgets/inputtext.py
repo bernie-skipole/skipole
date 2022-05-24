@@ -1389,132 +1389,144 @@ class TwoInputsSubmit1(Widget):
         self[1][0][2] = tag.ClosedPart(tag_name="input", attribs ={"type":"text"})
         # the submit button
         self[1][0][3] = tag.ClosedPart(tag_name="input", attribs={"type":"submit"})
-        self._jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        if not self.get_field_value("action"):
+
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = self.get_url(self.get_field_value("action"))
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
-        self._jsonurl = self.get_url(self.get_field_value("action_json"))
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self[1].attribs["action"] = actionurl
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        jsonurl = self.get_url(self.wf.action_json)
+        if jsonurl:
+            self.jlabels['url'] = jsonurl
+
+        if self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
             self[0].del_one_attrib("style")
 
+
         # the div holding label, input text and button
-        if self.get_field_value('inputdiv_class'):
-            self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
+        if self.wf.inputdiv_class:
+            self[1][0].attribs["class"] = self.wf.inputdiv_class
 
         # set up label
-        if self.get_field_value('label'):
-            self[1][0][0][0] = self.get_field_value('label')
-        if self.get_field_value('label_class'):
-            self[1][0][0].update_attribs({"class": self.get_field_value('label_class')})
-        if self.get_field_value('label_style'):
-            self[1][0][0].update_attribs({"style": self.get_field_value('label_style')})
-        # first input field
-        self[1][0][1].update_attribs({"name":self.get_formname('input_text1'), "value":self.get_field_value('input_text1')})
-        if self.get_field_value('size1'):
-            self[1][0][1].update_attribs({"size":self.get_field_value('size1')})
-        if self.get_field_value('maxlength1'):
-            self[1][0][1].update_attribs({"maxlength":self.get_field_value('maxlength1')})
-        if self.get_field_value('disabled1'):
-            self[1][0][1].update_attribs({"disabled":"disabled"})
-        if self.get_field_value('required1'):
-            self[1][0][1].update_attribs({"required":"required"})
-        if self.get_field_value('type1'):
-            self[1][0][1].update_attribs({"type":self.get_field_value('type1')})
-        if self.get_field_value('pattern1'):
-            self[1][0][1].update_attribs({"pattern":self.get_field_value('pattern1')})
-        if self.get_field_value('title1'):
-            self[1][0][1].update_attribs({"title":self.get_field_value('title1')})
+        if self.wf.label:
+            self[1][0][0][0] = self.wf.label
+        self[1][0][0].set_class_style(self.wf.label_class, self.wf.label_style)
 
-        if self.get_field_value('input_class1'):
-            input_class1 = self.get_field_value('input_class1')
+        # first input field
+        self[1][0][1].attribs.update({"name":self.get_formname('input_text1'), "value":self.wf.input_text1})
+
+        if self.wf.size1:
+            self[1][0][1].attribs["size"] = self.wf.size1
+        if self.wf.maxlength1:
+            self[1][0][1].attribs["maxlength"] = self.wf.maxlength1
+        if self.wf.disabled1:
+            self[1][0][1].attribs["disabled"] = "disabled"
+        if self.wf.required1:
+            self[1][0][1].attribs["required"] = "required"
+        if self.wf.type1:
+            self[1][0][1].attribs["type"] = self.wf.type1
+        if self.wf.pattern1:
+            self[1][0][1].attribs["pattern"] = self.wf.pattern1
+        if self.wf.title1:
+            self[1][0][1].attribs["title"] = self.wf.title1
+
+        if self.wf.input_class1:
+            input_class1 = self.wf.input_class1
         else:
             input_class1 = ''
 
-        if self.error_status and self.get_field_value('input_errored_class'):
+        if self.error_status and self.wf.input_errored_class:
             if input_class1:
-                input_class1 = input_class1 + ' ' + self.get_field_value('input_errored_class')
+                input_class1 = input_class1 + ' ' + self.wf.input_errored_class
             else:
-                input_class1 = self.get_field_value('input_errored_class')
-        elif self.get_field_value('set_input_errored1') and self.get_field_value('input_errored_class'):
+                input_class1 = self.wf.input_errored_class
+        elif self.wf.set_input_errored1 and self.wf.input_errored_class:
             if input_class1:
-                input_class1 = input_class1 + ' ' + self.get_field_value('input_errored_class')
+                input_class1 = input_class1 + ' ' + self.wf.input_errored_class
             else:
-                input_class1 = self.get_field_value('input_errored_class')
-        elif self.get_field_value('set_input_accepted1') and self.get_field_value('input_accepted_class'):
+                input_class1 = self.wf.input_errored_class
+        elif self.wf.set_input_accepted1 and self.wf.input_accepted_class:
             if input_class1:
-                input_class1 = input_class1 + ' ' + self.get_field_value('input_accepted_class')
+                input_class1 = input_class1 + ' ' + self.wf.input_accepted_class
             else:
-                input_class1 = self.get_field_value('input_accepted_class')
+                input_class1 = self.wf.input_accepted_class
 
         if input_class1:
-            self[1][0][1].update_attribs({"class":input_class1})
+            self[1][0][1].attribs["class"] = input_class1
 
 
         # second input field
-        self[1][0][2].update_attribs({"name":self.get_formname('input_text2'), "value":self.get_field_value('input_text2')})
-        if self.get_field_value('size2'):
-            self[1][0][2].update_attribs({"size":self.get_field_value('size2')})
-        if self.get_field_value('maxlength2'):
-            self[1][0][2].update_attribs({"maxlength":self.get_field_value('maxlength2')})
-        if self.get_field_value('disabled2'):
-            self[1][0][2].update_attribs({"disabled":"disabled"})
-        if self.get_field_value('required2'):
-            self[1][0][2].update_attribs({"required":"required"})
-        if self.get_field_value('type2'):
-            self[1][0][2].update_attribs({"type":self.get_field_value('type2')})
-        if self.get_field_value('pattern2'):
-            self[1][0][2].update_attribs({"pattern":self.get_field_value('pattern2')})
-        if self.get_field_value('title2'):
-            self[1][0][2].update_attribs({"title":self.get_field_value('title2')})
+        self[1][0][2].attribs.update({"name":self.get_formname('input_text2'), "value":self.wf.input_text2})
 
-        if self.get_field_value('input_class2'):
-            input_class2 = self.get_field_value('input_class2')
+        if self.wf.size2:
+            self[1][0][2].attribs["size"] = self.wf.size2
+        if self.wf.maxlength2:
+            self[1][0][2].attribs["maxlength"] = self.wf.maxlength2
+        if self.wf.disabled2:
+            self[1][0][2].attribs["disabled"] = "disabled"
+        if self.wf.required2:
+            self[1][0][2].attribs["required"] = "required"
+        if self.wf.type2:
+            self[1][0][2].attribs["type"] = self.wf.type2
+        if self.wf.pattern2:
+            self[1][0][2].attribs["pattern"] = self.wf.pattern2
+        if self.wf.title2:
+            self[1][0][2].attribs["title"] = self.wf.title2
+
+        if self.wf.input_class2:
+            input_class2 = self.wf.input_class2
         else:
             input_class2 = ''
 
-        if self.error_status and self.get_field_value('input_errored_class'):
+        if self.error_status and self.wf.input_errored_class:
             if input_class2:
-                input_class2 = input_class2 + ' ' + self.get_field_value('input_errored_class')
+                input_class2 = input_class2 + ' ' + self.wf.input_errored_class
             else:
-                input_class2 = self.get_field_value('input_errored_class')
-        elif self.get_field_value('set_input_errored2') and self.get_field_value('input_errored_class'):
+                input_class2 = self.wf.input_errored_class
+        elif self.wf.set_input_errored2 and self.wf.input_errored_class:
             if input_class2:
-                input_class2 = input_class2 + ' ' + self.get_field_value('input_errored_class')
+                input_class2 = input_class2 + ' ' + self.wf.input_errored_class
             else:
-                input_class2 = self.get_field_value('input_errored_class')
-        elif self.get_field_value('set_input_accepted2') and self.get_field_value('input_accepted_class'):
+                input_class2 = self.wf.input_errored_class
+        elif self.wf.set_input_accepted2 and self.wf.input_accepted_class:
             if input_class2:
-                input_class2 = input_class2 + ' ' + self.get_field_value('input_accepted_class')
+                input_class2 = input_class2 + ' ' + self.wf.input_accepted_class
             else:
-                input_class2 = self.get_field_value('input_accepted_class')
+                input_class2 = self.wf.input_accepted_class
 
         if input_class2:
-            self[1][0][2].update_attribs({"class":input_class2})
+            self[1][0][2].attribs["class"] = input_class2
 
-        # the submit button
-        self[1][0][3].update_attribs({"value":self.get_field_value('button_text')})
+        if self.wf.input_accepted_class:
+            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
+        if self.wf.input_errored_class:
+            self.jlabels['input_errored_class'] = self.wf.input_errored_class
+
+
+        # submit button
+        self[1][0][3].attribs["value"] = self.wf.button_text
         # the button class
-        if self.get_field_value('button_class'):
-            self[1][0][3].update_attribs({"class": self.get_field_value('button_class')})
+        if self.wf.button_class:
+            self[1][0][3].attribs["class"] = self.wf.button_class
 
         # set an id in the first input field for the 'label for' tag
-        self[1][0][1].insert_id()
+        submit_id = self[1][0][1].insert_id()
         # set the label 'for' attribute
-        self[1][0][0].update_attribs({'for':self[1][0][1].get_id()})
+        self[1][0][0].attribs['for'] = submit_id
 
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
@@ -1522,13 +1534,11 @@ class TwoInputsSubmit1(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a submit event handler"""
-        jscript = """  $("#{ident} form").on("submit input", function(e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident} form").on("submit input", function(e) {{
     SKIPOLE.widgets["{ident}"].eventfunc(e);
     }});
-""".format(ident=self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class', url=self._jsonurl)
-        return jscript + self._make_fieldvalues('input_accepted_class', 'input_errored_class')
+"""
 
 
     @classmethod
