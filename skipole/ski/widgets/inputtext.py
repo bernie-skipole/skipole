@@ -1613,35 +1613,31 @@ class SubmitDict1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the form and list"
 
-        input_dict = self.get_field_value("input_dict")
+        input_dict = self.wf.input_dict
         if not input_dict:
             self.show = False
             return
 
-        # get the form action url
-        if not self.get_field_value("action"):
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        action_url = self.get_url(self.get_field_value("action"))
-        if not action_url:
-            # setting self._error replaces the entire tag by the self._error message
+        actionurl = self.get_url(self.wf.action)
+        if not actionurl:
+            # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
-        self[0].update_attribs({"action": action_url})
+        # update the action of the form
+        self[0].attribs["action"] = actionurl
 
+        self[0][0].set_class_style(self.wf.ul_class, self.wf.ul_style)
 
-        if self.get_field_value("ul_class"):
-            self[0][0].update_attribs({"class": self.get_field_value("ul_class")})
-        if self.get_field_value("ul_style"):
-            self[0][0].update_attribs({"style": self.get_field_value("ul_style")})
-
-        li_class =  self.get_field_value("li_class")
+        li_class =  self.wf.li_class
 
         input_name = self.get_formname("input_dict") + '-'
 
-        if self.get_field_value('input_class'):
-            input_class = self.get_field_value('input_class')
+        if self.wf.input_class:
+            input_class = self.wf.input_class
         else:
             input_class = ''
 
@@ -1664,26 +1660,25 @@ class SubmitDict1(Widget):
                 self[0][0][linumber] = tag.Part(tag_name="li", attribs ={"class":li_class})
             else:
                 self[0][0][linumber] = tag.Part(tag_name="li")
-            if self.get_field_value("li_style"):
-                self[0][0][linumber].update_attribs({"style": self.get_field_value("li_style")})
-
+            if self.wf.li_style:
+                self[0][0][linumber].attribs["style"] = self.wf.li_style
 
             self[0][0][linumber][0] = li_input
 
         # list done, now for submit button
 
         # the div holding button
-        if self.get_field_value('inputdiv_class') and self.get_field_value('inputdiv_style'):
-            self[0][1].attribs = {"class" : self.get_field_value('inputdiv_class'), "style": self.get_field_value('inputdiv_style')}
-        elif self.get_field_value('inputdiv_class'):
-            self[0][1].attribs = {"class" : self.get_field_value('inputdiv_class')}
-        elif self.get_field_value('inputdiv_style'):
-            self[0][1].attribs = {"style" : self.get_field_value('inputdiv_style')}
+        if self.wf.inputdiv_class and self.wf.inputdiv_style:
+            self[0][1].attribs = {"class" : self.wf.inputdiv_class, "style": self.wf.inputdiv_style}
+        elif self.wf.inputdiv_class:
+            self[0][1].attribs = {"class" : self.wf.inputdiv_class}
+        elif self.wf.inputdiv_style:
+            self[0][1].attribs = {"style" : self.wf.inputdiv_style}
 
-        if self.get_field_value('button_class'):
-            self[0][1][0].attribs = {"value":self.get_field_value('button_text'), "type":"submit", "class": self.get_field_value('button_class')}
+        if self.wf.button_class:
+            self[0][1][0].attribs = {"value":self.wf.button_text, "type":"submit", "class":self.wf.button_class}
         else:
-            self[0][1][0].attribs = {"value":self.get_field_value('button_text'), "type":"submit"}
+            self[0][1][0].attribs = {"value":self.wf.button_text, "type":"submit"}
 
         # add ident and four hidden fields
         self.add_hiddens(self[0], page)
