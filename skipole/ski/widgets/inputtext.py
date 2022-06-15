@@ -2,7 +2,7 @@
 
 """Contains widgets for inputting text"""
 
-from .. import tag, excepts
+from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 

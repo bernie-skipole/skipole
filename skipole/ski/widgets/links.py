@@ -1,9 +1,7 @@
 
 "Contains link widgets"
 
-from urllib.parse import quote, quote_plus
-from string import Template
-import json
+from urllib.parse import quote
 
 from .. import skiboot, tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
@@ -57,7 +55,7 @@ class IconLink(Widget):
         if not self.get_field_value("link_ident"):
             self._error = "Warning: broken link"
             return
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             self._error = "Warning: broken link"
             return
@@ -138,7 +136,7 @@ class ContainerLink1(Widget):
         if not self.get_field_value("link_ident"):
             self._error = "Warning: broken link"
             return
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             self._error = "Warning: broken link"
             return
@@ -195,13 +193,13 @@ class ContainerLink2(Widget):
         "Build the link"
 
         if self.get_field_value("json_ident"):
-            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
+            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
         if not self.get_field_value("link_ident"):
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident"
             return
 
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             self._error = "Warning: broken link"
             return
@@ -274,7 +272,7 @@ class Link(Widget):
         if not self.get_field_value("link_ident"):
             self._error = "Warning: broken link"
             return
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             self._error = "Warning: broken link"
             return
@@ -393,7 +391,7 @@ class ImageOrTextLink(Widget):
         "Build the link"
 
         if self.get_field_value("link_ident"):
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.get_field_value("link_ident"))
             justurl = url
             if url:
                 # create a url for the href
@@ -414,7 +412,7 @@ class ImageOrTextLink(Widget):
         if self.get_field_value("link_text"):
             self[0] = self.get_field_value("link_text")
         elif self.get_field_value("img_link"):
-            imageurl = skiboot.get_url(self.get_field_value("img_link"), proj_ident=page.proj_ident)
+            imageurl = self.get_url(self.get_field_value("img_link"))
             if imageurl:
                 if self.get_field_value('width') and self.get_field_value('height'):
                     self[0] = tag.ClosedPart(tag_name="img", attribs={"src": quote(imageurl, safe='/:'),
@@ -476,7 +474,7 @@ class CloseButton(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
         if self.get_field_value("link_ident"):
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.get_field_value("link_ident"))
             if url:
                 # create a url for the href
                 get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
@@ -531,7 +529,7 @@ class OpenButton(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
         if self.get_field_value("link_ident"):
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.get_field_value("link_ident"))
             if url:
                 # create a url for the href
                 get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
@@ -596,7 +594,7 @@ class OpenButton2(Widget):
         # Hides widget if hide is True
         self.widget_hide(self.get_field_value("hide"))
         if self.get_field_value("link_ident"):
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.get_field_value("link_ident"))
             if url:
                 # create a url for the href
                 get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
@@ -676,8 +674,8 @@ class JSONButtonLink(Widget):
         # Hides widget if no error and hide is True
         self.widget_hide(self.get_field_value("hide"))
         if self.get_field_value("json_ident"):
-            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
-        self._htmlurl = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
+        self._htmlurl = self.get_url(self.get_field_value("link_ident"))
         if not self._htmlurl:
             if self.get_field_value('error_class'):
                 self.update_attribs({'class':self.get_field_value('error_class')})
@@ -772,7 +770,7 @@ class ButtonLink1(Widget):
                 self.update_attribs({'class':self.get_field_value('error_class')})
             self[0] = "Warning: broken link"
             return
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             if self.get_field_value('error_class'):
                 self.update_attribs({'class':self.get_field_value('error_class')})
@@ -865,7 +863,7 @@ class ButtonLink2(Widget):
         if self.error_status:
             self[0].del_one_attrib("style")
         if self.get_field_value("json_ident"):
-            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
+            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
         if not self.get_field_value("link_ident"):
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident"
@@ -882,7 +880,7 @@ class ButtonLink2(Widget):
         if self.get_field_value('button_style'):
             self[1][0].update_attribs({"style":self.get_field_value('button_style')})
         # get url and button text
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             # setting self._error replaces the entire tag
             self._error = "Warning: Invalid link"
@@ -1043,9 +1041,9 @@ class MessageButton(Widget):
             self[1][0].update_attribs({"class":self.get_field_value('button_class')})
         # get json url
         if self.get_field_value("json_ident"):
-            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
+            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
         # get url and button text
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             # setting self._error replaces the entire tag
             self._error = "Warning: Invalid link"
@@ -1162,7 +1160,7 @@ class ImageLink1(Widget):
         if not self.get_field_value("link_ident"):
             self._error = "Warning: broken link"
             return
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if not url:
             self._error = "Warning: broken link"
             return
@@ -1177,14 +1175,14 @@ class ImageLink1(Widget):
             # if no image ident, place the link page url as content, without the get fields
             self[0] = justurl
             return
-        img_url = skiboot.get_url(self.get_field_value("img_ident"), proj_ident=page.proj_ident)
+        img_url = self.get_url(self.get_field_value("img_ident"))
         if not img_url:
             self[0] = justurl
             return
         else:
             self._img_url = quote(img_url, safe='/:')
             self[0].update_attribs({"src": self._img_url})
-        hover_img_url = skiboot.get_url(self.get_field_value("hover_img_ident"), proj_ident=page.proj_ident)
+        hover_img_url = self.get_url(self.get_field_value("hover_img_ident"))
         if hover_img_url:
             self._hover_img_url = quote(hover_img_url, safe='/:')
 
@@ -1731,7 +1729,7 @@ class Table1_Links(Widget):
                 else:
                     self[rownumber][1][0] = tag.Part(tag_name='a')
 
-                url = skiboot.get_url(col2_links[index], proj_ident=page.proj_ident)
+                url = self.get_url(col2_links[index])
                 if url:
                     if col2[index]:
                         self[rownumber][1][0][0] = col2[index]
@@ -1868,7 +1866,7 @@ class Table2_Links(Widget):
 
         for item in col2_json_idents:
             if item:
-                self._col2_json_idents.append( skiboot.get_url(item, proj_ident=page.proj_ident) )
+                self._col2_json_idents.append( self.get_url(item) )
             else:
                 self._col2_json_idents.append('')
 
@@ -1913,7 +1911,7 @@ class Table2_Links(Widget):
                 else:
                     self[rownumber][1][0] = tag.Part(tag_name='a')
 
-                url = skiboot.get_url(col2_link_idents[index], proj_ident=page.proj_ident)
+                url = self.get_url(col2_link_idents[index])
                 if url:
                     if col2[index]:
                         self[rownumber][1][0][0] = col2[index]
@@ -2038,7 +2036,7 @@ class Table1_Button(Widget):
         else:
             odd = ''
         if self.get_field_value("json_ident"):
-            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
+            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
         # create rows
         for index, row in enumerate(fieldtable):
             rownumber = index+header
@@ -2061,7 +2059,7 @@ class Table1_Button(Widget):
                 self[rownumber][1][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
             self[rownumber][1][0].htmlescaped=False
             if self.get_field_value("link_ident"):
-                url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+                url = self.get_url(self.get_field_value("link_ident"))
                 if url:
                     if self.get_field_value("button_text"):
                         self[rownumber][1][0][0] = self.get_field_value("button_text")
@@ -2179,7 +2177,7 @@ class Table2_Button(Widget):
         else:
             odd = ''
         if self.get_field_value("json_ident"):
-            self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"), proj_ident=page.proj_ident)
+            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
         # create rows
         for index, row in enumerate(fieldtable):
             rownumber = index+header
@@ -2200,7 +2198,7 @@ class Table2_Button(Widget):
                 self[rownumber][2][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
             self[rownumber][2][0].htmlescaped=False
             if self.get_field_value("link_ident"):
-                url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+                url = self.get_url(self.get_field_value("link_ident"))
                 if url:
                     if self.get_field_value("button_text"):
                         self[rownumber][2][0][0] = self.get_field_value("button_text")
@@ -2319,13 +2317,13 @@ class Table3_Buttons2(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
         if self.get_field_value("json_ident1"):
-            self._jsonurl1 = skiboot.get_url(self.get_field_value("json_ident1"), proj_ident=page.proj_ident)
+            self._jsonurl1 = self.get_url(self.get_field_value("json_ident1"))
         if self.get_field_value("json_ident2"):
-            self._jsonurl2 = skiboot.get_url(self.get_field_value("json_ident2"), proj_ident=page.proj_ident)
+            self._jsonurl2 = self.get_url(self.get_field_value("json_ident2"))
         if self.get_field_value("link_ident1"):
-            self._url1 = skiboot.get_url(self.get_field_value("link_ident1"), proj_ident=page.proj_ident)
+            self._url1 = self.get_url(self.get_field_value("link_ident1"))
         if self.get_field_value("link_ident2"):
-            self._url2 = skiboot.get_url(self.get_field_value("link_ident2"), proj_ident=page.proj_ident)
+            self._url2 = self.get_url(self.get_field_value("link_ident2"))
         fieldtable = self.get_field_value("contents")
         header = 0
         if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):
@@ -2560,7 +2558,7 @@ class Table1_Buttons4(Widget):
                         btn_col1[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col1[0].htmlescaped=False
                     if self.get_field_value("link_ident1"):
-                        url = skiboot.get_url(self.get_field_value("link_ident1"), proj_ident=page.proj_ident)
+                        url = self.get_url(self.get_field_value("link_ident1"))
                         if url:
                             if self.get_field_value("button_text1"):
                                 btn_col1[0][0] = self.get_field_value("button_text1")
@@ -2584,7 +2582,7 @@ class Table1_Buttons4(Widget):
                         btn_col2[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col2[0].htmlescaped=False
                     if self.get_field_value("link_ident2"):
-                        url = skiboot.get_url(self.get_field_value("link_ident2"), proj_ident=page.proj_ident)
+                        url = self.get_url(self.get_field_value("link_ident2"))
                         if url:
                             if self.get_field_value("button_text2"):
                                 btn_col2[0][0] = self.get_field_value("button_text2")
@@ -2608,7 +2606,7 @@ class Table1_Buttons4(Widget):
                         btn_col3[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col3[0].htmlescaped=False
                     if self.get_field_value("link_ident3"):
-                        url = skiboot.get_url(self.get_field_value("link_ident3"), proj_ident=page.proj_ident)
+                        url = self.get_url(self.get_field_value("link_ident3"))
                         if url:
                             if self.get_field_value("button_text3"):
                                 btn_col3[0][0] = self.get_field_value("button_text3")
@@ -2632,7 +2630,7 @@ class Table1_Buttons4(Widget):
                         btn_col4[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col4[0].htmlescaped=False
                     if self.get_field_value("link_ident4"):
-                        url = skiboot.get_url(self.get_field_value("link_ident4"), proj_ident=page.proj_ident)
+                        url = self.get_url(self.get_field_value("link_ident4"))
                         if url:
                             if self.get_field_value("button_text4"):
                                 btn_col4[0][0] = self.get_field_value("button_text4")
@@ -2767,11 +2765,11 @@ class GeneralButtonTable2(Widget):
             self._error = "Invalid table size : droprows length does not match table rows"
             return
         # list of json url's
-        self._jsonurl_list = [ skiboot.get_url(item[1], proj_ident=page.proj_ident) for item in colidents ]
+        self._jsonurl_list = [ self.get_url(item[1]) for item in colidents ]
         # list of html url's
-        self._htmlurl_list = [ skiboot.get_url(item[0], proj_ident=page.proj_ident) for item in colidents ]
+        self._htmlurl_list = [ self.get_url(item[0]) for item in colidents ]
         # dropurl
-        self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
+        self._dropurl = self.get_url(self.get_field_value("dropident"))
         # set even row class
         if self.get_field_value('even_class'):
             self._even = self.get_field_value('even_class')
@@ -2994,13 +2992,13 @@ class GeneralButtonTable1(Widget):
             self._error = "Invalid table size : droprows length does not match table rows"
             return
         # list of json url's
-        self._jsonurl_list = [ skiboot.get_url(item[1], proj_ident=page.proj_ident) for item in colidents ]
+        self._jsonurl_list = [ self.get_url(item[1]) for item in colidents ]
         # list of html url's
-        self._htmlurl_list = [ skiboot.get_url(item[0], proj_ident=page.proj_ident) for item in colidents ]
+        self._htmlurl_list = [ self.get_url(item[0]) for item in colidents ]
         # list of storage key's
         self._storagekey_list = [ item[2] for item in colidents ]
         # dropurl
-        self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
+        self._dropurl = self.get_url(self.get_field_value("dropident"))
         # set even row class
         _even = None
         if self.get_field_value('even_class'):
@@ -3127,13 +3125,13 @@ class Audio1(Widget):
         if self.get_field_value('play'):
             self.update_attribs({'autoplay':'autoplay'})
         if self.get_field_value("mp3_ident"):
-            mp3url = skiboot.get_url(self.get_field_value("mp3_ident"), proj_ident=page.proj_ident)
+            mp3url = self.get_url(self.get_field_value("mp3_ident"))
             self.append( tag.ClosedPart(tag_name="source", attribs= {"src": mp3url, "type":"audio/mpeg"}) )
         if self.get_field_value("wav_ident"):
-            wavurl = skiboot.get_url(self.get_field_value("wav_ident"), proj_ident=page.proj_ident)
+            wavurl = self.get_url(self.get_field_value("wav_ident"))
             self.append( tag.ClosedPart(tag_name="source", attribs= {"src": wavurl, "type":"audio/wav"}) )
         if self.get_field_value("ogg_ident"):
-            oggurl = skiboot.get_url(self.get_field_value("ogg_ident"), proj_ident=page.proj_ident)
+            oggurl = self.get_url(self.get_field_value("ogg_ident"))
             self.append( tag.ClosedPart(tag_name="source", attribs= {"src": oggurl, "type":"audio/ogg"}) )
 
 
