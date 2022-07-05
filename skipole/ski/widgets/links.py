@@ -52,38 +52,37 @@ class IconLink(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
-        if not self.get_field_value("link_ident"):
+        if not self.wf.link_ident:
             self._error = "Warning: broken link"
             return
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if not url:
             self._error = "Warning: broken link"
             return
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2}
         # add get fields and page ident_data to the url (defined in tag.ParentPart)
-        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
-        self.update_attribs({"href": url})
-        if self.get_field_value("target"):
-            self.update_attribs({"target":self.get_field_value("target")})
+        self.attribs["href"] = self.make_get_url(page, url, get_fields, self.wf.force_ident)
+        if self.wf.target:
+            self.attribs["target"] = self.wf.target
 
         # the svg tag holding the container
-        if self.get_field_value('svg_class'):
-            self[0].update_attribs({"class": self.get_field_value('svg_class')})
-        if self.get_field_value('svg_style'):
-            self[0].update_attribs({"style": self.get_field_value('svg_style')})
-        if self.get_field_value("svg_width"):
-            self[0].update_attribs({"width":self.get_field_value("svg_width")})
-        if self.get_field_value("svg_height"):
-            self[0].update_attribs({"height":self.get_field_value("svg_height")})
-        if self.get_field_value("svg_viewBox"):
-            self[0].update_attribs({"viewBox":self.get_field_value("svg_viewBox")})
-        if self.get_field_value("svg_preserveAspectRatio"):
-            self[0].update_attribs({"preserveAspectRatio":self.get_field_value("svg_preserveAspectRatio")})
+        if self.wf.svg_class:
+            self[0].attribs["class"] = self.wf.svg_class
+        if self.wf.svg_style:
+            self[0].attribs["style"] = self.wf.svg_style
+        if self.wf.svg_width:
+            self[0].attribs["width"] = self.wf.svg_width
+        if self.wf.svg_height:
+            self[0].attribs["height"] = self.wf.svg_height
+        if self.wf.svg_viewBox:
+            self[0].attribs["viewBox"] = self.wf.svg_viewBox
+        if self.wf.svg_preserveAspectRatio:
+            self[0].attribs["preserveAspectRatio"] = self.wf.svg_preserveAspectRatio
 
-        if self.get_field_value("transform"):
-            self[0][0].update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self[0][0].attribs["transform"] = self.wf.transform
 
 
     @classmethod
@@ -133,21 +132,20 @@ class ContainerLink1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
         # self[0] is initially set as the empty string ''
-        if not self.get_field_value("link_ident"):
+        if not self.wf.link_ident:
             self._error = "Warning: broken link"
             return
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if not url:
             self._error = "Warning: broken link"
             return
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2}
         # add get fields and page ident_data to the url (defined in tag.ParentPart)
-        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
-        self.update_attribs({"href": url})
-        if self.get_field_value("target"):
-            self.update_attribs({"target":self.get_field_value("target")})
+        self.attribs["href"] = self.make_get_url(page, url, get_fields, self.wf.force_ident)
+        if self.wf.target:
+            self.attribs["target"] = self.wf.target
 
     @classmethod
     def description(cls):
@@ -187,41 +185,42 @@ class ContainerLink2(Widget):
         self.tag_name = "a"
         # where content can be placed
         self[0] = ''
-        self._jsonurl = ''
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
 
-        if self.get_field_value("json_ident"):
-            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
-        if not self.get_field_value("link_ident"):
+        if not self.wf.link_ident:
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident"
             return
 
-        url = self.get_url(self.get_field_value("link_ident"))
+
+        url = self.get_url(self.wf.link_ident)
         if not url:
             self._error = "Warning: broken link"
             return
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2}
 
         # add get fields and page ident_data to the url (defined in tag.ParentPart)
-        url = self.make_get_url(page, url, get_fields, True)
-        self.update_attribs({"href": url})
+        self.attribs["href"] = self.make_get_url(page, url, get_fields, True)
+
+        if self.wf.json_ident:
+            jsonurl = self.get_url(self.wf.json_ident)
+            # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+            if jsonurl:
+                self.jlabels['url'] = jsonurl
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        jscript = """  $("#{ident}").click(function (e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident}").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues(url=self._jsonurl)
-        else:
-            return jscript
+"""
 
     @classmethod
     def description(cls):
@@ -267,12 +266,12 @@ class Link(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
         # self[0] is initially set as the empty string ''
-        if self.get_field_value("content"):
-            self[0] = self.get_field_value("content")
-        if not self.get_field_value("link_ident"):
+        if self.wf.content:
+            self[0] = self.wf.content
+        if not self.wf.link_ident:
             self._error = "Warning: broken link"
             return
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if not url:
             self._error = "Warning: broken link"
             return
@@ -280,13 +279,12 @@ class Link(Widget):
             # if no content, place the page url as content
             self[0] = url
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2}
         # add get fields and page ident_data to the url (defined in tag.ParentPart)
-        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
-        self.update_attribs({"href": url})
-        if self.get_field_value("target"):
-            self.update_attribs({"target":self.get_field_value("target")})
+        self.attribs["href"] = self.make_get_url(page, url, get_fields, self.wf.force_ident)
+        if self.wf.target:
+            self.attribs["target"] = self.wf.target
 
     @classmethod
     def description(cls):
@@ -321,9 +319,9 @@ class LinkToWidget(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
         # self[0] is initially set as the empty string ''
-        if self.get_field_value("content"):
-            self[0] = self.get_field_value("content")
-        wdgetname = self.get_field_value("towidget")
+        if self.wf.content:
+            self[0] = self.wf.content
+        wdgetname = self.wf.towidget
         if not wdgetname:
             self._error = "Warning: broken link"
             return
@@ -331,7 +329,7 @@ class LinkToWidget(Widget):
         if not self[0]:
             # if no content, place the widget id as content
             self[0] = widget_id
-        self.update_attribs({"href": widget_id})
+        self.attribs["href"] = widget_id
 
     @classmethod
     def description(cls):
