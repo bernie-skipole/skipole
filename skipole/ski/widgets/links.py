@@ -388,45 +388,43 @@ class ImageOrTextLink(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
 
-        if self.get_field_value("link_ident"):
-            url = self.get_url(self.get_field_value("link_ident"))
-            justurl = url
-            if url:
+        if self.wf.link_ident:
+            justurl = self.get_url(self.wf.link_ident)
+            if justurl:
                 # create a url for the href
-                get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                              self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                              self.get_formname("get_field3"):self.get_field_value("get_field3"),
-                              self.get_formname("get_field4"):self.get_field_value("get_field4")}
-                url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
-                self.update_attribs({"href": url})
-                if self.get_field_value("target"):
-                    self.update_attribs({"target":self.get_field_value("target")})
+                get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                              self.get_formname("get_field2"):self.wf.get_field2,
+                              self.get_formname("get_field3"):self.wf.get_field3,
+                              self.get_formname("get_field4"):self.wf.get_field4}
+                self.attribs["href"] = self.make_get_url(page, justurl, get_fields, self.wf.force_ident)
+                if self.wf.target:
+                    self.attribs["target"] = :self.wf.target
             else:
                 self.tag_name="span"
         else:
             justurl = ''
             self.tag_name="span"
 
-        if self.get_field_value("link_text"):
-            self[0] = self.get_field_value("link_text")
-        elif self.get_field_value("img_link"):
-            imageurl = self.get_url(self.get_field_value("img_link"))
+        if self.wf.link_text:
+            self[0] = self.wf.link_text
+        elif self.wf.img_link:
+            imageurl = self.get_url(self.wf.img_link)
             if imageurl:
-                if self.get_field_value('width') and self.get_field_value('height'):
+                if self.wf.width and self.wf.height:
                     self[0] = tag.ClosedPart(tag_name="img", attribs={"src": quote(imageurl, safe='/:'),
-                                                                      'width':self.get_field_value('width'),
-                                                                      'height':self.get_field_value('height')})
-                elif self.get_field_value('width'):
+                                                                      'width':self.wf.width,
+                                                                      'height':self.wf.height})
+                elif self.wf.width:
                     self[0] = tag.ClosedPart(tag_name="img", attribs={"src": quote(imageurl, safe='/:'),
-                                                                      'width':self.get_field_value('width')})
-                elif self.get_field_value('height'):
+                                                                      'width':self.wf.width})
+                elif self.wf.height:
                     self[0] = tag.ClosedPart(tag_name="img", attribs={"src": quote(imageurl, safe='/:'),
-                                                                      'height':self.get_field_value('height')})
+                                                                      'height':self.wf.height})
                 else:
                     self[0] = tag.ClosedPart(tag_name="img", attribs={"src": quote(imageurl, safe='/:')})
             else:
                 # No image url, so show the text
-                self[0] = self.get_field_value("img_link")
+                self[0] = self.wf.img_link
         elif justurl:
             # if no image ident or text, place the link page url as content, without the get fields
             self[0] = justurl
