@@ -133,8 +133,10 @@ class ConfirmBox1(Widget):
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
         if not (self.jlabels['url1'] or self.jlabels['url2']):
-            return
-        ident = self.get_id()
+            return ''
+        if 'id' not in self.attribs:
+            return ''
+        ident = self.attribs['id']
         return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});

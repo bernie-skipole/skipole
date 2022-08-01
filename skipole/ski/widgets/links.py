@@ -4,7 +4,7 @@
 from urllib.parse import quote
 
 from .. import skiboot, tag
-from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
+from . import Widget, ClosedWidget, ClickEventMixin, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
 
@@ -443,7 +443,7 @@ class ImageOrTextLink(Widget):
 </a>"""
 
 
-class CloseButton(Widget):
+class CloseButton(ClickEventMixin, Widget):
     """A link button that closes a given section/widget, or if javascript is disabled, calls a link"""
 
     # This class does not display any error messages
@@ -483,14 +483,6 @@ class CloseButton(Widget):
             self.jlabels['target_widget'] = self.wf.target_widget
 
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        ident=self.get_id()
-        return f"""  $("#{ident}").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
-
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -501,7 +493,7 @@ class CloseButton(Widget):
 </a>"""
 
 
-class OpenButton(Widget):
+class OpenButton(ClickEventMixin, Widget):
     """A link button that opens a given section/widget, or if javascript is disabled, calls a link"""
 
     # This class does not display any error messages
@@ -541,13 +533,6 @@ class OpenButton(Widget):
         if self.wf.target_widget:
             self.jlabels['target_widget'] = self.wf.target_widget
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        ident=self.get_id()
-        return f"""  $("#{ident}").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
 
     @classmethod
     def description(cls):
@@ -560,7 +545,7 @@ class OpenButton(Widget):
 
 
 
-class OpenButton2(Widget):
+class OpenButton2(ClickEventMixin, Widget):
     """A link button that opens a given section/widget, or if javascript is disabled, calls a link"""
 
     # This class does not display any error messages
@@ -609,13 +594,6 @@ class OpenButton2(Widget):
         if self.wf.target_widget:
             self.jlabels['target_widget'] = self.wf.target_widget
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        ident=self.get_id()
-        return f"""  $("#{ident}").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
 
     @classmethod
     def description(cls):
@@ -628,7 +606,7 @@ class OpenButton2(Widget):
 
 
 
-class JSONButtonLink(Widget):
+class JSONButtonLink(ClickEventMixin, Widget):
     """A button link to the JSON page with the given ident, label or url.
        Can send session or local storage values.
        On error replace the button text
@@ -713,14 +691,6 @@ class JSONButtonLink(Widget):
         if html_url:
             self.jlabels['html_url'] = html_url
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        ident=self.get_id()
-        return f"""  $("#{ident}").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
-
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -770,44 +740,43 @@ class ButtonLink1(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "a"
-        self.update_attribs({"role":"button"})
+        self.attribs["role"] = "button"
         # on error, button text is replaced by error message
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
-        if self.error_status and self.get_field_value('error_class'):
-            self.update_attribs({'class':self.get_field_value('error_class')})
+        if self.error_status and self.wf.error_class:
+            self.attribs['class'] = self.wf.error_class
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if not self.get_field_value("link_ident"):
-            if self.get_field_value('error_class'):
-                self.update_attribs({'class':self.get_field_value('error_class')})
+        self.widget_hide(self.wf.hide)
+        if not self.wf.link_ident:
+            if self.wf.error_class:
+                self.attribs['class'] = self.wf.error_class
             self[0] = "Warning: broken link"
             return
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if not url:
-            if self.get_field_value('error_class'):
-                self.update_attribs({'class':self.get_field_value('error_class')})
+            if self.wf.error_class:
+                self.attribs['class'] = self.wf.error_class
             self[0] = "Warning: broken link"
             return
-        if self.get_field_value("button_text"):
-            self[0] = self.get_field_value("button_text")
+        if self.wf.button_text:
+            self[0] = self.wf.button_text
         else:
             self[0] = url
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                      self.get_formname("get_field3"):self.get_field_value("get_field3"),
-                      self.get_formname("get_field4"):self.get_field_value("get_field4")}
-        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
-        self.update_attribs({"href": url})
-        if self.get_field_value("target"):
-            self.update_attribs({"target":self.get_field_value("target")})
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets field values"""
-        return self._make_fieldvalues('error_class', 'widget_class')
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2,
+                      self.get_formname("get_field3"):self.wf.get_field3,
+                      self.get_formname("get_field4"):self.wf.get_field4}
+        url = self.make_get_url(page, url, get_fields, self.wf.force_ident)
+        self.attribs["href"] = url
+        if self.wf.target:
+            self.attribs["target"] = self.wf.target
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['error_class'] = self.wf.error_class
+        self.jlabels['widget_class'] = self.wf.widget_class
 
     @classmethod
     def description(cls):
@@ -866,62 +835,59 @@ class ButtonLink2(Widget):
         # buttondiv
         self[1] = tag.Part(tag_name="div")
         self[1][0] = tag.Part(tag_name="a", attribs={"role":"button"})
-        self._jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        self.widget_hide(self.wf.hide)
+        if self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
-        if self.get_field_value("json_ident"):
-            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
-        if not self.get_field_value("link_ident"):
+            del self[0].attribs["style"]
+        if not self.wf.link_ident:
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident"
             return
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.json_ident:
+            self.jlabels['url'] = self.get_url(self.wf.json_ident)
+        self.jlabels['button_wait_text'] = self.wf.button_wait_text
+
         # set buttondiv
-        if self.get_field_value('buttondiv_class'):
-            self[1].attribs = {"class":self.get_field_value('buttondiv_class')}
-        if self.get_field_value('buttondiv_style'):
-            self[1].update_attribs({"style":self.get_field_value('buttondiv_style')})
+        if self.wf.buttondiv_class:
+            self[1].attribs["class"] = self.wf.buttondiv_class
+        if self.wf.buttondiv_style:
+            self[1].attribs["style"] = self.wf.buttondiv_style
         # set button class
-        if self.get_field_value('button_class'):
-            self[1][0].update_attribs({"class":self.get_field_value('button_class')})
+        if self.wf.button_class:
+            self[1][0].attribs["class"] = self.wf.button_class
         # set button style
-        if self.get_field_value('button_style'):
-            self[1][0].update_attribs({"style":self.get_field_value('button_style')})
+        if self.wf.button_style:
+            self[1][0].attribs["style"] = self.wf.button_style
         # get url and button text
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if not url:
             # setting self._error replaces the entire tag
             self._error = "Warning: Invalid link"
             return
-        if self.get_field_value("button_text"):
-            self[1][0][0] = self.get_field_value("button_text")
+        if self.wf.button_text:
+            self[1][0][0] = self.wf.button_text
         else:
             self[1][0][0] = url
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
-        url = self.make_get_url(page, url, get_fields, True)
-        self[1][0].update_attribs({"href": url})
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2}
+        self[1][0].attribs["href"] = self.make_get_url(page, url, get_fields, True)
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues('button_wait_text', url=self._jsonurl)
-        else:
-            return jscript + self._make_fieldvalues('button_wait_text')
-
+"""
 
     @classmethod
     def description(cls):
