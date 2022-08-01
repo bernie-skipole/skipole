@@ -978,83 +978,73 @@ class MessageButton(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
+        # link button
+        if not self.wf.link_ident:
+            # setting self._error replaces the entire tag
+            self._error = "Warning: No link ident"
+            return
         # set an id in the message box
-        self[0].insert_id()
-        if self.get_field_value("messagediv_class"):
-            self[0].update_attribs({"class":self.get_field_value('messagediv_class')})
+        self.jlabels['messagebox_id'] = self[0].insert_id()
+        if self.wf.messagediv_class:
+            self[0].attribs["class"] = self.wf.messagediv_class
         # Hides message block hide if is True
-        if self.get_field_value("hide"):
+        if self.wf.hide:
             self[0].set_hide()
         else:
             self[0].set_block()
         # boxdiv
-        if self.get_field_value("boxdiv_class"):
-            self[0][0].update_attribs({"class":self.get_field_value('boxdiv_class')})
+        if self.wf.boxdiv_class:
+            self[0][0].attribs["class"] = self.wf.boxdiv_class
         # buttondiv
-        if self.get_field_value("xdiv_class"):
-            self[0][0][0].update_attribs({"class":self.get_field_value('xdiv_class')})
-        if self.get_field_value("xdiv_style"):
-            self[0][0][0].update_attribs({'style':self.get_field_value("xdiv_style")})
+        self[0][0][0].set_class_style(self.wf.xdiv_class, self.wf.xdiv_style)
+
         # x button
-        if self.get_field_value('x_class'):
-            self[0][0][0][0].update_attribs({"class":self.get_field_value('x_class')})
+        if self.wf.x_class:
+            self[0][0][0][0].attribs["class"] = self.wf.x_class
         # inner div
-        if self.get_field_value("inner_class"):
-            self[0][0][1].update_attribs({"class":self.get_field_value('inner_class')})
-        if self.get_field_value("inner_style"):
-            self[0][0][1].update_attribs({'style':self.get_field_value("inner_style")})
+        self[0][0][1].set_class_style(self.wf.inner_class, self.wf.inner_style)
+
         # paragraph
-        if self.get_field_value("pre_line"):
-            self[0][0][1][0].attribs={"style":"white-space: pre-line;"}
-        self[0][0][1][0][0] = self.get_field_value("para_text")
-        # link button
-        if not self.get_field_value("link_ident"):
-            # setting self._error replaces the entire tag
-            self._error = "Warning: No link ident"
-            return
+        if self.wf.pre_line:
+            self[0][0][1][0].attribs["style"] = "white-space: pre-line;"
+        self[0][0][1][0][0] = self.wf.para_text
         # set buttondiv
-        if self.get_field_value('buttondiv_class'):
-            self[1].attribs = {"class":self.get_field_value('buttondiv_class')}
-        if self.get_field_value('buttondiv_style'):
-            self[1].update_attribs({"style":self.get_field_value('buttondiv_style')})
+        self[1].set_class_style(self.wf.buttondiv_class, self.wf.buttondiv_style)
+
         # set button class
-        if self.get_field_value('button_class'):
-            self[1][0].update_attribs({"class":self.get_field_value('button_class')})
+        if self.wf.button_class:
+            self[1][0].attribs["class"] = self.wf.button_class
         # get json url
-        if self.get_field_value("json_ident"):
-            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
+        if self.wf.json_ident:
+            self.jlabels['url'] = self.get_url(self.wf.json_ident)
         # get url and button text
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if not url:
             # setting self._error replaces the entire tag
             self._error = "Warning: Invalid link"
             return
-        if self.get_field_value("button_text"):
-            self[1][0][0] = self.get_field_value("button_text")
+        if self.wf.button_text:
+            self[1][0][0] = self.wf.button_text
         else:
             self[1][0][0] = url
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2")}
-        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
-        self[1][0].update_attribs({"href": url})
-        if self.get_field_value("target"):
-            self[1][0].update_attribs({"target":self.get_field_value("target")})
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2}
+        self[1][0].attribs["href"] = self.make_get_url(page, url, get_fields, self.wf.force_ident)
+        if self.wf.target:
+            self[1][0].attribs["target"] = self.wf.target
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler on the a button"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
   $("#{ident} button").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        if self._jsonurl:
-            return jscript + self._make_fieldvalues(messagebox_id = self[0].get_id(), url=self._jsonurl)
-        else:
-            return jscript + self._make_fieldvalues(messagebox_id = self[0].get_id())
+"""
 
 
     @classmethod
