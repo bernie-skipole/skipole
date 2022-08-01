@@ -2026,3 +2026,17 @@ class ClosedWidget(tag.ClosedPart):
                 part_dict["validators"] = collections.OrderedDict(sorted(val_dict.items(), key=lambda t: t[0]))
         return ['ClosedWidget', part_dict]
 
+
+class ClickEventMixin(object):
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler"""
+        if 'id' not in self.attribs:
+            return ''
+        ident = self.attribs['id']
+        return f"""  $("#{ident}").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+"""
+
+

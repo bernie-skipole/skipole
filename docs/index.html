@@ -56,8 +56,12 @@
 <p>You would then run:</p>
 <p><strong>python3 /path/to/projectfiles/myproj.py</strong></p>
 <p>Then connect with a browser to localhost:8000 to view the project, and call localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.</p>
+<div>
+ <p>The main admin page.</p> 
+ <img src="/skipole/images/screen01.png" alt="First admin page" style="width:1000px;height:600px;" />
+</div>
 <p>Stop the server with ctrl-c</p>
-<p>'pages' are of several types, the main ones being <strong>template</strong> and <strong>responder</strong> pages. Typically you populate the templates with widgets, and set up the responders to accept an incoming call and route data from the call to your own code. Your code sets data into a Python object, which populates the widget fields of a template page which is then returned to the caller.</p>
+<p>'pages' are of several types, the main ones being <strong>template</strong> and <strong>responder</strong> pages. Typically you use the adimn graphical functions to choose and populate the templates with widgets, and set up the responders to accept an incoming call and route data from the call to your own code. Your code sets data into a Python object, which populates the widget fields of a template page which is then returned to the caller.</p>
 <p>As well as 'template' pages, JSON pages can be created and returned to the client browser. These can be used to update certain widget fields via javascript rather than refreshing entire pages.</p>
 <p>Multiple 'responder page' types are available, to handle cookies and incoming data.</p>
 <h4>Deploying your project</h4>
