@@ -1118,42 +1118,37 @@ class ImageLink1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
-        if self.get_field_value('width') and self.get_field_value('height'):
-            self[0].attribs = {'width':self.get_field_value('width'), 'height':self.get_field_value('height')}
-        elif self.get_field_value('width'):
-            self[0].attribs = {'width':self.get_field_value('width')}
-        elif self.get_field_value('height'):
-            self[0].attribs = {'height':self.get_field_value('height')}
-        if self.get_field_value('align'):
-            self[0].update_attribs({'align':self.get_field_value('align')})
-        if self.get_field_value("target"):
-            self.update_attribs({"target":self.get_field_value("target")})
-        if not self.get_field_value("link_ident"):
+        if self.wf.width:
+            self[0].attribs['width'] = self.wf.width
+        if self.wf.height:
+            self[0].attribs['height'] = self.wf.height
+        if self.wf.align:
+            self[0].attribs['align'] = self.wf.align
+        if self.wf.target:
+            self.attribs["target"] = self.wf.target
+        if not self.wf.link_ident:
             self._error = "Warning: broken link"
             return
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if not url:
             self._error = "Warning: broken link"
             return
-        justurl = url
         # create a url for the href
-        get_fields = {self.get_formname("get_field1"):self.get_field_value("get_field1"),
-                      self.get_formname("get_field2"):self.get_field_value("get_field2"),
-                      self.get_formname("get_field3"):self.get_field_value("get_field3")}
-        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
-        self.update_attribs({"href": url})
-        if not self.get_field_value("img_ident"):
+        get_fields = {self.get_formname("get_field1"):self.wf.get_field1,
+                      self.get_formname("get_field2"):self.wf.get_field2,
+                      self.get_formname("get_field3"):self.wf.get_field3}
+        self.attribs["href"] = self.make_get_url(page, url, get_fields, self.wf.force_ident)
+        if not self.wf.img_ident:
             # if no image ident, place the link page url as content, without the get fields
-            self[0] = justurl
+            self[0] = url
             return
-        img_url = self.get_url(self.get_field_value("img_ident"))
+        img_url = self.get_url(self.wf.img_ident)
         if not img_url:
-            self[0] = justurl
+            self[0] = url
             return
-        else:
-            self._img_url = quote(img_url, safe='/:')
-            self[0].update_attribs({"src": self._img_url})
-        hover_img_url = self.get_url(self.get_field_value("hover_img_ident"))
+        self._img_url = quote(img_url, safe='/:')
+        self[0].attribs["src"] = self._img_url
+        hover_img_url = self.get_url(self.wf.hover_img_ident)
         if hover_img_url:
             self._hover_img_url = quote(hover_img_url, safe='/:')
 
@@ -1162,12 +1157,13 @@ class ImageLink1(Widget):
         """Sets a hover event handler"""
         if (not self._img_url) or (not self._hover_img_url):
             return ''
-        return """  $("#{ident}").hover(function (e) {{
-    $("img", this).attr('src', '{hover_img_url}');
+        ident=self.get_id()
+        return f"""  $("#{ident}").hover(function (e) {{
+    $("img", this).attr('src', '{self._hover_img_url}');
       }}, function (e) {{
-    $("img", this).attr('src', '{img_url}');
+    $("img", this).attr('src', '{self._img_url}');
       }});
-""".format(ident = self.get_id(), hover_img_url = self._hover_img_url, img_url = self._img_url)
+"""
 
     @classmethod
     def description(cls):
@@ -1203,17 +1199,17 @@ class Image1(ClosedWidget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the link"
-        if self.get_field_value('width'):
-            self.update_attribs({'width':self.get_field_value('width')})
-        if self.get_field_value('height'):
-            self.update_attribs({'height':self.get_field_value('height')})
-        if self.get_field_value('alt'):
-            self.update_attribs({'alt':self.get_field_value('alt')})
+        if self.wf.width:
+            self.attribs['width'] = self.wf.width
+        if self.wf.height:
+            self.attribs['height'] = self.wf.height
+        if self.wf.alt:
+            self.attribs['alt'] = self.wf.alt
 
-        if not self.get_field_value("img_url"):
+        if not self.wf.img_url:
             self._error = "Warning: broken link"
         else:
-            self.update_attribs({"src": quote(self.get_field_value("img_url"), safe='/:')})
+            self.attribs["src"] = quote(self.wf.img_url, safe='/:')
 
     @classmethod
     def description(cls):
