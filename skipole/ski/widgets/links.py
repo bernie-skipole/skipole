@@ -1262,23 +1262,23 @@ class LinkTextBlockTable1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        table = self.get_field_value("link_table")
-        title1 = self.get_field_value("col1_link_title")
-        title2 = self.get_field_value("col2_text_title")
+        table = self.wf.link_table
+        title1 = self.wf.col1_link_title
+        title2 = self.wf.col2_text_title
 
         # set even row colour
-        if self.get_field_value('even_class'):
-            evenclass = self.get_field_value('even_class')
+        if self.wf.even_class:
+            evenclass = self.wf.even_class
         else:
             evenclass = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            oddclass = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            oddclass = self.wf.odd_class
         else:
             oddclass = ''
         # set header row colour
-        if self.get_field_value('header_class'):
-            headerclass = self.get_field_value('header_class')
+        if self.wf.header_class:
+            headerclass = self.wf.header_class
         else:
             headerclass = ''
 
@@ -1312,16 +1312,16 @@ class LinkTextBlockTable1(Widget):
                 content = row[0]
             else:
                 content = "?"
-            self[rownumber][0][0]= Link(link_ident=self.get_field_value("link_ident"),
+            self[rownumber][0][0]= Link(link_ident=self.wf.link_ident,
                                         get_field1=row[1],
                                         get_field2=row[2],
                                         content=content,
-                                        force_ident=self.get_field_value("force_ident"))
+                                        force_ident=self.wf.force_ident)
             self[rownumber][0][0].set_name('get_field1', self.get_name("show_get_field1"))
             self[rownumber][0][0].set_name('get_field2', self.get_name("show_get_field2"))
-            if not self.get_field_value("show_get_field1"):
+            if not self.wf.show_get_field1:
                 self[rownumber][0][0].set_field_value('get_field1','')
-            if not self.get_field_value("show_get_field2"):
+            if not self.wf.show_get_field2:
                 self[rownumber][0][0].set_field_value('get_field2','')
             # second column
             self[rownumber][1] = tag.Part(tag_name="td")
@@ -1399,29 +1399,29 @@ class LinkTextBlockTable2(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self.update_attribs({"style":"border-spacing:0;border-collapse:collapse;"})
+        self.attribs["style"] = "border-spacing:0;border-collapse:collapse;"
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        table = self.get_field_value("link_table")
-        title1 = self.get_field_value("col_link_title")
-        title2 = self.get_field_value("col_text_title")
-        title3 = self.get_field_value("col_textblock_title")
+        table = self.wf.link_table
+        title1 = self.wf.col_link_title
+        title2 = self.wf.col_text_title
+        title3 = self.wf.col_textblock_title
 
         # set even row colour
-        if self.get_field_value('even_class'):
-            evenclass = self.get_field_value('even_class')
+        if self.wf.even_class:
+            evenclass = self.wf.even_class
         else:
             evenclass = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            oddclass = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            oddclass = self.wf.odd_class
         else:
             oddclass = ''
         # set header row colour
-        if self.get_field_value('header_class'):
-            headerclass = self.get_field_value('header_class')
+        if self.wf.header_class:
+            headerclass = self.wf.header_class
         else:
             headerclass = ''
 
@@ -1461,16 +1461,16 @@ class LinkTextBlockTable2(Widget):
                 content = row[0]
             else:
                 content = "?"
-            self[rownumber][0][0]= Link(link_ident=self.get_field_value("link_ident"),
+            self[rownumber][0][0]= Link(link_ident=self.wf.link_ident,
                                         get_field1=row[1],
                                         get_field2=row[2],
                                         content=content,
-                                        force_ident=self.get_field_value("force_ident"))
+                                        force_ident=self.wf.force_ident)
             self[rownumber][0][0].set_name('get_field1', self.get_name("show_get_field1"))
             self[rownumber][0][0].set_name('get_field2', self.get_name("show_get_field2"))
-            if not self.get_field_value("show_get_field1"):
+            if not self.wf.show_get_field1:
                 self[rownumber][0][0].set_field_value('get_field1','')
-            if not self.get_field_value("show_get_field2"):
+            if not self.wf.show_get_field2:
                 self[rownumber][0][0].set_field_value('get_field2','')
 
             # second column, the text string column
@@ -1541,11 +1541,11 @@ class ListLinks(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list"
-        fieldlist = self.get_field_value('links')
-        li_class = self.get_field_value('li_class')
-        link_class = self.get_field_value('link_class')
-        target = self.get_field_value('target')
-        force_ident = self.get_field_value('force_ident')
+        fieldlist = self.wf.links
+        li_class = self.wf.li_class
+        link_class = self.wf.link_class
+        target = self.wf.target
+        force_ident = self.wf.force_ident
         # create rows
         for rownumber, row in enumerate(fieldlist):
             if li_class:
@@ -1623,29 +1623,29 @@ class Table1_Links(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        col1 = self.get_field_value("col1")
-        col2 = self.get_field_value("col2")
-        col2_links = self.get_field_value("col2_links")
-        col2_getfields = self.get_field_value("col2_getfields")
+        col1 = self.wf.col1
+        col2 = self.wf.col2
+        col2_links = self.wf.col2_links
+        col2_getfields = self.wf.col2_getfields
         # create rows, same length as col2_links
         rows = max( len(col1), len(col2), len(col2_links) )
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2'):
+        if self.wf.title1 or self.wf.title2:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
 
@@ -1658,10 +1658,10 @@ class Table1_Links(Widget):
         if len(col2) < rows:
             col2.extend(['']*(rows - len(col2)))    # pad col2 with ''
 
-        col1_class = self.get_field_value("col1_class")
-        col2_class = self.get_field_value("col2_class")
-        link_class = self.get_field_value("link_class")
-        link_style = self.get_field_value("link_style")
+        col1_class = self.wf.col1_class
+        col2_class = self.wf.col2_class
+        link_class = self.wf.link_class
+        link_style = self.wf.link_style
 
         for index in range(rows):
             rownumber = index+header
@@ -1705,10 +1705,9 @@ class Table1_Links(Widget):
                     # create a url for the href
                     if col2_getfields[index]:
                         get_fields = {self.get_formname("col2_getfields"):col2_getfields[index]}
-                        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+                        self[rownumber][1][0].attribs["href"] = self.make_get_url(page, url, get_fields, self.wf.force_ident)
                     else:
-                        url = self.make_get_url(page, url, {}, self.get_field_value("force_ident"))
-                    self[rownumber][1][0].update_attribs({"href": url})
+                        self[rownumber][1][0].attribs["href"] = self.make_get_url(page, url, {}, self.wf.force_ident)
                 else:
                    self[rownumber][1][0] = "Warning: broken link"
             else:
