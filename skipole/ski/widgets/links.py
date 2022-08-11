@@ -1786,38 +1786,41 @@ class Table2_Links(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._col2_json_idents = []
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        col1 = self.get_field_value("col1")
-        col2 = self.get_field_value("col2")
-        col2_link_idents = self.get_field_value("col2_link_idents")
-        col2_json_idents = self.get_field_value("col2_json_idents")
-        col2_getfields = self.get_field_value("col2_getfields")
-        link_classes = self.get_field_value("link_classes")
-        link_styles = self.get_field_value("link_styles")
+        col1 = self.wf.col1
+        col2 = self.wf.col2
+        col2_link_idents = self.wf.col2_link_idents
+        col2_json_idents = self.wf.col2_json_idents
+        col2_getfields = self.wf.col2_getfields
+        link_classes = self.wf.link_classes
+        link_styles = self.wf.link_styles
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['jurls'] = []
+
         # create rows, same length as col2_link_idents
         rows = len(col2_link_idents)
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2'):
+        if self.wf.title1 or self.wf.title2:
             header = 1
-            # and add an empty json link to self._col2_json_idents
-            self._col2_json_idents.append('')
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            # and add an empty json link to self.jlabels['jurls']
+            self.jlabels['jurls'].append('')
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
 
@@ -1830,19 +1833,20 @@ class Table2_Links(Widget):
         if len(col2) < rows:
             col2.extend(['']*(rows - len(col2)))    # pad col2 with ''
 
+
         for item in col2_json_idents:
             if item:
-                self._col2_json_idents.append( self.get_url(item) )
+                self.jlabels['jurls'].append( self.get_url(item) )
             else:
-                self._col2_json_idents.append('')
+                self.jlabels['jurls'].append('')
 
         if len(link_classes) < rows:
             link_classes.extend(['']*(rows - len(link_classes)))    # pad link_classes with ''
         if len(link_styles) < rows:
             link_styles.extend(['']*(rows - len(link_styles)))    # pad link_styles with ''
 
-        col1_class = self.get_field_value("col1_class")
-        col2_class = self.get_field_value("col2_class")
+        col1_class = self.wf.col1_class
+        col2_class = self.wf.col2_class
 
         for index in range(rows):
             rownumber = index+header
@@ -1886,12 +1890,11 @@ class Table2_Links(Widget):
                     # create a url for the href
                     if col2_getfields[index]:
                         get_fields = {self.get_formname("col2_getfields"):col2_getfields[index]}
-                        url = self.make_get_url(page, url, get_fields, self.get_field_value("force_ident"))
+                        self[rownumber][1][0].attribs["href"] = self.make_get_url(page, url, get_fields, self.wf.force_ident)
                     else:
-                        url = self.make_get_url(page, url, {}, self.get_field_value("force_ident"))
-                    self[rownumber][1][0].update_attribs({"href": url})
+                        self[rownumber][1][0].attribs["href"] = self.make_get_url(page, url, {}, self.wf.force_ident)
                 else:
-                   self[rownumber][1][0] = "Warning: broken link"
+                    self[rownumber][1][0] = "Warning: broken link"
             else:
                 # self[rownumber][1][0] must now be set with text only
                 if col2[index]:
@@ -1900,14 +1903,11 @@ class Table2_Links(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
+        ident=self.get_id()
+        return f"""  $("#{ident} a").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(ident = self.get_id())
-        return jscript + self._make_fieldvalues(jurls=self._col2_json_idents)
-
-
-
+"""
 
     @classmethod
     def description(cls):
