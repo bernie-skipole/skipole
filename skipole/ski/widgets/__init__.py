@@ -2030,7 +2030,7 @@ class ClosedWidget(tag.ClosedPart):
 class ClickEventMixin(object):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
+        """Sets a click event handler on the widget"""
         if 'id' not in self.attribs:
             return ''
         ident = self.attribs['id']
@@ -2038,5 +2038,20 @@ class ClickEventMixin(object):
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
 """
+
+
+class AnchorClickEventMixin(object):
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a click event handler on the a tags in the widget"""
+        if 'id' not in self.attribs:
+            return ''
+        ident = self.attribs['id']
+        return f"""  $("#{ident} a").click(function (e) {{
+    SKIPOLE.widgets['{ident}'].eventfunc(e);
+    }});
+"""
+
+
 
 

@@ -4,7 +4,7 @@
 from urllib.parse import quote
 
 from .. import skiboot, tag
-from . import Widget, ClosedWidget, ClickEventMixin, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
+from . import Widget, ClosedWidget, ClickEventMixin, AnchorClickEventMixin, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
 
@@ -789,7 +789,7 @@ class ButtonLink1(Widget):
 
 
 
-class ButtonLink2(Widget):
+class ButtonLink2(AnchorClickEventMixin, Widget):
     """A div holding a button link to the page with the given ident, label or url,
        and two optional get fields."""
 
@@ -880,14 +880,6 @@ class ButtonLink2(Widget):
                       self.get_formname("get_field2"):self.wf.get_field2}
         self[1][0].attribs["href"] = self.make_get_url(page, url, get_fields, True)
 
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        ident=self.get_id()
-        return f"""  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
 
     @classmethod
     def description(cls):
@@ -1737,7 +1729,7 @@ class Table1_Links(Widget):
 </table>"""
 
 
-class Table2_Links(Widget):
+class Table2_Links(AnchorClickEventMixin, Widget):
     """A table of two columns, the first column being text, the second links
        with either html or json links
        with CSS class and style for each link
@@ -1901,14 +1893,6 @@ class Table2_Links(Widget):
                     self[rownumber][1][0] = col2[index]
 
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        ident=self.get_id()
-        return f"""  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
-
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -1932,7 +1916,7 @@ class Table2_Links(Widget):
 
 
 
-class Table1_Button(Widget):
+class Table1_Button(AnchorClickEventMixin, Widget):
     """A table of a single text column, followed by a button link column
        There is a header and title over the text column,
        the button link can have one get field"""
@@ -1972,37 +1956,38 @@ class Table1_Button(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._jsonurl =''
+
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        fieldtable = self.get_field_value("contents")
+        self.widget_hide(self.wf.hide)
+        fieldtable = self.wf.contents
         header = 0
-        if self.get_field_value('title1'):
+        if self.wf.title1:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            if self.get_field_value('maximize_text_col'):
-                self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'), attribs={"style":"width : 100%;"})
+            if self.wf.maximize_text_col:
+                self[0][0] = tag.Part(tag_name='th', text = self.wf.title1, attribs={"style":"width : 100%;"})
             else:
-                self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
+                self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
             self[0][1] = tag.Part(tag_name='th')
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
-        if self.get_field_value("json_ident"):
-            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.json_ident:
+            self.jlabels['url'] = self.get_url(self.wf.json_ident)
         # create rows
         for index, row in enumerate(fieldtable):
             rownumber = index+header
@@ -2013,43 +1998,31 @@ class Table1_Button(Widget):
             else:
                 self[rownumber] = tag.Part(tag_name='tr')
             # first column is text
-            if self.get_field_value('maximize_text_col'):
+            if self.wf.maximize_text_col:
                 self[rownumber][0] = tag.Part(tag_name='td', text = row[0], attribs={"style":"width : 100%;"})
             else:
                 self[rownumber][0] = tag.Part(tag_name='td', text = row[0])
             # Next column is a button link
             self[rownumber][1] = tag.Part(tag_name='td')
-            if self.get_field_value('button_class'):
-                self[rownumber][1][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+            if self.wf.button_class:
+                self[rownumber][1][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
             else:
                 self[rownumber][1][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
             self[rownumber][1][0].htmlescaped=False
-            if self.get_field_value("link_ident"):
-                url = self.get_url(self.get_field_value("link_ident"))
+            if self.wf.link_ident:
+                url = self.get_url(self.wf.link_ident)
                 if url:
-                    if self.get_field_value("button_text"):
-                        self[rownumber][1][0][0] = self.get_field_value("button_text")
+                    if self.wf.button_text:
+                        self[rownumber][1][0][0] = self.wf.button_text
                     else:
                         self[rownumber][1][0][0] = url
                     # create a url for the href
                     get_fields = {self.get_formname("contents"):row[1]}
-                    url = self.make_get_url(page, url, get_fields, True)
-                    self[rownumber][1][0].update_attribs({"href": url})
+                    self[rownumber][1][0].attribs["href"] = self.make_get_url(page, url, get_fields, True)
                 else:
                    self[rownumber][1][0] = "Warning: broken link"
             else:
                 self[rownumber][1][0] = "Warning: broken link"
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        if not self._jsonurl:
-            return
-        jscript = """  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-""".format(ident = self.get_id())
-        return jscript + self._make_fieldvalues( url=self._jsonurl)
 
     @classmethod
     def description(cls):
@@ -2074,7 +2047,7 @@ class Table1_Button(Widget):
 </table>"""
 
 
-class Table2_Button(Widget):
+class Table2_Button(AnchorClickEventMixin, Widget):
     """A table of a two text columns, followed by a button link
        There is a header and titles over the two text columns,
        the button link can have one get field"""
@@ -2114,36 +2087,36 @@ class Table2_Button(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._jsonurl =''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        fieldtable = self.get_field_value("contents")
+        self.widget_hide(self.wf.hide)
+        fieldtable = self.wf.contents
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2'):
+        if self.wf.title1 or self.wf.title2:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
             self[0][2] = tag.Part(tag_name='th')
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
-        if self.get_field_value("json_ident"):
-            self._jsonurl = self.get_url(self.get_field_value("json_ident"))
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.json_ident:
+            self.jlabels['url'] = self.get_url(self.wf.json_ident)
         # create rows
         for index, row in enumerate(fieldtable):
             rownumber = index+header
@@ -2158,36 +2131,25 @@ class Table2_Button(Widget):
             self[rownumber][1] = tag.Part(tag_name='td', text = row[1])
             # Next column is a button link
             self[rownumber][2] = tag.Part(tag_name='td', attribs={"style":"width : 1%;"})
-            if self.get_field_value('button_class'):
-                self[rownumber][2][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+            if self.wf.button_class:
+                self[rownumber][2][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
             else:
                 self[rownumber][2][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
             self[rownumber][2][0].htmlescaped=False
-            if self.get_field_value("link_ident"):
-                url = self.get_url(self.get_field_value("link_ident"))
+            if self.wf.link_ident:
+                url = self.get_url(self.wf.link_ident)
                 if url:
-                    if self.get_field_value("button_text"):
-                        self[rownumber][2][0][0] = self.get_field_value("button_text")
+                    if self.wf.button_text:
+                        self[rownumber][2][0][0] = self.wf.button_text
                     else:
                         self[rownumber][2][0][0] = url
                     # create a url for the href
                     get_fields = {self.get_formname("contents"):row[2]}
-                    url = self.make_get_url(page, url, get_fields, True)
-                    self[rownumber][2][0].update_attribs({"href": url})
+                    self[rownumber][2][0].attribs["href"] = self.make_get_url(page, url, get_fields, True)
                 else:
                    self[rownumber][2][0] = "Warning: broken link"
             else:
                 self[rownumber][2][0] = "Warning: broken link"
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        if not self._jsonurl:
-            return
-        jscript = """  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-""".format(ident = self.get_id())
-        return jscript + self._make_fieldvalues( url=self._jsonurl)
 
 
     @classmethod
@@ -2216,7 +2178,7 @@ class Table2_Button(Widget):
 
 
 
-class Table3_Buttons2(Widget):
+class Table3_Buttons2(AnchorClickEventMixin, Widget):
     """A table of three text columns, followed by two button link columns
        The first row is three headers - over the three text columns"""
 
@@ -2274,43 +2236,49 @@ class Table3_Buttons2(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._url1 = ''
-        self._jsonurl1 = ''
-        self._url2 = ''
-        self._jsonurl2 = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        if self.get_field_value("json_ident1"):
-            self._jsonurl1 = self.get_url(self.get_field_value("json_ident1"))
-        if self.get_field_value("json_ident2"):
-            self._jsonurl2 = self.get_url(self.get_field_value("json_ident2"))
-        if self.get_field_value("link_ident1"):
-            self._url1 = self.get_url(self.get_field_value("link_ident1"))
-        if self.get_field_value("link_ident2"):
-            self._url2 = self.get_url(self.get_field_value("link_ident2"))
-        fieldtable = self.get_field_value("contents")
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.json_ident1:
+            self.jlabels['url1'] = self.get_url(self.wf.json_ident1)
+        if self.wf.json_ident2:
+            self.jlabels['url2'] = self.get_url(self.wf.json_ident2)
+
+        self.jlabels['button_wait_text1'] = self.wf.button_wait_text1
+        self.jlabels['button_wait_text2'] = self.wf.button_wait_text2
+
+        if self.wf.link_ident1:
+            url1 = self.get_url(self.wf.link_ident1)
+        else:
+            url1 = ''
+        if self.wf.link_ident2:
+            url2 = self.get_url(self.wf.link_ident2)
+        else:
+            url2 = ''
+        fieldtable = self.wf.contents
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):
+        if self.wf.title1 or self.wf.title2 or self.wf.title3:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
-            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
             self[0][3] = tag.Part(tag_name='th')
             self[0][4] = tag.Part(tag_name='th')
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
         # create rows
@@ -2333,23 +2301,22 @@ class Table3_Buttons2(Widget):
             if row[7]:
                 # reduce button column to minimum size
                 self[rownumber][3].attribs={"style":"width : 1%;"}
-                g1 = row[3] if self.get_field_value('get_field1_1') else ''
-                g2 = row[4] if self.get_field_value('get_field1_2') else ''
-                if self.get_field_value('button_class'):
-                    self[rownumber][3][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+                g1 = row[3] if self.wf.get_field1_1 else ''
+                g2 = row[4] if self.wf.get_field1_2 else ''
+                if self.wf.button_class:
+                    self[rownumber][3][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                 else:
                     self[rownumber][3][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                 self[rownumber][3][0].htmlescaped=False
-                if self._url1:
-                    if self.get_field_value("button_text1"):
-                        self[rownumber][3][0][0] = self.get_field_value("button_text1")
+                if url1:
+                    if self.wf.button_text1:
+                        self[rownumber][3][0][0] = self.wf.button_text1
                     else:
-                        self[rownumber][3][0][0] = self._url1
+                        self[rownumber][3][0][0] = url1
                     # create a url for the href
                     get_fields = {self.get_formname("get_field1_1"):g1,
                                                  self.get_formname("get_field1_2"):g2}
-                    url = self.make_get_url(page, self._url1, get_fields, True)
-                    self[rownumber][3][0].update_attribs({"href": url})
+                    self[rownumber][3][0].attribs["href"] = self.make_get_url(page, url1, get_fields, True)
                 else:
                     self[rownumber][3][0] = "Warning: broken link"
 
@@ -2357,33 +2324,24 @@ class Table3_Buttons2(Widget):
             if row[8]:
                 # reduce button column to minimum size
                 self[rownumber][4].attribs={"style":"width : 1%;"}
-                g3 = row[5] if self.get_field_value('get_field2_1') else ''
-                g4 = row[6] if self.get_field_value('get_field2_2') else ''
-                if self.get_field_value('button_class'):
-                    self[rownumber][4][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+                g3 = row[5] if self.wf.get_field2_1 else ''
+                g4 = row[6] if self.wf.get_field2_2 else ''
+                if self.wf.button_class:
+                    self[rownumber][4][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                 else:
                     self[rownumber][4][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                 self[rownumber][4][0].htmlescaped=False
-                if self._url2:
-                    if self.get_field_value("button_text2"):
-                        self[rownumber][4][0][0] = self.get_field_value("button_text2")
+                if url2:
+                    if self.wf.button_text2:
+                        self[rownumber][4][0][0] = self.wf.button_text2
                     else:
-                        self[rownumber][4][0][0] = self._url2
+                        self[rownumber][4][0][0] = url2
                     # create a url for the href
                     get_fields = {self.get_formname("get_field2_1"):g3,
                                                  self.get_formname("get_field2_2"):g4}
-                    url = self.make_get_url(page, self._url2, get_fields, True)
-                    self[rownumber][4][0].update_attribs({"href": url})
+                    self[rownumber][4][0].attribs["href"] = self.make_get_url(page, url2, get_fields, True)
                 else:
                     self[rownumber][4][0] = "Warning: broken link"
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-""".format(ident = self.get_id())
-        return jscript + self._make_fieldvalues('button_wait_text1', 'button_wait_text2', url1=self._jsonurl1, url2=self._jsonurl2)
 
 
     @classmethod
@@ -2478,16 +2436,16 @@ class Table1_Buttons4(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        fieldtable = self.get_field_value("contents")
-        col0_classes = self.get_field_value("col0_classes")
+        fieldtable = self.wf.contents
+        col0_classes = self.wf.col0_classes
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
         # create rows
@@ -2504,107 +2462,103 @@ class Table1_Buttons4(Widget):
             except IndexError:
                 css_class = ''
             if css_class:
-                if self.get_field_value('maximize_text_col'):
+                if self.wf.maximize_text_col:
                     self[rownumber][0] = tag.Part(tag_name='td', text = row[0], attribs={"class":css_class, "style":"width : 100%;"})
                 else:
                     self[rownumber][0] = tag.Part(tag_name='td', text = row[0], attribs={"class":css_class})
             else:
-                if self.get_field_value('maximize_text_col'):
+                if self.wf.maximize_text_col:
                     self[rownumber][0] = tag.Part(tag_name='td', text = row[0], attribs={"style":"width : 100%;"})
                 else:
                     self[rownumber][0] = tag.Part(tag_name='td', text = row[0])
             # Next four columns are button links
-            if self.get_field_value('btn_col1'):
+            if self.wf.btn_col1:
                 btn_col1 = tag.Part(tag_name='td')
                 if row[5]:
                     g1 = row[1] if row[1] else ''
-                    if self.get_field_value('button_class'):
-                        btn_col1[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+                    if self.wf.button_class:
+                        btn_col1[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                     else:
                         btn_col1[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col1[0].htmlescaped=False
-                    if self.get_field_value("link_ident1"):
-                        url = self.get_url(self.get_field_value("link_ident1"))
+                    if self.wf.link_ident1:
+                        url = self.get_url(self.wf.link_ident1)
                         if url:
-                            if self.get_field_value("button_text1"):
-                                btn_col1[0][0] = self.get_field_value("button_text1")
+                            if self.wf.button_text1:
+                                btn_col1[0][0] = self.wf.button_text1
                             else:
                                 btn_col1[0][0] = url
                             # create a url for the href
-                            url = self.make_get_url(page, url, {self.get_formname("btn_col1"):g1}, True)
-                            btn_col1[0].update_attribs({"href": url})
+                            btn_col1[0].attribs["href"] = self.make_get_url(page, url, {self.get_formname("btn_col1"):g1}, True)
                         else:
                            btn_col1[0] = "Warning: broken link"
                     else:
                         btn_col1[0] = "Warning: broken link"
                 self[rownumber].append(btn_col1)
-            if self.get_field_value('btn_col2'):
+            if self.wf.btn_col2:
                 btn_col2 = tag.Part(tag_name='td')
                 if row[6]:
                     g2 = row[2] if row[2] else ''
-                    if self.get_field_value('button_class'):
-                        btn_col2[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+                    if self.wf.button_class:
+                        btn_col2[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                     else:
                         btn_col2[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col2[0].htmlescaped=False
-                    if self.get_field_value("link_ident2"):
-                        url = self.get_url(self.get_field_value("link_ident2"))
+                    if self.wf.link_ident2:
+                        url = self.get_url(self.wf.link_ident2)
                         if url:
-                            if self.get_field_value("button_text2"):
-                                btn_col2[0][0] = self.get_field_value("button_text2")
+                            if self.wf.button_text2:
+                                btn_col2[0][0] = self.wf.button_text2
                             else:
                                 btn_col2[0][0] = url
                             # create a url for the href
-                            url = self.make_get_url(page, url, {self.get_formname("btn_col2"):g2}, True)
-                            btn_col2[0].update_attribs({"href": url})
+                            btn_col2[0].attribs["href"] = self.make_get_url(page, url, {self.get_formname("btn_col2"):g2}, True)
                         else:
                             btn_col2[0] = "Warning: broken link"
                     else:
                         btn_col2[0] = "Warning: broken link"
                 self[rownumber].append(btn_col2)
-            if self.get_field_value('btn_col3'):
+            if self.wf.btn_col3:
                 btn_col3 = tag.Part(tag_name='td')
                 if row[7]:
                     g3 = row[3] if row[3] else ''
-                    if self.get_field_value('button_class'):
-                        btn_col3[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+                    if self.wf.button_class:
+                        btn_col3[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                     else:
                         btn_col3[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col3[0].htmlescaped=False
-                    if self.get_field_value("link_ident3"):
-                        url = self.get_url(self.get_field_value("link_ident3"))
+                    if self.wf.link_ident3:
+                        url = self.get_url(self.wf.link_ident3)
                         if url:
-                            if self.get_field_value("button_text3"):
-                                btn_col3[0][0] = self.get_field_value("button_text3")
+                            if self.wf.button_text3:
+                                btn_col3[0][0] = self.wf.button_text3
                             else:
                                 btn_col3[0][0] = url
                             # create a url for the href
-                            url = self.make_get_url(page, url, {self.get_formname("btn_col3"):g3}, True)
-                            btn_col3[0].update_attribs({"href": url})
+                            btn_col3[0].attribs["href"] = self.make_get_url(page, url, {self.get_formname("btn_col3"):g3}, True)
                         else:
                            btn_col3[0] = "Warning: broken link"
                     else:
                         btn_col3[0] = "Warning: broken link"
                 self[rownumber].append(btn_col3)
-            if self.get_field_value('btn_col4'):
+            if self.wf.btn_col4:
                 btn_col4 = tag.Part(tag_name='td')
                 if row[8]:
                     g4 = row[4] if row[4] else ''
-                    if self.get_field_value('button_class'):
-                        btn_col4[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+                    if self.wf.button_class:
+                        btn_col4[0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                     else:
                         btn_col4[0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                     btn_col4[0].htmlescaped=False
-                    if self.get_field_value("link_ident4"):
-                        url = self.get_url(self.get_field_value("link_ident4"))
+                    if self.wf.link_ident4:
+                        url = self.get_url(self.wf.link_ident4)
                         if url:
-                            if self.get_field_value("button_text4"):
-                                btn_col4[0][0] = self.get_field_value("button_text4")
+                            if self.wf.button_text4:
+                                btn_col4[0][0] = self.wf.button_text4
                             else:
                                 btn_col4[0][0] = url
                             # create a url for the href
-                            url = self.make_get_url(page, url, {self.get_formname("btn_col4"):g4}, True)
-                            btn_col4[0].update_attribs({"href": url})
+                            btn_col4[0].attribs["href"] = self.make_get_url(page, url, {self.get_formname("btn_col4"):g4}, True)
                         else:
                            btn_col4[0] = "Warning: broken link"
                     else:
@@ -2651,7 +2605,7 @@ class Table1_Buttons4(Widget):
 </table>"""
 
 
-class GeneralButtonTable2(Widget):
+class GeneralButtonTable2(AnchorClickEventMixin, Widget):
     """A table of buttons and text."""
 
     # This class does not display any error messages
@@ -2697,28 +2651,25 @@ class GeneralButtonTable2(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._jsonurl_list = []
-        self._dropurl = ''
-        self._htmlurl_list = []
-        self._button_class = ''
-        self._even = ''
-        self._odd = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        fieldtable = self.get_field_value("contents")
-        self._button_class = self.get_field_value('button_class')
+        self.widget_hide(self.wf.hide)
+        fieldtable = self.wf.contents
         get_field_name = self.get_formname("contents")
-        dragtable = self.get_field_value("dragrows")
-        droptable = self.get_field_value("droprows")
-        colidents = self.get_field_value("cols")
+        dragtable = self.wf.dragrows
+        droptable = self.wf.droprows
+        colidents = self.wf.cols
         cols = len(colidents)
         if not cols:
             self.show = False
             return
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['button_class'] = self.wf.button_class
+
         elements = len(fieldtable)
         rows = elements//cols
         if elements != rows*cols:
@@ -2731,25 +2682,31 @@ class GeneralButtonTable2(Widget):
             self._error = "Invalid table size : droprows length does not match table rows"
             return
         # list of json url's
-        self._jsonurl_list = [ self.get_url(item[1]) for item in colidents ]
+        self.jlabels['json_url'] = [ self.get_url(item[1]) for item in colidents ]
         # list of html url's
-        self._htmlurl_list = [ self.get_url(item[0]) for item in colidents ]
+        self.jlabels['html_url'] = [ self.get_url(item[0]) for item in colidents ]
         # dropurl
-        self._dropurl = self.get_url(self.get_field_value("dropident"))
+        self.jlabels['dropurl'] = self.get_url(self.get_field_value("dropident"))
         # set even row class
-        if self.get_field_value('even_class'):
-            self._even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
+        else:
+            even = ''
+        self.jlabels['even_class'] = even
         # set odd row class
-        if self.get_field_value('odd_class'):
-            self._odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
+        else:
+            odd = ''
+        self.jlabels['odd_class'] = odd
         # cell  increments for every table cell
         cell = -1
         # create rows
         for rownumber  in range(rows):
-            if self._even and (rownumber % 2) :
-                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":self._even})
-            elif self._odd and not (rownumber % 2):
-                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":self._odd})
+            if even and (rownumber % 2) :
+                self[rownumber] = tag.Part(tag_name="tr", attribs={"class":even})
+            elif odd and not (rownumber % 2):
+                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":odd})
             else:
                 self[rownumber] = tag.Part(tag_name='tr')
             if dragtable:
@@ -2758,20 +2715,19 @@ class GeneralButtonTable2(Widget):
                 else:
                     dragdata = ""
                 if dragtable[rownumber][0]:
-                    self[rownumber].update_attribs(
+                    self[rownumber].attribs.update(
 {"style":"cursor:move;",
  "draggable":"true",
- "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
-                                                                                  data = dragdata)})
+ "ondragstart":f"SKIPOLE.widgets['{self.get_id()}'].dragstartfunc(event, '{dragdata}')"})
             if droptable:
                 if droptable[rownumber][1]:
                     dropdata = droptable[rownumber][1]
                 else:
                     dropdata = ""
                 if droptable[rownumber][0]:
-                    self[rownumber].update_attribs(
-{"ondrop":"SKIPOLE.widgets['{ident}'].dropfunc(event, '{data}')".format(ident = self.get_id(), data = dropdata),
- "ondragover":"SKIPOLE.widgets['{ident}'].allowdropfunc(event)".format(ident = self.get_id())})
+                    self[rownumber].attribs.update(
+{"ondrop":f"SKIPOLE.widgets['{self.get_id()}'].dropfunc(event, '{dropdata}')",
+ "ondragover":f"SKIPOLE.widgets['{self.get_id()}'].allowdropfunc(event)"})
             for colnumber in range(cols):
                 cell += 1
                 element = fieldtable[cell]
@@ -2786,12 +2742,12 @@ class GeneralButtonTable2(Widget):
                 else:
                     self[rownumber][colnumber] = tag.Part(tag_name='td')
                 # get html url for this column
-                url = self._htmlurl_list[colnumber]
+                url = self.jlabels['html_url'][colnumber]
                 # is it a button link
                 if url and element[2]:
                     # its a link, apply button class
-                    if self._button_class:
-                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self._button_class})
+                    if self.wf.button_class:
+                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                     else:
                         self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                      # apply button text
@@ -2801,28 +2757,11 @@ class GeneralButtonTable2(Widget):
                     else:
                         self[rownumber][colnumber][0][0] = url
                     # create a url for the href
-                    cellurl = self.make_get_url(page, url, {get_field_name:element[3]}, True)
-                    # apply url and href
-                    self[rownumber][colnumber][0].update_attribs({"href": cellurl})
+                    self[rownumber][colnumber][0].attribs["href"] = self.make_get_url(page, url, {get_field_name:element[3]}, True)
                 else:
                     # not a link
                     self[rownumber][colnumber][0] = celltext
                     self[rownumber][colnumber].htmlescaped = False
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-""".format(ident = self.get_id())
-        if self._jsonurl_list or self._dropurl or self._htmlurl_list:
-            return jscript + self._make_fieldvalues(json_url=self._jsonurl_list,
-                                                    dropurl=self._dropurl,
-                                                    html_url = self._htmlurl_list,
-                                                    button_class = self._button_class,
-                                                    even_class = self._even,
-                                                    odd_class = self._odd)
-        return jscript
 
 
 class ProjectiFrame(Widget):
