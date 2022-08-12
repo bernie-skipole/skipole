@@ -2686,7 +2686,7 @@ class GeneralButtonTable2(AnchorClickEventMixin, Widget):
         # list of html url's
         self.jlabels['html_url'] = [ self.get_url(item[0]) for item in colidents ]
         # dropurl
-        self.jlabels['dropurl'] = self.get_url(self.get_field_value("dropident"))
+        self.jlabels['dropurl'] = self.get_url(self.wf.dropident)
         # set even row class
         if self.wf.even_class:
             even = self.wf.even_class
@@ -2788,7 +2788,7 @@ class ProjectiFrame(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the iframe"
-        proj_ident = self.get_field_value("project")
+        proj_ident = self.wf.project
         if not proj_ident:
             self._error = "Warning: project for iframe is not given"
             return
@@ -2800,8 +2800,8 @@ class ProjectiFrame(Widget):
             iframename = self.placename + "-" + proj_ident
         else:
             iframename = proj_ident
-        self.update_attribs({"width": self.get_field_value("width"),
-                             "height": self.get_field_value("height"),
+        self.attribs.update({"width": self.wf.width,
+                             "height": self.wf.height,
                              "name": iframename,
                              "src": project_url})
 
@@ -2819,7 +2819,7 @@ class ProjectiFrame(Widget):
 
 
 
-class GeneralButtonTable1(Widget):
+class GeneralButtonTable1(AnchorClickEventMixin, Widget):
     """A table of buttons and text. Bottons include ability to send stored data"""
 
     # This class does not display any error messages
@@ -2866,21 +2866,17 @@ class GeneralButtonTable1(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
-        self._jsonurl_list = []
-        self._dropurl = ''
-        self._htmlurl_list = []
-        self._storagekey_list = []
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        fieldtable = self.get_field_value("contents")
+        self.widget_hide(self.wf.hide)
+        fieldtable = self.wf.contents
         get_field_name = self.get_formname("contents")
-        dragtable = self.get_field_value("dragrows")
-        droptable = self.get_field_value("droprows")
-        colidents = self.get_field_value("cols")
+        dragtable = self.wf.dragrows
+        droptable = self.wf.droprows
+        colidents = self.wf.cols
         cols = len(colidents)
         if not cols:
             self.show = False
@@ -2896,22 +2892,32 @@ class GeneralButtonTable1(Widget):
         if droptable and (len(droptable) != rows):
             self._error = "Invalid table size : droprows length does not match table rows"
             return
+
         # list of json url's
-        self._jsonurl_list = [ self.get_url(item[1]) for item in colidents ]
+        self.jlabels['json_url'] = [ self.get_url(item[1]) for item in colidents ]
         # list of html url's
-        self._htmlurl_list = [ self.get_url(item[0]) for item in colidents ]
-        # list of storage key's
-        self._storagekey_list = [ item[2] for item in colidents ]
+        self.jlabels['html_url'] = [ self.get_url(item[0]) for item in colidents ]
         # dropurl
-        self._dropurl = self.get_url(self.get_field_value("dropident"))
+        self.jlabels['dropurl'] = self.get_url(self.wf.dropident)
+        # list of storage key's
+        self.jlabels['keys'] = [ item[2] for item in colidents ]
+
         # set even row class
-        _even = None
-        if self.get_field_value('even_class'):
-            _even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            _even = self.wf.even_class
+        else:
+            _even = ''
+        self.jlabels['even_class'] = _even
         # set odd row class
-        _odd = None
-        if self.get_field_value('odd_class'):
-            _odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            _odd = self.wf.odd_class
+        else:
+            _odd = ''
+        self.jlabels['odd_class'] = _odd
+        if self.wf.button_class:
+            self.jlabels['button_class'] = self.wf.button_class
+        else:
+            self.jlabels['button_class'] = ''
         # cell  increments for every table cell
         cell = -1
         # create rows
@@ -2928,20 +2934,19 @@ class GeneralButtonTable1(Widget):
                 else:
                     dragdata = ""
                 if dragtable[rownumber][0]:
-                    self[rownumber].update_attribs(
+                    self[rownumber].attribs.update(
 {"style":"cursor:move;",
  "draggable":"true",
- "ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
-                                                                                  data = dragdata)})
+ "ondragstart":f"SKIPOLE.widgets['{self.get_id()}'].dragstartfunc(event, '{dragdata}')"})
             if droptable:
                 if droptable[rownumber][1]:
                     dropdata = droptable[rownumber][1]
                 else:
                     dropdata = ""
                 if droptable[rownumber][0]:
-                    self[rownumber].update_attribs(
-{"ondrop":"SKIPOLE.widgets['{ident}'].dropfunc(event, '{data}')".format(ident = self.get_id(), data = dropdata),
- "ondragover":"SKIPOLE.widgets['{ident}'].allowdropfunc(event)".format(ident = self.get_id())})
+                    self[rownumber].attribs.update(
+{"ondrop":f"SKIPOLE.widgets['{self.get_id()}'].dropfunc(event, '{dropdata}')",
+ "ondragover":f"SKIPOLE.widgets['{self.get_id()}'].allowdropfunc(event)"})
             for colnumber in range(cols):
                 cell += 1
                 element = fieldtable[cell]
@@ -2956,12 +2961,12 @@ class GeneralButtonTable1(Widget):
                 else:
                     self[rownumber][colnumber] = tag.Part(tag_name='td')
                 # get html url for this column
-                url = self._htmlurl_list[colnumber]
+                url = self.jlabels['html_url'][colnumber]
                 # is it a button link
                 if url and element[2]:
                     # its a link, apply button class
-                    if self.get_field_value('button_class'):
-                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.get_field_value('button_class')})
+                    if self.wf.button_class:
+                        self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
                     else:
                         self[rownumber][colnumber][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
                      # apply button text
@@ -2971,29 +2976,11 @@ class GeneralButtonTable1(Widget):
                     else:
                         self[rownumber][colnumber][0][0] = url
                     # create a url for the href
-                    cellurl = self.make_get_url(page, url, {get_field_name:element[3]}, True)
-                    # apply url and href
-                    self[rownumber][colnumber][0].update_attribs({"href": cellurl})
+                    self[rownumber][colnumber][0].attribs["href"] = self.make_get_url(page, url, {get_field_name:element[3]}, True)
                 else:
                     # not a link
                     self[rownumber][colnumber][0] = celltext
                     self[rownumber][colnumber].htmlescaped = False
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        jscript = """  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-""".format(ident = self.get_id())
-        if self._jsonurl_list or self._dropurl or self._htmlurl_list:
-            return jscript + self._make_fieldvalues('even_class',
-                                                    'odd_class',
-                                                    'button_class',
-                                                    json_url=self._jsonurl_list,
-                                                    dropurl=self._dropurl,
-                                                    html_url = self._htmlurl_list,
-                                                    keys = self._storagekey_list)
-        return jscript
 
 
 
