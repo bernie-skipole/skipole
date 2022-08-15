@@ -1,12 +1,8 @@
 
 
-
 """Contains widgets for lists"""
 
-
-from .. import skiboot, tag, excepts
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
-
 
 
 class UList1(Widget):
@@ -29,32 +25,33 @@ class UList1(Widget):
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "ul"
-        self._even = ''
-        self._odd = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list"
-        contents = self.get_field_value("contents")
-        # set even li class
-        if self.get_field_value('even_class'):
-            self._even = self.get_field_value('even_class')
-        # set odd li class
-        if self.get_field_value('odd_class'):
-            self._odd = self.get_field_value('odd_class')
+        contents = self.wf.contents
 
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+
+        # set even li class
+        if self.wf.even_class:
+            _even = self.wf.even_class
+            self.jlabels['even_class'] = _even
+        else:
+            _even = ''
+        # set odd li class
+        if self.wf.odd_class:
+            _odd = self.wf.odd_class
+            self.jlabels['odd_class'] = _odd
+        else:
+            _odd = ''
         for index, item in enumerate(contents):
-            if self._even and (index % 2):
-                self[index] = tag.Part(tag_name="li", attribs={"class":self._even}, text=item)
-            elif self._odd and not (index % 2):
-                self[index] = tag.Part(tag_name='li', attribs={"class":self._odd}, text=item)
+            if _even and (index % 2):
+                self[index] = tag.Part(tag_name="li", attribs={"class":_even}, text=item)
+            elif _odd and not (index % 2):
+                self[index] = tag.Part(tag_name='li', attribs={"class":_odd}, text=item)
             else:
                 self[index] = tag.Part(tag_name='li', text=item)
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets list items"""
-        return self._make_fieldvalues(even_class = self._even, odd_class = self._odd)
 
 
     @classmethod
@@ -94,28 +91,32 @@ class UList2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list"
-        contents = self.get_field_value("set_html")
+        contents = self.wf.set_html
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+
         # set even li class
-        if self.get_field_value('even_class'):
-            self._even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            _even = self.wf.even_class
+            self.jlabels['even_class'] = _even
+        else:
+            _even = ''
         # set odd li class
-        if self.get_field_value('odd_class'):
-            self._odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            _odd = self.wf.odd_class
+            self.jlabels['odd_class'] = _odd
+        else:
+            _odd = ''
 
         for index, item in enumerate(contents):
-            if self._even and (index % 2):
-                self[index] = tag.Part(tag_name="li", attribs={"class":self._even}, text=item)
-            elif self._odd and not (index % 2):
-                self[index] = tag.Part(tag_name='li', attribs={"class":self._odd}, text=item)
+            if _even and (index % 2):
+                self[index] = tag.Part(tag_name="li", attribs={"class":_even}, text=item)
+            elif _odd and not (index % 2):
+                self[index] = tag.Part(tag_name='li', attribs={"class":_odd}, text=item)
             else:
                 self[index] = tag.Part(tag_name='li', text=item)
             self[index].htmlescaped = False
             self[index].linebreaks=False
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets list items"""
-        return self._make_fieldvalues(even_class = self._even, odd_class = self._odd)
 
 
     @classmethod

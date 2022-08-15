@@ -156,7 +156,7 @@ class ContainerLink1(Widget):
 </a>"""
 
 
-class ContainerLink2(Widget):
+class ContainerLink2(ClickEventMixin, Widget):
     """A link to the page with the given ident, label or url, and two optional get fields.
        get_fields are JSON settable
        Can request a json return if json_ident set
@@ -213,14 +213,6 @@ class ContainerLink2(Widget):
             if jsonurl:
                 self.jlabels['url'] = jsonurl
 
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        ident=self.get_id()
-        return f"""  $("#{ident}").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
 
     @classmethod
     def description(cls):
@@ -3012,18 +3004,18 @@ class Audio1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the audio"
 
-        if self.get_field_value('controls'):
-            self.update_attribs({'controls':'controls'})
-        if self.get_field_value('play'):
-            self.update_attribs({'autoplay':'autoplay'})
-        if self.get_field_value("mp3_ident"):
-            mp3url = self.get_url(self.get_field_value("mp3_ident"))
+        if self.wf.controls:
+            self.attribs['controls'] = 'controls'
+        if self.wf.play:
+            self.attribs['autoplay'] = 'autoplay'
+        if self.wf.mp3_ident:
+            mp3url = self.get_url(self.wf.mp3_ident)
             self.append( tag.ClosedPart(tag_name="source", attribs= {"src": mp3url, "type":"audio/mpeg"}) )
-        if self.get_field_value("wav_ident"):
-            wavurl = self.get_url(self.get_field_value("wav_ident"))
+        if self.wf.wav_ident:
+            wavurl = self.get_url(self.wf.wav_ident)
             self.append( tag.ClosedPart(tag_name="source", attribs= {"src": wavurl, "type":"audio/wav"}) )
-        if self.get_field_value("ogg_ident"):
-            oggurl = self.get_url(self.get_field_value("ogg_ident"))
+        if self.wf.ogg_ident:
+            oggurl = self.get_url(self.wf.ogg_ident)
             self.append( tag.ClosedPart(tag_name="source", attribs= {"src": oggurl, "type":"audio/ogg"}) )
 
 
@@ -3067,16 +3059,16 @@ class Audio2(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the audio"
 
-        if self.get_field_value('controls'):
-            self.update_attribs({'controls':'controls'})
-        if self.get_field_value('play'):
-            self.update_attribs({'autoplay':'autoplay'})
-        if self.get_field_value("src_mp3"):
-            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.get_field_value("src_mp3"), safe='/:'), "type":"audio/mpeg"}) )
-        if self.get_field_value("src_wav"):
-            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.get_field_value("src_wav"), safe='/:'), "type":"audio/wav"}) )
-        if self.get_field_value("src_ogg"):
-            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.get_field_value("src_ogg"), safe='/:'), "type":"audio/ogg"}) )
+        if self.wf.controls:
+            self.attribs['controls'] = 'controls'
+        if self.wf.play:
+            self.attribs['autoplay'] = 'autoplay'
+        if self.wf.src_mp3:
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.wf.src_mp3, safe='/:'), "type":"audio/mpeg"}) )
+        if self.wf.src_wav:
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.wf.src_wav, safe='/:'), "type":"audio/wav"}) )
+        if self.wf.src_ogg:
+            self.append( tag.ClosedPart(tag_name="source", attribs= {"src": quote(self.wf.src_ogg, safe='/:'), "type":"audio/ogg"}) )
 
 
     @classmethod
