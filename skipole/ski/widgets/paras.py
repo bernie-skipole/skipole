@@ -493,6 +493,7 @@ class JSONDivLink(Widget):
                         'button_show_text':FieldArg("text", "Show"),
                         'button_hide_text':FieldArg("text", "Hide"),
                         'button_class':FieldArg("cssclass", ""),
+                        'button_style':FieldArg("cssstyle", ""),
                         'json_ident':FieldArg("url", ''),
                         'link_ident':FieldArg("url", 'no_javascript'),
                         'get_field':FieldArg("text", "", valdt=True),
@@ -515,6 +516,8 @@ class JSONDivLink(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         if self.wf.button_class:
              self[0].attribs["class"] = self.wf.button_class
+        if self.wf.button_style:
+             self[0].attribs["style"] = self.wf.button_style
         if self.wf.link_ident:
             url = self.get_url(self.wf.link_ident)
             if url:
@@ -575,7 +578,7 @@ class JSONDivLink(Widget):
   <a href="#" role="button">  <!-- with class button_class -->
     <!-- set with button_show_text or button_hide_text -->
   </a>
-  <div>  <!-- with class div_class, style div_style, and either hidden or not, depending on hide -->
+  <div>  <!-- with class div_class, and either hidden or not, depending on hide -->
     <!-- div_content shown as either text or html -->
   </div>
 </div>"""

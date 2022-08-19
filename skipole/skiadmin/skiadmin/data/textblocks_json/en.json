@@ -1945,6 +1945,7 @@
   "widgets.paras.JSONDivLink.button_show_text": "Button text when content is hidden.",
   "widgets.paras.JSONDivLink.button_show_text.": "Button text when content is hidden.",
   "widgets.paras.JSONDivLink.button_show_text.full": "Button text when content is hidden, automatically set on the button by javascript when button pressed to hide contents.",
+  "widgets.paras.JSONDivLink.button_style": "CSS Style of the button link",
   "widgets.paras.JSONDivLink.div_class": "CSS class of the content div.",
   "widgets.paras.JSONDivLink.div_class.full": "CSS class of the content div.",
   "widgets.paras.JSONDivLink.div_content": "Text or html string to place in the content div.",
