@@ -3,7 +3,7 @@
 
 
 from .. import tag
-from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
+from . import Widget, ClosedWidget, AnchorClickEventMixin, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
 class TagBlock(Widget):
@@ -376,7 +376,7 @@ class DivPara(Widget):
 </div>"""
 
 
-class JSONTextLink(Widget):
+class JSONTextLink(AnchorClickEventMixin, Widget):
     """A div, containing an anchor link (used as a button) followed by a paragraph containing text
        If the button is pressed, and the text is visible - the text is hidden, and button text set to 'button_show_text'.
        If the button is pressed, and the text is hidden - a call to a json file is made which should return the
@@ -406,74 +406,62 @@ class JSONTextLink(Widget):
         # pass fields to Widget
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "div"
-        self[0] = tag.Part(tag_name='a', attribs={'role':'button'})
+        self[0] = tag.Part(tag_name='a', attribs={'role':'button', 'href':'#'})
         self[0][0] = ""  # where button text is to be set
         self[1] = tag.Part(tag_name="p")
         # do not insert <br /> - leave that to pre_line
         self[1].linebreaks=False
         self[1][0] =  ""  # where para_text is to be set
-        self._jsonurl = ''
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value('button_class'):
-             self[0].update_attribs({"class":self.get_field_value('button_class')})
-        self[0].update_attribs({"href":"#"})
-        if not self.get_field_value("link_ident"):
+        if self.wf.button_class:
+             self[0].attribs["class"] = self.wf.button_class
+        if not self.wf.link_ident:
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident"
             return
-        url = self.get_url(self.get_field_value("link_ident"))
+        url = self.get_url(self.wf.link_ident)
         if url:
-            get_fields = {self.get_formname("get_field"):self.get_field_value("get_field")}
-            url = self.make_get_url(page, url, get_fields, force_ident=True)
-            self[0].update_attribs({"href": url})
+            get_fields = {self.get_formname("get_field"):self.wf.get_field}
+            self[0].attribs["href"] = self.make_get_url(page, url, get_fields, force_ident=True)
         else:
             self._error = "Warning: Invalid link ident"
             return
+ 
+        if self.wf.para_class:
+            self[1].attribs["class"] = self.get_field_value("para_class")
 
-        para_style = {}
-
-        if self.get_field_value("para_class"):
-            para_style["class"] = self.get_field_value("para_class")
-
-        if self.get_field_value("hide") and (not self.error_status):
-            self[0][0] = self.get_field_value("button_show_text")
-            if self.get_field_value("pre_line"):
-                para_style["style"] = "display:none;white-space: pre-line;"
+        if self.wf.hide and (not self.error_status):
+            self[0][0] = self.wf.button_show_text
+            if self.wf.pre_line:
+                self[1].attribs["style"] = "display:none;white-space: pre-line;"
             else:
-                para_style["style"] = "display:none;"
+                self[1].attribs["style"] = "display:none;"
         else:
-            self[0][0] = self.get_field_value("button_hide_text")
-            if self.get_field_value("pre_line"):
-                para_style["style"] = "white-space: pre-line;"
-
-        if para_style:
-            self[1].attribs=para_style
+            self[0][0] = self.wf.button_hide_text
+            if self.wf.pre_line:
+                self[1].attribs["style"] = "white-space: pre-line;"
 
         if not self.error_status:
             # only set para_text if an error is not already there
-            self[1][0] = self.get_field_value("para_text")
-        if not self.get_field_value("json_ident"):
+            self[1][0] = self.wf.para_text
+        if not self.self.wf.json_ident:
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident to JSON"
             return
-        self._jsonurl = self.get_url(self.get_field_value("json_ident"))
-        if not self._jsonurl:
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['button_show_text'] = self.wf.button_show_text
+        self.jlabels['button_hide_text'] = self.wf.button_hide_text
+
+        jsonurl = self.get_url(self.wf.json_ident)
+        if not jsonurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
+        self.jlabels['url'] = jsonurl
 
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        if not self._jsonurl:
-            return
-        jscript = """  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-""".format(ident = self.get_id())
-        return jscript + self._make_fieldvalues( 'button_show_text', 'button_hide_text', url=self._jsonurl)
 
     @classmethod
     def description(cls):
@@ -519,67 +507,65 @@ class JSONDivLink(Widget):
         # pass fields to Widget
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "div"
-        self[0] = tag.Part(tag_name='a', attribs={'role':'button'})
+        self[0] = tag.Part(tag_name='a', attribs={'role':'button', 'href':'#'})
         self[0][0] = ""  # where button text is to be set
         self[1] = tag.Part(tag_name='div')
         self[1][0] =  ""  # where div_content is to be set
-        self._jsonurl = ''
-
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value('button_class'):
-             self[0].update_attribs({"class":self.get_field_value('button_class')})
-        self[0].update_attribs({"href":"#"})
-        if self.get_field_value("link_ident"):
-            url = self.get_url(self.get_field_value("link_ident"))
+        if self.wf.button_class:
+             self[0].attribs["class"] = self.wf.button_class
+        if self.wf.link_ident:
+            url = self.get_url(self.wf.link_ident)
             if url:
-                get_fields = {self.get_formname("get_field"):self.get_field_value("get_field")}
-                url = self.make_get_url(page, url, get_fields, force_ident=True)
-                self[0].update_attribs({"href": url})
+                get_fields = {self.get_formname("get_field"):self.wf.get_field}
+                self[0].attribs["href"] = self.make_get_url(page, url, get_fields, force_ident=True)
 
-        if self.get_field_value("hide") and (not self.error_status):
-            self[1].attribs={"style":"display:none;"}
-            self[0][0] = self.get_field_value("button_show_text")
+        if self.wf.hide and (not self.error_status):
+            self[1].attribs["style"] = "display:none;"
+            self[0][0] = self.wf.button_show_text
         else:
-            self[1].attribs={}
-            self[0][0] = self.get_field_value("button_hide_text")
-        if self.get_field_value('div_class'):
-            self[1].update_attribs({"class":self.get_field_value('div_class')})
+            self[0][0] = self.wf.button_hide_text
+        if self.wf.div_class:
+            self[1].attribs["class"] = self.wf.div_class
         if not self.error_status:
             # only set div_content if an error is not already there
-            self[1][0] = self.get_field_value("div_content")
-        if not self.get_field_value("htmlescaped"):
+            self[1][0] = self.wf.div_content
+        if not self.wf.htmlescaped:
             # set the div to not escape its contents
             self[1].htmlescaped = False
         # set an id in the button and div
-        self[0].insert_id()
-        self[1].insert_id()
-        if not self.get_field_value("json_ident"):
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['buttonident'] = self[0].insert_id()
+        self.jlabels['divident'] = self[1].insert_id()
+
+        self.jlabels['button_show_text'] = self.wf.button_show_text
+        self.jlabels['button_hide_text'] = self.wf.button_hide_text
+        self.jlabels['get_field'] = self.wf.get_field
+
+        self.jlabels['htmlescaped'] = "text" if self.wf.htmlescaped else "html"
+
+        if not self.wf.json_ident:
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident to JSON"
             return
-        self._jsonurl = self.get_url(self.get_field_value("json_ident"))
-        if not self._jsonurl:
+        jsonurl = self.get_url(self.wf.json_ident)
+        if not jsonurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
+        self.jlabels['url'] = jsonurl
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler"""
-        jscript = """  $("#{buttonident}").click(function (e) {{
+        """Sets a click event handler on the button"""
+        ident = self.get_id()
+        buttonident = self[0].get_id() # ident of the button
+        return f"""  $("#{buttonident}").click(function (e) {{
     SKIPOLE.widgets['{ident}'].eventfunc(e);
     }});
-""".format(
-        ident = self.get_id(),
-        buttonident = self[0].get_id(), # ident of the button
-        )
-        return jscript + self._make_fieldvalues("button_hide_text", "button_show_text", "get_field",
-                                                htmlescaped = "text" if self.get_field_value("htmlescaped") else "html",
-                                                divident = self[1].get_id(),
-                                                buttonident = self[0].get_id(),
-                                                url = self._jsonurl
-                                                )
+"""
+
 
     @classmethod
     def description(cls):
@@ -628,28 +614,30 @@ class TextBlockPara(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         if not self.error_status:
-            linebreaks = bool(self.get_field_value('linebreaks'))
-            if self.get_field_value('text_replaceblock'):
+            linebreaks = bool(self.wf.linebreaks)
+            if self.wf.text_replaceblock:
                 # no textblock, just the replacement text
-                self[0] = self.get_field_value('text_replaceblock')
+                self[0] = self.wf.text_replaceblock
                 if not linebreaks:
                     self.linebreaks = False             
             else:
                 # define the textblock
-                tblock = self.get_field_value("textblock_ref")
-                tblock.project = self.get_field_value('textblock_project')
-                tblock.failmessage = self.get_field_value('text_refnotfound')
+                tblock = self.wf.textblock_ref
+                tblock.project = self.wf.textblock_project
+                tblock.failmessage = self.wf.text_refnotfound
                 tblock.linebreaks = linebreaks
-                if self.get_field_value('replace_strings'):
-                    tblock.replace_strings = self.get_field_value('replace_strings')
+                if self.wf.replace_strings:
+                    tblock.replace_strings = self.wf.replace_strings
                 # place it at location 0
                 self[0] = tblock
-        if self.error_status and self.get_field_value('error_class'):
-            self.update_attribs({"class":self.get_field_value('error_class')})
+        if self.error_status and self.wf.error_class:
+            self.attribs["class"] = self.wf.error_class
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets fieldvalues"""
-        return self._make_fieldvalues('widget_class','error_class','linebreaks')
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['widget_class'] = self.wf.widget_class
+        self.jlabels['error_class'] = self.wf.error_class
+        self.jlabels['linebreaks'] = self.wf.linebreaks
+
 
     @classmethod
     def description(cls):
@@ -691,14 +679,14 @@ class TextBlockDiv(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # define the textblock
-        tblock = self.get_field_value("textblock_ref")
-        tblock.project = self.get_field_value('textblock_project')
-        tblock.failmessage = self.get_field_value('content_refnotfound')
+        tblock = self.wf.textblock_ref
+        tblock.project = self.wf.textblock_project
+        tblock.failmessage = self.wf.content_refnotfound
         tblock.escape = False
         tblock.linebreaks = False
         # place it at location 0
-        if self.get_field_value("content_replaceblock"):
-            self[0] = self.get_field_value("content_replaceblock")
+        if self.wf.content_replaceblock:
+            self[0] = self.wf.content_replaceblock
         else:
             self[0] = tblock
 
@@ -745,28 +733,24 @@ class ShowPara1(Widget):
         self[1][0][0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        para_style = {}
 
-        if self.get_field_value("para_class"):
-            para_style["class"] = self.get_field_value("para_class")
+        if self.wf.para_class:
+            self[0].attribs["class"] = self.wf.para_class
 
-        if self.get_field_value("show_para"):
-            if self.get_field_value("pre_line"):
-                para_style["style"] = "white-space: pre-line;"
+        if self.wf.show_para:
+            if self.wf.pre_line:
+                self[0].attribs["style"] = "white-space: pre-line;"
         else:
-            if self.get_field_value("pre_line"):
-                para_style["style"] = "display:none;white-space: pre-line;"
+            if self.wf.pre_line:
+                self[0].attribs["style"] = "display:none;white-space: pre-line;"
             else:
-                para_style["style"] = "display:none;"
+                self[0].attribs["style"] = "display:none;"
 
-        if para_style:
-            self[0].attribs=para_style
-
-        self[0][0] = self.get_field_value("para_text")
+        self[0][0] = self.wf.para_text
         if self.error_status:
-            self[1].del_one_attrib("style")
-        if self.get_field_value('error_class'):
-            self[1].update_attribs({"class":self.get_field_value('error_class')})
+            del self[1].attribs["style"]
+        if self.wf.error_class:
+            self[1].attribs["class"] = self.wf.error_class
 
     @classmethod
     def description(cls):
@@ -816,17 +800,17 @@ class ShowPara2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
+        self.widget_hide(self.wf.hide)
         # define the text paragraph
-        self[1][0][0] = self.get_field_value("para_text")
-        if self.get_field_value("inner_class"):
-            self[1].update_attribs({"class":self.get_field_value("inner_class")})
-        if self.get_field_value("close_class"):
-            self[0].update_attribs({"class":self.get_field_value("close_class")})
-        if self.get_field_value("close_style"):
-            self[0].update_attribs({"style":self.get_field_value("close_style")})
-        if self.get_field_value("pre_line"):
-            self[1][0].attribs = {"style":"white-space: pre-line;"}
+        self[1][0][0] = self.wf.para_text
+        if self.wf.inner_class:
+            self[1].attribs["class"] = self.wf.inner_class
+        if self.wf.close_class:
+            self[0].attribs["class"] = self.wf.close_class
+        if self.wf.close_style:
+            self[0].attribs["style"] = self.wf.close_style
+        if self.wf.pre_line:
+            self[1][0].attribs["style"] = "white-space: pre-line;"
 
     @classmethod
     def description(cls):
