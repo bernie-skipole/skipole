@@ -3,7 +3,7 @@
 """Contains widgets for radio forms"""
 
 
-from .. import skiboot, tag, excepts
+from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -45,24 +45,23 @@ class RadioButton1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the radio buttons"
 
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
-        if self.get_field_value('div_class'):
-            self[1].update_attribs({"class":self.get_field_value('div_class')})
-        checked = self.get_field_value('radio_checked')
+            del self[0].attrib["style"]
+        if self.wf.div_class:
+            self[1].attribs["class"] = self.wf.div_class
+        checked = self.wf.radio_checked
         name = self.get_formname('radio_checked')
-        label_class = self.get_field_value('label_class')
-        self[1].insert_id()
-        one_id = self[1].get_id()
-        for index,val in enumerate(self.get_field_value('radio_values')):
-            if self.get_field_value('inputdiv_class'):
-                inputblock = tag.Part(tag_name="div", attribs={"class":self.get_field_value('inputdiv_class')})
+        label_class = self.wf.label_class
+        one_id = self[1].insert_id()
+        for index,val in enumerate(self.wf.radio_values):
+            if self.wf.inputdiv_class:
+                inputblock = tag.Part(tag_name="div", attribs={"class":self.wf.inputdiv_class})
             else:
                 inputblock = tag.Part(tag_name="div")
             if checked and (checked == val):
-                prt = tag.ClosedPart(tag_name="input",
+                inputblock[0] = tag.ClosedPart(tag_name="input",
                                             attribs ={"name":name,
                                                       "value":val,
                                                       "checked":"checked",
@@ -70,19 +69,18 @@ class RadioButton1(Widget):
                 # ensure only one item checked
                 checked = ''
             else:
-                prt = tag.ClosedPart(tag_name="input",
+                inputblock[0] = tag.ClosedPart(tag_name="input",
                                             attribs ={"name":name,
                                                       "value":val,
                                                       "type":"radio"})
-            prt.insert_id(one_id + '_' + str(index) + '_0')
-            inputblock[0] = prt
-            inputblock[1] = tag.Part(tag_name="label")
+            ibid = inputblock[0].insert_id(one_id + '_' + str(index) + '_0')
             if label_class:
-                inputblock[1].attribs = {"class": label_class, 'for':inputblock[0].get_id()}
+                inputblock[1] = tag.Part(tag_name="label", attribs = {"class": label_class, 'for':ibid})
             else:
-                inputblock[1].attribs = {'for':inputblock[0].get_id()}
+                inputblock[1] = tag.Part(tag_name="label", attribs = {'for':ibid})
+
             try:
-                inputblock[1][0] = self.get_field_value('radio_text')[index]
+                inputblock[1][0] = self.wf.radio_text[index]
             except IndexError:
                 inputblock[1][0] = ''
             self[1].append(inputblock)
