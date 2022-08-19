@@ -1,11 +1,7 @@
 
-
 """Contains commonly used paragraphs"""
 
-from string import Template
-import json
 
-from .. import skiboot
 from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
@@ -36,32 +32,29 @@ class TagBlock(Widget):
         self.tag_name = "div"
         # container is the widget itself
         self[0] =  ""
-        self._dropurl = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self.tag_name = self.get_field_value('tag')
+        self.tag_name = self.wf.tag
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        # dropurl
-        self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
-        # drag
-        drag = self.get_field_value("drag")
-        if drag:
-            self.update_attribs(
-{"draggable":"true",
-"ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
-                                                                                 data = drag)})
-        # drop
-        drop = self.get_field_value("drop")
-        if drop:
-            self.update_attribs(
-{"ondrop":"SKIPOLE.widgets['{ident}'].dropfunc(event, '{data}')".format(ident = self.get_id(), data = drop),
-"ondragover":"SKIPOLE.widgets['{ident}'].allowdropfunc(event)".format(ident = self.get_id())})
+        self.widget_hide(self.wf.hide)
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets drop and drag"""
-        if self._dropurl:
-            return self._make_fieldvalues(dropurl=self._dropurl)
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        dropurl = self.get_url(self.wf.dropident)
+        if dropurl:
+            self.jlabels['dropurl'] = dropurl
+
+        # drag
+        drag = self.wf.drag
+        if drag:
+            self.attribs.update(
+{"draggable":"true",
+"ondragstart":f"SKIPOLE.widgets['{self.get_id()}'].dragstartfunc(event, '{drag}')"})
+        # drop
+        drop = self.wf.drop
+        if drop:
+            self.attribs.update(
+{"ondrop":f"SKIPOLE.widgets['{self.get_id()}'].dropfunc(event, '{drop}')",
+"ondragover":f"SKIPOLE.widgets['{self.get_id()}'].allowdropfunc(event)"})
 
 
     @classmethod
@@ -96,10 +89,10 @@ class DivStyleDiv(Widget):
         self[0][0] =  ""  # where html is to be set
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self[0].tag_name = self.get_field_value('inner_tag')
-        if self.get_field_value('style'):
-            self[0].update_attribs({"style":self.get_field_value('style')})
-        self[0][0] = self.get_field_value("set_html")
+        self[0].tag_name = self.wf.inner_tag
+        if self.wf.style:
+            self[0].attribs["style"] = self.wf.style
+        self[0][0] = self.wf.set_html
 
     @classmethod
     def description(cls):
@@ -136,32 +129,29 @@ class DivHTML(Widget):
         self[0] = ""  # where the html string is to be set
         self.htmlescaped = False
         self.linebreaks=False
-        self._dropurl = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self[0] = self.get_field_value("set_html")
+        self[0] = self.wf.set_html
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
+        self.widget_hide(self.wf.hide)
         # dropurl
-        self._dropurl = skiboot.get_url(self.get_field_value("dropident"), proj_ident=page.proj_ident)
-        # drag
-        drag = self.get_field_value("drag")
-        if drag:
-            self.update_attribs(
-{"draggable":"true",
-"ondragstart":"SKIPOLE.widgets['{ident}'].dragstartfunc(event, '{data}')".format(ident = self.get_id(),
-                                                                                 data = drag)})
-        # drop
-        drop = self.get_field_value("drop")
-        if drop:
-            self.update_attribs(
-{"ondrop":"SKIPOLE.widgets['{ident}'].dropfunc(event, '{data}')".format(ident = self.get_id(), data = drop),
-"ondragover":"SKIPOLE.widgets['{ident}'].allowdropfunc(event)".format(ident = self.get_id())})
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        dropurl = self.get_url(self.wf.dropident)
+        if dropurl:
+            self.jlabels['dropurl'] = dropurl
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets drop and drag"""
-        if self._dropurl:
-            return self._make_fieldvalues(dropurl=self._dropurl)
+        # drag
+        drag = self.wf.drag
+        if drag:
+            self.attribs.update(
+{"draggable":"true",
+"ondragstart":f"SKIPOLE.widgets['{self.get_id()}'].dragstartfunc(event, '{drag}')"})
+        # drop
+        drop = self.wf.drop
+        if drop:
+            self.attribs.update(
+{"ondrop":f"SKIPOLE.widgets['{self.get_id()}'].dropfunc(event, '{drop}')",
+"ondragover":f"SKIPOLE.widgets['{self.get_id()}'].allowdropfunc(event)"})
 
     @classmethod
     def description(cls):
@@ -191,7 +181,7 @@ class PreText(Widget):
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self[0] = self.get_field_value("pre_text")
+        self[0] = self.wf.pre_text
 
     @classmethod
     def description(cls):
@@ -220,7 +210,7 @@ class SpanText(Widget):
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self[0] = self.get_field_value("span_text")
+        self[0] = self.wf.span_text
 
     @classmethod
     def description(cls):
@@ -251,10 +241,10 @@ class TagText(Widget):
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self.tag_name = self.get_field_value('tag')
+        self.tag_name = self.wf.tag
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
-        self[0] = self.get_field_value("tag_text")
+        self.widget_hide(self.wf.hide)
+        self[0] = self.wf.tag_text
 
     @classmethod
     def description(cls):
@@ -287,8 +277,8 @@ class TagUnEscaped(Widget):
         self.linebreaks=False
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self.tag_name = self.get_field_value('tag')
-        self[0] = self.get_field_value("content")
+        self.tag_name = self.wf.tag
+        self[0] = self.wf.content
 
     @classmethod
     def description(cls):
@@ -317,7 +307,7 @@ class ParaText(Widget):
         self[0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        self[0] = self.get_field_value("para_text")
+        self[0] = self.wf.para_text
 
     @classmethod
     def description(cls):
@@ -358,20 +348,19 @@ class DivPara(Widget):
         self[0][0] = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("pre_line"):
-            self[0].attribs={"style":"white-space: pre-line;"}
-        if self.get_field_value('para_class'):
-            self[0].update_attribs({"class":self.get_field_value('para_class')})
+        if self.wf.pre_line:
+            self[0].attribs["style"] = "white-space: pre-line;"
+        if self.wf.para_class:
+            self[0].attribs["class"] = self.wf.para_class
         # self[0][0] could be set by an error message
         if not self.error_status:
-            self[0][0] = self.get_field_value("para_text")
-        if self.error_status and self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+            self[0][0] = self.wf.para_text
+        if self.error_status and self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
 
-            
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets fieldvalues"""
-        return self._make_fieldvalues('para_class', 'error_class')
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['para_class'] = self.wf.para_class
+        self.jlabels['error_class'] = self.wf.error_class
 
 
     @classmethod
@@ -434,7 +423,7 @@ class JSONTextLink(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident"
             return
-        url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+        url = self.get_url(self.get_field_value("link_ident"))
         if url:
             get_fields = {self.get_formname("get_field"):self.get_field_value("get_field")}
             url = self.make_get_url(page, url, get_fields, force_ident=True)
@@ -469,7 +458,7 @@ class JSONTextLink(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident to JSON"
             return
-        self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"),  proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("json_ident"))
         if not self._jsonurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
@@ -542,7 +531,7 @@ class JSONDivLink(Widget):
              self[0].update_attribs({"class":self.get_field_value('button_class')})
         self[0].update_attribs({"href":"#"})
         if self.get_field_value("link_ident"):
-            url = skiboot.get_url(self.get_field_value("link_ident"), proj_ident=page.proj_ident)
+            url = self.get_url(self.get_field_value("link_ident"))
             if url:
                 get_fields = {self.get_formname("get_field"):self.get_field_value("get_field")}
                 url = self.make_get_url(page, url, get_fields, force_ident=True)
@@ -569,7 +558,7 @@ class JSONDivLink(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No link ident to JSON"
             return
-        self._jsonurl = skiboot.get_url(self.get_field_value("json_ident"),  proj_ident=page.proj_ident)
+        self._jsonurl = self.get_url(self.get_field_value("json_ident"))
         if not self._jsonurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
