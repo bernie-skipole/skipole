@@ -147,34 +147,34 @@ class RadioTable(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table of radio buttons"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
 
-        checked = self.get_field_value('radio_checked')
+        checked = self.wf.radio_checked
         name = self.get_formname('radio_checked')
-        fieldtable = self.get_field_value("contents")
-        if self.get_field_value('table_class'):
-            self[1].attribs={"class":self.get_field_value('table_class')}
+        fieldtable = self.wf.contents
+        if self.wf.table_class:
+            self[1].attribs["class"] = self.wf.table_class
         # set table header with titles
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2'):
+        if self.wf.title1 or self.wf.title2:
             header = 1
-            if self.get_field_value('header_class'):
-                self[1][0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[1][0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[1][0] = tag.Part(tag_name='tr')
-            self[1][0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[1][0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[1][0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[1][0][1] = tag.Part(tag_name='th', text = self.wf.title2)
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
 
@@ -284,38 +284,38 @@ class TwoRadioOptions(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the radio buttons"
-        checked = self.get_field_value('radio_checked')
+        checked = self.wf.radio_checked
         name = self.get_formname('radio_checked')
 
-        if self.get_field_value('div_class1'):
-            self[0].update_attribs({"class":self.get_field_value('div_class1')})
-        if self.get_field_value('div_class2'):
-            self[1].update_attribs({"class":self.get_field_value('div_class2')})
+        if self.wf.div_class1:
+            self[0].attribs["class"] = self.wf.div_class1
+        if self.wf.div_class2:
+            self[1].attribs["class"] = self.wf.div_class2
 
-        if checked and (checked == self.get_field_value('value1')):
+        if checked and (checked == self.wf.value1):
             self[0][0][0] = tag.ClosedPart(tag_name="input",
                                      attribs ={"name":name,
-                                     "value":self.get_field_value('value1'),
+                                     "value":self.wf.value1,
                                      "checked":"checked",
                                      "type":"radio"})
         else:
             self[0][0][0] = tag.ClosedPart(tag_name="input",
                                      attribs ={"name":name,
-                                     "value":self.get_field_value('value1'),
+                                     "value":self.wf.value1,
                                      "type":"radio"})
-        self[0][0][1] = self.get_field_value('label1')
-        if checked and (checked == self.get_field_value('value2')):
+        self[0][0][1] = self.wf.label1
+        if checked and (checked == self.wf.value2):
             self[1][0][0] = tag.ClosedPart(tag_name="input",
                                      attribs ={"name":name,
-                                     "value":self.get_field_value('value2'),
+                                     "value":self.wf.value2,
                                      "checked":"checked",
                                      "type":"radio"})
         else:
             self[1][0][0] = tag.ClosedPart(tag_name="input",
                                      attribs ={"name":name,
-                                     "value":self.get_field_value('value2'),
+                                     "value":self.wf.value2,
                                      "type":"radio"})
-        self[1][0][1] = self.get_field_value('label2')
+        self[1][0][1] = self.wf.label2
 
 
     @classmethod
@@ -393,54 +393,43 @@ class BooleanRadio(Widget):
         div1 = self[0]
         div2 = self[1]
 
-        if self.get_field_value('div_class1'):
-            div1.attribs = {"class": self.get_field_value('div_class1')}
-        if self.get_field_value('div_class2'):
-            div2.attribs = {"class": self.get_field_value('div_class2')}
+        if self.wf.div_class1:
+            div1.attribs["class"] = self.wf.div_class1
+        if self.wf.div_class2:
+            div2.attribs["class"] = self.wf.div_class2
 
         # labels of first div
-        if self.get_field_value('left_class1'):
-            div1[0].attribs = {"class": self.get_field_value('left_class1')}
-        if self.get_field_value('left_style1'):
-            div1[0].attribs = {"style": self.get_field_value('left_style1')}
-        div1[0][0] = self.get_field_value('left_label1')
+        div1[0].set_class_style(self.wf.left_class1, self.wf.left_style1)
+        div1[0][0] = self.wf.left_label1
 
-        if self.get_field_value('right_class1'):
-            div1[2].attribs = {"class": self.get_field_value('right_class1')}
-        if self.get_field_value('right_style1'):
-            div1[2].attribs = {"style": self.get_field_value('right_style1')}
-        div1[2][0] = self.get_field_value('right_label1')
+        div1[2].set_class_style(self.wf.right_class1, self.wf.right_style1)
+        div1[2][0] = self.wf.right_label1
+
 
         # labels of second div
-        if self.get_field_value('left_class2'):
-            div2[0].attribs = {"class": self.get_field_value('left_class2')}
-        if self.get_field_value('left_style2'):
-            div2[0].attribs = {"style": self.get_field_value('left_style2')}
-        div2[0][0] = self.get_field_value('left_label2')
+        div2[0].set_class_style(self.wf.left_class2, self.wf.left_style2)
+        div2[0][0] = self.wf.left_label2
 
-        if self.get_field_value('right_class2'):
-            div2[2].attribs = {"class": self.get_field_value('right_class2')}
-        if self.get_field_value('right_style2'):
-            div2[2].attribs = {"style": self.get_field_value('right_style2')}
-        div2[2][0] = self.get_field_value('right_label2')
+        div2[2].set_class_style(self.wf.right_class2, self.wf.right_style2)
+        div2[2][0] = self.wf.right_label2
 
         name = self.get_formname('radio_checked')
-        if self.get_field_value('radio_checked'):
+        if self.wf.radio_checked:
             # True chosen
-            div1[1].attribs = {"type":"radio", 'name': name, "checked":"checked", "value":"True"}
-            div2[1].attribs = {"type":"radio", 'name': name, "value":"False"}
+            div1[1].attribs.update({"type":"radio", 'name': name, "checked":"checked", "value":"True"})
+            div2[1].attribs.update({"type":"radio", 'name': name, "value":"False"})
         else:
             # False chosen
-            div1[1].attribs = {"type":"radio", 'name': name, "value":"True"}
-            div2[1].attribs = {"type":"radio", 'name': name, "checked":"checked", "value":"False"}
+            div1[1].attribs.update({"type":"radio", 'name': name, "value":"True"})
+            div2[1].attribs.update({"type":"radio", 'name': name, "checked":"checked", "value":"False"})
 
         # set the label 'for' attribute to the input field id
-        div1[1].insert_id()
-        div1[0].update_attribs({'for':div1[1].get_id()})
-        div1[2].update_attribs({'for':div1[1].get_id()})
-        div2[1].insert_id()
-        div2[0].update_attribs({'for':div2[1].get_id()})
-        div2[2].update_attribs({'for':div2[1].get_id()})
+        div1_1_id = div1[1].insert_id()
+        div1[0].attribs.update({'for':div1_1_id})
+        div1[2].attribs.update({'for':div1_1_id})
+        div2_1_id = div2[1].insert_id()
+        div2[0].attribs.update({'for':div2_1_id})
+        div2[2].attribs.update({'for':div2_1_id})
 
     @classmethod
     def description(cls):
@@ -501,22 +490,22 @@ class RadioTable2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        rowc = self.get_field_value("row_classes")
-        col1 = self.get_field_value("col1")
-        col2 = self.get_field_value("col2")
-        col3 = self.get_field_value("radiocol")
-        checked = self.get_field_value('radio_checked')
+        rowc = self.wf.row_classes
+        col1 = self.wf.col1
+        col2 = self.wf.col2
+        col3 = self.wf.radiocol
+        checked = self.wf.radio_checked
         name = self.get_formname('radio_checked')
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):
+        if self.wf.title1 or self.wf.title2 or self.wf.title3:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
-            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
 
         # create rows
         rows = max( len(col1), len(col2), len(col3) )
@@ -543,11 +532,11 @@ class RadioTable2(Widget):
             if col3[index]:  # this is the value
                 self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":name, "type":"radio"})
                 if checked and (checked == col3[index]):
-                    self[rownumber][2][0].update_attribs({"value":col3[index], "checked":"checked"})
+                    self[rownumber][2][0].attribs.update({"value":col3[index], "checked":"checked"})
                     # ensure only one item checked
                     checked = ''
                 else:
-                    self[rownumber][2][0].update_attribs({"value":col3[index]})
+                    self[rownumber][2][0].attribs.update({"value":col3[index]})
 
     @classmethod
     def description(cls):
