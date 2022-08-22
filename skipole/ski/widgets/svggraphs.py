@@ -77,15 +77,15 @@ class Chart1(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
-        font_family = self.get_field_value("font_family")
+        font_family = self.wf.font_family
         if not font_family:
             font_family = "arial"
 
-        if self.get_field_value("plus50legend"):
-            charnumbers = len(self.get_field_value("plus50legend"))
+        if self.wf.plus50legend:
+            charnumbers = len(self.wf.plus50legend)
             textlength = 5*charnumbers
             self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"3",
                                                            "y":"40",
@@ -94,7 +94,7 @@ class Chart1(Widget):
                                                            "fill":"white",
                                                            "stroke-width":"0"}))
             self.append( tag.Part(tag_name='text',
-                                  text=self.get_field_value("plus50legend"),
+                                  text=self.wf.plus50legend,
                                   attribs={
                                             'x':"5",
                                             'y':"53",
@@ -105,8 +105,8 @@ class Chart1(Widget):
                                             'fill':"green",
                                             'stroke-width':"0"  }))
 
-        if self.get_field_value("minus50legend"):
-            charnumbers = len(self.get_field_value("minus50legend"))
+        if self.wf.minus50legend:
+            charnumbers = len(self.wf.minus50legend)
             textlength = 5*charnumbers
             self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"3",
                                                            "y":"140",
@@ -115,7 +115,7 @@ class Chart1(Widget):
                                                            "fill":"white",
                                                            "stroke-width":"0"}))
             self.append( tag.Part(tag_name='text',
-                                  text=self.get_field_value("minus50legend"),
+                                  text=self.wf.minus50legend,
                                   attribs={
                                             'x':"5",
                                             'y':"153",
@@ -127,8 +127,8 @@ class Chart1(Widget):
                                             'stroke-width':"0"  }))
 
 
-        if self.get_field_value("zerolegend"):
-            charnumbers = len(self.get_field_value("zerolegend"))
+        if self.wf.zerolegend:
+            charnumbers = len(self.wf.zerolegend)
             textlength = 5*charnumbers
             self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"3",
                                                            "y":"90",
@@ -137,7 +137,7 @@ class Chart1(Widget):
                                                            "fill":"white",
                                                            "stroke-width":"0"}))
             self.append( tag.Part(tag_name='text',
-                                  text=self.get_field_value("zerolegend"),
+                                  text=self.wf.zerolegend,
                                   attribs={
                                             'x':"5",
                                             'y':"103",
@@ -148,17 +148,17 @@ class Chart1(Widget):
                                             'fill':"green",
                                             'stroke-width':"0"  }))
 
-        stroke_width = self.get_field_value("stroke_width")
+        stroke_width = self.wf.stroke_width
         if not stroke_width:
             stroke_width = "1"
         else:
             stroke_width = str(stroke_width)
 
-        stroke = self.get_field_value("stroke")
+        stroke = self.wf.stroke
         if not stroke:
             stroke = "black"
 
-        values = self.get_field_value("values")
+        values = self.wf.values
         if not values:
             # still include a polyline tag, for javascript to find
             self.append(tag.ClosedPart(tag_name='polyline', attribs={"points":"",
@@ -237,26 +237,26 @@ class Graph48Hr(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
-        fill = self.get_field_value("fill")
+        fill = self.wf.fill
         if not fill:
             fill = "white"
 
-        fill_opacity = self.get_field_value("fill_opacity")
+        fill_opacity = self.wf.fill_opacity
         if not fill_opacity:
             fill_opacity = "0"
 
-        self._font_family = self.get_field_value("font_family")
+        self._font_family = self.wf.font_family
         if not self._font_family:
             self._font_family = "arial"
 
-        self._axiscol = self.get_field_value("axiscol")
+        self._axiscol = self.wf.axiscol
         if not self._axiscol:
             self._axiscol = "green"
 
-        self._plotcol = self.get_field_value("plotcol")
+        self._plotcol = self.wf.plotcol
         if not self._plotcol:
             self._plotcol = "black"
 
@@ -269,8 +269,8 @@ class Graph48Hr(Widget):
                                                            "stroke":self._axiscol,
                                                            "stroke-width":"1"})
 
-        values = self.get_field_value("values")
-        last_day = self.get_field_value("last_day")
+        values = self.wf.values
+        last_day = self.wf.last_day
 
         if (not values) and (not last_day):
             # do not know when to plot
@@ -352,8 +352,8 @@ class Graph48Hr(Widget):
             axist = axist + self._hr
 
         # create Y axis
-        minv = self.get_field_value("minvalue")
-        maxv = self.get_field_value("maxvalue")
+        minv = self.wf.minvalue
+        maxv = self.wf.maxvalue
 
         isint = True
         try: 
@@ -599,35 +599,35 @@ class StarChart(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
-        stroke_width = self.get_field_value("stroke_width")
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
+        stroke_width = self.wf.stroke_width
         if stroke_width:
-            self[0].update_attribs({"stroke-width":str(stroke_width)})
+            self[0].attribs["stroke-width"] = str(stroke_width)
         # stroke will be the star colour
-        stroke = self.get_field_value("stroke")
+        stroke = self.wf.stroke
         if stroke:
-            self[0].update_attribs({"stroke":stroke})
-        fill = self.get_field_value("fill")
+            self[0].attribs["stroke"] = stroke
+        fill = self.wf.fill
         if fill:
-            self[0].update_attribs({"fill":fill})
-        if not self.get_field_value("stars"):
+            self[0].attribs["fill"] = fill
+        if not self.wf.stars:
             return
 
         # limit centre of the chart
-        ra0_deg = float(self.get_field_value("ra"))
+        ra0_deg = float(self.wf.ra)
         if (ra0_deg < 0.0) or (ra0_deg > 360.0):
             ra0_deg = 0.0
         ra0 = math.radians(ra0_deg)
 
-        dec0_deg = float(self.get_field_value("dec"))
+        dec0_deg = float(self.wf.dec)
         if dec0_deg > 90.0:
             dec0_deg = 90.0
         if dec0_deg < -90.0:
             dec0_deg = -90.0
         dec0 = math.radians(dec0_deg)
 
-        view_deg = float(self.get_field_value("view"))
+        view_deg = float(self.wf.view)
 
         # avoid division by zero
         if view_deg < 0.000001:
@@ -654,7 +654,7 @@ class StarChart(Widget):
         # taken from www.projectpluto.com/project.htm
 
 
-        for star in self.get_field_value("stars"):
+        for star in self.wf.stars:
 
             ra_deg = float(star[1])
             dec_deg = float(star[2])
@@ -709,7 +709,7 @@ class StarChart(Widget):
                                                                    "stroke":stroke}))
 
 
-        if self.get_field_value("square"):
+        if self.wf.square:
             # plot a square on the chart centre
             self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"240",
                                                                  "y":"240",
@@ -717,7 +717,7 @@ class StarChart(Widget):
                                                                  "height":"20",
                                                                  "style":"stroke:%s;stroke-width:1;fill-opacity:0;" % (stroke,)}))
 
-        if self.get_field_value("cross"):
+        if self.wf.cross:
             # plot a + on the chart centre
             self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
                                                                  "y1":"250",
@@ -732,7 +732,7 @@ class StarChart(Widget):
                                                                  "stroke":stroke,
                                                                  "stroke-width":"1"}))
 
-        for line in self.get_field_value("lines"):
+        for line in self.wf.lines:
 
             start_ra_deg = float(line[0])
             start_dec_deg = float(line[1])
@@ -860,22 +860,30 @@ class StarChartXY(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
-        stroke_width = self.get_field_value("stroke_width")
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
+        stroke_width = self.wf.stroke_width
         if stroke_width:
-            self[0].update_attribs({"stroke-width":str(stroke_width)})
+            self[0].attribs["stroke-width"] = str(stroke_width)
         # stroke will be the star colour
-        stroke = self.get_field_value("stroke")
+        stroke = self.wf.stroke
         if stroke:
-            self[0].update_attribs({"stroke":stroke})
-        fill = self.get_field_value("fill")
+            self[0].attribs["stroke"] = stroke
+        fill = self.wf.fill
         if fill:
-            self[0].update_attribs({"fill":fill})
-        if not self.get_field_value("stars"):
+            self[0].attribs["fill"] = fill
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['stroke'] = self.wf.stroke
+        self.jlabels['stroke_width'] = self.wf.stroke_width
+        self.jlabels['fill'] = self.wf.fill
+        self.jlabels['cross'] = self.wf.cross
+        self.jlabels['square'] = self.wf.square
+
+        if not self.wf.stars:
             return
 
-        for star in self.get_field_value("stars"):
+        for star in self.wf.stars:
 
             # get the radius of a star circle to plot
             if star[0]:
@@ -900,7 +908,7 @@ class StarChartXY(Widget):
                                                                    "stroke":stroke}))
 
 
-        if self.get_field_value("square"):
+        if self.wf.square:
             # plot a square on the chart centre
             self.append(tag.ClosedPart(tag_name='rect', attribs={"x":"240",
                                                                  "y":"240",
@@ -908,7 +916,7 @@ class StarChartXY(Widget):
                                                                  "height":"20",
                                                                  "style":"stroke:%s;stroke-width:1;fill-opacity:0;" % (stroke,)}))
 
-        if self.get_field_value("cross"):
+        if self.wf.cross:
             # plot a + on the chart centre
             self.append(tag.ClosedPart(tag_name='line', attribs={"x1":"240",
                                                                  "y1":"250",
@@ -923,7 +931,7 @@ class StarChartXY(Widget):
                                                                  "stroke":stroke,
                                                                  "stroke-width":"1"}))
 
-        for line in self.get_field_value("lines"):
+        for line in self.wf.lines:
 
             # move origin to circle centre (250,250)
             startx = 250 - float(line[0])
@@ -940,10 +948,7 @@ class StarChartXY(Widget):
                                                                  "stroke-width":"1"}))
 
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets scale values"""
-        return self._make_fieldvalues('stroke', 'stroke_width', 'fill', 'cross', 'square')
- 
+
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
