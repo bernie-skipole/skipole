@@ -29,14 +29,14 @@ class SVGContainer(Widget):
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("width"):
-            self.update_attribs({"width":self.get_field_value("width")})
-        if self.get_field_value("height"):
-            self.update_attribs({"height":self.get_field_value("height")})
-        if self.get_field_value("viewBox"):
-            self.update_attribs({"viewBox":self.get_field_value("viewBox")})
-        if self.get_field_value("preserveAspectRatio"):
-            self.update_attribs({"preserveAspectRatio":self.get_field_value("preserveAspectRatio")})
+        if self.wf.width:
+            self.attribs["width"] = self.wf.width
+        if self.wf.height:
+            self.attribs["height"] = self.wf.height
+        if self.wf.viewBox:
+            self.attribs["viewBox"] = self.wf.viewBox
+        if self.wf.preserveAspectRatio:
+            self.attribs["preserveAspectRatio"] = self.wf.preserveAspectRatio
 
     @classmethod
     def description(cls):
@@ -68,8 +68,8 @@ class Group(Widget):
         self[0] = ""
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
     @classmethod
     def description(cls):
@@ -111,18 +111,18 @@ class TextBlockGroup(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         # define the textblock
-        tblock = self.get_field_value("textblock_ref")
-        tblock.project = self.get_field_value('textblock_project')
-        tblock.failmessage = self.get_field_value('content_refnotfound')
+        tblock = self.wf.textblock_ref
+        tblock.project = self.wf.textblock_project
+        tblock.failmessage = self.wf.content_refnotfound
         tblock.escape = False
         tblock.linebreaks = False
         # place it at location 0
-        if self.get_field_value("content_replaceblock"):
-            self[0] = self.get_field_value("content_replaceblock")
+        if self.wf.content_replaceblock:
+            self[0] = self.wf.content_replaceblock
         else:
             self[0] = tblock
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
     @classmethod
     def description(cls):
@@ -159,10 +159,10 @@ class TextGroup(Widget):
         self.linebreaks = False
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("text"):
-            self[0] = self.get_field_value("text")
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.text:
+            self[0] = self.wf.text
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
     @classmethod
     def description(cls):
@@ -214,11 +214,11 @@ class Rect(ClosedWidget):
         # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
         # attribute stroke-width. So update the tag with each item from arg_descriptions
         for att in self.arg_descriptions.keys():
-            if self.get_field_value(att):
+            if getattr(self.wf, att, ''):
                 if att == "stroke_width":
-                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                    self.attribs["stroke-width"] = getattr(self.wf, att)
                 else:
-                    self.update_attribs({att:self.get_field_value(att)})   
+                    self.attribs[att] = getattr(self.wf, att)
 
     @classmethod
     def description(cls):
@@ -268,25 +268,25 @@ class SimpleText(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Set the attributes"
-        if self.get_field_value("x"):
-            self.update_attribs({"x":self.get_field_value("x")})
-        if self.get_field_value("y"):
-            self.update_attribs({"y":self.get_field_value("y")})
-        if self.get_field_value("dx"):
-            self.update_attribs({"dx":self.get_field_value("dx")})
-        if self.get_field_value("dy"):
-            self.update_attribs({"dy":self.get_field_value("dy")})
-        if self.get_field_value("font_family"):
-            self.update_attribs({"font-family":self.get_field_value("font_family")})
-        if self.get_field_value("font_size"):
-            self.update_attribs({"font-size":self.get_field_value("font_size")})
-        if self.get_field_value("fill"):
-            self.update_attribs({"fill":self.get_field_value("fill")})
-        if self.get_field_value("stroke"):
-            self.update_attribs({"stroke":self.get_field_value("stroke")})
-        if self.get_field_value("stroke_width"):
-            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
-        self[0] = self.get_field_value("text")
+        if self.wf.x:
+            self.attribs["x"] = self.wf.x
+        if self.wf.y:
+            self.attribs["y"] = self.wf.y
+        if self.wf.dx:
+            self.attribs["dx"] = self.wf.dx
+        if self.wf.dy:
+            self.attribs["dy"] = self.wf.dy
+        if self.wf.font_family:
+            self.attribs["font-family"] = self.wf.font_family
+        if self.wf.font_size:
+            self.attribs["font-size"] = self.wf.font_size
+        if self.wf.fill:
+            self.attribs["fill"] = self.wf.fill
+        if self.wf.stroke:
+            self.attribs["stroke"] = self.wf.stroke
+        if self.wf.stroke_width:
+            self.attribs["stroke-width"] = self.wf.stroke_width
+        self[0] = self.wf.text
 
 
     @classmethod
@@ -331,27 +331,27 @@ class TextList(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Set the attributes"
-        if self.get_field_value("font_family"):
-            self.update_attribs({"font-family":self.get_field_value("font_family")})
-        if self.get_field_value("font_size"):
-            self.update_attribs({"font-size":self.get_field_value("font_size")})
-        if self.get_field_value("fill"):
-            self.update_attribs({"fill":self.get_field_value("fill")})
-        if self.get_field_value("stroke"):
-            self.update_attribs({"stroke":self.get_field_value("stroke")})
-        if self.get_field_value("stroke_width"):
-            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
-        lines = self.get_field_value("lines")
+        if self.wf.font_family:
+            self.attribs["font-family"] = self.wf.font_family
+        if self.wf.font_size:
+            self.attribs["font-size"] = self.wf.font_size
+        if self.wf.fill:
+            self.attribs["fill"] = self.wf.fill
+        if self.wf.stroke:
+            self.attribs["stroke"] = self.wf.stroke
+        if self.wf.stroke_width:
+            self.attribs["stroke-width"] = self.wf.stroke_width
+        lines = self.wf.lines
         if not lines:
             return
         line1 = lines[0]
-        self.update_attribs({"x":str(line1[0])})
-        self.update_attribs({"y":str(line1[1])})
+        self.attribs["x"] = str(line1[0])
+        self.attribs["y"] = str(line1[1])
         self[0] = line1[2]
         for line in lines[1:]:
             tspan = tag.Part(tag_name='tspan', text = line[2])
-            tspan.update_attribs({"x":str(line[0])})
-            tspan.update_attribs({"y":str(line[1])})
+            tspan.attribs["x"] = str(line[0])
+            tspan.attribs["y"] = str(line[1])
             self.append(tspan)
 
     @classmethod
@@ -399,11 +399,11 @@ class Circle(ClosedWidget):
         # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
         # attribute stroke-width. So update the tag with each item from arg_descriptions
         for att in self.arg_descriptions.keys():
-            if self.get_field_value(att):
+            if getattr(self.wf, att, ''):
                 if att == "stroke_width":
-                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                    self.attribs["stroke-width"] = getattr(self.wf, att)
                 else:
-                    self.update_attribs({att:self.get_field_value(att)})   
+                    self.attribs[att] = getattr(self.wf, att)
 
     @classmethod
     def description(cls):
@@ -444,11 +444,12 @@ class Line(ClosedWidget):
         # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
         # attribute stroke-width. So update the tag with each item from arg_descriptions
         for att in self.arg_descriptions.keys():
-            if self.get_field_value(att):
+            if getattr(self.wf, att, ''):
                 if att == "stroke_width":
-                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                    self.attribs["stroke-width"] = getattr(self.wf, att)
                 else:
-                    self.update_attribs({att:self.get_field_value(att)})   
+                    self.attribs[att] = getattr(self.wf, att)
+
 
     @classmethod
     def description(cls):
@@ -493,11 +494,12 @@ class Ellipse(ClosedWidget):
         # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
         # attribute stroke-width. So update the tag with each item from arg_descriptions
         for att in self.arg_descriptions.keys():
-            if self.get_field_value(att):
+            if getattr(self.wf, att, ''):
                 if att == "stroke_width":
-                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                    self.attribs["stroke-width"] = getattr(self.wf, att)
                 else:
-                    self.update_attribs({att:self.get_field_value(att)})
+                    self.attribs[att] = getattr(self.wf, att)
+
 
     @classmethod
     def description(cls):
@@ -536,21 +538,21 @@ class Polygon(ClosedWidget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Set the attributes"
 
-        if self.get_field_value("fill"):
-            self.update_attribs({"fill":self.get_field_value("fill")})
-        if self.get_field_value("stroke"):
-            self.update_attribs({"stroke":self.get_field_value("stroke")})
-        if self.get_field_value("stroke_width"):
-            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
+        if self.wf.fill:
+            self.attribs["fill"] = self.wf.fill
+        if self.wf.stroke:
+            self.attribs["stroke"] = self.wf.stroke
+        if self.wf.stroke_width:
+            self.attribs["stroke-width"] = self.wf.stroke_width
 
-        if not self.get_field_value('points'):
+        if not self.wf.points:
             return
 
         points_att = ""
-        points = self.get_field_value('points')
+        points = self.wf.points
         for x,y in points:
             points_att += "%s,%s " % (x,y)
-        self.update_attribs({'points':points_att})   
+        self.attribs['points'] = points_att   
   
 
     @classmethod
@@ -590,21 +592,21 @@ class Polyline(ClosedWidget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "Set the attributes"
 
-        if self.get_field_value("fill"):
-            self.update_attribs({"fill":self.get_field_value("fill")})
-        if self.get_field_value("stroke"):
-            self.update_attribs({"stroke":self.get_field_value("stroke")})
-        if self.get_field_value("stroke_width"):
-            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
+        if self.wf.fill:
+            self.attribs["fill"] = self.wf.fill
+        if self.wf.stroke:
+            self.attribs["stroke"] = self.wf.stroke
+        if self.wf.stroke_width:
+            self.attribs["stroke-width"] = self.wf.stroke_width
 
-        if not self.get_field_value('points'):
+        if not self.wf.points:
             return
 
         points_att = ""
-        points = self.get_field_value('points')
+        points = self.wf.points
         for x,y in points:
             points_att += "%s,%s " % (x,y)
-        self.update_attribs({'points':points_att})   
+        self.attribs['points'] = points_att   
   
 
     @classmethod
@@ -645,11 +647,11 @@ class Path(ClosedWidget):
         # Note - all arg_descriptions are attributes, apart from stroke_width which is actually
         # attribute stroke-width. So update the tag with each item from arg_descriptions
         for att in self.arg_descriptions.keys():
-            if self.get_field_value(att):
+            if getattr(self.wf, att, ''):
                 if att == "stroke_width":
-                    self.update_attribs({"stroke-width":self.get_field_value(att)})
+                    self.attribs["stroke-width"] = getattr(self.wf, att)
                 else:
-                    self.update_attribs({att:self.get_field_value(att)})
+                    self.attribs[att] = getattr(self.wf, att)
 
     @classmethod
     def description(cls):
