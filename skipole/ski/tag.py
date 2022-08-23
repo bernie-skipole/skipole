@@ -498,13 +498,13 @@ class Part(ParentPart):
     text = property(get_text, set_text, doc="Equivalent to self[0]; note may not be text despite this attributes name")
 
 
-    def set_contained_values(self, values):
+    def set_contained_values(self, *args, **kwargs):
         """This may be called during a _build by a widget wishing to set values into contained widgets
            It is generally overwitten by widgets which are intended to be contained, and need to do something
            with information from their parent container"""
         for index, part in enumerate(self.parts):
             if hasattr(part, "set_contained_values"):
-                part.set_contained_values(values)
+                part.set_contained_values(*args, **kwargs)
 
         
     def update(self, page, ident_list, environ, call_data, lang, ident_string, placename='', embedded=('','',None)):
