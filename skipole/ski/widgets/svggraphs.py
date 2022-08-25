@@ -3,7 +3,6 @@
 import math, datetime
 
 from decimal import Decimal, ROUND_UP
-from collections import namedtuple
 
 from .. import tag
 
@@ -1088,7 +1087,7 @@ class Axis1(Widget):
         cx = self._leftspace - minx*mx 
 
         # set these limits into contained parts
-        self.set_contained_values(miny=miny,maxy=maxy,minx=minx,maxx=maxx,my=my,cy=cy,mx=mx,cx=cx)
+        self[1].set_contained_values(miny=miny,maxy=maxy,minx=minx,maxx=maxx,my=my,cy=cy,mx=mx,cx=cx)
         # The set_contained_values method is defined in the Tag class which is the parent of Widget
 
 
@@ -1546,7 +1545,7 @@ class Axis2(Widget):
         cx = self._leftspace - minx*mx
 
         # ensure all contained parts have these values
-        self.set_contained_values(miny=miny,maxy=maxy,minx=minx,maxx=maxx,my=my,cy=cy,mx=mx,cx=cx)
+        self[1].set_contained_values(miny=miny,maxy=maxy,minx=minx,maxx=maxx,my=my,cy=cy,mx=mx,cx=cx)
 
 
     def _y_axis(self, maxv, minv, interval):
@@ -2042,29 +2041,43 @@ class YBars(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
-        values = self.get_field_value("values")
-        if not values:
-            return
-
-        bar_width = self.get_field_value("bar_width")
+        bar_width = self.wf.bar_width
         if not bar_width:
-            return
+            bar_width = 10
 
         # get bar in pixels, -1 multiplier as my is negative
         self._barwidth = int(-1*self._my*Decimal(bar_width))
-        if not self._barwidth:
-            return
 
         self._halfbar = self._barwidth//2
         self._xaxis = int(self._mx*self._minx + self._cx)
 
-        self._fill = self.get_field_value("fill")
-        self._fill_opacity = self.get_field_value("fill_opacity")
-        self._stroke = self.get_field_value("stroke")
-        self._stroke_width = self.get_field_value("stroke_width")
+        self._fill = self.wf.fill
+        self._fill_opacity = self.wf.fill_opacity
+        self._stroke = self.wf.stroke
+        self._stroke_width = self.wf.stroke_width
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['fill'] = self._fill
+        self.jlabels['fill_opacity'] = self._fill_opacity
+        self.jlabels['stroke'] = self._stroke
+        self.jlabels['stroke_width'] = self._stroke_width
+        self.jlabels['barwidth'] = self._barwidth
+        self.jlabels['xaxis'] = self._xaxis
+        self.jlabels['minx'] = float(self._minx)
+        self.jlabels['maxx'] = float(self._maxx)
+        self.jlabels['miny'] = float(self._miny)
+        self.jlabels['maxy'] = float(self._maxy)
+        self.jlabels['my'] = float(self._my)
+        self.jlabels['cy'] = float(self._cy)
+        self.jlabels['mx'] = float(self._mx)
+        self.jlabels['cx'] = float(self._cx)
+
+        values = self.wf.values
+        if not values:
+            return
 
         # for each point, plot a bar on the graph
         for valpair in values:
@@ -2099,24 +2112,6 @@ class YBars(Widget):
                                                             "stroke":self._stroke,
                                                             "stroke-width":self._stroke_width}))
 
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets scale values"""
-        return self._make_fieldvalues(
-                                     'fill',
-                                     'fill_opacity',
-                                     'stroke',
-                                     'stroke_width',
-                                      barwidth = self._barwidth,
-                                      xaxis = self._xaxis,
-                                      minx = float(self._minx),
-                                      maxx = float(self._maxx),
-                                      miny = float(self._miny),
-                                      maxy = float(self._maxy),
-                                      my = float(self._my),
-                                      cy = float(self._cy),
-                                      mx = float(self._mx),
-                                      cx = float(self._cx))
 
 
     @classmethod
@@ -2175,29 +2170,29 @@ class Axis3(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
-        fill = self.get_field_value("fill")
+        fill = sself.wf.fill
         if not fill:
             fill = "white"
 
-        fill_opacity = self.get_field_value("fill_opacity")
+        fill_opacity = self.wf.fill_opacity
         if not fill_opacity:
             fill_opacity = "0"
 
-        self._font_family = self.get_field_value("font_family")
+        self._font_family = self.wf.font_family
         if not self._font_family:
             self._font_family = "arial"
 
-        self._axiscol = self.get_field_value("axiscol")
+        self._axiscol = self.wf.axiscol
         if not self._axiscol:
             self._axiscol = "green"
 
-        self._leftspace = int(self.get_field_value("leftspace"))
-        self._topspace = int(self.get_field_value("topspace"))
-        self._axiswidth = int(self.get_field_value("axiswidth"))
-        self._axisheight = int(self.get_field_value("axisheight"))
+        self._leftspace = int(self.wf.leftspace)
+        self._topspace = int(self.wf.topspace)
+        self._axiswidth = int(self.wf.axiswidth)
+        self._axisheight = int(self.wf.axisheight)
 
 
         self[0][0] = tag.ClosedPart(tag_name='rect', attribs={"x":str(self._leftspace),
@@ -2209,13 +2204,12 @@ class Axis3(Widget):
                                                            "stroke":self._axiscol,
                                                            "stroke-width":"1"})
 
-        xlabels = self.get_field_value('xlabels')
-        ylabels = self.get_field_value('ylabels')
-
+        xlabels = self.wf.xlabels
+        ylabels = self.wf.ylabels
 
         # create Y axis
-        minv = Decimal(self.get_field_value("minyvalue"))
-        maxv = Decimal(self.get_field_value("maxyvalue"))
+        minv = Decimal(self.wf.minyvalue)
+        maxv = Decimal(self.wf.maxyvalue)
         if (maxv <= minv):
             return
         if ylabels and (len(ylabels) > 1): 
@@ -2225,10 +2219,9 @@ class Axis3(Widget):
  
         miny,maxy = self._y_axis(maxv, minv, interval, ylabels)
 
-
         # create X axis
-        minv = Decimal(self.get_field_value("minxvalue"))
-        maxv = Decimal(self.get_field_value("maxxvalue"))
+        minv = Decimal(self.wf.minxvalue)
+        maxv = Decimal(self.wf.maxxvalue)
         if (maxv <= minv):
             return
         if xlabels and (len(xlabels) > 1): 
@@ -2254,7 +2247,7 @@ class Axis3(Widget):
         cx = self._leftspace - minx*mx
 
         # ensure all contained parts have these values
-        self.set_contained_values(miny=miny,maxy=maxy,minx=minx,maxx=maxx,my=my,cy=cy,mx=mx,cx=cx)
+        self[1].set_contained_values(miny=miny,maxy=maxy,minx=minx,maxx=maxx,my=my,cy=cy,mx=mx,cx=cx)
 
 
 
@@ -2267,7 +2260,7 @@ class Axis3(Widget):
         maxv = minv + number_of_intervals*interval
 
 
-        yoffset = self.get_field_value("yoffset")
+        yoffset = self.wf.yoffset
         if yoffset:
             maxv += interval/Decimal("2.0")
             minv -= interval/Decimal("2.0")
@@ -2386,7 +2379,7 @@ class Axis3(Widget):
         maxv = minv + number_of_intervals*interval
 
 
-        xoffset = self.get_field_value("xoffset")
+        xoffset = self.wf.xoffset
         if xoffset:
             maxv += interval/Decimal("2.0")
             minv -= interval/Decimal("2.0")
