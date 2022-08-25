@@ -2173,7 +2173,7 @@ class Axis3(Widget):
         if self.wf.transform:
             self.attribs["transform"] = self.wf.transform
 
-        fill = sself.wf.fill
+        fill = self.wf.fill
         if not fill:
             fill = "white"
 

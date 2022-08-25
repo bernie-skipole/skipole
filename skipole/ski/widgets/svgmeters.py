@@ -16,8 +16,6 @@ class Arrow1(ClosedWidget):
     # This class does not display any error messages
     display_errors = False
 
-    _points = ((49,1), (50,1), (98,30), (98,32), (60,32), (60,98), (39,98), (39,32), (1,32), (1,30))
-
     arg_descriptions = {'fill':FieldArg("text", "none", jsonset=True),
                         'stroke':FieldArg("text", "black", jsonset=True),
                         'transform':FieldArg("text", "", jsonset=True),
@@ -33,23 +31,18 @@ class Arrow1(ClosedWidget):
         """
         ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "polygon"
+        self.attribs["points"] = "49,1 50,1 98,30 98,32 60,32 60,98 39,98 39,32 1,32 1,30"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "create arrow"                  
-        attrib_points = ""
-        for p in self._points:
-            point = "%s, %s " % p
-            attrib_points += point
-        self.update_attribs({"points":attrib_points})
-
-        if self.get_field_value("fill"):
-            self.update_attribs({"fill":self.get_field_value("fill")})
-        if self.get_field_value("stroke"):
-            self.update_attribs({"stroke":self.get_field_value("stroke")})
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
-        if self.get_field_value("stroke_width"):
-            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
+        if self.wf.fill:
+            self.attribs["fill"] = self.wf.fill
+        if self.wf.stroke:
+            self.attribs["stroke"] = self.wf.stroke
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
+        if self.wf.stroke_width:
+            self.attribs["stroke-width"] = self.wf.stroke_width
 
     @classmethod
     def description(cls):
@@ -66,8 +59,6 @@ class Arrow2(ClosedWidget):
     # This class does not display any error messages
     display_errors = False
 
-    _points = ((24,1), (25,1), (49,50), (49,52), (30,52), (30,198), (19,198), (19,52), (1,52), (1,50))
-
     arg_descriptions = {'fill':FieldArg("text", "none", jsonset=True),
                         'stroke':FieldArg("text", "black", jsonset=True),
                         'transform':FieldArg("text", "", jsonset=True),
@@ -83,23 +74,18 @@ class Arrow2(ClosedWidget):
         """
         ClosedWidget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "polygon"
+        self.attribs["points"] = "24,1 25,1 49,50 49,52 30,52 30,198 19,198 19,52 1,52 1,50"
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "create arrow"                  
-        attrib_points = ""
-        for p in self._points:
-            point = "%s, %s " % p
-            attrib_points += point
-        self.update_attribs({"points":attrib_points})
-
-        if self.get_field_value("fill"):
-            self.update_attribs({"fill":self.get_field_value("fill")})
-        if self.get_field_value("stroke"):
-            self.update_attribs({"stroke":self.get_field_value("stroke")})
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
-        if self.get_field_value("stroke_width"):
-            self.update_attribs({"stroke-width":self.get_field_value("stroke_width")})
+        if self.wf.fill:
+            self.attribs["fill"] = self.wf.fill
+        if self.wf.stroke:
+            self.attribs["stroke"] = self.wf.stroke
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
+        if self.wf.stroke_width:
+            self.attribs["stroke-width"] = self.wf.stroke_width
 
     @classmethod
     def description(cls):
@@ -112,8 +98,6 @@ class Vertical1(Widget):
 
     # This class does not display any error messages
     display_errors = False
-
-    _points = ((110,49), (110,50), (81,98), (79,98), (79,60), (13,60), (13,39), (79,39), (79,1), (81,1))
 
     arg_descriptions = {
                         'transform':FieldArg("text", "", jsonset=True),
@@ -165,10 +149,8 @@ class Vertical1(Widget):
                                                            "fill":"white",
                                                            "stroke":"black",
                                                            "stroke-width":"1"})
-        arrow_points = ""
-        for p in self._points:
-            point = "%s, %s " % p
-            arrow_points += point
+        arrow_points = "110,49 110,50 81,98 79,98 79,60 13,60 13,39 79,39 79,1 81,1"
+
         self[1] = tag.ClosedPart(tag_name='polygon', attribs={
                                                            "fill":"white",
                                                            "stroke":"black",
@@ -184,20 +166,20 @@ class Vertical1(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
-        font_family = self.get_field_value("font_family")
+        font_family = self.wf.font_family
         if not font_family:
             font_family = "arial"
 
-        if self.get_field_value("arrow_fill"):
-            self[1].update_attribs({"fill":self.get_field_value("arrow_fill")})
+        if self.wf.arrow_fill:
+            self[1].attribs["fill"] = self.wf.arrow_fill
         # make the scale
-        minscale, maxscale = self._make_scale(self.get_field_value("minimum"),
-                                              self.get_field_value("maximum"),
-                                              self.get_field_value("smallintervals"),
-                                              self.get_field_value("largeintervals"))
+        minscale, maxscale = self._make_scale(self.wf.minimum,
+                                              self.wf.maximum,
+                                              self.wf.smallintervals,
+                                              self.wf.largeintervals)
 
         # small lines
         minitems = len(minscale)
@@ -239,20 +221,20 @@ class Vertical1(Widget):
             n += 1
 
         # now place arrow at the measurement point
-        measurement = Decimal(self.get_field_value("measurement"))
+        measurement = Decimal(self.wf.measurement)
         self._minvalue = maxscale[0]
         self._maxvalue = maxscale[-1]
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['maxvalue'] = self._maxvalue
+        self.jlabels['minvalue'] = self._minvalue
+
         if measurement >= self._maxvalue:
             return
         if measurement <= self._minvalue:
-            self[1].update_attribs({"transform" : "translate(0, 600)"})
+            self[1].attribs["transform"] = "translate(0, 600)"
             return
         m = Decimal('600.0') - (measurement - self._minvalue)*600/(self._maxvalue-self._minvalue)
-        self[1].update_attribs({"transform" : "translate(0, %s)" % (m,)})
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sends scaling factor for mapping measurement to scale"""
-        return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue))
+        self[1].attribs["transform"] = f"translate(0, {m})"
 
 
     @classmethod
