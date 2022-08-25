@@ -1089,7 +1089,7 @@ class Axis1(Widget):
 
         # set these limits into contained parts
         self.set_contained_values(miny=miny,maxy=maxy,minx=minx,maxx=maxx,my=my,cy=cy,mx=mx,cx=cx)
-
+        # The set_contained_values method is defined in the Tag class which is the parent of Widget
 
 
     def _float_axis(self, maxv, minv, x=False):
