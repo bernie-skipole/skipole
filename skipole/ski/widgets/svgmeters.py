@@ -563,13 +563,13 @@ class Angle(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "create compass"                  
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
-        font_family = self.get_field_value("font_family")
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
+        font_family = self.wf.font_family
         if not font_family:
             font_family = "arial"
-        self._scale_units = self.get_field_value("scale_units")
-        measurement = Decimal(self.get_field_value("measurement"))
+        self._scale_units = self.wf.scale_units
+        measurement = Decimal(self.wf.measurement)
         rotate_string = ''
         if self._scale_units == '24':
             self._draw_24(font_family)
@@ -588,7 +588,9 @@ class Angle(Widget):
             if (measurement > 0) and (measurement < 360):
                 rotate_string = "rotate(" + str(measurement) + " 250 250)"
         if rotate_string:
-            self[3].update_attribs({"transform" : rotate_string})
+            self[3].attribs["transform"] = rotate_string
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['scale_units'] = self._scale_units
 
 
     def _draw_24(self, font_family):
@@ -810,10 +812,6 @@ class Angle(Widget):
                                                                 'stroke':"black",
                                                                 'stroke-width':"1",
                                                                 'transform' : minor_rotate  })  )
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sends scaling factor for mapping measurement to scale"""
-        return self._make_fieldvalues(scale_units=self._scale_units)
 
 
     @classmethod

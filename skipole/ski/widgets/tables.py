@@ -1,6 +1,6 @@
 
 
-from .. import skiboot, tag
+from .. import tag
 from . import Widget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
@@ -33,8 +33,8 @@ class ColorTable1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        titles = self.get_field_value("titles")
-        contents = self.get_field_value("contents")
+        titles = self.wf.titles
+        contents = self.wf.contents
         cols = len(titles)
         if (not contents) or (not cols):
             return
@@ -43,18 +43,18 @@ class ColorTable1(Widget):
             return
 
         # set even row class
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row class
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
 
-        if self.get_field_value('header_class'):
-            self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+        if self.wf.header_class:
+            self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
         else:
             self[0] = tag.Part(tag_name='tr')
 
@@ -136,25 +136,25 @@ class TwoColTable1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        col_list1 = self.get_field_value("col1")
-        col_list2 = self.get_field_value("col2")
+        col_list1 = self.wf.col1
+        col_list2 = self.wf.col2
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2'):
+        if self.wf.title1 or self.wf.title2:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
         # create rows
@@ -435,7 +435,7 @@ class ButtonTextBlockTable1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.get_field_value("action"))
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
