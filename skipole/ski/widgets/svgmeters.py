@@ -255,8 +255,6 @@ class Traditional1(Widget):
     # This class does not display any error messages
     display_errors = False
 
-    _points = ((24,1), (25,1), (49,50), (49,52), (30,52), (30,198), (19,198), (19,52), (1,52), (1,50))
-
     arg_descriptions = {
                         'transform':FieldArg("text", "translate(10,10)", jsonset=True),
                         'minimum':FieldArg("text", "0"),
@@ -301,7 +299,7 @@ class Traditional1(Widget):
         # A path which holds the curved shape which will contain the meter
 
         # the angle of the white backing is 140 degrees, this makes an
-        # angle of 20 degrees to the horizonta. So get this in radians
+        # angle of 20 degrees to the horizontal. So get this in radians
         back_horizontal_angle = math.radians(20.0)
 
         # The scale
@@ -373,17 +371,18 @@ A %s %s 0 0 1 %s %s
         self[1] = tag.ClosedPart(tag_name='path',
                                  attribs={ "fill":"none", "stroke":"black", "stroke-width":"2", "d":scale_data})
 
-
         # The arrow points
-        arrow_points = ""
+        _points = ((24,1), (25,1), (49,50), (49,52), (30,52), (30,198), (19,198), (19,52), (1,52), (1,50))
         # move all points to the right and down,
         # note 24.5 is x distance to arrow point
         x_move = cx - 24.5
         # moves arrow down to just touch the scale
         y_move = cy - r2
-        for p in self._points:
-            point = "%s, %s " % (p[0] + x_move, p[1] + y_move)
-            arrow_points += point
+        # get a generator producing strings of the form "x,y"
+        movedpoints = (str(p[0] + x_move) + "," + str(p[1] + y_move) for p in _points)
+        # and get a string of the points separated by spaces
+        arrow_points = " ".join(movedpoints)
+
         self[2] = tag.ClosedPart(tag_name='polygon', attribs={
                                                            "fill":"black",
                                                            "stroke":"grey",
@@ -402,21 +401,21 @@ A %s %s 0 0 1 %s %s
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value("transform"):
-            self.update_attribs({"transform":self.get_field_value("transform")})
+        if self.wf.transform:
+            self.attribs["transform"] = self.wf.transform
 
-        font_family = self.get_field_value("font_family")
+        font_family = self.wf.font_family
         if not font_family:
             font_family = "arial"
 
-        if self.get_field_value("arrow_stroke"):
-            self[2].update_attribs({"stroke":self.get_field_value("arrow_stroke")})
-            self[3].update_attribs({"stroke":self.get_field_value("arrow_stroke")})
+        if self.wf.arrow_stroke:
+            self[2].attribs["stroke"] = self.wf.arrow_stroke
+            self[3].attribs["stroke"] = self.wf.arrow_stroke
         # make the scale
-        minscale, maxscale = self._make_scale(self.get_field_value("minimum"),
-                                              self.get_field_value("maximum"),
-                                              self.get_field_value("smallintervals"),
-                                              self.get_field_value("largeintervals"))
+        minscale, maxscale = self._make_scale(self.wf.minimum,
+                                              self.wf.maximum,
+                                              self.wf.smallintervals,
+                                              self.wf.largeintervals)
 
         # start angle is 180 - 120 / 2 normally 30
         start_angle = (Decimal('180') - self._scale_angle)/Decimal('2')
@@ -478,26 +477,24 @@ A %s %s 0 0 1 %s %s
             n += 1
 
         # now place arrow at the measurement point
-        measurement = Decimal(self.get_field_value("measurement"))
+        measurement = Decimal(self.wf.measurement)
         self._minvalue = maxscale[0]
         self._maxvalue = maxscale[-1]
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['maxvalue'] = self._maxvalue
+        self.jlabels['minvalue'] = self._minvalue
+
         centre_string = " " + str(self._cx) + " " + str(self._cy) + ")"
         if measurement >= self._maxvalue:
-            self[2].update_attribs({"transform" : "rotate(" + str(self._scale_angle/2) + centre_string})
+            self[2].attribs["transform"] = "rotate(" + str(self._scale_angle/2) + centre_string
             return
         if measurement <= self._minvalue:
-            self[2].update_attribs({"transform" : "rotate(-" + str(self._scale_angle/2) + centre_string})
+            self[2].attribs["transform"] = "rotate(-" + str(self._scale_angle/2) + centre_string
             return
 
         measurement_angle = (measurement - self._minvalue)*self._scale_angle/(self._maxvalue-self._minvalue) - self._scale_angle/2
 
-        rotate_string = "rotate(" + str(measurement_angle) + centre_string
-        self[2].update_attribs({"transform" : rotate_string})
-
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sends scaling factor for mapping measurement to scale"""
-        return self._make_fieldvalues(maxvalue=str(self._maxvalue), minvalue=str(self._minvalue))
+        self[2].attribs["transform"] = "rotate(" + str(measurement_angle) + centre_string
 
 
     @classmethod
