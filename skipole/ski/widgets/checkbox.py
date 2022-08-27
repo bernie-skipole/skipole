@@ -52,7 +52,7 @@ class CheckBox1(Widget):
         "build the checkbox"
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         self[1].set_class_style(self.wf.div_class, self.wf.div_style)
         if self.wf.left_label:
             self[1][0][0] = self.wf.left_label
@@ -209,7 +209,7 @@ class CheckedText(Widget):
         "build the checkbox"
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
 
         # the div holding label, input fields
         self[1].set_class_style(self.wf.inputdiv_class, self.wf.inputdiv_style)
@@ -313,7 +313,7 @@ class CheckInputs(Widget):
         "build the checkbox"
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
 
         self[1].set_class_style(self.wf.div_class)
         if self.wf.label_text:
@@ -445,7 +445,7 @@ class SubmitCheckBox1(Widget):
 
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"

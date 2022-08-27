@@ -126,7 +126,7 @@ class Pin4(Widget):
         if self.wf.error_class:
             self[0][0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0][0].del_one_attrib("style")
+            del self[0][0].attribs["style"]
 
         # update the action of the form
         self[0][2].attribs["action"] = actionurl
@@ -377,7 +377,7 @@ class NamePasswd1(Widget):
         if self.wf.error_class:
             self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
 
         # the div holding labels, input fields and button
         if self.wf.inputdiv_class:

@@ -39,7 +39,7 @@ class SimpleFooter(Widget):
         "Build the paragraph"
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         self[1].set_class_style(self.wf.paradiv_class)
         self[1][0].set_class_style(self.wf.para_class)
         if self.wf.footer_text:

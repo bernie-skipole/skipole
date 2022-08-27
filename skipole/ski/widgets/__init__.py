@@ -1123,18 +1123,7 @@ class Widget(tag.Part):
         field.value = value
         if name == self.fields["show"].name:
             self.show = bool(value)
-#        if name == self.fields['widget_class'].name:
-#            if value:
-#                self.update_attribs({'class':value})
-#            else:
-#                self.del_one_attrib('class')
-#        if name == self.fields['widget_style'].name:
-#            if value:
-#                self.update_attribs({'style':value})
-#            else:
-#                self.del_one_attrib('style')
-
-        
+       
 
     def set_single_multivalue(self, name, value):
         """If a field name is given with a -, then after the dash must be an index
@@ -1201,12 +1190,12 @@ class Widget(tag.Part):
             if value:
                 self.update_attribs({'class':value})
             else:
-                self.del_one_attrib('class')
+                del self.attribs["class"]
         if field_arg == 'widget_style':
             if value:
                 self.update_attribs({'style':value})
             else:
-                self.del_one_attrib('style')
+                del self.attribs["style"]
 
         if field_arg == 'show_error':
             self.error_message = field.value
@@ -1835,17 +1824,6 @@ class ClosedWidget(tag.ClosedPart):
         field.value = value
         if name == self.fields["show"].name:
             self.show = bool(value)
-#        if name == self.fields['widget_class'].name:
-#            if value:
-#                self.update_attribs({'class':value})
-#            else:
-#                self.del_one_attrib('class')
-#        if name == self.fields['widget_style'].name:
-#            if value:
-#                self.update_attribs({'style':value})
-#            else:
-#                self.del_one_attrib('style')
-
 
     def set_single_multivalue(self, name, value):
         """If a field name is given with a -, then after the dash must be an index
@@ -1908,12 +1886,12 @@ class ClosedWidget(tag.ClosedPart):
             if value:
                 self.update_attribs({'class':value})
             else:
-                self.del_one_attrib('class')
+                del self.attribs["class"]
         if field_arg == 'widget_style':
             if value:
                 self.update_attribs({'style':value})
             else:
-                self.del_one_attrib('style')
+                del self.attribs["style"]
         if field_arg == 'show_error':
             self.error_message = field.value
 

@@ -404,7 +404,8 @@ def del_attrib(project, section_name, schange, location, attribute):
        deletes the given attribute, returns sceetion change uuid """
     proj, section = get_proj_section(project, section_name, schange)
     part = section.location_item(location)
-    part.del_one_attrib(attribute)
+    if attribute in part.attribs:
+        del part.attribs[attribute]
     # save the altered section, and return the section.change uuid
     return proj.add_section(section_name, section)
 

@@ -251,7 +251,7 @@ class TextInput2(Widget):
 
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
 
         self[1].set_class_style(self.wf.inputdiv_class)
 
@@ -408,7 +408,7 @@ class Password2(Widget):
 
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
 
         self[1].set_class_style(self.wf.inputdiv_class)
 
@@ -887,7 +887,7 @@ class SubmitTextInput1(Widget):
         if self.wf.error_class:
             self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
@@ -1136,7 +1136,7 @@ class SubmitTextInput3(Widget):
         if self.wf.error_class:
             self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
@@ -1414,7 +1414,7 @@ class TwoInputsSubmit1(Widget):
         if self.wf.error_class:
             self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
 
 
         # the div holding label, input text and button
@@ -1807,7 +1807,7 @@ class SubmitTextInput2(Widget):
         if self.wf.error_class:
             self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
@@ -2056,7 +2056,7 @@ class SubmitTextInput4(Widget):
         if self.wf.error_class:
             self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"

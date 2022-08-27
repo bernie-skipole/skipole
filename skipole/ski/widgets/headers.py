@@ -48,7 +48,7 @@ class NavButtons1(Widget):
 
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         self[1].set_class_style(self.wf.ul_class)
 
         # for each link in the nav_links table - create a link and add it
@@ -540,7 +540,7 @@ class HeaderText1(Widget):
         self[1].set_class_style(self.wf.p_class, self.wf.p_style)
         self[2].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[2].del_one_attrib("style")
+            del self[2].attribs["style"]
 
     @classmethod
     def description(cls):
@@ -599,7 +599,7 @@ class HeaderText2(Widget):
         self[1].set_class_style(self.wf.p_class, self.wf.p_style)
         self[2].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[2].del_one_attrib("style")
+            del self[2].attribs["style"]
 
     @classmethod
     def description(cls):
@@ -658,7 +658,7 @@ class HeaderText3(Widget):
         self[1].set_class_style(self.wf.p_class, self.wf.p_style)
         self[2].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[2].del_one_attrib("style")
+            del self[2].attribs["style"]
 
 
     @classmethod
@@ -718,7 +718,7 @@ class HeaderText4(Widget):
         self[1].set_class_style(self.wf.p_class, self.wf.p_style)
         self[2].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[2].del_one_attrib("style")
+            del self[2].attribs["style"]
 
 
 
@@ -779,7 +779,7 @@ class HeaderText5(Widget):
         self[1].set_class_style(self.wf.p_class, self.wf.p_style)
         self[2].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[2].del_one_attrib("style")
+            del self[2].attribs["style"]
 
 
     @classmethod
@@ -839,7 +839,7 @@ class HeaderText6(Widget):
         self[1].set_class_style(self.wf.p_class, self.wf.p_style)
         self[2].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[2].del_one_attrib("style")
+            del self[2].attribs["style"]
 
     @classmethod
     def description(cls):

@@ -357,11 +357,6 @@ class ParentPart(object):
             return
         return self.attribs[name]
 
-    def del_one_attrib(self, attrib):
-        "deletes an attribute"
-        if attrib in self.attribs:
-            del self.attribs[attrib]
-
 
     def update_attribs(self, attribs):
         "Updates attributes with the dictionary given in the attribs argument"

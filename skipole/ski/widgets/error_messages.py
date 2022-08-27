@@ -119,7 +119,7 @@ class ErrorDiv(Widget):
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             self.attribs["style"] = "display: block;"
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         # the div holding the container
         self[1].set_class_style(self.wf.container_class)
 

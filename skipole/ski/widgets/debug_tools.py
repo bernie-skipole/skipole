@@ -42,7 +42,7 @@ class ShowEnviron(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         self[1].set_class_style(self.wf.para_class)
         self[1].text = self.wf.toptext
         self[2].text = pprint.pformat(environ)
@@ -96,7 +96,7 @@ class ShowCallData(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         self[1].set_class_style(self.wf.para_class)
         self[1].text = self.wf.toptext
         self[2].text = pprint.pformat(call_data)
@@ -153,7 +153,7 @@ class ShowResponders(Widget):
         "Update the table to show responder data"
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
-            self[0].del_one_attrib("style")
+            del self[0].attribs["style"]
         self[1].set_class_style(self.wf.paradiv_class)
         self[1][0].set_class_style(self.wf.para_class)
         self[1][0].text = self.wf.toptext
