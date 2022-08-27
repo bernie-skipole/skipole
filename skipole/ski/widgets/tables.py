@@ -231,27 +231,27 @@ class ThreeColTable1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        col_list1 = self.get_field_value("col1")
-        col_list2 = self.get_field_value("col2")
-        col_list3 = self.get_field_value("col3")
+        col_list1 = self.wf.col1
+        col_list2 = self.wf.col2
+        col_list3 = self.wf.col3
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2') or self.get_field_value('title3'):
+        if self.wf.title1 or self.wf.title2 or self.wf.title3:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
-            self[0][2] = tag.Part(tag_name='th', text = self.get_field_value('title3'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
         # create rows
@@ -327,24 +327,24 @@ class TextBlockTable2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the table"
-        fieldtable = self.get_field_value("contents")
+        fieldtable = self.wf.contents
         header = 0
-        if self.get_field_value('title1') or self.get_field_value('title2'):
+        if self.wf.title1 or self.wf.title2:
             header = 1
-            if self.get_field_value('header_class'):
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.get_field_value('header_class')})
+            if self.wf.header_class:
+                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
                 self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.get_field_value('title1'))
-            self[0][1] = tag.Part(tag_name='th', text = self.get_field_value('title2'))
+            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
         # set even row colour
-        if self.get_field_value('even_class'):
-            even = self.get_field_value('even_class')
+        if self.wf.even_class:
+            even = self.wf.even_class
         else:
             even = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            odd = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            odd = self.wf.odd_class
         else:
             odd = ''
         # create rows
@@ -427,52 +427,52 @@ class ButtonTextBlockTable1(Widget):
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
-        if not self.get_field_value("action"):
+            del self[0].attribs["style"]
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = self.get_url(self.get_field_value("action"))
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
+        self[1].attribs["action"] = actionurl
 
         # build the table
         table = self[1][0]
-        if self.get_field_value('table_class'):
-            table.update_attribs({"class":self.get_field_value('table_class')})
+        if self.wf.table_class:
+            table.attribs["class"] = self.wf.table_class
 
-        title1 = self.get_field_value("col1_button_title")
-        title2 = self.get_field_value("col2_text_title")
+        title1 = self.wf.col1_button_title
+        title2 = self.wf.col2_text_title
 
         # set even row colour
-        if self.get_field_value('even_class'):
-            evenclass = self.get_field_value('even_class')
+        if self.wf.even_class:
+            evenclass = self.wf.even_class
         else:
             evenclass = ''
         # set odd row colour
-        if self.get_field_value('odd_class'):
-            oddclass = self.get_field_value('odd_class')
+        if self.wf.odd_class:
+            oddclass = self.wf.odd_class
         else:
             oddclass = ''
         # set header row colour
-        if self.get_field_value('header_class'):
-            headerclass = self.get_field_value('header_class')
+        if self.wf.header_class:
+            headerclass = self.wf.header_class
         else:
             headerclass = ''
         # set button class
-        if self.get_field_value('button_class'):
-            buttonclass = self.get_field_value('button_class')
+        if self.wf.button_class:
+            buttonclass = self.wf.button_class
         else:
             buttonclass = ''
 
-        rows = self.get_field_value('buttons')
+        rows = self.wf.buttons
 
         for num, row in enumerate(rows):
             if title1 or title2:

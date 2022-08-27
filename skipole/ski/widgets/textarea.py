@@ -4,7 +4,7 @@
 """Contains widgets for textarea forms"""
 
 
-from .. import skiboot, tag, excepts
+from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 class SubmitTextArea(Widget):
@@ -61,61 +61,55 @@ class SubmitTextArea(Widget):
         # the text input field
         self[1][0][0] = tag.Part(tag_name="textarea")
         # the submit button
-        self[1][0][1] = tag.ClosedPart(tag_name="input")
+        self[1][0][1] = tag.ClosedPart(tag_name="input", attribs={"type":"submit"})
 
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
             self[0].del_one_attrib("style")
-        if not self.get_field_value("action"):
+        if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
             return
-        actionurl = skiboot.get_url(self.get_field_value("action"),  proj_ident=page.proj_ident)
+        actionurl = self.get_url(self.wf.action)
         if not actionurl:
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
         # update the action of the form
-        self[1].update_attribs({"action": actionurl})
+        self[1].attribs["action"] = actionurl
         # the class of the div holding textarea and button
-        if self.get_field_value('inputdiv_class'):
-            self[1][0].attribs = {"class": self.get_field_value('inputdiv_class')}
+        if self.wf.inputdiv_class:
+            self[1][0].attribs["class"] = self.wf.inputdiv_class
 
-        if self.get_field_value("inputdiv_style"):
-            self[1][0].update_attribs({"style":self.get_field_value("inputdiv_style")})
+        if self.wf.inputdiv_style:
+            self[1][0].attribs["style"] = self.wf.inputdiv_style
 
         # set up the text area
-        self[1][0][0].attribs = {"name":self.get_formname('input_text')}
+        self[1][0][0].attribs["name"] = self.get_formname('input_text')
 
-        if self.get_field_value('rows'):
-            self[1][0][0].update_attribs({"rows": self.get_field_value('rows')})
+        if self.wf.rows:
+            self[1][0][0].attribs["rows"] = self.wf.rows
 
-        if self.get_field_value('cols'):
-            self[1][0][0].update_attribs({"cols": self.get_field_value('cols')})
+        if self.wf.cols:
+            self[1][0][0].attribs["cols"] = self.wf.cols
 
-        if self.get_field_value('textarea_class'):
-            self[1][0][0].update_attribs({"class": self.get_field_value('textarea_class')})
+        if self.wf.textarea_class:
+            self[1][0][0].attribs["class"] = self.wf.textarea_class
 
-        if self.get_field_value("textarea_style"):
-            self[1][0][0].update_attribs({"style":self.get_field_value("textarea_style")})
+        if self.wf.textarea_style:
+            self[1][0][0].attribs["style"] = self.wf.textarea_style
 
-        if self.get_field_value('input_text'):
-            self[1][0][0][0] = self.get_field_value('input_text')
+        if self.wf.input_text:
+            self[1][0][0][0] = self.wf.input_text
 
-        # set up the submit button
-        if self.get_field_value('button_text'):
-            submit = self.get_field_value('button_text')
-        else:
-            submit = "Submit"
+        self[1][0][1].attribs["value"] = self.wf.button_text if self.wf.button_text else "Submit"
 
-        if self.get_field_value('button_class'):
-            self[1][0][1].attribs = {"value":submit, "type":"submit", "class":self.get_field_value('button_class')}
-        else:
-            self[1][0][1].attribs = {"value":submit, "type":"submit"}
+        if self.wf.button_class:
+            self[1][0][1].attribs["class"] = self.wf.button_class
 
         # add ident and four hidden fields
         self.add_hiddens(self[1], page)
@@ -169,13 +163,13 @@ class TextArea1(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the input field"
-        self.update_attribs({"name":self.get_formname('input_text')})
-        if self.get_field_value('input_text'):
-            self[0] = self.get_field_value('input_text')
-        if self.get_field_value('rows'):
-            self.update_attribs({"rows": self.get_field_value('rows')})
-        if self.get_field_value('cols'):
-            self.update_attribs({"cols": self.get_field_value('cols')})
+        self.attribs["name"] = self.get_formname('input_text')
+        if self.wf.input_text:
+            self[0] = self.wf.input_text
+        if self.wf.rows:
+            self.attribs["rows"] = self.wf.rows
+        if self.wf.cols:
+            self.attribs["cols"] = self.wf.cols
  
     @classmethod
     def description(cls):
@@ -239,42 +233,31 @@ class TextArea2(Widget):
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the input field"
-        if self.get_field_value('error_class'):
-            self[0].update_attribs({"class":self.get_field_value('error_class')})
+        if self.wf.error_class:
+            self[0].attribs["class"] = self.wf.error_class
         if self.error_status:
-            self[0].del_one_attrib("style")
-        if self.get_field_value('label_class'):
-            self[1].update_attribs({"class": self.get_field_value('label_class')})
-        if self.get_field_value('label_style'):
-            self[1].update_attribs({"style": self.get_field_value('label_style')})
-        if self.get_field_value("label"):
-            self[1][0] = self.get_field_value("label")
+            del self[0].attribs["style"]
+
+        self[1].set_class_style(self.wf.label_class, self.wf.label_style)
+
+        if self.wf.label:
+            self[1][0] = self.wf.label
         # set an id in the textarea for the 'label for' tag
-        self[2].insert_id()
-        self[1].update_attribs({'for':self[2].get_id()})
-        self[2].update_attribs({"name":self.get_formname('input_text')})
-        if self.get_field_value('textarea_class'):
-            self[2].update_attribs({"class": self.get_field_value('textarea_class')})
-        if self.get_field_value("textarea_style"):
-            self[2].update_attribs({"style":self.get_field_value("textarea_style")})
+        self[1].attribs['for'] = self[2].insert_id()
+        self[2].attribs["name"] = self.get_formname('input_text')
+        self[2].set_class_style(self.wf.textarea_class, self.wf.textarea_style)
 
-        if self.get_field_value('rows'):
-            self[2].update_attribs({"rows": self.get_field_value('rows')})
-        if self.get_field_value('cols'):
-            self[2].update_attribs({"cols": self.get_field_value('cols')})
-        if self.get_field_value('input_text'):
-            self[2][0] = self.get_field_value('input_text')
+        if self.wf.rows:
+            self[2].attribs["rows"] = self.wf.rows
+        if self.wf.cols:
+            self[2].attribs["cols"] = self.wf.cols
+        if self.wf.input_text:
+            self[2][0] = self.wf.input_text
         # redstar
-        if self.get_field_value('redstar'):
+        if self.wf.redstar:
             self[3] = tag.Part(tag_name="span")
-            if self.get_field_value('redstar_style'):
-                self[3].update_attribs({"style":self.get_field_value('redstar_style')})
-            if self.get_field_value('redstar_class'):
-                self[3].update_attribs({"class":self.get_field_value('redstar_class')})
+            self[3].set_class_style(self.wf.redstar_class, self.wf.redstar_style)
             self[3][0] = '*'
-
-
-
 
     @classmethod
     def description(cls):
