@@ -494,7 +494,7 @@ class TemplatePageAndSVG(ParentPage):
             sectionpart.section_places = {}
             sectionpart.set_idents(str(self.ident) + '_' + placename, sectionpart.widgets, sectionpart.section_places, embedded=(section_name,'',None))
             # If no id placed in the top tag, inserts the section placename
-            if not sectionpart.has_attrib('id'):
+            if not ('id' in sectionpart.attribs):
                 sectionpart.insert_id(id_string=placename)
             self.sections[placename] = sectionpart
             # Set section widgets field displaynames
@@ -531,7 +531,7 @@ class TemplatePageAndSVG(ParentPage):
         sectionpart.section_places = {}
         sectionpart.set_idents(str(self.ident) + '_' + placename, sectionpart.widgets, sectionpart.section_places, embedded=(section_name,'',None))
         # If no id placed in the top tag, inserts the section placename
-        if not sectionpart.has_attrib('id'):
+        if not ('id' in sectionpart.attribs):
             sectionpart.insert_id(id_string=placename)
         self.sections[placename] = sectionpart
         # Set section widgets field displaynames
@@ -953,7 +953,7 @@ $(function(){
             if 'backcol' in self.page_settings:
                 self.backcol = self.page_settings['backcol']
             if 'body_class' in self.page_settings:
-                self.body.update_attribs({'class':self.page_settings['body_class']})
+                self.body.attribs['class'] = self.page_settings['body_class']
             if 'show_error' in self.page_settings:
                 self._widget_set_value(self._default_error_widget.set_field(f='show_error'), self.page_settings['show_error'])
             if 'add_jscript' in self.page_settings:
@@ -1136,21 +1136,21 @@ class SVG(TemplatePageAndSVG):
         # part not found
         return
 
-
-
     def get_width(self):
-        return self.svg.get_attrib_value("width")
+        "Return value of width attribute, or None if it does not exist"
+        return self.svg.attribs.get("width")
 
     def set_width(self, width):
-        self.svg.update_attribs({"width":width})
+        self.svg.attribs["width"] = width
 
     width = property(get_width, set_width)
 
     def get_height(self):
-        return self.svg.get_attrib_value("height")
+        "Return value of height attribute, or None if it does not exist"
+        return self.svg.attribs.get("height")
 
     def set_height(self, height):
-        self.svg.update_attribs({"height":height})
+        self.svg.attribs["height"] = height
 
     height = property(get_height, set_height)
 

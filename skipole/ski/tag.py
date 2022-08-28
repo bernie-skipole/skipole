@@ -208,26 +208,29 @@ class ParentPart(object):
            but the part has a name, sets the id to the part name, otherwise
            sets the id to self.ident_string, returns the id"""
         if id_string:
-            self.update_attribs({"id": id_string})
+            self.attribs["id"] = id_string
             return id_string
         if self.name:
             # This only applies to named widgets
             if self.placename:
                 full_id = self.placename + '-' + self.name
-                self.update_attribs({"id": full_id})
+                self.attribs["id"] = full_id
                 return full_id
             else:
-                self.update_attribs({"id": self.name})
+                self.attribs["id"] = self.name
                 return self.name
         if self.ident_string:
-            self.update_attribs({"id": self.ident_string})
+            self.attribs["id"] = self.ident_string
             return self.ident_string
 
     def get_id(self):
-        return self.get_attrib_value('id')
+        "Return id, or None if not set"
+        return self.attribs.get('id')
+
 
     def get_class(self):
-        return self.get_attrib_value('class')
+        "Return class, or None if not set"
+        return self.attribs.get('class')
 
     def set_class(self, value):
         if (not value) and ('class' in self.attribs):
@@ -238,12 +241,10 @@ class ParentPart(object):
     def set_hide(self, value=True):
         "If True, Sets display:none !important into style, if False removes it"
         if value:
-            attribs = self.attribs
-            if 'style' not in attribs:
+            style = self.attribs.get('style')
+            if not style:
                 self.attribs['style'] = "display:none !important;"
                 return
-            # An existing style is in place
-            style = self.attribs['style']
             style_list = style.split(';')
             # ensure no empty items
             style_list = [item for item in style_list if item]
@@ -261,17 +262,15 @@ class ParentPart(object):
                 # "display:block !important" already set, remove it so it can be replaced
                 style_list.remove("display:block !important")
             # append display:none !important;
-            if not style_list:
+            if style_list:
+                style_list.append("display:none !important;")
+                self.attribs['style'] = ";".join(style_list)
+            else:
                 self.attribs['style'] = "display:none !important;"
-                return
-            style_list.append("display:none !important;")
-            self.attribs['style'] = ";".join(style_list)
         else:
-            attribs = self.attribs
-            if 'style' not in attribs:
+            style = self.attribs.get('style')
+            if not style:
                 return
-            # An existing style is in place
-            style = self.attribs['style']
             style_list = style.split(';')
             style_list = [item for item in style_list if item]
             if "display:none !important" in style_list:
@@ -285,12 +284,10 @@ class ParentPart(object):
 
     def set_block(self):
         "Sets display:block !important into style"
-        attribs = self.attribs
-        if 'style' not in attribs:
+        style = self.attribs.get('style')
+        if not style:
             self.attribs['style'] = "display:block !important;"
             return
-        # An existing style is in place
-        style = self.attribs['style']
         style_list = style.split(';')
         # ensure no empty items
         style_list = [item for item in style_list if item]
@@ -308,11 +305,11 @@ class ParentPart(object):
             # "display:none !important" already set, remove it so it can be replaced
             style_list.remove("display:none !important")
         # append display:block !important;
-        if not style_list:
+        if style_list:
+            style_list.append("display:block !important;")
+            self.attribs['style'] = ";".join(style_list)
+        else:
             self.attribs['style'] = "display:block !important;"
-            return
-        style_list.append("display:block !important;")
-        self.attribs['style'] = ";".join(style_list)
 
 
     @property
@@ -347,21 +344,6 @@ class ParentPart(object):
                 return quote(url, safe='/:?&=@')+valstring[end+1:]
         return valstring
 
-    def has_attrib(self, name):
-        "If this attrib exists, return True otherwise False"
-        return name in self.attribs
-
-    def get_attrib_value(self, name):
-        """Get an attribute value, given its name, if it does not exist, return None"""
-        if name not in self.attribs:
-            return
-        return self.attribs[name]
-
-
-    def update_attribs(self, attribs):
-        "Updates attributes with the dictionary given in the attribs argument"
-        for att,val in attribs.items():
-            self.attribs[att]=val
 
     def set_class_style(self, class_attribute='', style_attribute=''):
         "Sets the tag class and style attributes"
@@ -397,7 +379,7 @@ class ParentPart(object):
         """If a message is given, sets self._error
         """
         # update attribute with  data-status="error"
-        self.update_attribs({'data-status':'error'})
+        self.attribs['data-status'] = 'error'
         if message:
             self._error = message
         self.show = True

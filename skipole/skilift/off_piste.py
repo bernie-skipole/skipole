@@ -67,12 +67,13 @@ def insert_div_in_body(project, css_class, brief):
        as the containing div in each page body (thus encapsulating all other body contents),
        unless a div with this class already exists at this point.
        Sets the containing div brief description with the brief given here."""
+
     proj = _get_proj(project)
     for page in _get_project_template_pages(project):
         body = page.body
-        if (len(body) == 1) and hasattr(body[0], 'attribs') and body[0].get_attrib_value('class'):
+        if (len(body) == 1) and hasattr(body[0], 'attribs') and body[0].attribs.get('class'):
             # body has one item with a class attribute
-            if body[0].get_attrib_value('class') == css_class:
+            if body[0].attribs.get('class') == css_class:
                 # container div already exists
                 if body[0].brief != brief:
                     body[0].brief = brief

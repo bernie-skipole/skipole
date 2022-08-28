@@ -1016,7 +1016,7 @@ class Widget(tag.Part):
         self.error_status = True
         # if this is a named widget update attribute with data-status="error"
         if self.name:
-            self.update_attribs({'data-status':'error'})
+            self.attribs['data-status'] = 'error'
         if not message:
             message = self.error_message
         if self.error_location is not None:
@@ -1171,7 +1171,7 @@ class Widget(tag.Part):
                 raise ServerError("Field argument %s does not exist in this widget." % (field_arg,))
             if self.get_field_value(field_arg):
                 key = 'data-' + self.get_formname(field_arg)
-                part.update_attribs({key:str(self.get_field_value(field_arg))})
+                part.attribs[key] = str(self.get_field_value(field_arg))
 
     def set_field_value(self, field_arg, value):
         """If this widget contains fields, then this should set a field
@@ -1188,12 +1188,12 @@ class Widget(tag.Part):
             self.show = field.value
         if field_arg == 'widget_class':
             if value:
-                self.update_attribs({'class':value})
+                self.attribs['class'] = value
             else:
                 del self.attribs["class"]
         if field_arg == 'widget_style':
             if value:
-                self.update_attribs({'style':value})
+                self.attribs['style'] = value
             else:
                 del self.attribs["style"]
 
@@ -1729,7 +1729,7 @@ class ClosedWidget(tag.ClosedPart):
         self.error_status = True
         # if this is a named widget update attribute with data-status="error"
         if self.name:
-            self.update_attribs({'data-status':'error'})
+            self.attribs['data-status'] = 'error'
         if not message:
             message = self.error_message
         self._error_build(message)
@@ -1867,7 +1867,7 @@ class ClosedWidget(tag.ClosedPart):
                 raise ServerError("Field argument %s does not exist in this widget." % (field_arg,))
             if self.get_field_value(field_arg):
                 key = 'data-' + self.get_formname(field_arg)
-                self.update_attribs({key:str(self.get_field_value(field_arg))})
+                self.attribs[key] = str(self.get_field_value(field_arg))
 
     def set_field_value(self, field_arg, value):
         """If this widget contains fields, then this should set a field
@@ -1884,12 +1884,12 @@ class ClosedWidget(tag.ClosedPart):
             self.show = field.value
         if field_arg == 'widget_class':
             if value:
-                self.update_attribs({'class':value})
+                self.attribs['class'] = value
             else:
                 del self.attribs["class"]
         if field_arg == 'widget_style':
             if value:
-                self.update_attribs({'style':value})
+                self.attribs['style'] = value
             else:
                 del self.attribs["style"]
         if field_arg == 'show_error':
