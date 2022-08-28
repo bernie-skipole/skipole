@@ -169,7 +169,7 @@ class SubmitDropDown1(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the form"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
+        self.widget_hide(self.wf.hide)
         self[0].set_class_style(self.wf.error_class)
         if self.error_status:
             del self[0].attribs["style"]
@@ -309,7 +309,7 @@ class HiddenContainer(Widget):
     def _build(self, page, ident_list, environ, call_data, lang):
         "build the box"
         # Hides widget if no error and hide is True
-        self.widget_hide(self.get_field_value("hide"))
+        self.widget_hide(self.wf.hide)
  
         self[0].set_class_style(self.wf.boxdiv_class, self.wf.boxdiv_style)
         # buttondiv
@@ -319,7 +319,7 @@ class HiddenContainer(Widget):
         # button
         self[0][0][0].set_class_style(self.wf.button_class)
 
-        if not self.get_field_value("link_ident"):
+        if not self.wf.link_ident:
             self[0][0][0][0] = "Warning: broken link"
         else:
             url = self.get_url(self.wf.link_ident)

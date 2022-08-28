@@ -1555,8 +1555,7 @@ class Axis2(Widget):
         number_of_intervals = fraction_number_of_intervals.to_integral_value(rounding=ROUND_UP)
         maxv = minv + number_of_intervals*interval
 
-
-        yoffset = self.get_field_value("yoffset")
+        yoffset = self.wf.yoffset
         if yoffset:
             maxv += interval/Decimal("2.0")
             minv -= interval/Decimal("2.0")

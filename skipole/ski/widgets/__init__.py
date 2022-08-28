@@ -547,9 +547,11 @@ class Widget(tag.Part):
         tag.Part.__init__(self, tag_name="div", text='', show=True, brief=brief, hide_if_empty=False)
         self.name = name
         # create self.fields which is a dictionary of {fname:FieldArg,...}, by calling the class method
+        # field_name_dict() which gets copies of arg_descriptions, common_args and error_args and returns them
+        # as the single dictionary fields
         self.fields = copy.deepcopy(self.field_name_dict())
-
         # Each FieldArg object has a name and value.
+ 
         # **field_args is a dictionary of {fname:value, ...} 
 
         # For each FieldArg object in self.fields, if its fname does not appear in the **field_args, then its value will be that
@@ -575,9 +577,6 @@ class Widget(tag.Part):
         # the widget show is set by the show argument
         self.show = self.fields["show"].value
 
-        # create an initial namespace of field names to values, this will be updated in the update method
-        self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
-
         # Creates a dictionary of names against field arguments fname in self._names
         self._create_name_dict()
 
@@ -590,7 +589,7 @@ class Widget(tag.Part):
         return cls.__module__.split('.')[-1]
 
     def _create_name_dict(self):
-        "Creates a dictionary of names against field arguments"
+        "Creates a dictionary of names against field argument fnames"
         self._names = { field.name:fname for fname, field in self.fields.items() }
 
 
@@ -880,7 +879,7 @@ class Widget(tag.Part):
             if isinstance(self._error, TextBlock):
                 self._error.update(page, ident_list, environ, call_data, lang, self.ident_string, self.placename, embedded_parts)
             return
-        # build the widget, set self.wf with updated field values
+        # build the widget, set self.wf with field values, this namespace is used in the widget build to access widget field values easily
         self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
         # set the widget class and style attributes
         self.set_class_style(self.wf.widget_class, self.wf.widget_style)
@@ -898,14 +897,6 @@ class Widget(tag.Part):
             if not e.ident_list:
                 e.ident_list = ident_list
             raise
-
-
-    def _make_fieldvalues(self, *fieldargs, **otherparams):
-        "Creates a javascript string of self.jlabels, which can be used by _build_js"
-        for farg in fieldargs:
-            self.jlabels[farg] = self.get_field_value(farg)
-        self.jlabels.update(otherparams)
-        return "\n"
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Called by make_js, and should be overwritten by widgets to set widget specific javascript
@@ -1406,6 +1397,8 @@ class ClosedWidget(tag.ClosedPart):
         tag.ClosedPart.__init__(self, tag_name="link", show=True, brief=brief)
         self.name = name
         # create self.fields which is a dictionary of {fname:FieldArg,...}, by calling the class method
+        # field_name_dict() which gets copies of arg_descriptions, common_args and error_args and returns them
+        # as the single dictionary fields
         self.fields = copy.deepcopy(self.field_name_dict())
 
         # Each FieldArg object has a name and value.
@@ -1426,9 +1419,6 @@ class ClosedWidget(tag.ClosedPart):
             # set field values to be the values given in **field_args
             if fname in field_args:
                 field.value = field_args[fname]
-
-        # create an initial namespace of field names to values, this will be updated in the update method
-        self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
 
         # Creates a dictionary of names against field arguments in self._names
         self._create_name_dict()
@@ -1609,7 +1599,7 @@ class ClosedWidget(tag.ClosedPart):
             if isinstance(self._error, TextBlock):
                 self._error.update(page, ident_list, environ, call_data, lang, self.ident_string, self.placename, embedded_parts)
             return
-        # build the widget, set self.wf with updated field values
+        # build the widget, set self.wf with field values, this namespace is used in the widget build to access widget field values easily
         self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
         # set the widget class and style attributes
         self.set_class_style(self.wf.widget_class, self.wf.widget_style)
@@ -1617,13 +1607,6 @@ class ClosedWidget(tag.ClosedPart):
         self.insert_id()
         self._build(page, ident_list, environ, call_data, lang)
 
-
-    def _make_fieldvalues(self, *fieldargs, **otherparams):
-        "Creates a javascript string of self.jlabels, which can be used by _build_js"
-        for farg in fieldargs:
-            self.jlabels[farg] = self.get_field_value(farg)
-        self.jlabels.update(otherparams)
-        return "\n"
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         return ''
@@ -1693,9 +1676,6 @@ class ClosedWidget(tag.ClosedPart):
         if contents:
             # contents added after fieldvalues in case these contents use the fieldvalues
             page.add_javascript(contents)
-
-
-
 
     def set_placename(self, section_name, placename):
         "Widgets in sections with displayname validators need displaynames to change"

@@ -1838,7 +1838,7 @@ class SubmitTextInput2(Widget):
             self[1][0].attribs["class"] = self.wf.inputdiv_class
 
         self[1][0][0].set_class_style(self.wf.label_class, self.wf.label_style)
-        if self.get_field_value('label'):
+        if self.wf.label:
             self[1][0][0][0] = self.wf.label
 
         # the span holding input text and button

@@ -430,7 +430,7 @@ class JSONTextLink(AnchorClickEventMixin, Widget):
             return
  
         if self.wf.para_class:
-            self[1].attribs["class"] = self.get_field_value("para_class")
+            self[1].attribs["class"] = self.wf.para_class
 
         if self.wf.hide and (not self.error_status):
             self[0][0] = self.wf.button_show_text
