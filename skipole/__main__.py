@@ -13,21 +13,26 @@ DESCRIPTION = """Usage is
 
 python3 -m skipole mynewproj /path/to/projectfiles
 
-Which creates a directory /path/to/projectfiles
-containing a sub directy and a python file:
+Which, if it does not already exist, creates a directory /path/to/projectfiles
+and within it creates a sub directory and a python file:
 
-mynewproj.py - a minimal python file which you willdevelop further.
+mynewproj.py - a minimal python file which you will develop further.
 
 mynewproj - a subdirectory containing data and static files for your new project
 
 You should replace 'mynewproj' with your preferred name for a new project.
 
 The path "/path/to/projectfiles" must be given, and is the path to a directory
-where you will develop your project. Multiple projects can be created in one
-'projectfiles' directory, or you could have multiple such directories holding
-different projects.
+where you will develop your project.
 
 If mynewproj already exists in the directory, it will not be changed.
+
+Once created you can then run:
+
+python3 /path/to/projectfiles/mynewproj.py
+
+To serve the project at url localhost:8000, and with a browser call
+localhost:8000/skiadmin for the admin pages
 """
 
 
