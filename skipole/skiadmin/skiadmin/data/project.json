@@ -36093,7 +36093,7 @@ false
 "parts": [
 [
 "Text",
-"When you create an application, you can add sub projects using application.add_project(sub-application, url).\r\n\r\nThis project being edited is the main application - or 'root' project with the top level URL. Normally you would also have the 'skis' project which contains javascript files used by all other projects."
+"When you create an application, you can add sub projects in your code using application.add_project(sub-application, url).\r\n\r\nThis allows a web site to be created from multiple projects, which may be useful if the site has areas of distinct functions.\r\n\r\nThis project being edited is the main application - or 'root' project with the top level URL. Your code should also add the 'skis' sub-project which contains javascript files used by all other projects. So typically these files are served at '/lib'."
 ]
 ]
 }
@@ -36144,7 +36144,7 @@ false
 "parts": [
 [
 "Text",
-"The 'skiadmin' sub-project will be present, needed to serve these admin pages. This sub project should be removed for your final deployment.\r\n\r\nThe following lists the projects currently served:"
+"The 'skiadmin' sub-project will be present, and is serving these admin pages beneath '/skiadmin'. When your project is completed you should remove the lines in your code which adds the skiadmin project, and these pages will no longer be served.\r\n\r\nThe following lists the projects currently served, and will include your root project, the skis sub project, and the skiadmin sub project, plus any other sub projects you may have added:"
 ]
 ]
 }
