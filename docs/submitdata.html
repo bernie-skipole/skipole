@@ -117,8 +117,10 @@ def submit_data(skicall):
 <p>However if skicall.submit_list contains more than one string, it expects the strings to be ordered as ['module_name', 'function_name'] - or ['package_name', 'module_name', 'function_name'].</p>
 <p>It then uses these names to call the specified function instead of submit_data. This can be convenient. When you create a responder that calls 'submit_data' - you set the responder submit list to call the appropriate function in your code.</p>
 <p>If you are providing a complex tree of packages and modules to handle the submit_data calls, this avoids the need to import them all into your top script, since the decorator will do the importing according to the submit_list.</p>
-<p>Your target functions should be of the form:</p>
+<p>Your own modules would typically have an import statement providing the PageData and exception classes, and your target functions should accept a single 'skicall' parameter:</p>
 <pre>
+from skipole import FailPage, GoTo, ValidateError, ServerError, ServeFile, PageData, SectionData
+
 def function_name(skicall):
     ....  your code 
 </pre>
