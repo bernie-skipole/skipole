@@ -78,7 +78,7 @@ def _create_new_widget(project, module_name, widget_classname, name, brief):
                 # get default
                 default_value = fromjson.get_widget_default_field_value(project, module_name, widget_classname, fieldarg)
                 widget_instance.set_field_value(fieldarg, default_value)
-    except e:
+    except:
         raise ServerError("Unable to obtain defaults from defaults.json")
     return widget_instance
 

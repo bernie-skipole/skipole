@@ -54,6 +54,21 @@
 <p>This framework often refers to the key tuple (widgetname,fieldname) as a widgfield.</p>
 
 <p>Using the skiadmin facility a responder is chosen from a list of responders by yourself, and added to this site like any other page. Each responder has a different functionality. Certain responders call this submit_data function. Typically a client web browser would make a call to a responder, which (after start_call is called) would then call your submit_data function. Responders generally are set with a target ident - generally the ident of a template page, which will have its widgets populated by any data you set in the PageData object.</p>
+<p>For example, if you are returning a template page with a widget 'displaydata' and with a field 'hide' which you want to set to True, you would use:</p>
+<pre>
+    pd = PageData()
+    pd['displaydata','hide'] = True
+    pd['otherwidgets', 'otherfields'] = 'Other values'
+    # You may also have a section in the page, with a section alias of "mysection"
+    sd = SectionData("mysection")
+    sd['anotherwidget', 'widgetfield'] = "Text displayed on widget"
+    # And then update pd with this section data
+    pd.update(sd)
+    # and finally, you would set the pd into skicall using update
+    skicall.update(pd)
+</pre>
+<p>The template page returned will then have its widget fields set accordingly.</p>
+<p>Further information on the PageData and SectionData objects are available by the left navigation buttons.</p>
 
 <p>The responder calling this function will specify what it wants returned from submit_data in its documentation.</p>
 <p>Most responders require 'None' to be returned, but, for example, the LogIn responder requires a session string.</p>

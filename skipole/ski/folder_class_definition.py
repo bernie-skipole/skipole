@@ -44,8 +44,7 @@ class Folder(object):
       If this is an admin folder, the ident is a negative number.
 
     *name*
-      The name of the folder, making up the url, and therefore should be lower case
-      and url friendly
+      The name of the folder, making up the url, and therefore should be url friendly
 
     *pages*
       A dictionary of {page_name: ident} for each page in the folder
@@ -69,11 +68,11 @@ class Folder(object):
         self.ident = None
         self._parentfolder_ident = None
         if name:
-            self._name = name.lower()
+            self._name = name
         else:
             self._name = ""
         if default_page_name:
-            self.default_page_name = default_page_name.lower()
+            self.default_page_name = default_page_name
         else:
             self.default_page_name = ""
         self._restricted = bool(restricted)
@@ -155,7 +154,7 @@ class Folder(object):
         return self._name
 
     def set_name(self, name):
-        self._name = name.lower()
+        self._name = name
 
     name = property(get_name, set_name)
 

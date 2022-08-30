@@ -508,7 +508,6 @@ def _to_dict(input_dict, proj_ident):
 
 def _folder(parent, folder_name, folder_dict, proj_ident, addition_number=0, restricted=False):
     "Create a folder"
-    folder_name = folder_name.lower()
     if 'ident' not in folder_dict:
         raise excepts.ServerError("A folder requires an ident")
     ident = skiboot.Ident(proj_ident, folder_dict['ident']+addition_number)
@@ -545,7 +544,6 @@ def _folder(parent, folder_name, folder_dict, proj_ident, addition_number=0, res
     return page_list
 
 def _page(parent, page_name, page_dict, proj_ident, addition_number=0):
-    page_name = page_name.lower()
     if 'ident' not in page_dict:
         raise excepts.ServerError("A page ident missing")
     ident = skiboot.Ident(proj_ident, page_dict['ident']+addition_number)

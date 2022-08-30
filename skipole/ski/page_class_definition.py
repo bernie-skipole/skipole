@@ -30,7 +30,7 @@ class ParentPage(object):
         # self._parentfolder_ident is set when a page is added to a folder.
         self._parentfolder_ident = None
         if name:
-            self._name = name.lower()
+            self._name = name
         else:
             self._name = ""
         self.ident = None
@@ -102,8 +102,8 @@ class ParentPage(object):
         return self._name
 
     def set_name(self, name):
-        "Ensure name is lower case"
-        self._name = name.lower()
+        "Set the page name"
+        self._name = name
 
     name = property(get_name, set_name)
 

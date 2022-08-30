@@ -1180,12 +1180,12 @@ class Widget(tag.Part):
         if field_arg == 'widget_class':
             if value:
                 self.attribs['class'] = value
-            else:
+            elif "class" in self.attribs:
                 del self.attribs["class"]
         if field_arg == 'widget_style':
             if value:
                 self.attribs['style'] = value
-            else:
+            elif "style" in self.attribs:
                 del self.attribs["style"]
 
         if field_arg == 'show_error':
@@ -1865,12 +1865,12 @@ class ClosedWidget(tag.ClosedPart):
         if field_arg == 'widget_class':
             if value:
                 self.attribs['class'] = value
-            else:
+            elif "class" in self.attribs:
                 del self.attribs["class"]
         if field_arg == 'widget_style':
             if value:
                 self.attribs['style'] = value
-            else:
+            elif "style" in self.attribs:
                 del self.attribs["style"]
         if field_arg == 'show_error':
             self.error_message = field.value
