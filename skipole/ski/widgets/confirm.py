@@ -4,7 +4,7 @@
 
 
 from .. import tag, excepts
-from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
+from . import Widget, ClosedWidget, AnchorClickEventMixin, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
 
@@ -132,7 +132,8 @@ class ConfirmBox1(Widget):
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
-        if not (self.jlabels['url1'] or self.jlabels['url2']):
+        if not (self.jlabels.get('url1') or self.jlabels.get('url2')):
+            # if no json links have been set, return without creating a click function
             return ''
         if 'id' not in self.attribs:
             return ''
@@ -167,7 +168,7 @@ class ConfirmBox1(Widget):
 </div>"""
 
 
-class ConfirmBox2(Widget):
+class ConfirmBox2(AnchorClickEventMixin, Widget):
     """A div - normally used for modal background containing a  div with a paragraph
          of text and two buttons, each with three optional get fields.
          The 'cancel' button1 hides the widget without making a call if javascript is available
@@ -280,14 +281,6 @@ class ConfirmBox2(Widget):
                 self[0][1][1].attribs["href"] = url
 
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler on the a buttons"""
-        ident = self.get_id()
-        return f"""  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
-
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -313,7 +306,7 @@ class ConfirmBox2(Widget):
 </div>"""
 
 
-class AlertClear1(Widget):
+class AlertClear1(AnchorClickEventMixin, Widget):
     """A div - normally used for modal background containing a div with a paragraph
          of text or error message and an X button with three optional get fields.
          The 'clear' button hides the widget without making a call if javascript is available
@@ -410,14 +403,6 @@ class AlertClear1(Widget):
                 self[0][1][0][0] = "Warning: broken link"
 
 
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler on the a button"""
-        ident = self.get_id()
-        return f"""  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
-
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -439,7 +424,7 @@ class AlertClear1(Widget):
 </div>"""
 
 
-class AlertClear2(Widget):
+class AlertClear2(AnchorClickEventMixin, Widget):
     """A div - normally used for modal background containing a div with a paragraph
          of text or error message and an X button with three optional get fields.
          The 'clear' button hides the widget and makes a call requesting a JSON page,
@@ -540,14 +525,6 @@ class AlertClear2(Widget):
             else:
                 self[0][1][0][0] = "Warning: broken link"
 
-
-    def _build_js(self, page, ident_list, environ, call_data, lang):
-        """Sets a click event handler on the a button"""
-        ident = self.get_id()
-        return f"""  $("#{ident} a").click(function (e) {{
-    SKIPOLE.widgets['{ident}'].eventfunc(e);
-    }});
-"""
 
     @classmethod
     def description(cls):
