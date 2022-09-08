@@ -25,7 +25,7 @@ class ConfirmBox1(Widget):
 
                         'button1_class':FieldArg("cssclass", ""),
                         'button1_style':FieldArg("cssstyle", ""),
-                        'link_ident1':FieldArg("url", ''),
+                        'link_ident1':FieldArg("url", 'no_javascript'),
                         'json_ident1':FieldArg("url", ''),
                         'get_field1_1':FieldArg("text", "", valdt=True, jsonset=True),
                         'get_field1_2':FieldArg("text","", valdt=True, jsonset=True),
@@ -34,7 +34,7 @@ class ConfirmBox1(Widget):
 
                         'button2_class':FieldArg("cssclass", ""),
                         'button2_style':FieldArg("cssstyle", ""),
-                        'link_ident2':FieldArg("url", ''),
+                        'link_ident2':FieldArg("url", 'no_javascript'),
                         'json_ident2':FieldArg("url", ''),
                         'get_field2_1':FieldArg("text", "", valdt=True, jsonset=True),
                         'get_field2_2':FieldArg("text","", valdt=True, jsonset=True),

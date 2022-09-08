@@ -96,6 +96,7 @@
 "widget_class": "w3-modal"
 },
 "ConfirmBox1": {
+"boxdiv_class": "w3-modal-content w3-panel",
 "button1_class": "w3-button w3-round w3-theme-d4",
 "button1_style": "margin-left:20%;margin-right:10px;",
 "button2_class": "w3-button w3-round w3-theme-d4",
