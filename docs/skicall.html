@@ -67,6 +67,7 @@ This attribute is used when requesting TextBlocks.</p>
 <p>skicall.textblock(textref, project=None) is a method which given a reference string returns the text of the associated TextBlock.<br />If project is None, it assumes the TextBlock is defined in the current project, if project is given it must be the root or a sub project. If no TextBlock is found, it returns None.</p>
 <p>skicall.projectpaths() returns a dictionary of project names as keys with the project url paths as values.</p>
 <p>skicall.makepath(*foldernames) returns a url path string starting with this project's url, with the given foldernames joined. If no foldernames are given, then just the project url is returned.</p>
+<p>skicall.ident_from_path(path, project=None) is a method, given a path string, and project name, returns a tuple of (projectname, ident number) or None if the folder or page is not found. If project is not given, then the current project is assumed.</p>
 <p>skicall.map_url_to_server(urlfolder, serverfolder) maps a url folder to a server folder.<br />
 Generally called in the start_call function. Maps a url folder such as "/projecturl/special/css" to a server folder such as "/home/user/thisproject/css"<br />
 if a call is made to, say "/projecturl/special/css/myfile.css" this function will return a pathlib.Path object to the file "/home/user/thisproject/css/myfile.css" if such a file exists. If not then None is returned. If a ServeFile exception is raised with such a pathlib.Path, then the framework will serve the file.<br />

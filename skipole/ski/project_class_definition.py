@@ -1491,6 +1491,19 @@ class SkiCall(object):
             return
         return proj.textblocks.get_text(textref, self.lang)
 
+
+    def ident_from_path(self, path, project=None):
+        "Returns tuple of projectname, ident number, of the page or folder given by the path, or None if not found"
+        if project is None:
+            project = self.project
+        proj = skiboot.getproject(project)
+        if proj is None:
+            return
+        ident = proj.root.ident_from_path(path)
+        if ident:
+            return ident.to_tuple()
+
+
     def label_value(self, label, project=None):
         """Given a label, returns the associated ident or URL
            If project is not given assumes this project, if given, project must exist as either the root,
