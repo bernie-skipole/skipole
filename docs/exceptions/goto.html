@@ -47,7 +47,7 @@
 <p>GoTo(target, clear_submitted=False, clear_page_data=False)</p>
 <p>This is an Exception class that, being raised, forces a jump to the page given by the target argument.</p>
 <p>GoTo has arguments:</p>
-<p><strong>target</strong> - is the ident, label or external url of the page to jump to. If a url is given it should start with http:// or https:// or /, in this case a redirection instruction is sent to the client browser so submitted data or page data is lost.</p>
+<p><strong>target</strong> - is the ident, label or external url of the page to jump to. If a url is given it should start with http:// or https:// or /, in this case a redirection instruction is sent to the client browser so submitted data and page data are not applied to the target.</p>
 <p><strong>clear_submitted</strong> - if True, any submitted data in the widget fields will be discarded. This allows a GoTo to an AllowedFields responder that expects nothing to be submitted.</p>
 <p><strong>clear_page_data</strong> - if True, any data set in skicall is cleared.</p>
 <p>If the target ident is that of a responder page then it cannot be a responder already visited within the call (this will raise a ServerError) as this may cause an infinite loop condition.</p>
