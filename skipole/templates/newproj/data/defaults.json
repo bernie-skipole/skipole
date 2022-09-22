@@ -118,6 +118,7 @@
 "error_messages": {
 "ErrorClear1": {
 "boxdiv_class": "w3-modal-content w3-red",
+"button_class": "w3-button w3-red w3-border w3-round",
 "buttondiv_class": "w3-panel",
 "error_class": "w3-panel",
 "widget_class": "w3-modal"
