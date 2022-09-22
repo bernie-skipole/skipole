@@ -46,7 +46,13 @@
 <p>The developer supplies appropriate python functions to receive data and populate the widget parameters.</p>
 <img src="/skipole/images/overview.png" alt="overview" style="width:801px;height:520px;" />
 <p>Skipole requires python 3.6 or later. It would normally be installed with pip, usually into a virtual environment.</p>
-<p><strong>pip install skipole</strong></p>
+<p>If you are using Debian, you may need the Python3 version of pip to obtain packages from Pypi.</p>
+<p>apt-get install python3-pip</p>
+<p>If you need further information on pip and virtual environments, try:<a href=https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/</a></p>
+<p>Then install skipole from pypi with:</p>
+<p><strong>python3 -m pip install skipole</strong></p>
+<p>Or - if you just want to install it with your own user permissions only:</p>
+<p><strong>python3 -m pip install --user skipole</strong></p>
 <h4>Overview</h4>
 <p>The framework is used to create a project, this consists of a number of template pages and Responders that together with your own code will produce a wsgi application. Responders call your functions, which populate and then return a template page consisting of HTML code and widgets.</p>
 <p>To create a new project you would normally run:</p>
