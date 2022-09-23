@@ -133,12 +133,13 @@ def responder_info(project, pagenumber, pchange=None):
 
         if field_options['single_field']:
 
-            # single_field_value - still to do
-            # as there is currently no responder which takes a single field and value
-            #????????????????????????????????????????????????????????
-
-            # single_field
-            if not field_options['field_values']:
+            if field_options['field_values']:
+                # single_field_value
+                if responder.responder_fields:
+                    single_field_value = list(responder.responder_fields.items())[0]
+                else:
+                    single_field_value = ['','']
+            else:
                 if not responder.responder_fields.keys():
                     single_field = ''
                 else:

@@ -341,8 +341,24 @@ def retrieve_edit_respondpage(skicall):
     # the fields option is enabled
 
     if f_options['single_field']:
-        # single field, no value
-        if not f_options['field_values']:
+        if f_options['field_values']:
+            # single field and value
+            if r_info.single_field_value:
+                fieldname, fieldvalue = r_info.single_field_value
+            else:
+                fieldname = ''
+                fieldvalue = ''
+            sd_singlefieldvalue = utils.addsinglefieldval('addfieldval',
+                                               _t_ref(r_info, 'fields'),        # textblock
+                                               skicall.textblock(_t_ref(r_info, 'addfieldlabel')),
+                                               skicall.textblock(_t_ref(r_info, 'addvaluelabel')),
+                                               fieldname,
+                                               fieldvalue,
+                                               action='add_field_value',
+                                               left_label='add :')
+            pd.update(sd_singlefieldvalue)
+        else:
+            # single field, no value
             if r_info.single_field:
                 fieldname = r_info.single_field
             else:
@@ -354,7 +370,6 @@ def retrieve_edit_respondpage(skicall):
                                                     action = "set_field",
                                                     left_label = "Submit the field : ")
             pd.update(sd_singlefield)
-        # currently there is no responder which takes a single field and value
         return
 
 
@@ -671,13 +686,14 @@ def add_field_val(skicall):
     if not f:
         raise FailPage(message="Invalid data given")
 
+    # get a ResponderInfo named tuple with information about the responder
+    try:
+        r_info = editresponder.responder_info(project, pagenumber, pchange)
+    except ServerError as e:
+        raise FailPage(message=e.message)
+
     # if value is empty ensure empty values allowed
     if not v:
-        # get a ResponderInfo named tuple with information about the responder
-        try:
-            r_info = editresponder.responder_info(project, pagenumber, pchange)
-        except ServerError as e:
-            raise FailPage(message=e.message)
         # field options
         f_options = r_info.field_options
         if not f_options['fields']:
@@ -693,6 +709,10 @@ def add_field_val(skicall):
         call_data['pchange'] = editresponder.add_field_value(project, pagenumber, pchange, f, v)
     except ServerError as e:
         raise FailPage(e.message)
+
+    if r_info.field_options['single_field']:
+        # only a single field/value is being input, not a list, so present an acknowledgement
+        call_data['status'] = 'Field has been set'
 
 
 def add_widgfield(skicall):

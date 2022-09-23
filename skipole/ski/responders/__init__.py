@@ -140,7 +140,7 @@ main purpose is to act as a parent class for all other respond objects.
             oldfields = self.fields.copy()
             self.fields = {}
             try:
-                _set_field_value(self, field, value)
+                self._set_field_value(field, value)
             except ServerError as e:
                 self.fields = oldfields
                 raise
@@ -428,6 +428,6 @@ main purpose is to act as a parent class for all other respond objects.
 
 from .checkers import AllowedFields, PrettyFormData, StoreData, StoreDataKeyed, AllowStoreKeyed, AllowStore, Accept, AllowedAccept, PageData
 from .submitters import SubmitData, SubmitCSS, GetDictionaryDefaults, FieldStoreSubmit, ColourSubstitute, SetCookies, SubmitJSON, SubmitPlainText, SubmitIterator, MediaQuery
-from .navigators import CaseSwitch, EmptyGoto, EmptyCallDataGoto, DelCallDataItem, NoOperation
+from .navigators import CaseSwitch, EmptyGoto, EmptyCallDataGoto, DelCallDataItem, AddCallDataItem, NoOperation
 
 
