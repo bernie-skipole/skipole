@@ -141,7 +141,7 @@
 "footers": {
 "SimpleFooter": {
 "error_class": "w3-panel w3-red",
-"widget_class": "w3-container"
+"widget_class": "w3-panel w3-theme-d4"
 }
 },
 "headers": {
