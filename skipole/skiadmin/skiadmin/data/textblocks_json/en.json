@@ -746,7 +746,7 @@
   "widgets.headers.TabButtons1.tabs": "A list of lists, each inner list being (button text, id of item to display).",
   "widgets.headers.TabButtons1.tabs.full": "A list of lists, an inner list being supplied for each button. Each inner list has two elements:\n0 - The text to appear on the button\n1 - The id of the item to display when the button is pressed.",
   "widgets.headers.module": "Widgets to be typically used in a page header section.",
-  "widgets.info.PageDescription": "A widget containing the page brief description of the given ident which is set within the text. If no page ident is given, shows the brief of the current page.",
+  "widgets.info.PageDescription": "A widget displaying a span with the brief description of the page with the given ident. If no page ident is given, shows the brief of the current page.",
   "widgets.info.PageDescription.page_ident": "The ident of a page or folder, the brief description of this item will be displayed.",
   "widgets.info.PageDescription.span_text": "Any text set here will override the page description. JSON settable.",
   "widgets.info.PageIdent": "A span displaying the ident of the page containing the widget. The ident can be overwriiten if the field page_ident is given a value. ",
