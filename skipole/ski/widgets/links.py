@@ -2985,7 +2985,7 @@ class Audio1(Widget):
     arg_descriptions = {'mp3_ident':FieldArg("url", ''),
                         'wav_ident':FieldArg("url", ''),
                         'ogg_ident':FieldArg("url", ''),
-                        'controls':FieldArg("boolean", False),
+                        'controls':FieldArg("boolean", True),
                         'play':FieldArg("boolean", False, jsonset=True)
                        }
 
@@ -3040,7 +3040,7 @@ class Audio2(Widget):
     arg_descriptions = {'src_mp3':FieldArg("text", '', jsonset=True),
                         'src_wav':FieldArg("text", '', jsonset=True),
                         'src_ogg':FieldArg("text", '', jsonset=True),
-                        'controls':FieldArg("boolean", False),
+                        'controls':FieldArg("boolean", True),
                         'play':FieldArg("boolean", False, jsonset=True)
                        }
 
