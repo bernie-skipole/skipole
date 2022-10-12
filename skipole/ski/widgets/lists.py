@@ -2,6 +2,7 @@
 
 """Contains widgets for lists"""
 
+from .. import tag
 from . import Widget, ClosedWidget, FieldArg, FieldArgList, FieldArgTable, FieldArgDict
 
 
