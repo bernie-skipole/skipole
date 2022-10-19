@@ -493,7 +493,7 @@
 },
 "tables": {
 "ButtonTextBlockTable1": {
-"button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
+"button_class": "w3-button w3-block w3-small w3-theme-dark",
 "error_class": "w3-panel w3-red",
 "header_class": "w3-theme-d3",
 "odd_class": "w3-theme-d2",
