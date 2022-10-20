@@ -2351,6 +2351,7 @@
   "widgets.tables.ButtonTextBlockTable1": "A form consisting of a two column table of submit buttons and TextBlocks.",
   "widgets.tables.ButtonTextBlockTable1.action": "The target ident or label called when a button is pressed.",
   "widgets.tables.ButtonTextBlockTable1.button_class": "The CSS class applied to the submit buttons.",
+  "widgets.tables.ButtonTextBlockTable1.button_style": "The CSS style applied to the submit buttons.",
   "widgets.tables.ButtonTextBlockTable1.buttons": "A list of lists, an inner list for each row. The field name is the button name, first item of inner lists is the value on the button, which will be returned, second item is the TextBlock reference for the second column.",
   "widgets.tables.ButtonTextBlockTable1.col1_button_title": "The title of the first column, above the buttons.",
   "widgets.tables.ButtonTextBlockTable1.col2_text_title": "The title of the second colum, above the TextBlocks.",

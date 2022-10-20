@@ -395,6 +395,7 @@ class ButtonTextBlockTable1(Widget):
                         'hidden_field4':FieldArg("text", valdt=True, jsonset=True),
                         'buttons':FieldArgTable(['text', 'textblock_ref'], valdt=True),
                         'button_class':FieldArg("cssclass", ''),
+                        'button_style':FieldArg("cssstyle", ''),
                         'error_class':FieldArg("cssclass", ''),
                         'table_class':FieldArg("cssclass", '')
                         }
@@ -466,11 +467,6 @@ class ButtonTextBlockTable1(Widget):
             headerclass = self.wf.header_class
         else:
             headerclass = ''
-        # set button class
-        if self.wf.button_class:
-            buttonclass = self.wf.button_class
-        else:
-            buttonclass = ''
 
         rows = self.wf.buttons
 
@@ -502,17 +498,15 @@ class ButtonTextBlockTable1(Widget):
             table[rownumber][0] = tag.Part(tag_name="td")
             table[rownumber][1] = tag.Part(tag_name="td")
             # submit button
-            if buttonclass:
-                table[rownumber][0][0]= tag.ClosedPart(tag_name="input",
-                                                    attribs = {"value":row[0],
-                                                    "type":"submit",
-                                                    "name":self.get_formname('buttons'),
-                                                    "class":buttonclass})
-            else:
-                table[rownumber][0][0]= tag.ClosedPart(tag_name="input",
-                                                    attribs = {"value":row[0],
-                                                    "type":"submit",
-                                                    "name":self.get_formname('buttons')})
+            table[rownumber][0][0]= tag.ClosedPart(tag_name="input",
+                                                attribs = {"value":row[0],
+                                                "type":"submit",
+                                                "name":self.get_formname('buttons')})
+            if self.wf.button_class:
+                table[rownumber][0][0].attribs["class"] = self.wf.button_class
+            if self.wf.button_style:
+                table[rownumber][0][0].attribs["style"] = self.wf.button_style
+
             # textblock
             table[rownumber][1][0] = row[1]
 
