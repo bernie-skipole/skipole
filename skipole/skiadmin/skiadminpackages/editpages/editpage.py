@@ -1606,10 +1606,18 @@ def _page_domcontents(project, pagenumber, location_string):
     # add further items to domcontents
     part_string_list = []
 
+    # containers flags those widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers)
+    containers = []
+
     if 'parts' not in partdict:
         rows = 1
+        containers = []
+        container_rows = []
     else:
-        rows = _domtree(partdict, location_string, domcontents, part_string_list)
+        rows, containers = _domtree(partdict, location_string, domcontents, part_string_list)
+        container_rows = list(zip(*containers))
+        # gives list of two elements [rowlist, container number list]
+
     
     # for every row in the table
     dragrows = [ [ False, '']]
@@ -1623,7 +1631,11 @@ def _page_domcontents(project, pagenumber, location_string):
         row_string = proj_page + part_string_list[row]
         dragrows.append( [ True, row_string] )
         droprows.append( [ True, part_string_list[row]] )
-    
+        if container_rows and row in container_rows[0]:
+            number_of_containers = container_rows[1][container_rows[0].index(row)]
+            for c in range(number_of_containers):
+                dragrows.append( [ False, ''] )
+                droprows.append( [ False, ''] )
     return domcontents, dragrows, droprows
 
 
@@ -1642,12 +1654,16 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
     # parts is a list of items
     last_index = len(parts)-1
 
+    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers)
+    containers = []
+
     #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #cut #delete
 
     for index, part in enumerate(parts):
         part_location_string = part_loc + '-' + str(index)
         part_string_list.append(part_location_string)
         rows += 1
+        container_count = 0
         part_type, part_dict = part
         # the row text
         if part_type == 'Widget' or part_type == 'ClosedWidget':
@@ -1661,6 +1677,15 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
             if not part_brief:
                 part_brief = '-'
             contents.append([part_brief, '', False, ''])
+            if 'container_0' in part_dict:
+                for n in range(20):   # assume maximum of 20 containers in a widget
+                    containerstring = f"container_{n}"
+                    if containerstring in part_dict:
+                        container_count += 1
+                    else:
+                        # no further containers
+                        containers.append((rows, container_count))
+                        break
         elif part_type == 'TextBlock':
             contents.append(['TextBlock', padding, False, ''])
             part_ref = part_dict['textref']
@@ -1795,14 +1820,35 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
                 loc_string = editcell[3]
                 contents[last_row_at_this_level *12-7] = ['&searr;', 'width : 1%;', True, loc_string]
             last_row_at_this_level = rows
-            rows = _domtree(part_dict, part_location_string, contents, part_string_list, rows, indent)
+            rows, more_containers = _domtree(part_dict, part_location_string, contents, part_string_list, rows, indent)
+            if more_containers:
+                containers.extend(more_containers)
             # set u_r_flag for next item below this one
             if  (part_dict['tag_name'] != 'script') and (part_dict['tag_name'] != 'pre'):
                 u_r_flag = True
         else:
             last_row_at_this_level =rows
 
-    return rows
+        if container_count:
+            for c in range(container_count):
+                # add row of contents cells for each container
+                contents.extend( [
+                   ['', '', False, '' ],
+                   [f'container_{c}', '', False, '' ],
+                   ['', '', False, '' ],                                                # no up arrow
+                   ['', '', False, '' ],                                                # no up_right arrow
+                   ['', '', False, '' ],                                                # no down arrow
+                   ['', '', False, '' ],                                                # no down_right arrow
+                   ['Edit',  'width : 1%;', True, ''],                     # edit
+                   ['', '', False, '' ],                                                # no insert
+                   ['', '', False, '' ],                                                # no copy
+                   ['', '', False, '' ],                                                # no paste
+                   ['', '', False, '' ],                                                # no cut
+                   ['', '', False, '' ]                                                 # no delete
+                ] )
+
+
+    return rows, containers
 
 
 
