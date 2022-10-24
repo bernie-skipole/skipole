@@ -1365,23 +1365,40 @@ def edit_page_dom(skicall):
 
     # create location which is a tuple or list consisting of three items:
     # a location_string
-    # a container integer, in this case always None
+    # a container integer, which could be None
     # a tuple or list of location integers
-    location_list = part.split('-')
-    # first item should be a string, rest integers
-    if len(location_list) == 1:
-        # no location integers, so location_list[0] is the location_string
-        # edit the top location_string html part
-        call_data['part_tuple'] = skilift.part_info(editedprojname, pagenumber, None, [location_list[0], None, ()])
-        raise GoTo(target = 53007, clear_submitted=True)
 
-    location_string = location_list[0]
+    if '_' in part:
+        splitpart = part.split('_')
+        location_string = splitpart[0]   # the widget name
+        container = int(splitpart[1])
+        location_integers = []
+    else:
+        container = None
+        location_list = part.split('-')
+        location_string = location_list[0]
+        # first item should be a string, rest integers
+        if len(location_list) == 1:
+            # no location integers, so location_list[0] is the location_string
+            # edit the top location_string html part
+            call_data['part_tuple'] = skilift.part_info(editedprojname, pagenumber, None, [location_list[0], None, ()])
+            raise GoTo(target = 53007, clear_submitted=True)
+        location_integers = [ int(i) for i in location_list[1:]]
 
-    location_integers = [ int(i) for i in location_list[1:]]
-    part_tuple = skilift.part_info(editedprojname, pagenumber, None, [location_string, None, location_integers])
+    # skilift.part_info requires a location which is a tuple or list consisting of three items:
+    #   a string (such as 'head' or section name or widget name)
+    #   a container integer, such as 0 for widget container 0, or None if not in container
+    #   a tuple or list of location integers
+
+    part_tuple = skilift.part_info(editedprojname, pagenumber, None, [location_string, container, location_integers])
     if part_tuple is None:
         raise FailPage("Item to edit has not been recognised")
 
+    if container is not None:
+        # item to edit is a widget container
+        call_data['widget_name'] = location_string
+        call_data['container'] = container
+        raise GoTo(target = 54710, clear_submitted=True)
     if part_tuple.name:
         # item to edit is a widget
         call_data['part_tuple'] = part_tuple
@@ -1659,7 +1676,7 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
     # parts is a list of items
     last_index = len(parts)-1
 
-    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name)
+    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name, part_location_string)
     containers = []
 
     #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #cut #delete
@@ -1689,7 +1706,7 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
                         container_count += 1
                     else:
                         # no further containers
-                        containers.append((rows, container_count, indent, part_dict['name']))
+                        containers.append((rows, container_count, indent, part_dict['name'], part_location_string))
                         break
         elif part_type == 'TextBlock':
             contents.append(['TextBlock', padding, False, ''])
@@ -1842,26 +1859,26 @@ def _insert_containers(contents, containers):
         return
 
     # so some widgets have containers
-    # containers is a list, each item is a list of tuples, each tuple being (rownumber, number of containers, indent)
+    # containers is a list, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name, part_location_string)
 
     extrarows = 0
     
-    for row, containercount, indent, name in containers:
+    for row, containercount, indent, name, part_location_string in containers:
         for c in range(containercount):
             cellnumber = (row + extrarows)*12
             # add row of contents cells for each container
             contents.insert(cellnumber, [f'{name} {c}', f"padding-left : {indent+1}em;", False, '' ])
             contents.insert(cellnumber+1, [f'Container {c} of {name}', '', False, '' ])
-            contents.insert(cellnumber+2, ['', '', False, '' ])                      # no up arrow
-            contents.insert(cellnumber+3, ['', '', False, '' ])                      # no up_right arrow
-            contents.insert(cellnumber+4, ['', '', False, '' ])                      # no down arrow
-            contents.insert(cellnumber+5, ['', '', False, '' ])                      # no down_right arrow
-            contents.insert(cellnumber+6, ['Edit',  'width : 1%;', True, ''])        # edit
-            contents.insert(cellnumber+7, ['', '', False, '' ])                      # no insert
-            contents.insert(cellnumber+8, ['', '', False, '' ])                      # no copy
-            contents.insert(cellnumber+9, ['', '', False, '' ])                      # no paste
-            contents.insert(cellnumber+10, ['', '', False, '' ])                      # no cut
-            contents.insert(cellnumber+11, ['', '', False, '' ])                      # no delete
+            contents.insert(cellnumber+2, ['', '', False, '' ])                                              # no up arrow
+            contents.insert(cellnumber+3, ['', '', False, '' ])                                              # no up_right arrow
+            contents.insert(cellnumber+4, ['', '', False, '' ])                                              # no down arrow
+            contents.insert(cellnumber+5, ['', '', False, '' ])                                              # no down_right arrow
+            contents.insert(cellnumber+6, ['Edit',  'width : 1%;', True, f'{name}_{c}'])                     # edit, with name_containernumber
+            contents.insert(cellnumber+7, ['', '', False, '' ])                                              # no insert
+            contents.insert(cellnumber+8, ['', '', False, '' ])                                              # no copy
+            contents.insert(cellnumber+9, ['', '', False, '' ])                                              # no paste
+            contents.insert(cellnumber+10, ['', '', False, '' ])                                             # no cut
+            contents.insert(cellnumber+11, ['', '', False, '' ])                                             # no delete
             # As an extra row has been added
             extrarows += 1
 

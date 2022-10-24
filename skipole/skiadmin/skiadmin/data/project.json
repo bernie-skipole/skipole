@@ -27806,6 +27806,7 @@ false
 "fields": {
 "action": "add_new_respondpage",
 "button_class": "w3-button w3-padding-small w3-small w3-theme-dark",
+"button_style": "",
 "buttons": [
 [
 "",
