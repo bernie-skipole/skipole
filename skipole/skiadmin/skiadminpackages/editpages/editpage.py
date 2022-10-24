@@ -1377,20 +1377,21 @@ def edit_page_dom(skicall):
 
     # part is something like body-0-1-2
     location_list = part.split('-')
-    location_string = location_list[0]
+
     # first item should be a string, rest integers
     if len(location_list) == 1:
         # no location integers, so location_list[0] is the location_string
         # edit the top location_string html part
         call_data['part_tuple'] = skilift.part_info(editedprojname, pagenumber, None, [location_list[0], None, ()])
         raise GoTo(target = 53007, clear_submitted=True)
-    location_integers = [ int(i) for i in location_list[1:]]
 
     # skilift.part_info requires a location which is a tuple or list consisting of three items:
     #   a string (such as 'head' or section name or widget name)
     #   a container integer, such as 0 for widget container 0, or None if not in container
     #   a tuple or list of location integers
 
+    location_string = location_list[0]
+    location_integers = [ int(i) for i in location_list[1:]]
     part_tuple = skilift.part_info(editedprojname, pagenumber, None, [location_string, None, location_integers])
     if part_tuple is None:
         raise FailPage("Item to edit has not been recognised")
@@ -1643,17 +1644,19 @@ def _page_domcontents(project, pagenumber, location_string):
     proj_page = project+"_"+str(pagenumber)+"_"
 
     # for each row, ending at row-1 as first row is done
-    for row in range(0, rows-1):
-        row_string = proj_page + part_string_list[row]
-        dragrows.append( [ True, row_string] )
-        droprows.append( [ True, part_string_list[row]] )
-        if container_rows:
-            row2 = row+2
-            if row2 in container_rows[0]:
-                number_of_containers = container_rows[1][container_rows[0].index(row2)]
-                for c in range(number_of_containers):
-                    dragrows.append( [ False, ''] )
-                    droprows.append( [ False, ''] )
+    if rows > 1:
+        for row in range(0, rows-1):
+            row_string = proj_page + part_string_list[row]
+            dragrows.append( [ True, row_string] )
+            droprows.append( [ True, part_string_list[row]] )
+            if container_rows:
+                row2 = row+2
+                if row2 in container_rows[0]:
+                    number_of_containers = container_rows[1][container_rows[0].index(row2)]
+                    for c in range(number_of_containers):
+                        dragrows.append( [ False, ''] )
+                        droprows.append( [ False, ''] )
+
     return domcontents, dragrows, droprows
 
 
@@ -1672,7 +1675,7 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
     # parts is a list of items
     last_index = len(parts)-1
 
-    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name, part_location_string)
+    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name)
     containers = []
 
     #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #cut #delete
@@ -1702,7 +1705,7 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
                         container_count += 1
                     else:
                         # no further containers
-                        containers.append((rows, container_count, indent, part_dict['name'], part_location_string))
+                        containers.append((rows, container_count, indent, part_dict['name']))
                         break
         elif part_type == 'TextBlock':
             contents.append(['TextBlock', padding, False, ''])
@@ -1855,11 +1858,11 @@ def _insert_containers(contents, containers):
         return
 
     # so some widgets have containers
-    # containers is a list, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name, part_location_string)
+    # containers is a list, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name)
 
     extrarows = 0
     
-    for row, containercount, indent, name, part_location_string in containers:
+    for row, containercount, indent, name in containers:
         for c in range(containercount):
             cellnumber = (row + extrarows)*12
             # add row of contents cells for each container

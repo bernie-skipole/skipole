@@ -321,8 +321,17 @@ def edit_section_dom(skicall):
 
     # create location which is a tuple or list consisting of three items:
     # a string of section name
-    # a container integer, in this case always None
+    # a container integer, which could be None
     # a tuple or list of location integers
+
+    if '--' in part:
+        # part is widgetname--containernumber
+        splitpart = part.split('--')
+        call_data['widget_name'] = splitpart[0]    # the widget name
+        call_data['container'] = int(splitpart[1]) # the container number
+        raise GoTo(target = 54710, clear_submitted=True)
+
+    # part is something like sectionname-0-1-2
     location_list = part.split('-')
     # first item should be a string, rest integers
     if len(location_list) == 1:
@@ -330,6 +339,11 @@ def edit_section_dom(skicall):
         # edit the top section html part
         call_data['part_tuple'] = part_info(editedprojname, None, location_list[0], [location_list[0], None, ()])
         raise GoTo(target = 53007, clear_submitted=True)
+
+    # skilift.part_info requires a location which is a tuple or list consisting of three items:
+    #   a string (such as 'head' or section name or widget name)
+    #   a container integer, such as 0 for widget container 0, or None if not in container
+    #   a tuple or list of location integers
 
     section_name = location_list[0]
     call_data['section_name'] = section_name
@@ -1017,8 +1031,16 @@ def _section_domcontents(project, section_name):
 
     if 'parts' not in partdict:
         rows = 1
+        containers = []
+        container_rows = []
     else:
-        rows = _domtree(partdict, section_name, domcontents, part_string_list)
+        rows, containers = _domtree(partdict, section_name, domcontents, part_string_list)
+        container_rows = list(zip(*containers))
+        # gives list of two elements [rowlist, container number list]
+
+    # insert containers into the table
+    _insert_containers(domcontents, containers)
+
     # for every row in the table
     dragrows = [ [ False, '']]
     droprows = [ [ True, section_name ]]
@@ -1028,6 +1050,13 @@ def _section_domcontents(project, section_name):
         for row in range(0, rows-1):
             dragrows.append( [ True, part_string_list[row]] )
             droprows.append( [ True, part_string_list[row]] )
+            if container_rows:
+                row2 = row+2
+                if row2 in container_rows[0]:
+                    number_of_containers = container_rows[1][container_rows[0].index(row2)]
+                    for c in range(number_of_containers):
+                        dragrows.append( [ False, ''] )
+                        droprows.append( [ False, ''] )
     
     return domcontents, dragrows, droprows
 
@@ -1051,12 +1080,16 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
     # parts is a list of items
     last_index = len(parts)-1
 
+    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name)
+    containers = []
+
     #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #cut #delete
 
     for index, part in enumerate(parts):
         part_location_string = part_loc + '-' + str(index)
         part_string_list.append(part_location_string)
         rows += 1
+        container_count = 0
         part_type, part_dict = part
         # the row text
         if part_type == 'Widget' or part_type == 'ClosedWidget':
@@ -1070,6 +1103,15 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
             if not part_brief:
                 part_brief = '-'
             contents.append([part_brief, '', False, ''])
+            if 'container_0' in part_dict:
+                for n in range(20):   # assume maximum of 20 containers in a widget
+                    containerstring = f"container_{n}"
+                    if containerstring in part_dict:
+                        container_count += 1
+                    else:
+                        # no further containers
+                        containers.append((rows, container_count, indent, part_dict['name']))
+                        break
         elif part_type == 'TextBlock':
             contents.append(['TextBlock', padding, False, ''])
             part_ref = part_dict['textref']
@@ -1204,14 +1246,45 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
                 loc_string = editcell[3]
                 contents[last_row_at_this_level *12-7] = ['&searr;', 'width : 1%;', True, loc_string]
             last_row_at_this_level = rows
-            rows = _domtree(part_dict, part_location_string, contents, part_string_list, rows, indent)
+            rows, more_containers = _domtree(part_dict, part_location_string, contents, part_string_list, rows, indent)
+            if more_containers:
+                containers.extend(more_containers)
             # set u_r_flag for next item below this one
             if  (part_dict['tag_name'] != 'script') and (part_dict['tag_name'] != 'pre'):
                 u_r_flag = True
         else:
             last_row_at_this_level =rows
 
-    return rows
+    return rows, containers
 
+
+def _insert_containers(contents, containers):
+    "Inserts container lines into the dom table"
+    if not containers:
+        return
+
+    # so some widgets have containers
+    # containers is a list, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name)
+
+    extrarows = 0
+    
+    for row, containercount, indent, name in containers:
+        for c in range(containercount):
+            cellnumber = (row + extrarows)*12
+            # add row of contents cells for each container
+            contents.insert(cellnumber, [f'{name} {c}', f"padding-left : {indent+1}em;", False, '' ])
+            contents.insert(cellnumber+1, [f'Container {c} of {name}', '', False, '' ])
+            contents.insert(cellnumber+2, ['', '', False, '' ])                                              # no up arrow
+            contents.insert(cellnumber+3, ['', '', False, '' ])                                              # no up_right arrow
+            contents.insert(cellnumber+4, ['', '', False, '' ])                                              # no down arrow
+            contents.insert(cellnumber+5, ['', '', False, '' ])                                              # no down_right arrow
+            contents.insert(cellnumber+6, ['Edit',  'width : 1%;', True, f'{name}--{c}'])                    # edit, with name_containernumber
+            contents.insert(cellnumber+7, ['', '', False, '' ])                                              # no insert
+            contents.insert(cellnumber+8, ['', '', False, '' ])                                              # no copy
+            contents.insert(cellnumber+9, ['', '', False, '' ])                                              # no paste
+            contents.insert(cellnumber+10, ['', '', False, '' ])                                             # no cut
+            contents.insert(cellnumber+11, ['', '', False, '' ])                                             # no delete
+            # As an extra row has been added
+            extrarows += 1
 
 
