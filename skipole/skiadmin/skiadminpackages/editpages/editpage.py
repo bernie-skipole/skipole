@@ -1618,24 +1618,29 @@ def _page_domcontents(project, pagenumber, location_string):
         container_rows = list(zip(*containers))
         # gives list of two elements [rowlist, container number list]
 
-    
-    # for every row in the table
+    # insert containers into the table
+    _insert_containers(domcontents, containers)
+
+
+    # for the first row in the table
     dragrows = [ [ False, '']]
     droprows = [ [ True, location_string ]]
 
     # send project and page number with dragrow info to avoid items being dragged across web screens showing different pages
     proj_page = project+"_"+str(pagenumber)+"_"
 
-    # for each row (minus 1 as the first row is done)
+    # for each row, ending at row-1 as first row is done
     for row in range(0, rows-1):
         row_string = proj_page + part_string_list[row]
         dragrows.append( [ True, row_string] )
         droprows.append( [ True, part_string_list[row]] )
-        if container_rows and row in container_rows[0]:
-            number_of_containers = container_rows[1][container_rows[0].index(row)]
-            for c in range(number_of_containers):
-                dragrows.append( [ False, ''] )
-                droprows.append( [ False, ''] )
+        if container_rows:
+            row2 = row+2
+            if row2 in container_rows[0]:
+                number_of_containers = container_rows[1][container_rows[0].index(row2)]
+                for c in range(number_of_containers):
+                    dragrows.append( [ False, ''] )
+                    droprows.append( [ False, ''] )
     return domcontents, dragrows, droprows
 
 
@@ -1654,7 +1659,7 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
     # parts is a list of items
     last_index = len(parts)-1
 
-    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers)
+    # list widgets with containers, each item is a list of tuples, each tuple being (rownumber, number of containers, indent, widget name)
     containers = []
 
     #Text   #characters..      #up  #up_right  #down  #down_right   #edit   #insert  #copy  #paste  #cut #delete
@@ -1684,7 +1689,7 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
                         container_count += 1
                     else:
                         # no further containers
-                        containers.append((rows, container_count))
+                        containers.append((rows, container_count, indent, part_dict['name']))
                         break
         elif part_type == 'TextBlock':
             contents.append(['TextBlock', padding, False, ''])
@@ -1829,26 +1834,37 @@ def _domtree(partdict, part_loc, contents, part_string_list, rows=1, indent=1):
         else:
             last_row_at_this_level =rows
 
-        if container_count:
-            for c in range(container_count):
-                # add row of contents cells for each container
-                contents.extend( [
-                   ['', '', False, '' ],
-                   [f'container_{c}', '', False, '' ],
-                   ['', '', False, '' ],                                                # no up arrow
-                   ['', '', False, '' ],                                                # no up_right arrow
-                   ['', '', False, '' ],                                                # no down arrow
-                   ['', '', False, '' ],                                                # no down_right arrow
-                   ['Edit',  'width : 1%;', True, ''],                     # edit
-                   ['', '', False, '' ],                                                # no insert
-                   ['', '', False, '' ],                                                # no copy
-                   ['', '', False, '' ],                                                # no paste
-                   ['', '', False, '' ],                                                # no cut
-                   ['', '', False, '' ]                                                 # no delete
-                ] )
-
-
     return rows, containers
+
+def _insert_containers(contents, containers):
+    "Inserts container lines into the dom table"
+    if not containers:
+        return
+
+    # so some widgets have containers
+    # containers is a list, each item is a list of tuples, each tuple being (rownumber, number of containers, indent)
+
+    extrarows = 0
+    
+    for row, containercount, indent, name in containers:
+        for c in range(containercount):
+            cellnumber = (row + extrarows)*12
+            # add row of contents cells for each container
+            contents.insert(cellnumber, [f'{name} {c}', f"padding-left : {indent+1}em;", False, '' ])
+            contents.insert(cellnumber+1, [f'Container {c} of {name}', '', False, '' ])
+            contents.insert(cellnumber+2, ['', '', False, '' ])                      # no up arrow
+            contents.insert(cellnumber+3, ['', '', False, '' ])                      # no up_right arrow
+            contents.insert(cellnumber+4, ['', '', False, '' ])                      # no down arrow
+            contents.insert(cellnumber+5, ['', '', False, '' ])                      # no down_right arrow
+            contents.insert(cellnumber+6, ['Edit',  'width : 1%;', True, ''])        # edit
+            contents.insert(cellnumber+7, ['', '', False, '' ])                      # no insert
+            contents.insert(cellnumber+8, ['', '', False, '' ])                      # no copy
+            contents.insert(cellnumber+9, ['', '', False, '' ])                      # no paste
+            contents.insert(cellnumber+10, ['', '', False, '' ])                      # no cut
+            contents.insert(cellnumber+11, ['', '', False, '' ])                      # no delete
+            # As an extra row has been added
+            extrarows += 1
+
 
 
 
