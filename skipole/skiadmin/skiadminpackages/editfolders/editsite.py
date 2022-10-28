@@ -661,4 +661,12 @@ def set_widgets_css(skicall):
     call_data['status'] = 'Widget CSS classes set'
 
 
+def setaboutcode(skicall):
+    "Sets link in the aboutcode page"
+    pd = skicall.call_data['pagedata']
+    if skicall.proj_data['examples']:
+        pd['examples', 'link_ident'] = skicall.proj_data['examples']
+
+
+
 

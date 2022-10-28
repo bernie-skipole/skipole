@@ -150,8 +150,11 @@ def end_call(page_ident, page_type, skicall):
 # is provided rather than an application object being immediately created.
 
 
-def makeapp(editedprojname):
-    """This function returns the skiadmin application."""
+def makeapp(editedprojname, examples=None):
+    """This function returns the skiadmin application. editedprojectname should be
+       the name of the project being edited, examples should be the URL of the site
+       hosting widget examples, for example http://webparametrics.co.uk/skiwidgets/
+       If no such site exists, examples should be None"""
 
     if not editedprojname:
         raise ServerError("The project name being edited is required")
@@ -167,8 +170,14 @@ def makeapp(editedprojname):
         adminbackcol_rgb = skiadminpackages.css_styles.hex_int(adminbackcol)
         colours = skiadminpackages.css_styles.get_colours(*adminbackcol_rgb)
 
+    # ensure examples has trailing / character
+    if examples:
+        examples = examples.rstrip('/') + "/"
 
-    proj_data = {"editedprojname":editedprojname, "colours":colours, "adminbackcol":adminbackcol}
+    proj_data = {"editedprojname":editedprojname,
+                 "colours":colours,
+                 "adminbackcol":adminbackcol,
+                 "examples":examples}
 
     # The WSGIApplication created here is generally given a URL of "/skiadmin"
     # when added to the root project using application.add_project

@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     from skipole import skiadmin, set_debug, skilift
     set_debug(True)
-    skiadmin_application = skiadmin.makeapp(editedprojname=PROJECT)
+    skiadmin_application = skiadmin.makeapp(editedprojname=PROJECT, examples="http://www.webparametrics.co.uk/skiwidgets/")
     application.add_project(skiadmin_application, url='/skiadmin')
 
     # serve the application with the development server from skilift
