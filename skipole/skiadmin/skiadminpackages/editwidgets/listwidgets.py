@@ -80,6 +80,13 @@ def retrieve_widgets_list(skicall):
     call_data['module'] = module_name
 
     sd["page_head","large_text"] = "Widgets in module %s" % (module_name,)
+    # set map link to link to examples
+    if skicall.proj_data['examples']:
+        sd["map", "show"] = True
+        sd["map", "button_text"] = "Examples"
+        sd["map", "force_ident"] = False
+        sd["map", "link_ident"] = skicall.proj_data['examples'] + module_name
+
     pd.update(sd)
     pd['moduledesc','textblock_ref'] = 'widgets.' + module_name + '.module'
 
@@ -143,6 +150,14 @@ def retrieve_new_widget(skicall):
     # widg is a WidgetDescription named tuple
 
     sd["page_head","large_text"] = "Create widget of type %s" % (widget_class_name,)
+
+    # set map link to link to examples
+    if skicall.proj_data['examples']:
+        sd["map", "show"] = True
+        sd["map", "button_text"] = "Example"
+        sd["map", "force_ident"] = False
+        sd["map", "link_ident"] = skicall.proj_data['examples'] + module_name +"/" + widget_class_name
+
     pd.update(sd)
 
 

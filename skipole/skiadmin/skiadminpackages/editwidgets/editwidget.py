@@ -86,7 +86,6 @@ def retrieve_widget(skicall):
 
     # Fill in header
     sd["page_head","large_text"] = "Widget " + widget_name
-    pd.update(sd)
 
     project = call_data['editedprojname']
 
@@ -108,6 +107,15 @@ def retrieve_widget(skicall):
             widget = editwidget.page_widget(project, pagenumber, call_data['pchange'], widget_name)
     except ServerError as e:
         raise FailPage(e.message)
+
+    # set map link to link to examples
+    if skicall.proj_data['examples']:
+        sd["map", "show"] = True
+        sd["map", "button_text"] = "Example"
+        sd["map", "force_ident"] = False
+        sd["map", "link_ident"] = skicall.proj_data['examples'] + widgetdescription.modulename +"/" + widgetdescription.classname
+
+    pd.update(sd)
     
 
     pd['widget_type','para_text'] = "This widget is of type %s.%s." % (widgetdescription.modulename, widgetdescription.classname)
