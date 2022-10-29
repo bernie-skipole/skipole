@@ -25,6 +25,14 @@ def retrieve_module_list(skicall):
 
     # Fill in header
     sd["page_head","large_text"] = "Choose module"
+
+    # set map link to link to examples
+    if skicall.proj_data['examples']:
+        sd["map", "show"] = True
+        sd["map", "button_text"] = "Examples"
+        sd["map", "force_ident"] = False
+        sd["map", "link_ident"] = skicall.proj_data['examples']
+
     pd.update(sd)
 
     # as this page chooses a module, clear any previous chosen module and widget class

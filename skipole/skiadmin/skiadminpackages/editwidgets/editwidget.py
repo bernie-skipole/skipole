@@ -1588,7 +1588,8 @@ def move_down_right_in_container_dom(skicall):
         else:
             parent_integers = list(location_integers[:-1])
             parent_location = (widget_name, container, parent_integers)
-        items_in_parent = len(skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location))
+        p_contents = skilift.part_contents(part_tuple.project, part_tuple.pagenumber, part_tuple.section_name, parent_location)
+        items_in_parent = len(p_contents)
         if location_integers[-1] == (items_in_parent-1):
             # At end of a block, cannot be moved
             raise FailPage("Cannot be moved down")

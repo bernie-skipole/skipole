@@ -512,6 +512,9 @@ def part_info(project, pagenumber, section_name, location):
     return PartInfo(project, pagenumber, page_part, section_name, name, location, part_type, brief)
 
 
+
+#skiadmin 85004 None ('tagblock', 0, ())
+
 def part_contents(project, pagenumber, section_name, location):
     "If the given part is a Part or Section, returns a list of PartInfo tuples, one for each content"
     # part is either in a page or a section
@@ -519,6 +522,7 @@ def part_contents(project, pagenumber, section_name, location):
         raise ServerError("Page and section both missing")
 
     page_part = None
+    widget = None
 
     if section_name:
         if pagenumber is not None:
@@ -535,6 +539,7 @@ def part_contents(project, pagenumber, section_name, location):
             widget = page.widgets[location[0]]
             if widget is not None:
                ident_top = widget.ident_string.split("-", 1)
+               # ['skiadmin_85004_body', '0']
                # ident_top[0] will be of the form proj_pagenum_head
                page_part = ident_top[0].split("_")[2]
 
@@ -542,8 +547,11 @@ def part_contents(project, pagenumber, section_name, location):
         return
     if hasattr(part, '__class__'):
         part_type = part.__class__.__name__
-    if (part_type != "Part") and (part_type != "Section"):
+    else:
         return
+    if widget is None:
+        if (part_type != "Part") and (part_type != "Section"):
+            return
 
     subpart_list = []
 
