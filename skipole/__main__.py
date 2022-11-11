@@ -1,156 +1,170 @@
+
+# If called using 
 #
-# This script is meant to be run from the command line using
-#
-# python3 -m skipole mynewproj /path/to/projectfiles
+# python3 -m skipole
 #
 #
 
-import sys, os, re, shutil
+import sys
 
 from . import version
 
-DESCRIPTION = """Usage is
 
-python3 -m skipole mynewproj /path/to/projectfiles
+if len(sys.argv) == 2:
+    # if called with "python3 -m skipole --version"
+    if sys.argv[1] == "--version":
+        print(version)
+        sys.exit(0)
 
-Which, if it does not already exist, creates a directory /path/to/projectfiles
-and within it creates a sub directory and a python file:
+print(f"""skipole version {version}
 
-mynewproj.py - a minimal python file which you will develop further.
+skipole is a WSGI application generator.
 
-mynewproj - a subdirectory containing data and static files for your new project
+skilift is an associated python package used to develop an application.
+
+Typically a developer's PC would have both the skilift and the skipole Python packages installed. Skilift includes a development web server and provides a web admin interface, which together with your own code and the skipole functions, enables the developer to create a WSGI application.
+
+Once created, your application and its support files can be moved to your deployment server, which also needs a WSGI compatible web server, and the skipole package. 
+
+The deployment server does not need the skilift application.
+
+Skipole and skilift require python 3.6 or later, and can be installed with:
+
+python3 -m pip install skipole
+
+python3 -m pip install skilift
+
+
+skilift
+-------
+
+To generate a new project, and use a web admin interface to develop it, the package skilift is required.
+
+skilift can be run from the command line with the python -m option
+
+Usage is
+
+python3 -m skilift mynewproj /path/to/projectfiles
+
+Which creates a directory /path/to/projectfiles
+containing sub directory mynewproj - containing project data, and file
+mynewproj.py where your code will be developed.
 
 You should replace 'mynewproj' with your preferred name for a new project.
 
-The path "/path/to/projectfiles" must be given, and is the path to a directory
-where you will develop your project.
+The path "/path/to/projectfiles" is the path to a directory where you will
+develop your project. Multiple projects can be created in one 'projectfiles'
+directory, or you could have multiple such directories holding different
+projects.
 
 If mynewproj already exists in the directory, it will not be changed.
 
-Once created you can then run:
+You should then inspect the file
 
-python3 /path/to/projectfiles/mynewproj.py
+/path/to/projectfiles/mynewproj.py
 
-To serve the project at url localhost:8000, and with a browser call
-localhost:8000/skiadmin for the admin pages
-"""
+where your code will be developed.
 
 
-# a search for anything none-alphanumeric and not an underscore
-_AN = re.compile('[^\w]')
+skipole
+-------
+
+skipole is intended to be imported, if it is run using
+
+python3 -m skipole
+
+this text is displayed.
+
+If it is run using
+
+python3 -m skipole --version
+
+Then a version string is displayed.
+
+When imported skipole makes the following available:
+
+version - a version string of the form a.b.c
+
+WSGIApplication - an instance of this class is a callable WSGI application (see below)
+
+set_debug(mode) - a function to turn on debugging (if mode is True), or off (if mode is False)
+
+use_submit_list - is available to optionally wrap the user defined submit_data function
+                  Enables a responder 'submit list' to define package,module,function to
+                  be called as the responder's submit_data function, where package,module
+                  is relative to the users code.
+
+PageData - An instance of this class is used to update page widgets.
+
+SectionData - An instance of this class is used to update section widgets
 
 
-args = sys.argv
+Exceptions
+----------
 
-if len(args) == 3:
-    project_name = args[1]
-    if args[2].startswith('-'):
-        print("Invalid filepath. " + DESCRIPTION)
-        sys.exit(3)
-    projectfiles = os.path.abspath(os.path.expanduser(args[2]))
-    if _AN.search(project_name):
-        print( "Error: Invalid project name, alphanumeric only")
-        sys.exit(1)
-    if '_' in project_name:
-        print( "Error: Invalid project name, alphanumeric only (no underscore).")
-        sys.exit(1)
-    if (project_name == 'skis') or (project_name=='skiadmin'):
-        print("Error: This project name is reserved")
-        sys.exit(2)
-elif len(args) == 2:
-    if args[1] == "--version":
-        print(version)
-        sys.exit(0)
-    elif (args[1] == "-h") or (args[1] == "--help"):
-        print(DESCRIPTION)
-        sys.exit(0)
-    else:
-        print("Unrecognised option. " + DESCRIPTION)
-        sys.exit(3)
-else:
-    print( "Invalid input. " + DESCRIPTION)
-    sys.exit(3)
+These are also provided, and can be raised within the users code:
+
+ValidateError - returns the project validation error page
+
+ServerError - returns the project server error page
+
+GoTo - diverts the call to another page
+
+FailPage - diverts the call to the calling Responder's 'Fail page'
+
+ServeFile - sends a static server file to the client browser
 
 
-# get the location of the directories to be copied
-template_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates')
+WSGIApplication
+---------------
 
-template_newproj_directory = os.path.join(template_directory, 'newproj')
-if not os.path.isdir(template_newproj_directory):
-    print("Error: Cannot find the template data for the newproj project")
-    sys.exit(7)
-template_newproj_pyfile = os.path.join(template_directory, 'newproj.py')
-if not os.path.isfile(template_newproj_pyfile):
-    print("Error: Cannot find the template data for the newproj project")
-    sys.exit(8)
+An instance of this class should be created, and is a callable WSGI application.
 
+The WSGIApplication has the following arguments which should be provided to create
+an instance:
 
-project_directory = os.path.join(projectfiles, project_name)
-project_pyfile = os.path.join(projectfiles, project_name + ".py")
+PROJECT - the project name
 
-# newproj python file
-newproj_pyfile = os.path.join(projectfiles, 'newproj.py')
+PROJECTFILES - the directory containing your projects
 
+PROJ_DATA - An optional dictionary you may wish to provide
 
-# If the given projectfiles directory does not exist
-if not os.path.isdir(projectfiles):
+start_call - a function you should create, called at the start of a call
 
-    # create the directory by copying the template_directory
-    shutil.copytree(template_directory, projectfiles)
+submit_data - a function you should create, called by responders
 
-    # new directory which has been created
-    newproj_directory = os.path.join(projectfiles, 'newproj')
+end_call - a function you should create, called at the end of the call, prior to returning the page
 
-    # change the name of the newproj_directory to project_name
-    os.rename(newproj_directory, project_directory)
-else:
-    # The given projectfiles does exist, so use it for the new project
+url - path where this project will be served, typically '/'
 
-    if os.path.isdir(project_directory) or os.path.isfile(project_pyfile):
-        print("Project %s already exists, and has not been altered." % (project_name,))
-        sys.exit(0)
+You would typically define your functions, and then create an instance:
 
-    # create a new project
-    shutil.copytree(template_newproj_directory, project_directory)
-    shutil.copyfile(template_newproj_pyfile, newproj_pyfile)
+my_application = WSGIApplication(project=PROJECT,
+                                 projectfiles=PROJECTFILES,
+                                 proj_data=PROJ_DATA,
+                                 start_call=start_call,
+                                 submit_data=submit_data,
+                                 end_call=end_call,
+                                 url="/")
 
+This my_application is then a callable WSGI application.
 
-# new_code_path -> project_pyfile
-# newproj_file -> newproj_pyfile
+The WSGIApplication class has method:
 
+add_project(self, proj, url) - adds other projects to the 'root' project.
 
-print("Creating %s" % (project_pyfile,))
+Where proj is another instance of a WSGIApplication and will be served at the path
+given by argument url.
 
-# change newproj.py to project_name.py, including the contents
-## READ newproj.py
+The skis module has the function makeapp() which creates a project providing needed javascript
+files which should be added to your application, for example:
 
-with open(newproj_pyfile, "r") as tnf:
-    templatecontents = tnf.read()
-os.remove(newproj_pyfile)
-## REPLACE newproj with the new project name
-newcontents = templatecontents.replace("newproj", project_name)
-## REPLACE the 'os.path.dirname(os.path.realpath(__file__))' call with the new projectfiles
-newcontents = newcontents.replace("os.path.dirname(os.path.realpath(__file__))", "\"" + projectfiles + "\"")
-## WRITE the new file
-with open(project_pyfile, "w") as pf:
-    pf.write(newcontents)
+from skipole import skis
+skis_application = skis.makeapp()
+my_application.add_project(skis_application, url='/lib')
 
-# change data/project.json contents
-## READ project.json
-data_file = os.path.join(project_directory, "data", "project.json")
-with open(data_file, "r") as tdf:
-    templatedatacontents = tdf.read()
-os.remove(data_file)
-## REPLACE newproj with the new project name
-newdatacontents = templatedatacontents.replace("newproj", project_name)
-## WRITE the new file
-with open(data_file, "w") as tdf2:
-    tdf2.write(newdatacontents)
+Which causes the skis project to be served at /lib.
 
-print("""Use the command:
-python3 %s
-To serve the project at url localhost:8000
-and localhost:8000/skiadmin for the admin pages""" % (project_pyfile,))
-sys.exit(0)
+""")
 
 

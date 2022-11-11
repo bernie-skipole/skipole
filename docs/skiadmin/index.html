@@ -42,7 +42,7 @@
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
 <h3>skiadmin</h3>
 <p>Having created a project with:</p>
-<p>python3 -m skipole myproj /path/to/my/projectfiles</p>
+<p>python3 -m skilift myproj /path/to/my/projectfiles</p>
 <p>Inspect the file /path/to/my/projectfiles/myproj.py, and you will see it contains the application:</p>
 <pre>
     application = WSGIApplication(project='myproj',
@@ -55,14 +55,20 @@
 </pre>
 <p>You will also see that a sub-project has been added:</p>
 <pre>
+############### THESE LINES IMPORT SKILIFT AND ADD THE SKIADMIN SUB-PROJECT #
+############### AND SHOULD BE REMOVED WHEN YOU DEPLOY YOUR APPLICATION #
+
+## The skilift package is only needed for development, it is not needed
+## for your finished application
+
+
 if __name__ == "__main__":
 
-    ############### THESE LINES ADD THE SKIADMIN SUB-PROJECT FOR DEVELOPMENT #
-    ################# AND SHOULD BE REMOVED WHEN YOU DEPLOY YOUR APPLICATION #
-
-    from skipole import skiadmin, set_debug, skilift
     set_debug(True)
-    skiadmin_application = skiadmin.makeapp(editedprojname=PROJECT)
+
+    from skilift import make_skiadmin, development_server
+
+    skiadmin_application = make_skiadmin(editedprojname=PROJECT, examples="http://www.webparametrics.co.uk/skiwidgets/")
     application.add_project(skiadmin_application, url='/skiadmin')
 
     # serve the application with the development server from skilift
@@ -70,7 +76,8 @@ if __name__ == "__main__":
     host = "127.0.0.1"
     port = 8000
     print("Serving %s on port %s. Call http://localhost:%s/skiadmin to edit." % (PROJECT, port, port))
-    skilift.development_server(host, port, application)
+    development_server(host, port, application)
+ 
 </pre>
 
 <p>This code does three things, it calls set_debug(True), which gives enhanced error reporting, it creates a project 'skiadmin' which is added to your own project at url '/skiadmin', and it runs your application on a development web server.</p>

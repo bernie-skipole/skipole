@@ -1,16 +1,26 @@
 # README #
 
-skipole is a framework for creating wsgi applications. A web admin interface, together with your own code, allows the developer to create dynamic web pages.
+skipole is a WSGI application generator.
 
-Skipole requires python 3.6 or later, and can be installed with:
+skilift is an associated python package which helps the development of an application.
+
+Typically a developer's PC would have both the skilift and the skipole Python packages installed. Skilift can be used to generate a web site, it includes a development web server and provides a web admin interface, which together with your own code and the skipole functions, enables the developer to create a wsgi application.
+
+Once created, your application and its support files can be moved to your deployment server, which also needs a WSGI compatible web server, and the skipole package. 
+
+The deployment server does not need the skilift application.
+
+Skipole and skilift require python 3.6 or later, and can be installed with:
 
 python3 -m pip install skipole
+
+python3 -m pip install skilift
  
 ### Starting a new project ###
 
 To create a new project you would normally run:
 
-python3 -m skipole myproj /path/to/projectfiles
+python3 -m skilift myproj /path/to/projectfiles
 
 You should replace 'myproj' with your preferred name for a new project. A projectfiles directory will be created with your new project 'myproj' within it.
 
@@ -36,7 +46,7 @@ The widgets created have a look and feel set by CSS classes, you have the facili
 
 ### Final output ###
 
-When you have fully developed your application, and wish to deploy it, you would remove the lines in myproj.py which run the development_server, and which add the skiadmin sub project, and you will be left with your final WSGI 'application' - which can be served by any wsgi compatable web server.
+When you have fully developed your application, and wish to deploy it, you would remove the lines in myproj.py which import skilift and which run the admin functions and the development_server. You will be left with your final WSGI 'application' - which can be served by any WSGI compatable web server.
 
 ### Upgrading ###
 
@@ -44,9 +54,7 @@ To upgrade to the latest version:
 
 python3 -m pip install --upgrade skipole
 
-Check you have the latest with:
-
-python3 -m skipole --version
+python3 -m pip install --upgrade skilift
 
 ### Further information ###
 

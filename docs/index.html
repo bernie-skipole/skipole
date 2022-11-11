@@ -36,27 +36,32 @@
  <div class="w3-bar-block w3-black">
   <a href="https://github.com/bernie-skipole/skipole/" class="w3-bar-item w3-button">github.com/bernie-skipole/skipole</a>
 </div>
+ <div class="w3-bar-block w3-black">
+  <a href="https://github.com/bernie-skipole/skilift/" class="w3-bar-item w3-button">github.com/bernie-skipole/skilift</a>
+</div>
 </div>
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
 <h3>The Skipole Framework - Introduction</h3>
-<p>skipole.py is a framework for creating wsgi applications.</p>
-<p>A web admin interface allows the developer to create web pages containing widgets.</p>
+<p>skipole is a WSGI application generator.</p>
+<p>skilift is an associated python package which helps the development of an application.</p>
+<p>Typically a developer's PC would have both the skilift and the skipole Python packages installed. Skilift can be used to generate a web site, it includes a development web server and provides a web admin interface, which together with your own code and the skipole functions, enables the developer to create a wsgi application.</p>
+<p>Once created, your application and its support files can be moved to your deployment server, which also needs a WSGI compatible web server, and the skipole package.</p> 
+<p>The deployment server does not need the skilift application.</p>
 <p>The developer supplies appropriate python functions to receive data and populate the widget parameters.</p>
 <img src="/skipole/images/overview.png" alt="overview" style="width:801px;height:520px;" />
 <p>Skipole requires python 3.6 or later. It would normally be installed with pip, usually into a virtual environment.</p>
 <p>If you are using Debian, you may need the Python3 version of pip to obtain packages from Pypi.</p>
 <p>apt-get install python3-pip</p>
 <p>If you need further information on pip and virtual environments, try:<a href=https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/</a></p>
-<p>Then install skipole from pypi with:</p>
+<p>Then install skipole and skifift from pypi with:</p>
 <p><strong>python3 -m pip install skipole</strong></p>
-<p>Or - if you just want to install it with your own user permissions only:</p>
-<p><strong>python3 -m pip install --user skipole</strong></p>
+<p><strong>python3 -m pip install skilift</strong></p>
 <h4>Overview</h4>
 <p>The framework is used to create a project, this consists of a number of template pages and Responders that together with your own code will produce a wsgi application. Responders call your functions, which populate and then return a template page consisting of HTML code and widgets.</p>
 <p>To create a new project you would normally run:</p>
-<p><strong>python3 -m skipole myproj /path/to/projectfiles</strong></p>
+<p><strong>python3 -m skilift myproj /path/to/projectfiles</strong></p>
 <p>You should replace 'myproj' with your preferred name for a new project. A projectfiles directory will be created with your new project 'myproj' within it.</p>
 <p>The framework provides a web 'skiadmin' subdirectory of your project which allows you to create template pages of various types (html, css and svg) and Responders which call your Python functions defined in myproj.py</p>
 <p>You would then run:</p>
@@ -75,9 +80,10 @@
 <p>As well as 'template' pages, JSON pages can be created and returned to the client browser. These can be used to update certain widget fields via javascript rather than refreshing entire pages.</p>
 <p>Multiple 'responder' types are available, to handle cookies and incoming data.</p>
 <h4>Deploying your project</h4>
-<p>You would normally copy the projectfiles directory to your server, and then the script:</p>
+<p>To deploy your final application on a web server of your choice, you would edit myproj.py to remove skilift and the development server, and also remove the code which adds the skiadmin project.</p>
+<p>You would normally copy the projectfiles directory to your web server, and then the script:</p>
 <p>/path/to/projectfiles/myproj.py</p>
-<p>Both creates the 'application' object, and serves it using a development server. To deploy your final application on a web server of your choice, you would edit myproj.py to remove the development server, and also remove the the code which adds the skiadmin project.</p>
+<p>would create the WSGI application.</p>
 <p>Deploying a web server with the application depends on your server, usually the web server has some means of importing myproj.py, and running 'application'. The <a href="/skipole/servers/index.html">Serving wsgi</a> link on the left gives a number of examples.</p>
 </div>
 </div>
