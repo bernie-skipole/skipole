@@ -117,12 +117,12 @@ where your code will be developed.
 
 """
 
-import sys, traceback, inspect
+import sys, traceback, inspect, pkgutil
 
 from functools import wraps
 from importlib import import_module
 
-from .ski import skiboot
+from .ski import skiboot, widgets
 
 from .ski.project_class_definition import SkipoleProject, PageData, SectionData
 from .ski.excepts import ValidateError, ServerError, GoTo, FailPage, ServeFile
@@ -263,5 +263,18 @@ def use_submit_list(submit_data):
         return submitfunc(skicall)
     return submit_function
 
+
+def widget_modules():
+    "Return a tuple of widget module names"
+    return tuple(name for (module_loader, name, ispkg) in pkgutil.iter_modules(widgets.__path__))
+
+
+def widgets_in_module(module_name):
+    "Returns a tuple of widget names present in the module"
+    module = import_module('.ski.widgets.' + module_name, __name__)
+    widget_list = []
+    for classname,obj in inspect.getmembers(module, lambda member: inspect.isclass(member) and (member.__module__ == module.__name__)):
+        widget_list.append(classname)
+    return tuple(widget_list)
 
 
