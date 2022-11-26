@@ -4,13 +4,13 @@
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <title>Index</title>
-<link href="/skipole/css/w3.css" type="text/css" rel="stylesheet" />
-<link href="/skipole/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+<link href="../css/w3.css" type="text/css" rel="stylesheet" />
+<link href="../css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
 </head>
 <body class="w3-theme">
 <div class="w3-container w3-theme-d1">
 <p>
-<a href="/skipole/index.html"><img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" /></a>
+<a href="../index.html"><img src="../images/logo.svg" height="28" width="56" align="bottom" /></a>
 &nbsp;Skipole WSGI generator.
 </p>
 </div>
@@ -18,19 +18,19 @@
 <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
 <p>Topics:</p>
  <div class="w3-bar-block w3-black">
-  <a href="/skipole/index.html" class="w3-bar-item w3-button">Introduction</a>
-  <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
-  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button w3-blue">Your Code</a>
-  <a href="/skipole/skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
-  <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
-  <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
-  <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
-  <a href="/skipole/exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
-  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">PageData</a>
-  <a href="/skipole/sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
-  <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
-  <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
-  <a href="/skipole/examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
+  <a href="../index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="../getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="../pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="../skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
+  <a href="../startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="../submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="../endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="index.html" class="w3-bar-item w3-button w3-blue">Exceptions</a>
+  <a href="../pagedata.html" class="w3-bar-item w3-button">PageData</a>
+  <a href="../sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
+  <a href="../skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="../servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
+  <a href="../examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
 </div>
 <p>Development at GitHub:</p>
  <div class="w3-bar-block w3-black">
@@ -44,16 +44,22 @@
 <p>You can also import exceptions which you can use in your functions:</p>
 <p><strong>from skipole import FailPage, GoTo, ValidateError, ServerError, ServeFile</strong></p>
 <p>Follow the links for further information:</p>
-<p><a href="/skipole/exceptions/failpage.html">FailPage(message = '', section='', widget='', failpage=None)</a></p>
+<p><a href="failpage.html">FailPage(message = '', section='', widget='', failpage=None)</a></p>
 <p>If raised in a submit_data function, the responder's failpage is returned to the clent.</p>
-<p><a href="/skipole/exceptions/goto.html">GoTo(target, clear_submitted=False, clear_page_data=False)</a></p>
+<p><a href="goto.html">GoTo(target, clear_submitted=False, clear_page_data=False)</a></p>
 <p>Causes a jump to the target page set in the exception.</p>
-<p><a href="/skipole/exceptions/validateerror.html">ValidateError(message = '', section='', widget='', status='400 Bad Request')</a></p>
+<p><a href="validateerror.html">ValidateError(message = '', section='', widget='', status='400 Bad Request')</a></p>
 <p>Causes the validate error page to be returned to the client.</p>
-<p><a href="/skipole/exceptions/servererror.html">ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</a></p>
+<p><a href="servererror.html">ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</a></p>
 <p>Causes the server error page to be returned to the client.</p>
-<p><a href="/skipole/exceptions/servefile.html">ServeFile(server_file, status='200 OK', headers=None, enable_cache=None, mimetype=None)</a></p>
+<p><a href="servefile.html">ServeFile(server_file, status='200 OK', headers=None, enable_cache=None, mimetype=None)</a></p>
 <p>Causes a static server file to be returned to the client.</p>
+
+<div class="w3-bar w3-border">
+  <a href="../endcall.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;end_call</a>
+  <a href="failpage.html" class="w3-bar-item w3-button w3-green w3-right">FailPage&nbsp;&gt;</a>
+</div>
+
 </div>
 </div>
 <script>

@@ -4,13 +4,13 @@
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <title>Index</title>
-<link href="/skipole/css/w3.css" type="text/css" rel="stylesheet" />
-<link href="/skipole/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+<link href="../css/w3.css" type="text/css" rel="stylesheet" />
+<link href="../css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
 </head>
 <body class="w3-theme">
 <div class="w3-container w3-theme-d1">
 <p>
-<img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" />
+<img src="../images/logo.svg" height="28" width="56" align="bottom" />
 &nbsp;Skipole WSGI generator.
 </p>
 </div>
@@ -18,19 +18,19 @@
 <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
 <p>Topics:</p>
  <div class="w3-bar-block w3-black">
-  <a href="/skipole/index.html" class="w3-bar-item w3-button w3-blue">Introduction</a>
-  <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
-  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
-  <a href="/skipole/skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
-  <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
-  <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
-  <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
-  <a href="/skipole/exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
-  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">PageData</a>
-  <a href="/skipole/sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
-  <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
-  <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
-  <a href="/skipole/examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
+  <a href="../index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="../getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="../pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="../skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
+  <a href="../startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="../submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="../endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="../exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
+  <a href="../pagedata.html" class="w3-bar-item w3-button">PageData</a>
+  <a href="../sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
+  <a href="../skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="index.html" class="w3-bar-item w3-button w3-blue">Serving wsgi</a>
+  <a href="../examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
 </div>
 <p>Development at GitHub:</p>
  <div class="w3-bar-block w3-black">
@@ -42,7 +42,7 @@
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
 <h3>Serving your application</h3>
 <p>Your deployment web server should have skipole installed.</p>
-<p>Once you have developed a project inside a 'projectfiles' directory, copy projectfiles to your target web server. Delete the skiadmin project - you will not be serving that. Edit 'myproj.py' so it creates the application, and adds the 'skis' application, but does not create the Python web server or adds skiadmin.</p>
+<p>Once you have developed a project inside a 'projectfiles' directory, copy projectfiles to your target web server. Edit 'myproj.py' so it creates the application, and adds the 'skis' application, but does not import skilift, nor does it create the development server or skiadmin.</p>
 <p>For test purposes, this could be served by some web servers straight from the command line. Though you would have to put your ../projectfiles onto the Python path - something like:</p>
 <p>export PYTHONPATH=${PYTHONPATH}:$HOME/projectfiles</p>
 <p>And then the application created in myproj could be served, for example using gunicorn:</p>
@@ -51,11 +51,17 @@
 <p>Or similarly using Waitress (python3-waitress on Debian based distro's)</p>
 <p>waitress-serve --port=8000 myproj:application</p>
 <p>In general however, you are likely to want the application to start on boot up, examples of running the wsgi app with a debian based server are given below:</p>
-<p><a href = "/skipole/servers/basicpi.html">Simple serving for a Raspberry Pi</a></p>
-<p><a href = "/skipole/servers/suggestions.html">Further suggestions for Pi</a></p>
-<p><a href = "/skipole/servers/nginxuwsgi.html">nginx and uwsgi</a></p>
-<p><a href = "/skipole/servers/poundwaitress.html">Pound reverse proxy and Waitress</a></p>
-<p><a href = "/skipole/servers/nginxwaitress.html">nginx load balancing and Waitress</a></p>
+<p><a href = "basicpi.html">Simple serving for a Raspberry Pi</a></p>
+<p><a href = "suggestions.html">Further suggestions for Pi</a></p>
+<p><a href = "nginxuwsgi.html">nginx and uwsgi</a></p>
+<p><a href = "poundwaitress.html">Pound reverse proxy and Waitress</a></p>
+<p><a href = "nginxwaitress.html">nginx load balancing and Waitress</a></p>
+
+<div class="w3-bar w3-border">
+  <a href="../skicall.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;skicall</a>
+  <a href="basicpi.html" class="w3-bar-item w3-button w3-green w3-right">Simple Pi&nbsp;&gt;</a>
+</div>
+
 </div>
 </div>
 <script>

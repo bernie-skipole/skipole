@@ -4,13 +4,13 @@
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <title>Index</title>
-<link href="/skipole/css/w3.css" type="text/css" rel="stylesheet" />
-<link href="/skipole/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+<link href="css/w3.css" type="text/css" rel="stylesheet" />
+<link href="css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
 </head>
 <body class="w3-theme">
 <div class="w3-container w3-theme-d1">
 <p>
-<a href="/skipole/index.html"><img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" /></a>
+<a href="index.html"><img src="images/logo.svg" height="28" width="56" align="bottom" /></a>
 &nbsp;Skipole WSGI generator.
 </p>
 </div>
@@ -18,19 +18,19 @@
 <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
 <p>Topics:</p>
  <div class="w3-bar-block w3-black">
-  <a href="/skipole/index.html" class="w3-bar-item w3-button">Introduction</a>
-  <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
-  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button w3-blue">Your Code</a>
-  <a href="/skipole/skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
-  <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
-  <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
-  <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
-  <a href="/skipole/exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
-  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">PageData</a>
-  <a href="/skipole/sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
-  <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
-  <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
-  <a href="/skipole/examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
+  <a href="index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="pythoncode.html" class="w3-bar-item w3-button w3-blue">Your Code</a>
+  <a href="skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
+  <a href="startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
+  <a href="pagedata.html" class="w3-bar-item w3-button">PageData</a>
+  <a href="sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
+  <a href="skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
+  <a href="examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
 </div>
 <p>Development at GitHub:</p>
  <div class="w3-bar-block w3-black">
@@ -59,16 +59,16 @@
 </pre>
 <p>Where 'PROJECTFILES' is the path to your projectfiles directory - this informs the object where the project JSON files can be found.</p>
 <p>start_call, submit_data and end_call are three functions that you will provide. Minimum versions are available in myproj.py which you will develop further. They are called during the progress of a call:</p>
-<p><a href="/skipole/startcall.html">start_call(called_ident, skicall)</a></p>
+<p><a href="startcall.html">start_call(called_ident, skicall)</a></p>
 <p>start_call is called when the server initially receives an incoming call. The parameter called_ident is a tuple of (project name, page ident number) which defines the page called from the incoming call URL. It will be 'None' if the ident of the requested page is unknown. The parameter skicall is an object containing further information and methods which will be described later in this documentation.</p>
 <p>The function would normally return the 'called_ident' tuple, to pass the call on to the page requested, but it could return a different ident tuple which would divert the call to a different page.</p>
-<p><a href="/skipole/submitdata.html">submit_data(skicall)</a></p>
+<p><a href="submitdata.html">submit_data(skicall)</a></p>
 <p>submit_data is called by Responder pages, in this function you would typically handle any data submitted and create the response by filling in the data for a template page.</p>
-<p><a href="/skipole/endcall.html">end_call(page_ident, page_type, skicall)</a></p>
+<p><a href="endcall.html">end_call(page_ident, page_type, skicall)</a></p>
 <p>end_call is called prior to returning the page. Any final widget fields can be set here.</p>
 <p>These functions can in turn call on any further modules you wish to include within the package - hence you can access your own databases and functionality.</p>
-<p>You will notice the framework passes the skicall object to your functions which contains a good deal of information you will need, more about it is given here:<a href="/skipole/skicall.html">skicall</a></p>
-<p>In particular your functions will create a PageData object, which is a dictionary-like object where widget field values can be set. These will be set in the page finally returned to the client. For further details:<a href="/skipole/pagedata.html">PageData</a></p>
+<p>You will notice the framework passes the skicall object to your functions which contains a good deal of information you will need, more about it is given here:<a href="skicall.html">skicall</a></p>
+<p>In particular your functions will create a PageData object, which is a dictionary-like object where widget field values can be set. These will be set in the page finally returned to the client. For further details:<a href="pagedata.html">PageData</a></p>
 <h3>The skis project</h3>
 <p>A project can have further 'sub-projects' added to it at a given path. The 'skis' sub project is provided by the skipole framework, before your application is ready it needs to have the application from the 'skis' project added to it. Within myproj.py you will see this is done with:</p>
 <pre>
@@ -98,11 +98,17 @@
 <p>Your myproj.py module can also import exceptions which you can use in your functions:</p>
 <p><strong>from skipole import FailPage, GoTo, ValidateError, ServerError, ServeFile</strong></p>
 <p>Further information about the exceptions and their arguments can be found at:</p>
-<p><a href="/skipole/exceptions/failpage.html">FailPage(message = '', section='', widget='', failpage=None)</a></p>
-<p><a href="/skipole/exceptions/goto.html">GoTo(target, clear_submitted=False, clear_page_data=False)</a></p>
-<p><a href="/skipole/exceptions/validateerror.html">ValidateError(message = '', section='', widget='', status='400 Bad Request')</a></p>
-<p><a href="/skipole/exceptions/servererror.html">ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</a></p>
-<p><a href="/skipole/exceptions/servefile.html">ServeFile(server_file, status='200 OK', headers=None, enable_cache=None, mimetype=None)</a></p>
+<p><a href="exceptions/failpage.html">FailPage(message = '', section='', widget='', failpage=None)</a></p>
+<p><a href="exceptions/goto.html">GoTo(target, clear_submitted=False, clear_page_data=False)</a></p>
+<p><a href="exceptions/validateerror.html">ValidateError(message = '', section='', widget='', status='400 Bad Request')</a></p>
+<p><a href="exceptions/servererror.html">ServerError(message = '', section='', widget='', status='500 Internal Server Error', code=0)</a></p>
+<p><a href="exceptions/servefile.html">ServeFile(server_file, status='200 OK', headers=None, enable_cache=None, mimetype=None)</a></p>
+
+<div class="w3-bar w3-border">
+  <a href="getting_started.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;Getting Started</a>
+  <a href="skiadmin/index.html" class="w3-bar-item w3-button w3-green w3-right">skiadmin&nbsp;&gt;</a>
+</div> 
+
 </div>
 </div>
 <script>

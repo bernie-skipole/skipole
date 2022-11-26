@@ -4,13 +4,13 @@
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <title>Index</title>
-<link href="/skipole/css/w3.css" type="text/css" rel="stylesheet" />
-<link href="/skipole/css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+<link href="../css/w3.css" type="text/css" rel="stylesheet" />
+<link href="../css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
 </head>
 <body class="w3-theme">
 <div class="w3-container w3-theme-d1">
 <p>
-<img src="/skipole/images/logo.svg" height="28" width="56" align="bottom" />
+<img src="../images/logo.svg" height="28" width="56" align="bottom" />
 &nbsp;Skipole WSGI generator.
 </p>
 </div>
@@ -18,19 +18,19 @@
 <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
 <p>Topics:</p>
  <div class="w3-bar-block w3-black">
-  <a href="/skipole/index.html" class="w3-bar-item w3-button w3-blue">Introduction</a>
-  <a href="/skipole/getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
-  <a href="/skipole/pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
-  <a href="/skipole/skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
-  <a href="/skipole/startcall.html" class="w3-bar-item w3-button">start_call</a>
-  <a href="/skipole/submitdata.html" class="w3-bar-item w3-button">submit_data</a>
-  <a href="/skipole/endcall.html" class="w3-bar-item w3-button">end_call</a>
-  <a href="/skipole/exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
-  <a href="/skipole/pagedata.html" class="w3-bar-item w3-button">PageData</a>
-  <a href="/skipole/sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
-  <a href="/skipole/skicall.html" class="w3-bar-item w3-button">skicall</a>
-  <a href="/skipole/servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
-  <a href="/skipole/examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
+  <a href="../index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="../getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="../pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="../skiadmin/index.html" class="w3-bar-item w3-button">skiadmin</a>
+  <a href="../startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="../submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="../endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="../exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
+  <a href="../pagedata.html" class="w3-bar-item w3-button">PageData</a>
+  <a href="../sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
+  <a href="../skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="index.html" class="w3-bar-item w3-button w3-blue">Serving wsgi</a>
+  <a href="../examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
 </div>
 <p>Development at GitHub:</p>
  <div class="w3-bar-block w3-black">
@@ -65,7 +65,7 @@
 <p>So nginx is running and serving a default web page.</p>
 <h4>Place your wsgi application</h4>
 <p>Assuming you have created an application and have the 'projectfiles' directory. For the purpose of these instructions we will use the project 'skitest', <strong>so wherever skitest appears in the text below, substitute the name of your own project.</strong></p>
-<p>I assume you have edited skitest.py to remove skiadmin and the Python web service.</p> 
+<p>Edit skitest.py to remove skilift, skiadmin and the development web service.</p> 
 <p>You will need to use sudo or to be superuser to use most of these commands. Please only continue if you are confident of your capability, as superuser you can damage your system.</p>
 <p>Copy projectfiles into the /opt directory.</p>
 <p>uwsgi will be running your project with user www-data, therefore to allow uwsgi to have access to these files, give them user and group of www-data. So from within /opt</p>
@@ -155,6 +155,12 @@
 
 </pre>
 <p>This causes nginx to serve the static files directly, without using uwsgi or the Python application.</p>
+
+<div class="w3-bar w3-border">
+  <a href="suggestions.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;Further Pi</a>
+  <a href="poundwaitress.html" class="w3-bar-item w3-button w3-green w3-right">pound waitress&nbsp;&gt;</a>
+</div>
+
 </div>
 </div>
 <script>
