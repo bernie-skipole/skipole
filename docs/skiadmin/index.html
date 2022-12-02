@@ -53,7 +53,7 @@
                                   end_call=end_call,
                                   url="/")
 </pre>
-<p>You will also see that a sub-project has been added:</p>
+<p>You will also see that a skiadmin sub-project has been added:</p>
 <pre>
 ############### THESE LINES IMPORT SKILIFT AND ADD THE SKIADMIN SUB-PROJECT #
 ############### AND SHOULD BE REMOVED WHEN YOU DEPLOY YOUR APPLICATION #
@@ -86,44 +86,17 @@ if __name__ == "__main__":
 <p>skiadmin allows you to add pages of different types, and edit them, typically 'template' pages containing widgets, and 'responder' pages which accept incoming requests from the user, then calls your code, and passes the results to a template page, which is returned to the client.</p>
 <p>The pages added by skiadmin are given 'idents' being (projectname, pagenumber) and labels mapping a name to these idents can be created. 'sections' can also be created, which can also contain widgets, and can be inserted into template pages, and 'textblocks' can be made which contain either plain text or your own html code.</p>
 <p>When you create or alter any page, ensure you choose the 'Save' option to make your changes permanent, and when you change your Python code you need to restart the web server.</p>
-<h3>Screenshots</h3>
-<p>The following are a number of screenshots of the skiadmin web interface:</p>
 <div>
- <p>The main admin page.</p> 
+ <h3>The main admin page.</h3> 
  <img src="../images/screen01.png" alt="First admin page" style="width:1000px;height:600px;" />
 </div>
-<div>
- <p>The project root page and folder tree.</p> 
- <img src="../images/screen02.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>Editing a template page.</p> 
- <img src="../images/screen03.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>The body of the template page.</p> 
- <img src="../images/screen04.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>Editing a widget, showing its fields with their default values.</p> 
- <img src="../images/screen05.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>Adding an item to the page body.</p> 
- <img src="../images/screen06.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>Adding a widget to the page body - first a module, containing a number of widgets is chosen.</p> 
- <img src="../images/screen07.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>On picking a widget, its description is shown.</p> 
- <img src="../images/screen08.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
+<p>Further skiadmin functions are given below:</p>
+<p><a href = "screenshots.html">Screenshots of the web pages</a></p>
+<p><a href = "navigation.html">Navigation</a></p>
 
 <div class="w3-bar w3-border">
   <a href="../pythoncode.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;Your Code</a>
-  <a href="../startcall.html" class="w3-bar-item w3-button w3-green w3-right">start_call&nbsp;&gt;</a>
+  <a href="screenshots.html" class="w3-bar-item w3-button w3-green w3-right">screenshots&nbsp;&gt;</a>
 </div> 
 
 </div>

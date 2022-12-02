@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Screenshots</title>
+<link href="../css/w3.css" type="text/css" rel="stylesheet" />
+<link href="../css/w3-theme-ski.css" type="text/css" rel="stylesheet" />
+</head>
+<body class="w3-theme">
+<div class="w3-container w3-theme-d1">
+<p>
+<img src="../images/logo.svg" height="28" width="56" align="bottom" />
+&nbsp;Skipole WSGI generator.
+</p>
+</div>
+<div style="width:250px" class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left w3-theme-l1 w3-container" id="mySidebar">
+<button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+<p>Topics:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="../index.html" class="w3-bar-item w3-button">Introduction</a>
+  <a href="../getting_started.html" class="w3-bar-item w3-button">Getting Started</a>
+  <a href="../pythoncode.html" class="w3-bar-item w3-button">Your Code</a>
+  <a href="index.html" class="w3-bar-item w3-button w3-blue">skiadmin</a>
+  <a href="../startcall.html" class="w3-bar-item w3-button">start_call</a>
+  <a href="../submitdata.html" class="w3-bar-item w3-button">submit_data</a>
+  <a href="../endcall.html" class="w3-bar-item w3-button">end_call</a>
+  <a href="../exceptions/index.html" class="w3-bar-item w3-button">Exceptions</a>
+  <a href="../pagedata.html" class="w3-bar-item w3-button">PageData</a>
+  <a href="../sectiondata.html" class="w3-bar-item w3-button">SectionData</a>
+  <a href="../skicall.html" class="w3-bar-item w3-button">skicall</a>
+  <a href="../servers/index.html" class="w3-bar-item w3-button">Serving wsgi</a>
+  <a href="../examples/index.html" class="w3-bar-item w3-button">Code Examples</a>
+</div>
+<p>Development at GitHub:</p>
+ <div class="w3-bar-block w3-black">
+  <a href="https://github.com/bernie-skipole/skipole/" class="w3-bar-item w3-button">github.com/bernie-skipole/skipole</a>
+</div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+<div class="w3-container  w3-section">
+<button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
+<h3>Navigation</h3>
+<p>The main navigation buttons of the skiadmin web interface:</p>
+<p>Along the top:</p>
+<p>'Save' which saves your project changes.</p>
+<p>'Help' - which shows help messages appropriate to the page displayed.</p>
+<p>'Root' - shows the root folder of your project, further buttons link to the pages currently being edited.</p>
+
+<p>When the root folder is displayed, it shows the sub folders and pages within your project which can be edited.</p>
+
+<p>At the left:</p>
+<p>'Project' - Opens your project, useful to view as you make changes.</p>
+<p>'Admin' - The main admin page.</p>
+<p>'Root Folder' - Takes you to the root folder of your project.</p>
+<p>'Page Labels' - Enables you to assign text labels to pages.</p>
+<p>'TextBlocks' - Blocks of text or static HTML can be predefined, for later insertion into templates.</p>
+<p>'Sections' - Blocks of dynamic HTML and widgets can be predefined.</p>
+<p>Further buttons will be displayed depending on your position in the system.</p>
+<p>Finally an input field where you can choose the label or ident of a page to be edited.</p>
+
+<div class="w3-bar w3-border">
+  <a href="screenshots.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;screenshots</a>
+  <a href="../startcall.html" class="w3-bar-item w3-button w3-green w3-right">start_call&nbsp;&gt;</a>
+</div> 
+
+</div>
+</div>
+<script>
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+</body>
+</html>
+

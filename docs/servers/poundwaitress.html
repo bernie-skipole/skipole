@@ -41,8 +41,6 @@
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
 <h3>Serving with the Pound reverse Proxy and the Waitress WSGI web server</h3>
-<p>NOTE: Since this was written I have noticed pound is no longer available on debian and derivatives,
-these instructions are left here in case it comes back.</p>
 <p>The instructions here describe how Pound and Waitress can be used to serve your application whenever your debian-based server is powered up.</p>
 <p>They assume you have no other web server running (so port 80 and port 8000 is free), and you are familiar with shell commands, changing directories, creating text files and setting permissions. You should also have used skipole to create an application.</p>
 <p>In this example Pound proxies calls to the Waitress web server which is running your wsgi python application. The settings here use default values provided by the operating system to keep the setup simple.</p>
