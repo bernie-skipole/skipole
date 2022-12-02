@@ -46,21 +46,20 @@
 <p>You can create a directory where projects will be developed, and a new project 'myproj'.</p>
 <p><strong>python3 -m skilift myproj /path/to/my/projectfiles</strong></p>
 <p>You should replace 'myproj' with your preferred name for a new project.</p>
-<p>The /path/to/my/projectfiles should be to a directory where you will be developing your new project.</p>
+<p>The /path/to/my/projectfiles should be a directory where you will be developing your new project.</p>
 <p>The projectfiles directory will be created with your new project 'myproj' within it:</p>
 <p>...projectfiles/myproj.py</p>
 <p>...projectfiles/myproj/data/....</p>
 <p>...projectfiles/myproj/static/....</p>
-<p>The path "/path/to/my/projectfiles" is the path to a directory of your choice where you will develop your project. Multiple projects can be created in one 'projectfiles' directory, or you could have multiple such directories holding different projects.</p>
+<p>Multiple projects can be created in one 'projectfiles' directory, or you could have multiple such directories holding different projects.</p>
 <p>If the directory already exists, and if myproj already exists in the directory, it will not be changed.</p>
 <p>The python file myproj.py contains code which imports skipole, and generates the wsgi application, and functions which you will develop further yourself. It is strongly commented so you should inspect it, its contents are shown at the bottom of this page.</p>
 <p>Having created the project, you would then run:</p>
 <p><strong>python3 /path/to/my/projectfiles/myproj.py</strong></p>
 <p>This should display "Serving myproj on port 8000. Call http://localhost:8000/skiadmin to edit.</p>
 <p>Then connect with a browser to localhost:8000 to view the project, and call localhost:8000/skiadmin to open an administrative site to add and edit folders and pages.</p>
-<p>To stop the project from serving, in the terminal press ctrl-c</p>
 <h3>myproj.py</h3>
-<p>The initial content of the skeleton myproj.py file is shown below, you would normally develop this further, and these documentation pages give further information, but the code is shown here to give you an initial view of the Python file.</p>
+<p>The initial content of the skeleton myproj.py file is shown below, you would normally develop this further, and these documentation pages give further information.</p>
 
 <div class="w3-container w3-white">
 <pre>

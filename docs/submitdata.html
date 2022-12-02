@@ -68,9 +68,8 @@
     skicall.update(pd)
 </pre>
 <p>The template page returned will then have its widget fields set accordingly.</p>
-<p>Further information on the PageData and SectionData objects are available by the left navigation buttons.</p>
 
-<p>The responder calling this function will specify what it wants returned from submit_data in its documentation.</p>
+<p>The responder calling submit_data() will specify what it wants returned from submit_data in its documentation.</p>
 <p>Most responders require 'None' to be returned, but, for example, the LogIn responder requires a session string.</p>
 
 <p>On returning from submit_data the call will be passed to the responder's target page, which could typically be a template page (in which case your end_call function will be called next) or it could be another responder. If required a GoTo exception could be raised to jump elsewhere, or a FailPage exception could be raised to jump to the responders failure page with an error message.</p>
