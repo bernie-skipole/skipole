@@ -40,45 +40,21 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>Screenshots</h3>
-<p>The following are a number of screenshots of the skiadmin web interface:</p>
+<h3>Project Root</h3>
 <div>
- <p>The main admin page.</p> 
- <img src="../images/screen01.png" alt="First admin page" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>The project root page and folder tree.</p> 
+ <p>The project root is normally the first point to be edited.</p> 
  <img src="../images/screen02.png" alt="Root tree" style="width:1000px;height:600px;" />
 </div>
-<div>
- <p>Editing a template page.</p> 
- <img src="../images/screen03.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>The body of the template page.</p> 
- <img src="../images/screen04.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>Editing a widget, showing its fields with their default values.</p> 
- <img src="../images/screen05.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>Adding an item to the page body.</p> 
- <img src="../images/screen06.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>Adding a widget to the page body - first a module, containing a number of widgets is chosen.</p> 
- <img src="../images/screen07.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<div>
- <p>On picking a widget, its description is shown.</p> 
- <img src="../images/screen08.png" alt="Root tree" style="width:1000px;height:600px;" />
-</div>
-<p>&nbsp;</p>
-
+<p>This shows the root of the site, and the sub folders and responder and template pages within it. The folders and pages can be edited, and new ones added. Where a folder is set as 'R' restricted, it's contents cannot be directly accessed by a call from a client browser. Typically a responder page will be called, which in turn calls your Python functions, and it then passes the call to a template page - which is usually in a restricted folder.</p>
+<p>Therefore you would add responders and template pages to build your site.</p>
+<p>You could also add 'File' pages - which link to static files on your server, and are useful to serve static CSS files which do not need to be dynamically built.</p>
+<p>The above screenshot also shows a 'JSON' page. Your Python code can populate an empty JSON file with widget fields and values, since it is common to use an empty JSON file as a responder target, an empty one is provided with label 'general_json' and can be used for this purpose.</p>
+<p>Different types of responder can be set into the project, sometimes a 'NoOperation' responder is used - this does nothing more than pass the call on to a target template page, however it can be removed and replaced with a more useful responder later - so it's chief use is to act as an place holder for future development.</p>
+<p>The full definition of the project is held in a JSON file, the part holding the root folder and contents can be downloaded here, and stored by yourself as a JSON file which can be reused in other projects if required.</p>
+<p>The second column of the table shown above shows the page ident number. Each page has an ident (project, number) however in most cases just the number is required, the project name being implied. To avoid linking to pages by an uninformative number, 'labels' can be defined, mapping a string to the ident, these are set in the 'Page Labels' area. The label is unique to the project, and can be different to the page 'name' which is shown in the first colum, and makes up the URL path of the page.</p>
 <div class="w3-bar w3-border">
-  <a href="index.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;skiadmin</a>
-  <a href="navigation.html" class="w3-bar-item w3-button w3-green w3-right">Navigation&nbsp;&gt;</a>
+  <a href="navigation.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;Navigation</a>
+  <a href="../startcall.html" class="w3-bar-item w3-button w3-green w3-right">start_call&nbsp;&gt;</a>
 </div> 
 
 </div>
