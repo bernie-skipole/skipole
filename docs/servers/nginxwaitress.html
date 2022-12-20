@@ -40,62 +40,25 @@
 <div class="w3-main" style="margin-left:250px">
 <div class="w3-container  w3-section">
 <button class="w3-button w3-xlarge w3-hide-large w3-black" onclick="w3_open()">&#9776; Menu</button>
-<h3>Serving with the NGINX reverse proxy and with multiple Waitress WSGI web servers behind it</h3>
-<p>NOTE: This was tested using a Linux mint server, and with multiple LXC Debian servers running within it to simulate a network of servers</p>
-<p>In this example NGINX proxies calls to the Waitress web servers which are each running your wsgi python application. The settings here use default values provided by the operating system to keep the setup simple.</p>
-<p>NGINX is installed on the Linux mint server, and the backend servers have Waitress, skipole and your application (assuming it is called 'skitest' - replace this with your own project name) installed on them.</p>
-<h4>Install nginx</h4>
-<p>Using apt-get (you may have to use 'sudo' an awful lot with every command), install the package nginx which includes nginx-common and ngix-full, (ngix-core on Linux Mint).</p>
-<p>Use your browser to connect to 'localhost' and you should see the nginx web service running:</p>
-<pre>
-        Welcome to nginx!
-        
-        If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
-        
-        For online documentation and support please refer to nginx.org.
-        Commercial support is available at nginx.com.
-        
-        Thank you for using nginx.
-</pre>
-<p>So nginx is running and serving a default web page. We now need it to proxy requests to the backend servers. The Mint (debian) system has two directories:</p>
-<p>/etc/nginx/sites-available</p>
-<p>/etc/nginx/sites-enabled</p>
-<p>You will see under sites-available a default configuration file, and under sites-enabled a link to that file, which is the current enabled default site.</p>
-<p>Under /etc/nginx/sites-available create another configuration file skitest.conf:</p>
-<pre>
+<h3>Serving with the NGINX reverse proxy</h3>
+<p>In this example NGINX acts as a reverse proxy forwarding calls to a project (called skitest in this example) being served with the Waitress web server at localhost:8000</p>
 
-  upstream server_group   {
-    server 10.239.52.58:8000;
-    server 10.239.52.126:8000;
-    }
-
-  server  {
-    listen 80;
-    location / {
-      proxy_pass http://server_group;
-      }
-  }
-
-</pre>
-<p>The two ip addresses above direct calls to the two backend servers - replace these with your own ip addresses.</p>
-<p>Then, within directory /etc/nginx/sites-enabled delete the default link, and create a new link to skitest.conf:</p>
-<p>rm default</p>
-<p>ln -s /etc/nginx/sites-available/skitest.conf /etc/nginx/sites-enabled/</p>
-<p>Now reboot the server or restart nginx with command "service nginx restart"</p>
-<h4>Install waitress</h4>
-<p>On each of your backend servers, you now need skipole, your application, and the Waitress web server.</p>
+<h4>Install Waitress</h4>
+<p>You need skipole, your application, and the Waitress web server.</p>
+<p>pip install skipole</p>
 <p>Install the package 'python3-waitress'</p>
 <p>apt-get install python3-waitress</p>
-<p>Copy your projectfiles directory into /opt, creating directory:</p>
+<p>Note: you could also use pip install waitress, as it is available in pypi</p>
+<p>Copy your projectfiles directory into /opt (or under any directory of your choice), creating directory:</p>
 <p>/opt/projectfiles/</p>
-<p>Ensure skilift, skiadmin and the development server are removed and skitest.py is edited with the following:</p>
+<p>Ensure skitest.py is edited to remove skilift, skiadmin and the development server and waitress is imported and serves your application with the following:</p>
 <pre>
 
     from waitress import serve
-    serve(application, host='10.239.52.58', port=8000)
+    serve(application, host='127.0.0.1', port=8000)
 
 </pre>
-<p>Note: The host ip address matches the ip address of each server. Normally I would put '0.0.0.0' here but found this did not work on lxc servers.</p>
+<p>You could create a username which will run the project, in this example, the user 'www-data' is used.</p>
 <p>Give the directory and contents www-data:www-data ownership</p>
 <p>sudo chown -R www-data:www-data /opt/projectfiles</p>
 <p>Then create a file :</p>
@@ -132,7 +95,83 @@
 <p>sudo systemctl daemon-reload</p>
 <p>sudo systemctl enable skitest.service</p>
 <p>This starts /opt/projectfiles/skitest.py on boot up.</p>
-<p>Finally reboot - and calling your nginx server should result in your application being served.</p>
+<p>Finally reboot.</p>
+
+<h4>Install NGINX</h4>
+<p>Using apt-get, install the package nginx which includes nginx-common and ngix-full, (ngix-core on Linux Mint).</p>
+<p>Use your browser to connect to 'localhost' and you should see the nginx web service running:</p>
+<pre>
+        Welcome to nginx!
+        
+        If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+        
+        For online documentation and support please refer to nginx.org.
+        Commercial support is available at nginx.com.
+        
+        Thank you for using nginx.
+</pre>
+<p>So nginx is running and serving a default web page. We now need it to proxy requests to port 8000. A Debian based system has two directories:</p>
+<p>/etc/nginx/sites-available</p>
+<p>/etc/nginx/sites-enabled</p>
+<p>You will see under sites-available a default configuration file, and under sites-enabled a link to that file, which is the current enabled default site.</p>
+
+<p>Under /etc/nginx/sites-available create another configuration file skitest.conf:</p>
+<pre>
+
+ server  {
+
+    server_name _;
+
+    listen 80;
+    location / {
+       proxy_pass http://localhost:8000/;
+       proxy_buffering off;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-Host $host;
+       proxy_set_header X-Forwarded-Port $server_port;
+       }
+
+    }
+
+</pre>
+<p>Then, within directory /etc/nginx/sites-enabled delete the default link, and create a new link to skitest.conf:</p>
+<p>rm default</p>
+<p>ln -s /etc/nginx/sites-available/skitest.conf /etc/nginx/sites-enabled/</p>
+<p>Now reboot the server or restart nginx with command "service nginx restart"</p>
+<p>Connecting to your server with a browser should now show your skitest project.</p>
+
+<h4>Load balancing</h4>
+<p>You may want multiple copies of skitest running, either on backend servers or containers, in this case the NGINX proxy can pass calls to these instances.</p>
+<p>NOTE: This was tested using a Linux mint server, and with multiple LXC containers running within it to simulate a network of servers.</p>
+<p>Under /etc/nginx/sites-available use the following configuration file:</p>
+<pre>
+
+  upstream server_group   {
+    server 10.239.52.58:8000;
+    server 10.239.52.126:8000;
+    }
+
+  server  {
+    listen 80;
+    location / {
+       proxy_pass http://server_group;
+       proxy_buffering off;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-Host $host;
+       proxy_set_header X-Forwarded-Port $server_port;
+      }
+  }
+
+</pre>
+<p>The two ip addresses above direct calls to the two backend containers - replace these with your own ip addresses.</p>
+<p>Each project in the container has a Waitress serving command like:</p>
+<pre>
+
+    from waitress import serve
+    serve(application, host='10.239.52.58', port=8000)
+
+</pre>
+<p>Note: The host ip address matches the ip address of each container. Normally I would put '0.0.0.0' here but found this did not work on lxc containers.</p>
 
 <div class="w3-bar w3-border">
   <a href="poundwaitress.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;pound waitress</a>
