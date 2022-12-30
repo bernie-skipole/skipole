@@ -10,7 +10,7 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"version"         : "5.5.1",             # The skipole version
+"version"         : "5.5.2",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
@@ -61,7 +61,7 @@ def root_project():
 
 
 def projectpaths():
-    """Returns a dictionary of project name : project path for all projects."""
+    """Returns a dictionary of project ident : project path for all projects."""
     rootproj = root_project()
     # rootproj.subprojects is a dictionary of sub projects {proj_ident: Project instance,.....}
     all_projects = {proj_ident:proj.url for proj_ident, proj in rootproj.subprojects.items()}
@@ -119,12 +119,19 @@ def project_ident(proj_ident=None):
         return root_project().proj_ident
     return proj_ident
 
+def project_name(proj_ident=None):
+    "Returns the given project name, if the given ident is None, returns current site root project name"
+    project = getproject(proj_ident)
+    if project is None:
+        return None
+    return project.proj_name
+
 def projectdir(proj_ident=None):
-    "Returns projectfiles/proj_ident"
-    return os.path.join(projectfiles(proj_ident), project_ident(proj_ident))
+    "Returns projectfiles/proj_name"
+    return os.path.join(projectfiles(proj_ident), project_name(proj_ident))
 
 def projectstatic(proj_ident=None):
-    "Returns projectfiles/proj_ident/static"
+    "Returns projectfiles/proj_name/static"
     return os.path.join(projectdir(proj_ident), 'static')
 
 def projectdata(proj_ident=None):

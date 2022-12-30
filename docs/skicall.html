@@ -54,6 +54,7 @@ This attribute is used when requesting TextBlocks.</p>
 <p>skicall.path is the URL path to the page called.</p>
 <p>skicall.proj_data is a project attribute, a dictionary set when creating the skipole.WSGIApplication object. It could be used for your own purpose - for example to input a database password when the program is started.</p>
 <p>skicall.project is the project name.</p>
+<p>skicall.proj_ident is the value set with the proj_ident argument of the WSGIApplication class.</p>
 <p>skicall.projectfiles is the string path to the 'projectfiles' directory of data and static files. Each project's specific directory can be found beneath it - that is, in the '..projectfiles/myproject/' directory.</p>
 <p>skicall.received_cookies is a dictionary of cookie name:values received from the client. Note, that if skicall.language is set, a cookie value received will appear in this dictionary with key 'language'.</p>
 <p>skicall.rootproject will be True if this is the root project, False if it is a sub project.</p>

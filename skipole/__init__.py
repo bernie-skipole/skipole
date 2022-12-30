@@ -55,6 +55,13 @@ end_call - a function you should create, called at the end of the call, prior to
 
 url - path where this project will be served, typically '/'
 
+proj_ident - generally set to None, in which case it will be auto set to the project name
+
+proj_ident is only used to provide an alternate name should you wish to add this application
+multiple times to another root project. Each instance can be given a different proj_ident
+to differentiate them, so each page will have an id of (proj_ident, number)
+rather than (projectname, number).
+
 You would typically define your functions, and then create an instance:
 
 my_application = WSGIApplication(project=PROJECT,
@@ -63,7 +70,8 @@ my_application = WSGIApplication(project=PROJECT,
                                  start_call=start_call,
                                  submit_data=submit_data,
                                  end_call=end_call,
-                                 url="/")
+                                 url="/",
+                                 proj_ident=None)
 
 This my_application is then a callable WSGI application.
 
@@ -136,7 +144,7 @@ __all__ = ['WSGIApplication', 'ValidateError', 'ServerError', 'GoTo', 'FailPage'
 class WSGIApplication(object):
     """The WSGIApplication - an instance being a callable WSGI application"""
 
-    def __init__(self, project, projectfiles, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
+    def __init__(self, project, projectfiles, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/", proj_ident=None):
         """An instance of this class is a callable WSGI application.
 
 Arguments are:
@@ -155,13 +163,20 @@ submit_data - a function you should create, called by responders
 end_call - a function you should create, called at the end of the call, prior to returning the page
 
 url - path where this project will be served, typically '/'
+
+proj_ident - generally set to None, in which case it will be auto set to the project name
 """
-        self._skipoleproject = SkipoleProject(project, projectfiles, proj_data, start_call, submit_data, end_call, url)
+        self._skipoleproject = SkipoleProject(project, projectfiles, proj_data, start_call, submit_data, end_call, url, proj_ident)
 
 
     @property
     def project(self):
         """The project name"""
+        return self._skipoleproject.proj_name
+
+    @property
+    def proj_ident(self):
+        """The project ident"""
         return self._skipoleproject.proj_ident
 
     @property

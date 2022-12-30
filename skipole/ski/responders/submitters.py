@@ -151,7 +151,7 @@ class SetCookies(Respond):
                 try:
                     cki = cookies.SimpleCookie()
                     # set project path
-                    ck_path = skicall.projectpaths()[skicall.project]
+                    ck_path = skicall.projectpaths()[skicall.proj_ident]
                     # however this path ends with a /, remove the last /
                     if len(ck_path)>1 and ck_path.endswith('/'):
                         ck_path = ck_path.rstrip('/')

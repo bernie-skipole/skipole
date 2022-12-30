@@ -56,13 +56,21 @@ def _end_call(page_ident, page_type, skicall):
 class SkipoleProject(object):
     """The SkipoleProject - an instance being a callable WSGI application"""
 
-    def __init__(self, project, projectfiles, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/"):
+    def __init__(self, project, projectfiles, proj_data={}, start_call=None, submit_data=None, end_call=None, url="/", proj_ident=None):
         """Loads the project from JSON files and records the user functions"""
         if _AN.search(project):
             raise ServerError(message="Error: Invalid project name, alphanumeric only")
         if '_' in project:
             raise ServerError(message="Error: Invalid project name, alphanumeric only (no underscore).")
-        self._proj_ident = project
+        if proj_ident is None:
+            self._proj_ident = project
+        else:
+            if _AN.search(proj_ident):
+                raise ServerError(message="Error: Invalid proj_ident, alphanumeric only")
+            if '_' in project:
+                raise ServerError(message="Error: Invalid proj_ident, alphanumeric only (no underscore).")
+            self._proj_ident = proj_ident
+        self.proj_name = project
         self.projectfiles = projectfiles
         self.proj_data = proj_data
         if start_call is None:
@@ -111,7 +119,10 @@ class SkipoleProject(object):
         self.identitems = {}
 
         # Create an instance of the AccessTextBlocks class for this project
-        self.textblocks = textblocks.AccessTextBlocks(self._proj_ident, projectfiles, skiboot.default_language())
+        # self.proj_name is used as the location of the textblocks json file is
+        # found at os.path.join(projectfiles, project, "data", "textblocks_json")
+        # where project is the project name, not the proj_ident
+        self.textblocks = textblocks.AccessTextBlocks(self.proj_name, projectfiles, skiboot.default_language())
 
         # maintain a cach dictionary of paths against idents {path:ident}
         self._paths = {}
@@ -673,14 +684,15 @@ class SkipoleProject(object):
 
         # call the user function end_call
         try:
-            skicall.project = self._proj_ident
+            skicall.project = self.proj_name
+            skicall.proj_ident = self._proj_ident
             skicall.proj_data = self.proj_data
             skicall.rootproject = self.rootproject
             try:
                 session_string = self.end_call(page.ident.to_tuple(), page.page_type, skicall)
                 if session_string:
                     # set cookie in target_page
-                    page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.project, session_string, skiboot.root_project().url)
+                    page.session_cookie = "Set-Cookie", "%s=%s; Path=%s" % (skicall.proj_ident, session_string, skiboot.root_project().url)
             except FailPage as e:
                 page.show_error([e.errormessage])
             finally:
@@ -728,7 +740,7 @@ class SkipoleProject(object):
 
     def load_from_json(self):
         "Loads project with data saved in project.json file"
-        projectdict = read_json.create_project(self._proj_ident, self.projectfiles)
+        projectdict = read_json.create_project(self._proj_ident, self.projectfiles, self.proj_name)
         self.default_language = projectdict['default_language']
         self.brief = projectdict['brief']
         self.version = projectdict['version']

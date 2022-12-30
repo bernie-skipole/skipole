@@ -51,11 +51,11 @@
 </pre>
 <p>This function is called at the end of a call prior to filling the template (or other type of returned page) with data, and gives you the opportunity to set any further widget fields, and to optionally set a session cookie string.</p>
 
-<p>page_ident is the ident of the page being returned. A tuple ('projname', pagenumber), this is usually the ident of the template, css etc., page but can also be the ident of one of the responders which create a dynamic page (see page_type).</p>
+<p>page_ident is the ident of the page being returned. A tuple (proj_ident, pagenumber), this is usually the ident of the template, css etc., page but can also be the ident of one of the responders which create a dynamic page (see page_type).</p>
 
 <p>page_type is a string giving the type of the page returned, typically 'TemplatePage', 'CSS', 'SVG', 'FilePage' or 'JSON'. Certain responders create their own pages and for these the page_type will be the responder type, one of 'SubmitJSON', 'SubmitPlainText', 'SubmitCSS', 'SubmitIterator'.</p>
 
-<p>This function should return either None, or optionally a session cookie string. This string will be returned with the next call to this web site in the skicall.received_cookies dictionary with key being the project name.</p>
+<p>This function should return either None, or optionally a session cookie string. This string will be returned with the next call to this web site in the skicall.received_cookies dictionary with key being the proj_ident.</p>
 
 <div class="w3-bar w3-border">
   <a href="submitdata.html" class="w3-bar-item w3-button w3-green">&lt;&nbsp;submit_data</a>

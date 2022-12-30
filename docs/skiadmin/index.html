@@ -51,7 +51,9 @@
                                   start_call=start_call,
                                   submit_data=submit_data,
                                   end_call=end_call,
-                                  url="/")
+                                  url="/",
+                                  proj_ident=None)
+
 </pre>
 <p>You will also see that a skiadmin sub-project has been added:</p>
 <pre>
@@ -70,6 +72,11 @@ if __name__ == "__main__":
 
     skiadmin_application = make_skiadmin(editedprojname=PROJECT, examples="http://www.webparametrics.co.uk/skiwidgets/")
     application.add_project(skiadmin_application, url='/skiadmin')
+
+    # the skiadmin sub project can now be used to edit your application
+    # please note: when being used to edit a project in this way, skilift requires the
+    # application to be the root application, and to have proj_ident to be set to the
+    # project name ( or set to None which automatically does this )
 
     # serve the application with the development server from skilift
 

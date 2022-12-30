@@ -224,7 +224,8 @@ main purpose is to act as a parent class for all other respond objects.
         # so update skicall with this project
         proj_ident = ident_list[-1].proj
         this_project = skiboot.getproject(proj_ident)
-        skicall.project = proj_ident
+        skicall.project = this_project.proj_name
+        skicall.proj_ident = this_project.proj_ident
         skicall.proj_data = this_project.proj_data
         skicall.rootproject = this_project.rootproject
 

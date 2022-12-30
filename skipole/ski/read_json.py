@@ -268,13 +268,16 @@ def _check_idents_for_create_folder(project_numbers, new_numbers, addition_numbe
 
 
 
-def read_project(proj_ident, projectfiles):
+def read_project(proj_ident, projectfiles, proj_name):
     "Reads the project.json file and checks version, if ok returns the read project"
 
     if not proj_ident:
         raise excepts.ServerError("Sorry, the project has not been recognised")
 
-    filepath = os.path.join(projectfiles, proj_ident, "data", "project.json")
+    if not proj_name:
+        raise excepts.ServerError("Sorry, the project has not been recognised")
+
+    filepath = os.path.join(projectfiles, proj_name, "data", "project.json")
 
     try:
         with open(filepath, 'r') as fp:
@@ -380,7 +383,7 @@ def _allparts(toplist, part_type):
  
 
 
-def create_project(proj_ident, projectfiles):
+def create_project(proj_ident, projectfiles, proj_name):
     """Builds the project from the file project.json, returns a dictionary
           with the following keys
          original_skipole_version
@@ -394,7 +397,7 @@ def create_project(proj_ident, projectfiles):
          siteroot - the root folder
 """
 
-    project = read_project(proj_ident, projectfiles)
+    project = read_project(proj_ident, projectfiles, proj_name)
     projectdict = {}
 
     if 'url' in project:
