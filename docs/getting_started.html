@@ -64,8 +64,6 @@
 <div class="w3-container w3-white">
 <pre>
 
-import os
-
 # from skipole import the WSGIApplication class which will be used to create a wsgi application
 
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, ServeFile, use_submit_list, skis, PageData, SectionData, set_debug
@@ -85,7 +83,7 @@ from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError,
 # the framework needs to know the location of the projectfiles directory holding the project data
 # and static files.
 
-PROJECTFILES = os.path.dirname(os.path.realpath(__file__))
+PROJECTFILES = "/home/user/projectfiles"
 PROJECT = "myproj"
 
 # This file myproj.py is initially created under the projectfiles directory, however it does not
@@ -102,7 +100,7 @@ PROJ_DATA={}
 # be used to set values into the widgets of returned pages. Minimal versions are provided below.
 
 # When a call is received by the server, the framework converts the url called to a 'called_ident'
-# which is a tuple (projectname, pagenumber), and then, if this is the project called, this
+# which is a tuple (proj_ident, pagenumber), and then, if this is the project called, this
 # start_call function is called. If the page called is not recognised, called_ident will be None.
 
 # The skicall object has attributes and methods pertaining to the call. 
@@ -110,11 +108,14 @@ PROJ_DATA={}
 
 def start_call(called_ident, skicall):
     """When a call is initially received this function is called.
-       Unless you want to divert to another page, this function should return called_ident which
-       would typically be the ident of a Responder or Template page dealing with the call.
-       If a ServeFile exception is raised, which contains a pathlib.Path object of a local server
-       file then that server file will be sent to the client. In this case, the end_call function
-       will not be called."""
+       Unless you want to divert to another page, this function should return the given called_ident
+       which would typically be the ident of a Responder matching the url called.
+       Each page ident is a tuple of the form (proj_ident, pagenumber) where proj_ident is
+       usually the project name but can be set to a string when an instance of the WSGIApplication
+       class is created.
+       If a ServeFile exception is raised in this function, which contains a pathlib.Path object
+       of a local server file then that server file will be sent to the client."""
+
     # To serve a directory of static files, you can map a url to a server directory with the
     # skicall.map_url_to_server method, which returns pathlib.Path objects, and then
     # raise a ServeFile exception, which causes the file to be served. For example:
@@ -129,7 +130,7 @@ def start_call(called_ident, skicall):
     # data to these functions.
 
     # Normally you would return called_ident, which is the page being called, or None to cause a
-    # page not found error, or another ident (project, pagenumber) to divert the call to another page.
+    # page not found error, or another ident (proj_ident, pagenumber) to divert the call to another page.
 
     return called_ident
 
@@ -163,9 +164,20 @@ def submit_data(skicall):
 def end_call(page_ident, page_type, skicall):
     """This function is called prior to returning a page,
        it can also be used to return an optional session cookie string."""
-    # If you have created a PageData object and stored it in skicall.call_data
-    # this would be a good place to call skicall.update(pd)
-    # so the data is set into the page prior to returning the page to the user.
+
+    # page_ident is the ident of the page being returned. A tuple (proj_ident, pagenumber),
+    # this is usually the ident of the template, css etc., page but can also be the ident
+    # of one of the responders which create a dynamic page.
+
+    # page_type is a string giving the type of the page returned, typically 'TemplatePage',
+    # 'CSS', 'SVG', 'FilePage' or 'JSON'. Certain responders create their own pages and for
+    # these the page_type will be the responder type, one of 'SubmitJSON', 'SubmitPlainText',
+    # 'SubmitCSS', 'SubmitIterator'.
+
+    # This function should return either None, or optionally a session cookie string. This
+    # string will be returned with the next call to this web site in the skicall.received_cookies
+    # dictionary with key being the proj_ident.
+
     return
 
 
@@ -179,8 +191,15 @@ application = WSGIApplication(project=PROJECT,
                               start_call=start_call,
                               submit_data=submit_data,
                               end_call=end_call,
-                              url="/",
-                              proj_ident=None)
+                              url="/")
+
+# As well as the above arguments, a further argument proj_ident can be included in the above
+# (for skipole version 5.5.2 and later), if this is left at its default None value, then it will
+# be automatically set to the project name. However it can be set to a different string here
+# which may be useful if this project instance is to be added multiple times to another 'root'
+# project. Each unique proj_ident will then define each of the multiple sub applications.
+
+# This proj_ident value is then used as part of the page ident tuples (proj_ident, pagenumber)
 
 
 # Add the 'skis' application which serves javascript and css files required by
@@ -204,8 +223,7 @@ application.add_project(skis_application, url='/lib')
 # Before the call is routed to the subapplication, your my_check_cookies_function is called, with the
 # received_cookies dictionary, and with your application's proj_data dictionary. If your function
 # returns None, the call proceeds unhindered to the subapplication. If however your function returns
-# an ident tuple, of the form (projectname, pagenumber), then the call is routed to that page instead.
-
+# an ident tuple, of the form (proj_ident, pagenumber), then the call is routed to that page instead.
 
 
 #############################################################################
@@ -240,17 +258,16 @@ if __name__ == "__main__":
 
     # the skiadmin sub project can now be used to edit your application
     # please note: when being used to edit a project in this way, skilift requires the
-    # application to be the root application, and to have proj_ident to be set to the
-    # project name ( or set to None which automatically does this )
+    # application to be the root application, and (for skipole versions >= 5.5.2) to have
+    # proj_ident to be set to the project name ( default set to None automatically does this )
 
     # serve the application with the development server from skilift
 
     host = "127.0.0.1"
     port = 8000
-    print("Serving %s on port %s. Call http://localhost:%s/skiadmin to edit." % (PROJECT, port, port))
+    print(f"Serving {PROJECT} on port {port}. Call http://localhost:{port}/skiadmin to edit.")
     development_server(host, port, application)
  
-
 </pre>
 </div>
 
