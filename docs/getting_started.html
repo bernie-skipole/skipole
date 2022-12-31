@@ -194,10 +194,10 @@ application = WSGIApplication(project=PROJECT,
                               url="/")
 
 # As well as the above arguments, a further argument proj_ident can be included in the above
-# (for skipole version 5.5.2 and later), if this is left at its default None value, then it will
-# be automatically set to the project name. However it can be set to a different string here
-# which may be useful if this project instance is to be added multiple times to another 'root'
-# project. Each unique proj_ident will then define each of the multiple sub applications.
+# (for skipole version 5.5.2 and later), if this is left at its default None value, then it
+# will be automatically set to the project name. However it can be set to a different string
+# here which may be useful if multiple instances of this project are to be added to a parent
+# 'root' project. Each unique proj_ident will then define each of the sub applications.
 
 # This proj_ident value is then used as part of the page ident tuples (proj_ident, pagenumber)
 
