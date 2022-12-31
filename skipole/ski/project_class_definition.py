@@ -516,7 +516,7 @@ class SkipoleProject(object):
             # create the SkiCall object
             skicall = SkiCall(environ = environ,
                               path = path,
-                              project = self._proj_ident,
+                              proj_ident = self._proj_ident,
                               rootproject = self.rootproject,
                               caller_ident = tuple_caller_ident,
                               received_cookies = received_cookies,
@@ -684,7 +684,6 @@ class SkipoleProject(object):
 
         # call the user function end_call
         try:
-            skicall.project = self.proj_name
             skicall.proj_ident = self._proj_ident
             skicall.proj_data = self.proj_data
             skicall.rootproject = self.rootproject
@@ -1402,11 +1401,11 @@ class SkiCall(object):
     """SkiCall is the class of the skicall object which is created for each incoming
        call and is passed as an argument to the user functions"""
 
-    def __init__(self, environ, path, project, rootproject, caller_ident, received_cookies, ident_data, lang, proj_data):
+    def __init__(self, environ, path, proj_ident, rootproject, caller_ident, received_cookies, ident_data, lang, proj_data):
 
         self.environ = environ
         self.path = path
-        self.project = project
+        self.proj_ident = proj_ident
         self.rootproject = rootproject
         self.caller_ident = caller_ident
         self.received_cookies = received_cookies
@@ -1415,13 +1414,16 @@ class SkiCall(object):
         self._lang_cookie = None
         self.proj_data = proj_data
 
-        self._projectfiles = skiboot.projectfiles(project)
-
         self.ident_list = []
         self.submit_list = []
         self.submit_dict = {'error_dict':{}}
         self.call_data = {}
         self.page_data = {}
+
+    @property
+    def project(self):
+        return skiboot.project_name(self.proj_ident)
+
 
     def update(self, itemdata):
         "Updates page_data from a PageData, SectionData or Dictionary"
@@ -1466,7 +1468,7 @@ class SkiCall(object):
     @property
     def projectfiles(self):
         "Returns the projectfiles string"
-        return self._projectfiles
+        return skiboot.projectfiles(self.proj_ident)
 
     @property
     def lang(self):
@@ -1488,27 +1490,27 @@ class SkiCall(object):
     @property
     def accesstextblocks(self):
         "Returns the project instance of the AccessTextBlocks class"
-        this_project = skiboot.getproject(proj_ident=self.project)
+        this_project = skiboot.getproject(self.proj_ident)
         return this_project.textblocks
 
-    def textblock(self, textref, project=None):
+    def textblock(self, textref, proj_ident=None):
         """This method returns the textblock text, given a textblock reference string,
-           If project is not given assumes this project, if given, project must exist as either the root,
+           If proj_ident is not given assumes this project, if given, project must exist as either the root,
            or a sub project of the root.
            If no textblock is found, returns None."""
-        if project is None:
-            project = self.project
-        proj = skiboot.getproject(project)
+        if proj_ident is None:
+            proj_ident = self.proj_ident
+        proj = skiboot.getproject(proj_ident)
         if proj is None:
             return
         return proj.textblocks.get_text(textref, self.lang)
 
 
-    def ident_from_path(self, path, project=None):
-        "Returns tuple of projectname, ident number, of the page or folder given by the path, or None if not found"
-        if project is None:
-            project = self.project
-        proj = skiboot.getproject(project)
+    def ident_from_path(self, path, proj_ident=None):
+        "Returns tuple of proj_ident, ident number, of the page or folder given by the path, or None if not found"
+        if proj_ident is None:
+            proj_ident = self.proj_ident
+        proj = skiboot.getproject(proj_ident)
         if proj is None:
             return
         ident = proj.root.ident_from_path(path)
@@ -1516,28 +1518,28 @@ class SkiCall(object):
             return ident.to_tuple()
 
 
-    def label_value(self, label, project=None):
+    def label_value(self, label, proj_ident=None):
         """Given a label, returns the associated ident or URL
-           If project is not given assumes this project, if given, project must exist as either the root,
+           If proj_ident is not given assumes this project, if given, project must exist as either the root,
            or a sub project of the root.
            If no label is found, returns None."""
-        if project is None:
-            project = self.project
-        proj = skiboot.getproject(project)
+        if proj_ident is None:
+            proj_ident = self.proj_ident
+        proj = skiboot.getproject(proj_ident)
         if proj is None:
             return
         return proj.label_value(label)
 
 
     def projectpaths(self):
-        """Returns a dictionary of project name : project path
+        """Returns a dictionary of project idents : project path
 
-           This method returns a dictionary of project names as keys with the project paths as values."""
+           This method returns a dictionary of project idents as keys with the project paths as values."""
         return skiboot.projectpaths()
 
     def makepath(self, *foldernames):
         "Returns a url path string starting with the projects path, with the given foldernames joined"
-        projectpath = self.projectpaths()[self.project]
+        projectpath = self.projectpaths()[self.proj_ident]
         if not foldernames:
             return projectpath
         folderpath =  "/".join(foldernames)
@@ -1568,7 +1570,7 @@ class SkiCall(object):
             return
         if not urlfolder.startswith("/"):
             # relative path, pre-pend the project url
-            projectpath = self.projectpaths()[self.project]
+            projectpath = self.projectpaths()[self.proj_ident]
             if projectpath.endswith("/"):
                 urlfolder = projectpath + urlfolder
             else:
