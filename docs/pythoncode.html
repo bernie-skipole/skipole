@@ -59,10 +59,15 @@
 
 
 </pre>
-<p>Where 'PROJECTFILES' is the path to your projectfiles directory - this informs the object where the project JSON files can be found.</p>
-<p>start_call, submit_data and end_call are three functions that you will provide. Minimum versions are available in myproj.py which you will develop further. They are called during the progress of a call:</p>
+<p>project is your project name.</p>
+<p>projectfiles is the path to your projectfiles directory - this informs the object where the project JSON files can be found.</p>
+<p>proj_data is a dictionary which you can optionally set with values which will be passed to your functions.</p>
+<p>start_call, submit_data and end_call are three functions that you will provide. Minimum versions are available in myproj.py which you will develop further. They are called during the progress of a call</p>
+<p>url is the path where the project is served</p>
+<p>proj_ident - added for skipole version 5.5.2 and later, if this is left at its default None value, then it will be automatically set to the project name. However it can be set to a different string here which may be useful if multiple instances of this project are to be added to a parent 'root' project. Each unique proj_ident will then define each of the sub applications.</p>
+<h4>The functions</h4>
 <p><a href="startcall.html">start_call(called_ident, skicall)</a></p>
-<p>start_call is called when the server initially receives an incoming call. The parameter called_ident is a tuple of (project name, page ident number) which defines the page called from the incoming call URL. It will be 'None' if the ident of the requested page is unknown. The parameter skicall is an object containing further information and methods which will be described later in this documentation.</p>
+<p>start_call is called when the server initially receives an incoming call. The parameter called_ident is a tuple of (proj_ident, pagenumber) which defines the page called from the incoming call URL. It will be 'None' if the ident of the requested page is unknown. The parameter skicall is an object containing further information and methods which will be described later in this documentation.</p>
 <p>The function would normally return the 'called_ident' tuple, to pass the call on to the page requested, but it could return a different ident tuple which would divert the call to a different page.</p>
 <p><a href="submitdata.html">submit_data(skicall)</a></p>
 <p>submit_data is called by Responder pages, in this function you would typically handle any data submitted and create the response by filling in the data for a template page.</p>

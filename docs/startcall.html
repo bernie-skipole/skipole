@@ -50,7 +50,7 @@
 
 </pre>
 <p>When a call is received by the server, this function is called.</p>
-<p>called_ident is normally the ident of the page being called, it is a tuple ('projident', pagenumber) - with 'projident' is usually the project name, but could be the value set with the proj_ident argument of the WSGIApplication class. A proj_ident different to the project name is used where a sub project is added to a root project several times, each instance needing a unique proj_ident. The pagenumber is the unique integer page number. If the ident of the called page cannot be determined (the path called does not relate to a page) then called_ident will be None.</p>
+<p>called_ident is normally the ident of the page being called, it is a tuple (proj_ident, pagenumber) - with proj_ident is usually the project name, but could be the value set with the proj_ident argument of the WSGIApplication class. A proj_ident different to the project name is used where a sub project is added to a root project several times, each instance needing a unique proj_ident. The pagenumber is the unique integer page number. If the ident of the called page cannot be determined (the path called does not relate to a page) then called_ident will be None.</p>
 <p>skicall is the call object described <a href="skicall.html">here.</a></p>
 <p>This function should normally return the called_ident value.</p>
 <p>If any tests you set here, which could include testing received cookie values, are ok, then the function would normally return the called_ident given in the argument which is that of the page being called.</p>
