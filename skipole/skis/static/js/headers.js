@@ -69,15 +69,28 @@ SKIPOLE.headers.HeadText = function (widg_id, error_message, fieldmap) {
 SKIPOLE.headers.HeadText.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.headers.HeadText.prototype.constructor = SKIPOLE.headers.HeadText;
 SKIPOLE.headers.HeadText.prototype.setvalues = function (fieldlist, result) {
-    /* This widget accepts field - large_text */
+    /* This widget accepts field - large_text, tag */
    if (!this.widg_id) {
         return;
         }
     let the_widg = this.widg;
+    let widg_id = this.widg_id
     /* large_text */
     let large_text = this.fieldarg_in_result('large_text', result, fieldlist);
     if (large_text) {
         the_widg.text(large_text);
+        }
+    /* tag */
+    let new_tag = this.fieldarg_in_result('tag', result, fieldlist);
+    if (new_tag) {
+        let oldattributes = "id=\"" + widg_id + "\"";
+        if (the_widg.attr("class")) {
+            oldattributes = oldattributes + " class=\"" + the_widg.attr("class") + "\""}
+        if (the_widg.attr("style")) {
+            oldattributes = oldattributes + " style=\"" + the_widg.attr("style") + "\""}
+        the_widg.replaceWith('<' + new_tag + ' ' + oldattributes + '>' + the_widg.text() + '</' + new_tag + '>');
+        /* As this widget has been replaced, set this.widg to this new widget */
+        this.widg = $("#"+widg_id);   
         }
     };
 

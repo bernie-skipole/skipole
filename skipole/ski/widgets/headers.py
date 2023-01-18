@@ -472,7 +472,7 @@ class HeadText(Widget):
      # This class does not display any error messages
     display_errors = False
 
-    arg_descriptions = {'tag':FieldArg("text", 'h1'),
+    arg_descriptions = {'tag':FieldArg("text", 'h1', jsonset=True),
                         'large_text':FieldArg("text", "", jsonset=True)}
 
     def __init__(self, name=None, brief='', **field_args):
