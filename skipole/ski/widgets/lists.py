@@ -281,23 +281,23 @@ class TableList(AnchorClickEventMixin, Widget):
                 else:
                     self[rownumber][2][0] = "Warning: broken link"
 
-                # Next column is Remove button link
-                self[rownumber][3] = tag.Part(tag_name='td')
-                if self.wf.button_class:
-                    self[rownumber][3][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
+            # Next column is Remove button link
+            self[rownumber][3] = tag.Part(tag_name='td')
+            if self.wf.button_class:
+                self[rownumber][3][0] = tag.Part(tag_name='a', attribs = {"role":"button", "class":self.wf.button_class})
+            else:
+                self[rownumber][3][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
+            self[rownumber][3][0].htmlescaped=False
+            if remove_url:
+                if self.wf.remove_button_text:
+                    self[rownumber][3][0][0] = self.wf.remove_button_text
                 else:
-                    self[rownumber][3][0] = tag.Part(tag_name='a', attribs = {"role":"button"})
-                self[rownumber][3][0].htmlescaped=False
-                if remove_url:
-                    if self.wf.remove_button_text:
-                        self[rownumber][3][0][0] = self.wf.remove_button_text
-                    else:
-                        self[rownumber][3][0][0] = "Remove"
-                    # create a url for the href
-                    get_fields = {self.get_formname("contents"):row[3]}
-                    self[rownumber][3][0].attribs["href"] = self.make_get_url(page, remove_url, get_fields, True)
-                else:
-                    self[rownumber][3][0] = "Warning: broken link"
+                    self[rownumber][3][0][0] = "Remove"
+                # create a url for the href
+                get_fields = {self.get_formname("contents"):row[3]}
+                self[rownumber][3][0].attribs["href"] = self.make_get_url(page, remove_url, get_fields, True)
+            else:
+                self[rownumber][3][0] = "Warning: broken link"
 
 
 
