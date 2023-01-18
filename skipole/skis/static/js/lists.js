@@ -95,3 +95,11 @@ SKIPOLE.lists.UList2.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.lists.TableList = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.lists.TableList.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.lists.TableList.prototype.constructor = SKIPOLE.lists.TableList;
+
+
