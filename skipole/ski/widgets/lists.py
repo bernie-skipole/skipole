@@ -138,8 +138,6 @@ class TableList(AnchorClickEventMixin, Widget):
        Typically used to display and order a Python list"""
 
 
-    # copied from Table2_Button
-
     # This class does not display any error messages
     display_errors = False
 
@@ -156,7 +154,7 @@ class TableList(AnchorClickEventMixin, Widget):
                         'down_json_ident':FieldArg("url", ''),
                         'remove_link_ident':FieldArg("url", 'no_javascript'),
                         'remove_json_ident':FieldArg("url", ''),
-                        'contents':FieldArgTable(['text', 'text', 'text', 'text'], valdt=True)
+                        'contents':FieldArgTable(['text', 'text', 'text', 'text'], valdt=True, jsonset=True)
                         }
 
     def __init__(self, name=None, brief='', **field_args):
@@ -188,44 +186,57 @@ class TableList(AnchorClickEventMixin, Widget):
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
         fieldtable = self.wf.contents
+        if not fieldtable:
+            return
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        self.jlabels['button_class'] = self.wf.button_class
+        self.jlabels['remove_button_text'] = self.wf.remove_button_text
 
         # set even row colour
         if self.wf.even_class:
             even = self.wf.even_class
         else:
             even = ''
+        self.jlabels['even_class'] = even
+
         # set odd row colour
         if self.wf.odd_class:
             odd = self.wf.odd_class
         else:
             odd = ''
+        self.jlabels['odd_class'] = odd
 
-        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         if self.wf.up_json_ident:
-            self.jlabels['up_url'] = self.get_url(self.wf.up_json_ident)
+            self.jlabels['up_json_url'] = self.get_url(self.wf.up_json_ident)
         if self.wf.down_json_ident:
-            self.jlabels['down_url'] = self.get_url(self.wf.down_json_ident)
+            self.jlabels['down_json_url'] = self.get_url(self.wf.down_json_ident)
         if self.wf.remove_json_ident:
-            self.jlabels['remove_url'] = self.get_url(self.wf.remove_json_ident)
+            self.jlabels['remove_json_url'] = self.get_url(self.wf.remove_json_ident)
 
         if self.wf.up_link_ident:
             up_url = self.get_url(self.wf.up_link_ident)
+            self.jlabels['up_link_url'] = up_url
         else:
             up_url = ''
 
         if self.wf.down_link_ident:
             down_url = self.get_url(self.wf.down_link_ident)
+            self.jlabels['down_link_url'] = down_url
         else:
             down_url = ''
 
         if self.wf.remove_link_ident:
             remove_url = self.get_url(self.wf.remove_link_ident)
+            self.jlabels['remove_link_url'] = remove_url
         else:
             remove_url = ''
 
+        if self.wf.maximize_text_col:
+           self.jlabels['maximize_text_col'] = True
+
+
         len_fieldtable = len(fieldtable)
-        if not len_fieldtable:
-            return
         lastrow = len_fieldtable - 1
 
         # create rows
