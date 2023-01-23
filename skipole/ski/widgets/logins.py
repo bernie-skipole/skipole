@@ -370,8 +370,10 @@ class NamePasswd1(Widget):
         jsonurl = self.get_url(self.wf.action_json)
         if jsonurl:
             self.jlabels['url'] = jsonurl
-        self.jlabels['input_accepted_class'] = self.wf.input_accepted_class  
-        self.jlabels['input_errored_class'] =  self.wf.input_errored_class
+        if self.wf.input_accepted_class:
+            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
+        if self.wf.input_errored_class:
+            self.jlabels['input_errored_class'] =  self.wf.input_errored_class
 
 
         if self.wf.error_class:

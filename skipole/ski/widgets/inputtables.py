@@ -207,6 +207,12 @@ class InputTable5(Widget):
             self._error = "Warning: broken link"
             return
 
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.input_accepted_class:
+            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
+        if self.wf.input_errored_class:
+            self.jlabels['input_errored_class'] = self.wf.input_errored_class
+
 
         len_label = len(self.wf.col_label)
         len_input = len(self.wf.col_input)
@@ -249,11 +255,7 @@ class InputTable5(Widget):
         input_class = self.wf.input_class
         input_style = self.wf.input_style
 
-        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
-        if self.wf.input_accepted_class:
-            self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
-        if self.wf.input_errored_class:
-            self.jlabels['input_errored_class'] = self.wf.input_errored_class
+
 
         for rownumber in range(rows):
             if rownumber<len_label:

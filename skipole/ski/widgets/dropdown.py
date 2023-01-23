@@ -171,8 +171,14 @@ class SubmitDropDown1(Widget):
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
         self[0].set_class_style(self.wf.error_class)
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.action_json:
+            self.jlabels['url'] = self.get_url(self.wf.action_json)
+
         if self.error_status:
             del self[0].attribs["style"]
+
         if not self.wf.action:
             # setting self._error replaces the entire tag
             self._error = "Warning: No form action"
@@ -182,10 +188,6 @@ class SubmitDropDown1(Widget):
             # setting self._error replaces the entire tag
             self._error = "Warning: broken link"
             return
-
-        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
-        if self.wf.action_json:
-            self.jlabels['url'] = self.get_url(self.wf.action_json)
 
         # update the action of the form
         self[1].attribs["action"] = actionurl

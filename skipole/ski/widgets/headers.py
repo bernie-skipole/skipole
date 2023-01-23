@@ -195,9 +195,6 @@ class NavButtons3(Widget):
         get_field1 = self.wf.get_field1
         get_field2 = self.wf.get_field2
 
-        if not button_text:
-            return
-
         link_ident = self.wf.link_ident
         if not link_ident:
             link_ident = 'no_javascript'
@@ -209,6 +206,9 @@ class NavButtons3(Widget):
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         if json_ident:
             self.jlabels['jsonurl'] = self.get_url(json_ident)
+
+        if not button_text:
+            return
 
         # for each link - create a link and add it
         for index,txt in enumerate(button_text):

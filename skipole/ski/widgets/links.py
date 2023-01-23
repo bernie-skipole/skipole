@@ -740,6 +740,13 @@ class ButtonLink1(Widget):
         "Build the link"
         if self.error_status and self.wf.error_class:
             self.attribs['class'] = self.wf.error_class
+
+        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.error_class:
+            self.jlabels['error_class'] = self.wf.error_class
+        if self.wf.widget_class
+            self.jlabels['widget_class'] = self.wf.widget_class
+
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
         if not self.wf.link_ident:
@@ -766,9 +773,7 @@ class ButtonLink1(Widget):
         self.attribs["href"] = url
         if self.wf.target:
             self.attribs["target"] = self.wf.target
-        # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
-        self.jlabels['error_class'] = self.wf.error_class
-        self.jlabels['widget_class'] = self.wf.widget_class
+
 
     @classmethod
     def description(cls):
