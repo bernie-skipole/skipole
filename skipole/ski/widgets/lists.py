@@ -186,8 +186,6 @@ class TableList(AnchorClickEventMixin, Widget):
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)
         fieldtable = self.wf.contents
-        if not fieldtable:
-            return
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         self.jlabels['button_class'] = self.wf.button_class
@@ -235,7 +233,8 @@ class TableList(AnchorClickEventMixin, Widget):
         if self.wf.maximize_text_col:
            self.jlabels['maximize_text_col'] = True
 
-
+        if not fieldtable:
+            return
         len_fieldtable = len(fieldtable)
         lastrow = len_fieldtable - 1
 
