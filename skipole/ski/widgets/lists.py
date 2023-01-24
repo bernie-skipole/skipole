@@ -74,6 +74,8 @@ class UList2(Widget):
     display_errors = False
 
     arg_descriptions = {
+                       'highlight_class':FieldArg("cssclass", ''),
+                       'set_highlight':FieldArg("boolean", False, jsonset=True),
                        'set_html': FieldArgList('text', jsonset=True),
                        'even_class':FieldArg("cssclass", ""),
                        'odd_class':FieldArg("cssclass", "")
@@ -81,20 +83,26 @@ class UList2(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """
+        highlight_class: CSS class will replace widget_class if set_highlight is True
+        set_highlight: Set to True to force highlight_class to replace widget_class
+                       Set to False to remove highlight_class and return to widget_class
         set_html: List of html strings to be shown, html will be shown unescaped
         even_class: class of even li elements, if empty string, then no class will be applied
         odd_class: class of odd li elements, if empty string, then no class will be applied
         """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "ul"
-        self._even = ''
-        self._odd = ''
 
     def _build(self, page, ident_list, environ, call_data, lang):
         "Build the list"
         contents = self.wf.set_html
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+
+        if self.wf.highlight_class:
+            self.jlabels['highlight_class'] = self.wf.highlight_class
+            if self.wf.set_highlight:
+                self.attribs["class"] = self.wf.highlight_class
 
         # set even li class
         if self.wf.even_class:
