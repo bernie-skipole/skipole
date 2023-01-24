@@ -637,7 +637,6 @@ class TextBlockPara(Widget):
             self.attribs["class"] = self.wf.error_class
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
-        self.jlabels['widget_class'] = self.wf.widget_class
         self.jlabels['error_class'] = self.wf.error_class
         self.jlabels['linebreaks'] = self.wf.linebreaks
 

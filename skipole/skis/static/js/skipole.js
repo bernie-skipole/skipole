@@ -270,22 +270,28 @@ SKIPOLE.setfields = function(result) {
         for (const widg_ident in widg_fields) {
             let fieldlist = widg_fields[widg_ident];
             let thiswidget = SKIPOLE.widgets[widg_ident]
+            // If given, update the widget_class and widget_style in fieldvalues, so they are available
+            // to thiswidget.setvalues even if they have been changed by JSON call 
             let widget_class = thiswidget.fieldarg_in_result('widget_class', result, fieldlist);
             if (widget_class != undefined) {
                 if (widget_class) {
                     $("#"+widg_ident).attr("class", widget_class);
+                    this.fieldvalues["widget_class"] = widget_class;
                     }
                 else {
                     $("#"+widg_ident).removeAttr("class");
+                    this.fieldvalues["widget_class"] = '';
                     }
                 }
             let widget_style = thiswidget.fieldarg_in_result('widget_style', result, fieldlist);
             if (widget_style != undefined) {
                 if (widget_style) {
                     $("#"+widg_ident).attr("style", widget_style);
+                    this.fieldvalues["widget_style"] = widget_style;
                     }
                 else {
                     $("#"+widg_ident).removeAttr("style");
+                    this.fieldvalues["widget_style"] = '';
                     }
                 }
             // now call widget method to set any other values

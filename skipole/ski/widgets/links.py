@@ -672,8 +672,6 @@ class JSONButtonLink(ClickEventMixin, Widget):
             self.jlabels['button_wait_text'] = self.wf.button_wait_text
         if self.wf.error_class:
             self.jlabels['error_class'] = self.wf.error_class
-        if self.wf.widget_class:
-            self.jlabels['widget_class'] = self.wf.widget_class
         if self.wf.session_storage:
             self.jlabels['session_storage'] = self.wf.session_storage
         if self.wf.local_storage:
@@ -744,8 +742,6 @@ class ButtonLink1(Widget):
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
         if self.wf.error_class:
             self.jlabels['error_class'] = self.wf.error_class
-        if self.wf.widget_class
-            self.jlabels['widget_class'] = self.wf.widget_class
 
         # Hides widget if no error and hide is True
         self.widget_hide(self.wf.hide)

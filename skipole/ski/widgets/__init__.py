@@ -883,6 +883,13 @@ class Widget(tag.Part):
         self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
         # set the widget class and style attributes
         self.set_class_style(self.wf.widget_class, self.wf.widget_style)
+        # Set these two into self.jlabels - which in turn sets them into the javascript variable fieldvalues
+        # these are updated by javascript whenever these values are updated by json, making them always available
+        # to the javascript code.
+        if self.wf.widget_class:
+            self.jlabels["widget_class"] = self.wf.widget_class
+        if self.wf.widget_style:
+            self.jlabels["widget_style"] = self.wf.widget_style
         # Insert this widgets id
         self.insert_id()
         # insert further parts according to each widget build
@@ -1603,6 +1610,13 @@ class ClosedWidget(tag.ClosedPart):
         self.wf = SimpleNamespace(**{fname:item.value for fname,item in self.fields.items()})
         # set the widget class and style attributes
         self.set_class_style(self.wf.widget_class, self.wf.widget_style)
+        # Set these two into self.jlabels - which in turn sets them into the javascript variable fieldvalues
+        # these are updated by javascript whenever these values are updated by json, making them always available
+        # to the javascript code.
+        if self.wf.widget_class:
+            self.jlabels["widget_class"] = self.wf.widget_class
+        if self.wf.widget_style:
+            self.jlabels["widget_style"] = self.wf.widget_style
         # Insert this widgets id
         self.insert_id()
         self._build(page, ident_list, environ, call_data, lang)

@@ -193,9 +193,12 @@ SKIPOLE.links.JSONButtonLink.prototype.clear_error = function () {
     let the_widg = this.widg;
     the_widg.removeAttr("data-status");
     // set the widget class to widget_class
-    let widget_class = this.fieldarg_in_result('widget_class', result, fieldlist);
+    let widget_class = this.fieldvalues['widget_class'];
     if (widget_class) {
         the_widg.attr('class', widget_class);
+        }
+     else {
+        the_widg.removeAttr("class");
         }
     };
 SKIPOLE.links.JSONButtonLink.prototype.show_error = function (error_message) {
@@ -376,9 +379,12 @@ SKIPOLE.links.ButtonLink1.prototype.clear_error = function () {
     let the_widg = this.widg;
     the_widg.removeAttr("data-status");
     // set the widget class to widget_class
-    let widget_class = this.fieldarg_in_result('widget_class', result, fieldlist);
+    let widget_class = this.fieldvalues['widget_class'];
     if (widget_class) {
         the_widg.attr('class', widget_class);
+        }
+     else {
+        the_widg.removeAttr("class");
         }
     };
 SKIPOLE.links.ButtonLink1.prototype.show_error = function (error_message) {
@@ -395,7 +401,7 @@ SKIPOLE.links.ButtonLink1.prototype.show_error = function (error_message) {
     the_widg.attr("data-status", "error");
     the_widg.text(error_message);
     // set the widget class to error class
-    let error_class = this.fieldarg_in_result('error_class', result, fieldlist);
+    let error_class = this.fieldvalues['error_class'];
     if (error_class) {
         the_widg.attr('class', error_class);
         }
