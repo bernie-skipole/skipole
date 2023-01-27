@@ -13,6 +13,8 @@ class UList1(Widget):
     display_errors = False
 
     arg_descriptions = {
+                       'highlight_class':FieldArg("cssclass", ''),
+                       'set_highlight':FieldArg("boolean", False, jsonset=True),
                        'contents': FieldArgList('text', jsonset=True),
                        'even_class':FieldArg("cssclass", ""),
                        'odd_class':FieldArg("cssclass", "")
@@ -20,6 +22,9 @@ class UList1(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """
+        highlight_class: CSS class will replace widget_class if set_highlight is True
+        set_highlight: Set to True to force highlight_class to replace widget_class
+                       Set to False to remove highlight_class and return to widget_class
         contents: List of text strings to be shown, gives the number of list items
         even_class: class of even li elements, if empty string, then no class will be applied
         odd_class: class of odd li elements, if empty string, then no class will be applied
@@ -33,6 +38,10 @@ class UList1(Widget):
         contents = self.wf.contents
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+        if self.wf.highlight_class:
+            self.jlabels['highlight_class'] = self.wf.highlight_class
+            if self.wf.set_highlight:
+                self.attribs["class"] = self.wf.highlight_class
 
         # set even li class
         if self.wf.even_class:
@@ -150,6 +159,8 @@ class TableList(AnchorClickEventMixin, Widget):
     display_errors = False
 
     arg_descriptions = {
+                        'highlight_class':FieldArg("cssclass", ''),
+                        'set_highlight':FieldArg("boolean", False, jsonset=True),
                         'even_class':FieldArg("cssclass", ""),
                         'odd_class':FieldArg("cssclass", ""),
                         'maximize_text_col':FieldArg('boolean',True),
@@ -167,6 +178,9 @@ class TableList(AnchorClickEventMixin, Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """
+        highlight_class: CSS class will replace widget_class if set_highlight is True
+        set_highlight: Set to True to force highlight_class to replace widget_class
+                       Set to False to remove highlight_class and return to widget_class
         even_class: class of even rows, if empty string, then no class will be applied
         odd_class: class of odd rows, if empty string, then no class will be applied
         maximize_text_col: If True the text column is made large, with the button columns reduced to the size of the buttons
@@ -196,6 +210,11 @@ class TableList(AnchorClickEventMixin, Widget):
         fieldtable = self.wf.contents
 
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
+
+        if self.wf.highlight_class:
+            self.jlabels['highlight_class'] = self.wf.highlight_class
+            if self.wf.set_highlight:
+                self.attribs["class"] = self.wf.highlight_class
         self.jlabels['button_class'] = self.wf.button_class
         self.jlabels['remove_button_text'] = self.wf.remove_button_text
 
