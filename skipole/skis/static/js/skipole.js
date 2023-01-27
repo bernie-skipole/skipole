@@ -276,22 +276,22 @@ SKIPOLE.setfields = function(result) {
             if (widget_class != undefined) {
                 if (widget_class) {
                     $("#"+widg_ident).attr("class", widget_class);
-                    this.fieldvalues["widget_class"] = widget_class;
+                    thiswidget.fieldvalues["widget_class"] = widget_class;
                     }
                 else {
                     $("#"+widg_ident).removeAttr("class");
-                    this.fieldvalues["widget_class"] = '';
+                    thiswidget.fieldvalues["widget_class"] = '';
                     }
                 }
             let widget_style = thiswidget.fieldarg_in_result('widget_style', result, fieldlist);
             if (widget_style != undefined) {
                 if (widget_style) {
                     $("#"+widg_ident).attr("style", widget_style);
-                    this.fieldvalues["widget_style"] = widget_style;
+                    thiswidget.fieldvalues["widget_style"] = widget_style;
                     }
                 else {
                     $("#"+widg_ident).removeAttr("style");
-                    this.fieldvalues["widget_style"] = '';
+                    thiswidget.fieldvalues["widget_style"] = '';
                     }
                 }
             // now call widget method to set any other values
