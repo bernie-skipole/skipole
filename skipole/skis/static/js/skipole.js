@@ -294,6 +294,28 @@ SKIPOLE.setfields = function(result) {
                     thiswidget.fieldvalues["widget_style"] = '';
                     }
                 }
+
+            // If set_highlight and highlight_class then check if widget
+            // class needs to be set
+            let highlight_class = thiswidget.fieldvalues["highlight_class"];
+            if (highlight_class != undefined) {
+                let set_highlight = thiswidget.fieldarg_in_result('set_highlight', result, fieldlist);
+                if (set_highlight != undefined){
+                    if (set_highlight) {
+                        $("#"+widg_ident).attr("class", highlight_class);
+                        }
+                    else {
+                        let stored_widget_class = thiswidget.fieldvalues["widget_class"];
+                        if (stored_widget_class){
+                            $("#"+widg_ident).attr("class", stored_widget_class);
+                            }
+                        else {
+                            $("#"+widg_ident).removeAttr("class");
+                            }
+                        }
+                     }
+                }
+
             // now call widget method to set any other values
             thiswidget.setvalues(fieldlist, result);
             }

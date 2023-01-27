@@ -67,27 +67,6 @@ SKIPOLE.lists.UList2.prototype.setvalues = function (fieldlist, result) {
     let even_class = fieldvalues["even_class"];
     let odd_class = fieldvalues["odd_class"];
 
-    // If set_highlight and highlight_class then check if widget
-    // class needs to be set
-    let highlight_class = fieldvalues["highlight_class"];
-    if (highlight_class != undefined) {
-        let set_highlight = this.fieldarg_in_result('set_highlight', result, fieldlist);
-        if (set_highlight != undefined){
-            if (set_highlight) {
-                the_widg.attr("class", highlight_class);
-                }
-            else {
-                let widget_class = fieldvalues["widget_class"];
-                if (widget_class){
-                    the_widg.attr("class", widget_class);
-                    }
-                else {
-                    the_widg.removeAttr("class");
-                    }
-                }
-             }
-        }
-
     if (contents) {
         // If a request to renew the list is recieved, this block
         // empties the existing list, and re-draws it
