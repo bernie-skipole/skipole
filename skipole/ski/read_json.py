@@ -421,23 +421,15 @@ def create_project(proj_ident, projectfiles, proj_name):
         projectdict['version'] = "0.0.0"
 
     if 'specialpages' in project:
-        # dictionary of label:integer or url
+        # dictionary of label:integer, url or string pointing to another project
         # needs to be a dictionary of label:ident or url
         specialpages = {}
         for label, target in project['specialpages'].items():
             if isinstance(target, int):
                 # An ident belonging to this project
                 specialpages[label] = skiboot.Ident(proj_ident, target)
-            elif ',' in target:
-                specialpages[label] = target
-            elif '_' in target:
-                itemident = skiboot.make_ident(target, proj_ident)
-                if itemident is None:
-                    specialpages[label] = target
-                else:
-                    specialpages[label] = itemident
             else:
-                # must be a url
+                # must be a url or string pointing to another project
                 specialpages[label] = target
         projectdict['specialpages'] = specialpages
     else:

@@ -28,7 +28,6 @@ _AN = re.compile('[^\w]')
 # text
 # url           - either a url string, label string or ident
 # textblock_ref
-# ident         - the ident of a page or folder
 # element_ident - the string ident of a page element
 # boolean
 # integer
@@ -69,12 +68,6 @@ class ParentFieldArg(object):
                     if val.lower() == 'false':
                         return False
                 return bool(val)
-            elif valtype == 'ident':
-                if val == 0:
-                    return skiboot.make_ident(val)
-                if not val:
-                    return None
-                return skiboot.make_ident(val)
             elif valtype == 'url':
                 if val == 0:
                     sval = '0'

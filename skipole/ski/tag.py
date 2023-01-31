@@ -203,6 +203,7 @@ class ParentPart(object):
         # ident_string normally starts project_pageident_head-0-... etc
         return self.ident_string.split('_')[0]
 
+
     def insert_id(self, id_string=''):
         """Adds the id_string to the part attributes. If no id_string given
            but the part has a name, sets the id to the part name, otherwise

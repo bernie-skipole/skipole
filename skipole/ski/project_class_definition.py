@@ -1176,6 +1176,8 @@ class SkipoleProject(object):
             if len(target.split(',')) == 2:
                 # item points to a subproject label
                 item = target
+            else:
+                raise ServerError(message="Sorry, label target not recognised")
         else:
             item = skiboot.make_ident(target, self._proj_ident)
             if not item:
@@ -1203,7 +1205,7 @@ class SkipoleProject(object):
 
 
     def labels(self):
-        "Returns the special pages dictionary as a dictionary of labels with url's and tuples"
+        "Returns the special pages dictionary as a dictionary of labels with strings and and idents as tuples"
         labels_dict = {}
         for key, val in self.special_pages.items():
             if isinstance(val, str):
@@ -1214,15 +1216,55 @@ class SkipoleProject(object):
 
 
     def label_value(self, key):
-        "Returns the url or tuple associated with the label"
+        "Returns the special_pages string or ident as tuple associated with the label"
         val = self.special_pages.get(key)
         if val is None:
             return
-        labels_dict = {}
         if isinstance(val, str):
             return val
         else:
             return val.to_tuple()
+
+
+    def resolve_label(self, label, proj_ident=None, depth=4):
+        """Given a page label and proj_ident, resolves the label to ident tuple
+           If proj_ident is None, starts with this project
+           Follows subproject labels to the given depth, limited to avoid circular references
+           Returns either the tuple, or URL string, or None if unsuccessful"""
+        depth = depth-1
+        if depth < 0:
+            return
+        if proj_ident is None:
+            proj = self
+        else:
+            proj = skiboot.getproject(proj_ident)
+        if proj is None:
+            return
+        value = proj.label_value(label)
+        if value is None:
+            return
+        if isinstance(value, tuple):
+            # its an ident
+            return value
+        # so value is a string, either URL, or something like "subproject, label")
+        if "/" in value:
+            # a url
+            return value
+        if ',' not in value:
+            # not sure what this is, but in case of future possible strings, return it
+            return value
+        vallist = value.split(',')
+        if len(vallist) != 2:
+            # invalid
+            return
+        if vallist[1].isdigit():
+            # Its "subproject, integer"
+            try:
+                return (vallist[0], int(vallist[1]))
+            except:
+                return
+        # Its "subproject, label"
+        return self.resolve_label(vallist[1], vallist[0], depth)
 
 
     def _redirect_to_url(self, url, environ, call_data, page_data, lang):
@@ -1519,7 +1561,7 @@ class SkiCall(object):
 
 
     def label_value(self, label, proj_ident=None):
-        """Given a label, returns the associated ident or URL
+        """Given a label, returns the associated URL, or ident as a tuple
            If proj_ident is not given assumes this project, if given, project must exist as either the root,
            or a sub project of the root.
            If no label is found, returns None."""
@@ -1528,7 +1570,18 @@ class SkiCall(object):
         proj = skiboot.getproject(proj_ident)
         if proj is None:
             return
-        return proj.label_value(label)
+        value = proj.label_value(label)
+        if value is None:
+            return
+        if isinstance(value, str):
+            if "/" in value:
+                # a url
+                return value
+            if (',' in value ) and not (value.split(',')[1].isdigit()):
+                if len(value.split(',')) == 2:
+                    # item points to a subproject label
+                    return tuple(value.split(','))
+        return value
 
 
     def projectpaths(self):
