@@ -91,10 +91,12 @@ class PageIdent(Widget):
                 if len(vallist) != 2:
                     self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                     return
-                if vallist[1].isdigit():
+                lblproj = vallist[0].strip(" ()[]\"")
+                lblval = vallist[1].strip(" ()[]\"")
+                if lblval.isdigit():
                     # Its "subproject, integer"
                     try:
-                        value = (vallist[0], int(vallist[1]))
+                        value = (lblproj, int(lblval))
                     except:
                         self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                         return
@@ -103,7 +105,7 @@ class PageIdent(Widget):
                     if proj is None:
                         self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                         return
-                    value = proj.resolve_label(vallist[1], vallist[0])
+                    value = proj.resolve_label(lblval, lblproj)
             else:
                  # its a label string of this project
                 if proj is None:
@@ -119,10 +121,8 @@ class PageIdent(Widget):
                 # a url
                 self[0] = f"Given label points to URL rather than an ident"
                 return
-            if isinstance(value, tuple):
-                # an ident tuple, make an ident
-                page_ident = skiboot.make_ident(value)
-                self[0] = page_ident.to_comma_str()
+            # an ident tuple
+            self[0] = value
         else:
             self[0] = page.ident.to_comma_str()
 
@@ -180,10 +180,12 @@ class PageName(Widget):
                 if len(vallist) != 2:
                     self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                     return
-                if vallist[1].isdigit():
+                lblproj = vallist[0].strip(" ()[]\"")
+                lblval = vallist[1].strip(" ()[]\"")
+                if lblval.isdigit():
                     # Its "subproject, integer"
                     try:
-                        value = (vallist[0], int(vallist[1]))
+                        value = (lblproj, int(lblval))
                     except:
                         self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                         return
@@ -192,7 +194,7 @@ class PageName(Widget):
                     if proj is None:
                         self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                         return
-                    value = proj.resolve_label(vallist[1], vallist[0])
+                    value = proj.resolve_label(lblval, lblproj)
             else:
                  # its a label string of this project
                 if proj is None:
@@ -208,14 +210,13 @@ class PageName(Widget):
                 # a url
                 self[0] = f"Given label points to URL rather than an ident"
                 return
-            if isinstance(value, tuple):
-                # an ident tuple, make an ident
-                page_ident = skiboot.make_ident(value)
-                requested_page = skiboot.get_item(page_ident)
-                if requested_page is None:
-                    self[0] = "Unknown page"
-                else:
-                    self[0] = requested_page.name
+             # an ident tuple, make an ident
+            page_ident = skiboot.make_ident(value)
+            requested_page = skiboot.get_item(page_ident)
+            if requested_page is None:
+                self[0] = "Unknown page"
+            else:
+                self[0] = requested_page.name
         else:
             self[0] = page.name
 
@@ -273,10 +274,12 @@ class PageDescription(Widget):
                 if len(vallist) != 2:
                     self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                     return
-                if vallist[1].isdigit():
+                lblproj = vallist[0].strip(" ()[]\"")
+                lblval = vallist[1].strip(" ()[]\"")
+                if lblval.isdigit():
                     # Its "subproject, integer"
                     try:
-                        value = (vallist[0], int(vallist[1]))
+                        value = (lblproj, int(lblval))
                     except:
                         self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                         return
@@ -285,7 +288,7 @@ class PageDescription(Widget):
                     if proj is None:
                         self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                         return
-                    value = proj.resolve_label(vallist[1], vallist[0])
+                    value = proj.resolve_label(lblval, lblproj)
             else:
                  # its a label string of this project
                 if proj is None:
@@ -301,14 +304,13 @@ class PageDescription(Widget):
                 # a url
                 self[0] = f"Given label points to URL rather than an ident"
                 return
-            if isinstance(value, tuple):
-                # an ident tuple, make an ident
-                page_ident = skiboot.make_ident(value)
-                requested_page = skiboot.get_item(page_ident)
-                if requested_page is None:
-                    self[0] = "Unknown page"
-                else:
-                    self[0] = requested_page.brief
+            # an ident tuple, make an ident
+            page_ident = skiboot.make_ident(value)
+            requested_page = skiboot.get_item(page_ident)
+            if requested_page is None:
+                self[0] = "Unknown page"
+            else:
+                self[0] = requested_page.brief
         else:
             self[0] = page.brief
 
