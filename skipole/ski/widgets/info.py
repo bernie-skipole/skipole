@@ -122,7 +122,7 @@ class PageIdent(Widget):
                 self[0] = f"Given label points to URL rather than an ident"
                 return
             # an ident tuple
-            self[0] = value
+            self[0] = f"{value[0]},{value[1]}"
         else:
             self[0] = page.ident.to_comma_str()
 
