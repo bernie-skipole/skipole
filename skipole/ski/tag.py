@@ -332,15 +332,15 @@ class ParentPart(object):
         "If valstring starts with a  label in the form {label}, substitute url here"
         if valstring[0] != '{':
             return valstring
-        proj_ident = self.proj_ident
-        if not proj_ident:
+        if not self.proj_ident:
             return valstring
         end = valstring.find('}')
         if end == -1:
             return valstring
         label = valstring[1:end]
         if label:
-            url = skiboot.get_url(label, proj_ident)
+            proj = skiboot.getproject(self.proj_ident)
+            url = proj.label_to_url(label)
             if url:
                 return quote(url, safe='/:?&=@')+valstring[end+1:]
         return valstring
