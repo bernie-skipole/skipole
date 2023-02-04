@@ -102,10 +102,11 @@ class PageIdent(Widget):
                         return
                 else:
                     # Its "subproject, label"
-                    if proj is None:
+                    subproj = skiboot.getproject(lblproj)
+                    if subproj is None:
                         self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                         return
-                    value = proj.resolve_label(lblval, lblproj)
+                    value = subproj.resolve_label(lblval)
             else:
                  # its a label string of this project
                 if proj is None:
@@ -191,10 +192,11 @@ class PageName(Widget):
                         return
                 else:
                     # Its "subproject, label"
-                    if proj is None:
-                        self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
+                    subproj = skiboot.getproject(lblproj)
+                    if subproj is None:
+                        self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                         return
-                    value = proj.resolve_label(lblval, lblproj)
+                    value = subproj.resolve_label(lblval)
             else:
                  # its a label string of this project
                 if proj is None:
@@ -210,7 +212,7 @@ class PageName(Widget):
                 # a url
                 self[0] = f"Given label points to URL rather than an ident"
                 return
-             # an ident tuple, make an ident
+            # an ident tuple, make an ident
             page_ident = skiboot.make_ident(value)
             requested_page = skiboot.get_item(page_ident)
             if requested_page is None:
@@ -285,10 +287,11 @@ class PageDescription(Widget):
                         return
                 else:
                     # Its "subproject, label"
-                    if proj is None:
-                        self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
+                    subproj = skiboot.getproject(lblproj)
+                    if subproj is None:
+                        self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                         return
-                    value = proj.resolve_label(lblval, lblproj)
+                    value = subproj.resolve_label(lblval)
             else:
                  # its a label string of this project
                 if proj is None:
