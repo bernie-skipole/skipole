@@ -194,7 +194,7 @@ class PageName(Widget):
                     # Its "subproject, label"
                     subproj = skiboot.getproject(lblproj)
                     if subproj is None:
-                        self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
+                        self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                         return
                     value = subproj.resolve_label(lblval)
             else:
@@ -289,7 +289,7 @@ class PageDescription(Widget):
                     # Its "subproject, label"
                     subproj = skiboot.getproject(lblproj)
                     if subproj is None:
-                        self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
+                        self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                         return
                     value = subproj.resolve_label(lblval)
             else:
