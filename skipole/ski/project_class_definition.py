@@ -1289,62 +1289,6 @@ class SkipoleProject(object):
         return url
 
 
-    def label_to_url(self, label, depth=4):
-        """Given a page label, resolves the label to url string
-           Follows subproject labels to the given depth, limited to avoid circular references
-           Returns either the URL string, or None if unsuccessful"""
-        depth = depth-1
-        if depth < 0:
-            return
-
-        value = self.special_pages.get(label)
-        if value is None:
-            return
-        # value is what the label points to, either an Ident or a string
-        if isinstance(value, skiboot.Ident):
-            # Its an ident, get the page or folder
-            item = proj.get_item(value)
-            if item is None:
-                return
-            url = item.url
-            if not url:
-                return
-            return url
-
-        # value is not an ident or None, so must be a string
-        # it could be a string url, or a string such as
-        # "subproject,label" or "subproject,integer"
-
-        if "/" in value:
-            # a url
-            return value
-        if ',' not in value:
-            # not sure what this is, but in case of future possible strings, return it
-            return value
-        vallist = value.split(',')
-        if len(vallist) != 2:
-            # invalid
-            return
-        if vallist[1].isdigit():
-            # Its "subproject, integer"
-            try:
-                subproj = skiboot.getproject(vallist[0])
-                if subproj is None:
-                    return
-                # Get the page or folder of the subproj
-                item = subproj.get_item(int(vallist[1]))
-                if item is None:
-                    return
-                url = item.url
-                if not url:
-                    return
-                return url
-            except:
-                return
-        # Its "subproject, label", call this function again
-        return self.label_to_url(vallist[1], vallist[0], depth)
-
-
     def _redirect_to_url(self, url, environ, call_data, page_data, lang):
         "Return status, headers, page.data() of the redirector page, with fields set to url"
         if '/' not in url:
