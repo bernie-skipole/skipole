@@ -1226,29 +1226,23 @@ class SkipoleProject(object):
             return val.to_tuple()
 
 
-    def resolve_label(self, label, proj_ident=None, depth=4):
-        """Given a page label and proj_ident, resolves the label to ident tuple
-           If proj_ident is None, starts with this project
+    def resolve_label(self, label, depth=4):
+        """Given a page label, resolves the label to ident tuple
            Follows subproject labels to the given depth, limited to avoid circular references
            Returns either the tuple, or URL string, or None if unsuccessful"""
         depth = depth-1
         if depth < 0:
             return
-        if proj_ident is None:
-            proj = self
-        else:
-            proj = skiboot.getproject(proj_ident)
-        if proj is None:
-            return
-        value = proj.label_value(label)
+        value = self.label_value(label)
         if value is None:
             return
         if isinstance(value, tuple):
-            # its an ident
+            # its an ident tuple
             return value
-        # so value is a string, either URL, or something like "subproject, label")
+        # so value is a string, either URL, or something like "subproject, label"
+        # or "subproject, integer" which should be returned as a tuple
         if "/" in value:
-            # a url
+            # Its a url
             return value
         if ',' not in value:
             # not sure what this is, but in case of future possible strings, return it
@@ -1264,24 +1258,46 @@ class SkipoleProject(object):
             except:
                 return
         # Its "subproject, label"
-        return self.resolve_label(vallist[1], vallist[0], depth)
+        subproj = skiboot.getproject(vallist[0])
+        if subproj is None:
+            return
+        return subproj.resolve_label(vallist[1], depth)
 
 
-    def label_to_url(self, label, proj_ident=None, depth=4):
-        """Given a page label and proj_ident, resolves the label to url string
-           If proj_ident is None, starts with this project
+   def label_to_url(self, label, depth=4):
+        """Given a page label, resolves the label to url string
+           Follows subproject labels to the given depth, limited to avoid circular references
+           Returns either the URL string, or None if unsuccessful"""
+
+        value = self.resolve_label(label, depth)
+        if value is None:
+            return
+        if isinstance(value, str):
+            # a url
+            return value
+        # value is "proj_id, integer"
+        proj = skiboot.getproject(value[0])
+        if proj is None:
+            return
+        # Get the page or folder of the proj
+        item = proj.get_item(value[1])
+        if item is None:
+            return
+        url = item.url
+        if not url:
+            return
+        return url
+
+
+    def label_to_url(self, label, depth=4):
+        """Given a page label, resolves the label to url string
            Follows subproject labels to the given depth, limited to avoid circular references
            Returns either the URL string, or None if unsuccessful"""
         depth = depth-1
         if depth < 0:
             return
-        if proj_ident is None:
-            proj = self
-        else:
-            proj = skiboot.getproject(proj_ident)
-        if proj is None:
-            return
-        value = proj.special_pages.get(label)
+
+        value = self.special_pages.get(label)
         if value is None:
             return
         # value is what the label points to, either an Ident or a string
