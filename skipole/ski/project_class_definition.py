@@ -1264,7 +1264,7 @@ class SkipoleProject(object):
         return subproj.resolve_label(vallist[1], depth)
 
 
-   def label_to_url(self, label, depth=4):
+    def label_to_url(self, label, depth=4):
         """Given a page label, resolves the label to url string
            Follows subproject labels to the given depth, limited to avoid circular references
            Returns either the URL string, or None if unsuccessful"""

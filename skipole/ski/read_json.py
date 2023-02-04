@@ -422,7 +422,7 @@ def create_project(proj_ident, projectfiles, proj_name):
 
     if 'specialpages' in project:
         # dictionary of label:integer, url or string pointing to another project
-        # needs to be a dictionary of label:ident or url
+        # change integers to Idents
         specialpages = {}
         for label, target in project['specialpages'].items():
             if isinstance(target, int):
