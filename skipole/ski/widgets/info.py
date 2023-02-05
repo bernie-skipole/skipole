@@ -73,54 +73,18 @@ class PageIdent(Widget):
             self[0] = self.wf.span_text
         elif self.wf.page_label:
             proj = skiboot.getproject(self.proj_ident)
-            if "/" in self.wf.page_label:
-                # its a URL
-                self[0] = f"Unable to resolve {self.wf.page_label}"
+            # its a label string of this project
+            if proj is None:
+                self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                 return
-
-            if self.wf.page_label.isdigit():
-                # Its "integer"
-                try:
-                    value = (self.proj_ident, int(self.wf.page_label))
-                except:
-                    self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
-                    return
-            elif ',' in self.wf.page_label:
-                # Its a string such as "proj_ident,number"
-                vallist = self.wf.page_label.split(',')
-                if len(vallist) != 2:
-                    self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
-                    return
-                lblproj = vallist[0].strip(" ()[]\"")
-                lblval = vallist[1].strip(" ()[]\"")
-                if lblval.isdigit():
-                    # Its "subproject, integer"
-                    try:
-                        value = (lblproj, int(lblval))
-                    except:
-                        self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
-                        return
-                else:
-                    # Its "subproject, label"
-                    subproj = skiboot.getproject(lblproj)
-                    if subproj is None:
-                        self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
-                        return
-                    value = subproj.resolve_label(lblval)
-            else:
-                 # its a label string of this project
-                if proj is None:
-                    self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
-                    return
-                value = proj.resolve_label(self.wf.page_label)
-
+            value = proj.resolve_label(self.wf.page_label)
             # so value is one of the tuple ident, None, or URL
             if not value:
                 self[0] = f"Unable to resolve the ident of {self.wf.page_label}"
                 return
             if isinstance(value, str):
                 # a url
-                self[0] = f"Given label points to URL rather than an ident"
+                self[0] = f"Given label points to URL rather than a page ident"
                 return
             # an ident tuple
             self[0] = f"{value[0]},{value[1]}"
@@ -133,7 +97,7 @@ class PageIdent(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
-  <!-- string value of the page_ident, or span_text -->
+  <!-- string value of the page ident, or span_text -->
 </span>
 """
 
