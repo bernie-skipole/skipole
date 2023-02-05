@@ -145,8 +145,8 @@ class PageName(Widget):
                 if len(vallist) != 2:
                     self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                     return
-                lblproj = vallist[0].strip(" ()[]\"")
-                lblval = vallist[1].strip(" ()[]\"")
+                lblproj = vallist[0].strip(" ()[]\"\'")
+                lblval = vallist[1].strip(" ()[]\"\'")
                 if lblval.isdigit():
                     # Its "subproject, integer"
                     try:
@@ -240,8 +240,8 @@ class PageDescription(Widget):
                 if len(vallist) != 2:
                     self[0] = f"Unable to resolve the ident of {self.wf.page_ident}"
                     return
-                lblproj = vallist[0].strip(" ()[]\"")
-                lblval = vallist[1].strip(" ()[]\"")
+                lblproj = vallist[0].strip(" ()[]\"\'")
+                lblval = vallist[1].strip(" ()[]\"\'")
                 if lblval.isdigit():
                     # Its "subproject, integer"
                     try:
