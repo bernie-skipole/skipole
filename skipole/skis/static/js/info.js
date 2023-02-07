@@ -126,6 +126,24 @@ SKIPOLE.info.ProgressBar1.prototype.setvalues = function (fieldlist, result) {
     };
 
 
+SKIPOLE.info.ProgressBar2 = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.info.ProgressBar2.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.info.ProgressBar2.prototype.constructor = SKIPOLE.info.ProgressBar2;
+SKIPOLE.info.ProgressBar2.prototype.setvalues = function (fieldlist, result) {
+    if (!this.widg_id) {
+        return;
+        }
+    let value = this.fieldarg_in_result('value', result, fieldlist);
+    if (value || value === 0) {
+        let insidediv = this.widg.children().filter(":first");
+        insidediv.attr("style", "height:24px;width:" + value + "%;");
+        }
+    };
+
+
 
 
 
