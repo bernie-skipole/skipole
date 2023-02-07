@@ -521,6 +521,46 @@ class ProgressBar1(Widget):
 
 
 
+class ProgressBar2(Widget):
+    """A div containing a progress bar, uses width of a div rather than the progress tag"""
 
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {'value':FieldArg("integer", "0", jsonset=True),
+                        'bar_class':FieldArg("cssclass", '')
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+        value is an integer representing a percentage between 0 and 100
+        bar_class should set the bar colour, such as w3-green
+        """
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
+        self[0] = tag.Part(tag_name="div")
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "build the widget"
+        if self.wf.value<0:
+            value = 0
+        elif self.wf.value>100:
+            value = 100
+        else:
+            value = self.wf.value
+        barstyle = f"height:24px;width:{value}%"
+        self[0].set_class_style(self.wf.bar_class, barstyle)
+
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id and class widget_class -->
+ <div> <!-- with class bar_class and style width set to value -->
+ </div>
+</div>
+"""
 
 
