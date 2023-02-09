@@ -137,6 +137,8 @@ end_call - a function you should create, called at the end of the call, prior to
 
 url - path where this project will be served, typically '/'
 
+proj_ident - project identifier, normally None which auto sets it to the PROJECT value
+
 You would typically define your functions, and then create an instance:
 
 my_application = WSGIApplication(project=PROJECT,
@@ -145,7 +147,13 @@ my_application = WSGIApplication(project=PROJECT,
                                  start_call=start_call,
                                  submit_data=submit_data,
                                  end_call=end_call,
-                                 url="/")
+                                 url="/",
+                                 proj_ident=None)
+
+If the argument proj_ident is left at its default None value, then it will be automatically
+set to the project name. However it can be set to a different string here which may be useful
+if multiple instances of this project are to be created and added to a parent 'root' project.
+Each unique proj_ident will then define each of the sub applications.
 
 This my_application is then a callable WSGI application.
 

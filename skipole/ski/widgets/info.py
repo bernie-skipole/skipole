@@ -315,7 +315,7 @@ class ProjectName(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <span>  <!-- with widget id and class widget_class -->
-  <!-- the project name -->
+  <!-- the project ident (usually the project name unless set otherwise) -->
 </span>
 """
 
