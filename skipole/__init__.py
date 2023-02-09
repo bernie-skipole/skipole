@@ -32,6 +32,8 @@ GoTo - diverts the call to another page
 
 FailPage - diverts the call to the calling Responder's 'Fail page'
 
+ServeFile - Causes a static server file to be returned to the client.
+
 
 WSGIApplication
 ---------------
