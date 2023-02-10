@@ -419,6 +419,11 @@ class Redirector(Widget):
         else:
             url = self.wf.url
 
+        if "/" not in url:
+            # not a valid url
+            self[1][0] = f"Invalid URL \"{url}\" has been given"
+            return
+        
         self[0][0] = "window.location.replace(\"%s\");" % (url,)
 
         linebreaks = bool(self.wf.linebreaks)

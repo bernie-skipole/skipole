@@ -869,7 +869,7 @@ class Widget(tag.Part):
         else:
             embedded_parts = self.embedded
         if self._error:
-            if isinstance(self._error, TextBlock):
+            if isinstance(self._error, tag.TextBlock):
                 self._error.update(page, ident_list, environ, call_data, lang, self.ident_string, self.placename, embedded_parts)
             return
         # build the widget, set self.wf with field values, this namespace is used in the widget build to access widget field values easily
@@ -1596,7 +1596,7 @@ class ClosedWidget(tag.ClosedPart):
         else:
             embedded_parts = self.embedded
         if self._error:
-            if isinstance(self._error, TextBlock):
+            if isinstance(self._error, tag.TextBlock):
                 self._error.update(page, ident_list, environ, call_data, lang, self.ident_string, self.placename, embedded_parts)
             return
         # build the widget, set self.wf with field values, this namespace is used in the widget build to access widget field values easily
