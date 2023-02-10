@@ -382,7 +382,10 @@ class Redirector(Widget):
     """A widget containing javascript which redirects the page to the url
        Once the page is loaded, the redirection occurs, so normally
        this is the only widget on the page
-       A textblock is displayed with the link to the url if the client has javascript disabled"""
+       A textblock is displayed with the link to the url if the client has javascript disabled
+
+       If an error is raised with this widget as target, the error message should be a URL which the widget will
+       then use - causing a redirection on error."""
 
     arg_descriptions = {'url':FieldArg("text", ''),
                         'textblock_ref':FieldArg("textblock_ref", ""),
@@ -393,7 +396,7 @@ class Redirector(Widget):
 
     def __init__(self, name=None, brief='', **field_args):
         """
-        url: the url to redirect to
+        url: the url to redirect to, either a URL containing / character or a label
         textblock_ref: The reference of the TextBlock appearing in the paragraph
         text_refnotfound: text to appear if the textblock is not found
         text_replaceblock: text set here will replace the textblock
@@ -408,6 +411,7 @@ class Redirector(Widget):
 
     def _error_build(self, message):
         """Called if an error is raised"""
+        # sets the error message as the widget URL
         if message:
             self._url = message
 
@@ -419,12 +423,23 @@ class Redirector(Widget):
         else:
             url = self.wf.url
 
-        if "/" not in url:
-            # not a valid url
-            self[1][0] = f"Invalid URL \"{url}\" has been given"
+        if not url:
+            self[1][0] = "Invalid URL given"
             return
+
+        if "/" not in url:
+            # not a valid url, could be a label
+            proj = skiboot.getproject(self.proj_ident)
+            if proj is None:
+                self[1][0] = "Unable to resolve the URL"
+                return
+            value = proj.label_to_url(url)
+            if value is None:
+                self[1][0] = f"Invalid URL \"{url}\" has been given"
+                return
+            url = value
         
-        self[0][0] = "window.location.replace(\"%s\");" % (url,)
+        self[0][0] = f"window.location.replace(\"{url}\");"
 
         linebreaks = bool(self.wf.linebreaks)
 
