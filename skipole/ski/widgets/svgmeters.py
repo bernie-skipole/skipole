@@ -222,18 +222,18 @@ class Vertical1(Widget):
 
         # now place arrow at the measurement point
         measurement = Decimal(self.wf.measurement)
-        self._minvalue = maxscale[0]
-        self._maxvalue = maxscale[-1]
+        _minvalue = maxscale[0]
+        _maxvalue = maxscale[-1]
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
-        self.jlabels['maxvalue'] = self._maxvalue
-        self.jlabels['minvalue'] = self._minvalue
+        self.jlabels['maxvalue'] = str(_maxvalue)
+        self.jlabels['minvalue'] = str(_minvalue)
 
-        if measurement >= self._maxvalue:
+        if measurement >= _maxvalue:
             return
-        if measurement <= self._minvalue:
+        if measurement <= _minvalue:
             self[1].attribs["transform"] = "translate(0, 600)"
             return
-        m = Decimal('600.0') - (measurement - self._minvalue)*600/(self._maxvalue-self._minvalue)
+        m = Decimal('600.0') - (measurement - _minvalue)*600/(_maxvalue-_minvalue)
         self[1].attribs["transform"] = f"translate(0, {m})"
 
 
@@ -478,21 +478,21 @@ A %s %s 0 0 1 %s %s
 
         # now place arrow at the measurement point
         measurement = Decimal(self.wf.measurement)
-        self._minvalue = maxscale[0]
-        self._maxvalue = maxscale[-1]
+        _minvalue = maxscale[0]
+        _maxvalue = maxscale[-1]
         # any label:value added to self.jlabels will be set in a javascript fieldvalues attribute for the widget
-        self.jlabels['maxvalue'] = self._maxvalue
-        self.jlabels['minvalue'] = self._minvalue
+        self.jlabels['maxvalue'] = str(_maxvalue)
+        self.jlabels['minvalue'] = str(_minvalue)
 
         centre_string = " " + str(self._cx) + " " + str(self._cy) + ")"
-        if measurement >= self._maxvalue:
+        if measurement >= _maxvalue:
             self[2].attribs["transform"] = "rotate(" + str(self._scale_angle/2) + centre_string
             return
-        if measurement <= self._minvalue:
+        if measurement <= _minvalue:
             self[2].attribs["transform"] = "rotate(-" + str(self._scale_angle/2) + centre_string
             return
 
-        measurement_angle = (measurement - self._minvalue)*self._scale_angle/(self._maxvalue-self._minvalue) - self._scale_angle/2
+        measurement_angle = (measurement - _minvalue)*self._scale_angle/(_maxvalue-_minvalue) - self._scale_angle/2
 
         self[2].attribs["transform"] = "rotate(" + str(measurement_angle) + centre_string
 
