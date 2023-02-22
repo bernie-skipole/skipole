@@ -673,9 +673,9 @@ class SubmitFromScript(Widget):
            self.jlabels['hidden_field1'] = self.wf.hidden_field1
         if self.wf.hidden_field2:
            self.jlabels['hidden_field2'] = self.wf.hidden_field2
-        if self.wf.local_storage:
+        if self.wf.hidden_field3:
            self.jlabels['hidden_field3'] = self.wf.hidden_field3
-        if self.wf.local_storage:
+        if self.wf.hidden_field4:
            self.jlabels['hidden_field4'] = self.wf.hidden_field4
 
         if not self.wf.action:
