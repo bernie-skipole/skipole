@@ -159,10 +159,17 @@ This my_application is then a callable WSGI application.
 
 The WSGIApplication class has method:
 
-add_project(self, proj, url) - adds other projects to the 'root' project.
+add_project(self, proj, url, check_cookies=None) - adds other projects to the 'root' project.
 
 Where proj is another instance of a WSGIApplication and will be served at the path
 given by argument url.
+
+The optional check_cookies argument can be set to a function which you would create, with signature:
+def my_check_cookies_function(received_cookies, proj_data):
+Before the call is routed to the subapplication, your my_check_cookies_function is called, with the
+received_cookies dictionary, and with your application's proj_data dictionary. If your function
+returns None, the call proceeds unhindered to the subapplication. If however your function returns
+an ident tuple, of the form (proj_ident, pagenumber), then the call is routed to that page instead.
 
 The skis module has the function makeapp() which creates a project providing needed javascript
 files which should be added to your application, for example:
