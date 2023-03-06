@@ -89,7 +89,7 @@ def project_to_OD(proj_ident=None):
                 if target.proj == proj_ident:
                     specialpages[label] = target.num
                 else:
-                    specialpages[label] = str(target)
+                    specialpages[label] = target.to_comma_str()
             else:
                 specialpages[label] = target
         project["specialpages"] = OrderedDict(sorted(specialpages.items(), key=lambda t: t[0]))
