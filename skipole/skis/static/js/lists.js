@@ -351,5 +351,10 @@ SKIPOLE.lists.TableList.prototype.eventfunc = function (e) {
     };
 
 
-
+SKIPOLE.lists.FileList = function (widg_id, error_message, fieldmap) {
+    SKIPOLE.BaseWidget.call(this, widg_id, error_message, fieldmap);
+    this.display_errors = false;
+    };
+SKIPOLE.lists.FileList.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
+SKIPOLE.lists.FileList.prototype.constructor = SKIPOLE.lists.FileList;
 

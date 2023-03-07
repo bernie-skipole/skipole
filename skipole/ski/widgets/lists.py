@@ -368,3 +368,60 @@ class TableList(AnchorClickEventMixin, Widget):
   <!-- rows repeated -->
 </table>"""
 
+
+class FileList(Widget):
+    """Defines a div, containing links to downloadable files
+       If the download parameter is true, the file pointed by the url is downloaded rather than displayed in the browser"""
+
+    # This class does not display any error messages
+    display_errors = False
+
+    arg_descriptions = {
+                        'file_links':FieldArgTable(("url", "text", "boolean"), valdt=True),    # target, filename, download
+                        'button_class':FieldArg("cssclass", ''),
+                        'button_style':FieldArg("cssstyle", '')
+                       }
+
+    def __init__(self, name=None, brief='', **field_args):
+        """
+         file_links: A list of lists, each inner list describing a link
+        For each link, the table row is
+          0 : The url, label or ident of the target page of the link
+          1 : Filename - The displayed text of the link and name of file to be downloaded
+          2 : True if the link is to be downloaded rather than displayed
+        button_class: The class of the button links - which provides the appearance via CSS
+        """
+        Widget.__init__(self, name=name, brief=brief, **field_args)
+        self.tag_name = "div"
+        # as this widget does not display errors, and is not json settable, hide if empty
+        self.hide_if_empty=True
+
+
+    def _build(self, page, ident_list, environ, call_data, lang):
+        "Build the list of links"
+        for row in self.wf.file_links:
+            linkurl, filename, download = row
+            if not (linkurl or filename):
+                continue
+            url = self.get_url(linkurl)
+            if not url:
+                continue
+            if download:
+                lnk = tag.Part(tag_name="a", text=filename, attribs={"href":url, "role":"button", "download":filename})
+            else:
+                lnk = tag.Part(tag_name="a", text=filename, attribs={"href":url, "role":"button"})
+            lnk.set_class_style(self.wf.button_class, self.wf.button_style)
+            self.append(lnk)
+
+    @classmethod
+    def description(cls):
+        """Returns a text string to illustrate the widget"""
+        return """
+<div>  <!-- with widget id and class widget_class -->
+  <a role=\"button\" href=\"#\" download=\"filename\">  <!-- with class set to button_class -->
+    <!-- The filename -->
+  </a>
+  <!-- further links -->
+</div>"""
+
+
