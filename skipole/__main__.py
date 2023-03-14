@@ -28,7 +28,7 @@ Once created, your application and its support files can be moved to your deploy
 
 The deployment server does not need the skilift application.
 
-Skipole and skilift require python 3.6 or later, and can be installed with:
+Skipole and skilift require python 3.8 or later, and can be installed with:
 
 python3 -m pip install skipole
 
@@ -97,6 +97,10 @@ use_submit_list - is available to optionally wrap the user defined submit_data f
 PageData - An instance of this class is used to update page widgets.
 
 SectionData - An instance of this class is used to update section widgets
+
+widget_modules() - Return a tuple of widget module names
+
+widgets_in_module(module_name) - Returns a tuple of widget names present in the module
 
 
 Exceptions

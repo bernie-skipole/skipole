@@ -1,110 +1,31 @@
 
 """A WSGI application generator
 
-The package makes the following available:
+skilift is an associated python package used to develop an application.
 
-version - a version string of the form a.b.c
+Typically a developer's PC would have both the skilift and the skipole Python packages installed. Skilift includes a development web server and provides a web admin interface, which together with your own code and the skipole functions, enables the developer to create a WSGI application.
 
-WSGIApplication - an instance of this class is a callable WSGI application (see below)
+Once created, your application and its support files can be moved to your deployment server, which also needs a WSGI compatible web server, and the skipole package. 
 
-set_debug(mode) - a function to turn on debugging (if mode is True), or off (if mode is False)
+The deployment server does not need the skilift application.
 
-use_submit_list - is available to optionally wrap the user defined submit_data function
-                  Enables a responder 'submit list' to define package,module,function to
-                  be called as the responder's submit_data function, where package,module
-                  is relative to the users code.
+Skipole and skilift require python 3.8 or later, and can be installed with:
 
-PageData - An instance of this class is used to update page widgets.
+python3 -m pip install skipole
 
-SectionData - An instance of this class is used to update section widgets
+python3 -m pip install skilift
 
 
-Exceptions
-----------
+skilift
+-------
 
-These are also provided, and can be raised within the users code:
+To generate a new project, and use a web admin interface to develop it, the package skilift is required.
 
-ValidateError - returns the project validation error page
-
-ServerError - returns the project server error page
-
-GoTo - diverts the call to another page
-
-FailPage - diverts the call to the calling Responder's 'Fail page'
-
-ServeFile - Causes a static server file to be returned to the client.
-
-
-WSGIApplication
----------------
-
-An instance of this class should be created, and is a callable WSGI application.
-
-The WSGIApplication has the following arguments which should be provided to create
-an instance:
-
-PROJECT - the project name
-
-PROJECTFILES - the directory containing your projects
-
-PROJ_DATA - An optional dictionary you may whish to provide
-
-start_call - a function you should create, called at the start of a call
-
-submit_data - a function you should create, called by responders
-
-end_call - a function you should create, called at the end of the call, prior to returning the page
-
-url - path where this project will be served, typically '/'
-
-proj_ident - generally set to None, in which case it will be auto set to the project name
-
-proj_ident is only used to provide an alternate name should you wish to add this application
-multiple times to another root project. Each instance can be given a different proj_ident
-to differentiate them, so each page will have an id of (proj_ident, number)
-rather than (projectname, number).
-
-You would typically define your functions, and then create an instance:
-
-my_application = WSGIApplication(project=PROJECT,
-                                 projectfiles=PROJECTFILES,
-                                 proj_data=PROJ_DATA,
-                                 start_call=start_call,
-                                 submit_data=submit_data,
-                                 end_call=end_call,
-                                 url="/",
-                                 proj_ident=None)
-
-This my_application is then a callable WSGI application.
-
-The WSGIApplication class has method:
-
-add_project(self, proj, url) - adds other projects to the 'root' project.
-
-Where proj is another instance of a WSGIApplication and will be served at the path
-given by argument url.
-
-The skis module has the function makeapp() which creates a project providing needed javascript
-files which should be added to your application, for example:
-
-from skipole import skis
-skis_application = skis.makeapp()
-my_application.add_project(skis_application, url='/lib')
-
-Which causes the skis project to be served at /lib.
-
-Sub-projects (such as skis above) cannot have further sub projects added - all
-sub-projects can only be added to the 'root' project.
-
-
-python3 -m skipole
-------------------
-
-skipole can be run from the command line with the python -m option
+skilift can be run from the command line with the python -m option
 
 Usage is
 
-python3 -m skipole mynewproj /path/to/projectfiles
+python3 -m skilift mynewproj /path/to/projectfiles
 
 Which creates a directory /path/to/projectfiles
 containing sub directory mynewproj - containing project data, and file
@@ -125,6 +46,125 @@ You should then inspect the file
 
 where your code will be developed.
 
+
+skipole
+-------
+
+skipole is intended to be imported, if it is run using
+
+python3 -m skipole
+
+this text is displayed.
+
+If it is run using
+
+python3 -m skipole --version
+
+Then a version string is displayed.
+
+When imported skipole makes the following available:
+
+version - a version string of the form a.b.c
+
+WSGIApplication - an instance of this class is a callable WSGI application (see below)
+
+set_debug(mode) - a function to turn on debugging (if mode is True), or off (if mode is False)
+
+use_submit_list - is available to optionally wrap the user defined submit_data function
+                  Enables a responder 'submit list' to define package,module,function to
+                  be called as the responder's submit_data function, where package,module
+                  is relative to the users code.
+
+PageData - An instance of this class is used to update page widgets.
+
+SectionData - An instance of this class is used to update section widgets
+
+widget_modules() - Return a tuple of widget module names
+
+widgets_in_module(module_name) - Returns a tuple of widget names present in the module
+
+
+Exceptions
+----------
+
+These are also provided, and can be raised within the users code:
+
+ValidateError - returns the project validation error page
+
+ServerError - returns the project server error page
+
+GoTo - diverts the call to another page
+
+FailPage - diverts the call to the calling Responder's 'Fail page'
+
+ServeFile - sends a static server file to the client browser
+
+
+WSGIApplication
+---------------
+
+An instance of this class should be created, and is a callable WSGI application.
+
+The WSGIApplication has the following arguments which should be provided to create
+an instance:
+
+PROJECT - the project name
+
+PROJECTFILES - the directory containing your projects
+
+PROJ_DATA - An optional dictionary you may wish to provide
+
+start_call - a function you should create, called at the start of a call
+
+submit_data - a function you should create, called by responders
+
+end_call - a function you should create, called at the end of the call, prior to returning the page
+
+url - path where this project will be served, typically '/'
+
+proj_ident - project identifier, normally None which auto sets it to the PROJECT value
+
+You would typically define your functions, and then create an instance:
+
+my_application = WSGIApplication(project=PROJECT,
+                                 projectfiles=PROJECTFILES,
+                                 proj_data=PROJ_DATA,
+                                 start_call=start_call,
+                                 submit_data=submit_data,
+                                 end_call=end_call,
+                                 url="/",
+                                 proj_ident=None)
+
+If the argument proj_ident is left at its default None value, then it will be automatically
+set to the project name. However it can be set to a different string here which may be useful
+if multiple instances of this project are to be created and added to a parent 'root' project.
+Each unique proj_ident will then define each of the sub applications.
+
+This my_application is then a callable WSGI application.
+
+The WSGIApplication class has method:
+
+add_project(self, proj, url, check_cookies=None) - adds other projects to the 'root' project.
+
+Where proj is another instance of a WSGIApplication and will be served at the path
+given by argument url.
+
+The optional check_cookies argument can be set to a function which you would create, with signature:
+def my_check_cookies_function(received_cookies, proj_data):
+Before the call is routed to the subapplication, your my_check_cookies_function is called, with the
+received_cookies dictionary, and with your application's proj_data dictionary. If your function
+returns None, the call proceeds unhindered to the subapplication. If however your function returns
+an ident tuple, of the form (proj_ident, pagenumber), then the call is routed to that page instead.
+
+The skis module has the function makeapp() which creates a project providing needed javascript
+files which should be added to your application, for example:
+
+from skipole import skis
+skis_application = skis.makeapp()
+my_application.add_project(skis_application, url='/lib')
+
+Which causes the skis project to be served at /lib.
+
 """
 
 import sys, traceback, inspect, pkgutil
@@ -140,7 +180,8 @@ from .ski.excepts import ValidateError, ServerError, GoTo, FailPage, ServeFile
 version = skiboot.version()
 
 
-__all__ = ['WSGIApplication', 'ValidateError', 'ServerError', 'GoTo', 'FailPage', 'ServeFile', 'set_debug', 'use_submit_list', 'version', 'PageData', 'SectionData']
+__all__ = ['WSGIApplication', 'ValidateError', 'ServerError', 'GoTo', 'FailPage', 'ServeFile',
+           'set_debug', 'use_submit_list', 'version', 'PageData', 'SectionData', 'widget_modules', 'widgets_in_module']
 
 
 class WSGIApplication(object):
