@@ -351,18 +351,15 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
         var keysonly = Object.keys(keysvals);
         }
     let self = this;
-    let index = 0;
-    let header = false;
-    if (the_widg.find('th').length) {
-        header = true;
+
+    let tbody = the_widg.find('tbody');
+    if (!tbody.length) {
+        return;
         }
-    the_widg.find('tr').each(function() {
-        if (header) {
-            // the header line
-            header = false;
-            }
-        else {
-            // for each row
+
+    let index = 0;
+    tbody.find('tr').each(function() {
+            // for each row in the body
 
             // set its class
             if (row_classes && row_classes.length) {
@@ -448,7 +445,6 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                 }
 
 
-
             // up_hide
             if (up_hide && up_hide.length) {
                 if (up_hide[index] !== null) {
@@ -501,7 +497,6 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                 }
 
              index=index+1;
-            }
         })
     };
 SKIPOLE.inputtables.InputTable3.prototype.eventfunc = function (e) {
@@ -571,7 +566,9 @@ SKIPOLE.inputtables.InputTable3.prototype.setnewnumber = function (val, rownumbe
     // be put into the getfield3 fields of the arrow links
     // rownumber is the row on the table affected
 
-    let rows = this.widg.find('tr');
+    let tbody = this.widg.find('tbody');
+
+    let rows = tbody.find('tr');
     let cells = $(rows[rownumber]).children();
     let a_link = $(cells[3]).find("a");
 
