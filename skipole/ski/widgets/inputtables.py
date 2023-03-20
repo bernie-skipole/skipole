@@ -765,7 +765,7 @@ class InputTable3(Widget):
                         'up_getfield2':FieldArgList('text', valdt=True, jsonset=True),
                         'down_getfield1':FieldArgList('text', valdt=True, jsonset=True),
                         'down_getfield2':FieldArgList('text', valdt=True, jsonset=True),
-                        'getfield3':FieldArgList('text', valdt=True, jsonset=True),
+                        'getfield3':FieldArgList('text', valdt=True),
                         'col1':FieldArgList('text', jsonset=True),
                         'col2':FieldArgList('text', jsonset=True),
                         'inputdict':FieldArgDict('text', valdt=True, jsonset=True, senddict=True)                 # dictionary of keyname:value

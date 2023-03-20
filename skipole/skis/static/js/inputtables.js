@@ -337,19 +337,12 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
     let up_getfield2 = this.fieldarg_in_result('up_getfield2', result, fieldlist);
     let down_getfield1 = this.fieldarg_in_result('down_getfield1', result, fieldlist);
     let down_getfield2 = this.fieldarg_in_result('down_getfield2', result, fieldlist);
-    let getfield3 = this.fieldarg_in_result('getfield3', result, fieldlist);
 
-    if (getfield3 === undefined) {
-        getfield3 = {};
-        }
 
     let row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
     let up_hide = this.fieldarg_in_result('up_hide', result, fieldlist);
     let down_hide = this.fieldarg_in_result('down_hide', result, fieldlist);
     let keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
-    if (keysvals && Object.keys(keysvals).length) {
-        var keysonly = Object.keys(keysvals);
-        }
     let self = this;
 
     let tbody = the_widg.find('tbody');
@@ -361,64 +354,51 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
     tbody.find('tr').each(function() {
             // for each row in the body
 
-            // set its class
+            // set the row class
             if (row_classes && row_classes.length) {
                 if (row_classes[index] !== null) {
                     $(this).attr("class", row_classes[index]);
                     }
                 }
+            // for the td cells in the row
             let cells = $(this).children();
+            // set col1 value if given
             if (col1 && col1.length) {
                 if (col1[index] !== null) {
                     $(cells[0]).text(col1[index]);
                     }
                  }
+            // set col2 value if given
             if (col2 && col2.length) {
                 if (col2[index] !== null) {
                     $(cells[1]).text(col2[index]);
                     }
                  }
 
+             //deal with input field
             let inputtag = $(cells[2]).find('input');
 
-            // set the input field equal to values given in getfield3
-            if (getfield3[index] === undefined) {
-                var getf3 = null;
-                }
-            else {
-                 var getf3 = getfield3[index];
-                 }
-
-            if (inputtag && inputtag.length) {
-
-                if (getf3 !== null) {
-                    inputtag.val(getf3);
+            if (keysvals != undefined) {
+                // If inputdict given, any value for this
+                // row should be set
+                let inputname = inputtag.prop('name');
+                // get the rowkey from this name, which should be of the form
+                // widgetname:fieldname-rowkey
+                let namearray = inputname.split("-");
+                let rowkey = namearray[1];
+                if (rowkey in keysvals) {
+                    // the received inputdict has a new value for this row
+                    inputtag.val(keysvals[rowkey]);
                     }
-
-                // however if inputdict given, this overrides values given in getf3
-                if (keysonly && keysonly.length) {
-                    let rowkey = keysonly[index];
-                    if (rowkey) {
-                        // set name attribute and val attribute for each input field
-                        if (keysvals[rowkey] !== null) {
-                            inputtag.prop('name', self.formname('inputdict') + "-" + rowkey);
-                            inputtag.val(keysvals[rowkey]);
-                            }
-                        }
-                     }
-
-                // getf3 for the arrows, this should be the value from the input_dict
-                getf3 = inputtag.val();
-                }
-            else {
-                  getf3 = null;
                  }
+
+            // getf3 for the arrows
+            getf3 = inputtag.val();
 
 
             let a_link = $(cells[3]).find("a");
             let up_link = $(a_link[0]);
             // up_getfield1
-
             if (up_getfield1 && up_getfield1.length) {
                 if (up_getfield1[index] !== null) {
                     let href = up_link.attr('href');
@@ -427,7 +407,6 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                     }
                 }
             // up_getfield2
-
             if (up_getfield2 && up_getfield2.length) {
                 if (up_getfield2[index] !== null) {
                     let href = up_link.attr('href');
@@ -435,16 +414,12 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                     up_link.attr('href', url);
                     }
                 }
-
-
             // getfield3
             if (getf3 !== null) {
                 let href = up_link.attr('href');
                 let url = self.setgetfield(href, 'getfield3', getf3);
                 up_link.attr('href', url);
                 }
-
-
             // up_hide
             if (up_hide && up_hide.length) {
                 if (up_hide[index] !== null) {
@@ -459,7 +434,6 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
 
             let down_link = $(a_link[1]);
             // down_getfield1
-
             if (down_getfield1 && down_getfield1.length) {
                 if (down_getfield1[index] !== null) {
                     let href = down_link.attr('href');
@@ -468,7 +442,6 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                     }
                 }
             // down_getfield2
-
             if (down_getfield2 && down_getfield2.length) {
                 if (down_getfield2[index] !== null) {
                     let href = down_link.attr('href');
@@ -476,14 +449,12 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                     down_link.attr('href', url);
                     }
                 }
-
             // getfield3
             if (getf3 !== null) {
                 let href = down_link.attr('href');
                 let url = self.setgetfield(href, 'getfield3', getf3);
                 down_link.attr('href', url);
                 }
-
             // down_hide
             if (down_hide && down_hide.length) {
                 if (down_hide[index] !== null) {
