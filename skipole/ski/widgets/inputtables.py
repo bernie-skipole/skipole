@@ -738,6 +738,7 @@ class InputTable3(Widget):
     arg_descriptions = {'header_class':FieldArg("cssclass",""),        # class applied to row of header
                         'col1_class':FieldArg("cssclass",""),          # class applied to every td in the first column
                         'col2_class':FieldArg("cssclass",""),          # class applied to every td in the second column
+                        'cell_style':FieldArgTable(['integer', 'integer', 'text'], jsonset=True),  # style applied to row,col for col 1 and 2
                         'col3_class':FieldArg("cssclass",""),          # class applied to every td in the third column
                         'col3_style':FieldArg("cssstyle", ""),
                         'col4_class':FieldArg("cssclass",""),          # class applied to every td in the fourth column
@@ -778,6 +779,7 @@ class InputTable3(Widget):
         header_class: class of the header row, if empty string, then no class will be applied
         col1_class: class applied to every td in the first column
         col2_class: class applied to every td in the second column
+        cell_style: list of lists of form [row, col, cssstyle] where row is tbody row starting at 1, col is 1 or 2
         col3_class: class applied to every td in the third column
         col3_style: style applied to every td in the third column
         col4_class: class applied to every td in the fourth column
@@ -810,10 +812,9 @@ class InputTable3(Widget):
                    will be useful when doing a JSON update.
         col1: A list of text strings to place in the first column
         col2: A list of text strings to place in the second column
-        inputdict: A dictionary of keyname:value, should be Ordered Dict unless python >= 3.6
+        inputdict: A dictionary of keyname:value,
                    the fields submitted will have name 'widgetname:inputdict-keyname'
-                   and the user will receive a widgfield ('widgetname','inputdict') containing a dictionary of keyname:values
-                   If values are None, then the values listed in getfield3 will be used, otherwise values given here have priority
+                   and the widgfield received will be ('widgetname','inputdict') containing a dictionary of keyname:values
          """
         Widget.__init__(self, name=name, brief=brief, **field_args)
         self.tag_name = "table"
@@ -895,8 +896,8 @@ class InputTable3(Widget):
             self[0][0][2] = tag.Part(tag_name='th', text = self.wf.title3)
             self[0][0][3] = tag.Part(tag_name='th', text = self.wf.title4)
 
-        # create rows
-        rows = max( len(col1), len(col2), len(inputdict) )
+        # create rows, the given inputdict defines the number of rows
+        rows = len(inputdict)
 
         if not rows:
             return
@@ -914,10 +915,7 @@ class InputTable3(Widget):
             col2.extend(['']*(rows - len(col2)))
 
         keylist = list(inputdict.keys())
-        if rows > len(keylist):
-            keylist.extend([None]*(rows - len(keylist)))
-
-        # keylist is a list of the dictionary keys, extended by None keys, if the dictionary is smaller than the number of rows of the table
+        # keylist is a list of the dictionary keys
 
         for index in range(rows):
             cssclass = rowc[index] if index < len(rowc) else ''
@@ -944,30 +942,30 @@ class InputTable3(Widget):
             get3 = getfield3[index] if index < len(getfield3) else ''
 
             key = keylist[index]
-            if key:  # this is the dictionary key
-                keyed_name = input_name + key
-                if not inputdict[key]:
-                    # if no value given, and if get3 has a value, that is used
-                    if get3:
-                        inputdict[key] = get3
-                else:
-                    # inputdict overrides get3, but the two must match
-                    get3 = inputdict[key]
+            # this is the dictionary key
+            keyed_name = input_name + key
+            if not inputdict[key]:
+                # if no value given, and if get3 has a value, that is used
+                if get3:
+                    inputdict[key] = get3
+            else:
+                # inputdict overrides get3, but the two must match
+                get3 = inputdict[key]
 
-                # set up the input field, including an onchange event which sets getfield3 when the input field changes
-                bodyrow[2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name,
-                                                                          "type":"text",
-                                                                          "value":inputdict[key],
-                                             "onchange":f"SKIPOLE.widgets['{self.get_id()}'].setnewnumber(this.value, {index})"
-                                                                                 })
-                if size:
-                    bodyrow[2][0].attribs["size"] = size
-                if maxlength:
-                    bodyrow[2][0].attribs["maxlength"] = maxlength
-                if input_class:
-                    bodyrow[2][0].attribs["class"] = input_class
-                if input_style:
-                    bodyrow[2][0].attribs["style"] = input_style
+            # set up the input field, including an onchange event which sets getfield3 when the input field changes
+            bodyrow[2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name,
+                                                                      "type":"text",
+                                                                      "value":inputdict[key],
+                                         "onchange":f"SKIPOLE.widgets['{self.get_id()}'].setnewnumber(this.value, {index})"
+                                                                             })
+            if size:
+                bodyrow[2][0].attribs["size"] = size
+            if maxlength:
+                bodyrow[2][0].attribs["maxlength"] = maxlength
+            if input_class:
+                bodyrow[2][0].attribs["class"] = input_class
+            if input_style:
+                bodyrow[2][0].attribs["style"] = input_style
 
             bodyrow[3] = tag.Part(tag_name='td')
             bodyrow[3].set_class_style(col4_class, col4_style)
@@ -1037,6 +1035,22 @@ class InputTable3(Widget):
                           self.get_formname("getfield3"):get3
                           }
             bodyrow[3][1].attribs["href"] = self.make_get_url(page, down_url, get_fields, True)
+            
+        # set cell styles            
+        for row, col, style in self.wf.cell_style:
+            # each cell has format row, col, style, where row and col start at 1 rather than zero
+            if row > rows:
+                continue
+            bodyrow = tbody[row-1]
+            if col == 1:
+                cellcol = bodyrow[0]
+            elif col == 2:
+                cellcol = bodyrow[1]  
+            else:
+                continue
+            if style:
+                cellcol.attribs["style"] = style            
+        
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""

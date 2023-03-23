@@ -64,7 +64,7 @@ SKIPOLE.inputtables.InputTable1.prototype.setvalues = function (fieldlist, resul
                     }
                  }
              index=index+1;
-             
+
             }
         })
     };
@@ -343,6 +343,7 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
     let up_hide = this.fieldarg_in_result('up_hide', result, fieldlist);
     let down_hide = this.fieldarg_in_result('down_hide', result, fieldlist);
     let keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
+    let cell_style = this.fieldarg_in_result('cell_style', result, fieldlist);
     let self = this;
 
     let tbody = the_widg.find('tbody');
@@ -469,6 +470,24 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
 
              index=index+1;
         })
+
+    // set cell colours
+    if (cell_style != undefined) {
+        bodyrows = tbody.find('tr');
+
+        cell_style.forEach(function (item, index) {
+            // for each inner list of cell_style which is of format [row, col, style]
+            let row = bodyrows[item[0]-1];
+            let columns = $(row).find('td');
+            let col = columns[item[1]-1];
+            if (item[2]) {
+                $(col).attr('style', item[2]);
+                }
+            else {
+                $(col).removeAttr('style');
+                }
+            });
+        }
     };
 SKIPOLE.inputtables.InputTable3.prototype.eventfunc = function (e) {
     SKIPOLE.skiprefresh = true;
@@ -553,5 +572,3 @@ SKIPOLE.inputtables.InputTable3.prototype.setnewnumber = function (val, rownumbe
     let downurl = this.setgetfield(downhref, 'getfield3', val);
     down_link.attr('href', downurl);
     };
-
-
