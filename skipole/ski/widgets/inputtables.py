@@ -16,6 +16,11 @@ class InputTable1(Widget):
 
 
     arg_descriptions = {'header_class':FieldArg("cssclass",""),
+                        'col1_class':FieldArg("cssclass",""),          # class applied to every td in the first column
+                        'col2_class':FieldArg("cssclass",""),          # class applied to every td in the second column
+                        'cell_style':FieldArgTable(['integer', 'integer', 'text'], jsonset=True),  # style applied to row,col for col 1 and 2
+                        'col3_class':FieldArg("cssclass",""),          # class applied to every td in the third column
+                        'col3_style':FieldArg("cssstyle", ""),
                         'size':FieldArg("text", ''),
                         'maxlength':FieldArg("text", ''),
                         'title1':FieldArg('text', ''),
@@ -32,6 +37,11 @@ class InputTable1(Widget):
     def __init__(self, name=None, brief='', **field_args):
         """
         header_class: class of the header row, if empty string, then no class will be applied
+        col1_class: class applied to every td in the first column
+        col2_class: class applied to every td in the second column
+        cell_style: list of lists of form [row, col, cssstyle] where row is tbody row starting at 1, col is 1 or 2
+        col3_class: class applied to every td in the third column
+        col3_style: style applied to every td in the third column
         size: The number of characters appearing in each text input area
         maxlength: The maximum number of characters accepted in each text area
         title1: The header title over the first text column
@@ -40,7 +50,7 @@ class InputTable1(Widget):
         row_classes: A list of CSS classes to apply to each row (not including the header)
         col1: A list of text strings to place in the first column
         col2: A list of text strings to place in the second column
-        inputdict: A dictionary of keyname:value, should be Ordered Dict unless python >= 3.6
+        inputdict: A dictionary of keyname:value,
                    the fields submitted will have name 'widgetname:inputdict-keyname'
                    and the user will receive a widgfield ('widgetname','inputdict') containing a dictionary of keyname:values
          """
@@ -58,52 +68,86 @@ class InputTable1(Widget):
         size = self.wf.size
         maxlength = self.wf.maxlength
 
-        header = 0
+        col1_class = self.wf.col1_class
+        col2_class = self.wf.col2_class
+        col3_class = self.wf.col3_class
+        col3_style = self.wf.col3_style
+
+        header = False
         if self.wf.title1 or self.wf.title2 or self.wf.title3:
-            header = 1
+            header = True
+            self[0] = tag.Part(tag_name='thead')
             if self.wf.header_class:
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
+                self[0][0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
-                self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
-            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
-            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
+                self[0][0] = tag.Part(tag_name='tr')
+            self[0][0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][0][2] = tag.Part(tag_name='th', text = self.wf.title3)
 
         # create rows
-        rows = max( len(col1), len(col2), len(inputdict) )
-        if not rowc:
-            rowc = ['']*rows
-        if rows > len(rowc):
-            rowc.extend(['']*(rows - len(rowc)))
+        rows = len(inputdict)
+        if not rows:
+            return
+
+        tbody = tag.Part(tag_name='tbody')
+
+        if header:
+            self[1] = tbody
+        else:
+            self[0] = tbody
+
         if rows > len(col1):
             col1.extend(['']*(rows - len(col1)))
         if rows > len(col2):
             col2.extend(['']*(rows - len(col2)))
 
         keylist = list(inputdict.keys())
-        if rows > len(keylist):
-            keylist.extend([None]*(rows - len(keylist)))
-
-        # keylist is a list of the dictionary keys, extended by None keys, if the dictionary is smaller than the number of rows of the table
+         # keylist is a list of the dictionary keys
         
         for index in range(rows):
-            rownumber = index+header
-            if rowc[index]:
-                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":rowc[index]})
+            cssclass = rowc[index] if index < len(rowc) else ''
+            if cssclass:
+                tbody[index] = tag.Part(tag_name='tr', attribs={"class":cssclass})
             else:
-                self[rownumber] = tag.Part(tag_name='tr')
-            self[rownumber][0] = tag.Part(tag_name='td', text = col1[index])
-            self[rownumber][1] = tag.Part(tag_name='td', text = col2[index])
-            self[rownumber][2] = tag.Part(tag_name='td')
-            key = keylist[index]
-            if key:  # this is the dictionary key
-                keyed_name = input_name + key
-                self[rownumber][2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"text", "value":inputdict[key]})
-                if size:
-                    self[rownumber][2][0].attribs["size"] = size
-                if maxlength:
-                    self[rownumber][2][0].attribs["maxlength"] = maxlength
+                tbody[index] = tag.Part(tag_name='tr')
+            bodyrow = tbody[index]
 
+            if col1_class:
+                bodyrow[0] = tag.Part(tag_name='td', text = col1[index], attribs={"class":col1_class})
+            else:
+                bodyrow[0] = tag.Part(tag_name='td', text = col1[index])
+
+            if col2_class:
+                bodyrow[1] = tag.Part(tag_name='td', text = col2[index], attribs={"class":col2_class})
+            else:
+                bodyrow[1] = tag.Part(tag_name='td', text = col2[index])
+
+            bodyrow[2] = tag.Part(tag_name='td')
+            bodyrow[2].set_class_style(col3_class, col3_style)
+
+            key = keylist[index]
+            keyed_name = input_name + key
+            bodyrow[2][0] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"text", "value":inputdict[key]})
+            if size:
+                bodyrow[2][0].attribs["size"] = size
+            if maxlength:
+                bodyrow[2][0].attribs["maxlength"] = maxlength
+
+        # set cell styles            
+        for row, col, style in self.wf.cell_style:
+            # each cell has format row, col, style, where row and col start at 1 rather than zero
+            if row > rows:
+                continue
+            bodyrow = tbody[row-1]
+            if col == 1:
+                cellcol = bodyrow[0]
+            elif col == 2:
+                cellcol = bodyrow[1]  
+            else:
+                continue
+            if style:
+                cellcol.attribs["style"] = style   
 
 
     @classmethod
@@ -111,18 +155,22 @@ class InputTable1(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
+ <thead>
   <tr> <!-- with header class -->
     <th> <!-- title1 --> </th>
     <th> <!-- title2 --> </th>
     <th> <!-- title3 --> </th>
   </tr>
+ </thead>
+ <tbody>
   <tr> <!-- with class from row_classes -->
-    <td> <!-- col1 text string --> </td>
-    <td> <!-- col2 text string --> </td>
+    <td> <!-- with class col1_class and col1 text string --> </td>
+    <td> <!-- with class col2_class and col2 text string --> </td>
     <td><input type="text" />  <!-- with names and value derived from 'inputdict' -->
     </td>
   </tr>
   <!-- rows repeated -->
+ </tbody>
 </table>"""
 
 

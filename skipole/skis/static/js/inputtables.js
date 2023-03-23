@@ -19,54 +19,76 @@ SKIPOLE.inputtables.InputTable1.prototype.setvalues = function (fieldlist, resul
     let col2 = this.fieldarg_in_result('col2', result, fieldlist);
     let row_classes = this.fieldarg_in_result('row_classes', result, fieldlist);
     let keysvals = this.fieldarg_in_result('inputdict', result, fieldlist);
-    if (keysvals && Object.keys(keysvals).length) {
-        var keysonly = Object.keys(keysvals);
-        }
+    let cell_style = this.fieldarg_in_result('cell_style', result, fieldlist);
     let self = this;
-    let index = 0;
-    let header = false;
-    if (the_widg.find('th').length) {
-        header = true;
+
+    let tbody = the_widg.find('tbody');
+    if (!tbody.length) {
+        return;
         }
-    the_widg.find('tr').each(function() {
-        if (header) {
-            // the header line
-            header = false;
+
+    let index = 0;
+    tbody.find('tr').each(function() {
+        // for each row in the body
+
+        // set its class
+        if (row_classes && row_classes.length) {
+            if (row_classes[index] !== null) {
+                $(this).attr("class", row_classes[index]);
+                }
             }
-        else {
-            // for each row
-            // set its class
-            if (row_classes && row_classes.length) {
-                if (row_classes[index] !== null) {
-                    $(this).attr("class", row_classes[index]);
+        // for the td cells in the row
+        let cells = $(this).children();
+        if (col1 && col1.length) {
+            if (col1[index] !== null) {
+                $(cells[0]).text(col1[index]);
+                }
+             }
+        if (col2 && col2.length) {
+            if (col2[index] !== null) {
+                $(cells[1]).text(col2[index]);
+                }
+             }
+
+         //deal with input field
+        let inputtag = $(cells[2]).find('input');
+
+        if (keysvals != undefined) {
+            // If inputdict given, any value for this
+            // row should be set
+            let inputname = inputtag.prop('name');
+            // get the rowkey from this name, which should be of the form
+            // widgetname:fieldname-rowkey
+            let namearray = inputname.split("-");
+            let rowkey = namearray[1];
+            if (rowkey in keysvals) {
+                if (keysvals[rowkey] !== null) {
+                    // the received inputdict has a new value for this row
+                    inputtag.val(keysvals[rowkey]);
                     }
                 }
-            let cells = $(this).children();
-            if (col1 && col1.length) {
-                if (col1[index] !== null) {
-                    $(cells[0]).text(col1[index]);
-                    }
-                 }
-            if (col2 && col2.length) {
-                if (col2[index] !== null) {
-                    $(cells[1]).text(col2[index]);
-                    }
-                 }
-            if (keysonly && keysonly.length) {
-                let rowkey = keysonly[index];
-                if (rowkey) {
-                    if (keysvals[rowkey] !== null) {
-                        // set name attribute and val attribute for each input field
-                        let inputtag = $(cells[2]).find('input');
-                        inputtag.prop('name', self.formname('inputdict') + "-" + rowkey);
-                        inputtag.val(keysvals[rowkey]);
-                        }
-                    }
-                 }
-             index=index+1;
-
-            }
+             }
+         index=index+1;
         })
+
+    // set cell colours
+    if (cell_style != undefined) {
+        bodyrows = tbody.find('tr');
+
+        cell_style.forEach(function (item, index) {
+            // for each inner list of cell_style which is of format [row, col, style]
+            let row = bodyrows[item[0]-1];
+            let columns = $(row).find('td');
+            let cell = columns[item[1]-1];
+            if (item[2]) {
+                $(cell).attr('style', item[2]);
+                }
+            else {
+                $(cell).removeAttr('style');
+                }
+            });
+        }
+
     };
 
 
@@ -388,8 +410,10 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
                 let namearray = inputname.split("-");
                 let rowkey = namearray[1];
                 if (rowkey in keysvals) {
-                    // the received inputdict has a new value for this row
-                    inputtag.val(keysvals[rowkey]);
+                    if (keysvals[rowkey] !== null) {
+                        // the received inputdict has a new value for this row
+                        inputtag.val(keysvals[rowkey]);
+                        }
                     }
                  }
 
@@ -479,12 +503,12 @@ SKIPOLE.inputtables.InputTable3.prototype.setvalues = function (fieldlist, resul
             // for each inner list of cell_style which is of format [row, col, style]
             let row = bodyrows[item[0]-1];
             let columns = $(row).find('td');
-            let col = columns[item[1]-1];
+            let cell = columns[item[1]-1];
             if (item[2]) {
-                $(col).attr('style', item[2]);
+                $(cell).attr('style', item[2]);
                 }
             else {
-                $(col).removeAttr('style');
+                $(cell).removeAttr('style');
                 }
             });
         }
