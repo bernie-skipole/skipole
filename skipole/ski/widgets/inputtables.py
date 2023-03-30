@@ -601,14 +601,15 @@ class InputTable4(Widget):
 
         if self.wf.title1 or self.wf.title2 or self.wf.title3 or self.wf.title4:
             header = True
+            self[0] = tag.Part(tag_name='thead')
             if self.wf.header_class:
-                self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
+                self[0][0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
-                self[0] = tag.Part(tag_name='tr')
-            self[0][0] = tag.Part(tag_name='th', text = self.wf.title1)
-            self[0][1] = tag.Part(tag_name='th', text = self.wf.title2)
-            self[0][2] = tag.Part(tag_name='th', text = self.wf.title3)
-            self[0][3] = tag.Part(tag_name='th', text = self.wf.title4)
+                self[0][0] = tag.Part(tag_name='tr')
+            self[0][0][0] = tag.Part(tag_name='th', text = self.wf.title1)
+            self[0][0][1] = tag.Part(tag_name='th', text = self.wf.title2)
+            self[0][0][2] = tag.Part(tag_name='th', text = self.wf.title3)
+            self[0][0][3] = tag.Part(tag_name='th', text = self.wf.title4)
 
         # create rows
         rows = len(inputdict)
