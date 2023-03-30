@@ -104,7 +104,7 @@ class InputTable1(Widget):
 
         keylist = list(inputdict.keys())
          # keylist is a list of the dictionary keys
-        
+
         for index in range(rows):
             cssclass = rowc[index] if index < len(rowc) else ''
             if cssclass:
@@ -134,7 +134,7 @@ class InputTable1(Widget):
             if maxlength:
                 bodyrow[2][0].attribs["maxlength"] = maxlength
 
-        # set cell styles            
+        # set cell styles
         for row, col, style in self.wf.cell_style:
             # each cell has format row, col, style, where row and col start at 1 rather than zero
             if row > rows:
@@ -143,11 +143,11 @@ class InputTable1(Widget):
             if col == 1:
                 cellcol = bodyrow[0]
             elif col == 2:
-                cellcol = bodyrow[1]  
+                cellcol = bodyrow[1]
             else:
                 continue
             if style:
-                cellcol.attribs["style"] = style   
+                cellcol.attribs["style"] = style
 
 
     @classmethod
@@ -334,7 +334,7 @@ class InputTable5(Widget):
             # for every table row, create a form
             formrow = tag.Part(tag_name="form", attribs ={"method":"post", "action": action_url})
 
-            # 1st column is label text 
+            # 1st column is label text
             if label_class:
                 formrow[0] = tag.Part(tag_name="label", attribs={'class':label_class})
             else:
@@ -451,7 +451,7 @@ class InputTable5(Widget):
         <input type="submit" /> <!-- with value button_text1, CSS class button1_class and name widgfield derived from button_text1 field name -->
         <input type="submit" /> <!-- with value button_text2, CSS class button2_class and name widgfield derived from button_text2 field name -->
         <!-- hidden input fields -->
-    </form>                              
+    </form>
   </div>
   <!--  The above repeated for each item in col_input or col_label, whichever is greater -->
 </div>"""
@@ -475,6 +475,7 @@ class InputTable4(Widget):
                         'col1_class':FieldArg("cssclass",""),          # class applied to every td in the first column
                         'col2_class':FieldArg("cssclass",""),          # class applied to every td in the second column
                         'col3_class':FieldArg("cssclass",""),          # class applied to every td in the third column
+                        'cell_style':FieldArgTable(['integer', 'integer', 'text'], jsonset=True),  # style applied to row,col for col 1,2 and 3
                         'col4_class':FieldArg("cssclass",""),          # class applied to every td in the fourth column
                         'col4_style':FieldArg("cssstyle", ""),
                         'row_classes':FieldArgList('text', jsonset=True),
@@ -596,9 +597,10 @@ class InputTable4(Widget):
         # get url
         down_url = self.get_url(down_link_ident)
 
-        header = 0
+        header = False
+
         if self.wf.title1 or self.wf.title2 or self.wf.title3 or self.wf.title4:
-            header = 1
+            header = True
             if self.wf.header_class:
                 self[0] = tag.Part(tag_name='tr', attribs={"class":self.wf.header_class})
             else:
@@ -609,10 +611,17 @@ class InputTable4(Widget):
             self[0][3] = tag.Part(tag_name='th', text = self.wf.title4)
 
         # create rows
-        rows = max( len(col1), len(col2), len(col3), len(inputdict) )
+        rows = len(inputdict)
 
         if not rows:
             return
+
+        tbody = tag.Part(tag_name='tbody')
+
+        if header:
+            self[1] = tbody
+        else:
+            self[0] = tbody
 
         if rows > len(col1):
             col1.extend(['']*(rows - len(col1)))
@@ -622,42 +631,39 @@ class InputTable4(Widget):
             col3.extend(['']*(rows - len(col3)))
 
         keylist = list(inputdict.keys())
-        if rows > len(keylist):
-            keylist.extend([None]*(rows - len(keylist)))
-
-        # keylist is a list of the dictionary keys, extended by None keys, if the dictionary is smaller than the number of rows of the table
+        # keylist is a list of the dictionary keys
 
         for index in range(rows):
-            rownumber = index+header
 
             cssclass = rowc[index] if index < len(rowc) else ''
             if cssclass:
-                self[rownumber] = tag.Part(tag_name='tr', attribs={"class":cssclass})
+                tbody[index] = tag.Part(tag_name='tr', attribs={"class":cssclass})
             else:
-                self[rownumber] = tag.Part(tag_name='tr')
+                tbody[index] = tag.Part(tag_name='tr')
+            bodyrow = tbody[index]
 
             if col1_class:
-                self[rownumber][0] = tag.Part(tag_name='td', text = col1[index], attribs={"class":col1_class})
+                bodyrow[0] = tag.Part(tag_name='td', text = col1[index], attribs={"class":col1_class})
             else:
-                self[rownumber][0] = tag.Part(tag_name='td', text = col1[index])
+                bodyrow[0] = tag.Part(tag_name='td', text = col1[index])
 
             if col2_class:
-                self[rownumber][1] = tag.Part(tag_name='td', text = col2[index], attribs={"class":col2_class})
+                bodyrow[1] = tag.Part(tag_name='td', text = col2[index], attribs={"class":col2_class})
             else:
-                self[rownumber][1] = tag.Part(tag_name='td', text = col2[index])
+                bodyrow[1] = tag.Part(tag_name='td', text = col2[index])
 
             if col3_class:
-                self[rownumber][2] = tag.Part(tag_name='td', text = col3[index], attribs={"class":col3_class})
+                bodyrow[2] = tag.Part(tag_name='td', text = col3[index], attribs={"class":col3_class})
             else:
-                self[rownumber][2] = tag.Part(tag_name='td', text = col3[index])
+                bodyrow[2] = tag.Part(tag_name='td', text = col3[index])
 
             if col4_class:
-                self[rownumber][3] = tag.Part(tag_name='td', attribs={"class":col4_class})
+                bodyrow[3] = tag.Part(tag_name='td', attribs={"class":col4_class})
             else:
-                self[rownumber][3] = tag.Part(tag_name='td')
+                bodyrow[3] = tag.Part(tag_name='td')
 
             if col4_style:
-                self[rownumber][3].attribs["style"] = col4_style
+                bodyrow[3].attribs["style"] = col4_style
 
             if up_style:
                 up_button_style = up_style
@@ -675,21 +681,21 @@ class InputTable4(Widget):
 
 
             if up_button_style:
-                self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button", "style":up_button_style})
+                bodyrow[3][0] = tag.Part(tag_name="a", attribs={"role":"button", "style":up_button_style})
             else:
-                self[rownumber][3][0] = tag.Part(tag_name="a", attribs={"role":"button"})
+                bodyrow[3][0] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if up_class:
-                self[rownumber][3][0].attribs["class"] = up_class
+                bodyrow[3][0].attribs["class"] = up_class
 
-            self[rownumber][3][0][0] = tag.HTMLSymbol("&uarr;")
+            bodyrow[3][0][0] = tag.HTMLSymbol("&uarr;")
 
             # create a url for the up arrow link
             upget1 = up_getfield1[index] if index < len(up_getfield1) else ''
             upget2 = up_getfield2[index] if index < len(up_getfield2) else ''
             get_fields = {self.get_formname("up_getfield1"):upget1,
                           self.get_formname("up_getfield2"):upget2}
-            self[rownumber][3][0].attribs["href"] = self.make_get_url(page, up_url, get_fields, True)
+            bodyrow[3][0].attribs["href"] = self.make_get_url(page, up_url, get_fields, True)
 
             if down_style:
                 down_button_style = down_style
@@ -706,26 +712,43 @@ class InputTable4(Widget):
                         down_button_style = "visibility: hidden;"
 
             if down_button_style:
-                self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button", "style":down_button_style})
+                bodyrow[3][1] = tag.Part(tag_name="a", attribs={"role":"button", "style":down_button_style})
             else:
-                self[rownumber][3][1] = tag.Part(tag_name="a", attribs={"role":"button"})
+                bodyrow[3][1] = tag.Part(tag_name="a", attribs={"role":"button"})
 
             if down_class:
-                self[rownumber][3][1].attribs["class"] = down_class
+                bodyrow[3][1].attribs["class"] = down_class
 
-            self[rownumber][3][1][0] = tag.HTMLSymbol("&darr;")
+            bodyrow[3][1][0] = tag.HTMLSymbol("&darr;")
 
             # create a url for the down arrow link
             downget1 = down_getfield1[index] if index < len(down_getfield1) else ''
             downget2 = down_getfield2[index] if index < len(down_getfield2) else ''
             get_fields = {self.get_formname("down_getfield1"):downget1,
                           self.get_formname("down_getfield2"):downget2}
-            self[rownumber][3][1].attribs["href"] = self.make_get_url(page, down_url, get_fields, True)
+            bodyrow[3][1].attribs["href"] = self.make_get_url(page, down_url, get_fields, True)
 
             key = keylist[index]
             if key:  # this is the dictionary key
                 keyed_name = input_name + key
-                self[rownumber][3][2] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"hidden", "value":inputdict[key]})
+                bodyrow[3][2] = tag.ClosedPart(tag_name="input", attribs={"name":keyed_name, "type":"hidden", "value":inputdict[key]})
+
+        # set cell styles
+        for row, col, style in self.wf.cell_style:
+            # each cell has format row, col, style, where row and col start at 1 rather than zero
+            if row > rows:
+                continue
+            bodyrow = tbody[row-1]
+            if col == 1:
+                cellcol = bodyrow[0]
+            elif col == 2:
+                cellcol = bodyrow[1]
+            elif col == 3:
+                cellcol = bodyrow[2]
+            else:
+                continue
+            if style:
+                cellcol.attribs["style"] = style
 
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
@@ -1083,8 +1106,8 @@ class InputTable3(Widget):
                           self.get_formname("getfield3"):get3
                           }
             bodyrow[3][1].attribs["href"] = self.make_get_url(page, down_url, get_fields, True)
-            
-        # set cell styles            
+
+        # set cell styles
         for row, col, style in self.wf.cell_style:
             # each cell has format row, col, style, where row and col start at 1 rather than zero
             if row > rows:
@@ -1093,12 +1116,12 @@ class InputTable3(Widget):
             if col == 1:
                 cellcol = bodyrow[0]
             elif col == 2:
-                cellcol = bodyrow[1]  
+                cellcol = bodyrow[1]
             else:
                 continue
             if style:
-                cellcol.attribs["style"] = style            
-        
+                cellcol.attribs["style"] = style
+
 
     def _build_js(self, page, ident_list, environ, call_data, lang):
         """Sets a click event handler"""
@@ -1149,6 +1172,3 @@ class InputTable3(Widget):
   <!-- rows repeated -->
  </tbody>
 </table>"""
-
-
-
