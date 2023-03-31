@@ -561,7 +561,7 @@ class InputTable4(Widget):
         col4_class = self.wf.col4_class
         col4_style = self.wf.col4_style
 
-        up_link_ident = up_link_ident # ident of the up arrow link if javascript disabled
+        up_link_ident = self.wf.up_link_ident # ident of the up arrow link if javascript disabled
         if not up_link_ident:
             up_link_ident = 'no_javascript'
         up_json_ident = self.wf.up_json_ident # ident of the up arrow link, expects a json file returned
@@ -765,12 +765,15 @@ class InputTable4(Widget):
         """Returns a text string to illustrate the widget"""
         return """
 <table>  <!-- with widget id and class widget_class -->
+ <thead>
   <tr> <!-- with header class -->
     <th> <!-- title1 --> </th>
     <th> <!-- title2 --> </th>
     <th> <!-- title3 --> </th>
     <th> <!-- title4 --> </th>
   </tr>
+ </thead>
+ <tbody>
   <tr>
     <td> <!-- with class col1_class and col1 text string --> </td>
     <td> <!-- with class col2_class and col2 text string --> </td>
@@ -791,6 +794,7 @@ class InputTable4(Widget):
     </td>
   </tr>
   <!-- rows repeated -->
+ </tbody>
 </table>"""
 
 
