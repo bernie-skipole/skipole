@@ -1,0 +1,19 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "skipole"
+authors = [{name = "Bernard Czenkusz", email = "bernie@skipole.co.uk"}]
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License","Operating System :: OS Independent","Topic :: Internet :: WWW/HTTP :: WSGI :: Application"]
+version = "5.6.0"
+description="A WSGI Application generator"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords=['wsgi','application','web','framework']
+
+
+[project.urls]
+Documentation = "https://bernie-skipole.github.io/skipole/"
+Source = "https://github.com/bernie-skipole/skipole"

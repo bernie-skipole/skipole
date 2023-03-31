@@ -10,7 +10,7 @@ import os, copy, collections
 # Configuration defaults
 
 _CFG = {
-"version"         : "5.5.9",             # The skipole version
+"version"         : "5.6.0",             # The skipole version
 "default_language": 'en',                # The default language of the project
 "debug"           : False                # The debug mode, True shows exceptions on server error
 }
@@ -159,7 +159,7 @@ def version():
     "Returns the version string"
     return _CFG["version"]
 
-    
+
 
 # These functions deal with page and folder 'idents'.  They are defined here
 # as they are common functions used everywhere.
@@ -261,7 +261,7 @@ def ident_exists_strict(ident):
 
 
 # usefull functions
-    
+
 
 def mergedict(dict1, dict2):
     "returns a dictionary, which is the update of two dictionaries"
@@ -360,7 +360,7 @@ def find_ident_or_url(item, proj_ident=None):
         if item.isdigit():
             # string integer
             return ident_exists_strict(Ident.to_ident(item, proj_ident))
-        # could be 'project,number' or 'project,label', 
+        # could be 'project,number' or 'project,label',
         if ',' in item:
             item_parts = item.split(',')
             if len(item_parts) != 2:
@@ -470,7 +470,7 @@ class Ident(collections.namedtuple('Ident', ['proj','num'])):
             return cls(proj, item)
 
     def item(self):
-        """Return page or folder with this ident. 
+        """Return page or folder with this ident.
            If folder or respond page return the item, any other page, return a deep copy
            If not found, return None."""
         project = getproject(self.proj)
@@ -667,5 +667,3 @@ class WidgField(collections.namedtuple('WidgField', 's w f i')):
         if self.i:
             val = val + ',' + self.i
         return val
-
-
