@@ -7,7 +7,7 @@ name = "skipole"
 authors = [{name = "Bernard Czenkusz", email = "bernie@skipole.co.uk"}]
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License","Operating System :: OS Independent","Topic :: Internet :: WWW/HTTP :: WSGI :: Application"]
-version = "5.6.0"
+version = "5.6.1"
 description="A WSGI Application generator"
 readme = "README.md"
 requires-python = ">=3.8"
