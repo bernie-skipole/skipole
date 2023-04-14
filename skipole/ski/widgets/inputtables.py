@@ -176,11 +176,11 @@ class InputTable1(Widget):
 
 
 class InputTable5(Widget):
-    """Defines a div of four columns, the first just being label text, the second being text input fields,
-       the third and fourth being submit buttons.  Each row of the table is a form, the
-       form action ident is the same for all forms.
-       As well as the input text field each form submits button and value, so which of the two
-       buttons is pressed can be identified."""
+    """A div of four columns, the first just being label text, the second being text input fields,
+    the third and fourth being submit buttons. Each row of the table is a form, the form action ident
+    is the same for all forms and each form has four hidden fields.
+    As well as the input text field each form submits button and value, so which of the two
+    buttons is pressed can be identified."""
 
     # This class does not display any error messages
     display_errors = False
@@ -221,8 +221,8 @@ class InputTable5(Widget):
         size: The number of characters appearing in each text input area
         maxlength: The maximum number of characters accepted in each text area
         required: Set True to put the 'required' flag into each input field
-        action_json:  if a value set, and client has jscript enabled, this is the page ident, label, url the form calls, expects a json page back
-        action: The page ident, label, url the form calls, if action_json not set, expects an html page back
+        action_json:  if a value set, and client has jscript enabled, this is the page ident, label, url the form calls, expects a json page back.
+        action: The page ident, label, url the form calls, if action_json not set. Expects an html page back.
         button_text1: text appearing on the first buttons - if empty, no button 1 is shown
         button_text2: text appearing on the second buttons - if empty, no button 2 is shown
         button1_class: class set on button1
