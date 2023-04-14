@@ -99,14 +99,6 @@ SKIPOLE.inputtables.InputTable5 = function (widg_id, error_message, fieldmap) {
     };
 SKIPOLE.inputtables.InputTable5.prototype = Object.create(SKIPOLE.BaseWidget.prototype);
 SKIPOLE.inputtables.InputTable5.prototype.constructor = SKIPOLE.inputtables.InputTable5;
-SKIPOLE.inputtables.InputTable5.prototype.eventfunc = function(e) {
-    SKIPOLE.skiprefresh = true;
-     let selected_form = $(e.target);
-    if (!SKIPOLE.form_validate(selected_form)) {
-        // prevent the submission if validation failure
-        e.preventDefault();
-        }
-    };
 SKIPOLE.inputtables.InputTable5.prototype.setvalues = function (fieldlist, result) {
     if (!this.widg_id) {
         return;
@@ -137,6 +129,71 @@ SKIPOLE.inputtables.InputTable5.prototype.setvalues = function (fieldlist, resul
                 }
             }
         })
+    };
+
+SKIPOLE.inputtables.InputTable5.prototype.setbutton = function(name, value) {
+    // Called by button onclick, to save the name,value of the button
+    // used to submit the form
+    this.button_name = name;
+    this.button_value = value;
+    };
+
+SKIPOLE.inputtables.InputTable5.prototype.eventfunc = function(e) {
+    SKIPOLE.skiprefresh = true;
+    let selected_form = $(e.target);
+    if (!SKIPOLE.form_validate(selected_form)) {
+        // prevent the submission if validation failure
+        e.preventDefault();
+        }
+    else {
+        // form validated, if action_json url set, call a json page
+        let jsonurl = this.fieldvalues["url"];
+        if (jsonurl) {
+            // json url set, send data with a request for json and prevent default
+            let self = this
+            let senddata = selected_form.serializeArray();
+            // get the submit button name, value which submitted this form
+            // this is necessary since serializeArray() does not pick up the button name
+            // and value from the form, so an onclick event saves them using setbutton()
+            // and the name,value is pushed on to senddata
+            senddata.push({ name:this.button_name, value:this.button_value });
+            e.preventDefault();
+            // respond to json or html
+            $.ajax({
+                  url: jsonurl,
+                  data: senddata
+                      })
+                  .done(function(result, textStatus, jqXHR) {
+                     if (jqXHR.responseJSON) {
+                          // JSON response
+                          if (self.get_error(result)) {
+                              // if error, set any results received from the json call
+                              SKIPOLE.setfields(result);
+                              }
+                          else {
+                              // If no error received, clear any previous error
+                              self.clear_error();
+                              SKIPOLE.setfields(result);
+                              }
+                           } else {
+                              // html response
+                              document.open();
+                              document.write(result);
+                              document.close();
+                              }
+                      })
+                  .fail(function( jqXHR, textStatus, errorThrown ) {
+                              if (jqXHR.status == 400 || jqXHR.status == 404 || jqXHR.status == 500)  {
+                                  document.open();
+                                  document.write(jqXHR.responseText);
+                                  document.close();
+                                  }
+                              else {
+                                  SKIPOLE.json_failed( jqXHR, textStatus, errorThrown );
+                                  }
+                      });
+            }
+        }
     };
 
 
