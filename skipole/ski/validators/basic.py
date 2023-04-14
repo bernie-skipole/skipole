@@ -129,11 +129,13 @@ class IntMinMax(Validator):
         except Exception:
             raise ValidateError(message = 'values given must be integers')
         if arg_name == 'maxval':
-            if intval < 1:
-                raise ValidateError(message = 'A maximum value of of at least 1 is expected')
+            if 'minval' in self._val_args:
+                if intval <= self._val_args['minval']:
+                    raise ValidateError(message = 'A maximum value greater than the minimum value is expected')
         if arg_name == 'minval':
-            if intval < 0:
-                raise ValidateError(message = 'A minimum value of least 0 is expected')
+            if 'maxval' in self._val_args:
+                if intval >= self._val_args['maxval']:
+                    raise ValidateError(message = 'A minimum value less than the maximum value is expected')
         self._val_args[arg_name] = intval
 
     def _check(self, widgfield, item, environ, lang, form_data, call_data, caller_page_ident):
@@ -144,9 +146,9 @@ class IntMinMax(Validator):
         if self["maxval"] < self["minval"]:
             return '', False
         if i > self["maxval"]:
-            return str(self["maxval"]), False
+            return str(self["maxval"]), True
         if i < self["minval"]:
-            return str(self["minval"]), False
+            return str(self["minval"]), True
         return str(i), True
 
 
@@ -192,5 +194,3 @@ class Search(Validator):
         if re.search(self._val_args['pattern'],item) is None:
             return '', False
         return item, True
-
-

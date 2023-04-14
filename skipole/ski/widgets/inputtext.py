@@ -85,7 +85,7 @@ class TextInput1(ClosedWidget):
         if self.wf.title:
             self.attribs["title"] = self.wf.title
 
- 
+
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -164,7 +164,7 @@ class Password1(ClosedWidget):
         if self.wf.required:
             self.attribs["required"] = "required"
 
- 
+
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -607,7 +607,7 @@ class TextInput3(Widget):
             self.jlabels['input_accepted_class'] = self.wf.input_accepted_class
         if self.wf.input_errored_class:
             self.jlabels['input_errored_class'] = self.wf.input_errored_class
- 
+
     @classmethod
     def description(cls):
         """Returns a text string to illustrate the widget"""
@@ -631,7 +631,7 @@ class TextInput4(Widget):
     display_errors = False
 
     # js_validators is a class attribute, True if javascript validation is enabled
-    js_validators=True   
+    js_validators=True
 
     arg_descriptions = {
                         'input_accepted_class':FieldArg("cssclass", ''),
@@ -998,7 +998,7 @@ class SubmitTextInput1(Widget):
           </button>
       </span>
     </div>
-    <!-- hidden input fields -->                              
+    <!-- hidden input fields -->
   </form>
 </div>"""
 
@@ -1283,7 +1283,7 @@ class SubmitTextInput3(Widget):
       <input type=\"submit\" /> <!-- button value set to button_text and class to button_class -->
     </div>
     <!-- hidden input fields -->
-  </form>    
+  </form>
 </div>"""
 
 
@@ -1557,7 +1557,7 @@ class TwoInputsSubmit1(Widget):
       <input type=\"text\" /> <!-- input text value set to input_text2, class to input_class2 -->
       <input type=\"submit\" /> <!-- button value set to button_text and class to button_class -->
     </div>
-    <!-- hidden input fields -->    
+    <!-- hidden input fields -->
   </form>
 </div>"""
 
@@ -1571,7 +1571,7 @@ class SubmitDict1(Widget):
     arg_descriptions = {'action':FieldArg("url", ''),
                         'button_text':FieldArg("text", "Submit"),
                         'button_class':FieldArg("cssclass", ''),
-                        'input_dict':FieldArgDict('text', valdt=False, senddict=True),
+                        'input_dict':FieldArgDict('text', valdt=True, senddict=True),
                         'input_class':FieldArg("cssclass", ''),
                         'inputdiv_class':FieldArg("cssclass", ''),
                         'inputdiv_style':FieldArg("cssstyle", ''),
@@ -1930,7 +1930,7 @@ class SubmitTextInput2(Widget):
           </button>
       </span>
     </div>
-    <!-- hidden input fields -->                              
+    <!-- hidden input fields -->
   </form>
 </div>"""
 
@@ -2182,9 +2182,6 @@ class SubmitTextInput4(Widget):
           </button>
       </div>
     </div>
-    <!-- hidden input fields -->                              
+    <!-- hidden input fields -->
   </form>
 </div>"""
-
-
-
