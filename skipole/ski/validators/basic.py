@@ -132,10 +132,12 @@ class IntMinMax(Validator):
             if 'minval' in self._val_args:
                 if intval <= self._val_args['minval']:
                     raise ValidateError(message = 'A maximum value greater than the minimum value is expected')
-        if arg_name == 'minval':
+        elif arg_name == 'minval':
             if 'maxval' in self._val_args:
                 if intval >= self._val_args['maxval']:
                     raise ValidateError(message = 'A minimum value less than the maximum value is expected')
+        else:
+            raise ValidateError(message = 'Invalid argument')
         self._val_args[arg_name] = intval
 
     def _check(self, widgfield, item, environ, lang, form_data, call_data, caller_page_ident):
@@ -150,6 +152,49 @@ class IntMinMax(Validator):
         if i < self["minval"]:
             return str(self["minval"]), True
         return str(i), True
+
+
+
+class StrictIntMinMax(Validator):
+    """Check integer, limit value to between min and max value, raise error if input not an integer string
+       or if it is beyond the range."""
+
+    arg_descriptions = {'maxval':255,
+                        'minval':0}
+
+
+    def __setitem__(self, arg_name, value):
+        "Sets an argument value"
+        Validator.__setitem__(self, arg_name, value)
+        try:
+            intval = int(value)
+        except Exception:
+            raise ValidateError(message = 'values given must be integers')
+        if arg_name == 'maxval':
+            if 'minval' in self._val_args:
+                if intval <= self._val_args['minval']:
+                    raise ValidateError(message = 'A maximum value greater than the minimum value is expected')
+        elif arg_name == 'minval':
+            if 'maxval' in self._val_args:
+                if intval >= self._val_args['maxval']:
+                    raise ValidateError(message = 'A minimum value less than the maximum value is expected')
+        else:
+            raise ValidateError(message = 'Invalid argument')
+        self._val_args[arg_name] = intval
+
+    def _check(self, widgfield, item, environ, lang, form_data, call_data, caller_page_ident):
+        try:
+            i = int(item)
+        except Exception:
+            return '', False
+        if self["maxval"] < self["minval"]:
+            return '', False
+        if i > self["maxval"]:
+            return str(self["maxval"]), False
+        if i < self["minval"]:
+            return str(self["minval"]), False
+        return str(i), True
+
 
 
 class AlphaNumUnder(Validator):

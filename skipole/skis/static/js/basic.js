@@ -74,8 +74,20 @@ SKIPOLE.basic = {
             }
         return false;
         },
-    /* ok if item is an integer string and between or equal to minval - maxval*/
+    /* ok if item is an integer string, leave range test to server*/
     'IntMinMax': function (item, allowed_values, args) {
+        if (SKIPOLE.inallowedlist(item, allowed_values)) {
+            return true;
+            }
+        let reg = /^0-9/;
+        if ( reg.test(item)) {
+            return false;
+            }
+        /* item is an integer string */
+        return true;
+        },
+    /* ok if item is an integer string and between or equal to minval - maxval*/
+    'StrictIntMinMax': function (item, allowed_values, args) {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
             return true;
             }
@@ -127,4 +139,3 @@ SKIPOLE.basic = {
         return false;
     }
 };
-
