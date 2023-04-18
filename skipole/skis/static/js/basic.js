@@ -79,7 +79,7 @@ SKIPOLE.basic = {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
             return true;
             }
-        let reg = /^0-9/;
+        let reg = /[^0-9-]/;
         if ( reg.test(item)) {
             return false;
             }
@@ -91,7 +91,7 @@ SKIPOLE.basic = {
         if (SKIPOLE.inallowedlist(item, allowed_values)) {
             return true;
             }
-        let reg = /^0-9/;
+        let reg = /[^0-9-]/;
         if ( reg.test(item)) {
             return false;
             }
