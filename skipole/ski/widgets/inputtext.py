@@ -1568,6 +1568,9 @@ class SubmitDict1(Widget):
 
     display_errors = False
 
+    # js_validators is a class attribute, True if javascript validation is enabled
+    js_validators=True
+
     arg_descriptions = {'action':FieldArg("url", ''),
                         'button_text':FieldArg("text", "Submit"),
                         'button_class':FieldArg("cssclass", ''),
@@ -1677,6 +1680,14 @@ class SubmitDict1(Widget):
 
         # add ident and four hidden fields
         self.add_hiddens(self[0], page)
+
+    def _build_js(self, page, ident_list, environ, call_data, lang):
+        """Sets a submit event handler for javascript validation"""
+        ident=self.get_id()
+        return f"""  $("#{ident} form").on("submit input", function(e) {{
+    SKIPOLE.widgets["{ident}"].eventfunc(e);
+    }});
+"""
 
 
     @classmethod

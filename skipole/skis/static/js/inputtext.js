@@ -530,6 +530,16 @@ SKIPOLE.inputtext.SubmitDict1.prototype.setvalues = function (fieldlist, result)
     // sets hidden fields
     this.sethiddenfields(fieldlist, result);
     };
+SKIPOLE.inputtext.SubmitDict1.prototype.eventfunc = function (e) {
+    SKIPOLE.skiprefresh = true;
+    if (e.type == 'submit') {
+        // form submitted
+        if (!SKIPOLE.form_validate(this.widg)) {
+            // prevent the submission if validation failure
+            e.preventDefault();
+            }
+        }
+    };
 
 
 
@@ -632,7 +642,7 @@ SKIPOLE.inputtext.SubmitTextInput2.prototype.eventfunc = function (e) {
 
         // Display the key/value pairs in senddata
         // for (var pair of senddata.entries()) {
-        //    console.log(pair[0]+ ', ' + pair[1]); 
+        //    console.log(pair[0]+ ', ' + pair[1]);
         // }
 
 
@@ -820,5 +830,3 @@ SKIPOLE.inputtext.SubmitTextInput4.prototype.clear_error = function() {
     let input_field = $('#' + fieldvalues["input_id"]);
     this.set_errored(input_field, false);
     };
-
-
