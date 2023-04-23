@@ -76,7 +76,7 @@ SKIPOLE.setfields = function(result) {
            let pageidentarray = SKIPOLE.identdata.split('_');
            // set identdata to projectname_pagenumber_ident_data
            SKIPOLE.identdata = pageidentarray[0] + '_' + pageidentarray[1] + '_' + result["ident_data"];
-           // set this in all hidden input 'ident' fields 
+           // set this in all hidden input 'ident' fields
            $("input[name='ident']:hidden").attr("value", SKIPOLE.identdata);
            // and in all url get 'ident' fields
            let old_string = "?ident=" + oldidentdata
@@ -84,7 +84,7 @@ SKIPOLE.setfields = function(result) {
            $("a[href*='?ident=']").each(function(){
                // Update the ?ident= part of the url to the new ident_data string
                $(this).attr('href',$(this).attr('href').replace(old_string,new_string));
-               }); 
+               });
            }
        if ("ClearAllErrors" in result) {
            // Clear errors in the page
@@ -250,7 +250,7 @@ SKIPOLE.setfields = function(result) {
                    }
                if (splitwidgfield[1] == "hide") {
                    let sectionpart = $("#"+widg_id);
-                   if (result[widgfield]) {                      
+                   if (result[widgfield]) {
                        if (sectionpart.is(":visible")) {
                            sectionpart.fadeOut('slow');
                            }
@@ -271,7 +271,7 @@ SKIPOLE.setfields = function(result) {
             let fieldlist = widg_fields[widg_ident];
             let thiswidget = SKIPOLE.widgets[widg_ident]
             // If given, update the widget_class and widget_style in fieldvalues, so they are available
-            // to thiswidget.setvalues even if they have been changed by JSON call 
+            // to thiswidget.setvalues even if they have been changed by JSON call
             let widget_class = thiswidget.fieldarg_in_result('widget_class', result, fieldlist);
             if (widget_class != undefined) {
                 if (widget_class) {
@@ -396,7 +396,7 @@ SKIPOLE.form_validate = function(selected_form) {
             if ("input_errored_class" in input_widg.fieldvalues) {
                text_input.removeClass( input_widg.fieldvalues["input_errored_class"] );
                }
-            } 
+            }
         else {
             // failed validation - add input_errored_class, remove input_accepted_class
             if ("input_errored_class" in input_widg.fieldvalues) {
@@ -416,7 +416,7 @@ SKIPOLE.form_validate = function(selected_form) {
     return all_ok;
     };
 
-// sets <br /> into the string and escapes other html characters 
+// sets <br /> into the string and escapes other html characters
 SKIPOLE.textbr = function(string) {
     let entityMap = {
         "&": "&amp;",
@@ -706,7 +706,7 @@ SKIPOLE.BaseWidget.prototype.setvalues = function (fieldlist, result) {
 
 SKIPOLE.BaseWidget.prototype.set_accepted = function (input_field, input_accepted) {
     // input_accepted
-    if (input_accepted === true) {
+    if ((input_accepted === true) || (input_accepted === "True")) {
             if ("input_accepted_class" in this.fieldvalues) {
                input_field.addClass(this.fieldvalues["input_accepted_class"]);
                }
@@ -714,7 +714,7 @@ SKIPOLE.BaseWidget.prototype.set_accepted = function (input_field, input_accepte
                input_field.removeClass( this.fieldvalues["input_errored_class"] );
                }
         }
-   if (input_accepted === false) {
+   if ((input_accepted === false) || (input_accepted === "False")) {
             if ("input_accepted_class" in this.fieldvalues) {
                input_field.removeClass( this.fieldvalues["input_accepted_class"] );
                }
@@ -723,7 +723,7 @@ SKIPOLE.BaseWidget.prototype.set_accepted = function (input_field, input_accepte
 
 SKIPOLE.BaseWidget.prototype.set_errored = function (input_field, input_errored) {
     // input_errored
-    if (input_errored===true) {
+    if ((input_errored === true) || (input_errored === "True")) {
             if ("input_errored_class" in this.fieldvalues) {
                input_field.addClass(this.fieldvalues["input_errored_class"]);
                }
@@ -731,10 +731,10 @@ SKIPOLE.BaseWidget.prototype.set_errored = function (input_field, input_errored)
                input_field.removeClass( this.fieldvalues["input_accepted_class"] );
                }
         }
-   if (input_errored === false) {
+   if ((input_errored === false) || (input_errored === "False")) {
             if ("input_errored_class" in this.fieldvalues) {
                input_field.removeClass( this.fieldvalues["input_errored_class"] );
-               }        
+               }
         }
     };
 
@@ -748,7 +748,7 @@ SKIPOLE.BaseWidget.prototype.set_accepted_errored = function (input_field, field
     };
 
 SKIPOLE.BaseWidget.prototype.set_if_disabled = function (input_field, input_disabled, fieldlist, result) {
-    if (input_disabled===true) {
+    if ((input_disabled === true) || (input_disabled === "True")) {
             if ("input_disabled_class" in this.fieldvalues) {
                 if ("input_class" in this.fieldvalues) {
                    input_field.removeClass( this.fieldvalues["input_class"] );
@@ -757,7 +757,7 @@ SKIPOLE.BaseWidget.prototype.set_if_disabled = function (input_field, input_disa
                }
             input_field.attr("disabled", "disabled");
         }
-    if (input_disabled===false) {
+    if ((input_disabled === false) || (input_disabled === "False")) {
             if ("input_disabled_class" in this.fieldvalues) {
                input_field.removeClass( this.fieldvalues["input_disabled_class"] );
                 if ("input_class" in this.fieldvalues) {
