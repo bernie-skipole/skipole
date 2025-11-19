@@ -1,12 +1,14 @@
 # README #
 
+This is now closed and archived. Quite simply, there is so much better stuff out there, so I'm closing this down.
+
 skipole is a WSGI application generator.
 
 skilift is an associated python package which helps the development of an application.
 
 Typically a developer's PC would have both the skilift and the skipole Python packages installed. Skilift can be used to generate a web site, it includes a development web server and provides a web admin interface, which together with your own code and the skipole functions, enables the developer to create a wsgi application.
 
-Once created, your application and its support files can be moved to your deployment server, which also needs a WSGI compatible web server, and the skipole package. 
+Once created, your application and its support files can be moved to your deployment server, which also needs a WSGI compatible web server, and the skipole package.
 
 The deployment server does not need the skilift application.
 
@@ -15,7 +17,7 @@ Skipole and skilift require python 3.6 or later, and can be installed with:
 python3 -m pip install skipole
 
 python3 -m pip install skilift
- 
+
 ### Starting a new project ###
 
 To create a new project you would normally run:
@@ -61,5 +63,3 @@ python3 -m pip install --upgrade skilift
 The web admin pages have extensive documentation and help features, and for further information go to:
 
 https://bernie-skipole.github.io/skipole
-
-
